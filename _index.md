@@ -13,17 +13,11 @@ This directory contains research documents analyzing design decisions, exploring
 | [pointer-architecture-comparison.md](pointer-architecture-comparison.md) | Swift stdlib pointer vs memory/pointer primitives | DECISION |
 | [skill-based-documentation-architecture.md](skill-based-documentation-architecture.md) | Skill-based documentation architecture | — |
 
-## Workflow Documents
+## Workflow
 
-These documents define the research methodology (not research themselves):
-
-| Document | Purpose |
-|----------|---------|
-| [Research.md](Research.md) | Foundation infrastructure for research documents |
-| [Research Investigation.md](Research%20Investigation.md) | Reactive workflow for design questions |
-| [Research Discovery.md](Research%20Discovery.md) | Proactive workflow for design audits |
+Research workflow is defined in the **research-process** skill (`Skills/research-process/SKILL.md`).
 
 ## See Also
 
 - [Experiments/](../Experiments/) — Code verification experiments
-- [Documentation.docc/](../Documentation.docc/) — Authoritative documentation
+- [Documentation.docc/](../Documentation.docc/) — Explanatory documentation
