@@ -4,10 +4,14 @@ This directory contains research documents analyzing design decisions, exploring
 
 ## Research Documents
 
-| Document | Topic | Date | Status |
-|----------|-------|------|--------|
-| [pointer-architecture-comparison.md](pointer-architecture-comparison.md) | Swift stdlib pointer implementation vs memory/pointer primitives design | 2026-01-28 | DECISION |
-| [skill-based-documentation-architecture.md](skill-based-documentation-architecture.md) | Skill-based documentation architecture | 2026-01-28 | — |
+| Document | Topic | Status |
+|----------|-------|--------|
+| [ordinal-cardinal-foundations.md](ordinal-cardinal-foundations.md) | Mathematical foundations for ordinal/cardinal separation | IN_PROGRESS |
+| [affine-scaling-operations.md](affine-scaling-operations.md) | Tier 3 research on scaling operations in affine spaces | IN_PROGRESS |
+| [discrete-scaling-morphisms.md](discrete-scaling-morphisms.md) | Cross-domain scaling factors and type-safe conversion | RECOMMENDATION |
+| [academic-research-methodology.md](academic-research-methodology.md) | Tiered research methodology framework (RES-020-026) | DECISION |
+| [pointer-architecture-comparison.md](pointer-architecture-comparison.md) | Swift stdlib pointer vs memory/pointer primitives | DECISION |
+| [skill-based-documentation-architecture.md](skill-based-documentation-architecture.md) | Skill-based documentation architecture | — |
 
 ## Workflow Documents
 
