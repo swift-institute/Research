@@ -12,6 +12,7 @@ This directory contains research documents analyzing design decisions, exploring
 | [academic-research-methodology.md](academic-research-methodology.md) | Tiered research methodology framework (RES-020-026) | DECISION |
 | [pointer-architecture-comparison.md](pointer-architecture-comparison.md) | Swift stdlib pointer vs memory/pointer primitives | DECISION |
 | [skill-based-documentation-architecture.md](skill-based-documentation-architecture.md) | Skill-based documentation architecture | — |
+| [skill-loading-reliability.md](skill-loading-reliability.md) | Reliable skill loading via per-repo CLAUDE.md | DECISION |
 
 ## Workflow
 
