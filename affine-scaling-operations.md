@@ -1,16 +1,5 @@
 # Affine Space Scaling Operations
 
-<!--
----
-version: 1.0.0
-last_updated: 2026-01-27
-status: IN_PROGRESS
-tier: 3
-applies_to: [swift-primitives, swift-affine-primitives, swift-ordinal-primitives, swift-cardinal-primitives, swift-index-primitives, swift-bit-primitives]
-depends_on: [ordinal-cardinal-foundations.md]
----
--->
-
 ## Abstract
 
 This document investigates the mathematical foundations for scalar multiplication and scaling operations in the Swift Primitives ecosystem. We analyze whether positions (ordinals) can be scaled, whether vectors can be scaled, and how unit conversions (e.g., byte index to bit index) should be modeled. This is Tier 3 research establishing foundational semantic commitments for arithmetic operations across the primitives layer.

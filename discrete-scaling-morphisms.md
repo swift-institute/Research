@@ -1,16 +1,5 @@
 # Discrete Scaling Morphisms
 
-<!--
----
-version: 1.0.0
-last_updated: 2026-01-27
-status: IN_PROGRESS
-tier: 3
-applies_to: [swift-primitives, swift-affine-primitives, swift-index-primitives, swift-bit-primitives]
-depends_on: [affine-scaling-operations.md, ordinal-cardinal-foundations.md]
----
--->
-
 ## Abstract
 
 This document investigates the type-theoretic foundations for modeling cross-domain scaling factors in discrete index spaces. We distinguish between **geometric scaling** (endomorphism within a space) and **unit conversion** (morphism between spaces), and propose a design for the Swift Primitives ecosystem that maintains mathematical rigor while providing practical utility.
