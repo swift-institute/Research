@@ -1,16 +1,5 @@
 # Research Investigation
 
-<!--
----
-title: Research Investigation
-version: 1.1.0
-last_updated: 2026-01-22
-applies_to: [swift-primitives, swift-institute, swift-standards, swift-foundations]
-normative: true
-llm_optimized: true
----
--->
-
 @Metadata {
     @TitleHeading("Swift Institute")
 }

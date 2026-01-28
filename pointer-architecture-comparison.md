@@ -1,14 +1,5 @@
 # Pointer Architecture Comparison
 
-<!--
----
-version: 1.0.0
-last_updated: 2026-01-28
-status: DECISION
-tier: 3
----
--->
-
 ## Context
 
 Swift Institute is refactoring `swift-memory-primitives` and `swift-pointer-primitives` to provide typed arithmetic, non-null guarantees, and provenance-correct empty buffers. Before finalizing the design, we need to understand how Swift's stdlib implements its native pointer types and whether there are special compiler treatments we must account for.

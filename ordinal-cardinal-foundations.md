@@ -1,15 +1,5 @@
 # Ordinal and Cardinal Foundations for Swift Primitives
 
-<!--
----
-version: 1.0.0
-last_updated: 2026-01-26
-status: IN_PROGRESS
-tier: 3
-applies_to: [swift-primitives, swift-affine-primitives, swift-index-primitives, swift-cardinal-primitives, swift-ordinal-primitives]
----
--->
-
 ## Abstract
 
 This document investigates the mathematical foundations for organizing discrete position and cardinality types in the Swift Primitives ecosystem. We analyze whether the current `Affine.Discrete` model correctly captures the semantics of indices (ordinals) and counts (cardinals), and whether a principled reorganization into `swift-ordinal-primitives` and `swift-cardinal-primitives` is warranted. This is Tier 3 research establishing foundational semantic commitments for the primitives layer.

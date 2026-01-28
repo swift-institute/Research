@@ -1,14 +1,5 @@
 # Academic Research Methodology
 
-<!--
----
-version: 2.1.0
-last_updated: 2026-01-23
-status: DECISION
-tier: 3
----
--->
-
 ## Context
 
 The current Research system provides a solid foundation for documenting design decisions, but lacks the rigor of academic research. To produce "timeless infrastructure," we need PhD-level analysis that draws on:
