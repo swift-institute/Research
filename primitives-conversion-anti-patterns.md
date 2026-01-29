@@ -2,9 +2,12 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-01-29
 status: DECISION
+changelog:
+  - 1.1.0: Added section on intermediate property access (.position) anti-patterns
+  - 1.0.0: Initial research on .rawValue chain anti-patterns
 ---
 -->
 
@@ -14,21 +17,25 @@ AI agents writing implementations and tests for packages using primitives freque
 
 **Trigger**: Storage-primitives tests contain widespread `.rawValue` chain patterns where direct APIs exist.
 
-**Scope**: Primitives-wide — affects any package consuming index-primitives, ordinal-primitives, cardinal-primitives, memory-primitives, or their dependents.
+**Scope**: Primitives-wide — affects any package consuming index-primitives, ordinal-primitives, cardinal-primitives, memory-primitives, cyclic-primitives, or their dependents.
 
 ## Question
 
-Where should `.rawValue` access occur, and what patterns should call-sites use instead?
+Where should `.rawValue` and `.position` access occur, and what patterns should call-sites use instead?
 
 ## Analysis
 
 ### Core Design Principle
 
-**`.rawValue` access belongs exclusively in extension initializers.**
+**`.rawValue` and intermediate property access (`.position`) belong exclusively in extension initializers and same-package implementations.**
 
 The primitives architecture provides a layered type system:
 ```
 Index<T> = Tagged<T, Ordinal>
+Ordinal.rawValue: UInt
+
+Index<T>.Cyclic<N> = Tagged<T, Cyclic.Group<N>.Element>
+Cyclic.Group<N>.Element.position: Ordinal
 Ordinal.rawValue: UInt
 ```
 
@@ -59,6 +66,64 @@ let i = Int(bitPattern: index)
 let i = Int(bitPattern: index.position.rawValue)
 ```
 
+### Intermediate Property Access is Also an Anti-Pattern
+
+**New Analysis (v1.1.0)**: After the Cyclic.Group refactoring to use `position: Ordinal`, a subtler anti-pattern emerged: accessing intermediate properties like `.position` at call-sites, even without chaining to `.rawValue`.
+
+The principle extends: **every layer boundary should be crossed via extension initializers, not property access at call-sites**.
+
+#### The Anti-Pattern Hierarchy
+
+| Pattern | Severity | Location |
+|---------|----------|----------|
+| `index.position.rawValue` | Severe | Never at call-sites |
+| `element.position.rawValue` | Severe | Never at call-sites |
+| `cyclicIndex.rawValue.position` | Severe | Never at call-sites |
+| `index.rawValue` (for comparison) | Moderate | Never at call-sites — use `index == literal` |
+| `cyclicIndex.rawValue` (for comparison) | Moderate | Never at call-sites — use `cyclicIndex == literal` |
+| `index.position` | Moderate | Only in extension inits or same-package |
+| `element.position` | Moderate | Only in extension inits or same-package |
+
+#### Why `.position` Access Is Also Wrong at Call-Sites
+
+Consider `Cyclic.Group<N>.Element`:
+
+```swift
+// ❌ WRONG at call-site — crosses layer boundary
+#expect(element.position == 3)
+
+// ✓ CORRECT — uses literal conformance via Test Support
+#expect(element == 3)
+```
+
+The reasoning:
+1. `.position` is an implementation detail of how `Cyclic.Group.Element` stores its value
+2. Future refactoring might change this representation
+3. Test Support provides `ExpressibleByIntegerLiteral` specifically to avoid this
+4. Call-sites should use the semantic type, not peek at its internals
+
+#### Justified vs Unjustified Access
+
+| Access Pattern | At Extension Init | At Same-Package Impl | At Higher-Layer Test | At Call-Site |
+|----------------|-------------------|---------------------|---------------------|--------------|
+| `.rawValue` | ✓ Yes | ✓ Yes | ✗ Never | ✗ Never |
+| `.position` | ✓ Yes | ✓ Yes | ✗ Never | ✗ Never |
+| `.position.rawValue` | ✓ Rarely | ✗ Avoid | ✗ Never | ✗ Never |
+
+**"Same-package implementation"** means:
+- `Cyclic Primitives` accessing `Cyclic.Group.Element.position` in arithmetic implementations
+- `Ordinal Primitives` accessing `Ordinal.rawValue` in extension inits
+- NOT: `Cyclic Index Primitives` accessing `Cyclic.Group.Element.position` (that's a higher-layer package)
+
+**"Extension init"** means conversion APIs like:
+```swift
+extension Ordinal {
+    public init<let N: Int>(_ element: Cyclic.Group<N>.Element) {
+        self = element.position  // ✓ .position access justified here
+    }
+}
+```
+
 ### Test Support Architecture
 
 Test Support modules form a dependency chain that propagates literal conformances:
@@ -74,44 +139,27 @@ Affine Primitives Test Support
     ↓ re-exports Ordinal + Cardinal Test Support
 Index Primitives Test Support (HUB)
     ↓ re-exports Identity + Ordinal + Cardinal + Affine Test Support
+Cyclic Primitives Test Support
+    ↓ provides ExpressibleByIntegerLiteral for Cyclic.Group.Element
 Pointer Primitives Test Support
     ↓ re-exports Index Test Support
 Storage Primitives Test Support
     ↓ re-exports Index + Pointer Test Support
 ```
 
-**Single Source**: `Identity_Primitives_Test_Support` provides all literal conformances:
+**Single Source**: `Identity_Primitives_Test_Support` provides all literal conformances for Tagged types.
+
+**Cyclic Extension**: `Cyclic_Primitives_Test_Support` provides literal conformance for `Cyclic.Group.Element`:
 
 ```swift
-// Identity Primitives Test Support — the ONLY source
-extension Tagged: ExpressibleByIntegerLiteral
-where Tag: ~Copyable, RawValue: ExpressibleByIntegerLiteral {
-    @_disfavoredOverload
-    public init(integerLiteral value: RawValue.IntegerLiteralType) {
-        self = .init(__unchecked: (), RawValue(integerLiteral: value))
+extension Cyclic.Group.Element: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: Int) {
+        self = try! Self(Ordinal(UInt(value)))
     }
 }
-// Also: ExpressibleByFloatLiteral, ExpressibleByStringLiteral, etc.
 ```
 
-**Hub Pattern**: `Index_Primitives_Test_Support` re-exports all upstream Test Support, making it available to all higher packages.
-
-**Implication**: Any package importing its own Test Support already has `ExpressibleByIntegerLiteral` for:
-- `Index<T>` (via `Tagged<T, Ordinal>` + `Ordinal: ExpressibleByIntegerLiteral`)
-- `Index<T>.Offset` (via `Tagged<T, Affine.Discrete.Vector>`)
-- `Index<T>.Count` (via `Tagged<T, Cardinal>`)
-- `Cardinal`, `Ordinal` directly
-
-This enables test convenience:
-```swift
-let index: Index<Int> = 5           // Via Test Support literal conformance
-let offset: Index<Int>.Offset = -3  // Via Test Support literal conformance
-#expect(index == 5)                 // Comparison via literal
-```
-
-**Critical**: Storage-primitives tests import `Storage_Primitives_Test_Support`, which re-exports `Index_Primitives_Test_Support`. The literal conformances are **already available** — the anti-patterns are using `.rawValue` chains when literals would work.
-
-**Note**: These are `@_disfavoredOverload` and documented as "bypasses domain-specific validation" — test convenience only, not production code.
+**Implication**: Any package importing Test Support already has literal conformances. The anti-patterns are using property access when literals would work.
 
 ### Anti-Pattern Categories
 
@@ -121,11 +169,9 @@ let offset: Index<Int>.Offset = -3  // Via Test Support literal conformance
 ```swift
 // ❌ WRONG: Chain of .rawValue/.position accesses at call-site
 Int(bitPattern: index.position.rawValue)
-address.rawValue.rawValue
+element.position.rawValue
 index.position.rawValue * 5
 ```
-
-**Root Cause**: AI agents don't recognize that extension inits exist for these conversions.
 
 **Correct Pattern**:
 ```swift
@@ -137,7 +183,23 @@ try Int(index)
 Int(exactly: index)
 ```
 
-#### 2. Index-Derived Test Values
+#### 2. Single-Level Property Access
+
+**Anti-Pattern**:
+```swift
+// ❌ WRONG: Intermediate property access at call-site
+#expect(element.position == 3)
+#expect(index.rawValue.position == 3)
+```
+
+**Correct Pattern**:
+```swift
+// ✓ CORRECT: Via Test Support literal conformance
+#expect(element == 3)
+#expect(index.rawValue == 3)  // if rawValue is the semantic type (e.g., Cyclic.Group.Element)
+```
+
+#### 3. Index-Derived Test Values
 
 **Anti-Pattern**:
 ```swift
@@ -146,7 +208,7 @@ storage.initialize(to: Int(bitPattern: index.position.rawValue) * 10, at: index)
 #expect(value == Int(bitPattern: index.position.rawValue) * 10)
 ```
 
-**Correct Pattern**: Use external counter or leverage literal conformance.
+**Correct Pattern**: Use external counter.
 ```swift
 // ✓ CORRECT: External counter
 var i = 0
@@ -154,123 +216,82 @@ var i = 0
     storage.initialize(to: i * 10, at: index)
     i += 1
 }
-
-// ✓ CORRECT: Verify against counter
-var i = 0
-(.zero..<count).forEach { index in
-    #expect(storage.move(at: index) == i * 10)
-    i += 1
-}
 ```
 
-#### 3. Position Access for Comparison
+#### 4. Position Access for Cyclic Elements
 
 **Anti-Pattern**:
 ```swift
-// ❌ WRONG: Unwrapping for comparison
-#expect(next.position.rawValue == 1)
-index.position.rawValue == 5
+// ❌ WRONG: Accessing .position to compare
+#expect(cyclicElement.position == 5)
+#expect(cyclicIndex.rawValue.position == 5)
 ```
 
-**Correct Pattern**: Use literal conformance or semantic comparison.
+**Correct Pattern**:
 ```swift
-// ✓ CORRECT: Via Test Support literal conformance
-#expect(next == 1)
-#expect(index.position == 5)
-
-// ✓ CORRECT: Explicit construction
-#expect(next == try Index(1))
+// ✓ CORRECT: Use literal conformance
+#expect(cyclicElement == 5)
+#expect(cyclicIndex.rawValue == 5)  // rawValue is Cyclic.Group.Element, compare to literal
 ```
 
-### Where .rawValue IS Appropriate
+### Where Property Access IS Appropriate
 
-`.rawValue` access is justified **only** in:
+Property access (`.rawValue`, `.position`) is justified **only** in:
 
 1. **Extension initializers** (the designated location):
    ```swift
-   extension Int {
-       public init(bitPattern position: Ordinal) {
-           self = Int(bitPattern: position.rawValue)  // ✓
+   extension Ordinal {
+       public init<let N: Int>(_ element: Cyclic.Group<N>.Element) {
+           self = element.position  // ✓
        }
    }
    ```
 
-2. **Primitives package implementations** (same package that defines the type):
+2. **Same-package implementations**:
    ```swift
-   // In Memory.Address implementation
-   extension UnsafeRawPointer {
-       public init(_ address: Memory.Address) {
-           unsafe self = UnsafeRawPointer(bitPattern: address.rawValue.rawValue)!
-       }
+   // In Cyclic.Group+Arithmetic.swift (same package)
+   public static func + (lhs: Self, rhs: Self) -> Self {
+       let sum = lhs.position + Cardinal(rhs.position)  // ✓
+       // ...
    }
    ```
 
 3. **Bit-pattern verification tests within the defining package**:
    ```swift
-   // In Memory Primitives Tests — testing Memory.Address arithmetic
-   #expect(advanced.rawValue.rawValue == base.rawValue.rawValue &+ 3)
+   // In Cyclic Primitives Tests — testing Element internals
+   let element = try Cyclic.Group<5>.Element(Ordinal(3))
+   #expect(element.position == 3)  // ✓ Same-package, verifying internals
    ```
 
 **Never** in:
-- Higher-layer package tests (e.g., storage-primitives testing should not access memory-primitives internals)
+- Higher-layer package tests (e.g., cyclic-index-primitives should not access cyclic-primitives internals)
 - Application code
 - Test value computation
 
-### Available Extension APIs
+### Special Case: Index<T>.Cyclic<N>
 
-#### Index<T> / Tagged<Tag, Ordinal>
+For `Index<T>.Cyclic<N>` (which is `Tagged<T, Cyclic.Group<N>.Element>`):
 
-| Conversion | API | Notes |
-|------------|-----|-------|
-| `Index<T>` → `Int` (unchecked) | `Int(bitPattern: index)` | Bit reinterpret |
-| `Index<T>` → `Int` (throwing) | `try Int(index)` | Throws if > Int.max |
-| `Index<T>` → `Int` (optional) | `Int(exactly: index)` | nil if > Int.max |
-| `Index<T>` → `Ordinal` | `.position` | Direct property |
-| `Int` → `Index<T>` (throwing) | `try Index(int)` | Throws if negative |
-| Literal → `Index<T>` | `let i: Index<T> = 5` | Test Support only |
+| Access | Level | Justified At Call-Site |
+|--------|-------|----------------------|
+| Direct comparison | `Index<T>.Cyclic<N>` | ✓ Yes — semantic type |
+| `index.rawValue` | Cyclic.Group.Element | ✗ No — internal |
+| `index.rawValue.position` | Ordinal | ✗ No — internal |
+| `index.rawValue.position.rawValue` | UInt | ✗ Never |
 
-#### Cardinal / Index<T>.Count
-
-| Conversion | API | Notes |
-|------------|-----|-------|
-| `Cardinal` → `Int` (unchecked) | `Int(bitPattern: cardinal)` | |
-| `Cardinal` → `Int` (throwing) | `try Int(cardinal)` | |
-| `Int` → `Cardinal` (throwing) | `try Cardinal(int)` | Throws if negative |
-| Literal → `Cardinal` | `let c: Cardinal = 5` | Via literal conformance |
-
-### Comparison: Correct vs Incorrect
-
-#### Storage Tests (INCORRECT)
+The correct pattern for comparisons:
 ```swift
-// From Storage.Inline Tests.swift — anti-pattern
-(.zero..<count).forEach { index in
-    storage.initialize(to: Int(bitPattern: index.position.rawValue) * 10, at: index)
-}
-(.zero..<count).reversed().forEach { index in
-    #expect(value == Int(bitPattern: index.position.rawValue) * 10)
-}
+// ✓ CORRECT: Compare Tagged index directly to literal
+#expect(cyclicIndex == 3)
+
+// ❌ WRONG: Access rawValue for comparison
+#expect(cyclicIndex.rawValue == 3)
+
+// ❌ WRONG: Peek at position
+#expect(cyclicIndex.rawValue.position == 3)
 ```
 
-#### Pointer Tests (CORRECT)
-```swift
-// From Pointer Arithmetic Tests.swift — correct pattern
-var i = 0
-(.zero..<count).forEach { idx in
-    ptr[idx] = i * 10
-    i += 1
-}
-```
-
-#### Index Tests (CORRECT)
-```swift
-// From Index Tests.swift — leveraging literal conformance
-let index: Index<Int> = try Index(5)
-#expect(index.position == 5)  // Compare Ordinal to literal
-
-// From Index.Offset Tests.swift
-let offset: Index<IntTag>.Offset = 5
-#expect(offset == 5)  // Literal comparison
-```
+**Key insight**: Test Support provides `ExpressibleByIntegerLiteral` for `Tagged<T, RawValue>` when `RawValue: ExpressibleByIntegerLiteral`. This means `Index<T>.Cyclic<N>` can be compared directly to integer literals — no `.rawValue` access needed.
 
 ## Outcome
 
@@ -287,6 +308,17 @@ let offset: Index<IntTag>.Offset = 5
 | `Int(bitPattern: index.position.rawValue)` | `Int(bitPattern: index)` |
 | `index.position.rawValue * 5` | External counter or computed value |
 | `address.rawValue.rawValue` | Extension-provided conversions |
+
+#### [CONV-001a] Intermediate Property Access Location
+
+**Statement**: Intermediate property access (`.position`, `.rawValue`) MUST be confined to extension initializers and same-package implementations. Higher-layer packages and call-sites MUST compare at the semantic type level using literal conformances.
+
+| Instead of | Use |
+|------------|-----|
+| `element.position == 3` | `element == 3` (literal) |
+| `index.rawValue == 3` | `index == 3` (literal) |
+| `cyclicIndex.rawValue == 3` | `cyclicIndex == 3` (literal) |
+| `cyclicIndex.rawValue.position == 3` | `cyclicIndex == 3` (literal) |
 
 #### [CONV-002] Test Value Computation
 
@@ -312,23 +344,25 @@ var i = 0
 let index: Index<Int> = 5      // ✓ Test Support literal
 #expect(index == 5)            // ✓ Literal comparison
 #expect(offset == -3)          // ✓ Literal comparison
+#expect(cyclicElement == 3)    // ✓ Literal comparison
 ```
 
 #### [CONV-004] Cross-Package Boundary
 
-**Statement**: A package's tests SHOULD NOT access `.rawValue` of types from dependency packages. Use the semantic APIs those packages export.
+**Statement**: A package's tests SHOULD NOT access `.rawValue` or `.position` of types from dependency packages. Use the semantic APIs those packages export.
 
 | Package Under Test | Should NOT access |
 |--------------------|-------------------|
 | storage-primitives | `index.position.rawValue` (from ordinal-primitives) |
 | pointer-primitives | `address.rawValue.rawValue` (from memory-primitives) |
+| cyclic-index-primitives | `element.position` (from cyclic-primitives) |
 
 ### Packages Requiring Remediation
 
 | Package | Issue | Instances |
 |---------|-------|-----------|
 | swift-storage-primitives | `Int(bitPattern: index.position.rawValue)` | ~20+ |
-| swift-cyclic-primitives | `.rawValue.rawValue` comparisons | ~15+ |
+| swift-cyclic-index-primitives | `.rawValue.position` comparisons | Updated in v1.1.0 |
 | swift-bit-primitives | `.rawValue.rawValue` in location tests | ~10+ |
 
 ### Packages Demonstrating Correct Patterns
@@ -336,30 +370,13 @@ let index: Index<Int> = 5      // ✓ Test Support literal
 | Package | Pattern |
 |---------|---------|
 | swift-pointer-primitives | External counters, semantic comparisons |
-| swift-index-primitives | Literal conformance, `.position` comparisons |
+| swift-index-primitives | Literal conformance, `.position` comparisons (same-package) |
+| swift-cyclic-primitives | `.position` in same-package only, literal comparisons in tests |
 | swift-memory-primitives | `.rawValue` only in same-package implementation tests |
-
-### Test Support Target Inventory
-
-| Package | Test Support Target | Provides | Re-exports |
-|---------|--------------------|---------|-----------|
-| swift-identity-primitives | Identity Primitives Test Support | All literal conformances for Tagged | — |
-| swift-cardinal-primitives | Cardinal Primitives Test Support | — | Cardinal_Primitives |
-| swift-ordinal-primitives | Ordinal Primitives Test Support | — | Cardinal Test Support |
-| swift-affine-primitives | Affine Primitives Test Support | — | Ordinal + Cardinal Test Support |
-| swift-index-primitives | Index Primitives Test Support | — | Identity + Ordinal + Cardinal + Affine Test Support |
-| swift-range-primitives | Range Primitives Test Support | — | Index Test Support |
-| swift-pointer-primitives | Pointer Primitives Test Support | — | Index Test Support |
-| swift-memory-primitives | Memory Primitives Test Support | — | Index + Range + Ordinal + Cardinal + Affine + Identity Test Support |
-| swift-storage-primitives | Storage Primitives Test Support | — | Pointer + Index Test Support |
-| swift-cyclic-primitives | Cyclic Primitives Test Support | — | (check) |
-| swift-kernel-primitives | Kernel Primitives Test Support | — | (check) |
-
-**Key Insight**: Every package's Test Support has access to literal conformances via the re-export chain. The anti-patterns are inexcusable — the affordances are available but unused.
 
 ## References
 
 - `/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives/Tagged+Ordinal.swift` — Extension init APIs
 - `/Users/coen/Developer/swift-primitives/swift-identity-primitives/Tests/Support/Identity Primitives Test Support.swift` — Literal conformances
+- `/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Tests/Support/Cyclic.Group.Element+Literals.swift` — Cyclic literal conformance
 - `/Users/coen/Developer/swift-primitives/swift-pointer-primitives/Tests/Pointer Primitives Tests/Pointer Arithmetic Tests.swift` — Correct test patterns
-- `/Users/coen/Developer/swift-primitives/swift-storage-primitives/Tests/Storage Primitives Tests/Storage.Inline Tests.swift` — Anti-pattern examples
