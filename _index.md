@@ -19,7 +19,7 @@ This directory contains research documents analyzing design decisions, exploring
 | [lifetime-dependent-borrowed-cursors.md](lifetime-dependent-borrowed-cursors.md) | Lifetime-dependent borrowed cursor patterns | — |
 | [range-sequence-collection-semantic-analysis.md](range-sequence-collection-semantic-analysis.md) | Range, Sequence, Collection semantic separation | — |
 | [tagged-extension-duplication.md](tagged-extension-duplication.md) | Tagged extension duplication analysis | — |
-| [testing-conventions.md](testing-conventions.md) | Testing conventions for Swift Institute ecosystem (Tier 3) | IN_PROGRESS |
+| [testing-conventions.md](testing-conventions.md) | Testing conventions for Swift Institute ecosystem (Tier 3) | DECISION |
 
 ## Workflow
 
