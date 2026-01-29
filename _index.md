@@ -21,6 +21,7 @@ This directory contains research documents analyzing design decisions, exploring
 | [tagged-extension-duplication.md](tagged-extension-duplication.md) | Tagged extension duplication analysis | — |
 | [testing-conventions.md](testing-conventions.md) | Testing conventions for Swift Institute ecosystem (Tier 3) | DECISION |
 | [minimal-type-declaration-pattern.md](minimal-type-declaration-pattern.md) | Minimal type body with extensions pattern | DECISION |
+| [primitives-conversion-anti-patterns.md](primitives-conversion-anti-patterns.md) | Multi-layer .rawValue anti-patterns and Test Support affordances | DECISION |
 
 ## Workflow
 
