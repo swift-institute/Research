@@ -13,6 +13,11 @@ This directory contains research documents analyzing design decisions, exploring
 | [pointer-architecture-comparison.md](pointer-architecture-comparison.md) | Swift stdlib pointer vs memory/pointer primitives | DECISION |
 | [skill-based-documentation-architecture.md](skill-based-documentation-architecture.md) | Skill-based documentation architecture | — |
 | [skill-loading-reliability.md](skill-loading-reliability.md) | Reliable skill loading via per-repo CLAUDE.md | DECISION |
+| [skill-creation-process.md](skill-creation-process.md) | Process for adding new skills to the ecosystem | RECOMMENDATION |
+| [swift-package-export-for-llm.md](swift-package-export-for-llm.md) | Optimal format for exporting Swift packages to ChatGPT | RECOMMENDATION |
+| [lifetime-dependent-borrowed-cursors.md](lifetime-dependent-borrowed-cursors.md) | Lifetime-dependent borrowed cursor patterns | — |
+| [range-sequence-collection-semantic-analysis.md](range-sequence-collection-semantic-analysis.md) | Range, Sequence, Collection semantic separation | — |
+| [tagged-extension-duplication.md](tagged-extension-duplication.md) | Tagged extension duplication analysis | — |
 
 ## Workflow
 
