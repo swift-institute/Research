@@ -22,6 +22,7 @@ This directory contains research documents analyzing design decisions, exploring
 | [testing-conventions.md](testing-conventions.md) | Testing conventions for Swift Institute ecosystem (Tier 3) | DECISION |
 | [minimal-type-declaration-pattern.md](minimal-type-declaration-pattern.md) | Minimal type body with extensions pattern | DECISION |
 | [primitives-conversion-anti-patterns.md](primitives-conversion-anti-patterns.md) | Multi-layer .rawValue anti-patterns and Test Support affordances | DECISION |
+| [finite-collection-join-point-integration.md](finite-collection-join-point-integration.md) | Tier 3: Finite/Collection join-point integration pattern ([SEM-DEP-009]) | RECOMMENDATION |
 
 ## Workflow
 
