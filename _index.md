@@ -19,6 +19,7 @@ This directory contains research documents analyzing design decisions, exploring
 | [testing-conventions.md](testing-conventions.md) | Testing conventions for Swift Institute ecosystem (Tier 3) | DECISION |
 | [minimal-type-declaration-pattern.md](minimal-type-declaration-pattern.md) | Minimal type body with extensions pattern | DECISION |
 | [primitives-conversion-anti-patterns.md](primitives-conversion-anti-patterns.md) | Multi-layer .rawValue anti-patterns and Test Support affordances | DECISION |
+| [open-source-toolchain-compiler-crashes.md](open-source-toolchain-compiler-crashes.md) | swift.org +assertions toolchain crashes with ~Escapable/~Copyable (Tier 3) — [#87029](https://github.com/swiftlang/swift/issues/87029), [#87030](https://github.com/swiftlang/swift/issues/87030) | DECISION |
 | ~~finite-collection-join-point-integration.md~~ | Moved to `swift-primitives/swift-storage-primitives/Research/` | — |
 
 ## Moved to swift-memory-primitives/Research/
