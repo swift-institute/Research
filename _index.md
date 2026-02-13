@@ -23,6 +23,14 @@ This directory contains research documents analyzing design decisions, exploring
 | ~~finite-collection-join-point-integration.md~~ | Moved to `swift-primitives/swift-storage-primitives/Research/` | — |
 | [implementation-patterns-skill.md](implementation-patterns-skill.md) | New implementation skill: expression patterns, typed arithmetic, boundary overloads (Tier 2) — supersedes anti-patterns | DECISION |
 | [protocol-witness-effects-capability-abstraction.md](protocol-witness-effects-capability-abstraction.md) | Protocol vs witness vs effects for capability abstraction (Tier 3) — `associatedtype Output` collision between `Parser.Protocol` and `Rendering.Protocol` | IN_PROGRESS |
+| [intent-over-mechanism-expression-first.md](intent-over-mechanism-expression-first.md) | Intent over mechanism as foundational axiom; expression-first code style (Tier 3) | DECISION |
+| [session-reflection-meta-process.md](session-reflection-meta-process.md) | Two-phase session reflection and knowledge improvement pipeline (Tier 3) — 103 sources, SLR, formal semantics, v1.1 latest advances addendum | RECOMMENDATION |
+| [typed-infrastructure-catalog.md](typed-infrastructure-catalog.md) | Complete typed infrastructure inventory, tiers 0–15 (Tier 3) — systematic catalog for existing-infrastructure skill rebuild | RECOMMENDATION |
+| [storage-buffer-abstraction-analysis.md](storage-buffer-abstraction-analysis.md) | Storage and buffer variant abstraction analysis (Tier 3) — SLR (40 sources), container theory, substructural typing, comparative analysis of 5 candidate abstractions | RECOMMENDATION |
+| [bit-vector-zeros-infrastructure.md](bit-vector-zeros-infrastructure.md) | Zero-bit scanning infrastructure for Bit.Vector / Bit.Vector.Static (Tier 2) — mirrors .ones with .zeros, enables Storage.Pool.Inline.allocate() to replace raw loop | RECOMMENDATION |
+| [nested-protocols-in-generic-types.md](nested-protocols-in-generic-types.md) | Nesting protocols in generic types (Tier 3) — compiler source analysis, SE-0404 gap, no feature flag exists; `Buffer.Arena.Protocol` blocked by `isGenericContext()` | DECISION |
+| [nested-protocols-literature-study.md](nested-protocols-literature-study.md) | Cross-language literature study (Tier 3) — 52 sources across Scala/Rust/OCaml/Haskell/C++/type theory; validates "without capture" as ideal design, not just minimum; three-tier recommendation | RECOMMENDATION |
+| [tagged-structural-sendable.md](tagged-structural-sendable.md) | Can Tagged<Element, Cardinal> prove structural Sendable when Element: Sendable? (Tier 1) — could remove @unchecked from phantom-typed containers | IN_PROGRESS |
 
 ## Moved to swift-memory-primitives/Research/
 
