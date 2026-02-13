@@ -15,7 +15,7 @@ This directory contains research documents analyzing design decisions, exploring
 | [collaborative-llm-discussion.md](collaborative-llm-discussion.md) | Claude-ChatGPT collaborative discussion workflow | RECOMMENDATION |
 | ~~range-sequence-collection-semantic-analysis.md~~ | Moved to `swift-primitives/swift-storage-primitives/Research/` | — |
 | ~~[tagged-extension-duplication.md](tagged-extension-duplication.md)~~ | Tagged extension duplication analysis | SUPERSEDED |
-| [protocol-abstraction-for-phantom-typed-wrappers.md](protocol-abstraction-for-phantom-typed-wrappers.md) | Protocol abstraction for phantom-typed wrappers (Tier 3) — supersedes tagged-extension-duplication.md | DECISION |
+| [protocol-abstraction-for-phantom-typed-wrappers.md](protocol-abstraction-for-phantom-typed-wrappers.md) | Protocol abstraction for phantom-typed wrappers (Tier 3) — supersedes tagged-extension-duplication.md. Phase 2 complete via SuppressedAssociatedTypes. | IMPLEMENTED |
 | [testing-conventions.md](testing-conventions.md) | Testing conventions for Swift Institute ecosystem (Tier 3) | DECISION |
 | [minimal-type-declaration-pattern.md](minimal-type-declaration-pattern.md) | Minimal type body with extensions pattern | DECISION |
 | [primitives-conversion-anti-patterns.md](primitives-conversion-anti-patterns.md) | Multi-layer .rawValue anti-patterns and Test Support affordances | DECISION |
@@ -31,6 +31,7 @@ This directory contains research documents analyzing design decisions, exploring
 | [nested-protocols-in-generic-types.md](nested-protocols-in-generic-types.md) | Nesting protocols in generic types (Tier 3) — compiler source analysis, SE-0404 gap, no feature flag exists; `Buffer.Arena.Protocol` blocked by `isGenericContext()` | DECISION |
 | [nested-protocols-literature-study.md](nested-protocols-literature-study.md) | Cross-language literature study (Tier 3) — 52 sources across Scala/Rust/OCaml/Haskell/C++/type theory; validates "without capture" as ideal design, not just minimum; three-tier recommendation | RECOMMENDATION |
 | [tagged-structural-sendable.md](tagged-structural-sendable.md) | Can Tagged<Element, Cardinal> prove structural Sendable when Element: Sendable? (Tier 1) — could remove @unchecked from phantom-typed containers | IN_PROGRESS |
+| [affine-operator-unification-completeness.md](affine-operator-unification-completeness.md) | Should remaining Tagged+Affine operators be unified via Domain? (Tier 1) — completeness check after Phase 2 | IN_PROGRESS |
 
 ## Moved to swift-memory-primitives/Research/
 

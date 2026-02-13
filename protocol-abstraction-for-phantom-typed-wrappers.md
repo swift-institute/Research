@@ -2,12 +2,17 @@
 
 <!--
 ---
-version: 1.3.0
-last_updated: 2026-02-04
-status: DECISION
+version: 1.4.0
+last_updated: 2026-02-13
+status: IMPLEMENTED
 tier: 3
 supersedes: tagged-extension-duplication.md
 changelog:
+  - 1.4.0 (2026-02-13): Phase 2 IMPLEMENTED. SuppressedAssociatedTypes feature flag
+    unblocked associatedtype Domain: ~Copyable. Ordinal-primitives, cardinal-primitives
+    completed Phase 2 independently. Affine-primitives completed in session 2026-02-13
+    (8 bare + 8 tagged → 8 unified operators via where V.Domain == C.Domain).
+    Experiment: suppressed-associatedtype-domain (6 variants, all CONFIRMED).
   - 1.3.0 (2026-02-04): Documented ~Copyable associated type limitation blocking
     Domain for tagged conformances where Tag: ~Copyable. Revised to phased plan:
     Phase 1 (now) unifies same-type operators (17/31); Phase 2 (when Swift supports
