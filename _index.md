@@ -33,6 +33,7 @@ This directory contains research documents analyzing design decisions, exploring
 | [tagged-structural-sendable.md](tagged-structural-sendable.md) | Can Tagged<Element, Cardinal> prove structural Sendable when Element: Sendable? (Tier 1) — could remove @unchecked from phantom-typed containers | IN_PROGRESS |
 | [affine-operator-unification-completeness.md](affine-operator-unification-completeness.md) | Should remaining Tagged+Affine operators be unified via Domain? (Tier 1) — completeness check after Phase 2 | IN_PROGRESS |
 | [domain-first-repository-organization.md](domain-first-repository-organization.md) | Domain-first vs language-first repository organization (Tier 3) — 9 multi-language projects surveyed, 5 organizational models evaluated, formal analysis, `reality-` prefix, converged via Claude–ChatGPT collaborative review. Recommends Model D (Hybrid). | RECOMMENDATION |
+| [foundations-dependency-utilization-audit.md](foundations-dependency-utilization-audit.md) | Dependency utilization audit of swift-io and swift-kernel (Tier 1) — cross-referenced against [IMPL-*] and [INFRA-*] skills. Kernel: clean. IO: 2 actionable improvements (Tagged Flag forwarding, reserveCapacity overload). | RECOMMENDATION |
 
 ## Moved to swift-memory-primitives/Research/
 
