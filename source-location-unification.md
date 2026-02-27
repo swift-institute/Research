@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 3.0.0
+version: 3.1.0
 last_updated: 2026-02-27
 status: DECISION
 tier: 2
@@ -494,6 +494,15 @@ All phases implemented and committed on 2026-02-27.
 | swift-parsers | `9615226` | `Parser.Diagnostic.Location` | `Source.Location` directly |
 
 **Design decision**: Typealiases were rejected in favor of using `Source.Location` directly everywhere. This avoids namespace pollution and makes the canonical type visible at all call sites.
+
+### Related: JSON.LocatedError → Parser.Error.Located
+
+Discovered during the post-unification inventory. `JSON.LocatedError` in swift-json duplicated `Parser.Error.Located<E>` from parser-primitives — both wrap an error with a byte offset.
+
+| Package | Commit | Type eliminated | Replacement |
+|---------|--------|-----------------|-------------|
+| swift-parser-primitives | `81e6bb4` | — | Added `Hashable where E: Hashable` conformance |
+| swift-json | `93e9c5b` | `JSON.LocatedError` | `Parser.Error.Located<JSON.Error>` directly |
 
 ---
 
