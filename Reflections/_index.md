@@ -22,6 +22,8 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-02-13-collection-sequence-inheritance-deduplication.md](2026-02-13-collection-sequence-inheritance-deduplication.md) | 2026-02-13 | Collection-Sequence Inheritance — Deduplication Through Protocol Refinement | swift-collection-primitives, swift-sequence-primitives | processed |
 | [2026-02-13-suppressed-associatedtype-domain-unification.md](2026-02-13-suppressed-associatedtype-domain-unification.md) | 2026-02-13 | SuppressedAssociatedTypes Unblocks Phase 2 Domain Unification | swift-affine-primitives, swift-vector-primitives, swift-ordinal-primitives, swift-cardinal-primitives | processed |
 | [2026-02-25-async-callback-nonsending-replacement.md](2026-02-25-async-callback-nonsending-replacement.md) | 2026-02-25 | Async.Callback Nonsending Replacement — Research-to-Production Pipeline | swift-async-primitives, swift-test-primitives, swift-institute | pending |
+| [2026-02-27-tagged-string-crossmodule-access-levels-and-shadowing.md](2026-02-27-tagged-string-crossmodule-access-levels-and-shadowing.md) | 2026-02-27 | Tagged String Cross-Module — Access Levels and Shadowing | swift-identity-primitives, swift-string-primitives, swift-institute | pending |
+| [2026-02-27-source-location-and-located-error-unification.md](2026-02-27-source-location-and-located-error-unification.md) | 2026-02-27 | Source Location and Located Error Unification — Type Deduplication at Scale | swift-text-primitives, swift-source-primitives, swift-test-primitives, swift-witnesses, swift-parsers, swift-parser-primitives, swift-json | pending |
 
 ## Legacy Archive
 
