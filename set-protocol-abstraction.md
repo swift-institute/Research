@@ -277,8 +277,8 @@ subscript/count/isSpilled are all non-mutating. The closure capture
 
 ### Open Questions
 
-1. **Should `isDisjoint` accept heterogeneous set types?** E.g., `Set.Ordered.isDisjoint(with: Set.Ordered.Fixed)`. With a protocol, this is `<Other: Set.Protocol>`. Without, each pair needs an overload.
-2. **Should algebra operations move to the protocol?** They currently only exist on `Set.Ordered` and always return `Set.Ordered`. A protocol would need `associatedtype` for return type, adding complexity.
+1. ~~**Should `isDisjoint` accept heterogeneous set types?**~~ **Resolved**: Yes. All defaults use `<Other: Set.Protocol & ~Copyable>` for heterogeneous comparisons.
+2. ~~**Should algebra operations move to the protocol?**~~ **Resolved**: Yes. `set-protocol-requirements.md` (v3.0.0, DECISION) — algebra as protocol defaults returning `Set.Ordered`, no `associatedtype` needed. `count` added as third requirement, enabling `isStrictSubset`/`isStrictSuperset`/`isEmpty` defaults.
 3. **Should `Set.Protocol` inherit from `Sequence.Protocol`?** `Array.Protocol` inherits from `Collection.Bidirectional`. The set equivalent would be `Sequence.Protocol` (sets have no inherent ordering for bidirectional traversal, even though our ordered sets do preserve insertion order).
 
 ## References
