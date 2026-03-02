@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 2.0.0
 last_updated: 2026-03-02
-status: IN_PROGRESS
+status: DECISION
 tier: 2
 ---
 -->
@@ -224,7 +224,45 @@ Steps:
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+**Decision**: Option B implemented with ~Copyable support.
+
+### Implementation Record (2026-03-02)
+
+`__SetProtocol` declared in Set Primitives Core with `contains` + `forEach` as requirements.
+Default implementations for `isDisjoint(with:)`, `isSubset(of:)`, `isSuperset(of:)`.
+All four variants conform unconditionally (bare conformance, no `where Element: Copyable`).
+
+Static's `contains`/`index` changed from mutating to non-mutating (same legacy fix as Small).
+All `contains` implementations use `borrowing Element` parameter with linear scan (O(n)).
+The Copyable-constrained O(1) hash-table `contains` was removed to avoid witness ambiguity.
+
+**Experiment**: `swift-institute/Experiments/set-protocol-noncopyable-conformance/` validated
+three compiler behaviors (F1–F3) that shaped the implementation:
+
+- **F1**: `where Element: ~Copyable` in conformance clause breaks witness matching.
+  Bare `extension T: P {}` works. The struct's `~Copyable` propagates without explicit clause.
+- **F2**: Closures consume captured ~Copyable values — no borrowing closure capture.
+  Hash-table-closure pattern (`equals: { idx in buffer[idx] == element }`) cannot be used
+  for `borrowing Element: ~Copyable`. Linear scan is the workaround.
+- **F3**: `hashValue` computed property (via `where Self: ~Copyable` extension) not found
+  on generic `T: Hash.Protocol & ~Copyable`. Workaround: call `hash(into:)` directly.
+
+Files:
+- `Set Primitives Core/Set.Protocol.swift` — protocol declaration + namespace typealias
+- `Set Primitives Core/Set.Protocol+defaults.swift` — `isDisjoint`, `isSubset`, `isSuperset`
+- `Set Ordered Primitives/Set.Ordered ~Copyable.swift` — Ordered's borrowing `contains`
+- `Set Ordered Primitives/Set.Ordered.Fixed.swift` — Fixed's borrowing `contains`
+- `Set Ordered Primitives/Set.Ordered.Static.swift` — Static's borrowing `contains`
+- `Set Ordered Primitives/Set.Ordered.Small.swift` — Small's borrowing `contains`
+- Each variant's Copyable file — bare conformance
+
+### Performance Note
+
+The O(n) linear scan `contains` is a known regression from the O(1) hash-table version.
+"Large set operations" test: 0.79s (linear) vs 0.29s (hash). This is acceptable because:
+1. ~Copyable conformance is the priority (cannot use closures for hash lookup)
+2. Conformers can override `contains` for better performance when `Element: Copyable`
+3. The hash-table `index(_:)` method remains available as a Copyable-constrained O(1) path
 
 ### C1 Resolved (2026-03-02)
 
@@ -253,3 +291,4 @@ subscript/count/isSpilled are all non-mutating. The closure capture
 - Nested protocols research: `swift-institute/Research/nested-protocols-in-generic-types.md`
 - Small exclusivity workaround: `Set.Ordered.Small.swift:117-124`
 - Swift.SetAlgebra: stdlib `SetAlgebra.swift`
+- ~Copyable conformance experiment: `swift-institute/Experiments/set-protocol-noncopyable-conformance/`
