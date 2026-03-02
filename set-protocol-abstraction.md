@@ -258,11 +258,8 @@ Files:
 
 ### Performance Note
 
-The O(n) linear scan `contains` is a known regression from the O(1) hash-table version.
-"Large set operations" test: 0.79s (linear) vs 0.29s (hash). This is acceptable because:
-1. ~Copyable conformance is the priority (cannot use closures for hash lookup)
-2. Conformers can override `contains` for better performance when `Element: Copyable`
-3. The hash-table `index(_:)` method remains available as a Copyable-constrained O(1) path
+~~The O(n) linear scan `contains` was a known regression from the O(1) hash-table version.~~
+**Resolved**: O(1) restored via context-passing overload on Hash.Table. See `set-contains-performance-restoration.md` (v2.0.0, DECISION). All four variants now use O(1) hash-table `contains` as the protocol witness.
 
 ### C1 Resolved (2026-03-02)
 
