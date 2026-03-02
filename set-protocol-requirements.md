@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 3.0.0
+version: 3.1.0
 last_updated: 2026-03-02
 status: DECISION
 tier: 2
@@ -450,44 +450,18 @@ Could we use fewer requirements?
 | Operation | Proposed complexity | Theoretical optimal | Gap |
 |-----------|-------------------|-------------------|-----|
 | `contains` | O(1) amortized | O(1) amortized | None |
-| `isDisjoint` | O(n) | O(min(n,m)) | Yes — iterate smaller set with `count` |
+| `isDisjoint` | O(min(n,m)) | O(min(n,m)) | None — iterates smaller set |
 | `isSubset` | O(n) | O(n) | None |
 | `isSuperset` | O(m) | O(m) | None |
 | `isStrictSubset` | O(n) with count short-circuit | O(n) with count short-circuit | None |
 | `isStrictSuperset` | O(m) with count short-circuit | O(m) with count short-circuit | None |
 | `isEmpty` | O(1) via count | O(1) | None |
 | `union` | O(n+m) | O(n+m) | None |
-| `intersection` | O(n) | O(min(n,m)) | Yes — iterate smaller set with `count` |
+| `intersection` | O(min(n,m)) | O(min(n,m)) | None — iterates smaller set |
 | `subtract` | O(n) | O(n) | None — must iterate self |
 | `symmetricDifference` | O(n+m) | O(n+m) | None |
 
-Two operations have suboptimal complexity:
-
-**`isDisjoint`**: Currently iterates `self` (O(n)). With `count`, could iterate the smaller set (O(min(n,m))). Implementation:
-
-```swift
-public func isDisjoint<Other: Set.`Protocol` & ~Copyable>(
-    with other: borrowing Other
-) -> Bool where Other.Element == Element {
-    if count <= other.count {
-        var disjoint = true
-        forEach { element in
-            if disjoint, other.contains(element) { disjoint = false }
-        }
-        return disjoint
-    } else {
-        var disjoint = true
-        other.forEach { element in
-            if disjoint, self.contains(element) { disjoint = false }
-        }
-        return disjoint
-    }
-}
-```
-
-**`intersection`**: Currently iterates `self` (O(n)). Could iterate the smaller set (O(min(n,m))). The result is correct either way (intersection is commutative). Implementation analogous to `isDisjoint`.
-
-Both optimizations are enabled by `count` — an argument for including it as a requirement.
+~~Two operations had suboptimal complexity.~~ **Resolved**: `isDisjoint` and `intersection` now compare `count` and iterate the smaller set, achieving O(min(n,m)). Both optimizations are enabled by `count` as a requirement.
 
 #### 4. `forEach` vs Early-Exit Iteration
 
@@ -570,16 +544,16 @@ extension Set.`Protocol` where Self: ~Copyable, Element: Copyable {
 
 ### Implementation Record (2026-03-02)
 
-Option C implemented. `count` added to `__SetProtocol` as third requirement. Three relational defaults (`isEmpty`, `isStrictSubset`, `isStrictSuperset`) added to Set Primitives Core. Four algebra defaults (`union`, `intersection`, `subtract`, `symmetricDifference`) added to Set Ordered Primitives. All return `Set<Element>.Ordered`. All 59 tests pass. Zero conformance changes.
+Option C implemented. `count` added to `__SetProtocol` as third requirement. Four relational defaults (`isEmpty`, `isStrictSubset`, `isStrictSuperset`, `isEqual`) added to Set Primitives Core. Four algebra defaults (`union`, `intersection`, `subtract`, `symmetricDifference`) added to Set Ordered Primitives. All return `Set<Element>.Ordered`. `isDisjoint` and `intersection` optimized to iterate the smaller set (O(min(n,m))). 96 tests pass. Zero conformance changes.
 
 Files:
 - `Set Primitives Core/Set.Protocol.swift` — added `var count: Index<Element>.Count { get }` requirement
-- `Set Primitives Core/Set.Protocol+defaults.swift` — added `isEmpty`, `isStrictSubset`, `isStrictSuperset`; fixed `isDisjoint` complexity annotation from O(min(n,m)) to O(n)
-- `Set Ordered Primitives/Set.Protocol+algebra.swift` — NEW: `union`, `intersection`, `subtract`, `symmetricDifference` defaults constrained to `where Self: ~Copyable, Element: Copyable`
+- `Set Primitives Core/Set.Protocol+defaults.swift` — added `isEmpty`, `isStrictSubset`, `isStrictSuperset`, `isEqual`; optimized `isDisjoint` to O(min(n,m))
+- `Set Ordered Primitives/Set.Protocol+algebra.swift` — NEW: `union`, `intersection`, `subtract`, `symmetricDifference` defaults constrained to `where Self: ~Copyable, Element: Copyable`; `intersection` optimized to O(min(n,m))
 
 ### Rationale
 
-1. **Highest leverage**: 1 requirement addition unlocks 7 defaults — 3 relational (`isEmpty`, `isStrictSubset`, `isStrictSuperset`) and 4 algebra (`union`, `intersection`, `subtract`, `symmetricDifference`).
+1. **Highest leverage**: 1 requirement addition unlocks 8 defaults — 4 relational (`isEmpty`, `isStrictSubset`, `isStrictSuperset`, `isEqual`) and 4 algebra (`union`, `intersection`, `subtract`, `symmetricDifference`).
 
 2. **Zero conformance cost**: All four variants already have `var count: Index<Element>.Count { get }` in unconstrained extensions. No new witnesses, no constraint changes, no conditional conformances.
 
@@ -617,15 +591,15 @@ Mutating operations (`formUnion`, mutating `subtract`, `formIntersection`) requi
 
 ### Open Questions
 
-1. **Should `isEmpty` be a requirement or a default?** As a default via `count == .zero`, it's correct and O(1) since all variants have O(1) count. A requirement would allow variants with more efficient emptiness checks, but no variant currently benefits from this. Recommend: default.
+1. ~~**Should `isEmpty` be a requirement or a default?**~~ **Resolved**: Default via `count == .zero`. O(1) since all variants have O(1) count. No variant benefits from a separate requirement.
 
-2. **Should `isDisjoint` iterate the smaller set?** With `count` available, `isDisjoint` could check `self.count <= other.count` and swap iteration order. This achieves true O(min(n,m)). Requires a second implementation path (iterate other + probe self). Low priority — can be added as an optimization.
+2. ~~**Should `isDisjoint` iterate the smaller set?**~~ **Resolved**: Yes. Implemented — `isDisjoint` and `intersection` now compare `count` and iterate the smaller set, achieving O(min(n,m)). `intersection` optimization placed in Set Ordered Primitives (alongside the algebra defaults).
 
-3. **Should `Set.Ordered` override the protocol algebra defaults?** The concrete `.algebra` accessor accesses `buffer[idx]` directly (bypassing `forEach`). With `@inlinable`, the protocol defaults should inline to equivalent code. Benchmark before adding concrete overrides.
+3. **Should `Set.Ordered` override the protocol algebra defaults?** The concrete `.algebra` accessor accesses `buffer[idx]` directly (bypassing `forEach`). With `@inlinable`, the protocol defaults should inline to equivalent code. Benchmark before adding concrete overrides. **Deferred**: needs benchmarking.
 
-4. **Should the `.algebra` accessor be deprecated?** Protocol defaults provide the same operations as direct methods. Keeping both creates two paths to the same result. Options: (a) deprecate `.algebra`, (b) keep both (`.algebra` as optimized path, protocol defaults as generic path), (c) have `.algebra` delegate to the protocol defaults. Recommend: keep both initially, evaluate after benchmarking.
+4. **Should the `.algebra` accessor be deprecated?** Protocol defaults provide the same operations as direct methods. Keeping both creates two paths to the same result. **Deferred**: depends on Q3 benchmarking. Keep both until data is available.
 
-5. **Should the protocol provide `isEqual(to:)` for heterogeneous set equality?** `a.isSubset(of: b) && a.isSuperset(of: b)` composes set equality from existing defaults, but iterates twice. A dedicated `isEqual(to:)` could short-circuit via `count != other.count`. Low priority.
+5. ~~**Should the protocol provide `isEqual(to:)` for heterogeneous set equality?**~~ **Resolved**: Yes. Implemented as `count == other.count && isSubset(of: other)`. O(1) when counts differ, O(n) otherwise. Heterogeneous — works across any Set.Protocol conformer pair.
 
 ## References
 
