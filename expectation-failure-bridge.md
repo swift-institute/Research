@@ -4,7 +4,7 @@
 ---
 tier: 2
 version: 1.0.0
-status: RECOMMENDATION
+status: SUPERSEDED
 created: 2026-03-03
 packages: [swift-tests, swift-testing]
 skills: [testing, design, platform]
@@ -401,6 +401,25 @@ Note: The existing test targets (`Tests/Tests Tests/`) already import Apple's `T
 5. **Testing.Issue.record thread safety**: `Testing.Issue.record` is documented as safe to call from any context. When called outside of an active test, the behavior is implementation-defined but observed to be benign (no crash, no output). The `Collector.current == nil` guard should prevent this case, but it's worth noting.
 
 6. **Redundancy with Institute runner**: With the `atexit` handler in place, the `postRunActions` closure in `Testing.Main.swift` becomes redundant (both drain and rewrite; `atexit` would handle it if `postRunActions` didn't). The `postRunActions` path can be retained for explicitness and earlier execution timing (during run, not at process exit), or removed to eliminate redundancy. Recommend retaining — `postRunActions` fires earlier, giving the runner opportunity to report write errors through its event system.
+
+---
+
+## Superseded
+
+**Date**: 2026-03-03
+
+Option A (`#if canImport(Testing)` in `Tests Core`) creates a circular dependency
+when `swift-tests` and `swift-testing` coexist in the same build graph. The
+ecosystem's `Testing` module shadows Apple's toolchain module, causing
+`canImport(Testing)` to resolve to the ecosystem's module and forming a cycle:
+`Testing → Testing_Core → Tests → Tests_Core → import Testing → Testing`.
+
+The bridge functionality has been moved to a separate, optional target
+`Tests Apple Testing Bridge` in `swift-tests`. This target is NOT part of
+the `Tests` umbrella product, so it is never in the dependency chain of the
+ecosystem's `Testing` module. Consumers who use `swift-tests` directly
+(without the ecosystem's `swift-testing`) can depend on this bridge target
+to get Apple runner integration.
 
 ---
 
