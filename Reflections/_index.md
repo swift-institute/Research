@@ -24,6 +24,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-02-25-async-callback-nonsending-replacement.md](2026-02-25-async-callback-nonsending-replacement.md) | 2026-02-25 | Async.Callback Nonsending Replacement — Research-to-Production Pipeline | swift-async-primitives, swift-test-primitives, swift-institute | pending |
 | [2026-02-27-tagged-string-crossmodule-access-levels-and-shadowing.md](2026-02-27-tagged-string-crossmodule-access-levels-and-shadowing.md) | 2026-02-27 | Tagged String Cross-Module — Access Levels and Shadowing | swift-identity-primitives, swift-string-primitives, swift-institute | pending |
 | [2026-02-27-source-location-and-located-error-unification.md](2026-02-27-source-location-and-located-error-unification.md) | 2026-02-27 | Source Location and Located Error Unification — Type Deduplication at Scale | swift-text-primitives, swift-source-primitives, swift-test-primitives, swift-witnesses, swift-parsers, swift-parser-primitives, swift-json | pending |
+| [2026-03-03-typed-throws-rethrows-overload-resolution.md](2026-03-03-typed-throws-rethrows-overload-resolution.md) | 2026-03-03 | Typed Throws Conversion — rethrows Overload Resolution and E Inference | swift-standard-library-extensions, swift-geometry-primitives, swift-kernel-primitives, swift-algebra-primitives, swift-async-primitives, swift-cache-primitives, swift-dictionary-primitives, swift-ownership-primitives | pending |
 
 ## Legacy Archive
 
