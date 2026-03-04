@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.2.0
+version: 1.3.0
 last_updated: 2026-03-04
 status: DECISION
 tier: 2
@@ -372,14 +372,35 @@ public struct Lens<Whole, Part>: Sendable, Witness.`Protocol` {
 
 All 8 types store **zero instances** of their constrained type parameters — only `@Sendable` closures taking them as parameters. The constraint is unnecessary by the same reasoning as Strategy.
 
-#### Tier 2: Protocol-mediated (requires protocol change)
+#### Tier 2: Protocol-mediated (implemented)
 
-| Type | Package | Issue |
-|------|---------|-------|
-| `Effect.Continuation.One<Value: Sendable>` | effect | `_resume: @Sendable (sending Result<Value, Failure>) async -> Void` — closure-only. But `__EffectProtocol` requires `associatedtype Value: Sendable`. |
-| `Effect.Continuation.Multi<Value: Sendable>` | effect | Same pattern and same protocol constraint. |
+| Type | Package | Issue | Status |
+|------|---------|-------|--------|
+| `Effect.Continuation.One<Value: Sendable>` | effect | `_resume: @Sendable (sending Result<Value, Failure>) async -> Void` — closure-only | **FIXED** |
+| `Effect.Continuation.Multi<Value: Sendable>` | effect | Same pattern and same protocol constraint | **FIXED** |
 
-The `sending` keyword on the closure parameter means ownership transfer — it does NOT require `Value: Sendable`. However, removing the constraint from the continuation types requires also removing `associatedtype Value: Sendable` from `__EffectProtocol` and `__EffectContinuation`. This is a larger design decision about whether effect values fundamentally cross isolation boundaries (they do via continuation resume, but `sending` handles that).
+Removed `Value: Sendable` from `__EffectContinuation` protocol, `One`, `Multi` structs, and factory methods. Kept `Value: Sendable` on `__EffectProtocol` — the broader effect system (Spy.Invocation, Test.Handler in swift-effects) genuinely stores `E.Value` in Sendable contexts. The `onResume` method on `One` was moved to a `where Value: Sendable` extension because it legitimately uses the result in two `sending` contexts (callback and original closure).
+
+#### Function-level Sendable constraints (implemented)
+
+Phase 2 audit identified 26 function-level `Sendable` constraints that were unnecessary. After verification, **15 sites across 9 packages** were corrected:
+
+| Package | Sites | Constraint removed | Reason |
+|---------|-------|--------------------|--------|
+| `swift-algebra-law-primitives` | 2 | `Element: Sendable` on Associativity, Commutativity | Accept Semigroup (no longer requires Sendable) |
+| `swift-pool-primitives` | 4 | `T: Sendable` on TryAcquire methods | Synchronous, no isolation crossing |
+| `swift-dimension-primitives` | 4 | `Scalar: Sendable` on `fraction()` methods | Unlocked by fixing `Numeric.Fraction` |
+| `swift-async-primitives` | 2 | `T: Sendable` on Channel.Storage `withLock` | Synchronous return from `Mutex.withLock` |
+| `swift-binary-parser-primitives` | 2 | `Output: Sendable` on borrowed prefix | Synchronous; unconstrained sibling exists |
+| `swift-bit-pack-primitives` | 1 | `Word: Sendable` | Structural constraints sufficient |
+
+Additionally, `Numeric.Fraction<..., Result: Sendable>: Sendable` was changed to conditional Sendable conformance (`extension Numeric.Fraction: Sendable where Result: Sendable {}`), since it stores `value: Result` directly. This was the root cause requiring `where Scalar: Sendable` on the dimension fraction methods.
+
+**Correctly retained** (audit initially classified as unnecessary but proved load-bearing):
+- `Optic.Traversal.set` — `Part` captured in `@Sendable` closure via `modify`
+- `Sample.Metric.extract` — `Sample.Averaging<T>` struct requires `T: Sendable`
+- 9 algebra-law functions accepting Monoid/Group/Ring/Field (all require `Element: Sendable`)
+- 4 dimension-primitives sites (before `Numeric.Fraction` root cause fix)
 
 #### Not candidates (store values directly)
 
@@ -412,14 +433,28 @@ The constraint break is clean: Magma and Semigroup don't store Element, so remov
 
 All 5 serialization types are independent — they don't form a hierarchy. Each can be relaxed independently. The serialization package has the highest constraint density (5 types × 2-5 params each = ~18 unnecessary constraints).
 
-### Implementation Priority
+### Implementation Status
 
-| Priority | Package | Types | Params freed | Difficulty |
-|----------|---------|-------|-------------|------------|
-| 1 | swift-test-primitives | Redaction | 1 | Trivial (same package as Strategy) |
-| 2 | swift-serialization-primitives | 5 types | ~18 | Low (independent types, pure relaxation) |
-| 3 | swift-algebra-magma-primitives | Magma, Semigroup | 2 | Low (leaf types, no downstream breakage) |
-| 4 | swift-effect-primitives | One, Multi + protocols | 2 + protocols | Medium (protocol chain, design decision) |
+All tiers implemented and verified:
+
+| Priority | Package | Types | Params freed | Status |
+|----------|---------|-------|-------------|--------|
+| 1 | swift-test-primitives | Redaction | 1 | **DONE** |
+| 2 | swift-serialization-primitives | 5 types + Prefix.Result conditional | ~18 + 1 conditional | **DONE** |
+| 3 | swift-algebra-magma-primitives | Magma, Semigroup | 2 | **DONE** |
+| 4 | swift-effect-primitives | One, Multi + `__EffectContinuation` protocol | 2 + protocol | **DONE** |
+| 5 | swift-numeric-primitives | Numeric.Fraction → conditional Sendable | 1 | **DONE** |
+| 6 | 8 packages (function-level) | 15 function constraints | 15 | **DONE** |
+
+### Remaining Opportunities
+
+| Category | Scope | Description |
+|----------|-------|-------------|
+| `__EffectProtocol.Value: Sendable` | effect-primitives + swift-effects | Removing requires redesigning Spy.Invocation and Test.Handler which store `E.Value` |
+| `Infinite.Map/Scan/Zip` struct-level | infinite-primitives | Store Element directly but could use conditional Sendable |
+| `Algebra.Monoid+` conditional | algebra hierarchy | Store `identity: Element` — could use conditional Sendable instead of `Element: Sendable` |
+| swift-standards audit | standards layer | Not yet audited |
+| swift-foundations audit | foundations layer | Not yet audited |
 
 ## References
 
@@ -449,6 +484,7 @@ All 5 serialization types are independent — they don't form a hierarchy. Each 
 
 ## Changelog
 
+- v1.3.0 (2026-03-04): All tiers implemented. Removed Value: Sendable from __EffectContinuation protocol, One, Multi, and factory methods. Phase 2 function-level audit: 15 constraints removed across 9 packages. Fixed Numeric.Fraction root cause (conditional Sendable). Documented remaining opportunities (effect protocol, infinite types, algebra conditional, standards/foundations audit).
 - v1.2.0 (2026-03-04): Added Appendix: Ecosystem-Wide Inventory. Phase 1 audit of 631 Sendable sites across swift-primitives. Found 10 types with the closure-only anti-pattern (8 Tier 1 direct analogues, 2 Tier 2 protocol-mediated). Identified optics as exemplar of correct pattern. Mapped algebra chain impact (Magma/Semigroup removable, Monoid+ must keep). Prioritized implementation path.
 - v1.1.0 (2026-03-04): Status RECOMMENDATION → DECISION. Added Internal Precedent section with cross-references to 6 ecosystem concurrency research documents. Added Ecosystem Principle summary with annotation taxonomy table. Updated Implementation section to reflect completed work. Strengthened async consideration with nonsending-adoption-audit finding (sync closures cannot be nonsending). Added Changelog.
 - v1.0.0 (2026-03-04): Initial analysis. 5 options evaluated. Option B recommended.
