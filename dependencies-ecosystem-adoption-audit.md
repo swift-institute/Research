@@ -160,58 +160,50 @@ The `swift-effects` package (`Effect.Context`) is already a thin wrapper around 
 
 | Priority | Count | Description |
 |----------|-------|-------------|
-| **HIGH** | 2 | HTML rendering TaskLocals -- direct replacement, many call sites |
+| **HIGH** | 0 | — |
 | **MEDIUM** | 7 | IO singletons (2), provider protocols (4), IEEE 754 state (1) |
 | **LOW** | 9 | IO subsystem singletons (4), test infrastructure singletons (2), env var configs (3) |
-| **N/A** | 10 | Already correct (10 sites), not candidates (5 sites), or the dependency system itself |
+| **N/A** | 12 | Already correct (10 sites), not candidates (5 sites), HTML rendering KEEP @TaskLocal (2), or the dependency system itself |
 
-**Total actionable findings: 18** (2 HIGH + 7 MEDIUM + 9 LOW)
+**Total actionable findings: 16** (7 MEDIUM + 9 LOW)
 
 ## Prioritized Action Plan
 
-### Phase 1: HIGH Priority (Direct Replacement)
+### Phase 1: MEDIUM Priority (Refactoring Needed)
 
-1. **HTML.Context.Configuration as Dependency.Key**
-   - File: `/Users/coen/Developer/swift-foundations/swift-html-rendering/Sources/HTML Renderable/HTML.Context.Configuration.swift`
-   - Replace `@TaskLocal public static var current` with a `Dependency.Key` conformance
-   - Migrate ~25 call sites from `$current.withValue(...)` to `Dependency.Scope.with` or `withDependencies`
-   - Impact: Unifies configuration scoping with the rest of the ecosystem
+> **Note**: The original audit incorrectly listed HTML rendering TaskLocals as HIGH priority
+> for migration. Category 1 analysis (§ Findings, Category 1) correctly concluded these
+> should KEEP @TaskLocal — they are ambient rendering parameters, not injectable dependencies.
+> No action needed for `HTML.Context.Configuration` or `HTML.Style.Context`.
 
-2. **HTML.Element.Style.Context as Dependency.Key**
-   - File: `/Users/coen/Developer/swift-foundations/swift-html-rendering/Sources/HTML Renderable/HTML.Style.Context.swift`
-   - Replace `@TaskLocal public static var current` with a `Dependency.Key` conformance
-   - Preserve merging semantics in the key's getter/setter
-
-### Phase 2: MEDIUM Priority (Refactoring Needed)
-
-3. **IO.Blocking.Lane and IO.Lane singletons**
+1. **IO.Blocking.Lane and IO.Lane singletons**
    - Add `Dependency.Key` conformance alongside existing `.shared` for backward compatibility
    - `testValue` returns `.inline` (non-blocking mock lane)
    - Enables IO testing without spawning kernel threads
 
-4. **Provider protocols -> Dependency.Key convenience overloads**
+2. **Provider protocols -> Dependency.Key convenience overloads**
    - Add zero-parameter convenience methods: `RFC_4122.UUID.v4()`, `RFC_9562.UUID.v7(unixMilliseconds:)`
    - These resolve the provider from `Dependency.Scope.current`
    - Keep existing generic-parameter APIs as the primary interface
    - Requires `swift-dependency-primitives` as a dependency in `swift-rfc-4122`, `swift-rfc-9562`, `swift-rfc-6238`
 
-5. **IEEE 754 exception state scoping**
+3. **IEEE 754 exception state scoping**
    - Model `ExceptionState` as `Dependency.Key` at Layer 1 (`Dependency.Scope`)
    - `liveValue` returns process-global instance, `testValue` returns fresh per-scope instance
    - Fixes concurrent test isolation bug
 
-### Phase 3: LOW Priority (Design Discussion Needed)
+### Phase 2: LOW Priority (Design Discussion Needed)
 
-6. **IO subsystem singletons** (Selector, Completion Queue, Executor, Registry)
+4. **IO subsystem singletons** (Selector, Completion Queue, Executor, Registry)
    - These have async failable initialization
    - Requires `prepareDependencies` pattern at app startup
    - Significant API surface change -- defer to separate design document
 
-7. **Test infrastructure singletons** (Exclusion Controller, Inline Snapshot State)
+5. **Test infrastructure singletons** (Exclusion Controller, Inline Snapshot State)
    - Test-only infrastructure; benefit is marginal
    - Consider only if testing-the-test-framework becomes a priority
 
-8. **Environment-based configuration** (Testing.Configuration, Baseline.Recording/Storage)
+6. **Environment-based configuration** (Testing.Configuration, Baseline.Recording/Storage)
    - Already testable via `Environment.withOverlay`
    - Dependency.Key would be slightly more ergonomic but not essential
 
@@ -219,13 +211,13 @@ The `swift-effects` package (`Effect.Context`) is already a thin wrapper around 
 
 **Status**: RECOMMENDATION
 
-The audit found **18 actionable opportunities** across the ecosystem:
+The audit found **16 actionable opportunities** across the ecosystem:
 
-1. **2 HIGH-priority** items in `swift-html-rendering` where raw `@TaskLocal` usage should be replaced with `Dependency.Key`. These are straightforward substitutions with ~25 affected call sites.
+1. **7 MEDIUM-priority** items spanning IO testability (2), provider protocol convenience APIs (4), and IEEE 754 correctness (1). The provider protocol items are particularly interesting -- they would allow `RFC_4122.UUID.v4()` to work without explicitly passing a random provider, by resolving it from the dependency context.
 
-2. **7 MEDIUM-priority** items spanning IO testability (2), provider protocol convenience APIs (4), and IEEE 754 correctness (1). The provider protocol items are particularly interesting -- they would allow `RFC_4122.UUID.v4()` to work without explicitly passing a random provider, by resolving it from the dependency context.
+2. **9 LOW-priority** items where the current patterns work but could benefit from dependency injection for consistency or marginal testability improvements.
 
-3. **9 LOW-priority** items where the current patterns work but could benefit from dependency injection for consistency or marginal testability improvements.
+The HTML rendering `@TaskLocal` usages (`HTML.Context.Configuration`, `HTML.Style.Context`) were evaluated and correctly determined to KEEP `@TaskLocal` — they are ambient rendering parameters, not injectable services.
 
 The ecosystem already has **strong adoption** in the right places:
 - `swift-tests` snapshot testing uses `Dependency.Key` correctly (3 keys)
@@ -236,6 +228,5 @@ The ecosystem already has **strong adoption** in the right places:
 **Key architectural observation**: Layer 2 (standards) packages can use `swift-dependency-primitives` (Layer 1) but NOT `swift-dependencies` (Layer 3). This means standards packages get `Dependency.Scope.with` and `Dependency.Key` (with `liveValue`/`testValue`) but NOT `@Dependency` property wrapper, `withDependencies` convenience, or mode detection. This is sufficient for the provider protocol convenience overloads proposed in Phase 2.
 
 **Next steps**:
-- Implement Phase 1 (HTML rendering) -- no new dependencies needed, `swift-html-rendering` already depends on foundations
-- Design RFC for Phase 2 provider protocol pattern -- determine whether `swift-dependency-primitives` should be added as a dependency to `swift-rfc-4122`, `swift-rfc-9562`, `swift-rfc-6238`
-- Separate design document for IO singleton testability (Phase 3)
+- Design RFC for Phase 1 provider protocol pattern -- determine whether `swift-dependency-primitives` should be added as a dependency to `swift-rfc-4122`, `swift-rfc-9562`, `swift-rfc-6238`
+- Separate design document for IO singleton testability (Phase 2)
