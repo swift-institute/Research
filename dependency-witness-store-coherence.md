@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 2.1.0
-last_updated: 2026-03-03
-status: RECOMMENDATION
+version: 3.0.0
+last_updated: 2026-03-04
+status: IMPLEMENTED
 tier: 2
 ---
 -->
@@ -394,70 +394,53 @@ Replace both stores with a single, more capable store at L1. `Dependency.Values`
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: IMPLEMENTED (2026-03-04)
 
-### Recommended Approach: B + D + C (Three Phases)
+### Implemented: B + D + Dictionary-Key (Three Phases)
 
-With `SuppressedAssociatedTypes` already enabled in `swift-dependency-primitives`, Option D is unblocked. The revised recommendation combines mode propagation (B), protocol refinement (D), and the L1 key bridge (C) in three phases of increasing scope.
+All three phases are complete. Phase 3's original `_l1Apply` closure-chain design was superseded by a dictionary-key approach discovered through a collaborative Claude-ChatGPT discussion (see `task-local-stack-unification.md` v3.0).
 
-**Phase 1: Mode Propagation** — Implement immediately. Low risk, high value. Solves E1.
+**Phase 1: Mode Propagation** — **DONE** (committed 2026-03-04).
 
-Changes:
-1. `Witness.Context` — 6 mode-accepting method bodies gain `Dependency.Scope.with` wrapping (`Witness.Context.swift` lines 170-185, 229-245, 260-274, 285-299, 314-328, 339-353)
-2. `Test.Runner` — Remove explicit `Dependency.Scope.with({ $0.isTestContext = true })` from `runWithTraits` (`Test.Runner.swift` line 430)
-3. `Testing.Main` — No change needed (already pushes mode, which now propagates)
+`Witness.Context.with(mode:)` propagates mode to L1's `isTestContext` in a single scope push. Eliminated the dual scope push at `Testing.Main` + `Test.Runner`.
 
-Files touched: 2 (Witness.Context.swift, Test.Runner.swift)
-Solves: E1 (dual scope push)
+**Phase 2: Protocol Refinement** — **DONE** (committed 2026-03-04).
 
-**Phase 2: Protocol Refinement** — Implement after Phase 1 validation. Solves E3, improves E2.
+`Witness.Key` now refines `Dependency.Key`. L1's `Dependency.Key.Value` relaxed to `~Copyable & Sendable`. Protocol diamond verified by experiment (8/8 CONFIRMED).
 
-Protocol diamond verified: experiment `protocol-diamond-noncopyable-refinement` (8 variants, ALL CONFIRMED — Swift 6.2.4). Default chain, `= Self` default, `~Copyable` values, `where K.Value: Copyable` subscript guard, and IS-A resolution all work correctly.
+**Phase 3: L1 Key Bridge** — **SUPERSEDED** by dictionary-key approach (committed 2026-03-04).
 
-Changes:
-1. `Dependency.Key` (L1) — Relax `associatedtype Value: Sendable` to `associatedtype Value: ~Copyable & Sendable` (`Dependency.Key.swift` line 55)
-2. `Dependency.Values` (L1) — Add `where K.Value: Copyable` to subscript (`Dependency.Values.swift` line 55)
-3. `Witness.Key` (L3) — Add `: Dependency.Key` to protocol declaration (`Witness.Key.swift` line 70)
-4. `Dependency.Key` typealias (L3) — Verify the typealias `Dependency.Key = Witness.Key` remains correct (it does — `Witness.Key` IS-A `Dependency.Key` now)
+Instead of the `_l1Apply` closure chain and conditional `Dependency.Scope.with` wrapping, the implementation stores `Witness.Context` in L1's existing `[ObjectIdentifier: any Sendable]` dictionary under an internal `_ContextKey: Dependency.Key` defined in L3. This:
+- Unifies the two @TaskLocal stacks into one (L3's `@TaskLocal` deleted)
+- Eliminates all bridging mechanisms (`_l1Apply`, conditional wrapping, double Result-wrapping)
+- Provides full L1-key fidelity via `_withScope`'s two-`inout` contract: `(inout Witness.Values, inout Dependency.Values) -> Void`
+- Achieves single push per scope (vs Option E's minimum 2 pushes)
 
-Files touched: 3 (Dependency.Key.swift, Dependency.Values.swift, Witness.Key.swift)
-Solves: E3 (name coherence — `Witness.Key` IS-A `Dependency.Key`, the typealias is no longer a shadow but a narrowing)
-Improves: E2 (Witness.Key types can now be stored in L1's store via their Dependency.Key conformance)
-
-**Phase 3: L1 Key Bridge** — Implement after Phase 2. Solves E2 fully.
-
-Changes:
-1. `Witness.Values` — Add L1-key subscript with read fallback to `Dependency.Scope.current` (`Witness.Values.swift`)
-2. `Witness.Context` — Add L1-key subscript (`Witness.Context.swift`)
-3. `__DependencyValues` — Add `__DependencyKey` subscript with write-through tracking (`Dependency.Values.swift` in swift-dependencies)
-4. `withDependencies` — Apply L1 modifications via `Dependency.Scope.with` wrapping (all 4 overloads in `withDependencies.swift`)
-
-Files touched: 4
-Solves: E2 (full cross-store visibility — L1-only keys resolvable through L3's API, L3-written L1 keys visible to L1/L2 code)
+See `task-local-stack-unification.md` v3.0 for full design analysis and collaborative discussion transcript.
 
 ### Cumulative Effect
 
-| After Phase | E1 Dual Push | E2 Visibility | E3 Naming |
-|-------------|:---:|:---:|:---:|
-| Phase 1 | Solved | — | — |
-| Phase 2 | Solved | Partial (L3→L1) | Solved |
-| Phase 3 | Solved | Full | Solved |
+| After Phase | E1 Dual Push | E2 Visibility | E3 Naming | Implementation |
+|-------------|:---:|:---:|:---:|:---|
+| Phase 1 | Solved | — | — | `Witness.Context.with(mode:)` → L1 `isTestContext` |
+| Phase 2 | Solved | Partial (L3→L1) | Solved | `Witness.Key: Dependency.Key` refinement |
+| Phase 3 | Solved | **Full** | Solved | Dictionary-key: `_ContextKey` + `_withScope` |
 
-### What This Changes at L1
+### What Changed at L1
 
 Phase 1: Nothing at L1.
 Phase 2: Two backwards-compatible changes:
-- `Dependency.Key.Value` constraint relaxed from `Sendable` to `~Copyable & Sendable` (relaxation, all existing conformances still valid)
-- `Dependency.Values` subscript gains `where K.Value: Copyable` (all existing call sites use Copyable values)
+- `Dependency.Key.Value` constraint relaxed from `Sendable` to `~Copyable & Sendable`
+- `Dependency.Values` subscript gains `where K.Value: Copyable`
 
-L1's `Dependency.Scope` API, storage format, and effect system integration are unchanged across all phases.
+Phase 3: **Nothing at L1.** The dictionary-key approach stores `Witness.Context` in L1's existing dictionary mechanism with zero L1 API changes.
 
-### What This Does NOT Change
+### What Did NOT Change
 
-- L1's `Dependency.Scope` store and API — unchanged
+- L1's `Dependency.Scope` API, storage format, and @TaskLocal — unchanged (now the single source of truth)
 - L1's `Dependency.Values` storage format (`[ObjectIdentifier: any Sendable]`) — unchanged
 - Effect system (`Effect.Context` → `Dependency.Scope`) — unchanged
-- All existing conformances — unchanged (relaxation is backwards compatible)
+- All existing conformances — unchanged
 - L3's `Witness.Values` storage format — unchanged (still pointer-backed CoW)
 
 ## Changelog
@@ -467,6 +450,7 @@ L1's `Dependency.Scope` API, storage format, and effect system integration are u
 | 1.0.0 | 2026-03-03 | Initial observation from ecosystem audit |
 | 2.0.0 | 2026-03-03 | Full investigation: dependency chain analysis, conformance census, 5 options analyzed, phased recommendation |
 | 2.1.0 | 2026-03-03 | Corrected Option D: `SuppressedAssociatedTypes` already enabled in L1, unblocking `~Copyable` relaxation. Option D is feasible and non-breaking. Revised recommendation to 3-phase approach (B + D + C). Protocol diamond verified by experiment (8/8 CONFIRMED). |
+| 3.0.0 | 2026-03-04 | **IMPLEMENTED.** All three phases complete. Phase 3 superseded by dictionary-key approach (store `Witness.Context` in L1's existing dictionary). Single @TaskLocal, zero L1 change. See `task-local-stack-unification.md` v3.0. |
 
 ## References
 
@@ -475,20 +459,19 @@ L1's `Dependency.Scope` API, storage format, and effect system integration are u
 - `protocol-witness-effects-capability-abstraction.md` — Witnesses for capability abstraction
 - `dependencies-ecosystem-adoption-audit.md` — L1 Dependency.Key adoption audit
 - `witnesses-ecosystem-adoption-audit.md` — L3 Witness.Key adoption audit
+- `task-local-stack-unification.md` v3.0 — Dictionary-key design analysis and implementation (supersedes Phase 3)
 
-### Source Files
-- `swift-dependency-primitives/Sources/Dependency Primitives/Dependency.Scope.swift` — L1 store (@TaskLocal, `Dependency.Values`)
-- `swift-dependency-primitives/Sources/Dependency Primitives/Dependency.Values.swift` — L1 storage (`[ObjectIdentifier: any Sendable]`, `isTestContext`)
-- `swift-dependency-primitives/Sources/Dependency Primitives/Dependency.Key.swift` — L1 key protocol
-- `swift-witness-primitives/Sources/Witness Primitives/Witness.Protocol.swift:13` — `public import Dependency_Primitives` (re-export)
-- `swift-witnesses/Sources/Witnesses/Witness.Context.swift` — L3 store (@TaskLocal, mode enum)
-- `swift-witnesses/Sources/Witnesses/Witness.Values.swift` — L3 storage (UnsafeRawPointer, CoW, ~Copyable)
-- `swift-witnesses/Sources/Witnesses/Witness.Key.swift` — L3 key protocol
-- `swift-dependencies/Sources/Dependencies/Dependency.Key.swift:48` — `Dependency.Key = Witness.Key` (typealias)
-- `swift-dependencies/Sources/Dependencies/withDependencies.swift` — L3 → Witness.Context delegation
-- `swift-tests/Sources/Tests Performance/Test.Runner.swift:430` — L1 scope push (`isTestContext = true`)
-- `swift-testing/Sources/Testing/Testing.Main.swift:134` — L3 scope push (`mode: .test`)
-- `swift-effect-primitives/Sources/Effect Primitives/Effect.Context.swift` — Effect.Context delegates to `Dependency.Scope`
+### Source Files (Post-Implementation)
+- `swift-dependency-primitives/.../Dependency.Scope.swift` — L1 @TaskLocal (single source of truth, unchanged)
+- `swift-dependency-primitives/.../Dependency.Values.swift` — L1 storage (unchanged, carries `Witness.Context` via existing dict)
+- `swift-dependency-primitives/.../Dependency.Key.swift` — L1 key protocol (`Value: ~Copyable & Sendable` after Phase 2)
+- `swift-witness-primitives/.../Witness.Protocol.swift:13` — `public import Dependency_Primitives` (re-export)
+- `swift-witnesses/.../Witness.Context.swift` — `_ContextKey`, `_withScope`, computed `_current` (no own @TaskLocal)
+- `swift-witnesses/.../Witness.Values.swift` — L3 storage (UnsafeRawPointer, CoW, ~Copyable), L1-key subscript
+- `swift-witnesses/.../Witness.Key.swift` — L3 protocol (`: Dependency.Key, __WitnessKeyTest` after Phase 2)
+- `swift-dependencies/.../Dependency.Key.swift:48` — `Dependency.Key = Witness.Key` (typealias, now semantically accurate)
+- `swift-dependencies/.../withDependencies.swift` — 4 overloads using `Witness.Context._withScope`
+- `swift-effect-primitives/.../Effect.Context.swift` — Effect.Context delegates to `Dependency.Scope` (unchanged)
 
 ### Experiments
 - `swift-institute/Experiments/protocol-diamond-noncopyable-refinement/` — **8/8 CONFIRMED** (Swift 6.2.4): protocol diamond with shared `~Copyable` associated type, `= Self` default, default chain resolution, IS-A subscript resolution

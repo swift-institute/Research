@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 2.0.0
+version: 3.0.0
 last_updated: 2026-03-04
-status: RECOMMENDATION
+status: IMPLEMENTED
 tier: 2
 ---
 -->
@@ -350,7 +350,7 @@ The prior art confirms this model: SwiftUI `@Environment`, pointfreeco/swift-dep
 
 #### Q2: Given the layer constraint (L1 can't import L3), is a single @TaskLocal even possible without existentials?
 
-**Answer: No. "Always push both" sidesteps the need.**
+**Answer: No — but the existential cost is negligible, and L1 already uses the same pattern.**
 
 For a single @TaskLocal at L1 to carry L3's context, L3's data must be type-erased into something L1 can store. The options:
 
@@ -361,13 +361,9 @@ For a single @TaskLocal at L1 to carry L3's context, L3's data must be type-eras
 | Callback/function pointer | No | Needs `nonisolated(unsafe)` | Fragile (init ordering) |
 | Generic @TaskLocal | N/A — `@TaskLocal` requires concrete type at declaration | — | — |
 
-Option C's `_layerContext: (any Sendable)?` uses the same existential pattern already present in L1's `[ObjectIdentifier: any Sendable]` dict. However, constraint C2 from the handoff explicitly prohibits new existentials and `as?` downcasts. Option C requires `as? Witness.Context` in the L3 read path — exactly the kind of downcast C2 prohibits.
+The v2.0.0 analysis concluded that Option C's existential downcast violated constraint C2 (no new existentials). A subsequent collaborative discussion re-evaluated this: **L1 is already entirely existential-based** (`[ObjectIdentifier: any Sendable]`). Every L1 key read already does an `as? K.Value` downcast. Adding one more key (`_ContextKey`) that stores `Witness.Context` in the same dictionary adds zero new existential categories. The constraint was misapplied.
 
-This creates a tension: Option C is theoretically cleaner (single @TaskLocal, single mental model) but violates C2. Constraint C3 acknowledges L1 already uses existentials but says "don't make it worse."
-
-**"Always push both" resolves this tension.** By keeping two @TaskLocals and pushing both from `withDependencies`, no new existentials are needed. L1-key writes go directly into a `Dependency.Values` struct on `__DependencyValues`. No type erasure, no downcasts.
-
-If the existential constraint were relaxed in the future (accepting that L1 is already existential-based), Option C would become viable and would provide a simpler single-stack model. But under current constraints, "always push both" is the correct choice.
+The **dictionary-key approach** (implemented) resolves this: store `Witness.Context` in L1's existing dictionary under an internal `_ContextKey: Dependency.Key` defined in L3. No new `_layerContext` field. No new existential pattern. Same mechanism L1 already uses for every key.
 
 #### Q3: Is "always push both stacks" semantically sound?
 
@@ -599,91 +595,124 @@ Two files. No L1 changes. No L3 changes (beyond what Phase 1/2 already did). `Wi
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: IMPLEMENTED (2026-03-04)
 
-### Revised Recommendation: Option E (Always Push Both Stacks)
+### Implemented: Dictionary-Key Approach (via Collaborative Discussion)
 
-Option E replaces the previous Option C recommendation. The deciding factor: **Option C requires `as? Witness.Context` existential downcasting, which violates constraint C2.** Option E achieves the same goals without introducing new existentials.
+Option E (Always Push Both) was implemented first but was then superseded by a better design discovered through a [collaborative Claude-ChatGPT discussion](/tmp/tasklocal-unification-transcript.md). The key insight from ChatGPT: **store `Witness.Context` in L1's existing `[ObjectIdentifier: any Sendable]` dictionary under an internal `Dependency.Key` conformance defined in L3** — no new `_layerContext` field on L1, no separate @TaskLocal.
 
-#### Why Option E over Option C
+The existential constraint (C2) that blocked Option C was misapplied: L1 is already entirely existential-based (`[ObjectIdentifier: any Sendable]`). Using L1's existing dictionary for one more key — `_ContextKey` — adds zero new existential categories. The `as? Witness.Context` downcast uses the same pattern L1 already uses for every key read (`as? K.Value`).
 
-Option C (L1 Opaque Slot) is theoretically cleaner — one @TaskLocal, one mental model. But it requires:
-1. Adding `_layerContext: (any Sendable)?` to L1's `Dependency.Values` — a new existential field (violates C2, worsens C3)
-2. Using `as? Witness.Context` in L3's read path — an existential downcast (violates C2)
-3. Changing L3's `Witness.Context._current` from own @TaskLocal to computed property — internal refactor of L3
+#### What Was Implemented
 
-Option E avoids all three. It keeps both @TaskLocals (which must exist anyway — see Q5), coordinates their pushes, and replaces the `_l1Apply` closure chain with a direct `_l1Values` struct. The change is confined to 2 files in `swift-dependencies`.
+**L3 (`swift-witnesses/Witness.Context.swift`)**:
 
-If the existential constraint is ever relaxed (accepting that L1 is already existential-based), Option C remains a viable evolution path.
+1. **Internal `_ContextKey: Dependency.Key`** — stores `Witness.Context` in L1's dictionary:
+   ```swift
+   internal enum _ContextKey: Dependency.Key {
+       static var liveValue: Witness.Context { .init(values: .init(), mode: .live) }
+       static var testValue: Witness.Context { liveValue }  // mode managed by _withScope
+   }
+   ```
 
-#### Benefits
+2. **Computed `_current`** — reads from L1's dictionary (deleted `@TaskLocal`):
+   ```swift
+   private static var _current: Witness.Context {
+       Dependency.Scope.current[_ContextKey.self]
+   }
+   ```
 
-1. **Eliminates `_l1Apply` closure chain**: The opaque, per-write-allocating, API-leaking closure accumulator is replaced with a plain `Dependency.Values` struct on `__DependencyValues`. Inspectable, composable, zero per-write allocation.
+3. **`_withScope` bridge** — single entry point routing through `Dependency.Scope.with`:
+   ```swift
+   public static func _withScope<T, E: Error>(
+       mode: Mode? = nil,
+       _ modify: (inout Witness.Values, inout Dependency.Values) -> Void,
+       operation: () throws(E) -> T
+   ) throws(E) -> T {
+       try Dependency.Scope.with({ l1Values in
+           var context = l1Values[_ContextKey.self]
+           if let mode { context.mode = mode; l1Values.isTestContext = (mode == .test) }
+           modify(&context.values, &l1Values)
+           l1Values[_ContextKey.self] = context
+       }, operation: operation)
+   }
+   ```
 
-2. **Eliminates conditional branching**: All 4 `withDependencies` overloads lose their `if let l1Apply { ... } else { ... }` branching. Every overload unconditionally pushes both stacks.
+4. **All 8 scoping methods** (`with`, `with(mode:)`, `withTest`, `withPreview` × sync/async) refactored to thin delegates to `_withScope`.
 
-3. **No L1 changes**: `Dependency.Values`, `Dependency.Scope`, `Dependency.Key`, `Effect.Context` — all unchanged. L1's read path, subscript, storage format — all unchanged.
+**L3 (`swift-dependencies/withDependencies.swift`)**:
 
-4. **No L3 changes**: `Witness.Context`, `Witness.Values`, `Witness.Key` — all unchanged (beyond Phase 1/2 work already committed). Both @TaskLocals remain where they are.
+All 4 overloads simplified to call `_withScope`. No double push, no `var l1Values` capture dance, no explicit closure type annotations:
 
-5. **2 files changed**: Only `__DependencyValues` (replace field + simplify subscript) and `withDependencies` (remove conditional, add unconditional L1 push).
+```swift
+public func withDependencies<T, E: Error>(
+    _ modify: (inout __DependencyValues) -> Void,
+    operation: () throws(E) -> T
+) throws(E) -> T {
+    try Witness.Context._withScope({ witnessValues, l1Values in
+        var depValues = __DependencyValues(_witnessValues: witnessValues, _l1Values: l1Values)
+        modify(&depValues)
+        witnessValues = depValues._witnessValues
+        l1Values = depValues._l1Values
+    }, operation: operation)
+}
+```
 
-6. **Correct semantics**: The extra L1 push when no L1 keys were written is not observable (verified in Q3). Nested scoping, mode propagation, L1-internal pushes, Effect.Context — all work correctly.
+#### Benefits over Option E
 
-#### Trade-offs vs Option C
-
-| Aspect | Option C (Opaque Slot) | **Option E (Always Push Both)** |
+| Aspect | Option E (Always Push Both) | **Dictionary-Key (Implemented)** |
 |--------|:---:|:---:|
-| @TaskLocal count | 1 | 2 |
-| Mental model | Single stack | Two coordinated stacks |
-| L3 read cost | +1 existential downcast (~5ns) | Unchanged |
-| L1 read cost | Unchanged | Unchanged |
-| New existentials | 1 field + 1 downcast | **None** |
-| Mode-change pushes | 1 | 2 (redundant, not observable) |
-| L1 code changes | 1 field addition | **None** |
-| L3 code changes | Refactor `_current` to computed property | **None** |
-| `swift-dependencies` changes | Simplify `withDependencies` | Replace `_l1Apply`, simplify `withDependencies` |
-| Risk | Medium (L3 internals change) | **Low** (2 files, API-layer only) |
+| @TaskLocal count | 2 | **1** |
+| Mental model | Two coordinated stacks | **Single stack** |
+| Pushes per scope | 1 L3 + 1 L1 (minimum 2) | **1 (always)** |
+| Mode-change pushes | 1 L3 + 2 L1 | **1** |
+| L1 code changes | None | **None** |
+| New existentials | None | None (reuses existing dict) |
+| Double Result-wrapping | Yes (L3 + L1 each wrap) | **No** (single wrap in L1) |
+| `var l1Values` capture | Required | **Eliminated** |
 
-#### What Changes vs Phase 3 Plan
+#### Benefits over Option C (original)
 
-| Aspect | Phase 3 (v2.1, `_l1Apply`) | **Option E** |
-|--------|:---|:---|
-| L1 `Dependency.Values` | Unchanged | **Unchanged** |
-| L3 `Witness.Context._current` | Own @TaskLocal (unchanged) | **Own @TaskLocal (unchanged)** |
-| L3 `Witness.Context.with` | Own push + sometimes L1 push | **Unchanged (Phase 1 committed)** |
-| `__DependencyValues` | `_l1Apply: (@Sendable ...)? = nil` | `_l1Values: Dependency.Values` |
-| `__DependencyValues` L1-key subscript | Writes to `_witnessValues` + accumulates closure | **Direct read/write on `_l1Values`** |
-| `withDependencies` (non-mode) | L3 push + conditional L1 push | L3 push + **unconditional L1 push** |
-| `withDependencies` (mode) | L3+L1 push + conditional L1 push | L3+L1 push + **unconditional L1 push** |
-| L1 read path | Unchanged | **Unchanged** |
-| L3 read path | Unchanged | **Unchanged** |
+The dictionary-key approach is a refinement of Option C that avoids its specific downsides:
+
+| Aspect | Option C (Opaque Slot) | **Dictionary-Key (Implemented)** |
+|--------|:---:|:---:|
+| L1 API change | New `_layerContext` field | **None** (uses existing dict) |
+| Single-slot limitation | Only one layer can attach | **No limit** (any key can be stored) |
+| Existential pattern | New category (`any Sendable` field) | **Same pattern** as existing keys |
+
+#### Comparison (Final)
+
+| Criterion | A: Closure | B: Value | C: Opaque Slot | D: Unified Dict | E: Always Push Both | **F: Dictionary-Key** |
+|-----------|:---:|:---:|:---:|:---:|:---:|:---:|
+| E1: Eliminates bridging | No | Partial | **Yes** | **Yes** | **Yes** | **Yes** |
+| E2: Single mental model | No | No | **Yes** | **Yes** | Partial | **Yes** |
+| E3: Layer compliance | Yes | Yes | **Yes** | **Yes** | **Yes** | **Yes** |
+| E4: Performance | Baseline | Baseline | Better | Better | Baseline | **Best** (1 push always) |
+| E5: Complexity (risk) | Medium | Medium | Medium | High | **Low** | **Low** |
+| E6: API stability | Yes | Yes | Yes (1 field) | No | **Yes** | **Yes** (zero L1 change) |
+| No new existentials | Yes | Yes | No | No | Yes | **Yes** (reuses existing) |
 
 ### Risks
 
-1. **Double L1 push for mode-changing `withDependencies`**: `Witness.Context.with(mode:)` pushes L1 (Phase 1 mode propagation), then `withDependencies` pushes L1 again. The second push supersedes the first. Cost: ~16 bytes per mode-changing scope. Not observable. Optimizable later with a `_withContextOnly` entry point on `Witness.Context` (see Q4).
+1. **`Witness.Context` size exceeding inline buffer**: Currently 3 words (fits Swift's existential inline buffer — no heap allocation). If `Witness.Context` grows beyond 3 words, introduce a Copyable stored wrapper. Currently not a concern.
 
-2. **Two stacks remain a conceptual complexity**: Unlike Option C's single-stack model, Option E requires understanding that `withDependencies` coordinates two independent @TaskLocal variables. However, this complexity is confined to the `swift-dependencies` package — users of `withDependencies` see a single API.
+2. **~5ns existential downcast per L3 read**: `_current` reads `_ContextKey` from L1's dictionary, which involves `as? Witness.Context`. This is a type metadata pointer comparison — negligible in dependency resolution context.
 
-3. **L1-key values stored in two places**: When written through `withDependencies`, L1-key values end up in `_l1Values` (pushed into L1's @TaskLocal) but NOT in L3's `Witness.Values` storage. However, `Witness.Values`'s L1-key subscript getter falls back to `Dependency.Scope.current`, which reads the pushed L1 frame. So L3 code reading L1 keys through `Witness.Context` still sees the overrides. This is correct but relies on the fallback path.
+### Implementation History
 
-### Next Steps
-
-1. Review this analysis — does the "always push both" approach align with the architectural direction?
-2. If accepted, implement Option E as a replacement for Phase 3's `_l1Apply` approach
-3. Implementation order:
-   a. `__DependencyValues`: replace `_l1Apply` with `_l1Values`, simplify L1-key subscript
-   b. `withDependencies`: remove conditional branching, add unconditional `Dependency.Scope.with` push
-   c. Remove any test fixtures that reference `_l1Apply`
-4. Phase 2 (Protocol Refinement: `Witness.Key: Dependency.Key`) remains independent and can proceed on its own schedule
+1. Option E (Always Push Both) was implemented first based on the v2.0.0 recommendation
+2. A [collaborative Claude-ChatGPT discussion](/tmp/tasklocal-unification-transcript.md) (3 rounds) identified the dictionary-key approach as strictly superior
+3. Dictionary-key approach implemented, replacing Option E entirely
+4. Committed: `swift-witnesses` `07d5e0a`, `swift-dependencies` `b8dc901`
 
 ### Relationship to Parent Research Phases
 
-| Phase | Status | Option E Impact |
-|:------|:-------|:----------------|
-| Phase 1: Mode Propagation | **Committed** | Unchanged. `Witness.Context.with(mode:)` continues to push L1 for `isTestContext`. |
-| Phase 2: Protocol Refinement | Planned | **Independent.** `Witness.Key: Dependency.Key` is orthogonal to the stack question. |
-| Phase 3: L1 Key Bridge | **Replaced by Option E.** | `_l1Apply` closure chain → `_l1Values` struct. Conditional wrapping → unconditional push. |
+| Phase | Status | Impact |
+|:------|:-------|:-------|
+| Phase 1: Mode Propagation | **Done** | Subsumed — `_withScope` handles mode + `isTestContext` in a single push. |
+| Phase 2: Protocol Refinement | **Done** | Independent. `Witness.Key: Dependency.Key` is orthogonal to the stack question. |
+| Phase 3: L1 Key Bridge | **Superseded** | `_l1Apply` closure chain and conditional wrapping eliminated entirely. `_withScope`'s two-`inout` contract provides full L1-key fidelity. |
 
 ## Changelog
 
@@ -691,22 +720,27 @@ If the existential constraint is ever relaxed (accepting that L1 is already exis
 |---------|------|--------|
 | 1.0.0 | 2026-03-04 | Initial analysis: Options A-D, recommended Option C (L1 Opaque Slot) |
 | 2.0.0 | 2026-03-04 | Design Questions analysis (Q1-Q5). Added Option E (Always Push Both). Revised recommendation from Option C to Option E — Option C violates no-existentials constraint; Option E achieves same goals without new existentials. |
+| 3.0.0 | 2026-03-04 | **IMPLEMENTED.** Collaborative Claude-ChatGPT discussion (3 rounds) discovered dictionary-key approach: store `Witness.Context` in L1's existing dictionary under `_ContextKey: Dependency.Key`. Supersedes both Option C and Option E. Single @TaskLocal, zero L1 change, single push per scope. Committed to swift-witnesses + swift-dependencies. |
 
 ## References
 
 ### Parent Research
-- `dependency-witness-store-coherence.md` v2.1 — Phased approach (B + D + C), Phase 3 now replaced by Option E
+- `dependency-witness-store-coherence.md` v3.0 — Phased approach (B + D + C), all phases complete/superseded
 
-### Source Files
-- `swift-dependency-primitives/.../Dependency.Scope.swift` — L1 @TaskLocal (`_current` is private, `with` methods are public)
-- `swift-dependency-primitives/.../Dependency.Values.swift` — L1 storage (`[ObjectIdentifier: any Sendable]`, `isTestContext`)
+### Collaborative Discussion
+- `/tmp/tasklocal-unification-transcript.md` — Full 3-round Claude-ChatGPT transcript
+- `/tmp/tasklocal-unification-converged.md` — Converged action plan
+
+### Source Files (Post-Implementation)
+- `swift-dependency-primitives/.../Dependency.Scope.swift` — L1 @TaskLocal (unchanged — single source of truth)
+- `swift-dependency-primitives/.../Dependency.Values.swift` — L1 storage (unchanged — carries `Witness.Context` via existing dict)
 - `swift-dependency-primitives/.../Dependency.Key.swift` — L1 protocol (`Value: ~Copyable & Sendable`)
-- `swift-witnesses/.../Witness.Context.swift` — L3 @TaskLocal, mode propagation (Phase 1), `with(mode:)` pushes both stacks
-- `swift-witnesses/.../Witness.Values.swift` — L3 storage (UnsafeRawPointer, CoW, ~Copyable), L1-key subscript (Phase 2)
+- `swift-witnesses/.../Witness.Context.swift` — `_ContextKey`, `_withScope`, computed `_current` (no own @TaskLocal)
+- `swift-witnesses/.../Witness.Values.swift` — L3 storage (UnsafeRawPointer, CoW, ~Copyable), L1-key subscript
 - `swift-witnesses/.../Witness.Key.swift` — L3 protocol (`: Dependency.Key, __WitnessKeyTest`)
-- `swift-effect-primitives/.../Effect.Context.swift` — Pure delegation to `Dependency.Scope` (unaffected by all options)
-- `swift-dependencies/.../withDependencies.swift` — 4 overloads, currently with `_l1Apply` bridging (to be replaced)
-- `swift-dependencies/.../Dependency.Values.swift` — `__DependencyValues` with `_l1Apply` field (to be replaced)
+- `swift-effect-primitives/.../Effect.Context.swift` — Pure delegation to `Dependency.Scope` (unaffected)
+- `swift-dependencies/.../withDependencies.swift` — 4 overloads, all using `Witness.Context._withScope`
+- `swift-dependencies/.../Dependency.Values.swift` — `__DependencyValues` with `_witnessValues` + `_l1Values`
 
 ### Theoretical
 - Wadler, P. & Blott, S. (1989). "How to make ad-hoc polymorphism less ad hoc." — Dictionary-passing style (Reader effect basis)
