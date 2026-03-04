@@ -171,9 +171,28 @@ Our MediaType parser instead uses 30 lines of imperative code with manual `do/ca
 4. Add default `body` when `Body == Never` (fatal error, for leaf parsers)
 5. Typed throws complication: the body's `Failure` type becomes `Parser.Error.Either<...>` (nested binary tree), not a clean domain error enum. This is the key tension — PointFree uses untyped `throws`, we use typed throws.
 
-**Assessment**: The typed throws tension (point 5) is the real blocker. With untyped `throws`, error composition is invisible. With typed throws, `Parser.Take.Sequence { Token(); Literal([0x2F]); Token() }` produces `Failure = Either<Token.Error, Either<Either<EndOfInput.Error, Match.Error>, Token.Error>>` — a type that cannot be caught with `catch .expectedType`. Domain parsers need clean error enums, not structural error trees.
+**Experiment Results** (`swift-institute/Experiments/declarative-parser-typed-throws/`):
 
-This is a **design question that warrants its own research document** — it's not just ergonomics, it's a fundamental tension between typed throws and declarative composition.
+The builder infrastructure was validated with 10 test variants:
+
+| Variant | Description | Result |
+|---------|-------------|--------|
+| V1 | Imperative (baseline) | CONFIRMED — clean domain errors |
+| V2 | 2 parsers: Void + Value | CONFIRMED — Skip.First, auto Void-skipping |
+| V3 | 2 parsers: Value + Value | CONFIRMED — Take.Two tuple |
+| V4 | 3 parsers: Void + Value + Void | CONFIRMED — both Voids skipped |
+| V5 | 4 parsers: media-type skeleton | CONFIRMED — after `@_disfavoredOverload` fix |
+| V6 | 5 parsers: full media-type | CONFIRMED — 3-element tuple output |
+| V7 | Error type inspection | CONFIRMED — errors are `Either` trees, not domain enums |
+| V8 | `var body` pattern | REFUTED — typed throws creates circular type inference |
+| V9 | Builder-inside-imperative | CONFIRMED — works, but error mapping is stringly-typed |
+| V10 | Imperative/hybrid parity | CONFIRMED — identical results |
+
+**Infrastructure fix discovered**: `Parser.Take.Builder.buildPartialBlock(accumulated:next:)` had an overload ambiguity between the general `Take.Two` case and the tuple-flattening `Take.Two.Map` case. A single value `Input` can match `(repeat each O1)` with a 1-element pack, making both overloads equally viable. Fixed by adding `@_disfavoredOverload` to the general overload (same pattern PointFree uses).
+
+**Assessment**: The `var body` pattern is **incompatible with typed throws** as currently designed. The fundamental issue: `Body.Failure` is an opaque `Parser.Error.Either<...>` tree inferred from the builder closure. The conforming type cannot write `typealias Failure = Body.Failure` because `Body` is opaque. PointFree avoids this by using untyped `throws` — no `Failure` associated type. Our `Parser.Protocol` requires `associatedtype Failure: Swift.Error & Sendable`.
+
+The "hybrid" approach (V9) — using the builder internally within an imperative `func parse` — works but provides no ergonomic advantage: the `do { try inner.parse(&input) } catch { ... }` block catches `any Error` (typed information lost), forcing stringly-typed error mapping. This is worse than the imperative approach, which catches specific typed errors directly.
 
 #### F-7. No Dead Underscore Helpers Removed (LOW)
 
@@ -270,15 +289,22 @@ Track deletion readiness:
 | `_trimOWS` | 8 domain types |
 | `_quality` | 3 ContentNegotiation preferences |
 
-### R-5. Investigate Declarative `var body` for Parser.Protocol
+### R-5. Declarative `var body` — Blocked by Typed Throws
 
-The builder infrastructure is mature and unused at the protocol level. A separate research document should investigate adding `var body` to `Parser.Protocol`, specifically addressing:
+**Status**: Experimentally validated as BLOCKED.
 
-1. **Typed throws vs declarative composition** — Can `Parser.Error.Either<...>` trees be made ergonomic? Should domain parsers use a `.mapError` combinator? Or should the builder produce `any Error` internally and let the `parse()` default implementation catch-and-rethrow?
-2. **Hybrid model** — Could parsers provide EITHER `var body` (declarative) OR `func parse` (imperative), like PointFree's `Body == Never` pattern? This would let grammar-level parsers (Token, OWS) stay imperative while domain-level parsers (MediaType, Authentication) go declarative.
-3. **Literal byte matching** — `Parser.Literal` exists but requires `Parser.Streaming` input (has `advance()` method). Grammar-level parsers use `Collection.Slice.Protocol` (subscript + index). Can `Literal` work with `Collection.Slice.Protocol` inputs, or does it need a parallel implementation?
+The experiment (`swift-institute/Experiments/declarative-parser-typed-throws/`) confirmed that the `var body` pattern is incompatible with typed throws:
 
-**Priority**: Before migrating the remaining 10 domain types. If declarative composition is viable, those migrations should use it from the start rather than writing imperative `func parse` that gets rewritten later.
+- The builder produces `Parser.Error.Either<...>` trees as the `Failure` type
+- Conforming types cannot write `typealias Failure = Body.Failure` because `Body` is opaque
+- The "hybrid" approach (builder inside imperative `func parse`) provides no ergonomic advantage — error type information is lost at the `do/catch` boundary
+
+**Unblocked by experiment**: The builder infrastructure itself works perfectly. `Parser.Take.Sequence { }` correctly composes 2-5+ parsers with automatic Void-skipping and tuple flattening (after the `@_disfavoredOverload` fix). The blocker is exclusively the typed throws ↔ `var body` interaction.
+
+**Possible future resolution paths** (not actionable now):
+1. Swift language evolution: if typed throws supports `throws(Body.Failure)` in default implementations with opaque body types
+2. Error accessor pattern: `Parser.Error.Either` could provide `.first`, `.second`, `.third` typed accessors for positional error extraction
+3. Accept untyped throws for the `var body` path only, typed throws for imperative `func parse`
 
 ### R-6. Swift.Collection Constraint Guidance
 
@@ -291,30 +317,22 @@ This is a natural layering: grammar parsers work in bytes, domain parsers bridge
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: DECISION
 
-The parser bridge architecture is sound. The MediaType exemplar validates the imperative pattern. Ergonomics are acceptable for the imperative path — the main friction is boilerplate (`Parser_Primitives.Parser.ByteInput` qualification, `String(decoding:as:)` conversion), not design flaws.
+The parser bridge architecture is sound. The imperative pattern (MediaType exemplar) is the correct path forward.
 
-However, the most significant finding is **F-6**: mature result builder infrastructure (`Parser.Take.Builder`, `Parser.OneOf.Builder`, Void-skipping, tuple flattening, repetition, backtracking) exists but is not wired into `Parser.Protocol`. The PointFree `var body` pattern — which inspired our parser primitives — demonstrates that declarative composition dramatically reduces domain parser boilerplate. The key tension is typed throws: our `Parser.Error.Either<...>` trees are structurally sound but ergonomically hostile to domain error enums.
+**Key experiment finding**: The declarative `var body` pattern is incompatible with typed throws (`Parser.Protocol.Failure`). The PointFree pattern works because their `Parser` uses untyped `throws`. Our typed throws are non-negotiable ([API-ERR-001]). The builder infrastructure works perfectly for composition, but cannot replace `func parse` at the protocol level. This is a language-level constraint, not a design flaw.
 
-The migration path depends on resolving this tension:
+**Infrastructure fix applied**: `@_disfavoredOverload` added to `Parser.Take.Builder.buildPartialBlock(accumulated:next:)` general overload. Without this, 3+ value-producing parsers in a builder cause ambiguity between `Take.Two` and the tuple-flattening `Take.Two.Map` overload (single values match parameter pack of 1). This fix unblocks internal use of builders within imperative parsers.
 
-**Path A — Imperative (current)**:
+**Migration path** (imperative, validated):
 1. Delete `_quotedString` (zero call sites)
 2. Migrate simple domain types (ContentEncoding, ContentLanguage) to validate the pattern scales
 3. Add `TokenOrQuotedString` combinator
 4. Migrate complex domain types (Authentication, ContentNegotiation)
 5. Delete remaining underscore helpers
 
-**Path B — Declarative (requires R-5 research)**:
-1. Resolve typed throws vs `var body` composition (new research document)
-2. Add `var body` to `Parser.Protocol` with `Body == Never` escape hatch
-3. Migrate domain types using declarative builders
-4. Delete underscore helpers
-
-**Recommendation**: Investigate Path B (R-5) before committing to mass migration. The infrastructure investment has already been made — the builders exist. If the typed throws tension can be resolved, the remaining 10 domain type migrations will be significantly more ergonomic.
-
-The `Swift.Collection` conformance on `Input.Slice` was a principled infrastructure addition that unblocks all future domain parsers regardless of which path is chosen.
+The `Swift.Collection` conformance on `Input.Slice` was a principled infrastructure addition that unblocks all future domain parsers.
 
 ## References
 
@@ -330,3 +348,4 @@ The `Swift.Collection` conformance on `Input.Slice` was a principled infrastruct
 - `swift-input-primitives/Sources/Input Primitives/Input.Slice+Collection.Slice.Protocol.swift` — Swift.Collection bridge
 - `pointfreeco/swift-parsing/Sources/Parsing/Parser.swift` — Prior art: `var body` protocol pattern with `@ParserBuilder`
 - `pointfreeco/swift-parsing/Sources/Parsing/Builders/ParserBuilder.swift` — Prior art: result builder with Void-skipping
+- `swift-institute/Experiments/declarative-parser-typed-throws/` — Experiment: 10 variants testing builder composition + typed throws
