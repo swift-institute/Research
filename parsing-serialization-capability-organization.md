@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.2.0
+version: 1.3.0
 last_updated: 2026-03-04
 status: RECOMMENDATION
 tier: 2
@@ -680,11 +680,14 @@ should default to leaf parsers and escalate to Machine IR only when constrained.
 | ~~`.Parse` vs `.Parser` convention unification~~ | RESOLVED: `.Parser` decided (transformation-domain-architecture v3.0.0) | Migration task |
 | ~~`Parser.Serializer` adoption in standards~~ | RESOLVED: Now `Serializer.Protocol` in own package with Builder | transformation-domain-architecture v3.2.0 |
 | ~~Protocol-to-witness bridge module~~ | RESOLVED: Bridge pattern documented in transformation-domain-architecture Part 6 | Engineering task |
-| `Binary.ASCII.Serializable` migration | Separate ecosystem-wide research | ascii-serialization-migration.md TODO |
+| ~~`Binary.ASCII.Serializable` migration~~ | RESOLVED: Full migration plan | [ascii-serialization-migration.md](ascii-serialization-migration.md) (DECISION) |
 | ~~`Binary.Coder` generalization~~ | RESOLVED: `Coder.Protocol` in `swift-coder-primitives` (new package) | transformation-domain-architecture v3.2.0 |
 
 ## Changelog
 
+- **v1.3.0** (2026-03-04): Binary.ASCII.Serializable migration open item resolved —
+  full migration plan in ascii-serialization-migration.md (DECISION). All open items
+  now resolved or tracked. Status remains RECOMMENDATION.
 - **v1.2.0** (2026-03-04): Updated for transformation-domain-architecture v3.2.0
   (DECISION) and canonical-witness-capability-attachment v1.2.0 (DECISION). Tension 2
   partially resolved (Serializer.Protocol now in own package). Tension 4 fully resolved
