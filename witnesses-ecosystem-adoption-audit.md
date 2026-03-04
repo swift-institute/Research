@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 2.0.0
-last_updated: 2026-03-03
-status: IN PROGRESS
+version: 3.0.0
+last_updated: 2026-03-04
+status: COMPLETE
 tier: 1
 ---
 -->
@@ -208,7 +208,7 @@ The following patterns were investigated but are NOT candidates:
 
 ## Outcome
 
-**Status**: IN PROGRESS — Macro improvements complete, ecosystem adoption in progress.
+**Status**: COMPLETE — Macro improvements and ecosystem adoption done.
 
 ### Part 1: Macro Improvements — COMPLETE (2026-03-03)
 
@@ -219,46 +219,49 @@ All five macro improvements implemented and verified (100 tests pass):
 - 1d: Skip init when struct already has one
 - 1e: Non-closure stored properties in init/unimplemented/mock/observe
 
-### Part 2: Ecosystem Adoption — IN PROGRESS
+### Prerequisite: Remove Sendable from Witness.Protocol — COMPLETE (2026-03-04)
+
+`Witness.Protocol` changed from `: Sendable` to a pure marker protocol. See `witness-protocol-sendable-requirement.md` for rationale. Zero breakage for existing conformances.
+
+### Part 2: Ecosystem Adoption — COMPLETE (2026-03-04)
 
 #### Phase A: Simple `Witness.Protocol` Conformances (Primitives)
 
-Each requires: (1) `Package.swift` dependency on `swift-witness-primitives`, (2) `import Witness_Primitives`, (3) `extension Type: Witness.Protocol {}`.
+Each requires: (1) `Package.swift` dependency on `swift-witness-primitives`, (2) `public import Witness_Primitives`, (3) conformance on struct declaration.
 
 | Package | Type | Dep needed | Status |
 |---|---|---|---|
-| swift-optic-primitives | `Optic.Lens`, `Optic.Prism` | Yes (no deps currently) | PENDING |
-| swift-clock-primitives | `Clock.Any` | Yes | PENDING |
-| swift-predicate-primitives | `Predicate` | Yes | PENDING |
-| swift-binary-parser-primitives | `Binary.Coder` | Yes (to `Binary Coder Primitives` target) | PENDING |
-| swift-test-primitives | `Test.Snapshot.Strategy`, `Test.Snapshot.Diffing` | Yes (to `Test Snapshot Primitives` target) | PENDING |
-| swift-parser-machine-primitives | `Parser.Machine.Compile.Witness` | BLOCKED: not `Sendable` | DEFERRED |
-
-**Note on `Parser.Machine.Compile.Witness`**: This type and its `_compile` closure are not
-`@Sendable`. Adding `Sendable` + `@Sendable` is a prerequisite but may break downstream.
-Deferred pending Sendable audit.
+| swift-optic-primitives | `Optic.Lens`, `Optic.Prism` | Yes | DONE |
+| swift-clock-primitives | `Clock.Any` | Yes | DONE |
+| swift-predicate-primitives | `Predicate` | Yes | DONE |
+| swift-binary-parser-primitives | `Binary.Coder` | Yes (to `Binary Coder Primitives` target) | DONE |
+| swift-test-primitives | `Test.Snapshot.Strategy`, `Test.Snapshot.Diffing` | Yes (to `Test Snapshot Primitives` target) | DONE |
+| swift-parser-machine-primitives | `Parser.Machine.Compile.Witness` | No (unblocked by Sendable removal) | DEFERRED (pending Sendable audit) |
 
 #### Phase B: Simple `Witness.Protocol` Conformances (Standards/Foundations)
 
 | Package | Type | Dep needed | Status |
 |---|---|---|---|
-| swift-iso-32000 | `ISO_32000.StreamCompression` | Yes | PENDING |
-| swift-tests | `Test.Trait.ScopeProvider` | No (already has `swift-witnesses`) | PENDING |
-| swift-effects | `Effect.Yield.Handler`, `Effect.Exit.Handler` | Yes (has `Dependency Primitives`, needs `Witness Primitives`) | PENDING |
+| swift-iso-32000 | `ISO_32000.StreamCompression` | Yes (to `ISO 32000` target) | DONE |
+| swift-tests | `Test.Trait.ScopeProvider` | No (already has `swift-witnesses`) | DONE |
+| swift-effects | `Effect.Yield.Handler`, `Effect.Exit.Handler` | Yes (to `Effects Built-in` target) | DONE |
 
-#### Phase C: `@Witness` Macro Adoption (IO Drivers)
+#### Phase C: IO Driver `Witness.Protocol` + `Witness.Key` Registration
 
 | Package | Type | Change | Status |
 |---|---|---|---|
-| swift-io | `IO.Event.Driver` | `@Witness` macro, remove manual forwarding | PENDING |
-| swift-io | `IO.Completion.Driver` | `@Witness` macro, remove manual forwarding | PENDING |
+| swift-io | `IO.Event.Driver` | `Witness.Protocol` conformance + `Witness.Key` with `.kqueue()`/`.epoll()` liveValue | DONE |
+| swift-io | `IO.Completion.Driver` | `Witness.Protocol` conformance + `Witness.Key` with `IOUring.driver()`/`IOCP.driver()` liveValue | DONE |
+
+IO drivers use manual `Witness.Key` conformance (not `@Witness` macro) because the closure properties use `borrowing`/`consuming` parameter conventions and `~Copyable` handles. `@Witness` macro adoption for method forwarding is a separate future task.
 
 ### Deferred
 
 | Item | Reason |
 |---|---|
 | `@Witness` macro for algebra types | LOW priority — `@frozen`, performance-critical, no labels |
-| `Parser.Machine.Compile.Witness` | Not `Sendable`; requires Sendable audit first |
+| `Parser.Machine.Compile.Witness` | Not `Sendable`; Sendable removal unblocks conformance but Sendable audit still needed |
+| `@Witness` macro for IO drivers | Method forwarding already exists manually; macro adoption is incremental improvement |
 
 ### Macro Improvements Completed (2026-03-03)
 
