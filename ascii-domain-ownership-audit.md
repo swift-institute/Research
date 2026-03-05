@@ -189,29 +189,31 @@ Both are empty enum namespaces reserving the space for future convenience factor
 
 ## 6. Action Items
 
-### Immediate (blocks build)
+### Immediate (blocks build) — DONE
 
-| # | Action | Package | Files |
-|---|--------|---------|-------|
-| A1 | Remove dead `import Parser_ASCII_Integer_Primitives` | swift-rfc-9110 | `HTTP.Parse.swift:9` |
-| A2 | Remove dead `import Parser_ASCII_Integer_Primitives` | swift-rfc-3986 | `RFC_3986.Parse.swift:9` |
-| A3 | Remove dead `import Parser_ASCII_Integer_Primitives` | swift-iso-8601 | `ISO_8601.Parse.swift:9` |
-| A4 | Remove stale Package.swift dependency on `Parser ASCII Integer Primitives` | swift-rfc-9110 | `Package.swift:33` |
-| A5 | Remove stale Package.swift dependency on `Parser ASCII Integer Primitives` | swift-rfc-3986 | `Package.swift:32` |
-| A6 | Remove stale Package.swift dependency on `Parser ASCII Integer Primitives` | swift-iso-8601 | `Package.swift:48` |
+All fixed in commits `571ad49` (rfc-9110), `6779be6` (rfc-3986), `2e48ab8` (iso-8601), parent `7b2b33e` (swift-standards).
+
+| # | Action | Package | Status |
+|---|--------|---------|--------|
+| A1 | Remove dead `import Parser_ASCII_Integer_Primitives` | swift-rfc-9110 | DONE |
+| A2 | Remove dead `import Parser_ASCII_Integer_Primitives` | swift-rfc-3986 | DONE |
+| A3 | Remove dead `import Parser_ASCII_Integer_Primitives` | swift-iso-8601 | DONE |
+| A4 | Remove stale Package.swift dependency on `Parser ASCII Integer Primitives` | swift-rfc-9110 | DONE |
+| A5 | Remove stale Package.swift dependency on `Parser ASCII Integer Primitives` | swift-rfc-3986 | DONE |
+| A6 | Remove stale Package.swift dependency on `Parser ASCII Integer Primitives` | swift-iso-8601 | DONE |
 
 ### Soon (documentation accuracy)
 
-| # | Action | Document |
-|---|--------|----------|
-| B1 | Update all `Parser.Serializer` references to `Serializer.Protocol` | `parsing-serialization-capability-organization.md` |
-| B2 | Correct "four protocols" to "three protocols" + separate serializer | `ascii-parsing-domain-ownership.md` |
-| B3 | Update Package Structure with correct target names and add `Parseable Integer Primitives` | `ascii-parsing-domain-ownership.md` |
-| B4 | Remove `Parser.Serializer.swift` from file listing | `transformation-domain-architecture.md` |
-| B5 | Mark Next Steps 1-5 as DONE | `transformation-domain-architecture.md` |
-| B6 | Update target count to 36 | `transformation-domain-architecture.md` |
-| B7 | Fix package name `serialization-primitives` → `serializer-primitives` | `parsing-serialization-capability-organization.md` |
-| B8 | Update comment: `Parser.ASCII.Integer.Decimal` → `ASCII.Decimal.Parser` | `ISO_8601.Parse.Digits.swift:13` |
+| # | Action | Document | Status |
+|---|--------|----------|--------|
+| B1 | Update all `Parser.Serializer` references to `Serializer.Protocol` | `parsing-serialization-capability-organization.md` | OPEN |
+| B2 | Correct "four protocols" to "three protocols" + separate serializer | `ascii-parsing-domain-ownership.md` | OPEN |
+| B3 | Update Package Structure with correct target names and add `Parseable Integer Primitives` | `ascii-parsing-domain-ownership.md` | OPEN |
+| B4 | Remove `Parser.Serializer.swift` from file listing | `transformation-domain-architecture.md` | OPEN |
+| B5 | Mark Next Steps 1-5 as DONE | `transformation-domain-architecture.md` | OPEN |
+| B6 | Update target count to 36 | `transformation-domain-architecture.md` | OPEN |
+| B7 | Fix package name `serialization-primitives` → `serializer-primitives` | `parsing-serialization-capability-organization.md` | OPEN |
+| B8 | Update comment: `Parser.ASCII.Integer.Decimal` → `ASCII.Decimal.Parser` | `ISO_8601.Parse.Digits.swift:13` | DONE |
 
 ### Deferred
 
@@ -234,6 +236,9 @@ swift test   — swift-ascii-serializer-primitives   9/9 PASS
 swift build  — swift-parser-primitives             PASS
 swift build  — swift-serializer-primitives         PASS
 grep stale references — swift-primitives/          CLEAN
-grep stale references — swift-standards/           4 files found
+grep stale references — swift-standards/           4 files found → FIXED
 grep stale references — swift-foundations/         CLEAN
+swift build  — swift-rfc-9110 (after fix)          PASS
+swift build  — swift-rfc-3986 (after fix)          PASS
+swift build  — swift-iso-8601 (after fix)          PASS
 ```
