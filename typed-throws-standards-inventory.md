@@ -586,82 +586,127 @@ Note: Line 597 (`Request.Target.init(from:)`) calls `try RFC_3986.URI(uriString)
 
 ### Codable Protocol (`Decodable` / `Encodable`) -- 122 instances
 
-**Why blocked**: The Swift standard library defines the `Decodable` and `Encodable` protocols with untyped `throws`:
+**Initial assumption**: Protocol conformances CANNOT narrow `throws` to `throws(E)`.
+
+**Empirical finding** (experiment: `swift-standards/Experiments/typed-throws-protocol-conformance/`):
+Swift 6.2.4 DOES support throws covariance on protocol conformances. The subtyping chain is:
+```
+nonthrowing < throws(E) < throws
+```
+A conformer CAN declare `throws(DecodingError)` when the protocol requires `throws`. The conformance signature compiles.
+
+**Actual blocker**: The DOWNSTREAM APIs — not the conformance mechanism:
 
 ```swift
-// Swift stdlib definition
-public protocol Decodable {
-    init(from decoder: any Decoder) throws  // No typed throws
-}
+// Encoder/Decoder container protocol methods ALL use untyped throws:
+func singleValueContainer() throws -> any SingleValueDecodingContainer  // untyped
+func decode(_ type: Int.Type, forKey key: Key) throws -> Int            // untyped
+func encode(_ value: Int, forKey key: Key) throws                       // untyped
+```
 
-public protocol Encodable {
-    func encode(to encoder: any Encoder) throws  // No typed throws
+When a conformer declares `throws(DecodingError)`, calling `try container.decode(...)` produces `any Error` which cannot be caught as `DecodingError`:
+```
+error: thrown expression type 'any Error' cannot be converted to error type 'DecodingError'
+```
+
+**Workaround exists** — do/catch wrapping:
+```swift
+init(from decoder: any Decoder) throws(DecodingError) {
+    do {
+        let container = try decoder.singleValueContainer()
+        self.value = try container.decode(Int.self)
+    } catch let error as DecodingError {
+        throw error
+    } catch {
+        preconditionFailure("Decoder contract violation: \(type(of: error))")
+    }
 }
 ```
 
-Conforming types MUST match the protocol signature. Using `throws(DecodingError)` or `throws(EncodingError)` would not satisfy the protocol requirement.
+**Tradeoff analysis**:
 
-**What would unblock**: A Swift Evolution proposal to add typed throws to `Codable` protocols, e.g.:
-```swift
-public protocol Decodable {
-    init(from decoder: any Decoder) throws(DecodingError)
-}
-```
+| Factor | Assessment |
+|--------|------------|
+| Concrete callers benefit | YES — `try MyType(from: decoder)` sees `throws(DecodingError)` |
+| Generic callers benefit | NO — `try T(from: decoder)` goes through protocol witness, sees untyped `throws` |
+| Boilerplate cost | HIGH — 122 conformances × do/catch wrapping |
+| Soundness | QUESTIONABLE — custom Encoder/Decoder impls may throw non-standard errors |
+| Practical value | LOW — most Codable usage goes through JSONDecoder which calls via protocol existential |
 
-**Likelihood**: Low-medium. This would be a source-breaking change unless done with careful migration. SE-0413 (typed throws) was accepted but the stdlib has not been updated to use it for Codable.
+**Verdict**: Conversion is POSSIBLE but NOT RECOMMENDED for Codable. The benefit-to-cost ratio is unfavorable.
 
 ### Clock Protocol (`_Concurrency.Clock`) -- 2 instances
 
-**Why blocked**: The `Clock` protocol in `_Concurrency` defines:
-
+**Actual blocker**: Same mechanism — `Task.checkCancellation()` and `Task.sleep(nanoseconds:)` use untyped throws:
 ```swift
-public protocol Clock {
-    func sleep(until deadline: Instant, tolerance: Duration?) async throws
+// TaskCancellation.swift:270
+public static func checkCancellation() throws {     // untyped
+    if Task<Never, Never>.isCancelled {
+        throw _Concurrency.CancellationError()
+    }
 }
 ```
 
-**What would unblock**: A Swift Evolution proposal to add typed throws to `Clock.sleep`, e.g., `async throws(CancellationError)`.
+**Workaround exists** and is MORE defensible than Codable:
+```swift
+func sleep(until deadline: Instant, tolerance: Duration?) async throws(CancellationError) {
+    do {
+        try await Task.sleep(for: deadline.offset)
+    } catch is CancellationError {
+        throw CancellationError()
+    } catch {
+        preconditionFailure("Task.sleep contract violation: \(type(of: error))")
+    }
+}
+```
 
-**Likelihood**: Medium. `CancellationError` is the only error type thrown by the standard implementation, so this is a natural fit.
+The catch-all is sound here: `Task.sleep` and `Task.checkCancellation` genuinely only throw `CancellationError` per stdlib source. No third-party variation exists.
+
+**Verdict**: Conversion is POSSIBLE and DEFENSIBLE for Clock (2 instances, sound catch-all).
+
+### What would fix this properly
+
+Both blockers would be resolved by additive, non-breaking stdlib changes:
+- Typed throws on `Encoder`/`Decoder` container protocols → `throws(EncodingError)` / `throws(DecodingError)`
+- Typed throws on `Task.checkCancellation()` → `throws(CancellationError)`
+- Typed throws on `Task.sleep(nanoseconds:)` → `async throws(CancellationError)`
+
+These are safe because `throws(E) < throws` — existing untyped conformers continue to compile.
 
 ---
 
 ## Recommendations
 
-### 1. No action needed for swift-standards
+### 1. swift-standards typed throws is effectively complete
 
-The typed throws conversion for swift-standards is **complete**. Every convertible function has already been converted. The 124 remaining instances are all protocol-mandated and cannot be changed without upstream Swift evolution changes.
+Every non-protocol-mandated function has been converted. The 124 remaining are blocked by downstream stdlib APIs, not by our code.
 
-### 2. Track upstream Swift evolution
+### 2. Convert Clock conformances (2 instances) — OPTIONAL
 
-Monitor these potential proposals:
-- **Typed throws for Codable**: Would allow `throws(DecodingError)` / `throws(EncodingError)` on protocol conformances
-- **Typed throws for Clock**: Would allow `async throws(CancellationError)` on clock sleep methods
+The do/catch wrapping is sound and low-cost for `Clock.sleep`. Consider converting the 2 instances in swift-iso-9945 if typed error handling at clock call sites is valuable.
 
-### 3. Quality observation: mixed-domain Codable decoders
+### 3. Do NOT convert Codable conformances (122 instances)
+
+The cost (boilerplate, questionable soundness with custom encoders) outweighs the benefit (only concrete callers benefit, most usage is through protocol existentials).
+
+### 4. Quality observation: mixed-domain Codable decoders
 
 Three Codable decoders throw non-`DecodingError` types:
 - `Feed.init(from:)` in swift-json-feed-standard -- throws custom `Feed.Error.invalidVersion`
 - `Item.init(from:)` in swift-json-feed-standard -- throws custom `Item.Error.itemRequiresContent`
 - `Request.Target.init(from:)` in swift-rfc-9110 -- calls `RFC_3986.URI(_:)` which throws parse errors
 
-If Codable ever gains typed throws, these three would need error wrapping into `DecodingError.dataCorrupted` to satisfy a hypothetical `throws(DecodingError)` requirement. Consider preemptively wrapping these for consistency:
+Consider preemptively wrapping these in `DecodingError.dataCorruptedError` for Codable contract consistency.
 
-```swift
-// Current (json-feed Feed.init(from:))
-throw Error.invalidVersion(description: "...")
+### 5. Priority for other repos
 
-// Suggested (wraps in DecodingError for Codable consistency)
-throw DecodingError.dataCorruptedError(
-    forKey: .version,
-    in: container,
-    debugDescription: "Expected version 1.1 or 1, got: \(version)"
-)
-```
-
-### 4. Priority for other repos
-
-Since swift-standards is complete, focus typed throws efforts on:
+Focus typed throws efforts on:
 1. **swift-foundations** -- 17 closure parameters (blocked by stdlib rethrows or mixed domains)
 2. **swift-primitives** -- 11 async throws (Cache, Pool, Clock design decisions)
-3. **swift-standards remaining** from previous inventory: 2 mixed deserializers in rfc-9112, 1 mixed init in iso-8601 (already noted as intentionally left untyped)
+3. **swift-standards remaining** from previous inventory: 2 mixed deserializers in rfc-9112, 1 mixed init in iso-8601 (intentionally left untyped)
+
+### 6. Experiment reference
+
+Full empirical evidence: `swift-standards/Experiments/typed-throws-protocol-conformance/`
+- 9 variants tested, all results documented in main.swift header
+- Key finding: throws covariance on protocol conformances IS supported in Swift 6.2.4
