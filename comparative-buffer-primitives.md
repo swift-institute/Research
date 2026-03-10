@@ -5,7 +5,7 @@
 version: 1.0.0
 date: 2026-02-24
 scope: swift-buffer-primitives (Layer 1), swift-io (Layer 3)
-status: research
+status: DECISION
 ---
 -->
 

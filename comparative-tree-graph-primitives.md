@@ -6,6 +6,7 @@ version: 1.0.0
 date: 2026-02-24
 scope: swift-tree-primitives, swift-graph-primitives, swift-io
 type: comparative-analysis
+status: DECISION
 ---
 -->
 
