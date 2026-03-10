@@ -10,7 +10,7 @@ packages:
   - swift-cache-primitives
   - swift-dictionary-primitives
   - swift-ownership-primitives
-status: pending
+status: processed
 ---
 
 # Typed Throws Conversion — rethrows Overload Resolution and E Inference

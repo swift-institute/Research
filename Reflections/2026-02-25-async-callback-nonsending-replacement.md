@@ -5,7 +5,7 @@ packages:
   - swift-async-primitives
   - swift-test-primitives
   - swift-institute
-status: pending
+status: processed
 ---
 
 # Async.Callback Nonsending Replacement — Research-to-Production Pipeline
