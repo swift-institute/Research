@@ -1,55 +1,62 @@
-# Verify CCLSP Patches for Workspace-Wide Symbol Search
+# Verify CCLSP with Compilation Database
 
 ## Context
 
-We patched the local cclsp MCP server (npx cache at `/Users/coen/.npm/_npx/8c82866c3920cdae/node_modules/cclsp/dist/index.js`) with three changes:
+We've set up a compilation database approach for SourceKit-LSP:
 
-1. **SourceKit-LSP adapter** — custom timeouts (workspace/symbol: 120s, hover: 90s, references: 120s, call hierarchy: 90s) instead of the default 30s
-2. **`workspaceFolders` support** — reads `workspaceFolders` array from config and sends all entries in the LSP initialize request
-3. **Config** (`~/.claude/cclsp.json`) — declares three monorepo roots as workspace folders
+1. **`/Users/coen/Developer/compile_commands.json`** — 2845 entries across 328 modules from all three layers (primitives, standards, foundations), generated from swift-io's build manifest
+2. **`/Users/coen/Developer/.sourcekit-lsp/config.json`** — forces `defaultWorkspaceType: "compilationDatabase"` with background indexing enabled
+3. **`~/.claude/cclsp.json`** — `rootDir: "/Users/coen/Developer"` (no workspaceFolders)
+4. **cclsp patches** — SourceKit-LSP adapter with higher timeouts (workspace/symbol: 120s, hover: 90s, etc.)
 
-## What to verify
+## Tests
 
-### Test 1: Adapter is active
-Run `find_workspace_symbols` with query "Buffer". Before the patch this timed out at 30s. With the patch it should either:
-- Return results (success), or
-- Timeout at 120s (adapter active but SourceKit-LSP still building)
-- If it times out at 30s, the adapter patch is NOT active
+### Test 1: find_definition across layers
+Run `find_definition` on files from each layer. All should resolve instantly (compilation database lookup is O(1)).
 
-### Test 2: Workspace folders are sent
-Run `find_definition` on files in TWO DIFFERENT monorepos:
-- `/Users/coen/Developer/swift-primitives/swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.swift` — symbol "Buffer"
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO/IO.swift` — symbol "IO" (adjust path if needed; find the file first with Glob)
-
-Both should resolve definitions. If only one works, workspace folders may not be sent correctly.
-
-### Test 3: Hover works
-Run `get_hover` on Buffer.swift line 22, character 13. Before the patch this timed out at 30s. With 90s timeout it should return type information.
-
-### Test 4: Workspace symbol search across packages
-After Tests 2-3 trigger implicit workspace creation for multiple packages, run `find_workspace_symbols` again for "Buffer" and for "IO". Both should return results (since their implicit workspaces should now exist).
-
-### Test 5: Cross-package references
-Run `find_references` for a type used across packages (e.g., "Memory.Address" or "Storage" — something from primitives used in foundations).
-
-## How to report
-
-For each test, report:
-- **PASS**: what was returned
-- **FAIL**: the error message and timeout duration
-- **PARTIAL**: what worked and what didn't
-
-Also check stderr of the cclsp process for debug output:
-```bash
-ps aux | grep cclsp | grep -v grep
+```
+find_definition(file_path="/Users/coen/Developer/swift-primitives/swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.swift", symbol_name="Buffer")
+find_definition(file_path="/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Primitives/IO.swift", symbol_name="IO")
 ```
 
-If the adapter is active, you should see `Found server for swift: sourcekit-lsp (rootDir: ...)` in the MCP server stderr.
+**PASS**: Both return definition locations without timeout.
+**FAIL**: Timeout or error.
 
-## If tests fail
+### Test 2: get_hover
+```
+get_hover(file_path="/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Primitives/IO.swift", line=14, character=13)
+```
 
-Check:
-1. Is the patched npx cache (`8c82866c3920cdae`) the one being used? `ps aux | grep cclsp`
-2. Is the SourceKitLSPAdapter class present in the loaded file? `grep "SourceKitLSPAdapter" /Users/coen/.npm/_npx/8c82866c3920cdae/node_modules/cclsp/dist/index.js`
-3. Is `workspaceFolders` in the config? `cat ~/.claude/cclsp.json`
-4. Was cclsp restarted AFTER the patches? (Process start time should be after the patch time)
+**PASS**: Returns type information.
+**FAIL**: Timeout.
+
+### Test 3: find_workspace_symbols
+```
+find_workspace_symbols(query="Buffer")
+find_workspace_symbols(query="IO")
+```
+
+**PASS**: Returns symbols from the compilation database.
+**FAIL**: Empty or timeout.
+
+### Test 4: find_references (cross-layer)
+Find a type used across layers. Memory types are used everywhere:
+```
+find_references(file_path="/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Address.swift", symbol_name="Address")
+```
+(Adjust file path if needed — find it first with Glob for `**/Memory.Address.swift` under swift-memory-primitives)
+
+**PASS**: Returns references from multiple layers (primitives AND foundations).
+**FAIL**: Only one layer or timeout.
+
+### Test 5: Speed check
+Run Test 1 again after Tests 2-4. The second run should be noticeably faster (index warmed).
+
+## Diagnostics
+
+If tests fail, check:
+1. `ls /Users/coen/Developer/compile_commands.json` — file exists, ~13 MB
+2. `cat /Users/coen/Developer/.sourcekit-lsp/config.json` — has `defaultWorkspaceType: "compilationDatabase"`
+3. `cat ~/.claude/cclsp.json` — has `rootDir: "/Users/coen/Developer"`
+4. `grep SourceKitLSPAdapter ~/.npm/_npx/8c82866c3920cdae/node_modules/cclsp/dist/index.js` — adapter present
+5. Process check: `ps aux | grep cclsp` — should show a NEW process (started after this session), not the old one from 12:00PM
