@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-25
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-03-10
+status: RECOMMENDATION
 ---
 -->
 
@@ -242,7 +242,7 @@ import Clocks_Dependency  // provides @Dependency(\.clock)
 
 ## Outcome
 
-**Status**: IN_PROGRESS — awaiting decision
+**Status**: RECOMMENDATION
 
 **Recommendation**: Option F (integration sub-package) is the strongest candidate.
 

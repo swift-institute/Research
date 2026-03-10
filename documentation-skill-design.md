@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 2.0.0
-last_updated: 2026-02-26
-status: RECOMMENDATION
+version: 2.1.0
+last_updated: 2026-03-10
+status: SUPERSEDED
 ---
 -->
 
@@ -441,6 +441,12 @@ This separation is clean because README conventions are structurally independent
 3. **Should mirrored spec text be literally identical between inline and .docc?** The Wzl project shows near-identical text. Recommendation: MUST be semantically identical; minor formatting differences (e.g., line wrapping) are acceptable.
 
 4. **Should the blockquote convention (`>`) apply to non-legal specifications (RFCs, ISOs)?** Recommendation: yes — the pattern generalizes well to any verbatim specification text.
+
+## Outcome
+
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: **documentation** skill [DOC-*]
+This research was absorbed into the documentation skill. It remains as historical rationale.
 
 ## References
 

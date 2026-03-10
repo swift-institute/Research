@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-01-29
-status: DECISION
+version: 1.1.0
+last_updated: 2026-03-10
+status: SUPERSEDED
 tier: 3
 ---
 -->
@@ -546,7 +546,11 @@ Example: `initEmpty`, `allocateUpdatesOffset`, `sliceOutOfBounds`
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: **testing** skill [TEST-*]
+This research was absorbed into the testing skill. It remains as historical rationale.
+
+**Previous Status**: IN_PROGRESS
 
 ### Recommendations
 

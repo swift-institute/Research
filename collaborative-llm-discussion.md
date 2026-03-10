@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-01-29
-status: RECOMMENDATION
+version: 1.1.0
+last_updated: 2026-03-10
+status: SUPERSEDED
 tier: 2
 ---
 -->
@@ -367,7 +367,11 @@ Key findings from [ICLR 2025 research](https://d2jud02ci9yv69.cloudfront.net/202
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: **collaborative-discussion** skill [COLLAB-*]
+This research was absorbed into the collaborative-discussion skill. It remains as historical rationale.
+
+**Previous Status**: RECOMMENDATION
 
 ### Recommended Approach: Option E (Hybrid) with Option A as baseline
 

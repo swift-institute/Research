@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-26
-status: RECOMMENDATION
+version: 1.1.0
+last_updated: 2026-03-10
+status: SUPERSEDED
 ---
 -->
 
@@ -207,7 +207,11 @@ Formatting rules (section separators, heading levels, table alignment, code bloc
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: **readme** skill [README-*]
+This research was absorbed into the readme skill. It remains as historical rationale.
+
+**Previous Status**: RECOMMENDATION
 
 Create a `/readme` skill with prefix `README-*`, layer `process`, requiring `swift-institute`. Codify the existing Documentation Standards.md README specifications with requirement IDs, add monorepo and maturity tier patterns, and include SPI badge conventions.
 

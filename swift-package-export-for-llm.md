@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-01-29
-status: RECOMMENDATION
+version: 1.1.0
+last_updated: 2026-03-10
+status: SUPERSEDED
 tier: 1
 ---
 -->
@@ -230,7 +230,11 @@ extension Test {
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: **package-export** skill [PKG-EXPORT-*]
+This research was absorbed into the package-export skill. It remains as historical rationale.
+
+**Previous Status**: RECOMMENDATION
 
 **Decision**: Use **Option D: Hybrid Format** with the following structure:
 
