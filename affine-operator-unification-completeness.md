@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-13
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-03-10
+status: DEFERRED
 tier: 1
 ---
 -->
@@ -33,4 +33,8 @@ Key sub-questions:
 
 ## Outcome
 
-*Pending.*
+**Status**: DEFERRED
+
+Investigation never started. The remaining Ordinal-Ordinal→Vector and Tagged Ordinal-Tagged Vector operators in `Tagged+Affine.swift` are functional and tested. Unification via Domain is an optimization, not a correctness concern. Revisit when affine-primitives undergoes its next major audit or when new operator variants are added.
+
+**Deferred since**: 2026-03-10

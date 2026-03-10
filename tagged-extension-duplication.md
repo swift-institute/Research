@@ -1,3 +1,11 @@
+<!--
+---
+version: 1.1.0
+last_updated: 2026-03-10
+status: SUPERSEDED
+---
+-->
+
 # Investigation: Tagged Extension Duplication
 
 ## Problem Statement
@@ -224,6 +232,12 @@ Tagged+TEMPLATE.Add.swift.txt  # Copy and adapt for each type
 **If protocols are unacceptable**: Option C (macros) - cleanest non-protocol solution
 
 ---
+
+## Outcome
+
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: `protocol-abstraction-for-phantom-typed-wrappers.md`
+This research was absorbed into the protocol abstraction research. It remains as historical rationale.
 
 ## Next Step
 

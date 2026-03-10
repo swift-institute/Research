@@ -1,3 +1,11 @@
+<!--
+---
+version: 1.1.0
+last_updated: 2026-03-10
+status: SUPERSEDED
+---
+-->
+
 # Research: Skill-Based Documentation Architecture
 
 ## Question
@@ -47,6 +55,12 @@ applies_to:
 ## Loading Mechanism
 
 Skills are loaded via symlinks in `/Users/coen/Developer/.claude/skills/` pointing to skill directories in repositories.
+
+## Outcome
+
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: **swift-institute-core** skill + CLAUDE.md authoritative documentation section
+Skills are now the canonical source; this research designed the system that is now live. It remains as historical rationale.
 
 ## Recommendation
 

@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-01-28
-status: DECISION
+version: 1.1.0
+last_updated: 2026-03-10
+status: SUPERSEDED
 tier: 2
 ---
 -->
@@ -172,7 +172,11 @@ CLAUDE.md supports `@path/to/file` imports (up to 5 levels deep). Import skill c
 
 ## Outcome
 
-**Status**: DECISION
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: Per-repo CLAUDE.md convention (now standard practice)
+This research was absorbed into the per-repo CLAUDE.md convention. It remains as historical rationale.
+
+**Previous Status**: DECISION
 
 **Choice**: Option A (Per-Repo CLAUDE.md with Skill Invocation Directives)
 

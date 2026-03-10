@@ -1,3 +1,11 @@
+<!--
+---
+version: 1.1.0
+last_updated: 2026-03-10
+status: SUPERSEDED
+---
+-->
+
 # Academic Research Methodology
 
 ## Context
@@ -478,7 +486,11 @@ Adopt standard notation for formal content:
 
 ## Outcome
 
-**Status**: DECISION
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: **research-process** skill [RES-020-026]
+Content absorbed into the research-process skill as tiered research requirements. This research designed the tiered system that is now codified. It remains as historical rationale.
+
+**Previous Status**: DECISION
 
 **Recommendation**: Implement tiered research system as an **extension** to existing Research.md infrastructure.
 

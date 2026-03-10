@@ -2,10 +2,11 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-01-29
-status: DECISION
+version: 1.2.0
+last_updated: 2026-03-10
+status: SUPERSEDED
 changelog:
+  - 1.2.0: SUPERSEDED by implementation skill [IMPL-*]
   - 1.1.0: Added section on intermediate property access (.position) anti-patterns
   - 1.0.0: Initial research on .rawValue chain anti-patterns
 ---
@@ -295,7 +296,11 @@ The correct pattern for comparisons:
 
 ## Outcome
 
-**Status**: DECISION
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: **implementation** skill [IMPL-*] (absorbed into skill)
+This research was absorbed into the implementation skill. It remains as historical rationale.
+
+**Previous Status**: DECISION
 
 ### Conventions
 

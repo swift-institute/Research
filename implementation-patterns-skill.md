@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-02-06
-status: DECISION
+version: 1.2.0
+last_updated: 2026-03-10
+status: SUPERSEDED
 tier: 2
 ---
 -->
@@ -347,7 +347,11 @@ Not every missing operator or overload is a gap. Some things are intentionally a
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: **implementation** skill [IMPL-*]
+This research was absorbed into the implementation skill. It remains as historical rationale.
+
+**Previous Status**: IN_PROGRESS
 
 **Recommendation**: Option C — merge anti-patterns into a new `implementation` skill, keep `conversions` as the mechanical type reference.
 

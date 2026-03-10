@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-01-29
-status: RECOMMENDATION
+version: 1.1.0
+last_updated: 2026-03-10
+status: SUPERSEDED
 ---
 -->
 
@@ -144,7 +144,11 @@ A skill that provides a complete SKILL.md template plus rules for each decision 
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: **skill-creation** skill [SKILL-CREATE-*]
+This research was absorbed into the skill-creation skill. It remains as historical rationale.
+
+**Previous Status**: RECOMMENDATION
 
 **Recommendation**: Option B (Procedure-Oriented) with Option C's template included.
 

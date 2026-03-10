@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-13
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-03-10
+status: DEFERRED
 tier: 1
 ---
 -->
@@ -30,4 +30,8 @@ Key sub-questions:
 
 ## Outcome
 
-*Pending.*
+**Status**: DEFERRED
+
+Investigation never started. The question remains valid but is low-priority: `@unchecked Sendable` on phantom containers is a correctness annotation (sound by construction), not a safety hazard. Revisit when auditing `@unchecked` usage across the ecosystem or when Swift gains a mechanism for phantom type parameters to be excluded from Sendable inference.
+
+**Deferred since**: 2026-03-10

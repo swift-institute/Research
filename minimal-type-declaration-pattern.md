@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-01-29
-status: DECISION
+version: 1.1.0
+last_updated: 2026-03-10
+status: SUPERSEDED
 tier: 2
 ---
 -->
@@ -191,7 +191,11 @@ Some types have methods in body that should be in extensions.
 
 ## Outcome
 
-**Status**: DECISION
+**Status**: SUPERSEDED (2026-03-10)
+**Superseded by**: **code-organization** skill [API-IMPL-*]
+This research was absorbed into the code-organization skill. It remains as historical rationale.
+
+**Previous Status**: DECISION
 
 **Decision**: Adopt Option C — Minimal type body with ~Copyable exception.
 
