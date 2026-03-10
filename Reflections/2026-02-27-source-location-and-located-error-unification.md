@@ -9,7 +9,7 @@ packages:
   - swift-parsers
   - swift-parser-primitives
   - swift-json
-status: pending
+status: processed
 ---
 
 # Source Location and Located Error Unification — Type Deduplication at Scale

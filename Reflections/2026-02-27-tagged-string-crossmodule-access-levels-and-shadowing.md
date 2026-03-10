@@ -5,7 +5,7 @@ packages:
   - swift-identity-primitives
   - swift-string-primitives
   - swift-institute
-status: pending
+status: processed
 ---
 
 # Tagged String Cross-Module — Access Levels and Shadowing
