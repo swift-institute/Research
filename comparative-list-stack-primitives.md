@@ -6,6 +6,7 @@ version: 1.0.0
 date: 2026-02-24
 scope: swift-list-primitives, swift-stack-primitives, swift-io
 type: dependency-utilization-audit
+status: DECISION
 ---
 -->
 

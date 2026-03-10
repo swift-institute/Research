@@ -5,7 +5,7 @@
 version: 1.0.0
 date: 2026-02-24
 scope: Layer 1 (Primitives) × Layer 3 (Foundations)
-status: research
+status: RECOMMENDATION
 ---
 -->
 

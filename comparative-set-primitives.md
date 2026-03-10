@@ -5,7 +5,7 @@
 version: 1.0.0
 date: 2026-02-24
 scope: swift-io (Layer 3) consumption of swift-set-primitives (Layer 1)
-status: research
+status: DECISION
 ---
 -->
 

@@ -4,7 +4,7 @@
 ---
 date: 2026-02-24
 scope: swift-hash-table-primitives, swift-dictionary-primitives, swift-io
-status: research
+status: RECOMMENDATION
 ---
 -->
 

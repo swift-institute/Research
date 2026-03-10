@@ -2,7 +2,7 @@
 
 <!--
 ---
-status: research
+status: DECISION
 date: 2026-02-24
 scope: swift-bitset-primitives, swift-bit-vector-primitives, swift-io
 ---

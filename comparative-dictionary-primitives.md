@@ -5,6 +5,7 @@
 date: 2026-02-24
 scope: swift-dictionary-primitives, swift-io
 type: replacement-opportunity analysis
+status: RECOMMENDATION
 ---
 -->
 

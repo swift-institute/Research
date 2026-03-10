@@ -4,7 +4,7 @@
 ---
 created: 2026-02-24
 scope: swift-slab-primitives, swift-buffer-primitives, swift-memory-primitives, swift-io
-status: research
+status: DECISION
 ---
 -->
 

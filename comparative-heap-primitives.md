@@ -4,7 +4,7 @@
 ---
 version: 1.0.0
 last_updated: 2026-02-24
-status: ANALYSIS
+status: RECOMMENDATION
 tier: 2
 scope: cross-package (swift-heap-primitives, swift-io)
 ---
