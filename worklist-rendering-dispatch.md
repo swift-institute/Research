@@ -430,15 +430,11 @@ This change eliminates recursive mutual dispatch across wrapper layers and custo
 3. ✅ Style state from Styled wrapper processing is restored explicitly via `.restoreStyle`
 4. ✅ Attribute state from `_Attributes` wrapper processing is restored explicitly via `.restoreAttributes`, fixing the dynamic path's attribute loss
 5. ✅ The crashing test (`"document showing all elements"`) passes
-6. ⚠️ 81/84 tests pass — 3 pre-existing `breakAfter` failures (not introduced by this change, confirmed by stashing and re-testing old code)
+6. ✅ All 84 tests pass (3 pre-existing `breakAfter` failures were separately fixed)
 
 ### Implementation Note
 
 The `restoreStyle` case uses `ISO_32000.Context.Style.Resolved` (not `PDF.Context.Style` as in the plan). This is the actual type of `context.pdf.style`.
-
-### Remaining Issue: `forcePageBreakAfter` in Dynamic Path
-
-3 tests fail because `forcePageBreakAfter` flag is set by `applyStylePropertyViaMirror` but never checked/acted-upon in the dynamic Mirror-based path. The static path captures and acts on this flag in `HTML.Styled._render` and `renderFlattenedStyledContent`. This is a pre-existing bug — the old `renderStyledViaMirror` had the same gap. See `/tmp/breakafter-investigation-handoff.md` for investigation details.
 
 ### Implementation Steps
 
