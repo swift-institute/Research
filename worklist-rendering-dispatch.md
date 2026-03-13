@@ -2,24 +2,33 @@
 
 <!--
 ---
-version: 3.0.0
-last_updated: 2026-03-12
-status: IMPLEMENTED
+version: 4.0.0
+last_updated: 2026-03-13
+status: SUPERSEDED
 tier: 2
 supersedes: iterative-tuple-rendering.md (partially — retains tuple analysis, replaces solution)
 collaborative_discussion: Claude Round 3 + ChatGPT Round 3 — CONVERGED
 ---
 -->
 
+> **Update 2026-03-13**: The worklist interpreter (Cause 3) was superseded by the
+> `Rendering.Context` pure static dispatch architecture (commit `40ca61d`). That
+> redesign reintroduced SIGBUS via a **fourth** cause: `buildFinalResult` in
+> `swift-markdown-html-rendering`'s `HTML.Builder.swift` used `HTML.AnyView { component }`
+> (the `@HTML.Builder` closure init), re-entering the result builder in an infinite
+> cycle (875 repetitions, 2672 frames). Fixed in commit `bc5798b` by using the direct
+> `init(_ base: any HTML.View)` instead.
+
 ## Context
 
-The PDF HTML rendering pipeline (`swift-pdf-html-rendering`) crashes with SIGBUS (`___chkstk_darwin`) when rendering moderately nested view trees under Swift Testing's ~64KB async task stack. Three independent stack overflow causes were discovered:
+The PDF HTML rendering pipeline (`swift-pdf-html-rendering`) crashes with SIGBUS (`___chkstk_darwin`) when rendering moderately nested view trees under Swift Testing's ~64KB async task stack. Four independent stack overflow causes were discovered:
 
 1. **FIXED** (committed `16ce688` in swift-primitives) — `as?` conformance checking recursion on deeply nested `_Tuple` → unconditional `_TupleMarker` protocol
 2. **FIXED** (committed `16ce688` in swift-primitives) — Swift runtime type metadata demangling recursion → removed `buildPartialBlock(accumulated:next:)`
-3. **FIXED** (committed `e7bd156` in swift-foundations) — General rendering pipeline stack depth from mutual recursion → worklist interpreter
+3. **SUPERSEDED** (committed `e7bd156` in swift-foundations) — General rendering pipeline stack depth from mutual recursion → worklist interpreter — superseded by `Rendering.Context` static dispatch (`40ca61d`)
+4. **FIXED** (committed `bc5798b` in swift-markdown-html-rendering) — `buildFinalResult` infinite recursion: `HTML.AnyView { component }` re-enters the `@HTML.Builder` → infinite cycle
 
-Causes 1+2 are addressed in `iterative-tuple-rendering.md`. This document addresses Cause 3.
+Causes 1+2 are addressed in `iterative-tuple-rendering.md`. This document addresses Cause 3. Cause 4 is documented inline above.
 
 ### The Remaining Problem
 
