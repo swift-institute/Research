@@ -284,13 +284,24 @@ This replaces reading hundreds of source files. The `typed-throws-standards-inve
 - Update skills to reference the API catalog instead of manual lists
 - **Payoff**: Minimal context consumption for routine development
 
+### Phase 1 Execution: 2026-03-15
+
+Phase 1 has been executed. See [primitives-public-api-graph-analysis.md](primitives-public-api-graph-analysis.md) for full results.
+
+Key outcomes:
+- Symbol graph extraction works across 115/132 packages (17 empty/failed)
+- Distilled into 9.8 MB JSON: 435 modules, 13,262 symbols, 19,022 relationships
+- Cross-module relationships ARE captured via the `@Module.symbols.json` extension files
+- JSON proved to be the right catalog format — analyzable by scripts, fits in AI context as summary
+- Scripts stored at `swift-primitives/Scripts/{extract,distill,analyze}-symbol-graphs.*`
+
 ### Open Questions
 
 1. **Scale limit**: Can SourceKit-LSP index 361 packages simultaneously? Need empirical test.
 2. **Incremental extraction**: Can symbol graphs be extracted incrementally (only changed modules)?
-3. **Catalog format**: What's the optimal condensed format for AI consumption — structured text, JSON, or a hybrid?
+3. ~~**Catalog format**~~: JSON confirmed as the right format. Resolved by Phase 1.
 4. **Catalog freshness**: How to keep the catalog in sync with code changes? Pre-commit hook? Build phase?
-5. **Cross-module relationships**: Symbol graphs are per-module. How to capture cross-module composition patterns?
+5. ~~**Cross-module relationships**~~: The `@Module.symbols.json` files capture these. Resolved by Phase 1.
 
 ## References
 
