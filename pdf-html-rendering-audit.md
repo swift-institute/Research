@@ -1,5 +1,18 @@
 # Quality Audit: swift-pdf-html-rendering
 
+<!--
+---
+version: 1.1.0
+last_updated: 2026-03-15
+status: SUPERSEDED
+superseded_by: swift-foundations/swift-pdf/Research/swift-pdf-stack-audit.md
+---
+-->
+
+**Status**: SUPERSEDED (2026-03-15)
+**Superseded by**: `swift-foundations/swift-pdf/Research/swift-pdf-stack-audit.md`
+This audit's findings were synthesized into the full-stack audit. It remains as historical reference.
+
 **Date**: 2026-03-12
 **Scope**: Full package audit against `/implementation`, `/naming`, `/code-organization`, `/design` skills
 **Package**: `/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/`

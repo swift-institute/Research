@@ -2,10 +2,11 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-04
-status: DEFERRED
+version: 1.1.0
+last_updated: 2026-03-15
+status: SUPERSEDED
 tier: 1
+superseded_by: witness-macro-noncopyable-support-design.md (revised DEFERRED to VIABLE)
 methodology: RES-004
 depends_on: next-steps-witnesses.md, adoption-implementation-review.md
 ---

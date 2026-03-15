@@ -2,10 +2,11 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-02-12
-status: RECOMMENDATION
+version: 1.2.0
+last_updated: 2026-03-15
+status: SUPERSEDED
 tier: 3
+superseded_by: reflect-session skill [REFL-*] + reflections-processing skill [REFL-PROC-*]
 ---
 -->
 

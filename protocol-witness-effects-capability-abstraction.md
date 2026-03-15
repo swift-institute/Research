@@ -4,7 +4,7 @@
 ---
 version: 1.0.0
 last_updated: 2026-02-10
-status: IN_PROGRESS
+status: RECOMMENDATION
 tier: 3
 ---
 -->
