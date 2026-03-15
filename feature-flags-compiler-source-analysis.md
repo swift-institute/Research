@@ -7,8 +7,12 @@ date: 2026-03-03
 source: /Users/coen/Developer/swiftlang/swift/
 scope: Nine experimental feature flags relevant to ownership, accessors, and compile-time values
 method: Static analysis of compiler source, test counts, implementation depth
+status: SUPERSEDED
+superseded_by: feature-flags-assessment.md
 ---
 -->
+
+> **SUPERSEDED** by [feature-flags-assessment.md](feature-flags-assessment.md) (2026-03-15). Retained for detailed compiler source references.
 
 ## Summary
 
