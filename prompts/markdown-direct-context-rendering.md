@@ -8,7 +8,7 @@ Design a theoretically perfect architecture for rendering markdown directly into
 
 **Research process**: Follow [RES-004] Investigation Methodology. Enumerate options, identify criteria, analyze trade-offs, recommend.
 
-**Output**: Research document at `swift-institute/Research/markdown-direct-context-rendering.md` per [RES-003].
+**Output**: Research document at `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md` per [RES-003].
 
 ---
 
@@ -705,7 +705,7 @@ extension Markdown.Configuration {
 | Document | Path |
 |----------|------|
 | Rendering.View associated type naming | `swift-institute/Research/rendering-view-associated-type-naming.md` |
-| Markdown rendering organization audit | `swift-institute/Research/markdown-rendering-organization-audit.md` |
+| Markdown rendering organization audit | `swift-foundations/swift-markdown-html-rendering/Research/markdown-rendering-organization-audit.md` |
 | SwiftUI preview investigation prompt | `swift-institute/Research/prompts/markdown-swiftui-pdf-investigation.md` |
 | Stack overflow research | `swift-pdf/Research/sigbus-stack-overflow-handoff.md` |
 

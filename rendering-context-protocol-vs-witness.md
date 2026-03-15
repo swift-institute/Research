@@ -17,7 +17,7 @@ The markdown→HTML/PDF rendering pipeline uses `HTML.AnyView` type erasure that
 The `Rendering.Action` enum is conceptually what a `@Witness` macro would generate from the `Rendering.Context` protocol. This raises the question: should `Rendering.Context` itself become a witness struct?
 
 Prior research:
-- `swift-institute/Research/markdown-direct-context-rendering.md` — Direct context rendering design (RECOMMENDATION)
+- `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md` — Direct context rendering design (RECOMMENDATION)
 - `swift-institute/Research/protocol-witness-effects-capability-abstraction.md` — Protocol vs witness for capability abstraction (IN_PROGRESS, preliminary recommendation: witnesses)
 - `swift-institute/Research/witnesses-ecosystem-adoption-audit.md` — Ecosystem witness adoption audit (COMPLETE)
 
@@ -161,7 +161,7 @@ The critical change is in the *producer* (HTMLConverter emitting actions instead
 ## References
 
 - Experiment: `swift-institute/Experiments/rendering-context-protocol-vs-witness/`
-- Prior research: `swift-institute/Research/markdown-direct-context-rendering.md`
+- Prior research: `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md`
 - Stack overflow: `swift-foundations/swift-pdf/Research/sigbus-stack-overflow-handoff.md`
 - Witness adoption: `swift-institute/Research/witnesses-ecosystem-adoption-audit.md`
 - Witness effects: `swift-institute/Research/protocol-witness-effects-capability-abstraction.md`

@@ -150,7 +150,7 @@ Be honest about any capabilities lost:
 |------|----------|
 | `swift-institute/Research/rendering-context-witness-migration-implications.md` | Full migration analysis with factory + transformer design |
 | `swift-institute/Research/rendering-context-protocol-vs-witness.md` | Performance experiment results |
-| `swift-institute/Research/markdown-direct-context-rendering.md` | Motivating architecture (AnyView elimination) |
+| `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md` | Motivating architecture (AnyView elimination) |
 | `swift-institute/Experiments/rendering-context-algebra-composition/` | Working experiment (15 tests): witness, transformer, observer, action interpreter |
 | `swift-rendering-primitives/.../Rendering.Context.swift` | Current protocol (262 lines) |
 | `swift-html-rendering/.../HTML.Context.swift` | HTML conformer (633 lines) |

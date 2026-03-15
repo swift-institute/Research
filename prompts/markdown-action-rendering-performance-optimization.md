@@ -6,7 +6,7 @@ The action-based markdown rendering pipeline (Phase 4) works correctly and elimi
 
 Conduct a Tier 1 investigation ([RES-004]) to identify optimization opportunities and recommend a path to book-scale performance (1000+ sections in < 5 seconds, release build).
 
-**Output**: Research document at `swift-institute/Research/markdown-action-rendering-performance-optimization.md` per [RES-003].
+**Output**: Research document at `swift-foundations/swift-markdown-html-rendering/Research/markdown-action-rendering-performance-optimization.md` per [RES-003].
 
 ---
 

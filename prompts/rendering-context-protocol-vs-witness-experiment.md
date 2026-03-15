@@ -447,7 +447,7 @@ tier: 2
 -->
 
 ## Context
-{Link to markdown-direct-context-rendering.md and the witness discussion}
+{Link to swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md and the witness discussion}
 
 ## Question
 Should Rendering.Context be expressed as a protocol (current) or a witness struct?
@@ -476,7 +476,7 @@ Should Rendering.Context be expressed as a protocol (current) or a witness struc
 
 ## References
 - Experiment: `swift-institute/Experiments/rendering-context-protocol-vs-witness/`
-- Prior research: `swift-institute/Research/markdown-direct-context-rendering.md`
+- Prior research: `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md`
 ```
 
 ---
@@ -523,14 +523,14 @@ Should Rendering.Context be expressed as a protocol (current) or a witness struc
 | `swift-html-rendering/.../HTML.Context.swift` | HTML conformer (633 lines) |
 | `swift-pdf-html-rendering/.../PDF.HTML.Context+Rendering.swift` | PDF conformer (1095 lines) |
 | `swift-witnesses/.../WitnessMacro.swift` | Action enum generation (lines 879–959) |
-| `swift-institute/Research/markdown-direct-context-rendering.md` | Prior research |
+| `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md` | Prior research |
 
 ### Prior research to reference
 
 | Document | Path |
 |----------|------|
-| Direct context rendering | `swift-institute/Research/markdown-direct-context-rendering.md` |
-| Markdown rendering audit | `swift-institute/Research/markdown-rendering-organization-audit.md` |
+| Direct context rendering | `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md` |
+| Markdown rendering audit | `swift-foundations/swift-markdown-html-rendering/Research/markdown-rendering-organization-audit.md` |
 | Stack overflow handoff | `swift-foundations/swift-pdf/Research/sigbus-stack-overflow-handoff.md` |
 | Witness ecosystem adoption | `swift-institute/Research/witnesses-ecosystem-adoption-audit.md` |
 | Protocol-witness-effects | `swift-institute/Research/protocol-witness-effects-capability-abstraction.md` |

@@ -463,11 +463,11 @@ If the PDF markdown tests pass, the stack overflow is fixed.
 
 | Document | Key insight |
 |----------|------------|
-| `markdown-direct-context-rendering.md` | Original analysis of 6 approaches, C+A+F recommendation |
+| `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md` | Original analysis of 6 approaches, C+A+F recommendation |
 | `rendering-witness-architecture-value-analysis.md` | Action enum as free Σ-algebra, tee transform |
 | `rendering-context-witness-migration-implications.md` | Migration scope, factory pattern |
 | `sigbus-stack-overflow-handoff.md` | Stack overflow root cause (AnyView nesting depth) |
-| `markdown-rendering-organization-audit.md` | F-6: AnyView everywhere finding |
+| `swift-foundations/swift-markdown-html-rendering/Research/markdown-rendering-organization-audit.md` | F-6: AnyView everywhere finding |
 
 ---
 
