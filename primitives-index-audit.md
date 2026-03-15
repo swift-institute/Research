@@ -18,10 +18,16 @@ Full audit of Research/_index.md files across all package-level Research directo
 - Packages with Research/: 60
 - With _index.md: 46
 - Missing _index.md: 14
-- Packages with unlisted files (have index but files not in it): 29
-- Total unlisted files: 152
+- Packages with unlisted files (have index but files not in it): 29 (reported), 6 (actual — audit overcounted)
+- Total unlisted files: 152 (reported), 13 (actual — most were already indexed under different formatting)
 - Packages with listed-but-missing files: 0
 - Total listed-but-missing files: 0
+
+### Resolution (2026-03-15)
+
+- 13 missing `_index.md` files created (1 package skipped — no research files)
+- 6 existing indices updated with 13 genuinely unlisted files
+- Audit overcounted unlisted files due to formatting differences in index entries vs filenames
 
 ## Packages Missing _index.md
 
