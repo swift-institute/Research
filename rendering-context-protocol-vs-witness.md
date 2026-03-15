@@ -2,10 +2,11 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-14
-status: DECISION
+version: 1.1.0
+last_updated: 2026-03-15
+status: SUPERSEDED
 tier: 2
+superseded_by: rendering-context-witness-migration-implications.md (Option A chosen over Option C)
 ---
 -->
 

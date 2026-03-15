@@ -2,10 +2,11 @@
 
 <!--
 ---
-version: 1.3.0
-last_updated: 2026-03-04
-status: RECOMMENDATION
+version: 1.4.0
+last_updated: 2026-03-15
+status: SUPERSEDED
 tier: 2
+superseded_by: transformation-domain-architecture.md (DECISION incorporating this analysis)
 ---
 -->
 

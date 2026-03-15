@@ -1,5 +1,18 @@
 # Rendering Packages — Naming & Implementation Audit Findings
 
+<!--
+---
+version: 1.1.0
+last_updated: 2026-03-15
+status: SUPERSEDED
+superseded_by: audits/implementation-naming-2026-03-13/00-synthesis-and-fix-plan.md
+---
+-->
+
+**Status**: SUPERSEDED (2026-03-15)
+**Superseded by**: `audits/implementation-naming-2026-03-13/00-synthesis-and-fix-plan.md` (broader scope: 5 packages, structured fix plan)
+This audit's findings are a subset of the 2026-03-13 synthesis. It remains as historical reference.
+
 **Date**: 2026-03-12
 **Auditor**: Claude (Opus 4.6)
 **Skills**: `/naming` [API-NAME-001–004], `/implementation` [IMPL-INTENT, IMPL-000–053, PATTERN-009–022]

@@ -2,9 +2,10 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-26
-status: DECISION
+version: 1.1.0
+last_updated: 2026-03-15
+status: SUPERSEDED
+superseded_by: documentation skill [DOC-028], [DOC-029]
 ---
 -->
 
