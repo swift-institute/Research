@@ -5,9 +5,12 @@
 version: 1.0.0
 date: 2026-03-03
 applies_to: [swift-primitives, swift-foundations]
-status: research
+status: SUPERSEDED
+superseded_by: feature-flags-assessment.md
 ---
 -->
+
+> **SUPERSEDED** by [feature-flags-assessment.md](feature-flags-assessment.md) (2026-03-15). Retained for detailed ecosystem usage counts and before/after examples.
 
 ## Summary
 
