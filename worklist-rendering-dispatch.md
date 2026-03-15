@@ -6,7 +6,7 @@ version: 4.0.0
 last_updated: 2026-03-13
 status: SUPERSEDED
 tier: 2
-supersedes: iterative-tuple-rendering.md (partially — retains tuple analysis, replaces solution)
+supersedes: swift-foundations/swift-pdf-html-rendering/Research/iterative-tuple-rendering.md (partially — retains tuple analysis, replaces solution)
 collaborative_discussion: Claude Round 3 + ChatGPT Round 3 — CONVERGED
 ---
 -->
@@ -28,7 +28,7 @@ The PDF HTML rendering pipeline (`swift-pdf-html-rendering`) crashes with SIGBUS
 3. **SUPERSEDED** (committed `e7bd156` in swift-foundations) — General rendering pipeline stack depth from mutual recursion → worklist interpreter — superseded by `Rendering.Context` static dispatch (`40ca61d`)
 4. **FIXED** (committed `bc5798b` in swift-markdown-html-rendering) — `buildFinalResult` infinite recursion: `HTML.AnyView { component }` re-enters the `@HTML.Builder` → infinite cycle
 
-Causes 1+2 are addressed in `iterative-tuple-rendering.md`. This document addresses Cause 3. Cause 4 is documented inline above.
+Causes 1+2 are addressed in `swift-foundations/swift-pdf-html-rendering/Research/iterative-tuple-rendering.md`. This document addresses Cause 3. Cause 4 is documented inline above.
 
 ### The Remaining Problem
 
@@ -542,5 +542,5 @@ Transcript: `/tmp/worklist-rendering-dispatch-transcript.md`
 - `swift-tree-primitives/.../Tree.N.swift:456–514` — `removeSubtree` post-order with cleanup action
 - `swift-stack-primitives/.../Stack.swift` — `Stack<Element>` API
 - `swift-machine-primitives/` — evaluated and rejected (parser interpreter, wrong execution model)
-- `iterative-tuple-rendering.md` — Causes 1+2 analysis, tuple-specific solution (partially superseded)
-- Project memory: `iterative-tuple-rendering.md` — full crash chain and three-cause discovery
+- `swift-foundations/swift-pdf-html-rendering/Research/iterative-tuple-rendering.md` — Causes 1+2 analysis, tuple-specific solution (partially superseded)
+- Project memory: `swift-foundations/swift-pdf-html-rendering/Research/iterative-tuple-rendering.md` — full crash chain and three-cause discovery

@@ -17,7 +17,7 @@ Prior research established:
 - **Performance parity**: Witness closure dispatch costs 0.99–1.04x vs protocol dispatch in release builds (`rendering-context-protocol-vs-witness.md`, V2 vs V1). The performance question is settled.
 - **Composability validation**: The experiment `rendering-context-algebra-composition` validated that `~Copyable` witness structs with `consuming` transformers compile, compose, and produce correct output (15 tests, all pass).
 - **Migration feasibility**: ~26 files across 4 packages require changes; ~533 are unaffected (`rendering-context-witness-migration-implications.md`).
-- **Motivating problem**: The markdown→HTML→PDF pipeline overflows the stack via deeply nested `HTML.AnyView` type erasure; the `Rendering.Action` enum (a natural product of the witness architecture) enables flat iterative rendering (`markdown-direct-context-rendering.md`).
+- **Motivating problem**: The markdown→HTML→PDF pipeline overflows the stack via deeply nested `HTML.AnyView` type erasure; the `Rendering.Action` enum (a natural product of the witness architecture) enables flat iterative rendering (`swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md`).
 
 The previous decision (`rendering-context-protocol-vs-witness.md`, Option C — hybrid) was explicitly pragmatic: *"The decision to keep the protocol was pragmatic (migration cost), not architectural."* This document analyzes the architectural delta with migration cost excluded.
 
@@ -25,7 +25,7 @@ The previous decision (`rendering-context-protocol-vs-witness.md`, Option C — 
 
 - `rendering-context-witness-migration-implications.md` — migration scope and design (RECOMMENDATION)
 - `rendering-context-protocol-vs-witness.md` — performance experiment (DECISION: hybrid)
-- `markdown-direct-context-rendering.md` — motivating architecture (RECOMMENDATION)
+- `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md` — motivating architecture (RECOMMENDATION)
 - `rendering-context-algebra-composition` — composition experiment (15 tests)
 - `protocol-witness-effects-capability-abstraction.md` — general protocol vs witness analysis
 - `witnesses-ecosystem-adoption-audit.md` — ecosystem witness adoption
@@ -811,7 +811,7 @@ var context = Rendering.Context.html(state: htmlState)
 
 #### 6. Markdown Rendering
 
-The `Rendering.Action` enum is the key enabler for the direct-context markdown rendering architecture (`markdown-direct-context-rendering.md`). But it unlocks more than the immediate stack overflow fix:
+The `Rendering.Action` enum is the key enabler for the direct-context markdown rendering architecture (`swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md`). But it unlocks more than the immediate stack overflow fix:
 
 **Lazy rendering** — produce actions on-demand via a sequence:
 
@@ -1175,7 +1175,7 @@ This recommendation is independent of migration cost. The architectural delta is
 
 - `swift-institute/Research/rendering-context-witness-migration-implications.md` — migration scope and design (RECOMMENDATION)
 - `swift-institute/Research/rendering-context-protocol-vs-witness.md` — performance experiment: V2 ≈ V1 (DECISION: hybrid)
-- `swift-institute/Research/markdown-direct-context-rendering.md` — motivating architecture (RECOMMENDATION)
+- `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md` — motivating architecture (RECOMMENDATION)
 - `swift-institute/Experiments/rendering-context-algebra-composition/` — composition experiment (15 tests)
 - `swift-rendering-primitives/.../Rendering.Context.swift` — current protocol (262 lines)
 - `swift-html-rendering/.../HTML.Context.swift` — HTML conformer (633 lines)

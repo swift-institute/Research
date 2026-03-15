@@ -93,7 +93,7 @@ What is the concrete migration scope and design for converting `Rendering.Contex
 | Interaction with context | Indirect | Via HTML.View → Rendering.View |
 | Files affected by migration | 0 | |
 
-**Migration**: None. Markdown produces HTML.View types. The context is managed by the HTML layer. Markdown benefits indirectly — the `Rendering.Action` enum enables the direct-context rendering architecture proposed in `markdown-direct-context-rendering.md`.
+**Migration**: None. Markdown produces HTML.View types. The context is managed by the HTML layer. Markdown benefits indirectly — the `Rendering.Action` enum enables the direct-context rendering architecture proposed in `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md`.
 
 ### Total Migration Blast Radius
 
@@ -573,8 +573,8 @@ With the witness + Action enum in place:
 ## References
 
 - `swift-institute/Research/rendering-context-protocol-vs-witness.md` — performance experiment (V2 witness ≈ V1 protocol)
-- `swift-institute/Research/markdown-direct-context-rendering.md` — motivating architecture
-- `swift-institute/Research/markdown-rendering-organization-audit.md` — F-6 AnyView finding
+- `swift-foundations/swift-markdown-html-rendering/Research/markdown-direct-context-rendering.md` — motivating architecture
+- `swift-foundations/swift-markdown-html-rendering/Research/markdown-rendering-organization-audit.md` — F-6 AnyView finding
 - `swift-pdf/Research/sigbus-stack-overflow-handoff.md` — stack overflow root cause
 - `swift-institute/Experiments/rendering-context-algebra-composition/` — transformer pattern validation (15 tests, all pass)
 - `swift-institute/Research/prompts/rendering-context-protocol-vs-witness-experiment.md` — performance experiment prompt
