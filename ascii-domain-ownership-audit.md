@@ -4,7 +4,7 @@
 ---
 version: 1.0.0
 last_updated: 2026-03-05
-status: AUDIT
+status: RECOMMENDATION
 tier: 2
 ---
 -->

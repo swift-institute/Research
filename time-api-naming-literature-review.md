@@ -3,7 +3,7 @@
 <!--
 ---
 type: research
-status: complete
+status: COMPLETE
 created: 2026-02-27
 scope: API naming patterns for unit conversion properties
 ---

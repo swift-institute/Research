@@ -4,7 +4,7 @@
 ---
 type: research
 created: 2026-02-27
-status: complete
+status: COMPLETE
 scope: time-primitives API design
 ---
 -->

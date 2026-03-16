@@ -4,7 +4,7 @@
 ---
 version: 1.2.0
 last_updated: 2026-02-25
-status: CORRECTED (stream operator nonsending overloads not viable — see v1.2.0 corrections)
+status: COMPLETE
 tier: 2
 trigger: Pointfree #355 analysis — nonisolated(nonsending) as default interface pattern
 ---

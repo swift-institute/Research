@@ -4,7 +4,7 @@
 ---
 date: 2026-02-25
 scope: swift-async (foundations), swift-async-primitives (primitives)
-status: audit-complete
+status: COMPLETE
 ---
 -->
 

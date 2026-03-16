@@ -4,7 +4,7 @@
 ---
 version: 2.1.0
 last_updated: 2026-03-03
-status: MOSTLY IMPLEMENTED
+status: IMPLEMENTED
 tier: 3
 ---
 -->
