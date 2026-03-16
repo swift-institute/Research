@@ -1,4 +1,11 @@
 # Discrete Scaling Morphisms
+<!--
+---
+version: 1.0.0
+last_updated: 2026-01-27
+status: RECOMMENDATION
+---
+-->
 
 ## Abstract
 

@@ -1,4 +1,11 @@
 # Converged Plan: swift-translating Migration
+<!--
+---
+version: 1.0.0
+last_updated: 2026-03-11
+status: DECISION
+---
+-->
 
 ## Summary
 
