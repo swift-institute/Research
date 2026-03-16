@@ -4,7 +4,7 @@
 ---
 version: 1.0.0
 last_updated: 2026-03-15
-status: BUG REPRODUCED
+status: DECISION
 tier: 2
 ---
 -->

@@ -3,7 +3,7 @@
 <!--
 ---
 tier: 3
-status: scratch
+status: DEFERRED
 created: 2026-02-23
 scope: Repository naming, org structure, package identity
 ---

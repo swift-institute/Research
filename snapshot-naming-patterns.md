@@ -2,7 +2,7 @@
 
 <!--
 ---
-status: complete
+status: COMPLETE
 date: 2026-03-03
 scope: Research into named vs unnamed snapshots, inline vs file-backed storage, and API design across snapshot testing frameworks
 frameworks: [swift-snapshot-testing, Jest, Vitest, Insta, cargo-insta, Verify, ApprovalTests.NET, snapshot_testing (Ruby)]

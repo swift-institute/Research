@@ -4,7 +4,7 @@
 ---
 version: 1.0.0
 last_updated: 2026-03-01
-status: ANALYSIS
+status: RECOMMENDATION
 tier: 3
 applies_to: [swift-tree-primitives, swift-primitives]
 normative: false

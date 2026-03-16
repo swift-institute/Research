@@ -5,7 +5,7 @@
 version: 1.0.0
 created: 2026-02-25
 scope: swift-io, swift-kernel, swift-async-primitives, swift-async
-status: complete
+status: COMPLETE
 ---
 -->
 
