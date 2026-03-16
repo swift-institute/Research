@@ -25,6 +25,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-02-27-tagged-string-crossmodule-access-levels-and-shadowing.md](2026-02-27-tagged-string-crossmodule-access-levels-and-shadowing.md) | 2026-02-27 | Tagged String Cross-Module — Access Levels and Shadowing | swift-identity-primitives, swift-string-primitives, swift-institute | processed (2026-03-10) |
 | [2026-02-27-source-location-and-located-error-unification.md](2026-02-27-source-location-and-located-error-unification.md) | 2026-02-27 | Source Location and Located Error Unification — Type Deduplication at Scale | swift-text-primitives, swift-source-primitives, swift-test-primitives, swift-witnesses, swift-parsers, swift-parser-primitives, swift-json | processed (2026-03-10) |
 | [2026-03-03-typed-throws-rethrows-overload-resolution.md](2026-03-03-typed-throws-rethrows-overload-resolution.md) | 2026-03-03 | Typed Throws Conversion — rethrows Overload Resolution and E Inference | swift-standard-library-extensions, swift-geometry-primitives, swift-kernel-primitives, swift-algebra-primitives, swift-async-primitives, swift-cache-primitives, swift-dictionary-primitives, swift-ownership-primitives | processed (2026-03-10) |
+| [2026-03-16-dutch-law-four-layer-stack-validation.md](2026-03-16-dutch-law-four-layer-stack-validation.md) | 2026-03-16 | Dutch Law Four-Layer Stack Validation | burgerlijk-wetboek-core, burgerlijk-wetboek-boek-2, burgerlijk-wetboek, rule-burgerlijk-wetboek-2, rule-besloten-vennootschap | pending |
 
 ## Legacy Archive
 
