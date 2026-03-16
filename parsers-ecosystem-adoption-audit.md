@@ -2,12 +2,18 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-03
-status: RECOMMENDATION
+version: 1.1.0
+last_updated: 2026-03-15
+status: SUPERSEDED
 tier: 1
+superseded_by: next-steps-parsers.md
 ---
 -->
+
+> **Status**: SUPERSEDED (2026-03-15)
+> **Superseded by**: **next-steps-parsers.md** (v2.0.0)
+> This audit identified 95 adoption opportunities across ~30 packages. Its findings are fully incorporated into the next-steps tracking document, which contains the current per-package status, revised package assessment (5 complete, 8 mostly migrated, 2 bifurcated), and execution plan.
+> It remains as historical reference for the original gap analysis.
 
 ## Context
 

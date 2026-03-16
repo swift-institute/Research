@@ -2,12 +2,18 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-03
-status: RECOMMENDATION
+version: 1.1.0
+last_updated: 2026-03-15
+status: SUPERSEDED
 tier: 1
+superseded_by: next-steps-dependencies.md
 ---
 -->
+
+> **Status**: SUPERSEDED (2026-03-15)
+> **Superseded by**: **next-steps-dependencies.md** (v1.0.0) and **adoption-implementation-review.md** (v1.0.0)
+> All recommendations from this audit were implemented (12 done, 1 reverted-then-reapplied) or retained as-is per Category 1 analysis. The internal contradiction (Category 1 says KEEP @TaskLocal but Phase 1 says HIGH) was identified and resolved in next-steps Task 2.
+> It remains as historical reference for the original gap analysis.
 
 ## Context
 
