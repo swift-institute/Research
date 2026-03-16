@@ -1,4 +1,11 @@
 # Unified Geometry Types Specification
+<!--
+---
+version: 1.0.0
+last_updated: 2026-03-15
+status: RECOMMENDATION
+---
+-->
 
 A comprehensive specification for sharing geometry types from `swift-standards` across SVG, CSS, and HTML libraries.
 

@@ -1,4 +1,11 @@
 # Remediation Prompt: Naming + Implementation Audit
+<!--
+---
+version: 1.0.0
+last_updated: 2026-03-03
+status: RECOMMENDATION
+---
+-->
 
 Paste this into a new Claude Code chat to address the audit findings.
 

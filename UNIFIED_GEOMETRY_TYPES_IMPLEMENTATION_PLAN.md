@@ -1,4 +1,11 @@
 # Unified Geometry Types Implementation Plan
+<!--
+---
+version: 1.0.0
+last_updated: 2026-03-15
+status: RECOMMENDATION
+---
+-->
 
 A phased implementation guide for integrating swift-standards Geometry types across SVG, CSS, and HTML libraries.
 

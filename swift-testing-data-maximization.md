@@ -1,4 +1,11 @@
 # Swift Testing Data Maximization
+<!--
+---
+version: 1.0.0
+last_updated: 2026-03-14
+status: RECOMMENDATION
+---
+-->
 
 **Status**: Tier 2 Research [RES-004]
 **Date**: 2026-03-14

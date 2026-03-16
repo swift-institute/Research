@@ -1,4 +1,11 @@
 # Rendering Architecture Audit — Findings
+<!--
+---
+version: 1.0.0
+last_updated: 2026-03-13
+status: COMPLETE
+---
+-->
 
 **Date**: 2026-03-13
 **Scope**: `swift-rendering-primitives` (L1), `swift-html-rendering` (L3), `swift-svg-rendering` (L3), `swift-pdf-rendering` (L3)
