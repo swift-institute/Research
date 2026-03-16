@@ -3,7 +3,7 @@
 <!--
 ---
 date: 2026-02-24
-status: active
+status: IN_PROGRESS
 packages: [swift-async-primitives, swift-pool-primitives]
 ---
 -->
