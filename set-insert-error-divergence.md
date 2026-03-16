@@ -2,12 +2,16 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-02
-status: DECISION
+version: 1.1.0
+last_updated: 2026-03-15
+status: SUPERSEDED
 tier: 2
 ---
 -->
+
+> **Status**: SUPERSEDED (2026-03-15)
+> **Superseded by**: **set-protocol-requirements.md** (v4.0.0) — consolidated per [META-016]
+> This document's content has been merged into the unified Set.Protocol decision document.
 
 ## Context
 

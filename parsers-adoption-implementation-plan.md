@@ -2,12 +2,18 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-03
-status: RECOMMENDATION
+version: 1.1.0
+last_updated: 2026-03-15
+status: SUPERSEDED
 tier: 2
+superseded_by: next-steps-parsers.md
 ---
 -->
+
+> **Status**: SUPERSEDED (2026-03-15)
+> **Superseded by**: **next-steps-parsers.md** (v2.0.0)
+> This implementation plan (tiers, prerequisites, execution order, naming conventions, error type compatibility, validation strategy) is fully absorbed into the next-steps tracking document.
+> It remains as historical reference for the architectural reasoning behind the adoption strategy.
 
 ## Context
 
