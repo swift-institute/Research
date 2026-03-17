@@ -2,22 +2,29 @@
 
 <!--
 ---
-version: 2.0.0
-last_updated: 2026-03-04
+version: 3.0.0
+last_updated: 2026-03-16
 status: IN_PROGRESS
 source: adoption-implementation-review.md, parsers-ecosystem-adoption-audit.md
 ---
 -->
 
-## Status After First Pass
+## Status (Verified 2026-03-16)
 
-**Infrastructure:** `Parser.ASCII.Integer` module added to swift-parser-primitives.
+**Infrastructure:** `Parser.ASCII.Integer` module does NOT exist in swift-parser-primitives. Only ASCII decimal/hexadecimal *serializers* exist. Integer *parsing* combinators are a prerequisite for rfc-9112/rfc-9111 work.
 
-**New parsers added (18 packages, all PARTIAL):** Parser combinator implementations were written in 18 standards packages but sit alongside the old hand-rolled code without replacing it. The old `.split()`, `.components(separatedBy:)`, and manual index-advancement code remains at all call sites.
+**Complete (14 packages):** Parser combinators fully wired into public API, zero `.split()` in main Sources:
+- RFC 5321, RFC 7519, RFC 2369, RFC 5322, RFC 2822 (original 5)
+- RFC 9110 (14 parse files, parsers wired into public API — previously mischaracterized as "bifurcated")
+- RFC 3986, RFC 2045, RFC 2183, RFC 2388, RFC 5646, RFC 7617, RFC 9557, RSS (previously "mostly migrated" — all now have 0 splits)
 
-**Fully done (1):** RFC 6750 Foundation removal (byte-level, not via combinators).
+**Bifurcated (1 package):** WHATWG URL — 2 parse files exist but unused, 6 `.split()` calls in active code paths.
 
-**Not started (57+ items):** RFC 9112 (9 HIGH items), RFC 3987, RFC 5890, RFC 1035, RFC 1123, RFC 4291, RFC 4007, RFC 6531, ISO 14496-22, W3C CSS, WHATWG HTML, Linux NUMA, plist, and more.
+**Not started (2 packages):** RFC 9112 (8 `.split()` calls), RFC 9111 (4 `.split()` calls). No Parser_Primitives imports.
+
+**Correctly structured (1 package):** ISO 8601 — internal `.split()` contained within parser enum, public API delegates correctly.
+
+**Total remaining `.split()` calls:** 18 across 3 packages (not ~60 as previously estimated).
 
 ## Task 1: Replacement Pass — Wire New Parsers Into Existing APIs
 
@@ -194,13 +201,11 @@ extension RFC_9112.HTTP.Version {
 
 ---
 
-## Revised Package Status (as of 2026-03-04)
+## Revised Package Status (verified 2026-03-16)
 
-The current audit reveals a more nuanced picture than "18 packages, all PARTIAL":
+### Complete Migration (14 packages)
 
-### Complete Migration (5 packages)
-
-No manual `.split()` or `components(separatedBy:)` in main source:
+Zero `.split()` or `components(separatedBy:)` in main Sources:
 
 | Package | Parse Files | Notes |
 |---------|-------------|-------|
@@ -209,36 +214,34 @@ No manual `.split()` or `components(separatedBy:)` in main source:
 | swift-rfc-2369 | 2 | List header URI |
 | swift-rfc-5322 | 3 | DateTime, MessageID (Foundation in separate bridge module) |
 | swift-rfc-2822 | 3 | Email address (Foundation in separate bridge module) |
+| swift-rfc-9110 | 14 | HTTP parsers fully wired: MediaType.Parser public, ContentEncoding.parse() uses HTTP.Parse.tokens() |
+| swift-rfc-3986 | 10 | URI parsing |
+| swift-rfc-2045 | 4 | ContentType |
+| swift-rfc-2183 | 2 | ContentDisposition |
+| swift-rfc-2388 | 3 | FormData |
+| swift-rfc-5646 | 2 | LanguageTag |
+| swift-rfc-7617 | 2 | Basic credentials |
+| swift-rfc-9557 | 2 | Suffix annotations |
+| swift-rss-standard | 2 | iTunes duration |
 
-### Mostly Migrated (8 packages)
-
-1–2 remaining `.split()` calls, typically in non-critical or secondary paths:
-
-| Package | Parse Files | Remaining `.split()` | Location |
-|---------|-------------|---------------------|----------|
-| swift-rfc-3986 | 10 | 1 | To identify |
-| swift-rfc-2045 | 4 | 1 | ContentType secondary path |
-| swift-rfc-2183 | 2 | 1 | ContentDisposition secondary path |
-| swift-rfc-2388 | 3 | 2 | FormData pair splitting |
-| swift-rfc-5646 | 2 | 1 | LanguageTag subtag split |
-| swift-rfc-7617 | 2 | 1 | Basic credentials |
-| swift-rfc-9557 | 2 | 2 | Suffix annotations |
-| swift-rss-standard | 2 | 1 | iTunes duration |
-
-### Bifurcated Implementation (2 packages — CRITICAL)
-
-Parser combinators exist but public entry points still use old code:
+### Bifurcated Implementation (1 package)
 
 | Package | Parse Files | Active `.split()` | Problem |
 |---------|-------------|-------------------|---------|
-| **swift-rfc-9110** | 8 | **17** | HTTP.MediaType, ContentNegotiation, Authentication, Precondition, ContentEncoding, ContentLanguage all still use `.split()` in public methods. The 8 parser combinators (OWS, Token, QuotedString, Parameter, ParameterList, CommaSeparated, QualityValue) sit unused. |
-| **swift-whatwg-url** | 2 | **6** | WHATWG_Form_URL_Encoded.parse() uses direct `.split("&")` then `.split("=")`. Minimal combinator work done. |
+| **swift-whatwg-url** | 2 | **6** | WHATWG_Form_URL_Encoded.parse() uses direct `.split("&")` then `.split("=")`. 2 parse files (URL.Scheme.Parse, WHATWG_URL.Parse) exist but are not wired into public API. |
+
+### Not Started (2 packages)
+
+| Package | `.split()` calls | Items | Notes |
+|---------|:----------------:|:-----:|-------|
+| **swift-rfc-9112** | 8 | Version, Request.Line, Response.Line, Connection, TransferEncoding, ChunkedEncoding, Host, Message.Deserializer | No Parser_Primitives import, no .Parse files |
+| **swift-rfc-9111** | 4 | CacheControl, HeaderStorage (3 sites) | No Parser_Primitives import, no .Parse files |
 
 ### Correctly Structured (1 package)
 
 | Package | Parse Files | `.split()` in Parser | Notes |
 |---------|-------------|---------------------|-------|
-| swift-iso-8601 | 12 | 12 (internal) | All `.split()` contained within `ISO_8601.DateTime.Parser` enum. Public API delegates correctly. No action needed on these `.split()` calls. |
+| swift-iso-8601 | 12 | 12 (internal) | All `.split()` contained within parser enum. Public API delegates correctly. No action needed. |
 
 ### Foundation Status
 
@@ -248,8 +251,8 @@ Parser combinators exist but public entry points still use old code:
 
 | Metric | Count |
 |--------|-------|
-| Parse files created | 61 |
-| Remaining `.split()` in non-Parse source | 60 |
+| Parse files created | 61+ |
+| Remaining `.split()` across all packages | 18 (6 whatwg-url + 8 rfc-9112 + 4 rfc-9111) |
 | Remaining `.components(separatedBy:)` | 0 |
 | Foundation in main source | 0 |
 
@@ -439,30 +442,24 @@ The SVG path parser (`~500 lines`) in `swift-w3c-svg` is in a Foundation bridge 
 
 ---
 
-## Execution Plan Summary
+## Execution Plan Summary (revised 2026-03-16)
+
+Phases 1, 3, 6 are COMPLETE (verified — 0 remaining splits).
 
 ```
-Phase 1: RFC 9110 replacement pass (17 splits → 0)
-         ↓ unblocks
-Phase 2: RFC 9112 gap parsers (9 items, ~400 lines)
-         RFC 9111 gap parsers (5 items)
-         ├── both reuse RFC 9110 shared parsers
+Phase 1: WHATWG URL — wire existing parsers into public API (6 splits → 0)
          ↓
-Phase 3: RFC 3986 final split elimination (1 split → 0)
-         ↓ unblocks
-Phase 4: RFC 3987 IRI extension
-         ↓ unblocks
-Phase 5: WHATWG URL (6 splits + 7 gap items)
+Phase 2: RFC 9112 gap parsers (8 splits, new .Parse files needed)
+         RFC 9111 gap parsers (4 splits, new .Parse files needed)
+         ├── both can reuse RFC 9110 shared parsers (already complete)
+         ├── NOTE: hex/decimal integer parsing needed — no Parser.ASCII.Integer module exists
          ↓
-Phase 6: Remaining "mostly migrated" packages (8 packages, 10 splits total)
-         ISO 8601 — no action needed (correctly structured)
+Phase 3: Foundation removal audit (re-check after all wiring complete)
          ↓
-Phase 7: Foundation removal audit (re-check after all wiring complete)
-         ↓
-Phase 8: Binary parser migration (ISO 14496-22, plist — when Binary Parser Primitives mature)
+Phase 4: Binary parser migration (ISO 14496-22, plist — when Binary Parser Primitives mature)
 ```
 
-**Estimated scope**: ~60 `.split()` eliminations across Task 1 + ~25 new parser files for Task 2 gap packages.
+**Estimated scope**: 18 `.split()` eliminations across 3 packages.
 
 ---
 

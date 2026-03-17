@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-24
+version: 1.1.0
+last_updated: 2026-03-16
 status: RECOMMENDATION
 tier: 1
 ---
@@ -45,6 +45,8 @@ The file I/O write loops (`Kernel.File.Write.Atomic+API.swift:388-427`, `Kernel.
 
 #### Finding 1: Tagged Atomic Flag — `.rawValue` leak at call sites
 
+> **Resolved: 2026-03-16**: Implemented in Tagged+Kernel.Atomic.Flag.swift. Call sites updated.
+
 **Files**: `IO.Event.Poll.Loop.swift:63`, `IO.Completion.Queue.swift:488,491`
 
 **Current** (mechanism — [PATTERN-017]):
@@ -79,6 +81,8 @@ extension Tagged where RawValue == Kernel.Atomic.Flag, Tag: ~Copyable {
 ---
 
 #### Finding 2: `Int(bitPattern:)` at call sites for `reserveCapacity` and `store`
+
+> **Stale (unverified 2026-03-16)**: Issue persists at IO.Event.Registration.Queue and IO.Completion.Submission.Queue call sites.
 
 **Files**: `IO.Event.Registration.Queue.swift:29`, `IO.Completion.Submission.Queue.swift:28`, `IO.Blocking.Threads.Runtime.State.swift:397`, `IO.Blocking.Lane.Abandoning.Runtime.swift:75,138`, `IO.Handle.Waiters.swift:73`
 
@@ -115,6 +119,8 @@ For `IO.Handle.Waiters.count` — returning `Int` forces all consumers to work i
 
 #### Finding 3: `__unchecked` constructor for capacity
 
+> **Stale (unverified 2026-03-16)**: IO.Handle.Waiters.swift:62-64 still uses hand-rolled pattern.
+
 **File**: `IO.Handle.Waiters.swift:62-64`
 
 **Current** (mechanism — [PATTERN-017]):
@@ -138,6 +144,8 @@ Or if `capacity` is guaranteed positive, the `max` is redundant and a direct `tr
 ---
 
 #### Finding 4: Hand-rolled accessor structs on reference type
+
+> **Stale (unverified 2026-03-16)**: IO.Blocking.Threads.Runtime.State still uses hand-rolled structs.
 
 **File**: `IO.Blocking.Threads.Runtime.State.swift:299-351`
 
@@ -192,6 +200,8 @@ The in-flight count is stored as `Atomic<Int>` and manipulated via raw `Int` ope
 ---
 
 #### Finding 6: Queue drain pattern could use bulk collection
+
+> **Stale (unverified 2026-03-16)**: Original drain pattern persists; no Deque.drainAll() added.
 
 **Files**: `IO.Event.Registration.Queue.swift:26-35`, `IO.Completion.Submission.Queue.swift:26-35`
 
