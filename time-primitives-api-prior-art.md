@@ -1,3 +1,10 @@
+---
+title: "Time/Duration API Prior Art Across Languages"
+version: 1.0.0
+status: COMPLETE
+last_updated: 2026-02-27
+---
+
 # Time/Duration API Prior Art Across Languages
 
 <!--

@@ -1,3 +1,10 @@
+---
+title: "Comparative Analysis: swift-Slab-primitives vs swift-io Slab/Pool Usage"
+version: 1.0.0
+status: DECISION
+last_updated: 2026-02-24
+---
+
 # Comparative Analysis: swift-Slab-primitives vs swift-io Slab/Pool Usage
 
 <!--

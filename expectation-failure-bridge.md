@@ -1,3 +1,10 @@
+---
+title: "Test Expectation Failure Reporting Bridge"
+version: 1.0.0
+status: SUPERSEDED
+last_updated: 2026-03-03
+---
+
 # Test Expectation Failure Reporting Bridge
 
 <!--

@@ -1,3 +1,10 @@
+---
+title: "Converged Plan: Structural Type Primitives Decomposition"
+version: 1.0.0
+status: DECISION
+last_updated: 2026-03-16
+---
+
 # Converged Plan: Structural Type Primitives Decomposition
 
 ## Summary

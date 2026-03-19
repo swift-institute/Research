@@ -1,3 +1,10 @@
+---
+title: "Comparative Analysis: Hash-Table-Primitives vs swift-io Hash-Based Structures"
+version: 1.0.0
+status: RECOMMENDATION
+last_updated: 2026-02-24
+---
+
 # Comparative Analysis: Hash-Table-Primitives vs swift-io Hash-Based Structures
 
 <!--

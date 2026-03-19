@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-02-25
-status: IN_PROGRESS
+version: 1.2.0
+last_updated: 2026-03-18
+status: DEFERRED
 tier: 2
 trigger: Pointfree #355 analysis — isolation propagation as foundation for deterministic execution
 ---
@@ -352,7 +352,9 @@ A **practical middle ground** would be:
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+**Status**: DEFERRED
+
+**Blocker**: Swift language has no mechanism for nonsending sync closures. **Resumption trigger**: Swift evolution proposal for isolation-preserving sync closures. **Deferred**: 2026-03-18.
 
 **Finding**: Every operator in `Async.Stream` breaks isolation. The root cause is architectural: the `@Sendable () async -> Element?` closure stored in `Iterator` severs the caller's isolation context at every `_next()` call. This is compounded by pervasive actor-based state management and unstructured `Task` creation in multi-stream and temporal operators.
 

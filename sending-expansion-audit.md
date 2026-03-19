@@ -1,3 +1,10 @@
+---
+title: "sending Annotation Expansion Audit"
+version: 1.0.0
+status: COMPLETE
+last_updated: 2026-02-25
+---
+
 # `sending` Annotation Expansion Audit
 
 <!--

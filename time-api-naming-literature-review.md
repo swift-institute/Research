@@ -1,3 +1,10 @@
+---
+title: "Time API Naming: Literature Review"
+version: 1.0.0
+status: COMPLETE
+last_updated: 2026-02-27
+---
+
 # Time API Naming: Literature Review
 
 <!--

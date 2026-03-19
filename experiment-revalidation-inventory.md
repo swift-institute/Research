@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-15
+version: 1.1.0
+last_updated: 2026-03-18
 status: COMPLETE
 tier: 1
 ---
@@ -56,6 +56,14 @@ These document permanent language limitations or disproved hypotheses. Retest on
 | `swift-primitives/swift-property-primitives/Experiments/borrowing-read-accessor-test/` | REFUTED (gap not fundamental) | dev-snapshot-2026-02-13-a | `withUnsafePointer(to: self)` works from non-mutating context on ~Copyable types — gap IS available via public API |
 | `swift-primitives/swift-input-primitives/Experiments/read-accessor-noncopyable-optional/` | REFUTED | Swift 6.2.3 | `_read` cannot yield ~Copyable element into Optional |
 | `swift-primitives/swift-storage-primitives/Experiments/nary-soa-feasibility/` | PARTIAL | Swift 6.2.3 | N-ary SoA with packs blocked: `cannot suppress '~Copyable' on type 'each Field'` |
+
+### INCONCLUSIVE (Pending Further Investigation)
+
+These experiments could not reproduce the target behavior at tested depths. Retest on toolchain upgrades or with expanded reproduction cases.
+
+| Experiment | Status | Toolchain | Description |
+|------------|--------|-----------|-------------|
+| `swift-institute/Experiments/for-loop-result-builder/` | INCONCLUSIVE | Swift 6.2.4 | `for`-loop `buildArray` stack overflow from deeply nested `_Tuple` generic types. Could not reproduce at tested depths — real production types have deeper WHATWG element + CSS modifier nesting. Related: iterative tuple rendering trampoline investigation (IN PROGRESS) |
 
 ## Next Steps
 
