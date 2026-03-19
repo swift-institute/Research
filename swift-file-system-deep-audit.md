@@ -72,16 +72,11 @@ swift-file-system is the oldest package in the ecosystem. It **works** — the a
 
 ---
 
-### MEDIUM — M-3: Raw Int arithmetic where Kernel types exist [IMPL-002]
+### MEDIUM — M-3: Raw Int arithmetic where Kernel types exist [IMPL-002] (Partially Resolved)
 
-**Deferred** — no typed count infrastructure exists in this package. Would require adding new types.
+**Stat/Info sites resolved** — `Metadata.Info` now stores Kernel typed fields directly (`Kernel.File.Size`, `Kernel.Inode`, `Kernel.Device`, `Kernel.Link.Count`, `Kernel.User.ID`, `Kernel.Group.ID`). The `.rawValue.rawValue` chain on linkCount and all rawValue extraction in `_makeInfo` are eliminated.
 
-| File | Expression | Should Be |
-|------|------------|-----------|
-| `File.Handle.swift` | `totalWritten += written` | Use typed count |
-| `File.System.Read.Full.swift` | `totalRead += bytesRead` | Use typed count |
-| `File.System.Stat.swift` | `UInt32(stats.linkCount.rawValue.rawValue)` | rawValue chain — 2 levels |
-| `File.System.Stat.swift` | `stats.size.rawValue`, `stats.uid.rawValue` | rawValue extraction for mapping |
+**Remaining** — `totalWritten += written` and `totalRead += bytesRead` in Handle and Read.Full use bare `Int` because `Kernel.IO.Read.read` / `Kernel.IO.Write.write` return plain `Int`. This is a Kernel-level boundary; fix requires upstream typed return values.
 
 ---
 
@@ -150,6 +145,7 @@ swift-file-system is the oldest package in the ecosystem. It **works** — the a
 | M-1a | `iterateFiles` / `iterateDirectories` | Renamed to `files` / `directories` | Phase 4 |
 | M-1b | `lstatInfo(at:)` | Unified into `info(at:followSymlinks:)` | Phase 4 |
 | M-2 | Multiple types per file (6 files) | Split into 13 files (7 new) | Phase 4 |
+| M-3 | Raw Int in Stat/Info (rawValue chains) | Info preserves Kernel typed fields | Phase 4 |
 | M-4 | File.Unsafe.Sendable unused | Deleted | Phase 1 |
 | M-5 | Excessive re-exports (ASCII, RFC_4648) | Removed `@_exported` | Phase 1 |
 | M-6 | Path.Component byte-level init duplication | Low priority, deferred | — |
