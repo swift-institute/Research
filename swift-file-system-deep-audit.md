@@ -1,6 +1,6 @@
 # swift-file-system Deep Audit
 
-**Date**: 2026-03-19 (updated after Phase 4)
+**Date**: 2026-03-19 (updated after Phase 4 + L-2 revert)
 **Package**: swift-file-system (Layer 3 — Foundations)
 **Location**: `/Users/coen/Developer/swift-foundations/swift-file-system/`
 **Scope**: 54 source files in File System Primitives, 32 in File System, 65 test files
@@ -36,10 +36,17 @@ swift-file-system is the oldest package in the ecosystem. It **works** — the a
 - Error mapping: Eliminated duplicate `_mapKernelOpenError` in Contents.Iterator by sharing `_mapKernelError` from Contents (made `internal`).
 - IO.Closable: Added conformance to `File.Descriptor` (signature already matched).
 
-**Phase 4 — File splits, naming compliance, string literal conformance**:
+**Phase 4 — File splits, naming compliance** (committed as 8642a53):
 - M-2: Split 6 files with multiple type declarations into 13 files (7 new). All comply with [API-IMPL-005].
 - M-1 (partial): Renamed `iterateFiles` → `files`, `iterateDirectories` → `directories` on Walk. Unified `info(at:)`/`lstatInfo(at:)` → `info(at:followSymlinks:)` on Stat.
-- L-2: Added `ExpressibleByStringLiteral` conformance to `File` and `File.Directory`.
+
+**Phase 4 follow-up — String → Path.Component migration** (committed as ee38edc):
+- File/Directory FS-layer APIs migrated from `String` to `Path.Component` (subscripts, appending, rename, `/` operator, name/extension/stem properties).
+- `File.Path.Property` made generic over value type.
+
+**L-2 revert — ExpressibleByStringLiteral removed** (committed as 2f0b526):
+- `ExpressibleByStringLiteral` was added to `File` and `File.Directory` then reverted. The conformance silently overrides the throwing `init(_ string:) throws` for string literals — the compiler always selects the non-throwing `stringLiteral` path, turning validation errors into `fatalError` crashes. `@_disfavoredOverload` does not mitigate this; the protocol conformance path wins for literals unconditionally.
+- Root cause: design tension between `ExpressibleByStringLiteral` (fatalError on invalid) and throwing init (recoverable). Needs broader design resolution — see `Research/prompts/file-path-type-unification-audit.md`.
 
 ### Remaining Issues
 
@@ -96,6 +103,12 @@ swift-file-system is the oldest package in the ecosystem. It **works** — the a
 
 ---
 
+### LOW — L-2: File/Directory ExpressibleByStringLiteral
+
+**Reverted** — conformance is fundamentally incompatible with the existing throwing `init(_ string:)` on `File.Directory`. For string literals, the compiler always selects the `ExpressibleByStringLiteral` path (non-throwing, fatalError on invalid) over the throwing init, regardless of `@_disfavoredOverload`. Resolution requires a broader design decision about the File/Path type relationship. Research prompt: `Research/prompts/file-path-type-unification-audit.md`.
+
+---
+
 ### LOW — L-3: File.Handle.Open and File.Descriptor.Open are near-identical
 
 **Deferred** — ~70% structural overlap, but cleanup paths differ due to ownership semantics (Handle: Copyable `try? close()`, Descriptor: ~Copyable `consume`). A shared abstraction would add protocol + generic constraints + ownership bridging — more complexity than the duplication removes.
@@ -143,7 +156,7 @@ swift-file-system is the oldest package in the ecosystem. It **works** — the a
 | M-7 | Walk has three traversal implementations | Absorbed into C-5 | Phase 3 |
 | M-11 | Duplicated error mapping (4→3) | Shared `_mapKernelError`, eliminated duplicate | Phase 3 |
 | L-1 | 6 stub implementations | Deleted | Phase 1 |
-| L-2 | File/Directory missing ExpressibleByStringLiteral | Conformance added | Phase 4 |
+| L-2 | File/Directory missing ExpressibleByStringLiteral | **Reverted** — incompatible with throwing init | Phase 4 |
 | L-4 | FTS walker Darwin-only | Deleted | Phase 1 |
 
 ---
@@ -175,8 +188,6 @@ swift-file-system is the oldest package in the ecosystem. It **works** — the a
 | Result<> workarounds | 8 | 0 | 0 | 0 |
 | Kernel.Path.scope calls | 6 | 0 | 0 | 0 |
 | catch let error as | 14 | 5 | 5 | 5 |
-| Tests passing | 709 | 709 | 709 | 363* |
+| Tests passing | 709 | 709 | 709 | 1039 |
 
-*Note: Test count reduced because the pre-existing `swift-systems` dependency cycle (Kernel → Linux Kernel → Systems → Kernel) blocks full test execution. The 363 tests that ran all passed with 0 failures. The cycle is an infrastructure issue unrelated to this audit.
-
-Note: FSP file count increased from 47→54 due to 7 new files from M-2 file splits. Total line count is approximately unchanged (type declarations moved, not added).
+Note: FSP file count increased from 47→54 due to 7 new files from M-2 file splits. Total line count is approximately unchanged (type declarations moved, not added). Test count increased from 709 to 1039 due to tests added in intervening commits and the String → Path.Component migration fixing previously-broken test paths.
