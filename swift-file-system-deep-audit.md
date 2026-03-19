@@ -1,9 +1,9 @@
 # swift-file-system Deep Audit
 
-**Date**: 2026-03-19 (updated after Phase 3)
+**Date**: 2026-03-19 (updated after Phase 4)
 **Package**: swift-file-system (Layer 3 — Foundations)
 **Location**: `/Users/coen/Developer/swift-foundations/swift-file-system/`
-**Scope**: 47 source files in File System Primitives (5760 lines), 32 in File System (3533 lines), 65 test files
+**Scope**: 54 source files in File System Primitives, 32 in File System, 65 test files
 **Dependencies**: swift-kernel, swift-io, swift-environment, swift-paths, swift-strings, swift-ascii, swift-binary-primitives, swift-rfc-4648
 
 ---
@@ -30,11 +30,16 @@ swift-file-system is the oldest package in the ecosystem. It **works** — the a
 - swift-paths replaced `withKernelPath` closures with direct `path.kernelPath` property access
 - All 45 call sites migrated (-87 lines)
 
-**Phase 3 — Consolidate duplicated code** (this session, -294 lines):
+**Phase 3 — Consolidate duplicated code** (committed as e4f270c, -294 lines):
 - Walk: 3 traversal implementations → 1. Deleted `_walk()` and `_walkCallbackThrowing()`. `callAsFunction` now delegates to `iterate()`. Throwing `iterate()` wraps non-throwing variant with error capture.
 - Glob: 6 copy-pasted pattern construction blocks → 1 shared `_matchPaths`. All 6 variants (sync+async × 3) use the shared core. Async variants delegate to their sync counterpart via `IO.run`.
 - Error mapping: Eliminated duplicate `_mapKernelOpenError` in Contents.Iterator by sharing `_mapKernelError` from Contents (made `internal`).
 - IO.Closable: Added conformance to `File.Descriptor` (signature already matched).
+
+**Phase 4 — File splits, naming compliance, string literal conformance**:
+- M-2: Split 6 files with multiple type declarations into 13 files (7 new). All comply with [API-IMPL-005].
+- M-1 (partial): Renamed `iterateFiles` → `files`, `iterateDirectories` → `directories` on Walk. Unified `info(at:)`/`lstatInfo(at:)` → `info(at:followSymlinks:)` on Stat.
+- L-2: Added `ExpressibleByStringLiteral` conformance to `File` and `File.Directory`.
 
 ### Remaining Issues
 
@@ -46,36 +51,23 @@ swift-file-system is the oldest package in the ecosystem. It **works** — the a
 
 ## Remaining Findings
 
-### MEDIUM — M-1: Compound method/property names [API-NAME-002]
+### MEDIUM — M-1: Compound method/property names [API-NAME-002] (Partially Resolved)
 
-| Identifier | File | Should Be |
-|------------|------|-----------|
-| `iterateFiles(options:body:)` | `Walk.swift:168` | `iterate.files(options:body:)` |
-| `iterateDirectories(options:body:)` | `Walk.swift:187` | `iterate.directories(options:body:)` |
-| `isFile(at:)` | `File.System.Stat.swift` (FS) | Evaluate — reads naturally as bool |
-| `isDirectory(at:)` | `File.System.Stat.swift` (FS) | Evaluate |
-| `isSymlink(at:)` | `File.System.Stat.swift` (FS) | Evaluate |
-| `lstatInfo(at:)` | `File.System.Stat.swift` (FSP) | `info(at:followSymlinks:)` |
-| `seekToEnd()` | `File.Handle.swift` (FS) | `seek.toEnd()` |
-
-**Assessment**: These are breaking API changes. `iterateFiles`/`iterateDirectories` could be renamed to `iterate.files`/`iterate.directories` using the Property pattern since Walk is already a namespace struct. The `isFile`/`isDirectory`/`isSymlink` read naturally as boolean predicates — standard Swift convention, not a violation. `lstatInfo` and `seekToEnd` are genuine violations.
-
----
-
-### MEDIUM — M-2: Multiple type declarations per file [API-IMPL-005]
-
-| File | Types Declared | Should Split |
-|------|----------------|--------------|
-| `File.Name.swift` | `Name`, `RawEncoding` | `File.Name.RawEncoding.swift` |
-| `File.Directory.Contents.swift` | `Contents`, `Control` | `File.Directory.Contents.Control.swift` |
-| `File.Directory.Contents.Iterator.swift` | `Iterator`, `IteratorHandle` | `File.Directory.Contents.IteratorHandle.swift` |
-| `File.Directory.Walk.swift` | `Walk`, `InodeKey` | `File.Directory.Walk.InodeKey.swift` (internal) |
-| `File.System.Create.swift` | `Create`, `Options` | `File.System.Create.Options.swift` |
-| `File.System.Create.Directory.swift` | `Directory`, `Options`, `Error` | Split Options and Error |
+| Identifier | File | Status |
+|------------|------|--------|
+| `iterateFiles(options:body:)` | `Walk.swift` | **Resolved** → `files(options:body:)` |
+| `iterateDirectories(options:body:)` | `Walk.swift` | **Resolved** → `directories(options:body:)` |
+| `isFile(at:)` | `File.System.Stat.swift` (FS) | **Deferred** — standard Swift boolean predicate convention |
+| `isDirectory(at:)` | `File.System.Stat.swift` (FS) | **Deferred** — standard Swift boolean predicate convention |
+| `isSymlink(at:)` | `File.System.Stat.swift` (FS) | **Deferred** — standard Swift boolean predicate convention |
+| `lstatInfo(at:)` | `File.System.Stat.swift` (FSP) | **Resolved** → `info(at:followSymlinks:)` |
+| `seekToEnd()` | `File.Handle.swift` (FS) | **Deferred** — Seek namespace on ~Copyable Handle is over-engineering for one convenience method; `seek(to: 0, from: .end)` already available |
 
 ---
 
 ### MEDIUM — M-3: Raw Int arithmetic where Kernel types exist [IMPL-002]
+
+**Deferred** — no typed count infrastructure exists in this package. Would require adding new types.
 
 | File | Expression | Should Be |
 |------|------------|-----------|
@@ -88,49 +80,43 @@ swift-file-system is the oldest package in the ecosystem. It **works** — the a
 
 ### MEDIUM — M-9: File.Path._resolvingPOSIX does ad-hoc string manipulation
 
-Uses `hasPrefix`, `lastIndex(of: "/")`, `removeLast()` instead of Paths APIs.
+**Deferred** — would need Paths APIs for prefix checking, component splitting. Low priority.
 
 ---
 
 ### MEDIUM — M-10: File.Handle._pwrite/_pwriteAll are package-internal but substantial
 
-Positional write methods with ESPIPE fallback. Evaluate whether they should be consolidated into atomic write.
+**Deferred** — needs design discussion on whether to consolidate into atomic write.
 
 ---
 
 ### MEDIUM — M-12: Walk.Options.onUndecodable uses closure instead of enum
 
-Over-engineered. A `Undecodable.Policy` property would suffice for 99% of use cases. However, the closure pattern does work and provides maximum flexibility. Low priority.
-
----
-
-### LOW — L-2: File lacks ExpressibleByStringLiteral conformance
-
-Doc comment claims it; conformance missing.
+**Deferred** — the closure pattern works and provides maximum flexibility. Low priority.
 
 ---
 
 ### LOW — L-3: File.Handle.Open and File.Descriptor.Open are near-identical
 
-~70% structural duplication. Could share implementation.
+**Deferred** — ~70% structural overlap, but cleanup paths differ due to ownership semantics (Handle: Copyable `try? close()`, Descriptor: ~Copyable `consume`). A shared abstraction would add protocol + generic constraints + ownership bridging — more complexity than the duplication removes.
 
 ---
 
 ### LOW — L-5: Binary.Serializable conformances on enum types may be premature
 
-On 5 types without documented consumers.
+**Deferred** — removing conformances is also a breaking change.
 
 ---
 
 ### LOW — L-6: Walk.Error and Contents.Error overlap
 
-Both define `.pathNotFound`, `.permissionDenied`, `.notADirectory`. Walk maps Contents errors to its own type in `_walkCallback`. Could unify, but Walk.Error has additional cases (`.walkFailed`, `.undecodableEntry`) that Contents.Error doesn't need.
+**Deferred** — unification would nest error cases (`catch .contents(.pathNotFound(let p))` instead of `catch .pathNotFound(let p)`), making error handling less ergonomic. The current flat cases with a 4-line switch mapping are simpler for consumers.
 
 ---
 
 ### LOW — L-7: File.Path.Property is a novel pattern not used elsewhere
 
-Only 2 built-in properties. Consider moving to Paths.
+**Deferred** — only 2 built-in properties. Not worth refactoring.
 
 ---
 
@@ -148,12 +134,16 @@ Only 2 built-in properties. Consider moving to Paths.
 | H-4 | 14 hand-rolled accessor structs | **Deferred** — marginal benefit | — |
 | H-5 | Glob: 6 copy-pasted implementations | Consolidated via shared `_matchPaths` | Phase 3 |
 | H-6 | Fully-qualified module name collision | Resolved by deleting File.System.Create.File stub | Phase 1 |
+| M-1a | `iterateFiles` / `iterateDirectories` | Renamed to `files` / `directories` | Phase 4 |
+| M-1b | `lstatInfo(at:)` | Unified into `info(at:followSymlinks:)` | Phase 4 |
+| M-2 | Multiple types per file (6 files) | Split into 13 files (7 new) | Phase 4 |
 | M-4 | File.Unsafe.Sendable unused | Deleted | Phase 1 |
 | M-5 | Excessive re-exports (ASCII, RFC_4648) | Removed `@_exported` | Phase 1 |
 | M-6 | Path.Component byte-level init duplication | Low priority, deferred | — |
 | M-7 | Walk has three traversal implementations | Absorbed into C-5 | Phase 3 |
 | M-11 | Duplicated error mapping (4→3) | Shared `_mapKernelError`, eliminated duplicate | Phase 3 |
 | L-1 | 6 stub implementations | Deleted | Phase 1 |
+| L-2 | File/Directory missing ExpressibleByStringLiteral | Conformance added | Phase 4 |
 | L-4 | FTS walker Darwin-only | Deleted | Phase 1 |
 
 ---
@@ -175,16 +165,18 @@ Only 2 built-in properties. Consider moving to Paths.
 
 ## Statistics
 
-| Metric | Pre-Audit | Post-Phase-1-2 | Post-Phase-3 |
-|--------|-----------|----------------|--------------|
-| Source files (FSP) | 59 | 47 | 47 |
-| Source files (FS) | 33 | 31 | 32 |
-| Total source files | 92 | 78 | 79 |
-| Total source lines | ~11,400 | ~9,600 | ~9,300 |
-| fatalError("unreachable") | 6 | 0 | 0 |
-| Result<> workarounds | 8 | 0 | 0 |
-| Kernel.Path.scope calls | 6 | 0 | 0 |
-| catch let error as | 14 | 5 | 5 |
-| Tests passing | 709 | 709 | 709 |
+| Metric | Pre-Audit | Post-Phase-1-2 | Post-Phase-3 | Post-Phase-4 |
+|--------|-----------|----------------|--------------|--------------|
+| Source files (FSP) | 59 | 47 | 47 | 54 |
+| Source files (FS) | 33 | 31 | 32 | 32 |
+| Total source files | 92 | 78 | 79 | 86 |
+| Total source lines | ~11,400 | ~9,600 | ~9,300 | ~9,300 |
+| fatalError("unreachable") | 6 | 0 | 0 | 0 |
+| Result<> workarounds | 8 | 0 | 0 | 0 |
+| Kernel.Path.scope calls | 6 | 0 | 0 | 0 |
+| catch let error as | 14 | 5 | 5 | 5 |
+| Tests passing | 709 | 709 | 709 | 363* |
 
-Note: FS file count went from 31→32 because `Glob.swift` gained the shared `_matchPaths` function (no new file; the count reflects the `+1` from the Glob file edit visibility in the build).
+*Note: Test count reduced because the pre-existing `swift-systems` dependency cycle (Kernel → Linux Kernel → Systems → Kernel) blocks full test execution. The 363 tests that ran all passed with 0 failures. The cycle is an infrastructure issue unrelated to this audit.
+
+Note: FSP file count increased from 47→54 due to 7 new files from M-2 file splits. Total line count is approximately unchanged (type declarations moved, not added).
