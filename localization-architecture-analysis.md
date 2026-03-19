@@ -6,7 +6,7 @@ version: 2.0.0
 last_updated: 2026-03-17
 status: CONVERGED
 tier: 1
-collaborative_discussion: /tmp/localization-architecture-transcript.md
+collaborative_discussion: swift-institute/Research/localization-architecture-discussion-transcript.md
 ---
 -->
 
@@ -807,27 +807,51 @@ Currently `swift-locale` at L3 is a pure re-export of `swift-locale-standard`. S
 
 ## Converged Design (Collaborative Discussion with ChatGPT, 2026-03-17)
 
-The following design was converged through a 4-round collaborative discussion between Claude and ChatGPT. Full transcript: `/tmp/localization-architecture-transcript.md`.
+The following design was converged through a 4-round collaborative discussion between Claude and ChatGPT, then refined based on standards-dependency analysis. Full transcript: `swift-institute/Research/localization-architecture-discussion-transcript.md`.
 
 **This section supersedes the Phase 3 Design Proposal above** where they conflict. The Phase 1–2 inventory and gap analysis remain valid.
 
+### Standards Foundation
+
+The localization architecture is built on existing standard implementations, not reimplementations. The dependency graph:
+
+```
+ISO 639, ISO 3166, ISO 15924       (L2 — atomic standard types)
+              ↓
+         RFC 5646                    (L2 — language tag parsing, uses ISO types directly)
+              ↓
+          BCP 47                     (L2 — thin re-export: BCP47.LanguageTag = RFC_5646.LanguageTag)
+              ↓
+       Locale Standard               (L2 — composes Language + region? + script?)
+```
+
+`RFC_5646.LanguageTag` stores `ISO_639.LanguageCode`, `ISO_3166.Alpha2`, `ISO_15924.Alpha4` directly. L2's `Locale` is a narrower projection of the same standard types (language + region? + script?), excluding BCP 47's variants, extensions, and private-use subtags. Both compose FROM the standards — neither reimplements them.
+
 ### Key Decisions
 
-1. **Canonical identity model**: L2 `Language` (ISO 639) for pure language. L2 `Locale` (language + region? + script?) for locale identity. No separate `TranslationKey` type.
+1. **Standards-based identity model**: All locale identity is built on existing standard packages (`swift-iso-639`, `swift-iso-3166`, `swift-iso-15924`, `swift-rfc-5646`, `swift-bcp-47`). L2 `Language` (ISO 639 wrapper) for pure language. L2 `Locale` (language + region? + script?) for locale identity — a narrower view of the same ISO types that `RFC_5646.LanguageTag` uses. No separate `TranslationKey` type. No reimplementation of BCP 47 or any standard.
 
 2. **Single dependency**: `@Dependency(\.locale)` replaces both `@Dependency(\.language)` and any separate locale dependency. `Translated<A>` reads the locale directly.
 
-3. **Translated<A> keys on Locale**: With documented constraint — translation lookup observes only the authored-content identity subset: language, optional script, optional region. Other locale preference dimensions are excluded from translation identity.
+3. **Translated<A> keys on Locale**: `Locale` is a projection of the standard types (language + optional script + optional region), not a replacement for `BCP47.LanguageTag`. Translation lookup observes only this authored-content identity subset. Other locale preference dimensions (numbering system, calendar, collation, hour cycle) are excluded from translation identity. If `Locale` later grows such dimensions, they must either be excluded from equality/hash used by translation lookup, or a narrower translation identity must be factored out then.
 
-4. **Formatter purity**: `Format.Date`, `Format.Number`, `Format.Currency` always take explicit `locale:` in their init. They are deterministic pure values. The `time.formatted(.long)` convenience reads `@Dependency(\.locale)` at the extension method boundary, not inside the formatter.
+4. **Formatter purity**: `Format.Date`, `Format.Number`, `Format.Currency` always take explicit `locale:` in their init. They are deterministic pure values. The `time.formatted(.long)` convenience reads `@Dependency(\.locale)` at the extension method boundary, not inside the formatter:
+   ```swift
+   extension Time {
+       public func formatted(_ style: Format.Date.Style = .long) -> String {
+           @Dependency(\.locale) var locale
+           return Format.Date(locale: locale, style: style).format(self)
+       }
+   }
+   ```
 
-5. **ICU bridge at L3**: Standalone `swift-icu` package with thin `_LocaleICU` Clang module. Foundation-free. Full CLDR coverage via system ICU. Phase 1 requires ICU-backed platform (macOS, Linux, Windows, Android).
+5. **ICU bridge at L3**: Standalone `swift-icu` package with thin `_LocaleICU` Clang module (replicating Apple's swift-foundation pattern, but Foundation-free). Full CLDR coverage via system ICU. Phase 1 requires ICU-backed platform (macOS, Linux, Windows, Android).
 
-6. **Provider-shaped internal seam**: Formatters access locale data through protocol-shaped providers (`CalendarSymbolProvider`, `NumberSymbolProvider`, `CurrencySymbolProvider`). ICU backs them today. Static L2 tables slot in later (Option C).
+6. **Provider-shaped internal seam**: Formatters access locale data through protocol-shaped providers (`CalendarSymbolProvider`, `NumberSymbolProvider`, `CurrencySymbolProvider`). ICU backs them today. Static L2 tables slot in later (Option C) without changing the public API.
 
 7. **Namespace**: Locale-aware formatters under `Format` (from `Formatting_Primitives`). `Format.Date`, `Format.Number`, `Format.Currency`. Not under `Time`.
 
-8. **Fallback architecture**: Shared engine (`Locale.FallbackChain`), separate policies (`Translation.FallbackPolicy`, `Formatting.FallbackPolicy`). Default order: exact → drop region → drop script → linguistic chain → default. Documented as default policy, not invariant.
+8. **Fallback architecture**: Shared engine (`Locale.FallbackChain`), separate policies (`Translation.FallbackPolicy`, `Formatting.FallbackPolicy`). Default order: exact → drop region → drop script → linguistic chain → default. Documented as default policy, not invariant. Existing L2 `Language.fallbackChain` data feeds the linguistic step.
 
 9. **L1 FormatStyle unchanged**: Stays locale-unaware. Locale awareness is composed behavior at L3.
 
@@ -836,11 +860,11 @@ The following design was converged through a 4-round collaborative discussion be
 ### Architecture
 
 ```
-L3: swift-icu (thin package)
+L3: swift-icu (thin package — Foundation-free ICU bridge)
 ├── _LocaleICU (Clang module — ICU C headers + modulemap)
 └── ICU (Swift wrappers — symbol retrieval, caching, error handling)
 
-L3: swift-formatting (depends on swift-icu + swift-locale-standard)
+L3: swift-formatting (depends on swift-icu + L2 standards)
 ├── Format.Date — via CalendarSymbolProvider (backed by ICU)
 ├── Format.Number — via NumberSymbolProvider (backed by ICU)
 ├── Format.Currency — via CurrencySymbolProvider (backed by ICU)
@@ -848,25 +872,32 @@ L3: swift-formatting (depends on swift-icu + swift-locale-standard)
 └── Time.formatted(_:) convenience (DI read at call boundary)
 
 L3: swift-translating (updated)
-├── Translated<A> keyed on Locale (was BCP47.LanguageTag)
+├── Translated<A> keyed on Locale (narrowed from BCP47.LanguageTag)
 ├── Locale.FallbackChain engine + Translation.FallbackPolicy
 └── Compatibility adapters from BCP47.LanguageTag
 
 L2: swift-locale-standard (existing, enhanced)
-├── Locale, Language, fallback chains (unified)
-└── Locale.FallbackChain (shared engine)
+├── Locale (composes Language + ISO_3166.Alpha2? + ISO_15924.Alpha4?)
+├── Language (wraps ISO_639.LanguageCode)
+├── Locale.FallbackChain (shared engine)
+└── depends on: swift-bcp-47, swift-iso-639, swift-iso-3166, swift-iso-15924
+
+L2: swift-bcp-47 → swift-rfc-5646 (existing — BCP47.LanguageTag = RFC_5646.LanguageTag)
+└── depends on: swift-iso-639, swift-iso-3166, swift-iso-15924
+
+L2: swift-iso-639, swift-iso-3166, swift-iso-15924 (existing — atomic standard types)
 
 L1: swift-formatting-primitives (UNCHANGED)
 ├── FormatStyle protocol
 └── Format namespace, Format.FloatingPoint, Format.Numeric.*
 ```
 
-Future Option C upgrade:
+Future Option C upgrade (ICU-free targets):
 ```
-L2: swift-locale-data (static tables, ICU-free)
-├── Calendar data per ISO_639.LanguageCode
-├── Number data per ISO_3166.Alpha2
-└── Currency data per ISO_4217 code
+L2: swift-locale-data (static tables extending existing standard types)
+├── Calendar data — extends ISO_639.LanguageCode with month/day names
+├── Number data — extends ISO_3166.Alpha2 with separator conventions
+└── Currency data — extends ISO_4217 codes with symbol/placement
 
 L3: swift-formatting checks L2 providers first, falls back to ICU
 ```
@@ -876,7 +907,7 @@ L3: swift-formatting checks L2 providers first, falls back to ICU
 - **Phase 0**: Clean L1 locale placeholder. Add `.english`, `.dutch` aliases to L2 `Language`.
 - **Phase 1**: Create `swift-icu` (L3). Create `swift-formatting` (L3) with `Format.Date`, `Format.Number`, provider seam, `@Dependency(\.locale)`, `Time.formatted(_:)`.
 - **Phase 2**: Add `Format.Currency`. Extend number formatting with locale-aware sign/notation/precision.
-- **Phase 3**: Migrate `Translated<A>` to `Locale` keying. Unify fallback chains. Add BCP47 compatibility adapters.
+- **Phase 3**: Narrow `Translated<A>` keying from `BCP47.LanguageTag` to `Locale` (same underlying ISO types, minus variants/extensions/private-use). Unify fallback chains. Add BCP47 compatibility adapters.
 - **Phase 4**: Deprecate `Translating Platform` Foundation formatting. Product layer cleanup.
 - **Future**: Add `swift-locale-data` at L2 for embedded/ICU-free targets.
 
@@ -895,17 +926,18 @@ L3: swift-formatting checks L2 providers first, falls back to ICU
 
 ### Normative Constraints
 
-1. Phase 1 locale-aware formatting requires an ICU-backed platform. ICU-free targets remain unsupported until a static-data backend is introduced.
-2. Translation lookup observes only the authored-content identity subset of Locale: language, optional script, optional region.
-3. The fallback order (exact → drop region → drop script → linguistic → default) is the product default policy, not a universal invariant.
-4. The public API is domain-oriented (month names, separators, symbols), not ICU-oriented. ICU is an implementation detail.
-5. Locale data access composes with existing `swift-iso-639`, `swift-iso-3166`, `swift-iso-15924` packages.
+1. **Standards-based**: All locale identity types compose FROM existing standard packages (`swift-iso-639`, `swift-iso-3166`, `swift-iso-15924`, `swift-rfc-5646`, `swift-bcp-47`). No reimplementation of standard parsing, validation, or semantics. L2 `Locale` is a narrower projection of the same ISO types that `RFC_5646.LanguageTag` uses.
+2. **ICU-backed Phase 1**: Locale-aware formatting requires an ICU-backed platform. ICU-free targets remain unsupported until a static-data backend is introduced (Option C).
+3. **Translation identity subset**: Translation lookup observes only the authored-content identity subset of Locale: language, optional script, optional region. If `Locale` later grows formatting-preference dimensions, those must be excluded from translation lookup equality/hash.
+4. **Fallback as policy**: The fallback order (exact → drop region → drop script → linguistic → default) is the product default policy, not a universal invariant. Custom policies can reorder.
+5. **Domain-oriented API**: The public API is domain-oriented (month names, separators, symbols), not ICU-oriented. ICU is an implementation detail behind provider protocols.
+6. **Future static tables extend standards**: When Option C is implemented, static locale data tables extend existing standard types (`ISO_639.LanguageCode`, `ISO_3166.Alpha2`, `ISO_4217` codes), not parallel data types.
 
 ---
 
 ## References
 
-- Collaborative discussion transcript: `/tmp/localization-architecture-transcript.md`
+- Collaborative discussion transcript: `swift-institute/Research/localization-architecture-discussion-transcript.md`
 - Prior research: `/Users/coen/Developer/swift-institute/Research/foundation-free-time-and-locale-in-swift-translating.md` (Option C recommendation)
 - Apple swift-foundation ICU pattern: `/Users/coen/Developer/swiftlang/swift-foundation/Sources/FoundationInternationalization/`
 - Triggering file: `/Users/coen/Developer/rule-legal/rule-legal-nl/rule-besloten-vennootschap/Sources/Aandeelhoudersregister PDF/Time+Formatting.swift`

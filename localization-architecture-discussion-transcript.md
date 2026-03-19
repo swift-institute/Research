@@ -515,3 +515,24 @@ No further architectural objections. Proceed with converged plan.
 Agreed by:
 - Claude: Round 4
 - ChatGPT: Round 5 (CONVERGED_AND_READY)
+
+## Post-Convergence Clarification (Human Architect)
+
+After convergence, the human architect raised two additional constraints:
+
+1. **Standards-based, not reimplemented**: The design must depend on existing standard packages (`swift-iso-639`, `swift-iso-3166`, `swift-iso-15924`, `swift-rfc-5646`, `swift-bcp-47`), not reimplement them. L2 `Locale` is a narrower projection of the same ISO types that `RFC_5646.LanguageTag` uses — both compose from the standards.
+
+2. **Translated<A> migration is a narrowing**: Moving from `BCP47.LanguageTag` to `Locale` keying is not replacing a standard type. `Locale` uses the same underlying `ISO_639.LanguageCode`, `ISO_3166.Alpha2`, `ISO_15924.Alpha4` types. It simply drops the BCP 47 fields irrelevant to translation identity (variants, extensions, private-use).
+
+Dependency graph (verified from Package.swift files):
+```
+ISO 639, ISO 3166, ISO 15924    (L2 — atomic standard types)
+              ↓
+         RFC 5646                (L2 — parses/validates language tags, uses ISO types)
+              ↓
+          BCP 47                 (L2 — thin re-export: BCP47.LanguageTag = RFC_5646.LanguageTag)
+              ↓
+       Locale Standard           (L2 — composes Language + region? + script?)
+```
+
+These constraints are reflected in the updated research document.

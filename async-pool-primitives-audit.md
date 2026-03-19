@@ -1,3 +1,10 @@
+---
+title: "Audit Report: swift-async-primitives & swift-pool-primitives"
+version: 1.1.0
+status: RECOMMENDATION
+last_updated: 2026-03-18
+---
+
 # Audit Report: swift-async-primitives & swift-pool-primitives
 
 <!--

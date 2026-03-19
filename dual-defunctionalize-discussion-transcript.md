@@ -1,3 +1,10 @@
+---
+title: "Collaborative Discussion: Structural Type Primitives Decomposition"
+version: 1.0.0
+status: DECISION
+last_updated: 2026-03-16
+---
+
 # Collaborative Discussion: Structural Type Primitives Decomposition
 
 Started: 2026-03-16

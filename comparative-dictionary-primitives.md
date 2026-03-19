@@ -1,3 +1,10 @@
+---
+title: "Comparative Analysis: swift-dictionary-primitives vs. swift-io Dictionary Usage"
+version: 1.0.0
+status: RECOMMENDATION
+last_updated: 2026-02-24
+---
+
 # Comparative Analysis: swift-dictionary-primitives vs. swift-io Dictionary Usage
 
 <!--

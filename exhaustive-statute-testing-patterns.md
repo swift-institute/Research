@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-03
-status: RECOMMENDATION
+version: 1.1.0
+last_updated: 2026-03-18
+status: SUPERSEDED
 ---
 -->
 
@@ -250,7 +250,7 @@ extension `Artikel 1`.`Lid 2`.Arguments: CaseIterable {
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: SUPERSEDED (2026-03-18). **Superseded by**: **legal-testing** skill [LEG-TEST-*]. Short-term Bool? allCases pattern is now canonical in the skill. The medium-term @ExhaustiveCases macro recommendation remains as open future work.
 
 **Short-term (implement now)**: **Option D** — Manual `CaseIterable` conformances in Test Support. This requires no new infrastructure and follows existing conventions. The boilerplate is mechanical and can be done once per statute package.
 

@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-02-25
-status: IN_PROGRESS
+version: 1.2.0
+last_updated: 2026-03-18
+status: RECOMMENDATION
 tier: 2
 trigger: Pointfree #355 analysis — NonsendingClock and deterministic temporal testing
 ---
@@ -594,7 +594,7 @@ The wheel is the right foundation for server-side timer management (e.g., connec
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+**Status**: RECOMMENDATION
 
 Our temporal operators currently have **zero deterministic testability**. Of 12 operators (11 temporal + 1 non-temporal `repeating`), only `repeating` without interval is deterministic today. The remaining 10 temporal operators all depend on `Task.sleep(for:)` or hardcoded `ContinuousClock.now` with no clock injection point.
 

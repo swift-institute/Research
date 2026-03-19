@@ -1,3 +1,10 @@
+---
+title: "Test Output Quality: Parity with Apple and Beyond"
+version: 1.0.0
+status: DECISION
+last_updated: 2026-03-03
+---
+
 # Test Output Quality: Parity with Apple and Beyond
 
 <!--
