@@ -237,7 +237,7 @@ The HTTP standards family contains the highest density of hand-rolled `.split(se
 | Package | File | Current Pattern | Proposed Change | Priority |
 |---------|------|----------------|-----------------|----------|
 | swift-rfc-4648 | `Sources/RFC 4648/*.swift` | Manual byte-by-byte base64/base32/base16 decoding with lookup tables | These are inherently byte-level operations well-suited to lookup tables. Parser combinators add overhead without benefit for fixed-alphabet decoding. | LOW |
-| swift-base62-standard | `Sources/Base62 Standard/Base62_Standard.Decoding.swift:125` | Manual byte-level base62 decoding | Same as RFC 4648 -- lookup tables are appropriate | LOW |
+| swift-base62-primitives | `Sources/Base62 Primitives/Base62_Primitives.Decoding.swift:125` | Manual byte-level base62 decoding | Same as RFC 4648 -- lookup tables are appropriate | LOW |
 
 ### Category 13: Binary Format Parsing (ISO 14496-22, ISO 32000, RFC 1951)
 

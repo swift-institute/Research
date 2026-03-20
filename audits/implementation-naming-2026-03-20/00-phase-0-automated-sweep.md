@@ -265,7 +265,7 @@ Ranked by (violation density × ecosystem impact × prior coverage gap):
 | swift-region-primitives | 20 compound methods |
 | swift-sample-primitives | 15 compound methods |
 | swift-ordering-primitives | 9 compound methods + PartialComparator type |
-| swift-base62-standard | Compound types (IntegerWrapper, StringWrapper, CollectionWrapper) |
+| swift-base62-primitives | Compound types (IntegerWrapper, StringWrapper, CollectionWrapper) |
 | swift-parser-primitives | 15 `__unchecked` + compound types (ParserPrinter, LocatedError) |
 
 ### Tier 4 — Low Impact / Platform (audit last)

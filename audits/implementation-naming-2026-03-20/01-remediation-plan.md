@@ -246,9 +246,9 @@ Also grep swift-standards and swift-foundations for cross-repo usage — note bu
 | swift-ascii-primitives | `ControlCharacters` | `ASCII.Control` |
 | swift-ascii-primitives | `CaseConversion` | `ASCII.Case.Conversion` |
 | swift-ascii-primitives | `LineEnding` | `ASCII.Line.Ending` |
-| swift-base62-standard | `IntegerWrapper` | `Base62_Standard.Integer` |
-| swift-base62-standard | `StringWrapper` | `Base62_Standard.String` (nested) |
-| swift-base62-standard | `CollectionWrapper` | `Base62_Standard.Bytes` |
+| swift-base62-primitives | `IntegerWrapper` | `Base62_Primitives.Integer` |
+| swift-base62-primitives | `StringWrapper` | `Base62_Primitives.String` (nested) |
+| swift-base62-primitives | `CollectionWrapper` | `Base62_Primitives.Bytes` |
 | swift-standard-library-extensions | `CaseInsensitive` | `String.Case.Insensitive` |
 
 After each rename: build tiers 1-20 to find and fix downstream breakage.
