@@ -29,6 +29,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-18-store-view-not-body-noncopyable-rendering.md](2026-03-18-store-view-not-body-noncopyable-rendering.md) | 2026-03-18 | Store VIEW Not BODY — ~Copyable Body Support and Protocol Witness Ownership | swift-rendering-primitives, swift-css-html-rendering | processed (2026-03-20) |
 | [2026-03-20-file-path-literal-vs-throwing-init-harmonization.md](2026-03-20-file-path-literal-vs-throwing-init-harmonization.md) | 2026-03-20 | File/Path Literal vs Throwing Init — Harmonization | swift-file-system, swift-paths, swift-tests | processed (2026-03-20) |
 | [2026-03-20-skill-system-overhaul-architecture.md](2026-03-20-skill-system-overhaul-architecture.md) | 2026-03-20 | Skill System Overhaul — Application Gap, Research-Grounded Restructuring | swift-institute | processed (2026-03-20) |
+| [2026-03-20-pass4-compound-renames-and-generic-nesting.md](2026-03-20-pass4-compound-renames-and-generic-nesting.md) | 2026-03-20 | Pass 4: Compound Type Renames — Generic Nesting Discoveries | swift-pool-primitives, swift-cache-primitives, swift-parser-primitives | pending |
 
 ## Legacy Archive
 
