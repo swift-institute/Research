@@ -5,7 +5,18 @@ packages:
   - swift-file-system
   - swift-paths
   - swift-tests
-status: pending
+status: processed
+processed_date: 2026-03-20
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: Add [IMPL-037] string interpolation as type bridge pattern
+  - type: experiment_topic
+    target: swift-paths
+    description: "Path.init(validating:) rename scope — verify breaking change impact across Path family"
+  - type: package_insight
+    target: swift-tests
+    description: "#filePath to File.Path conversion hack (6 occurrences)"
 ---
 
 # File/Path Literal vs Throwing Init — Harmonization

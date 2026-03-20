@@ -5,7 +5,15 @@ packages:
   - swift-rendering-primitives
   - swift-html-rendering
   - swift-pdf-html-rendering
-status: pending
+status: processed
+processed_date: 2026-03-20
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: Add [IMPL-035] heap-deferred traversal all-or-nothing rule
+  - type: package_insight
+    target: swift-rendering-primitives
+    description: Pair._render limitation with push/pop views + @_owned tracking
 ---
 
 # Iterative Render Machine — Stack Overflow Fix via Heap-Deferred Traversal
