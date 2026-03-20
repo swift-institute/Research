@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 2.0.0
+version: 3.0.0
 last_updated: 2026-03-19
-status: DECISION
+status: DECISION (partially implemented)
 tier: 2
 ---
 -->
@@ -321,15 +321,22 @@ These types close the domain model. Currently `Path.Component.extension` and `.s
 
 **Conversion boundary principle**: `Path.init(_: String)` and `Path.Component.init(_: String)` stay — they ARE the boundary where untyped text enters the domain. Everything downstream speaks domain types.
 
-#### Phase 2: swift-kernel, swift-posix, swift-windows (L3) — No Changes
+#### Phase 2: swift-posix (L3) — Callback-Based Glob
 
-These packages do not depend on swift-paths. Their internal use of `Swift.String` for path values in error types, Context properties, glob results, and test helpers stays as-is. This `String` usage is an implementation detail encapsulated behind the File System layer.
+`Kernel.Glob.match` refactored from array-returning to callback-based yielding:
 
-**Rationale**: `Kernel.Path` (~Copyable) exists for zero-copy syscall interfacing. `Paths.Path` (Copyable) exists for user-facing path manipulation. Kernel should not see Paths — the abstraction boundary is intentional.
+| Current | Replace with |
+|---------|-------------|
+| `match(pattern:in:options:) → [String]` | `match(pattern:in:options:body:)` — streams each match to body closure |
+| `match(include:excluding:in:options:) → [String]` | `match(include:excluding:in:options:body:)` — collects for dedup, then yields |
 
-The `Kernel.Glob.match(in: Swift.String) → [Swift.String]` signature stays. File System wraps it:
-- Input: converts `File.Path` → `String` at the call site into Kernel.Glob (this conversion is internal to File System, invisible to consumers)
-- Output: wraps `[String]` results into `[File]` / `[File.Directory]` / `[File.Directory.Glob.Match]`
+Convenience `→ [String]` returning overloads preserved, delegating to the callback versions.
+
+**Benefits**: Single-pattern match streams directly — zero intermediate collection (unless deterministic ordering is requested). Multi-pattern collects for dedup (Set-based), then yields. Callers process results in the callback without building a second array.
+
+**Internal implementation**: String-based throughout (readdir gives C strings, pattern matching on Unicode scalars). The String is an encapsulated POSIX implementation detail — callers receive results via callback and convert to their own types.
+
+**Rationale**: `Kernel.Path` (~Copyable) exists for zero-copy syscall interfacing. `Paths.Path` (Copyable) exists for user-facing path manipulation. Kernel does not depend on swift-paths — the abstraction boundary is intentional. Error types use `path: String` because `Error` protocol requires `Copyable` and `Kernel.Path` is `~Copyable`.
 
 #### Phase 3: swift-file-system (L3)
 
@@ -357,14 +364,14 @@ All literal call sites (`directory / "Sources"`, `file.rename(to: "new.txt")`) c
 | `File.stem: String?` | `File.stem: Path.Component.Stem?` |
 | `File.Directory.name: String` | `File.Directory.name: Path.Component` |
 
-**Glob — internal plumbing stays String, consumer API already typed**:
+**Glob — uses callback API, internal plumbing stays String**:
 
-The consumer-facing glob API already returns `[File]`, `[File.Directory]`, `[Match]` — consumers never see `String`. Internally, `_matchPaths` delegates to `Kernel.Glob.match` which returns `[String]`; File System wraps results. The `include`/`excluding` parameters stay `[String]` — glob patterns are text specifications, not paths.
+The consumer-facing glob API already returns `[File]`, `[File.Directory]`, `[Match]` — consumers never see `String`. Internally, `_matchPaths` now uses the callback-based `Kernel.Glob.match(... body:)` to accumulate results. The `include`/`excluding` parameters stay `[String]` — glob patterns are text specifications, not paths.
 
 | Current | Verdict |
 |---------|---------|
 | `callAsFunction(include: [String], ...)` | Keep — patterns are text |
-| `_matchPaths(...) → [String]` | Keep as internal — wraps Kernel.Glob |
+| `_matchPaths(...) → [String]` | Uses callback API internally |
 | `Kernel.Glob.match(in: Swift.String(directory.path))` | Keep — internal conversion at File System boundary |
 
 **Path.Property — accept domain types**:
@@ -400,16 +407,43 @@ Currently, File System surfaces Kernel error types directly (e.g., `throws(Kerne
 
 ## Outcome
 
-**Status**: DECISION
+**Status**: DECISION (partially implemented)
 
-**Decision**: Replace all consumer-visible `Swift.String`-as-path usage with domain types. Subtractive approach — replace, do not add alongside. Introduce `Path.Component.Extension` and `Path.Component.Stem` in swift-paths to complete the domain model. Kernel layer keeps `String` internally (does not depend on swift-paths); File System wraps at the boundary.
+**Decision**: Replace all consumer-visible `Swift.String`-as-path usage with domain types. Subtractive approach — replace, do not add alongside. Introduce `Path.Component.Extension` and `Path.Component.Stem` in swift-paths to complete the domain model. Kernel layer keeps `String` internally (does not depend on swift-paths); File System wraps at the boundary. Glob pipeline refactored to callback-based yielding.
 
-### Implementation Order
+### Implemented (2026-03-19)
 
-1. **swift-paths**: Create `Path.Component.Extension` and `Path.Component.Stem`. Update `Path.Component.extension`, `.stem`, `Path.extension`, `Path.stem` return types. Replace `Path / String` and `Path.appending(_: String)` with `Path.Component` parameter.
-2. **swift-file-system**: Replace all navigation/identity APIs with `Path.Component`. Replace extension/stem properties with typed returns. Introduce wrapper error types. Path.Property becomes typed per property.
+**swift-paths** (58 tests pass):
+- `Path.Component.Extension` — new validated type (`ExpressibleByStringLiteral`)
+- `Path.Component.Stem` — new validated type (`ExpressibleByStringLiteral`)
+- `Path.Component: ExpressibleByStringInterpolation` — added for `"\(i)"` patterns
+- `Path.Component.extension` returns `Extension?` (was `String?`)
+- `Path.Component.stem` returns `Stem` (was `String`)
+- `Path.extension` returns `Component.Extension?` (was `String?`)
+- `Path.stem` returns `Component.Stem?` (was `String?`)
+- `Path / String` removed — `Path / Path.Component` is primary, `Path / Path` is `@_disfavoredOverload`
+- Multi-component paths via chaining: `dir / "a" / "b" / "c"` (not `dir / "a/b/c"`)
 
-Phase 1 is the foundation. Phase 2 depends on it. Kernel/POSIX/Windows are unchanged.
+**swift-posix**:
+- `Kernel.Glob.match(pattern:in:options:body:)` — streaming callback, zero intermediate collection
+- `Kernel.Glob.match(include:excluding:in:options:body:)` — callback after dedup
+- Convenience `→ [String]` returning overloads preserved
+
+**swift-file-system** (709 tests pass across both packages):
+- All navigation APIs: `Path.Component` (was `String`)
+- Identity properties: `file.name → Path.Component`, `.extension → Extension?`, `.stem → Stem?`
+- Rename: `Path.Component` (was `String`)
+- `Path.Property<Value>` — generic, typed per property
+- `_matchPaths` uses callback-based `Kernel.Glob.match`
+
+### Deferred
+
+| Item | Reason |
+|------|--------|
+| File System error wrapping (Kernel `path: String` → `File.Path`) | Design work needed — new error types at File System layer |
+| `Kernel.Path` in error types | Blocked: `Error` protocol requires `Copyable`, `Kernel.Path` is `~Copyable` |
+| `Path / String` removal revisit | Using `@_disfavoredOverload` on `Path / Path` — monitor for type-checker friction |
+| `Path.appending(_: String)` removal | Kept as throwing conversion boundary — useful for runtime String→Component validation |
 
 ### Consumer Call-Site Before/After
 
