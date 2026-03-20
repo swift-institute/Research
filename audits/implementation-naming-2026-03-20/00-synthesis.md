@@ -54,7 +54,7 @@ The 10 CRITICAL findings are isolated to 4 packages (geometry types, formatting 
 | algebra-linear-primitives | 9 | 0 | 0 | 3 | 8 | **21** | Clean — .rawValue/.unchecked boundary-correct |
 | parser-primitives | 107 | 0 | 7 | 4 | 3 | **17** | Compound types (ParserPrinter, LocatedError, EndOfInput) |
 | ascii-primitives | 17 | 0 | 4 | 8 | 2 | **16** | Compound types (GraphicCharacters, ControlCharacters) |
-| base62-standard | 14 | 0 | 3 | 5 | 5 | **16** | Compound types (IntegerWrapper, StringWrapper) |
+| base62-primitives | 14 | 0 | 3 | 5 | 5 | **16** | Compound types (IntegerWrapper, StringWrapper) |
 | formatting-primitives | 7 | 2 | 2 | 4 | 4 | **14** | FormatStyle, FloatingPoint shadow |
 | ordering-primitives | 9 | 0 | 1 | 3 | 1 | **9** | PartialComparator compound type |
 | cyclic-primitives | 10 | 0 | 0 | 1 | 3 | **8** | Clean — all 31 __unchecked boundary-correct |
@@ -170,9 +170,9 @@ Special case: `.rawValue.rawValue` double chains (41 total) and `.rawValue.rawVa
 | `EndOfInput` | parser | `Parser.End` |
 | `CollectionInput` | parser | `Parser.Input.Collection` |
 | `ByteInput` / `ByteStream` | parser | `Parser.Input.Bytes` |
-| `IntegerWrapper` | base62 | `Base62_Standard.Integer` |
-| `StringWrapper` | base62 | `Base62_Standard.String` |
-| `CollectionWrapper` | base62 | `Base62_Standard.Bytes` |
+| `IntegerWrapper` | base62 | `Base62_Primitives.Integer` |
+| `StringWrapper` | base62 | `Base62_Primitives.String` |
+| `CollectionWrapper` | base62 | `Base62_Primitives.Bytes` |
 | `TryAcquire` | pool | `Pool.Bounded.Acquire.Try` |
 | `CallbackAcquire` | pool | `Pool.Bounded.Acquire.Callback` |
 | `TimeoutAcquire` | pool | `Pool.Bounded.Acquire.Timeout` |

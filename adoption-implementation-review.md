@@ -222,7 +222,7 @@ None. All witness commits were retained.
 | swift-rfc-4007 | IPv6 scoped address | MEDIUM | |
 | swift-rfc-6531 | Internationalized email | MEDIUM | |
 | swift-rfc-4648 | Base encoding (deferred by audit) | LOW | Correctly deferred — lookup tables appropriate. |
-| swift-base62-standard | Base62 decoding (deferred by audit) | LOW | Correctly deferred. |
+| swift-base62-primitives | Base62 decoding (deferred by audit) | LOW | Correctly deferred. |
 | swift-iso-14496-22 | Font table binary parsing | MEDIUM | |
 | swift-iso-32000 | JPEG header, PDF binary | MEDIUM/LOW | |
 | swift-rfc-1951 | DEFLATE bit-level (deferred by audit) | LOW | Correctly deferred. |
