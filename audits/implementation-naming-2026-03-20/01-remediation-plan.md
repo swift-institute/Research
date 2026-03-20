@@ -483,7 +483,7 @@ No downstream builds needed.
 |------|-------------|-----------|------|--------|-------------------|--------|
 | 1 | Mechanical fixes (throws, duplicates, filenames) | T0→T20 | None | ~2h | ~25 | **DONE** |
 | 2 | Additive infrastructure (overloads, operators) | T0→T20 | None | ~4h | ~0 (enables Pass 3) | **DONE** (descoped) |
-| 3 | Consumer cleanup (.rawValue, Int(bitPattern:), __unchecked) | T0→T20 | Low | ~8h | ~200 | **3a DONE** (3b/3c not started) |
+| 3 | Consumer cleanup (.rawValue, Int(bitPattern:), __unchecked) | T0→T20 | Low | ~8h | ~200 | **DONE** |
 | 4 | Compound type renames | T0→T20 | Medium | ~6h | ~30 | Not started |
 | 5 | Property.View method refactoring | T0→T20 | High | ~16h | ~250 | Not started |
 | 6 | File organization (one-type-per-file) | T0→T20 | None | ~4h | ~60 | Not started |
@@ -540,7 +540,26 @@ Committed per tier across 3 submodules:
 - swift-source/text-primitives encoding sites: UInt encoding for Codable — boundary code.
 - 3 commented-out lines in buffer-primitives.
 
-**Pass 3b/3c status**: Not started. These involve replacing `Int(bitPattern:)` at non-boundary call sites and `__unchecked` with typed constructors. Requires per-package triage to distinguish boundary-correct usage from improvable sites.
+### Pass 3b/3c Completion Notes (2026-03-20)
+
+Swept all 12 packages from tier 5→20. Changes in 7 packages, 5 confirmed clean (boundary-only usage).
+
+| Tier | Package | Commit | Changes |
+|------|---------|--------|---------|
+| 5 | swift-affine-primitives | `c7e3ad4` | 8 sites in Tagged+Affine.swift: `.rawValue.rawValue` → `.cardinal`/`.vector` semantic accessors + `Int(bitPattern:)` delegation |
+| 9 | swift-algebra-modular-primitives | `a27e1f7` | 1 site: `.rawValue.rawValue` → `.ordinal.rawValue` |
+| 15 | swift-buffer-primitives | user-fixed | `__unchecked` → `.retag()` typed init; `minimumCapacity` → `.retag(UInt8.self)` |
+| 16 | swift-hash-table-primitives | `0a587ec` | 5 sites: `Int(bitPattern: bucket.position)` → typed `InlineArray[bucket]` subscript; `.position.rawValue` → `Int(bitPattern:)` |
+| 17 | swift-queue-primitives | `3ee4a5b` | 2 sites: `Index(__unchecked: (), Ordinal(...))` → `Index(Ordinal(...))` via `Ordinal.Protocol` init |
+| 17 | swift-set-primitives | `0c32e3a` | 1 site: `__unchecked` Count init → `Cardinal.Protocol` typed init |
+| 20 | swift-binary-parser-primitives | `14b8f670` | 4 sites: `Int(bitPattern: count.rawValue)` → `Int(bitPattern: count)` using Tagged overload |
+
+**Confirmed clean (no non-boundary changes needed):**
+- Tier 13: swift-memory-primitives — all `Int(bitPattern:)` at stdlib boundaries
+- Tier 14: swift-binary-primitives — all at arithmetic boundaries, proper Tagged overloads used
+- Tier 17: swift-kernel-primitives — already clean from 3a
+- Tier 18: swift-dictionary-primitives — all at stdlib boundaries (underestimatedCount, endIndex, subscript validation)
+- Tier 19: swift-tree-primitives — all at boundary between typed indices and raw Int storage
 
 ### Remaining after all passes
 
