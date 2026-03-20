@@ -3,7 +3,16 @@ date: 2026-03-20
 session_objective: Overhaul the Swift Institute skill system — add enforcement, simplify routing, formalize lifecycle
 packages:
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-03-20
+triage_outcomes:
+  - type: experiment_topic
+    target: swift-institute
+    description: "Test skill @-imports (composite SKILL.md referencing another) for non-destructive composition"
+  - type: no_action
+    description: "[META-020] Skill Health Check already exists in research-meta-analysis skill"
+  - type: no_action
+    description: "last_reviewed frontmatter already applied to all reviewed skills during overhaul session"
 ---
 
 # Skill System Overhaul — Application Gap, Research-Grounded Restructuring

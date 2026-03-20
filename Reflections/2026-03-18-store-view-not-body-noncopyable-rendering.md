@@ -6,7 +6,18 @@ packages:
   - swift-html-rendering
   - swift-css-html-rendering
   - swift-pdf-html-rendering
-status: pending
+status: processed
+processed_date: 2026-03-20
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: Add [IMPL-036] store container, compute content transiently
+  - type: skill_update
+    target: memory
+    description: Add [MEM-COPY-012] protocol property dispatch for ~Copyable return types
+  - type: package_insight
+    target: swift-rendering-primitives
+    description: @_owned tracking (deduplicated with entry 1)
 ---
 
 # Iterative Render Machine — From Reproduction to ~Copyable Body Support
