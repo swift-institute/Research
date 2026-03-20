@@ -486,7 +486,7 @@ No downstream builds needed.
 | 3 | Consumer cleanup (.rawValue, Int(bitPattern:), __unchecked) | T0→T20 | Low | ~8h | ~200 | **DONE** |
 | 4 | Compound type renames | T0→T20 | Medium | ~6h | ~30 | Not started |
 | 5 | Property.View method refactoring | T0→T20 | High | ~16h | ~250 | Not started |
-| 6 | File organization (one-type-per-file) | T0→T20 | None | ~4h | ~60 | Not started |
+| 6 | File organization (one-type-per-file) | T0→T20 | None | ~4h | ~60 | **DONE** |
 | **Total** | | | | **~40h** | **~565** | |
 
 ### Pass 1 Completion Notes (2026-03-20)
@@ -560,6 +560,22 @@ Swept all 12 packages from tier 5→20. Changes in 7 packages, 5 confirmed clean
 - Tier 17: swift-kernel-primitives — already clean from 3a
 - Tier 18: swift-dictionary-primitives — all at stdlib boundaries (underestimatedCount, endIndex, subscript validation)
 - Tier 19: swift-tree-primitives — all at boundary between typed indices and raw Int storage
+
+### Pass 6 Completion Notes (2026-03-20)
+
+Swept all packages listed in plan. 3 packages split, remainder justified as exceptions.
+
+| Tier | Package | Commit | Changes |
+|------|---------|--------|---------|
+| 9 | swift-dimension-primitives | `a433ac7` | Split Dimension.swift → Spatial.swift, Coordinate.swift, Displacement.swift, Extent.swift, Measure.swift |
+| 17 | swift-kernel-primitives | `e8b16a1` | Split Process.ID, Directory.Entry, Directory.Error to own files |
+| 20 | swift-cache-primitives | `a62e936` | Split Cache Storage/State/Action and Entry State/Waiters to own files |
+
+**Justified exceptions (not split):**
+- **swift-hash-table-primitives**: `Hash.Table.Static` has value-generic parameter — must stay in primary declaration (Swift compiler limitation). Tag enums are 2-5 line trivials.
+- **swift-queue-primitives**: All nested types must stay in primary declaration due to `~Copyable` constraint propagation compiler bug (MEM-COPY-006). Error types are hoisted module-level (API-EXC-001), 3-5 lines each.
+- **swift-dictionary-primitives**: Nested types required for `~Copyable` constraint propagation.
+- **swift-darwin-primitives**: Identity/UUID namespace enums are 1-line trivials.
 
 ### Remaining after all passes
 
