@@ -28,6 +28,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-18-iterative-render-machine-stack-overflow-fix.md](2026-03-18-iterative-render-machine-stack-overflow-fix.md) | 2026-03-18 | Iterative Render Machine — Stack Overflow Fix via Heap-Deferred Traversal | swift-rendering-primitives, swift-html-rendering, swift-pdf-html-rendering | pending |
 | [2026-03-18-store-view-not-body-noncopyable-rendering.md](2026-03-18-store-view-not-body-noncopyable-rendering.md) | 2026-03-18 | Store VIEW Not BODY — ~Copyable Body Support and Protocol Witness Ownership | swift-rendering-primitives, swift-css-html-rendering | pending |
 | [2026-03-20-file-path-literal-vs-throwing-init-harmonization.md](2026-03-20-file-path-literal-vs-throwing-init-harmonization.md) | 2026-03-20 | File/Path Literal vs Throwing Init — Harmonization | swift-file-system, swift-paths, swift-tests | pending |
+| [2026-03-20-skill-system-overhaul-architecture.md](2026-03-20-skill-system-overhaul-architecture.md) | 2026-03-20 | Skill System Overhaul — Application Gap, Research-Grounded Restructuring | swift-institute | pending |
 
 ## Legacy Archive
 
