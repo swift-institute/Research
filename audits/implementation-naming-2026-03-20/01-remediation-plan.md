@@ -479,15 +479,68 @@ No downstream builds needed.
 
 ## Execution Summary
 
-| Pass | Description | Direction | Risk | Effort | Findings addressed |
-|------|-------------|-----------|------|--------|-------------------|
-| 1 | Mechanical fixes (throws, duplicates, filenames) | T0→T20 | None | ~2h | ~25 |
-| 2 | Additive infrastructure (overloads, operators) | T0→T20 | None | ~4h | ~0 (enables Pass 3) |
-| 3 | Consumer cleanup (.rawValue, Int(bitPattern:), __unchecked) | T0→T20 | Low | ~8h | ~200 |
-| 4 | Compound type renames | T0→T20 | Medium | ~6h | ~30 |
-| 5 | Property.View method refactoring | T0→T20 | High | ~16h | ~250 |
-| 6 | File organization (one-type-per-file) | T0→T20 | None | ~4h | ~60 |
-| **Total** | | | | **~40h** | **~565** |
+| Pass | Description | Direction | Risk | Effort | Findings addressed | Status |
+|------|-------------|-----------|------|--------|-------------------|--------|
+| 1 | Mechanical fixes (throws, duplicates, filenames) | T0→T20 | None | ~2h | ~25 | **DONE** |
+| 2 | Additive infrastructure (overloads, operators) | T0→T20 | None | ~4h | ~0 (enables Pass 3) | **DONE** (descoped) |
+| 3 | Consumer cleanup (.rawValue, Int(bitPattern:), __unchecked) | T0→T20 | Low | ~8h | ~200 | **3a DONE** (3b/3c not started) |
+| 4 | Compound type renames | T0→T20 | Medium | ~6h | ~30 | Not started |
+| 5 | Property.View method refactoring | T0→T20 | High | ~16h | ~250 | Not started |
+| 6 | File organization (one-type-per-file) | T0→T20 | None | ~4h | ~60 | Not started |
+| **Total** | | | | **~40h** | **~565** | |
+
+### Pass 1 Completion Notes (2026-03-20)
+
+Committed per tier across 6 submodules:
+
+| Tier | Package | Commit | Changes |
+|------|---------|--------|---------|
+| 9 | swift-dimension-primitives | `d1b7c21` | Rename Arithmatic→Arithmetic (2 files), fix header, remove 7 compound statics, unify sixty/thirty into BinaryFloatingPoint |
+| 10 | swift-algebra-linear-primitives | `e00168f` | Rename Arithmatic→Arithmetic, fix header |
+| 12 | swift-geometry-primitives | `31fb44d` | Rename Arithmatic→Arithmetic, fix header, replace .halfPi/.twoPi→.pi.half/.pi.two in 6 files |
+| 17 | swift-kernel-primitives | `4a5aa4b` | Replace fatalError() with __unchecked init in Event.ID.init(_ value: Int32) |
+| 20 | swift-cache-primitives | `12a96d0` | throws→throws(Cache.Error) on 4 methods, single catch for continuation bridge |
+| 20 | swift-pool-primitives | `13f1d1b` | DESIGN comment documenting intentional untyped throws on create closure |
+
+**Pool typed throws descoped**: Changing `create` closure to `throws(Pool.Error)` would break consumer API (contradicts "zero cascade"). Documented with DESIGN comment per audit recommendation.
+
+### Pass 2 Completion Notes (2026-03-20)
+
+Committed per tier across 3 submodules:
+
+| Tier | Package | Commit | Changes |
+|------|---------|--------|---------|
+| 3 | swift-cardinal-primitives | `119593f` | `UInt32.init<C: Cardinal.Protocol>` — generic overload for bare + tagged |
+| 4 | swift-ordinal-primitives | `25bd738` | `Array.subscript` generalized from `Ordinal` to `Ordinal.Protocol` |
+| 13 | swift-memory-primitives | `b82d20d` | `.bitPattern` property, generic pointer inits for `Tagged<Tag, Memory.Address>` |
+
+**Descoped from plan based on [INFRA-200] principled absence**:
+- `UnsafePointer + Index<Element>` / `+ Count` — "add vectors (offsets) to points, not scalars (counts)." Consumer cleanup should use existing affine offset operators or typed pointer subscripts.
+- `InlineArray.subscript(Index<Element>)` — already exists as `Ordinal.Protocol`.
+- `Int(bitPattern: Tagged<Tag, Cardinal>)` and `Int(bitPattern: Tagged<Tag, Affine.Discrete.Vector>)` — already exist.
+
+### Pass 3a Completion Notes (2026-03-20)
+
+**All `.rawValue.rawValue` chains eliminated from Sources/**: 0 remaining (was 42).
+
+| Tier | Package | Commit | Sites fixed |
+|------|---------|--------|-------------|
+| 5 | swift-affine-primitives | `0b04f4b` | 6 pointer operator sites → `Int(bitPattern:)` |
+| 7 | swift-source-primitives | `51a075e` | 1 site → `Int(bitPattern: position.column)` |
+| 14 | swift-binary-primitives | `66aa856` | 6 sites in Cursor/Reader → `Int(bitPattern: offset)` |
+| 15 | swift-buffer-primitives | `2cf392c6` | 2 arena sites → `UInt32(header.highWater)` |
+| 17 | swift-kernel-primitives | `71a4c0f` | 3 triple-chain sites → `.bitPattern` |
+| 17 | swift-queue-primitives | `f9e46d6` | 5 sites → `Int(bitPattern: index)` |
+| 20 | swift-binary-parser-primitives | `8fbe932` | 1 site → `Int(bitPattern: offset)` |
+
+**Justified (not changed):**
+- swift-affine-primitives Tagged+Affine.swift (8 sites): same-package implementations with mixed conversion semantics (Count↔Offset, overflow checks). These are infrastructure boundary code per [CONV-002].
+- swift-algebra-modular-primitives (1 site): overflow-reporting multiplication — no typed equivalent per [INFRA-200].
+- swift-heap-primitives (1 site): Cardinal division — principled absence per [INFRA-200], documented in code.
+- swift-source/text-primitives encoding sites: UInt encoding for Codable — boundary code.
+- 3 commented-out lines in buffer-primitives.
+
+**Pass 3b/3c status**: Not started. These involve replacing `Int(bitPattern:)` at non-boundary call sites and `__unchecked` with typed constructors. Requires per-package triage to distinguish boundary-correct usage from improvable sites.
 
 ### Remaining after all passes
 
