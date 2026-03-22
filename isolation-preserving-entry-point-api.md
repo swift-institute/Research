@@ -329,6 +329,8 @@ Two discoveries eliminated the need for wrappers or accessors:
 
 **2. Direct `next(isolation:)` implementation defeats the conformance trap.** The `NonisolatedNonsendingByDefault` conformance trap causes `next()` to hop to the cooperative pool when `AsyncIteratorProtocol` is from `_Concurrency` (compiled without the feature). The fix: implement `next(isolation actor: isolated (any Actor)? = #isolation)` directly on our iterators. The `isolated actor` parameter forces execution on the caller's actor, and we forward `actor` (not `#isolation`) to the base iterator.
 
+> **Compiler validation (2026-03-22)**: `nonsending-compiler-patterns.md` confirmed this conformance trap is a known, tested behavior in the compiler test suite (`test/Concurrency/attr_execution/nonisolated_nonsending_by_default.swift:12-24`). The compiler generates witness thunks that mediate between `nonisolated(nonsending)` implementations and `@concurrent` protocol requirements (`test/Concurrency/attr_execution/protocols_silgen.swift:21-168`). Our `next(isolation:)` approach bypasses the trap by using the SE-0421 protocol requirement directly — which is the stdlib's own pattern for concrete iterator types like `AsyncMapSequence`.
+
 ### Architecture
 
 Each concrete type stores a `Transform` (or `Predicate`) enum with `.sync` and `.async` cases:

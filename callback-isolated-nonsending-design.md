@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 3.0.0
-last_updated: 2026-02-25
+version: 3.1.0
+last_updated: 2026-03-22
 status: IMPLEMENTED
 tier: 2
 trigger: nonsending-adoption-audit.md identified Callback as primary dual-mode candidate (P1–P5)
@@ -18,6 +18,10 @@ implementation:
     - swift-test-primitives/.../Test.Snapshot.Strategy.swift (4 call site migrations)
     - swift-async-primitives/Tests/.../Async.Callback Tests.swift (new, 255 lines)
 changelog:
+  - 3.1.0: NOTE — nonsending-compiler-patterns.md discovered the stdlib has DEPRECATED
+    isolation: parameter overloads in favor of nonisolated(nonsending) on the function itself.
+    Our callAsFunction(isolation:) uses the deprecated pattern. Future migration recommended:
+    replace with `nonisolated(nonsending) func callAsFunction() async -> Value`.
   - 3.0.0: IMPLEMENTED. Async.Callback replaced in swift-async-primitives. Test.Snapshot.Strategy
     migrated in swift-test-primitives. 23 tests added (11 unit, 7 edge case, 6 integration/isolation).
     All 88 async-primitives tests pass. CPS bridge `init(wrapping:)` provided for legacy callers.
@@ -63,7 +67,7 @@ What is the optimal design for a nonsending variant of `Async.Callback` that ena
 
 **Status: CONFIRMED WORKING for async closure types.**
 
-Experiment `nonsending-blocker-validation` (at `swift-institute/Experiments/nonsending-blocker-validation/`) validates:
+Experiment `nonsending-closure-type-constraints` (at `swift-institute/Experiments/nonsending-closure-type-constraints/`) validates:
 
 | Test | Pattern | Result |
 |------|---------|--------|
@@ -438,6 +442,8 @@ The CPS-based `Async.Callback<Value: Sendable>: Sendable` has been replaced enti
 
 The experiment (`callback-isolated-prototype`) tested 5 approaches across 15 test scenarios. Approaches C and D are the only correct implementations — both pass all isolation tests. Approach C was implemented because `#isolation` is the standard Swift pattern (SE-0420).
 
+> **v3.1 note**: `nonsending-compiler-patterns.md` (2026-03-22) discovered that the Swift stdlib has **deprecated** `isolation: isolated (any Actor)?` parameter overloads across all concurrency primitives (`withCheckedContinuation`, `withTaskCancellationHandler`, etc.) in favor of `nonisolated(nonsending)` on the function itself. Our `callAsFunction(isolation:)` uses the deprecated pattern. The stdlib migration uses `@_disfavoredOverload` + `@available(*, deprecated)` on the old overload. A future migration should replace `callAsFunction(isolation:)` with `nonisolated(nonsending) func callAsFunction() async -> Value`. This would remove the `isolation:` implementation detail from the public API and align with the compiler's canonical direction. Requires experiment validation that `await self()` in `map`/`flatMap` still propagates isolation with the method-level annotation.
+
 ### Key Decisions
 
 | Decision | Choice | Rationale |
@@ -497,8 +503,8 @@ All recommended steps have been completed:
 ### Experiments
 
 - `swift-institute/Experiments/callback-isolated-prototype/` — **Primary validation**: 5 approaches, 14 tests, 6 discoveries. Approaches C/D confirmed. Issue #83812 confirmed with method wrapper workaround.
-- `swift-institute/Experiments/nonsending-blocker-validation/` — Confirmed `@escaping nonisolated(nonsending)` async closure storage (B1a, B1b)
-- `swift-institute/Experiments/nonsending-blocker-validation-negative/` — Confirmed sync closures cannot be nonsending
+- `swift-institute/Experiments/nonsending-closure-type-constraints/` — Confirmed `@escaping nonisolated(nonsending)` async closure storage (B1a, B1b) and sync restriction (B1d)
+- `swift-institute/Experiments/nonescapable-closure-storage/` — Confirmed ~Escapable closure storage patterns
 - `swift-institute/Experiments/stream-isolation-preservation/` — Confirmed sync closures preserve isolation when called from nonsending async context (Test K)
 
 ### Swift Evolution

@@ -203,6 +203,10 @@ When `strategy.capture(value)` is called:
 
 This is where our infrastructure has a structural advantage: `Async.Callback` was already designed with `nonisolated(nonsending)` semantics (SE-0431/SE-0420), making it a natural fit for non-Sendable composition.
 
+> **Update (2026-03-22)**: `nonsending-compiler-patterns.md` confirmed that the Swift stdlib's function type conversion lattice allows `nonisolated(nonsending)` ↔ `@concurrent` conversion freely, but crossing to specific actor isolation requires Sendable. Since Strategy's closures and values stay within the caller's isolation domain (never crossing to a specific actor), plain (non-`@Sendable`) closures are type-system-guaranteed safe. This validates the non-Sendable Strategy design from the compiler's own conversion rules.
+>
+> Additionally, `callAsFunction(isolation:)` uses a pattern the stdlib has since deprecated — a future migration to `nonisolated(nonsending) func callAsFunction()` would further simplify this path (see `callback-isolated-nonsending-design.md` v3.1 note).
+
 ### Question 5: Impact on `Witness.Protocol` conformance
 
 `Witness.Protocol` is an empty marker protocol:
