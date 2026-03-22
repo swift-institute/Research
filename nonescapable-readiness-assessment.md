@@ -27,7 +27,7 @@ Which types in the Swift Institute async ecosystem are candidates for `~Escapabl
 
 ## Experiment Validation
 
-Empirical testing (2026-02-25) in `swift-institute/Experiments/nonsending-blocker-validation-negative/` challenged several assumptions from the initial analysis. The results correct the assessment's characterization of blockers.
+Empirical testing (2026-02-25) in `swift-institute/Experiments/nonescapable-closure-storage/` challenged several assumptions from the initial analysis. The results correct the assessment's characterization of blockers.
 
 **Toolchain**: Apple Swift 6.2.3 (swiftlang-6.2.3.3.21), macOS 26.0 (arm64).
 
@@ -427,9 +427,9 @@ Dynamic arrays are heap-backed (`UnsafeMutablePointer`) and require `Element: Es
 | ~Escapable types | SE-0446 | Accepted, experimental | `Kernel.Path.View`, `Path.View`, `Span.Iterator` |
 | @_lifetime annotations | SE-0456 | Accepted, experimental | `Kernel.Path.View.init`, `Span.Iterator.init` |
 | Span<T> as ~Escapable | SE-0447 | Accepted, in stdlib | Used throughout |
-| ~Escapable + Sendable | SE-0446 | Works (confirmed by experiment) | Validated in nonsending-blocker-validation-negative |
-| ~Escapable + @escaping closure storage | SE-0446 + SE-0456 | Works with @_lifetime(immortal) | Validated in nonsending-blocker-validation-negative |
-| ~Escapable across await (immortal) | SE-0446 + SE-0456 | Works with @_lifetime(immortal) | Validated in nonsending-blocker-validation-negative |
+| ~Escapable + Sendable | SE-0446 | Works (confirmed by experiment) | Validated in nonescapable-closure-storage |
+| ~Escapable + @escaping closure storage | SE-0446 + SE-0456 | Works with @_lifetime(immortal) | Validated in nonescapable-closure-storage |
+| ~Escapable across await (immortal) | SE-0446 + SE-0456 | Works with @_lifetime(immortal) | Validated in nonescapable-closure-storage |
 
 #### Unresolved (blocking further async adoption)
 
@@ -562,7 +562,7 @@ The Swift Institute async ecosystem has **8 candidate types** for `~Escapable`, 
 - `/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Primitives/Kernel.Path.View.swift` -- Existing ~Escapable type in ecosystem
 - `/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Primitives Standard Library Integration/Swift.Span.Iterator.swift` -- Existing ~Escapable iterator
 - `/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Primitives Core/Sequence.Map.swift` -- Canonical conditional Escapable pattern
-- `/Users/coen/Developer/swift-institute/Experiments/nonsending-blocker-validation-negative/` -- Experiment: ~Escapable edge case validation (2026-02-25)
+- `/Users/coen/Developer/swift-institute/Experiments/nonescapable-closure-storage/` -- Experiment: ~Escapable edge case validation (2026-02-25)
 - `/Users/coen/Developer/swift-institute/Experiments/resumption-nonescapable-noncopyable/` -- Experiment: Resumption ~Copyable + ~Escapable (2026-03-02)
 - `/Users/coen/Developer/swift-institute/Experiments/conditional-escapable-container/` -- Experiment: Conditional Escapable containers (2026-03-02)
 - `/Users/coen/Developer/swift-institute/Experiments/nonescapable-gap-revalidation-624/` -- Experiment: Gap A/B re-validation on Swift 6.2.4 (2026-03-02)

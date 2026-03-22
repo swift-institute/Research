@@ -2,9 +2,10 @@
 
 <!--
 ---
-version: 1.3.0
-last_updated: 2026-03-04
-status: DECISION
+version: 1.4.0
+last_updated: 2026-03-22
+status: SUPERSEDED
+superseded_by: non-sendable-strategy-isolation-design.md
 tier: 2
 ---
 -->
@@ -273,7 +274,11 @@ Solved stdlib overload resolution defeating isolation-preserving concrete types 
 
 ## Outcome
 
-**Status**: DECISION (implemented)
+**Status**: SUPERSEDED
+
+**Superseded by**: [non-sendable-strategy-isolation-design.md](non-sendable-strategy-isolation-design.md) — The decided parts (remove `Value: Sendable`) are implemented. The remaining question (remove `@Sendable` from Strategy's closures entirely, making Strategy non-Sendable with isolation-first design) is the successor's scope.
+
+**Original decision** (implemented):
 
 **Decision**: **Option B — Remove `Value: Sendable` from `Test.Snapshot.Strategy` and downstream infrastructure**
 

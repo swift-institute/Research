@@ -262,6 +262,8 @@ However, the `operation` parameter and the function itself already have a `nonis
 
 Both `withCheckedContinuation` and `withUnsafeContinuation` already propagate caller isolation via `isolation: isolated (any Actor)? = #isolation`. Inside the continuation body, `MainActor.assertIsolated()` passes, confirming the body executes on the caller's isolation domain. The original analysis incorrectly characterized this as requiring evolution.
 
+> **Update (2026-03-22)**: The stdlib has since **deprecated** the `isolation:` parameter overloads of these functions in favor of `nonisolated(nonsending)` on the function itself (see `nonsending-compiler-patterns.md`). The new primary API is `public nonisolated(nonsending) func withCheckedContinuation<T>(...) async -> sending T`. The old overloads are marked `@_disfavoredOverload @available(*, deprecated)`.
+
 The continuation itself can still be resumed from any isolation domain (which is correct), but the *body closure* runs in the caller's context. This means code paths using continuation-based suspension do NOT lose caller isolation:
 - `Async.Bridge.next()`
 - `Async.Promise.value`
@@ -314,7 +316,7 @@ This eliminates approximately 22 of the 34 originally identified candidate sites
 
 ## Experiment Validation
 
-Empirical experiments were conducted in `swift-institute/Experiments/nonsending-blocker-validation/` and `swift-institute/Experiments/nonsending-blocker-validation-negative/` to validate the blocker analysis above. The results significantly revise the original assessment.
+Empirical experiments were conducted in `swift-institute/Experiments/nonsending-closure-type-constraints/` (B1: closure storage and sync restriction) and `swift-institute/Experiments/nonescapable-closure-storage/` (~Escapable edge cases) to validate the blocker analysis above. The results significantly revise the original assessment.
 
 ### Critical Discovery: nonsending Only Applies to Async Function Types
 
@@ -335,7 +337,9 @@ This means `nonisolated(nonsending)` is ONLY applicable to `async` closure param
 
 **Original claim:** The body of `withCheckedContinuation` is `@Sendable`, blocking isolation propagation.
 
-**Experiment result:** NOT BLOCKED. `withCheckedContinuation` and `withUnsafeContinuation` already propagate caller isolation via `isolation: isolated (any Actor)? = #isolation`. Inside the continuation body, `MainActor.assertIsolated()` passes, confirming the body executes on the caller's isolation domain. The original analysis incorrectly characterized this as a blocker.
+**Experiment result:** NOT BLOCKED. `withCheckedContinuation` and `withUnsafeContinuation` already propagate caller isolation. Inside the continuation body, `MainActor.assertIsolated()` passes, confirming the body executes on the caller's isolation domain. The original analysis incorrectly characterized this as a blocker.
+
+> **Update (2026-03-22)**: The stdlib has since deprecated the `isolation:` parameter overloads, replacing them with `nonisolated(nonsending)` on the function itself (see `nonsending-compiler-patterns.md`).
 
 ### Blocker B3: withTaskCancellationHandler — NOT BLOCKED
 
@@ -413,5 +417,7 @@ This means `nonisolated(nonsending)` is ONLY applicable to `async` closure param
 - Swift Concurrency: Sendable and actor isolation model
 - `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/` (14 @Sendable sites)
 - `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/` (38 @Sendable sites)
-- `swift-institute/Experiments/nonsending-blocker-validation/` — positive validation experiments (B1-B4 confirmed)
-- `swift-institute/Experiments/nonsending-blocker-validation-negative/` — negative validation (sync closure limitation discovered)
+- `swift-institute/Experiments/nonsending-closure-type-constraints/` — closure type applicability (B1a, B1b, B1d)
+- `swift-institute/Experiments/stdlib-concurrency-isolation/` — continuation and cancellation handler isolation (B2, B3)
+- `swift-institute/Experiments/nonsending-clock-feasibility/` — NonsendingClock protocol (B5)
+- `swift-institute/Experiments/nonescapable-closure-storage/` — ~Escapable closure storage (B4a, B4b)

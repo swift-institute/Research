@@ -23,8 +23,10 @@ Our temporal operators at `/Users/coen/Developer/swift-foundations/swift-async/S
 
 ## Experiment Validation
 
-**Experiment**: `swift-institute/Experiments/nonsending-blocker-validation/`
-**Negative experiment**: `swift-institute/Experiments/nonsending-blocker-validation-negative/`
+**Experiments**:
+- `swift-institute/Experiments/nonsending-clock-feasibility/` — NonsendingClock protocol validation (B5)
+- `swift-institute/Experiments/stdlib-concurrency-isolation/` — Continuation and cancellation handler isolation (B2, B3)
+- `swift-institute/Experiments/nonsending-closure-type-constraints/` — Closure type constraints (B1)
 **Toolchain**: Apple Swift 6.2.3 (swiftlang-6.2.3.3.21), macOS 26.0 (arm64)
 
 The research hypotheses from the initial analysis were empirically validated. Seven blockers (B1–B5) were tested. Key results:
@@ -44,7 +46,9 @@ This is immediately implementable — no language evolution proposals needed.
 
 ### B2: withCheckedContinuation already propagates isolation
 
-The document's original "Gap" about continuation functions is **not a real blocker**. `withCheckedContinuation` uses `isolation: isolated (any Actor)? = #isolation` and preserves caller isolation. `MainActor.assertIsolated` passed inside both `withCheckedContinuation` and `withUnsafeContinuation` bodies when called from a `@MainActor` function.
+The document's original "Gap" about continuation functions is **not a real blocker**. `withCheckedContinuation` preserves caller isolation. `MainActor.assertIsolated` passed inside both `withCheckedContinuation` and `withUnsafeContinuation` bodies when called from a `@MainActor` function.
+
+> **Update (2026-03-22)**: The stdlib has since **deprecated** the old `isolation: isolated (any Actor)?` parameter overloads of `withCheckedContinuation` et al. in favor of `nonisolated(nonsending)` on the function itself. The new primary API is `public nonisolated(nonsending) func withCheckedContinuation<T>(...) async -> sending T` (see `nonsending-compiler-patterns.md`).
 
 ### B3: withTaskCancellationHandler has full nonsending overload
 
@@ -532,7 +536,7 @@ The wheel is the right foundation for server-side timer management (e.g., connec
 
 **Impact**: Even if we add clock parameters, `Clock.sleep` is still `async`, still causes suspension + potential thread hop.
 
-**Update (2026-02-25)**: Experiment validation at `swift-institute/Experiments/nonsending-blocker-validation/` confirmed that a `NonsendingClock` protocol refining `Clock` with `nonisolated(nonsending) func sleep(until:tolerance:)` compiles and works on the current toolchain (Swift 6.2.3). An `ImmediateNonsendingClock` was tested — `MainActor.assertIsolated` passed after `clock.sleep`, confirming zero thread hop. The continuation functions (`withCheckedContinuation`, `withUnsafeContinuation`) already propagate caller isolation via `#isolation`, and `withTaskCancellationHandler` has a full `nonisolated(nonsending)` overload. This gap is no longer a blocker — the protocol can be defined and used immediately.
+**Update (2026-02-25)**: Experiment validation at `swift-institute/Experiments/nonsending-clock-feasibility/` confirmed that a `NonsendingClock` protocol refining `Clock` with `nonisolated(nonsending) func sleep(until:tolerance:)` compiles and works on the current toolchain (Swift 6.2.3). An `ImmediateNonsendingClock` was tested — `MainActor.assertIsolated` passed after `clock.sleep`, confirming zero thread hop. The continuation functions (`withCheckedContinuation`, `withUnsafeContinuation`) already propagate caller isolation via `#isolation`, and `withTaskCancellationHandler` has a full `nonisolated(nonsending)` overload. This gap is no longer a blocker — the protocol can be defined and used immediately.
 
 ---
 
@@ -616,5 +620,6 @@ The `Async.Timer.Wheel` primitive is the right foundation for server-side timer 
 - Async.Stream temporal sources: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/`
 - Async.Timer.Wheel primitive: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Timer.Wheel*.swift`
 - Existing stream tests: `/Users/coen/Developer/swift-foundations/swift-async/Tests/Sources/Async Stream Tests/Async.Stream Tests.swift`
-- Experiment validation (2026-02-25): `swift-institute/Experiments/nonsending-blocker-validation/`
-- Negative experiment (2026-02-25): `swift-institute/Experiments/nonsending-blocker-validation-negative/`
+- Experiment validation (2026-02-25): `swift-institute/Experiments/nonsending-clock-feasibility/` (B5: NonsendingClock)
+- Experiment validation (2026-02-25): `swift-institute/Experiments/stdlib-concurrency-isolation/` (B2, B3: continuation/cancellation handler)
+- Experiment validation (2026-02-25): `swift-institute/Experiments/nonsending-closure-type-constraints/` (B1: closure type constraints)

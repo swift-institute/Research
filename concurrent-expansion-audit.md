@@ -15,6 +15,8 @@ With `NonisolatedNonsendingByDefault` enabled, nonisolated async functions now d
 
 **Current state**: `@concurrent` is used ONLY in `IO.Blocking.Lane.swift` (8 sites: 4 stored closure type annotations + 4 method declarations).
 
+> **Validation (2026-03-22)**: `nonsending-compiler-patterns.md` confirmed that the Swift stdlib (`stdlib/public/Concurrency/`) contains **zero uses of `@concurrent`**. The stdlib uses `nonisolated(nonsending)` pervasively for functions that should inherit caller isolation, and unmodified `nonisolated` for functions that must hop to the generic executor. This validates our conservative approach — `@concurrent` is intended as an exceptional, explicit opt-out for genuine executor changes like thread pool dispatch.
+
 ## Audit Criterion
 
 A function needs `@concurrent` if and only if it genuinely executes on a different executor than the caller. This includes:

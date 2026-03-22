@@ -28,7 +28,7 @@ How does isolation propagate through composed `Async.Stream` pipelines, and wher
 
 ## Experiment Validation
 
-Empirical testing in `swift-institute/Experiments/nonsending-blocker-validation/` and `swift-institute/Experiments/nonsending-blocker-validation-negative/` revealed critical constraints that refine the original analysis.
+Empirical testing in `swift-institute/Experiments/nonsending-closure-type-constraints/` and `swift-institute/Experiments/stdlib-concurrency-isolation/` revealed critical constraints that refine the original analysis.
 
 ### Key Finding: `nonisolated(nonsending)` is async-only
 
@@ -45,6 +45,8 @@ This has three consequences:
 ### Correction: Continuation and cancellation handler isolation
 
 The original analysis implicitly included `withCheckedContinuation` and `withTaskCancellationHandler` in the isolation-breaking chain. Empirical testing confirms these already propagate caller isolation correctly — `withCheckedContinuation` uses `#isolation` and `withTaskCancellationHandler` uses `nonisolated(nonsending)` for its operation closure. The isolation breaks occur at actor boundaries and `@Sendable` closures, not at continuation or cancellation handler call sites.
+
+> **Update (2026-03-22)**: The stdlib has since migrated these functions to `nonisolated(nonsending)` on the function itself, deprecating the old `isolation:` parameter overloads (see `nonsending-compiler-patterns.md`). Both `withCheckedContinuation` and `withTaskCancellationHandler` now use `nonisolated(nonsending)` as their primary API. The `withTaskCancellationHandler` uses a double-nonsending pattern: both the outer function and its `operation` closure parameter are `nonisolated(nonsending)`.
 
 ## Analysis
 
@@ -320,7 +322,7 @@ The contract becomes:
 
 **Viability**: This is the current reality. It is consistent and honest. The question is whether it is acceptable.
 
-**Strengthened by experiment results**: The `nonsending-blocker-validation` experiments confirm that isolation breakage is deeper than originally understood. It is not merely a consequence of `@Sendable` on `_next` (which could theoretically be changed) — it is also a consequence of the fundamental inability to make sync closures nonsending. Even a hypothetical redesign that solved the `_next` problem would still break isolation for every sync operator closure. This makes Option D the only realistic path: accept that stream pipelines are concurrency boundaries and document the contract explicitly.
+**Strengthened by experiment results**: The `nonsending-closure-type-constraints` experiment confirms that isolation breakage is deeper than originally understood. It is not merely a consequence of `@Sendable` on `_next` (which could theoretically be changed) — it is also a consequence of the fundamental inability to make sync closures nonsending. Even a hypothetical redesign that solved the `_next` problem would still break isolation for every sync operator closure. This makes Option D the only realistic path: accept that stream pipelines are concurrency boundaries and document the contract explicitly.
 
 #### Assessment
 
@@ -380,5 +382,5 @@ A **practical middle ground** would be:
 - `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Iterator.swift` — Iterator with `@Sendable` `_next`
 - `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Iterator.Box.swift` — `@unchecked Sendable` bypass
 - `/Users/coen/Developer/swift-primitives/swift-ownership-primitives/Sources/Ownership Primitives/Ownership.Mutable.Unchecked.swift` — Sendable bypass mechanism
-- `/Users/coen/Developer/swift-institute/Experiments/nonsending-blocker-validation/` — Empirical validation: nonsending async closures, continuation/cancellation handler isolation
-- `/Users/coen/Developer/swift-institute/Experiments/nonsending-blocker-validation-negative/` — Negative validation: compiler rejects nonsending on sync function types
+- `/Users/coen/Developer/swift-institute/Experiments/nonsending-closure-type-constraints/` — Empirical validation: nonsending async closure storage (B1a, B1b) and sync restriction (B1d)
+- `/Users/coen/Developer/swift-institute/Experiments/stdlib-concurrency-isolation/` — Empirical validation: continuation and cancellation handler isolation propagation (B2, B3)
