@@ -32,6 +32,9 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-20-pass4-compound-renames-and-generic-nesting.md](2026-03-20-pass4-compound-renames-and-generic-nesting.md) | 2026-03-20 | Pass 4: Compound Type Renames — Generic Nesting Discoveries | swift-pool-primitives, swift-cache-primitives, swift-parser-primitives | pending |
 | [2026-03-20-release-mode-llvm-verifier-crash-investigation.md](2026-03-20-release-mode-llvm-verifier-crash-investigation.md) | 2026-03-20 | Release Mode LLVM Verifier Crash: Investigation and File-Split Fix | swift-buffer-primitives, swift-primitives | pending |
 | [2026-03-21-rawlayout-experiment-consolidation-and-workaround-exhaustion.md](2026-03-21-rawlayout-experiment-consolidation-and-workaround-exhaustion.md) | 2026-03-21 | @_rawLayout Experiment Consolidation and Workaround Exhaustion | swift-buffer-primitives, swift-storage-primitives | pending |
+| [2026-03-22-swift-64-dev-compatibility-and-dual-compiler-discovery.md](2026-03-22-swift-64-dev-compatibility-and-dual-compiler-discovery.md) | 2026-03-22 | Swift 6.4-dev Compatibility: Three Fix Categories and the Dual-Compiler Discovery | swift-primitives (superrepo), swift-kernel-primitives, swift-buffer-primitives, 12+ others | pending |
+| [2026-03-22-sil-copypropagation-bug2-workaround.md](2026-03-22-sil-copypropagation-bug2-workaround.md) | 2026-03-22 | SIL CopyPropagation Bug 2: Scope Was 10x Wider Than Expected | swift-stack/queue/array/heap/set/dictionary/parser/async/graph-primitives | SUPERSEDED by root-cause fix |
+| [2026-03-22-copypropagation-nonescapable-root-cause-and-fix.md](2026-03-22-copypropagation-nonescapable-root-cause-and-fix.md) | 2026-03-22 | CopyPropagation ~Escapable Root Cause: mark_dependence Classification and Fix | swift-property-primitives, swift-buffer-primitives, 10+ others | pending |
 
 ## Legacy Archive
 
