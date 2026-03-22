@@ -9,6 +9,8 @@ status: pending
 
 # @_rawLayout Experiment Consolidation and Workaround Exhaustion
 
+> **UPDATE (2026-03-22)**: Bug 2's root cause was identified: `~Escapable` + `@_lifetime(borrow)` on Property.View generates `mark_dependence` classified as `PointerEscape` by CopyPropagation. Fixed by removing `~Escapable` from Property.View. The "workaround exhaustion" finding below was correct — all code-level workarounds *for the `@_optimize(none)` approach* were exhausted. The actual fix was eliminating the root cause at the type level. See [2026-03-22-copypropagation-nonescapable-root-cause-and-fix.md](2026-03-22-copypropagation-nonescapable-root-cause-and-fix.md).
+
 ## What Happened
 
 The session had two phases.
