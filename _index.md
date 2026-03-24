@@ -6,6 +6,7 @@ This directory contains research documents analyzing design decisions, exploring
 
 | Document | Topic | Status |
 |----------|-------|--------|
+| [audit.md](audit.md) | Ecosystem-wide conversions audit: bare `Cardinal`/`Ordinal` → phantom-tagged `Index<T>.Count`/`Index<T>`. 14 findings across protocols and stored properties in swift-primitives L1. 6-phase remediation plan. [CONV-016], [IDX-007]. | ACTIVE |
 | [generalized-audit-skill-design.md](generalized-audit-skill-design.md) | Generalized /audit skill design: single `audit.md` per scope, section-per-skill structure, update-in-place, 10 requirement IDs [AUDIT-001–010]. Solves orphan files, version proliferation, naming chaos. Tier 2, ecosystem-wide. | RECOMMENDATION |
 | [ecosystem-data-structures-inventory.md](ecosystem-data-structures-inventory.md) | Complete inventory of data structures across swift-primitives (Memory, Storage, Buffer, Collections) and swift-foundations. Variant system, composition architecture, decision guide. Tier 1, ecosystem-wide. | DECISION |
 | [string-path-type-inventory-file-system.md](string-path-type-inventory-file-system.md) | String/Path type audit across file system stack (301 symbols). Partially implemented: new domain types (Path.Component.Extension, Path.Component.Stem), subtractive String→Path.Component replacement in swift-paths and swift-file-system, callback-based glob in swift-posix. 709 tests pass. Deferred: error wrapping, Kernel.Path in errors (Error requires Copyable). Tier 2, cross-package. | DECISION (partial) |
