@@ -95,7 +95,13 @@ Replaces experimental `CImplementation`. Swift functions/enums exposed to C with
 
 Now a `SUPPRESSIBLE_LANGUAGE_FEATURE`. Officially sanctioned replacement for `@inline(__always)`.
 
-**Ecosystem opportunity**: **HIGH**. Audit all uses of `@inline(__always)` across the ecosystem and replace with `@inline(always)`. This is a clean, non-functional breaking change that aligns with the official API.
+**Ecosystem opportunity**: **HIGH**. Audit all uses of `@inline(__always)` across the ecosystem and replace with `@inline(always)`.
+
+**GOTCHA discovered during Wave 1**: `@inline(always)` (SE-0496) **forbids combining with `@usableFromInline`**. The old `@inline(__always)` was a permissive internal attribute that allowed this combination; the new official form does not. The mechanical `sed` replacement `@inline(__always)` → `@inline(always)` is therefore NOT fully safe — any site that also has `@usableFromInline` will error.
+
+**Fix**: Replace `@usableFromInline` with `@inlinable` on affected declarations. The intent of `@usableFromInline @inline(__always)` was always "make this available and force inlining across modules" — `@inlinable @inline(always)` achieves the same.
+
+**Affected sites found**: 11 total in swift-primitives (4 in `Logic.Ternary.swift`, 7 in `Token.Keyword+Lookup.swift`). Other repos (especially swift-iso with 181 `@inline(always)` occurrences) must be audited for the same conflict before building with Swift 6.3.
 
 #### SE-0497: `@export` Attribute
 
@@ -509,6 +515,7 @@ The ecosystem is already fully compliant with SE-0502.
 |------|-------|--------|--------|
 | Remove `SuppressedAssociatedTypesWithDefaults` from all Package.swift | 1,359 | sync script + `sed` | **DONE** |
 | Replace `@inline(__always)` → `@inline(always)` | ~83 | `sed` across repos | **DONE** |
+| Fix `@usableFromInline @inline(always)` → `@inlinable @inline(always)` | 11 | Manual (Logic.Ternary, Token.Keyword) | **DONE** (primitives only — audit other repos) |
 | Update `sync-swift-settings.sh` canonical source | 1 | Manual edit | **DONE** |
 | Update `generate-package-swift.py` canonical source | 1 | Manual edit | **DONE** |
 | Remove redundant Swift 6 upcoming features | 2 | In third-party repos only — no action | N/A |
