@@ -39,6 +39,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-22-nonsending-compiler-discovery-and-ecosystem-migration.md](2026-03-22-nonsending-compiler-discovery-and-ecosystem-migration.md) | 2026-03-22 | Nonsending Compiler Discovery and Ecosystem Migration | swift-async-primitives, swift-pool-primitives, swift-witnesses, swift-dependencies, swift-testing, swift-institute | processed (2026-03-22) |
 | [2026-03-24-generalized-audit-skill-design.md](2026-03-24-generalized-audit-skill-design.md) | 2026-03-24 | Generalized Audit Skill — From 82 Orphans to One Canonical Location | swift-institute | pending |
 | [2026-03-24-swift-io-audit-consolidation.md](2026-03-24-swift-io-audit-consolidation.md) | 2026-03-24 | swift-io Audit Consolidation — From 3 Scattered Files to One Canonical Location | swift-io, swift-institute | pending |
+| [2026-03-25-io-prior-art-literature-study.md](2026-03-25-io-prior-art-literature-study.md) | 2026-03-25 | IO Prior Art Literature Study and Design Audit | swift-io, swift-file-system, swift-kernel-primitives, swift-kernel, swift-posix | pending |
 
 ## Legacy Archive
 

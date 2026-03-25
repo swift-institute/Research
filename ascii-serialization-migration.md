@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-04
-status: DECISION
+version: 2.0.0
+last_updated: 2026-03-25
+status: IN_PROGRESS
 tier: 2
 ---
 -->
@@ -12,8 +12,8 @@ tier: 2
 ## Context
 
 `Binary.ASCII.Serializable` is a deprecated domain protocol in swift-ascii (L3) with
-~83 conformers across 16+ standards packages. The deprecation message directs users to
-witness properties, but no concrete migration plan existed.
+77 conformers across 15 IETF/WHATWG packages plus swift-ascii itself. The deprecation
+message directs users to witness properties, but no concrete migration plan existed.
 
 The transformation domain architecture (v3.2.0 DECISION) and canonical-witness
 capability attachment (v1.2.0 DECISION) now provide the target architecture:
@@ -39,12 +39,12 @@ v1.2.0: "Binary.ASCII.Serializable migration."
 - transformation-domain-architecture v3.2.0 (DECISION) — three independent packages
 - canonical-witness-capability-attachment v1.2.0 (DECISION) — protocol canonical + witness alternatives
 - parsers-adoption-implementation-plan — 8-phase parser rollout already planned
-- All ~83 conformers must migrate — no partial deprecation
+- All 77 conformers must migrate — no partial deprecation
 
 ### Stakeholders
 
-All standards packages (L2) with `Binary.ASCII.Serializable` conformances.
-swift-ascii (L3) as the protocol owner.
+IETF packages (`swift-ietf/swift-rfc-*`) and WHATWG packages (`swift-whatwg/`) with
+`Binary.ASCII.Serializable` conformances. swift-ascii (L3) as the protocol owner.
 
 ## Question
 
@@ -271,49 +271,72 @@ to `CustomStringConvertible` without explicit opt-in).
 | F11 | `buffer.append(ascii:)` | `T.serializer.serialize(value, into: &buffer)` | Direct call |
 | F12 | Binary.Serializable bridge | Extension `Serializable: Binary.Serializable` where Buffer == [UInt8] | swift-binary-primitives |
 
-### Conformer Inventory
+### Conformer Inventory (Verified 2026-03-25)
 
-| Package Group | Types | Parser Status | Notes |
-|--------------|-------|---------------|-------|
-| swift-ascii (Int, UInt, Int64, UInt64) | 4 | `ASCII.Decimal.Parser` exists | Serializer needed |
-| RFC 3986 (URI, Authority, Host, Path, Query, ...) | 9 | Planned Phase 3 | Most complex grammars |
-| RFC 2822 (Message, Mailbox, Address, ...) | 12 | Planned Phase 5 | Email format |
-| RFC 5322 (Message, Header, EmailAddress, ...) | 8 | Planned Phase 5 | Modern email |
-| RFC 2045/2046 (ContentType, Multipart, ...) | 11 | Planned Phase 6 | MIME |
-| RFC 3339 (DateTime, Offset) | 2 | Planned Phase 4 | ISO 8601 related |
-| RFC 791/4291/4007 (IPv4, IPv6) | 3 | Planned Phase 2 | Simple formats |
-| RFC 1035/1123 (Domain, Label) | 4 | Planned Phase 2 | DNS |
-| RFC 5321/6531 (EmailAddress, LocalPart) | 4 | Planned Phase 5 | SMTP |
-| RFC 2183/2369/2387 (Disposition, List) | 5 | Planned Phase 6 | MIME extensions |
-| RFC 6068 (Mailto) | 2 | Planned Phase 5 | Depends on RFC 3986 |
-| RFC 7519/7617 (JWT, Basic Auth) | 3 | Not yet planned | Auth |
-| RFC 9557 (Suffix, SuffixTag, Timestamp) | 3 | Not yet planned | Calendar |
-| WHATWG URL (URL, Host, Href, Path, Scheme, ...) | 6 | Not yet planned | Web |
-| Base62 | 2 | Not yet planned | Encoding |
-| **Total** | **~78 L2 + 4 L3** | | |
+Conformers live in `swift-ietf/`, `swift-whatwg/`, and `swift-foundations/swift-ascii/`.
+None in `swift-standards/`.
+
+| Package Group | Location | Types | Parseable | Serializable | Phase |
+|--------------|----------|-------|-----------|-------------|-------|
+| swift-ascii (Int, UInt, Int64, UInt64) | `swift-foundations/swift-ascii/` | 4 | DONE (L1) | DONE (L1) | 1 |
+| RFC 791/4291/4007 (IPv4, IPv6) | `swift-ietf/` | 3 | — | — | 2 |
+| RFC 1035/1123 (Domain, Label) | `swift-ietf/` | 4 | — | — | 2 |
+| RFC 3986 (URI, Authority, Host, Path, ...) | `swift-ietf/` | 9 | — | — | 3 |
+| RFC 3339 (DateTime, Offset) | `swift-ietf/` | 2 | — | — | 4 |
+| RFC 2822 (Message, Mailbox, Address, ...) | `swift-ietf/` | 12 | — | — | 5 |
+| RFC 5322 (Message, Header, EmailAddress, ...) | `swift-ietf/` | 8 | — | — | 5 |
+| RFC 5321/6531 (EmailAddress, LocalPart) | `swift-ietf/` | 4 | — | — | 5 |
+| RFC 6068 (Mailto, Mailto.Header) | `swift-ietf/` | 2 | — | — | 5 |
+| RFC 2045 (Charset, ContentType, ...) | `swift-ietf/` | 4 | — | — | 6 |
+| RFC 2046 (Multipart, Boundary, BodyPart, ...) | `swift-ietf/` | 6 | — | — | 6 |
+| RFC 2183/2369/2387 (Disposition, List, Related) | `swift-ietf/` | 6 | — | — | 6 |
+| RFC 3987 (IRI) | `swift-ietf/` | 1 | — | — | 7 |
+| RFC 7519/7617 (JWT, Basic Auth) | `swift-ietf/` | 3 | — | — | 7 |
+| RFC 9557 (Suffix, SuffixTag, Timestamp) | `swift-ietf/` | 3 | — | — | 7 |
+| WHATWG URL/Form (URL, Host, Href, ...) | `swift-whatwg/` | 6 | — | — | 7 |
+| **Total** | | **77** | **4 done** | **4 done** | |
 
 ### Phasing
 
 The migration aligns with parsers-adoption-implementation-plan phases, extended
-to include serializer creation:
+to include serializer creation.
 
 #### Phase 0: Infrastructure (Prerequisites)
 
 | Task | Package | Status |
 |------|---------|--------|
-| `Parseable` protocol | swift-parser-primitives | TODO |
-| `Serializable` protocol + `@Serializer.Builder` | swift-serializer-primitives | TODO |
-| `Codable` protocol | swift-coder-primitives | TODO |
-| Convenience extensions (`init(_: StringProtocol)`, byte-buffer helpers) | swift-ascii or primitives | TODO |
-| `ASCII.Decimal.Serializer<T>` | swift-ascii-parser-primitives | TODO |
+| `Parseable` protocol | swift-parser-primitives | **DONE** |
+| `Serializable` protocol + `@Serializer.Builder` | swift-serializer-primitives | **DONE** |
+| `Codable` protocol | swift-coder-primitives | **DONE** |
+| `Parseable.init(ascii: [UInt8])` convenience | swift-parser-primitives | **DONE** |
+| `Serializable.asciiBytes: [UInt8]` convenience | swift-serializer-primitives | **DONE** |
+| `Parseable.init(_: StringProtocol)` convenience | swift-parser-primitives or swift-ascii | TODO |
+| `Serializable` → String conversion | swift-serializer-primitives or swift-ascii | TODO |
+| `Serializable` → `Binary.Serializable` bridge | swift-binary-primitives or swift-ascii | TODO |
+| `ASCII.Decimal.Parser<Input, T>` | swift-ascii-parser-primitives | **DONE** |
+| `ASCII.Decimal.Serializer<T>` | swift-ascii-serializer-primitives | **DONE** |
+| `ASCII.Hexadecimal.Parser` | swift-ascii-parser-primitives | **DONE** |
+| `ASCII.Hexadecimal.Serializer` | swift-ascii-serializer-primitives | **DONE** |
 
-#### Phase 1: Primitive Types (4 types)
+#### Phase 1: Primitive Types (4 types) — PARTIALLY DONE
 
-Migrate `Int`, `UInt`, `Int64`, `UInt64`:
-- Parser: `ASCII.Decimal.Parser` (already exists)
-- Serializer: `ASCII.Decimal.Serializer<T>` (new)
-- Conform to `Parseable` + `Serializable`
-- `CustomStringConvertible` + `ExpressibleByIntegerLiteral` per-type
+Migrate `Int`, `UInt`, `Int64`, `UInt64` (plus Int8, Int16, Int32, UInt8, UInt16, UInt32):
+
+| Task | Status |
+|------|--------|
+| `ASCII.Decimal.Parser` | **DONE** (swift-ascii-parser-primitives) |
+| `ASCII.Decimal.Serializer<T>` | **DONE** (swift-ascii-serializer-primitives) |
+| `Parseable` conformances (all 10 integer types) | **DONE** (FixedWidthInteger+Parseable.swift) |
+| `Serializable` conformances (all 10 integer types) | **DONE** (FixedWidthInteger+Serializable.swift) |
+| Remove `Binary.ASCII.Serializable` from Int/Int64/UInt/UInt64 | TODO (Int+ASCII.Serializable.swift) |
+| `CustomStringConvertible` per-type | N/A (stdlib provides) |
+| `ExpressibleByIntegerLiteral` per-type | N/A (stdlib provides) |
+| Update tests | TODO |
+
+**Remaining work**: Delete the 4 retroactive `Binary.ASCII.Serializable` conformances
+in `swift-ascii/Sources/ASCII/Int+ASCII.Serializable.swift` (lines 103-183). The
+`Binary.ASCII.Decimal` namespace, error type, and parsing functions (lines 10-99) may
+also be removable if no other code depends on them.
 
 #### Phase 2: Simple Formats (7 types)
 
@@ -331,17 +354,21 @@ RFC 3986 URI components — most complex grammar, highest reuse:
 
 RFC 3339 DateTime, Offset.
 
-#### Phase 5: Email (24 types)
+#### Phase 5: Email (26 types)
 
-RFC 2822, 5322, 5321, 6531, 6068 — email ecosystem.
+RFC 2822 (12), 5322 (8), 5321 (2), 6531 (2), 6068 (2) — email ecosystem.
 
 #### Phase 6: MIME (16 types)
 
-RFC 2045, 2046, 2183, 2369, 2387 — MIME types.
+RFC 2045 (4), 2046 (6), 2183 (3), 2369 (2), 2387 (1) — MIME types.
 
-#### Phase 7: Remaining (20 types)
+#### Phase 7: Remaining (13 types)
 
-RFC 7519, 7617, 9557, WHATWG URL, Base62.
+RFC 3987 (1), 7519 (1), 7617 (2), 9557 (3), WHATWG URL/Form (6).
+
+**Note**: Base62 (`UInt8.Base62.Serializable`) is a separate protocol in
+swift-base62-primitives, NOT a `Binary.ASCII.Serializable` conformer. It follows
+the same pattern but requires its own migration.
 
 #### Phase 8: Cleanup
 
@@ -350,6 +377,28 @@ RFC 7519, 7617, 9557, WHATWG URL, Base62.
 - Remove `Binary.ASCII.RawRepresentable`
 - Remove all extensions in Binary.ASCII.Serializable.swift
 - Remove deprecated annotations
+- Remove `Binary.ASCII.Decimal` namespace (if unused)
+
+### swift-ascii Warning Status (2026-03-25)
+
+22 deprecation warnings in `swift-ascii/Sources/ASCII/`:
+
+| File | Warnings | Root Cause |
+|------|----------|------------|
+| `Binary.ASCII.Serializable.swift` | 14 | Extensions on deprecated protocol |
+| `Int+ASCII.Serializable.swift` | 4 | Conformances to deprecated protocol |
+| `Binary.ASCII.Wrapper.swift` | 2 | References deprecated protocol |
+| `Binary.ASCII.RawRepresentable.swift` | 1 | Inherits from deprecated protocol |
+| `StringProtocol+INCITS_4_1986.swift` | 1 | Generic constraint on deprecated protocol |
+
+**Int+ASCII.Serializable.swift** (4 warnings): These conformances are fully redundant
+with L1 `Parseable` + `Serializable`. Can be deleted once Phase 1 cleanup is done.
+
+**Remaining 18 warnings**: These come from the deprecated protocol infrastructure
+that Phases 2-7 conformers still depend on. These warnings persist until Phase 8
+(full protocol removal). They must be silenced with `@available(*, deprecated)`
+annotations on each extension/reference — the standard Swift deprecation cascade
+pattern.
 
 ### What Gets Deleted
 
@@ -398,6 +447,16 @@ For each `Binary.ASCII.Serializable` conformer:
 
 ## Changelog
 
+- **v2.0.0** (2026-03-25): Status audit. Phase 0 infrastructure largely DONE:
+  Parseable, Serializable, Codable protocols all exist; ASCII.Decimal.Parser and
+  Serializer exist; integer Parseable/Serializable conformances exist at L1.
+  Three Phase 0 convenience extensions remain TODO (StringProtocol init, String
+  conversion, Binary.Serializable bridge). Phase 1 partially done — L1 conformances
+  exist but L3 deprecated conformances not yet removed. Corrected conformer count:
+  77 (not ~83). Corrected locations: conformers in swift-ietf/ and swift-whatwg/
+  (not swift-standards/). Corrected Phase 5 count: 26 (not 24). Corrected Phase 7
+  count: 13 (not 20). Base62 is separate protocol, not a conformer. Added swift-ascii
+  warning status section. Status DECISION → IN_PROGRESS.
 - **v1.0.0** (2026-03-04): Initial analysis and decision. ~83 conformers inventoried
   across 16+ standards packages. Zero external generic constraints — migration is clean.
   Three options: no protocol, domain protocol, constrained extensions. Decision:
