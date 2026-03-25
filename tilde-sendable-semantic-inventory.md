@@ -175,21 +175,58 @@ The 3 Tier 1 types are a subset of the 29 `@unchecked Sendable` types across the
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: DEFERRED — ready to execute
 
-**When to act**: After SE-0518 (`TildeSendable`) is accepted and stabilized (currently experimental in Swift 6.3).
+### Phase 1: Enable experimental features ecosystem-wide
 
-**Tier 1 candidates** (3 types) should adopt `~Sendable` immediately upon stabilization:
-1. `IO.Completion.IOUring.Ring` — replace `@unchecked Sendable` with `~Sendable`
-2. `IO.Completion.IOCP.State` — replace `@unchecked Sendable` with `~Sendable`
-3. `File.Directory.Contents.IteratorHandle` — replace `@unchecked Sendable` with `~Sendable`
+Edit `swift-institute/Scripts/sync-swift-settings.sh`, add to `ECOSYSTEM_LINES` array (after the existing `SuppressedAssociatedTypes` line):
 
-**Tier 2 candidates** (4 types) require design discussion before acting.
+```bash
+'        .enableExperimentalFeature("TildeSendable"),'
+'        .enableExperimentalFeature("ManualOwnership"),'
+'        .treatWarning("SemanticCopies", as: .warning),'
+'        .treatWarning("DynamicExclusivity", as: .warning),'
+```
 
-**Prerequisite**: The boundary-crossing mechanism must be resolved first. If a type is `~Sendable`, how do you transfer it to the poll thread once? Options:
-- `nonisolated(unsafe)` at the transfer site
-- `@unchecked Sendable` wrapper at the transfer site (not on the type)
-- A new "transfer-once" mechanism (not yet proposed)
+Then run:
+```bash
+./swift-institute/Scripts/sync-swift-settings.sh
+```
+
+This propagates to all Package.swift files across swift-primitives, swift-standards, and swift-foundations.
+
+**Note**: `.treatWarning` requires SwiftPM PackageDescription 6.2+ (available since Swift 6.2). `ManualOwnership` unlocks the `SemanticCopies` and `DynamicExclusivity` diagnostic groups (both `DefaultIgnoreWarnings`); the `.treatWarning` lines activate them.
+
+### Phase 2: Apply ~Sendable to Tier 1 types
+
+Replace `@unchecked Sendable` with `~Sendable` on 3 types:
+
+| Type | File | Change |
+|------|------|--------|
+| `IO.Completion.IOUring.Ring` | `swift-io/Sources/IO Completions/IO.Completion.IOUring.Ring.swift` | `final class … : @unchecked Sendable` → `final class … : ~Sendable` |
+| `IO.Completion.IOCP.State` | `swift-io/Sources/IO Completions/IO.Completion.IOCP.State.swift` | Same pattern |
+| `File.Directory.Contents.IteratorHandle` | `swift-file-system/Sources/File System Core/File.Directory.Contents.IteratorHandle.swift` | Same pattern |
+
+At each site, resolve the boundary-crossing mechanism. The single transfer (e.g., poll thread initialization) needs explicit unsafe handling:
+- `nonisolated(unsafe)` at the transfer site, OR
+- Local `@unchecked Sendable` wrapper at the transfer site (not on the type itself)
+
+### Phase 3: Build, test, triage warnings
+
+```bash
+cd /Users/coen/Developer/swift-primitives && swift build 2>&1 | grep -c 'SemanticCopies\|DynamicExclusivity'
+cd /Users/coen/Developer/swift-foundations && swift build 2>&1 | grep -c 'SemanticCopies\|DynamicExclusivity'
+```
+
+Triage any `SemanticCopies` warnings — these flag unintended copies in `~Copyable` code. High signal given the ecosystem's heavy `~Copyable` usage.
+
+### Phase 4: Tier 2 design discussion (deferred)
+
+The 4 debatable types require case-by-case decision after Phase 3 experience:
+- `Kernel.File.Write.Streaming.Context` (swift-kernel)
+- `Kernel.Memory.Map.Region` (swift-kernel-primitives)
+- `IO.Event.Batch` (swift-io)
+- `IO.Blocking.Threads.Job.Instance` (swift-io)
 
 ## References
 
@@ -198,3 +235,4 @@ The 3 Tier 1 types are a subset of the 29 `@unchecked Sendable` types across the
 - `swift-io/Research/audit.md` — Memory Safety section, 22 `@unchecked Sendable` audit
 - `swift-file-system/Research/audit.md` — Finding #1 (MEM-SEND-001), IteratorHandle
 - `swiftlang/swift/include/swift/Basic/Features.def:550` — `SUPPRESSIBLE_EXPERIMENTAL_FEATURE(TildeSendable, false)`
+- `swiftlang/swift-package-manager/Sources/Runtimes/PackageDescription/BuildSettings.swift:682` — `.treatWarning(_:as:)` API (PackageDescription 6.2+)

@@ -887,3 +887,51 @@ cd /Users/coen/Developer/swift-foundations && swift build
 9 findings: 0 critical, 7 high, 2 medium.
 
 All 9 are naming violations where the code uses an academically incorrect term. The execution plan is fully mechanical: content sed, git mv, swift build/test verification. Cross-package impact is contained to 2 source files + 1 research doc in swift-foundations. Research document at `variant-naming-audit.md` provides the full academic rationale, cross-document contradiction analysis, and corrected variant system definition.
+
+## ASCII Serialization Migration — 2026-03-25
+
+### Scope
+
+- **Target**: swift-ascii (L3) + 73 conformers across `swift-ietf/` and `swift-whatwg/`
+- **Research**: [ascii-serialization-migration.md](ascii-serialization-migration.md) (v2.0.0, IN_PROGRESS)
+- **Trigger**: 22 deprecation warnings in `swift-ascii` from `Binary.ASCII.Serializable`
+
+### Phase Status
+
+| Phase | Description | Types | Status |
+|-------|-------------|-------|--------|
+| 0 | Infrastructure (Parseable, Serializable, Codable, parsers, serializers) | — | **MOSTLY DONE** — 3 convenience extensions remain |
+| 1 | Primitive integer types (Int, UInt, Int64, UInt64, etc.) | 4 | **L1 DONE** — L3 cleanup TODO |
+| 2 | Simple formats (IPv4, IPv6, DNS) | 7 | TODO |
+| 3 | URI (RFC 3986) | 9 | TODO |
+| 4 | Date/Time (RFC 3339) | 2 | TODO |
+| 5 | Email (RFC 2822, 5322, 5321, 6531, 6068) | 26 | TODO |
+| 6 | MIME (RFC 2045, 2046, 2183, 2369, 2387) | 16 | TODO |
+| 7 | Remaining (RFC 3987, 7519, 7617, 9557, WHATWG URL/Form) | 13 | TODO |
+| 8 | Cleanup (delete protocol, Wrapper, RawRepresentable) | — | Blocked on Phases 2-7 |
+
+### Findings
+
+| # | Severity | Source | Location | Finding | Status |
+|---|----------|--------|----------|---------|--------|
+| 1 | MEDIUM | Phase 0 gap | swift-parser-primitives or swift-ascii | `Parseable.init(_: StringProtocol)` convenience missing — types cannot parse from strings via canonical protocol | OPEN |
+| 2 | MEDIUM | Phase 0 gap | swift-serializer-primitives or swift-ascii | `Serializable` → String conversion missing — no `String.init` or `.asciiString` on Serializable | OPEN |
+| 3 | MEDIUM | Phase 0 gap | swift-binary-primitives or swift-ascii | `Serializable` → `Binary.Serializable` bridge missing — types lose `.bytes` and `String(value)` | OPEN |
+| 4 | HIGH | Phase 1 cleanup | `swift-ascii/.../Int+ASCII.Serializable.swift:103-183` | 4 redundant `Binary.ASCII.Serializable` conformances for Int/Int64/UInt/UInt64 — superseded by L1 `Parseable` + `Serializable` | OPEN |
+| 5 | MEDIUM | Deprecation cascade | `swift-ascii/.../Binary.ASCII.Serializable.swift` (14 sites) | Extensions on deprecated protocol produce 14 warnings — required by 73 external conformers until Phases 2-7 complete | OPEN |
+| 6 | MEDIUM | Deprecation cascade | `swift-ascii/.../Binary.ASCII.Wrapper.swift` (2 sites) | Wrapper struct and `.ascii` accessor reference deprecated protocol — 2 warnings | OPEN |
+| 7 | MEDIUM | Deprecation cascade | `swift-ascii/.../Binary.ASCII.RawRepresentable.swift` (1 site) | Sub-protocol inherits from deprecated protocol — 1 warning | OPEN |
+| 8 | MEDIUM | Deprecation cascade | `swift-ascii/.../StringProtocol+INCITS_4_1986.swift:221` | `init<T: Binary.ASCII.Serializable>` references deprecated protocol — 1 warning | OPEN |
+
+### Next Actions
+
+1. **Phase 1 cleanup** — Delete 4 integer `Binary.ASCII.Serializable` conformances (finding #4). Verify `Binary.ASCII.Decimal` namespace has no remaining consumers, or keep if needed. Eliminates 4 of 22 warnings.
+2. **Deprecation cascade** — Add `@available(*, deprecated)` to findings #5-#8 (18 sites). This is the correct Swift pattern for protocol infrastructure that must stay for external conformers. Eliminates remaining 18 warnings.
+3. **Phase 0 gaps** — Build findings #1-#3 (convenience extensions) to unblock Phase 2+ migration.
+4. **Phases 2-7** — Migrate 73 conformers per [ascii-serialization-migration.md](ascii-serialization-migration.md) per-type checklist.
+
+### Summary
+
+8 findings: 0 critical, 1 high, 7 medium.
+
+77 types across the ecosystem conform to the deprecated `Binary.ASCII.Serializable` protocol. The replacement infrastructure (`Parseable`, `Serializable`, `Serializer.Protocol`) is operational at L1. Phase 1 (integers) is done at L1 but the redundant L3 conformances remain. 22 deprecation warnings in swift-ascii: 4 from redundant conformances (deletable), 18 from protocol infrastructure (deprecation cascade). Three Phase 0 convenience extensions needed before Phases 2-7 can proceed at scale.

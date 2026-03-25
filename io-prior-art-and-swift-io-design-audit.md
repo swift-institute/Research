@@ -517,24 +517,28 @@ The ecosystem provides read/write operations at every layer of the stack:
 | L3 | `IO.Event.Channel.read(into:)` / `.write(_:)` | Async event-driven (epoll/kqueue) |
 | L3 | `IO.Completion.Read` / `.Write` | Completion-based (io_uring/IOCP) |
 
-This is a **layered concrete type** approach rather than a **composable trait** approach. The design matches Zig's model (concrete types at each level, no Reader/Writer trait) and Swift System's model (`FileDescriptor.read(into:)` as a method, not a protocol conformance).
+This is a **layered concrete type** approach rather than a **composable trait** approach.
 
-**Comparison with trait-based prior art:**
+**Why not a generic Reader/Writer trait?**
 
-| System | Approach | Composability model |
-|--------|----------|-------------------|
-| Go | Trait (`io.Reader`/`io.Writer`) | Any type with `Read([]byte)` composes |
-| Rust | Trait (`Read`/`Write`) | `BufReader<GzDecoder<File>>` via trait bounds |
-| Java | Base class (`InputStream`/`OutputStream`) | `BufferedInputStream(GZIPInputStream(...))` |
-| **Zig 0.15.1+** | **Concrete vtable struct** | Composition via embedding, not trait conformance |
-| **Swift System** | **Methods on concrete types** | No composition — file-specific |
-| **swift-io/file-system** | **Methods on concrete types per layer** | No generic composition — domain-specific at each layer |
+Most surveyed systems define a composable IO abstraction — Go's `io.Reader`, Rust's `Read`, Java's `InputStream` — enabling pipelines like `BufReader<GzDecoder<File>>`. An initial draft of this audit flagged the absence of an equivalent as a potential gap. On closer examination, it is not.
 
-**Assessment**: The layered approach is architecturally sound for the domains it covers — file IO, event-driven socket IO, and completion-based IO each have distinct semantics (atomic writes, half-close, buffer ownership transfer) that don't fit a single trait. The prior art confirms this: even in Go, `os.File` has 20+ methods beyond `Read`/`Write` that the interface can't express. Rust's `File` implements `Read` but all useful operations (`metadata()`, `sync_all()`, `try_clone()`) are on `File` directly.
+A hypothetical `IO.Readable` protocol (or `IO.Reader` witness) would need a single `read(into:) -> Int` method. But the types that would conform have fundamentally different semantics:
 
-The open question is whether the ecosystem will eventually benefit from a cross-domain composable stream abstraction (e.g., for `network → decompression → parsing` pipelines). If so, `File.Handle`, `IO.Event.Channel`, and similar types could conform to such a trait without API changes — the `read(into: UnsafeMutableRawBufferPointer) -> Int` signature is already consistent across layers. This would be additive, not a redesign.
+| Type | Error type | Ownership | Domain-specific capabilities |
+|------|-----------|-----------|------------------------------|
+| `File.Handle` | `Kernel.IO.Read.Error` | `~Copyable`, `mutating` | seek, sync, pread, metadata |
+| `IO.Event.Channel` | `IO.Event.Failure` | `~Copyable`, `async` | half-close, shutdown, arm/suspend |
+| `IO.Completion.Read` | `IO.Completion.Error` | `~Copyable`, move-only operation | buffer ownership transfer, kernel-side execution |
+| Descriptor-level | `Kernel.IO.Read.Error` | Stateless static function | EINTR retry policy |
 
-**Verdict**: **Correct architecture**. Read/write is present and well-typed at every layer. The layered concrete approach is the right choice for domain-specific IO. A cross-domain composable trait is a future additive option, not a current gap.
+A generic trait would need to erase the error type (violating [API-ERR-001] typed throws), ignore ownership differences, and hide domain-specific capabilities behind the lowest common denominator — precisely the .NET `Stream` mistake where a single base class serves all IO domains, and callers discover capabilities at runtime (`CanSeek`, `CanWrite`).
+
+The ecosystem's philosophy — domain-specific types with full type information — is the deliberate alternative. Go gets away with `io.Reader` because Go has no typed errors, no ownership system, and no generics (historically). Rust gets away with `Read` because the trait only requires one method and all the real work happens on the concrete type. But in both ecosystems, the trait adds *less* than it appears: Go's `os.File` has 20+ methods beyond `Read`/`Write`; Rust's `File` has `metadata()`, `sync_all()`, `set_permissions()`, `try_clone()` — none expressible through `Read`.
+
+The layered concrete approach is closer to Zig 0.15.1+ (concrete types with methods at each layer, no Reader trait) and Swift System (`FileDescriptor.read(into:)` as a method, not a protocol conformance) — both of which are modern designs that arrived at the same conclusion independently.
+
+**Verdict**: **Correct architecture, not a gap**. Read/write is present and well-typed at every layer, with domain-appropriate error types and ownership semantics preserved. A generic trait would erase type information that the ecosystem's design philosophy exists to preserve.
 
 **swift-file-system verdict**: ~13 concepts, all Tier 1-3. Zero-copy reads via Span, first-class atomic writes, and callback-based zero-allocation directory iteration are ahead of surveyed prior art. **No unnecessary concepts; several innovations.**
 
@@ -597,7 +601,7 @@ The decomposition is **isomorphic** to prior art — the same concepts, differen
 
 2. **IO.Executor layer is thinnest on prior art**. Handle/Registry/Slot/Transaction/Teardown has limited prior art because it solves Swift-specific problems. Needs design review as it evolves.
 
-3. **Cross-domain stream composability**. Read/write is present and well-typed at every layer (descriptor, handle, file operations, event channel, completion). The `read(into: UnsafeMutableRawBufferPointer) -> Int` signature is already consistent. If the ecosystem later needs cross-domain composition (network → decompression → parsing), a composable trait can be introduced that existing types conform to — additive, not a redesign. This is a future opportunity, not a current gap.
+3. **No generic Reader/Writer trait — by design**. Initial analysis flagged this as a potential gap; deeper examination concluded it is the correct architecture. A generic trait would erase typed errors ([API-ERR-001]), ignore ownership differences across IO domains, and hide domain-specific capabilities. The layered concrete approach preserves full type information at every layer. See "Read/Write Architecture" analysis in the swift-file-system section for the full reasoning.
 
 ---
 
@@ -633,7 +637,7 @@ Each layer does its job without overreaching. swift-io provides infrastructure; 
 
 As the IO stack evolves, apply this prior art test to new concepts: *does it map to a recognized pattern, or is it novel?* Novel is acceptable when justified — `IO.Executor.Slot` demonstrates this. Novel without justification should be challenged.
 
-The consistent `read(into:) -> Int` signature across layers means a composable stream trait can be introduced additively if cross-domain composition (buffering, decompression, encryption pipelines) becomes needed. `File.Handle`, `IO.Event.Channel`, and descriptor-level APIs already share the right shape.
+The absence of a generic Reader/Writer trait is a deliberate design decision, not a gap. Each IO domain has distinct error types, ownership semantics, and capabilities that a generic trait would erase. See the "Read/Write Architecture" analysis for the full reasoning and comparison against Go/Rust/Zig.
 
 ## References
 
