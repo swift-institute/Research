@@ -519,6 +519,30 @@ internal enum Storage {
 
 Accessing this enum requires `unsafe` even for the safe case, because the compiler cannot statically determine which case is active.
 
+### 7.5 `~Escapable` Types and Pointer Exposure
+
+**Key insight**: On `~Escapable` types, public pointer properties are **structurally safe**. The view cannot outlive the source, so the pointer cannot dangle. The type system enforces the lifetime boundary that closures (`withUnsafePointer`) enforce by convention.
+
+```swift
+// STRUCTURALLY SAFE - ~Escapable prevents pointer from outliving source
+@safe public struct View: ~Copyable, ~Escapable {
+    public let pointer: UnsafePointer<Char>  // Cannot dangle by construction
+    public var span: Span<Char> { ... }      // Still preferred for callers
+}
+```
+
+This changes the severity assessment for pointer exposure:
+
+| Containing type | Public pointer property | Severity | Rationale |
+|----------------|------------------------|----------|-----------|
+| `Escapable` type | Dangerous | HIGH | Pointer can escape and dangle |
+| `~Escapable` type | Structurally safe | LOW | Type system prevents escape |
+| Coroutine-scoped (no `~Escapable`) | Safe by convention | MEDIUM | `_read`/`_modify` scope prevents escape, but not enforced by type system |
+
+**Why `@unsafe` is still recommended**: Even on `~Escapable` types, adding `@unsafe` to the pointer property communicates intent — "this is the escape hatch, prefer `span`." The annotation is documentation, not a safety requirement.
+
+**Why coroutine-scoped is MEDIUM, not LOW**: Types like `Property.View` omit `~Escapable` due to a CopyPropagation compiler bug ([MEM-COPY-013]). They are safe by coroutine scope, but this safety depends on the usage pattern (yielded via `_read`/`_modify`), not the type definition. If someone constructs a `Property.View` outside a coroutine, the pointer could dangle.
+
 ---
 
 ## 8. Expression Placement Rules
