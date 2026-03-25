@@ -290,6 +290,34 @@ Per [CONV-016], conformer code uses tier 4 typed initializers (`Index<Self>.Coun
 
 **Design decisions needed**: Finding #6 (Hunk phantom tag: `Old`/`New` vs `Line`) and finding #10 (cyclic group domain tagging strategy).
 
+### Execution Priority
+
+```
+Priority 1: Phase 1 — Finite.Capacity (finding #1)
+    └── 2 conformers, smallest blast radius, validates protocol-level pattern
+    └── Unblocks Phase 2
+
+Priority 2: Phase 2 — Finite.Enumerable (finding #2)
+    └── 16 conformers across 5 packages — keystone change
+    └── Unlocks consumer improvements (tier 4→2)
+    └── Unblocks Phases 3–6
+
+Priority 3: Phase 3 — Sequence iterator internals (findings #7, #8)
+    └── Mechanical, all @usableFromInline, no public API, no design decisions
+    └── Independent of Phases 1–2 but benefits from validated pattern
+
+Priority 4: Phase 5 — Sequence.Difference.Hunk (finding #6)
+    └── Public API — last HIGH finding after Phases 1–2
+    └── BLOCKED on design decision: phantom tag for old/new line positions
+
+Priority 5: Phase 6 — Cyclic groups + parser (findings #10, #11)
+    └── BLOCKED on design decision: cyclic group domain tagging strategy
+    └── Parser.Machine.Memoization.Key is independent and trivial
+
+Priority 6: Phase 4 — Sequence.Iterator.Protocol (finding #3)
+    └── Currently DEFERRED — revisit after Phases 1–3 establish pattern
+```
+
 ## Memory Safety — 2026-03-25
 
 ### Scope
@@ -429,3 +457,433 @@ Priority 8: Needs analysis (findings #19, #22)
 Priority 9: Documentation improvements (findings #9, #10, #12–14, #26, #27)
     └── @unsafe on ~Escapable pointer properties (optional), CSS theming, over-specified unsafe
 ```
+
+### Remediation Plan — Concrete Code Changes
+
+Each fix maps to a finding above. Grouped by category with exact file, current code, and target change.
+
+**Canonical references**:
+- `swift-institute/Research/swift-safety-model-reference.md` — safety model semantics
+- `swift-institute/Research/tilde-sendable-semantic-inventory.md` — Sendable category framework
+- `memory-safety` skill — [MEM-SAFE-020–025], [MEM-SEND-001–003]
+
+#### P1: Category B — `@unsafe @unchecked Sendable` + Pattern B doc (findings #15–18, #20)
+
+**Pattern B safety invariant** (use verbatim for all 5 types):
+```
+/// @unchecked Sendable: Category B (ownership transfer).
+/// ~Copyable unique ownership ensures only one thread can own the value
+/// at a time. Transfer via `consuming` relinquishes the sender's access.
+```
+
+| # | File | Current | Target |
+|---|------|---------|--------|
+| F15 | `swift-handle-primitives/.../Generation.Tracker.swift:205` | `extension Generation.Tracker: @unchecked Sendable {}` | `extension Generation.Tracker: @unsafe @unchecked Sendable {}` + Pattern B doc. Also fix doc at line 40: "Not thread-safe. External synchronization required" → "Not concurrently mutable. Ownership transfer is safe via ~Copyable." |
+| F16 | `swift-bit-vector-primitives/.../Bit.Vector.swift:146` | `extension Bit.Vector: @unchecked Sendable {}` | `extension Bit.Vector: @unsafe @unchecked Sendable {}` + Pattern B doc |
+| F17 | `swift-memory-primitives/.../Memory.Arena.swift:125` | `extension Memory.Arena: @unchecked Sendable {}` | `extension Memory.Arena: @unsafe @unchecked Sendable {}` + Pattern B doc |
+| F18 | `swift-memory-primitives/.../Memory.Pool.swift:370` | `extension Memory.Pool: @unchecked Sendable {}` | `extension Memory.Pool: @unsafe @unchecked Sendable {}` + Pattern B doc |
+| F20 | `swift-lifetime-primitives/.../Lifetime.Lease.swift:74` | `extension Lifetime.Lease: @unchecked Sendable where Value: Sendable {}` | `extension Lifetime.Lease: @unsafe @unchecked Sendable where Value: Sendable {}` + Pattern B doc |
+
+**Design rationale**: Cannot be made checked `Sendable` — `UnsafeMutablePointer` storage prevents it. `~Copyable` unique ownership provides the proof the compiler cannot verify. Type system gap, not a design problem.
+
+#### P2: Category A — `@unsafe @unchecked Sendable` + sync doc (finding #21)
+
+| # | File | Current | Target |
+|---|------|---------|--------|
+| F21 | `swift-machine-primitives/.../Machine.Capture.Slot.swift:17` | `public struct Slot: @unchecked Sendable {` | `public struct Slot: @unsafe @unchecked Sendable {` + doc: "Category A (synchronized). Inner `_Storage` uses atomic operations for thread-safe slot management." |
+
+#### P3: Category C — Replace `@unchecked Sendable` with `~Sendable` (finding #23 + Tier 1 inventory)
+
+Enable via `.enableExperimentalFeature("TildeSendable")` in Package.swift.
+
+| # | File | Current | Target |
+|---|------|---------|--------|
+| F23 | `swift-file-system/.../File.Directory.Contents.IteratorHandle.swift:14` | `final class IteratorHandle: @unchecked Sendable` | `final class IteratorHandle: ~Sendable` — thread-confined directory stream. Transfer site uses explicit `unsafe`. |
+| T1a | `swift-io/.../IO.Completion.IOUring.Ring` | `@unchecked Sendable` | `~Sendable` — confined to poll thread. Tier 1 per inventory. |
+| T1b | `swift-io/.../IO.Completion.IOCP.State` | `@unchecked Sendable` | `~Sendable` — confined to completion port thread. Tier 1 per inventory. |
+
+**Design rationale**: These types are NOT safe to send arbitrarily. `@unchecked Sendable` is a semantic lie. `~Sendable` expresses the truth: the type is non-Sendable, and the single transfer to the confined thread is an explicit unsafe boundary crossing.
+
+#### P4: Pointer exposure — add `@unsafe` (finding #8)
+
+| # | File | Current | Target |
+|---|------|---------|--------|
+| F8 | `swift-memory-primitives/.../Memory.Arena.swift:65` | `public var start: UnsafeMutableRawPointer { unsafe _storage }` | `@unsafe public var start: UnsafeMutableRawPointer { unsafe _storage }` |
+
+**Design rationale**: Arena is `~Copyable` but NOT `~Escapable`. Pointer can outlive arena. Cannot eliminate — `Storage.Arena` requires mutable typed pointer computation. `@unsafe` is the correct end state.
+
+#### P5: Property.View family — add `@unsafe` to base properties (finding #11)
+
+7 variants, same pattern:
+
+| # | File |
+|---|------|
+| F11a | `swift-property-primitives/.../Property.View.swift` |
+| F11b | `swift-property-primitives/.../Property.View.Typed.swift` |
+| F11c | `swift-property-primitives/.../Property.View.Read.swift` |
+| F11d | `swift-property-primitives/.../Property.View.Read.Typed.swift` |
+| F11e | `swift-property-primitives/.../Property.View.Typed.Valued.swift` |
+| F11f | `swift-property-primitives/.../Property.View.Read.Typed.Valued.swift` |
+| F11g | `swift-property-primitives/.../Property.View.Typed.Valued.Valued.swift` |
+
+**Target**: Add `@unsafe` to each `public var base: UnsafeMutablePointer<Base>` property.
+
+**Design rationale**: `~Copyable` but NOT `~Escapable` (omitted per [MEM-COPY-013]). Safe by coroutine scope, not type system. When the compiler bug is fixed and `~Escapable` is added, these downgrade to LOW.
+
+#### P6: Sentinel globals — add `@safe` (findings #24–25)
+
+| # | File | Global |
+|---|------|--------|
+| F24a | `swift-memory-primitives/.../Memory Buffer Primitives/Memory.Buffer.swift:29` | `_emptyBufferSentinelMutable` |
+| F24b | `swift-memory-primitives/.../Memory Buffer Primitives/Memory.Buffer.swift:37` | `_emptyBufferSentinel` |
+| F25 | `swift-memory-primitives/.../Memory Buffer Primitives/Memory.Buffer.Mutable.swift:19` | `_emptyMutableBufferSentinel` |
+| F24a' | `swift-memory-primitives/.../Memory Primitives/Memory.Buffer.swift:29` | duplicate of F24a |
+| F24b' | `swift-memory-primitives/.../Memory Primitives/Memory.Buffer.swift:37` | duplicate of F24b |
+| F25' | `swift-memory-primitives/.../Memory Primitives/Memory.Buffer.Mutable.swift:19` | duplicate of F25 |
+
+**Target**: Add `@safe` to each `nonisolated(unsafe) let` declaration.
+
+**Design rationale**: Cannot eliminate `nonisolated(unsafe)` — Swift 6 requires it for lazy-initialized globals. Sentinels are `let`, allocated once, address-only comparisons. `@safe` asserts the invariant.
+
+#### P7: `.strictMemorySafety()` gaps (finding #7)
+
+Add `.strictMemorySafety()` to `swiftSettings` for 13 swift-foundations packages:
+
+```
+swift-copy-on-write          swift-html-rendering
+swift-css                    swift-markdown-html-rendering
+swift-css-html-rendering     swift-pdf-html-rendering
+swift-dependency-analysis    swift-pdf-rendering
+swift-html                   swift-svg
+swift-svg-rendering          swift-svg-rendering-worktree
+swift-translating
+```
+
+Plus 3 swift-standards test sub-packages and the stale `swift-rfc-template/Package.swift.template`.
+
+#### P8: Needs analysis before fixing
+
+| # | Type | Question | Options |
+|---|------|----------|---------|
+| F19 | `Predicate<T>: @unchecked Sendable` | Copyable type stores `(T) -> Bool` — not `@Sendable`. Neither synchronized (A) nor `~Copyable` (B). | (a) Make closure `@Sendable` in API, (b) Remove `Sendable` conformance, (c) Determine if type should be `~Copyable` |
+| F22 | `Async.Filter/Map/CompactMap/FlatMap` (8 types) | Store non-`@Sendable` closures with `@unchecked Sendable`. | (a) Make closures `@Sendable`, (b) Category C → `~Sendable`, (c) Accept as Category A if async runtime provides confinement |
+
+#### P9: Documentation improvements (LOW — optional)
+
+| # | File | Change |
+|---|------|--------|
+| F9 | `swift-path-primitives/.../Path.View.swift:37` | Optionally add `@unsafe` to `pointer` (structurally safe via `~Escapable`) |
+| F10 | `swift-string-primitives/.../String.View.swift:35` | Same as F9 |
+| F12–14 | Various | Minor: `Memory.Buffer` properties, `File.Path.Component` init, `Memory.Map` addresses |
+| F26 | `swift-css/.../Color.Theme.swift:13`, `Font.Theme.swift:13` | Mutable static with data race risk. Consider `Mutex` or `Atomic`. |
+| F27 | `swift-file-system/.../File.Handle.swift:104,160,190` | Remove over-specified `unsafe` on `.isEmpty` |
+
+## Accepted Compiler Warnings — 2026-03-25
+
+### Scope
+
+- **Target**: swift-primitives (swift-ordering-primitives, swift-buffer-primitives)
+- **Trigger**: Build log warning triage from `swift test` on swift-foundations
+- **Files**: Ordering comparator extensions, buffer inline primitives
+
+### Context
+
+During a full warning audit of the swift-foundations test build, two classes of warnings in swift-primitives were identified as **not fixable** without either restricting the public API surface or introducing incorrect code. Both are accepted as compiler limitations pending future Swift evolution.
+
+### Findings
+
+| # | Severity | Diagnostic | Location | Finding | Status |
+|---|----------|------------|----------|---------|--------|
+| 1 | — | `#SendableMetatypes` | `Ordering.Comparator+Swift.Comparable.swift:28,83` | "capture of non-Sendable type 'T.Type' / 'Value.Type' in an isolated closure." Metatypes are stateless global descriptors — inherently thread-safe. The `nonisolated(unsafe) let _: T.Type = T.self` workaround documents intent but does not suppress implicit metatype captures. Adding `& Sendable` to constraints was attempted and reverted: it caused cascade failures in downstream callers (`Ordering.Order+Swift.Comparable.swift`, etc.) where `Sendable` is not required. | ACCEPTED |
+| 2 | — | `#SendableMetatypes` | `Ordering.Comparator+Comparable.swift:25` | Same diagnostic for `T: Comparison.Protocol & ~Copyable`. Adding `& Sendable` would exclude non-Sendable `~Copyable` comparable types — a legitimate use case. | ACCEPTED |
+| 3 | — | `#SendableMetatypes` | `Ordering.Comparator+Projection.swift:35` | Same diagnostic for `Value: Comparison.Protocol & ~Copyable` in the `by` method. Same rationale as #2. | ACCEPTED |
+| 4 | — | "variable was never mutated" | `Buffer.Arena.Small.swift`, `Buffer.Linear.Small.swift`, `Buffer.Linear.Small Copyable.swift`, `Buffer.Ring.Small Copyable.swift`, `Buffer.Linked.Small Copyable.swift` (17 sites) | All flagged `var buf` / `var inlineBuf` declarations use `consume buf` for ownership transfer. `consume` requires a `var` binding — `let` produces "'buf' is borrowed and cannot be consumed." The compiler's mutation analysis does not recognize `consume` as requiring mutability. | ACCEPTED |
+
+### Rationale
+
+**`#SendableMetatypes`**: Metatypes (`T.Type`) are pointers into read-only type metadata in the binary. They carry no mutable state and are inherently safe to share across concurrency boundaries. The Swift compiler's `#SendableMetatypes` diagnostic is conservative — it flags all metatype captures in `@Sendable` closures where the type itself is not `Sendable`. This is a known area where the type system lacks the expressivity to distinguish "the metatype of `T`" (always safe) from "a value of type `T`" (may not be safe). Future Swift evolution is expected to make metatypes unconditionally `Sendable`.
+
+**`var` never mutated**: The `consume` keyword performs a move — transferring ownership out of a binding. This is semantically distinct from mutation, but syntactically requires `var` because the binding's value is invalidated after the consume. The compiler's "never mutated" analysis predates ownership annotations and does not account for `consume`. This is a known false positive that will be resolved when the warning analysis is updated to recognize ownership operations.
+
+### Re-evaluation triggers
+
+- **`#SendableMetatypes`**: Re-evaluate when Swift adds unconditional metatype Sendability (likely via SE proposal) or when `nonisolated(unsafe)` is extended to cover implicit metatype captures.
+- **`var` never mutated**: Re-evaluate when the compiler's mutation analysis recognizes `consume` as requiring `var`.
+
+## Prior Art Compliance — swift-io — 2026-03-25
+
+### Scope
+
+- **Target**: swift-io (Layer 3, swift-foundations) + IO types in swift-kernel-primitives (Layer 1, swift-primitives)
+- **Method**: Design audit against external IO systems literature — 15 systems surveyed, 72 swift-io concepts evaluated
+- **Files**: 279 source files across 7 targets
+- **Research**: [io-prior-art-and-swift-io-design-audit.md](io-prior-art-and-swift-io-design-audit.md) (consolidated literature survey + concept-by-concept evaluation)
+
+### Context
+
+Proactive Discovery audit ([RES-012]) to determine whether swift-io introduces unnecessary custom concepts or whether its design is justified by established IO systems practice. Conducted without internal requirement IDs — evaluation criteria are the 4-tier concept necessity spectrum derived from the literature:
+
+| Tier | Definition | Expectation |
+|------|-----------|-------------|
+| 1 (Irreducible) | Every IO system has this | Must have |
+| 2 (Expected) | Best-in-class systems have this | Should have |
+| 3 (Valuable) | Present in many systems | May have |
+| 4 (Paradigm-specific) | Justified only by language context | Requires justification |
+
+### Systems Surveyed
+
+Rust (std::io, tokio, mio, tokio-uring, monoio), Go (io, bufio, os, net), Java (java.io, java.nio, NIO.2, Loom), .NET (System.IO, Pipelines, Span/Memory), Zig (std.io pre-0.15, std.Io 0.15.1+), OCaml (classic IO, Eio), Haskell (System.IO, conduit, pipes), SwiftNIO, Swift System, epoll, kqueue, IOCP, io_uring, libuv.
+
+### Findings
+
+| # | Category | Concepts | Prior Art Tier | Verdict |
+|---|----------|----------|---------------|---------|
+| 1 | Kernel primitives (L1) | 12 (Descriptor, IO.Error, Event, Interest, Flags, Socket.*, File.Offset/Delta/Size) | All Tier 1-2 | CLEAN — direct mappings to POSIX/kernel structures |
+| 2 | IO Core | 5 (IO namespace, Lifecycle, Lifecycle.Error, Closable, Backpressure.Strategy) | Tier 2-4 | CLEAN — Closable with `consuming close()` + `~Copyable` is well-precedented (Rust OwnedFd, Clean uniqueness types) |
+| 3 | IO Events | ~18 (Selector, Driver, Channel, Poll, Registration, Token type-state, Waiter, Wakeup, Backoff, Deadline, Batch, etc.) | Tier 2-4 | CLEAN — all map to mio/NIO/libuv/Java NIO patterns; Token type-state is a justified Swift adaptation of known typestate technique |
+| 4 | IO Completions | ~15 (Completion.ID, Operation, Event, Outcome, Queue, Submission, Driver, IOCP, IOUring, Read/Write/Accept/Connect) | All Tier 2 | CLEAN — direct typed Swift interface over io_uring SQ/CQ and IOCP |
+| 5 | IO Blocking | ~10 (Lane, Capabilities, Deadline, Execution.Semantics, Ticket, Sharded, Abandoning, Threads) | Tier 2-3 | CLEAN — maps to tokio spawn_blocking, libuv thread pool, Java ExecutorService |
+| 6 | IO Executor | ~12 (Executor, Handle, Registry, Waiter, Lane, Pool, Backend, Scope, Slot, Teardown, Ready/Pending) | Tier 2-4 | CLEAN — 1 truly novel concept (IO.Executor.Slot), justified by Swift's unique actor + ~Copyable combination |
+
+### Summary
+
+72 concepts audited. **0 findings.** Distribution:
+
+| Prior Art Tier | Count | % |
+|---------------|-------|---|
+| Tier 1-2 (universal/expected) | ~56 | 78% |
+| Tier 3 (valuable) | ~10 | 14% |
+| Tier 4 (paradigm-specific) | ~5 | 7% |
+| Truly novel | 1 | 1% |
+
+**Verdict: CLEAN.** swift-io does not introduce unnecessary custom concepts. Every abstraction maps to recognized IO systems prior art or is a justified adaptation of Swift's type system (`~Copyable`, typed throws, token type-state, witness structs). The 279-file count reflects the ecosystem's namespace-first file organization ([API-IMPL-005], [API-NAME-001]), not conceptual bloat — the concept set is isomorphic to tokio/mio/libuv.
+
+The single truly novel concept — `IO.Executor.Slot` (cross-actor `~Copyable` value transfer) — has no prior art because no other language combines actors with move-only types. Its existence is justified by the language constraint it addresses.
+
+**Notable strengths relative to prior art**: dual-model IO (events + completions) as first-class peers (only Zig 0.15.1+ does this), compile-time resource safety via `~Copyable`, type-state enforcement for event registration, typed throws with composite errors matching Zig's precision.
+
+---
+
+## Variant Naming — 2026-03-25
+
+### Scope
+
+- **Target**: swift-primitives ecosystem (6 packages) + swift-foundations (2 source files)
+- **Skill**: code-surface — [API-NAME-001], [API-NAME-003]; academic definitions from `variant-naming-audit.md`
+- **Files**: ~50 source files, ~10 test files across 6 packages + 2 downstream files
+- **Subject**: 7 types named "Fixed" with bounded-buffer semantics; 2 types named "Inline" at collection level where convention is "Static"
+
+### Findings
+
+| # | Severity | Rule | Location | Finding | Status |
+|---|----------|------|----------|---------|--------|
+| 1 | HIGH | [API-NAME-003] | swift-queue-primitives: `Queue.Fixed` | Bounded-buffer semantics (mutable count, capacity-limited) named "Fixed" instead of "Bounded" (Dijkstra 1965). `struct Fixed` declared in Queue.Fixed.swift:43. | OPEN |
+| 2 | HIGH | [API-NAME-003] | swift-queue-primitives: `Queue.DoubleEnded.Fixed` | Same as #1. Declared in Queue.DoubleEnded.swift:47. | OPEN |
+| 3 | HIGH | [API-NAME-003] | swift-queue-primitives: `Queue.Linked.Fixed` | Same as #1. Declared in Queue.Linked.swift:87. | OPEN |
+| 4 | HIGH | [API-NAME-003] | swift-heap-primitives: `Heap.Fixed` | Same as #1. Declared in Heap.swift:103. `comparative-heap-primitives.md` line 154 already calls it "bounded capacity" in prose. | OPEN |
+| 5 | HIGH | [API-NAME-003] | swift-heap-primitives: `Heap.MinMax.Fixed` | Same as #1. Declared in Heap.MinMax.Fixed.swift. | OPEN |
+| 6 | HIGH | [API-NAME-003] | swift-set-primitives: `Set.Ordered.Fixed` | Same as #1. Declared in Set.swift:73. | OPEN |
+| 7 | HIGH | [API-NAME-003] | swift-bitset-primitives: `Bitset.Fixed` | Same as #1. Declared in Bitset.Fixed.swift. | OPEN |
+| 8 | MEDIUM | convention | swift-list-primitives: `List.Linked.Inline<N>` | Collection-level variant uses "Inline" (infrastructure name) instead of "Static" (collection convention). Declared in List.Linked.swift:146. | OPEN |
+| 9 | MEDIUM | convention | swift-tree-primitives: `Tree.N.Inline<N>` | Same as #8. Declared in Tree.N.Inline.swift:37. | OPEN |
+
+### Execution Plan
+
+Each rename touches 5 layers: struct declarations, all type references, module/target names, file names, directory names. The replacement is mechanical and per-package safe (no "Fixed" variant in any affected package should remain "Fixed"). Full academic rationale in `variant-naming-audit.md`.
+
+#### Reference Patterns (all must be caught)
+
+| Pattern | Example | Replacement |
+|---------|---------|-------------|
+| `.Fixed` (type position) | `extension Queue.Fixed where...` | `.Bounded` |
+| `struct Fixed` | `public struct Fixed: ~Copyable` | `struct Bounded` |
+| `Queue<Element>.Fixed` | `throws(Queue<Element>.Fixed.Error)` | `Queue<Element>.Bounded` |
+| `Queue<Int>.Fixed` | `Queue<Int>.Fixed(capacity: 10)` | `Queue<Int>.Bounded` |
+| `Queue<ConcreteType>.*.Fixed` | `Queue<IO...>.DoubleEnded.Fixed(...)` | `...DoubleEnded.Bounded(...)` |
+| `__*FixedError` | `__QueueDoubleEndedFixedError` | `__QueueDoubleEndedBoundedError` |
+| `__*FixedError` | `__SetOrderedFixedError` | `__SetOrderedBoundedError` |
+| `__*FixedError` | `__BitsetFixedError` | `__BitsetBoundedError` |
+| `*FixedTests` | `QueueFixedTests` | `QueueBoundedTests` |
+| `*_Fixed_Primitives` | `Queue_Fixed_Primitives` | `Queue_Bounded_Primitives` |
+| `"* Fixed Primitives"` | `"Queue Fixed Primitives"` | `"Queue Bounded Primitives"` |
+| `Queue/Fixed` (DocC) | DocC link syntax | `Queue/Bounded` |
+| `"Queue.Fixed"` (strings) | test suite name | `"Queue.Bounded"` |
+| File names | `Queue.Fixed.swift` | `Queue.Bounded.swift` |
+| Directory names | `Queue Fixed Primitives/` | `Queue Bounded Primitives/` |
+| `List.Linked.Inline` | `extension List.Linked.Inline where...` | `List.Linked.Static` |
+| `Tree.N.Inline` | `extension Tree.N.Inline where...` | `Tree.N.Static` |
+| `struct Inline<let capacity` | collection-level declaration | `struct Static<let capacity` |
+| `__ListLinkedInlineError` | hoisted error | `__ListLinkedStaticError` |
+| `__TreeNInlineError` | hoisted error | `__TreeNStaticError` |
+| `Tree_N_Inline_Primitives` | module import | `Tree_N_Static_Primitives` |
+| `Tree N Inline Primitives` | target name | `Tree N Static Primitives` |
+
+#### Per-Package Content Replacement (sed)
+
+**swift-queue-primitives** (3 Fixed types, 1 hoisted error, 1 module/target):
+
+```bash
+PKG="/Users/coen/Developer/swift-primitives/swift-queue-primitives"
+find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
+  -e 's/\.Fixed/.Bounded/g' \
+  -e 's/struct Fixed/struct Bounded/g' \
+  -e 's/__QueueDoubleEndedFixedError/__QueueDoubleEndedBoundedError/g' \
+  -e 's/QueueFixedTests/QueueBoundedTests/g' \
+  -e 's/Queue_Fixed_Primitives/Queue_Bounded_Primitives/g' \
+  -e 's/Queue Fixed Primitives/Queue Bounded Primitives/g'
+```
+
+**swift-heap-primitives** (2 Fixed types, 1 module/target):
+
+```bash
+PKG="/Users/coen/Developer/swift-primitives/swift-heap-primitives"
+find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
+  -e 's/\.Fixed/.Bounded/g' \
+  -e 's/struct Fixed/struct Bounded/g' \
+  -e 's/Heap_Fixed_Primitives/Heap_Bounded_Primitives/g' \
+  -e 's/Heap Fixed Primitives/Heap Bounded Primitives/g'
+```
+
+**swift-set-primitives** (1 Fixed type, 1 hoisted error, no separate module):
+
+```bash
+PKG="/Users/coen/Developer/swift-primitives/swift-set-primitives"
+find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
+  -e 's/\.Fixed/.Bounded/g' \
+  -e 's/struct Fixed/struct Bounded/g' \
+  -e 's/__SetOrderedFixedError/__SetOrderedBoundedError/g'
+```
+
+**swift-bitset-primitives** (1 Fixed type, 1 hoisted error, no separate module):
+
+```bash
+PKG="/Users/coen/Developer/swift-primitives/swift-bitset-primitives"
+find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
+  -e 's/\.Fixed/.Bounded/g' \
+  -e 's/struct Fixed/struct Bounded/g' \
+  -e 's/__BitsetFixedError/__BitsetBoundedError/g'
+```
+
+**swift-list-primitives** (1 Inline→Static, 1 hoisted error):
+
+```bash
+PKG="/Users/coen/Developer/swift-primitives/swift-list-primitives"
+find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
+  -e 's/List\.Linked\.Inline/List.Linked.Static/g' \
+  -e 's/__ListLinkedInlineError/__ListLinkedStaticError/g'
+# Declaration rename (only in the one file):
+sed -i '' 's/public struct Inline<let capacity/public struct Static<let capacity/g' \
+  "$PKG/Sources/List Primitives Core/List.Linked.swift"
+```
+
+**swift-tree-primitives** (1 Inline→Static, 1 hoisted error, 1 module/target):
+
+```bash
+PKG="/Users/coen/Developer/swift-primitives/swift-tree-primitives"
+find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
+  -e 's/Tree\.N\.Inline/Tree.N.Static/g' \
+  -e 's/__TreeNInlineError/__TreeNStaticError/g' \
+  -e 's/Tree_N_Inline_Primitives/Tree_N_Static_Primitives/g' \
+  -e 's/Tree N Inline Primitives/Tree N Static Primitives/g'
+# Declaration rename:
+sed -i '' 's/public struct Inline<let capacity/public struct Static<let capacity/g' \
+  "$PKG/Sources/Tree N Inline Primitives/Tree.N.Inline.swift"
+```
+
+**swift-foundations** (downstream, 3 references):
+
+```bash
+sed -i '' 's/\.Fixed/.Bounded/g' \
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Worker.swift" \
+  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Runtime.State.swift"
+sed -i '' 's/Queue\.Fixed/Queue.Bounded/g; s/Heap\.Fixed/Heap.Bounded/g; s/DoubleEnded\.Fixed/DoubleEnded.Bounded/g' \
+  "/Users/coen/Developer/swift-foundations/swift-io/Research/data-structure-ecosystem-triage.md"
+```
+
+#### File and Directory Renames (git mv)
+
+**swift-queue-primitives:**
+
+```bash
+cd /Users/coen/Developer/swift-primitives/swift-queue-primitives
+git mv "Sources/Queue Fixed Primitives" "Sources/Queue Bounded Primitives"
+git mv "Sources/Queue Primitives Core/Queue.Fixed.swift" "Sources/Queue Primitives Core/Queue.Bounded.swift"
+git mv "Sources/Queue Bounded Primitives/Queue.Fixed Copyable.swift" "Sources/Queue Bounded Primitives/Queue.Bounded Copyable.swift"
+```
+
+**swift-heap-primitives:**
+
+```bash
+cd /Users/coen/Developer/swift-primitives/swift-heap-primitives
+git mv "Sources/Heap Fixed Primitives" "Sources/Heap Bounded Primitives"
+git mv "Sources/Heap Primitives Core/Heap.Fixed.Error.swift" "Sources/Heap Primitives Core/Heap.Bounded.Error.swift"
+git mv "Sources/Heap Bounded Primitives/Heap.Fixed ~Copyable.swift" "Sources/Heap Bounded Primitives/Heap.Bounded ~Copyable.swift"
+git mv "Sources/Heap Bounded Primitives/Heap.Fixed Copyable.swift" "Sources/Heap Bounded Primitives/Heap.Bounded Copyable.swift"
+git mv "Sources/Heap MinMax Primitives/Heap.MinMax.Fixed.swift" "Sources/Heap MinMax Primitives/Heap.MinMax.Bounded.swift"
+git mv "Sources/Heap MinMax Primitives/Heap.MinMax.Fixed ~Copyable.swift" "Sources/Heap MinMax Primitives/Heap.MinMax.Bounded ~Copyable.swift"
+git mv "Sources/Heap MinMax Primitives/Heap.MinMax.Fixed Copyable.swift" "Sources/Heap MinMax Primitives/Heap.MinMax.Bounded Copyable.swift"
+git mv "Tests/Heap Primitives Tests/Heap.Fixed Tests.swift" "Tests/Heap Primitives Tests/Heap.Bounded Tests.swift"
+```
+
+**swift-set-primitives:**
+
+```bash
+cd /Users/coen/Developer/swift-primitives/swift-set-primitives
+git mv "Sources/Set Ordered Primitives/Set.Ordered.Fixed.swift" "Sources/Set Ordered Primitives/Set.Ordered.Bounded.swift"
+git mv "Sources/Set Ordered Primitives/Set.Ordered.Fixed Copyable.swift" "Sources/Set Ordered Primitives/Set.Ordered.Bounded Copyable.swift"
+git mv "Sources/Set Ordered Primitives/Set.Ordered.Fixed.Indexed.swift" "Sources/Set Ordered Primitives/Set.Ordered.Bounded.Indexed.swift"
+git mv "Sources/Set Ordered Primitives/Set.Ordered.Fixed+Sequence.Consume.swift" "Sources/Set Ordered Primitives/Set.Ordered.Bounded+Sequence.Consume.swift"
+git mv "Sources/Set Ordered Primitives/Set.Ordered.Fixed+Sequence.Drain.swift" "Sources/Set Ordered Primitives/Set.Ordered.Bounded+Sequence.Drain.swift"
+```
+
+**swift-bitset-primitives:**
+
+```bash
+cd /Users/coen/Developer/swift-primitives/swift-bitset-primitives
+git mv "Sources/Bitset Primitives/Bitset.Fixed.swift" "Sources/Bitset Primitives/Bitset.Bounded.swift"
+git mv "Sources/Bitset Primitives/Bitset.Fixed.Error.swift" "Sources/Bitset Primitives/Bitset.Bounded.Error.swift"
+git mv "Sources/Bitset Primitives/Bitset.Fixed.Algebra.swift" "Sources/Bitset Primitives/Bitset.Bounded.Algebra.swift"
+git mv "Sources/Bitset Primitives/Bitset.Fixed.Algebra.Symmetric.swift" "Sources/Bitset Primitives/Bitset.Bounded.Algebra.Symmetric.swift"
+git mv "Sources/Bitset Primitives/Bitset.Fixed.Relation.swift" "Sources/Bitset Primitives/Bitset.Bounded.Relation.swift"
+```
+
+**swift-list-primitives:**
+
+```bash
+cd /Users/coen/Developer/swift-primitives/swift-list-primitives
+git mv "Sources/List Linked Primitives/List.Linked.Inline.swift" "Sources/List Linked Primitives/List.Linked.Static.swift"
+```
+
+**swift-tree-primitives:**
+
+```bash
+cd /Users/coen/Developer/swift-primitives/swift-tree-primitives
+git mv "Sources/Tree N Inline Primitives" "Sources/Tree N Static Primitives"
+git mv "Sources/Tree N Static Primitives/Tree.N.Inline.swift" "Sources/Tree N Static Primitives/Tree.N.Static.swift"
+git mv "Sources/Tree N Static Primitives/Tree.N.Inline.Error.swift" "Sources/Tree N Static Primitives/Tree.N.Static.Error.swift"
+```
+
+#### Verification
+
+```bash
+# Per package:
+cd /Users/coen/Developer/swift-primitives/{package} && swift build && swift test
+
+# Downstream:
+cd /Users/coen/Developer/swift-foundations && swift build
+```
+
+#### Safety Constraints
+
+1. **Never touch swift-array-primitives**: `Array.Fixed` is genuinely fixed (immutable count).
+2. **Inline→Static must not touch buffer/storage layer**: `Buffer.Linked.Inline`, `Buffer.Arena.Inline`, `Storage.Inline` are correct. The sed patterns `List.Linked.Inline` and `Tree.N.Inline` are specific enough.
+3. **`.Fixed` sed catches all nested Fixed types**: `Queue.Fixed`, `DoubleEnded.Fixed`, `Linked.Fixed`, `MinMax.Fixed` — all correct.
+4. **Hoisted error renames are substring-safe**: `.FixedError` → `.BoundedError` via the `.Fixed` rule works correctly.
+5. **`struct Inline<let capacity` in List/Tree**: Scoped to specific files to avoid touching buffer-layer declarations.
+6. **Exclude `.build/` directories**: The `find` commands exclude build artifacts.
+
+### Summary
+
+9 findings: 0 critical, 7 high, 2 medium.
+
+All 9 are naming violations where the code uses an academically incorrect term. The execution plan is fully mechanical: content sed, git mv, swift build/test verification. Cross-package impact is contained to 2 source files + 1 research doc in swift-foundations. Research document at `variant-naming-audit.md` provides the full academic rationale, cross-document contradiction analysis, and corrected variant system definition.
