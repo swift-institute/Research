@@ -572,16 +572,10 @@ unsafe array.withUnsafeBufferPointer { buffer in
 String interpolation with unsafe types needs `unsafe` on the outer expression:
 
 ```swift
-// WARNING: reference to unsafe type UnsafePointer<Int>
-_ = "Hello \(unsafe ptr)"  // Needs outer unsafe too
+// WARNING: expression uses unsafe constructs but is not marked with 'unsafe'
+_ = "Hello \(unsafe ptr)"
 
-// CORRECT
-_ = unsafe "Hello \(unsafe ptr)"
-```
-
-Wait — from the test file (`safe.swift:382-387`), the correct fix-it is to add `unsafe` at the start of the outer expression:
-
-```swift
+// CORRECT: outer unsafe covers the interpolation expression
 _ = unsafe "Hello \(unsafe ptr)"
 ```
 
@@ -1071,19 +1065,127 @@ For contributors and advanced users.
 
 ---
 
+## 18. Isolation Philosophy
+
+### 18.1 The Virality Problem
+
+Without isolation, unsafety propagates virally through the call graph. If a type exposes a raw pointer as its primary API, every consumer needs `unsafe`, and their callers may too. One unsafe type at the bottom infects every layer above it.
+
+```swift
+// Viral: pointer escapes, every consumer needs unsafe
+public struct Arena {
+    public var start: UnsafeMutableRawPointer
+}
+
+func useArena(_ arena: Arena) {
+    let ptr = unsafe arena.start         // infected
+    let value = unsafe ptr.load(as: Int.self) // infected
+}
+
+func higherLevel() {
+    unsafe useArena(Arena())             // infection spreads upward
+}
+```
+
+### 18.2 The Isolation Mechanism: `@safe` Boundaries
+
+SE-0458 provides exactly one tool to stop propagation: **`@safe`**. It tells the compiler "unsafety stops here — my callers are safe."
+
+```swift
+@safe
+public struct Arena: ~Copyable {
+    private var _storage: UnsafeMutableRawPointer
+
+    // Safe public API — callers need NO unsafe keyword
+    public func load<T>(at offset: Int, as type: T.Type) -> T {
+        precondition(offset >= 0 && offset + MemoryLayout<T>.size <= _allocated)
+        return unsafe _storage.load(fromByteOffset: offset, as: type)
+    }
+
+    // Escape hatch — callers MUST use unsafe keyword
+    @unsafe public var start: UnsafeMutableRawPointer { unsafe _storage }
+}
+```
+
+### 18.3 The Three Roles
+
+Every declaration plays exactly one of three roles:
+
+| Role | Annotation | Caller Obligation | Purpose |
+|------|-----------|-------------------|---------|
+| **Absorber** | `@safe` | None | Encapsulates unsafe internals behind a safe API |
+| **Propagator** | `@unsafe` | Must use `unsafe` | Escape hatch that pushes safety responsibility to caller |
+| **Unspecified** | (none) | Depends on signature | Compiler infers from types in signature |
+
+The goal is to **maximize absorbers** and **minimize propagators**. Every `@unsafe` declaration is a leak in the safety boundary. Every `@safe` declaration is a firewall.
+
+### 18.4 Boundary Placement Rule
+
+**The `@safe` boundary should be as LOW as possible** — as close to the raw pointer operations as you can get. This minimizes the amount of code that must reason about safety.
+
+```
+┌──────────────────────────────────────────────────────┐
+│  Layer N: Pure safe Swift                             │
+│  No unsafe keyword appears anywhere                   │
+│  (swift-standards is 100% this)                       │
+├──────────────────────────────────────────────────────┤
+│  @safe public types                                   │
+│  Safe API: subscripts, Span properties, methods       │
+│  @unsafe escape hatches: withUnsafePointer etc.       │
+├──────────────────────────────────────────────────────┤
+│  unsafe expressions                                   │
+│  Pointer arithmetic, memory binding, C calls          │
+│  Confined to method bodies of @safe types             │
+└──────────────────────────────────────────────────────┘
+```
+
+### 18.5 Five Isolation Rules
+
+**Rule 1: Never `@unsafe struct` for encapsulating types** [MEM-SAFE-021]
+
+Marking a struct `@unsafe` makes `self` an unsafe type, infecting every method body — including safe operations like `precondition(index < capacity)`. Use `@safe struct` with `@unsafe` escape hatch methods instead.
+
+**Rule 2: `@unsafe` only on escape hatches, never on the primary API** [MEM-SAFE-022]
+
+If the primary API requires `unsafe` at the call site, isolation has failed. The `@unsafe` method should be the one callers reach for reluctantly (C interop, performance-critical paths), not by default.
+
+**Rule 3: Private unsafe storage, never public pointers** [MEM-SAFE-023]
+
+A public `UnsafePointer` property on a `@safe` type is a contradiction. The type claims to be safe but exposes the unsafe internals. Make pointer storage `private` or `internal`; expose `Span` as the normative public API.
+
+**Rule 4: `@unchecked Sendable` requires `@unsafe`** [MEM-SAFE-024]
+
+SE-0458 treats `@unchecked Sendable` as inherently unsafe — it removes the compiler's data-race prevention without proof of safety. Without `@unsafe`, the conformance silently passes through strict memory safety checking.
+
+**Rule 5: `nonisolated(unsafe)` globals require `@safe` when encapsulated** [MEM-SAFE-025]
+
+Safely encapsulated globals (allocated once, never mutated, used as sentinels) should have `@safe` to assert the invariant and prevent the `nonisolated(unsafe)` from propagating warnings to consumers.
+
+### 18.6 The Acid Test
+
+For any type with unsafe internals:
+
+> Can a caller use this type's complete public API without ever writing the `unsafe` keyword?
+
+If yes — the type is properly isolated. The unsafe code is contained.
+If no — every caller that touches the unsafe API inherits the obligation, and their callers may too. Each `@unsafe` in the public API is a deliberate, documented escape hatch — not the primary interface.
+
+---
+
 ## Outcome
 
 **Status**: DECISION
 
 The Swift safety model as implemented in SE-0458 provides a comprehensive, expression-level mechanism for identifying and acknowledging unsafe operations. The Swift Institute ecosystem should:
 
-1. **Proactively annotate** all packages with `@safe`/`@unsafe` even before enabling strict mode
-2. **Prefer `@safe` structs** with `@unsafe` escape hatches over `@unsafe` structs
-3. **Enable `.strictMemorySafety()`** in `Package.swift` for all packages
-4. **Follow the expression placement rules** in Section 8 to avoid common pitfalls
-5. **Avoid the anti-patterns** documented in Section 14
-6. **Use Span-based APIs** as the normative safe alternative where possible
-7. **Use the audit checklist** in Section 15 for systematic compliance verification
+1. **Isolate unsafe code** — place `@safe` boundaries as low as possible, maximizing absorbers and minimizing propagators (Section 18)
+2. **Never `@unsafe struct`** for encapsulating types — use `@safe struct` with `@unsafe` escape hatches
+3. **Private unsafe storage** — never expose raw pointers as public properties; use `Span` as the normative interface
+4. **`@unchecked Sendable` requires `@unsafe`** — every unchecked conformance must be explicitly marked
+5. **Enable `.strictMemorySafety()`** in `Package.swift` for all packages
+6. **Follow the expression placement rules** in Section 8 to avoid common pitfalls
+7. **Avoid the anti-patterns** documented in Section 14
+8. **Use the audit checklist** in Section 15 for systematic compliance verification
 
 This document serves as the canonical reference for the ecosystem safety audit.
 

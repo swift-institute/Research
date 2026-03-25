@@ -428,12 +428,11 @@ The 6.3 compiler changes:
 2. **Force VWT-based destruction** (`3a8a19ad7d0`, 2026-03-24)
 3. New SIL property `isOrContainsRawLayout` for correct destruction routing
 
-**Assessment**: These changes may resolve bug #86652. If the compiler now routes `@_rawLayout` destruction through value witness tables instead of element-wise destruction, the LLVM IR undefined-stride crash is avoided. **Must verify by building with Swift 6.3 in release mode.**
+**Verified 2026-03-25: BUG NOT FIXED.** The LLVM verifier crash persists in Swift 6.3 (Xcode 26.4). The minimal reproducer (`rawlayout-minimal-reproducer/Bug1Consumer`, release mode) still crashes with `"Instruction does not dominate all uses!"` on the LLVM `verify` pass.
 
-If confirmed:
-- Remove all 36 `_deinitWorkaround` fields (saves 8 bytes per instance × every instantiation)
-- Potentially add `deinit` to `Storage.Inline` itself
-- Remove the field-ordering constraint (currently `@_rawLayout` must be last field)
+The 6.3 `@_rawLayout` changes address a different aspect (removing the deinit *requirement*) — they do not fix the cross-module LLVM IR domination bug triggered by 2+ `@_rawLayout`+deinit fields from a generic enum.
+
+**Result**: All 36 `_deinitWorkaround` fields must remain. Field-ordering constraint stays. No action possible until the upstream fix lands.
 
 #### CopyPropagation Workaround (Property.View)
 
@@ -495,26 +494,26 @@ The ecosystem is already fully compliant with SE-0502.
 
 ## Remediation Plan
 
-### Wave 1: Mechanical (Zero Risk)
+### Wave 1: Mechanical (Zero Risk) — DONE 2026-03-25
 
-| Task | Files | Method |
-|------|-------|--------|
-| Remove `SuppressedAssociatedTypesWithDefaults` from all Package.swift | ~209 | `sed` across repos |
-| Replace `@inline(__always)` → `@inline(always)` | ~83 | `sed` across repos |
-| Remove redundant Swift 6 upcoming features (`InferSendableFromCaptures`, `GlobalActorIsolatedTypesUsability`) | 2 | Manual edit |
+| Task | Files | Method | Status |
+|------|-------|--------|--------|
+| Remove `SuppressedAssociatedTypesWithDefaults` from all Package.swift | 1,359 | sync script + `sed` | **DONE** |
+| Replace `@inline(__always)` → `@inline(always)` | ~83 | `sed` across repos | **DONE** |
+| Update `sync-swift-settings.sh` canonical source | 1 | Manual edit | **DONE** |
+| Update `generate-package-swift.py` canonical source | 1 | Manual edit | **DONE** |
+| Remove redundant Swift 6 upcoming features | 2 | In third-party repos only — no action | N/A |
 
-**Estimated scope**: ~294 file edits, zero semantic change.
+### Wave 2: Verify & Remove Workarounds — PARTIALLY DONE 2026-03-25
 
-### Wave 2: Verify & Remove Workarounds
-
-| Task | Prerequisite | Files |
-|------|-------------|-------|
-| Build all `@_rawLayout` packages with Swift 6.3 in `-c release` | Install 6.3 toolchain | 7 packages |
-| If release builds pass: remove all `_deinitWorkaround` fields | Verified fix | 36 sites |
-| If release builds pass: remove field-ordering constraint | Verified fix | 7 packages |
-| Test Property.View with `~Escapable` re-added under 6.3 | Copy propagation fix verification | 7 types |
-| Remove `InoutLifetimeDependence` from experiment Package.swift | Already promoted | 1 file |
-| Remove `SymbolLinkageMarkers` from experiment Package.swift | Already promoted | 1 file |
+| Task | Prerequisite | Status |
+|------|-------------|--------|
+| Build `@_rawLayout` reproducer with Swift 6.3 `-c release` | Install 6.3 toolchain | **DONE — BUG NOT FIXED** |
+| ~~Remove all `_deinitWorkaround` fields~~ | ~~Verified fix~~ | **BLOCKED** — bug #86652 persists |
+| ~~Remove field-ordering constraint~~ | ~~Verified fix~~ | **BLOCKED** |
+| Test Property.View with `~Escapable` re-added under 6.3 | Copy propagation fix verification | PENDING |
+| Remove `InoutLifetimeDependence` from experiment Package.swift | Already promoted | PENDING |
+| Remove `SymbolLinkageMarkers` from experiment Package.swift | Already promoted | PENDING |
 
 ### Wave 3: Strategic Adoption
 
@@ -534,9 +533,9 @@ The ecosystem is already fully compliant with SE-0502.
 ### Phase 1: Catalog — COMPLETE (v1.0.0)
 ### Phase 2: Ecosystem Audit — COMPLETE (v2.0.0)
 
-**Summary**: 1,390 Package.swift files audited. 209 carry a ghost feature flag (`SuppressedAssociatedTypesWithDefaults`). 320 `@inline(__always)` sites ready for mechanical replacement. 36 `_deinitWorkaround` sites may be removable pending Swift 6.3 release-mode verification. Zero SE-0502 risk (all structs use explicit inits). Zero SE-0505 API usage.
+**Summary**: Wave 1 executed — 1,359 Package.swift cleaned of ghost flag, ~83 files migrated to `@inline(always)`, canonical scripts updated. Wave 2 partially complete — bug #86652 **NOT fixed** in Swift 6.3, `_deinitWorkaround` fields must remain. Property.View `~Escapable` re-addition and minor experiment cleanups still pending.
 
-**Highest-value action**: Verify bug #86652 fix → remove 36 workaround fields → save 8 bytes/instance across all inline data structures.
+**Highest-value remaining action**: File upstream bug report with the minimal reproducer to get #86652 prioritized for Swift 6.4.
 
 ## References
 
