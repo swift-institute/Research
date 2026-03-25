@@ -8,7 +8,18 @@ packages:
   - swift-dependencies
   - swift-testing
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-03-22
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: "Add [IMPL-062] nonisolated(nonsending) preferred over isolation: parameters"
+  - type: research_topic
+    target: nonsending-callasfunction-inference-quirk.md
+    description: "callAsFunction type inference quirk with nonisolated(nonsending)"
+  - type: package_insight
+    target: swift-async-primitives
+    description: "Update Async.Callback doc comments from SE-0420 to nonisolated(nonsending)"
 ---
 
 # Nonsending Compiler Discovery and Ecosystem Migration

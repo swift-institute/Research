@@ -4,7 +4,16 @@ session_objective: Diagnose and fix Swift 6.2 release mode compiler crash across
 packages:
   - swift-buffer-primitives
   - swift-primitives
-status: pending
+status: processed
+processed_date: 2026-03-22
+triage_outcomes:
+  - type: no_action
+    description: "Buffer.swift split superseded by 2026-03-22 compiler fix (21 lines in GenStruct.cpp)"
+  - type: skill_update
+    target: existing-infrastructure
+    description: "Add common mistake to [INFRA-002] — Int(bitPattern: count) not count.cardinal"
+  - type: no_action
+    description: "File compiler bug superseded — 2026-03-22 rawlayout-deinit session already identified root cause, filed on #86652, and wrote fix"
 ---
 
 # Release Mode LLVM Verifier Crash: Investigation and File-Split Fix
