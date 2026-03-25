@@ -350,7 +350,7 @@ See `swift-institute/Research/tilde-sendable-semantic-inventory.md` for the full
 | 20 | MEDIUM | [MEM-SAFE-024] | `swift-lifetime-primitives/.../Lifetime.Lease.swift:74` | `@unchecked Sendable where Value: Sendable` — `~Copyable` conditional ownership transfer. Sound, lacks `@unsafe`. | B | OPEN |
 | 21 | MEDIUM | [MEM-SAFE-024] | `swift-machine-primitives/.../Machine.Capture.Slot.swift:17` | `@unchecked Sendable` on outer `Slot` struct — inner `_Storage` is synchronized (atomic). | A | OPEN |
 | 22 | MEDIUM | [MEM-SAFE-024] | swift-foundations `swift-async/.../Async.Filter.swift:88` | `Async.Filter: @unchecked Sendable` — stores non-`@Sendable` closures. 8 types (Filter/Map/CompactMap/FlatMap + iterators). Needs analysis: are closures captured once and confined, or potentially shared? | — | OPEN |
-| 23 | LOW | [MEM-SAFE-024] | swift-foundations `swift-file-system/.../File.Directory.Contents.IteratorHandle.swift:14` | `@unchecked Sendable` wrapping thread-confined `Kernel.Directory.Stream`. Tier 1 candidate for `~Sendable` (SE-0518). | C | DEFERRED — awaiting SE-0518 (`~Sendable`) stabilization |
+| 23 | MEDIUM | [MEM-SAFE-024] | swift-foundations `swift-file-system/.../File.Directory.Contents.IteratorHandle.swift:14` | `@unchecked Sendable` wrapping thread-confined `Kernel.Directory.Stream`. Tier 1 in `~Sendable` inventory. Replace `@unchecked Sendable` with `~Sendable`. | C | OPEN |
 
 ### Findings — `nonisolated(unsafe)` Without Safety Annotation [MEM-SAFE-025]
 
@@ -407,8 +407,9 @@ Priority 1: Cat B — @unchecked Sendable → add @unsafe + Pattern B doc (findi
 Priority 2: Cat A — @unchecked Sendable → add @unsafe + sync doc (finding #21)
     └── Machine.Capture.Slot (synchronized via atomic)
 
-Priority 3: Cat C — Thread-confined → adopt ~Sendable (finding #23)
-    └── File.Directory.Contents.IteratorHandle → ~Sendable (SE-0518)
+Priority 3: Cat C — Thread-confined → replace @unchecked Sendable with ~Sendable (finding #23)
+    └── File.Directory.Contents.IteratorHandle → ~Sendable
+    └── Also: IO.Completion.IOUring.Ring, IO.Completion.IOCP.State (Tier 1 per ~Sendable inventory)
 
 Priority 4: Memory.Arena.start → add @unsafe (finding #8)
     └── Only HIGH pointer exposure finding after ~Escapable reassessment
