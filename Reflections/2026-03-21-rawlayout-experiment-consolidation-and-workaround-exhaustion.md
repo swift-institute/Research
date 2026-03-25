@@ -4,7 +4,18 @@ session_objective: Consolidate ~14 scattered @_rawLayout experiments into cohere
 packages:
   - swift-buffer-primitives
   - swift-storage-primitives
-status: pending
+status: processed
+processed_date: 2026-03-22
+triage_outcomes:
+  - type: skill_update
+    target: experiment-process
+    description: "Add [EXP-018] experiment consolidation guidance"
+  - type: package_insight
+    target: swift-buffer-primitives
+    description: "4 consolidation packaging defects in experiment variants"
+  - type: research_topic
+    target: swiftpm-build-plugins-for-xfrontend-flags.md
+    description: "Investigate SwiftPM build plugins for -Xfrontend flags without .unsafeFlags"
 ---
 
 # @_rawLayout Experiment Consolidation and Workaround Exhaustion

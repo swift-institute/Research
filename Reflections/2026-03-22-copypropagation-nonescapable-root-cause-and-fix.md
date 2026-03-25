@@ -13,7 +13,17 @@ packages:
   - swift-set-primitives
   - swift-dictionary-primitives
   - swift-graph-primitives
-status: pending
+status: processed
+processed_date: 2026-03-22
+triage_outcomes:
+  - type: experiment_topic
+    description: "Update copypropagation-nonescapable-mark-dependence experiment per [EXP-006]"
+  - type: research_topic
+    target: mark-dependence-copypropagation-bug-report.md
+    description: "File Swift bug report with standalone reproducer for mark_dependence/CopyPropagation interaction"
+  - type: skill_update
+    target: memory
+    description: "Add [MEM-COPY-013] redundant annotations on compiler optimization boundaries"
 ---
 
 # CopyPropagation ~Escapable Root Cause: mark_dependence Classification and Fix

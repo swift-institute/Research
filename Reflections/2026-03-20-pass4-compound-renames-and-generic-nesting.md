@@ -6,7 +6,17 @@ packages:
   - swift-cache-primitives
   - swift-parser-primitives
   - swift-effect-primitives
-status: pending
+status: processed
+processed_date: 2026-03-22
+triage_outcomes:
+  - type: experiment_topic
+    description: "generic-nested-typealias: add variant testing _Value capture for Effect.Protocol.Value"
+  - type: skill_update
+    target: platform
+    description: "Add [PLAT-ARCH-011] Swift.Error qualification in .Error namespaces"
+  - type: skill_update
+    target: code-surface
+    description: "Add [API-IMPL-009] hoisted-protocol-with-nested-typealias pattern"
 ---
 
 # Pass 4: Compound Type Renames — Generic Nesting Discoveries

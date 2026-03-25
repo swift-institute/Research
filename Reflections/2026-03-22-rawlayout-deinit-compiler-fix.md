@@ -13,7 +13,18 @@ packages:
   - swift-dictionary-primitives
   - swift-tree-primitives
   - swift-slab-primitives
-status: pending
+status: processed
+processed_date: 2026-03-22
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: "Add [IMPL-061] compiler fix over workaround accumulation"
+  - type: research_topic
+    target: swift-64-dev-compatibility-catalog.md
+    description: "Merged into 6.4-dev compatibility catalog research topic"
+  - type: package_insight
+    target: swift-buffer-primitives
+    description: "Ideal architecture after compiler fix lands — add deinit to Storage.Inline, remove 22 workaround sites"
 ---
 
 # From "Provably Impossible" to Compiler Fix in One Session
