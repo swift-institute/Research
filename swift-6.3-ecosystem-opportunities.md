@@ -436,7 +436,16 @@ The 6.3 `@_rawLayout` changes address a different aspect (removing the deinit *r
 
 #### CopyPropagation Workaround (Property.View)
 
-Still active. `~Escapable` omitted from 7 `Property.View` types to avoid `swiftlang/swift#88022`. The 6.3 copy propagation fixes for non-escapable types may help, but this needs separate verification.
+**Verified 2026-03-25: BUG FIXED in Swift 6.3.** The standalone reproducer (`swift-issue-copypropagation-nonescapable-mark-dependence`) builds and runs clean in release mode. The 6.3 copy propagation non-escapable fixes resolve `swiftlang/swift#88022`.
+
+**Action**: Re-add `~Escapable` and `@_lifetime(borrow base)` annotations to all 7 Property.View types:
+- `Property.View`
+- `Property.View.Read`
+- `Property.View.Typed<E>`
+- `Property.View.Read.Typed<E>`
+- `Property.View.Typed<E>.Valued<V>`
+- `Property.View.Read.Typed<E>.Valued<V>`
+- (Plus any `Valued.Valued` variants)
 
 ---
 
@@ -511,9 +520,9 @@ The ecosystem is already fully compliant with SE-0502.
 | Build `@_rawLayout` reproducer with Swift 6.3 `-c release` | Install 6.3 toolchain | **DONE — BUG NOT FIXED** |
 | ~~Remove all `_deinitWorkaround` fields~~ | ~~Verified fix~~ | **BLOCKED** — bug #86652 persists |
 | ~~Remove field-ordering constraint~~ | ~~Verified fix~~ | **BLOCKED** |
-| Test Property.View with `~Escapable` re-added under 6.3 | Copy propagation fix verification | PENDING |
-| Remove `InoutLifetimeDependence` from experiment Package.swift | Already promoted | PENDING |
-| Remove `SymbolLinkageMarkers` from experiment Package.swift | Already promoted | PENDING |
+| Test Property.View with `~Escapable` re-added under 6.3 | Copy propagation fix verification | **DONE — BUG FIXED** |
+| Remove `InoutLifetimeDependence` from experiment Package.swift | Already promoted | **DONE** |
+| Update `SymbolLinkageMarkers` comment in experiment Package.swift | Replaced by SE-0492 | **DONE** |
 
 ### Wave 3: Strategic Adoption
 
