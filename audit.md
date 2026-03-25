@@ -289,3 +289,122 @@ Per [CONV-016], conformer code uses tier 4 typed initializers (`Index<Self>.Coun
 **High-priority**: Findings #1–2 (`Finite.Capacity` + `Finite.Enumerable`) are the keystone — fixing the protocol requirements automatically propagates through all 16 conformers and unlocks consumer improvements. Finding #6 (`Sequence.Difference.Hunk`) is the only other public API violation.
 
 **Design decisions needed**: Finding #6 (Hunk phantom tag: `Old`/`New` vs `Line`) and finding #10 (cyclic group domain tagging strategy).
+
+## Memory Safety — 2026-03-25
+
+### Scope
+
+- **Target**: swift-primitives, swift-standards, swift-foundations (ecosystem-wide)
+- **Skill**: memory — [MEM-SAFE-001], [MEM-SAFE-002], [MEM-SAFE-010], [MEM-SAFE-012], [MEM-SAFE-014], [MEM-SAFE-020–025], [MEM-UNSAFE-003], [MEM-SEND-001]
+- **Reference**: `swift-institute/Research/swift-safety-model-reference.md`
+- **Files**: All `Sources/` across three superrepos
+
+### Per-Package Triage
+
+| Superrepo | Findings | Worst Severity | Notes |
+|-----------|----------|---------------|-------|
+| swift-primitives | 19 actionable | HIGH | Pointer exposure without `@unsafe`, bare `@unchecked Sendable` |
+| swift-standards | 4 | MEDIUM | Test sub-packages missing `.strictMemorySafety()`; zero unsafe code |
+| swift-foundations | 26 actionable | MEDIUM | 13 packages missing `.strictMemorySafety()`, `Async.*` Sendable gaps |
+
+### Findings — Strict Memory Safety Enablement [MEM-SAFE-001]
+
+| # | Severity | Rule | Location | Finding | Status |
+|---|----------|------|----------|---------|--------|
+| 1 | — | [MEM-SAFE-001] | swift-primitives `Package.swift:537-552` | `.strictMemorySafety()` enabled globally via loop over all targets. Every sub-package also has it. | CLEAN |
+| 2 | — | [MEM-SAFE-001] | swift-standards — all 17 active packages | `.strictMemorySafety()` enabled in all main packages. | CLEAN |
+| 3 | MEDIUM | [MEM-SAFE-001] | swift-standards `swift-html-standard/Tests/Package.swift:36` | Test sub-package missing `.strictMemorySafety()`. Main package has it. | OPEN |
+| 4 | LOW | [MEM-SAFE-001] | swift-standards `swift-pdf-standard/Tests/Package.swift:49` | Test sub-package missing `.strictMemorySafety()`. | OPEN |
+| 5 | LOW | [MEM-SAFE-001] | swift-standards `swift-svg-standard/Tests/Package.swift:35` | Test sub-package missing `.strictMemorySafety()`. | OPEN |
+| 6 | LOW | [MEM-SAFE-001] | swift-standards `swift-rfc-template/Package.swift.template` | Template stale: lacks `.strictMemorySafety()`, still on tools-version 6.0, imports Foundation. New packages scaffolded from this will not have strict safety. | OPEN |
+| 7 | MEDIUM | [MEM-SAFE-001] | swift-foundations — 13 packages | `swift-copy-on-write`, `swift-css`, `swift-css-html-rendering`, `swift-dependency-analysis`, `swift-html`, `swift-html-rendering`, `swift-markdown-html-rendering`, `swift-pdf-html-rendering`, `swift-pdf-rendering`, `swift-svg`, `swift-svg-rendering`, `swift-svg-rendering-worktree`, `swift-translating` — all missing `.strictMemorySafety()`. Entire rendering/HTML/CSS cluster. | OPEN |
+
+### Findings — Unsafe Pointer Exposure [MEM-SAFE-023], [MEM-SAFE-012], [MEM-SAFE-014]
+
+| # | Severity | Rule | Location | Finding | Status |
+|---|----------|------|----------|---------|--------|
+| 8 | HIGH | [MEM-SAFE-023] | `swift-memory-primitives/.../Memory.Arena.swift:65` | `@safe` struct exposes `public var start: UnsafeMutableRawPointer` without `@unsafe` on the property. Leaks mutable raw pointer from a `@safe` type through a non-`@unsafe` accessor. | OPEN |
+| 9 | HIGH | [MEM-SAFE-023] | `swift-path-primitives/.../Path.View.swift:37` | `public let pointer: UnsafePointer<Char>` on a `@safe` type. The type provides `span` as normative interface, but raw pointer is directly accessible without `@unsafe`. | OPEN |
+| 10 | HIGH | [MEM-SAFE-023] | `swift-string-primitives/.../String.View.swift:35` | `public let pointer: UnsafePointer<Char>` — same pattern as Path.View. Span accessor exists but pointer is exposed without `@unsafe`. | OPEN |
+| 11 | MEDIUM | [MEM-SAFE-023] | `swift-property-primitives/.../Property.View.swift:150` | `public var base: UnsafeMutablePointer<Base>` — canonical Property.View exposes base pointer without `@unsafe`. 7 variants affected: `Property.View`, `.Typed`, `.Read`, `.Read.Typed`, `.Typed.Valued`, `.Read.Typed.Valued`, `.Typed.Valued.Valued`. | OPEN |
+| 12 | MEDIUM | [MEM-SAFE-012] | `swift-memory-primitives/.../Memory.Buffer.Base.swift:37,52` | `public var nullable/nonNull: UnsafeRawBufferPointer` on Property extensions — stdlib bridge properties without `@unsafe`. Mutable variant at `Memory.Buffer.Mutable.Base.swift` has same issue. | OPEN |
+| 13 | MEDIUM | [MEM-SAFE-014] | swift-foundations `swift-memory/.../Memory.Map.swift:149,155` | `public var baseAddress: UnsafeRawPointer?` and `mutableBaseAddress: UnsafeMutableRawPointer?` — no Span normative accessor alongside these pointer properties. | OPEN |
+| 14 | MEDIUM | [MEM-SAFE-012] | swift-foundations `swift-file-system/.../File.Path.Component.swift:66` | `public init(utf8 buffer: UnsafeBufferPointer<UInt8>)` — should have a `Span<UInt8>` overload as normative interface. | OPEN |
+
+### Findings — Sendable Safety [MEM-SAFE-024], [MEM-SEND-001]
+
+| # | Severity | Rule | Location | Finding | Status |
+|---|----------|------|----------|---------|--------|
+| 15 | HIGH | [MEM-SAFE-024] | `swift-handle-primitives/.../Generation.Tracker.swift:205` | `@unchecked Sendable` without `@unsafe`. Documentation at line 40 says "Not thread-safe. External synchronization required" — Sendable conformance is semantically contradictory. Type is `~Copyable` (unique ownership), so concurrent access requires explicit transfer, but the documentation is misleading. | OPEN |
+| 16 | HIGH | [MEM-SAFE-024] | `swift-bit-vector-primitives/.../Bit.Vector.swift:146` | `@unchecked Sendable` without `@unsafe`. `~Copyable` unique ownership makes this sound, but lacks annotation and safety invariant documentation. | OPEN |
+| 17 | HIGH | [MEM-SAFE-024] | `swift-memory-primitives/.../Memory.Arena.swift:125` | `@unchecked Sendable` without `@unsafe` on `@safe` type with mutable state (`_allocated` is `var`). `~Copyable` provides unique ownership. | OPEN |
+| 18 | HIGH | [MEM-SAFE-024] | `swift-memory-primitives/.../Memory.Pool.swift:370` | `@unchecked Sendable` without `@unsafe`. Extensive mutable state. `~Copyable` provides unique ownership. | OPEN |
+| 19 | MEDIUM | [MEM-SAFE-024] | `swift-predicate-primitives/.../Predicate.swift:29` | `@unchecked Sendable` on type storing `(T) -> Bool` closure. Closures are not `@Sendable` by default. Unsound unless callers guarantee the closure is `@Sendable`. | OPEN |
+| 20 | MEDIUM | [MEM-SAFE-024] | `swift-lifetime-primitives/.../Lifetime.Lease.swift:74` | `@unchecked Sendable where Value: Sendable` — conditional, sound (unique ownership + value constraint), but lacks `@unsafe` for consistency. | OPEN |
+| 21 | MEDIUM | [MEM-SAFE-024] | `swift-machine-primitives/.../Machine.Capture.Slot.swift:17` | `@unchecked Sendable` on outer `Slot` struct — inner `_Storage` class is `@safe`, but outer struct lacks annotation. | OPEN |
+| 22 | MEDIUM | [MEM-SAFE-024] | swift-foundations `swift-async/.../Async.Filter.swift:88` | `Async.Filter: @unchecked Sendable` — stores non-`@Sendable` closures without `@safe` or safety documentation. Same pattern across `Async.Map` (line 85), `Async.CompactMap` (line 92), `Async.FlatMap` (line 106). 8 types total (each type + iterator). | OPEN |
+| 23 | MEDIUM | [MEM-SAFE-024] | swift-foundations `swift-file-system/.../File.Directory.Contents.IteratorHandle.swift:14` | `@unchecked Sendable` wrapping non-Sendable `Kernel.Directory.Stream`. Missing safety invariant. | OPEN |
+
+### Findings — `nonisolated(unsafe)` Without Safety Annotation [MEM-SAFE-025]
+
+| # | Severity | Rule | Location | Finding | Status |
+|---|----------|------|----------|---------|--------|
+| 24 | MEDIUM | [MEM-SAFE-025] | `swift-memory-primitives/.../Memory.Buffer.swift:29,37` | `nonisolated(unsafe) let _emptyBufferSentinelMutable` and `_emptyBufferSentinel` — allocated-once globals safely encapsulated; should have `@safe`. Duplicate at `Memory Primitives/Memory.Buffer.swift`. | OPEN |
+| 25 | MEDIUM | [MEM-SAFE-025] | `swift-memory-primitives/.../Memory.Buffer.Mutable.swift:19` | `nonisolated(unsafe) let _emptyMutableBufferSentinel` — same pattern, lacks `@safe`. Duplicate at `Memory Primitives/Memory.Buffer.Mutable.swift`. | OPEN |
+| 26 | LOW | [MEM-SAFE-025] | swift-foundations `swift-css/.../Color.Theme.swift:13` + `Font.Theme.swift:13` | `nonisolated(unsafe) private static var _prepared` — mutable static with public `_prepare()` mutator. Data race possible if called concurrently. Consider `Mutex` or `Atomic`. | OPEN |
+
+### Findings — Expression Placement [MEM-SAFE-002]
+
+| # | Severity | Rule | Location | Finding | Status |
+|---|----------|------|----------|---------|--------|
+| 27 | LOW | [MEM-SAFE-002] | swift-foundations `swift-file-system/.../File.Handle.swift:104,160,190` | `guard unsafe !buffer.isEmpty` — `.isEmpty` on `UnsafeMutableRawBufferPointer` is a safe property. `unsafe` is over-specified here. Harmless but noisy. | OPEN |
+
+### Findings — Annotation Correctness [MEM-UNSAFE-003]
+
+No violations found. All three superrepos correctly avoid `@unsafe struct` on encapsulating types. All `@safe` annotations are on types with genuine unsafe internal storage.
+
+One exemplary pattern worth noting: `Loader.Section.Bounds` (`swift-loader-primitives`) uses `@safe` struct with `@unsafe public nonisolated(unsafe) let` on individual escape-hatch properties — the canonical pattern per the research document.
+
+### Summary
+
+27 findings: 0 critical, 6 high, 14 medium, 7 low.
+
+**Systemic patterns**:
+
+1. **`@unchecked Sendable` without `@unsafe`** (findings #15–23): The most widespread issue. 13 types across primitives and foundations use bare `@unchecked Sendable`. Most are sound due to `~Copyable` unique ownership, but all lack the `@unsafe` annotation required by SE-0458 and safety invariant documentation. The `Async.*` sequence cluster in swift-foundations is the largest group (8 types).
+
+2. **Pointer property exposure without `@unsafe`** (findings #8–14): Public properties returning `UnsafePointer`/`UnsafeMutablePointer` on `@safe` types without `@unsafe` on the property itself. The Property.View family (7 variants) is the largest group. `Memory.Arena.start` is the most concerning (mutable raw pointer from `@safe` type).
+
+3. **`.strictMemorySafety()` gaps** (finding #7): 13 swift-foundations packages in the rendering/HTML/CSS cluster lack the flag. These packages contain no unsafe code, so the risk is low, but the gap prevents compile-time enforcement.
+
+4. **`nonisolated(unsafe)` sentinel globals** (findings #24–25): Safely encapsulated globals that should have `@safe` annotation for SE-0458 compliance.
+
+**Positive observations**:
+
+- swift-primitives has 100% `.strictMemorySafety()` coverage
+- swift-standards has zero unsafe code — architecturally clean Layer 2
+- All `@safe`/`@unsafe` type-level annotations are correct across the ecosystem
+- The IO subsystem in swift-foundations has exemplary safety documentation on every `@unchecked Sendable`
+- No anti-patterns from research document Section 14 detected (no wrong-side assignment, no double unsafe, no unsafe on allocate)
+
+### Remediation Priority
+
+```
+Priority 1: @unchecked Sendable → add @unsafe (findings #15–18, #22)
+    ├── swift-primitives: 4 types (Bit.Vector, Generation.Tracker, Memory.Arena, Memory.Pool)
+    └── swift-foundations: 8 types (Async.Filter/Map/CompactMap/FlatMap + iterators)
+
+Priority 2: Pointer properties → add @unsafe (findings #8–12)
+    ├── Memory.Arena.start
+    ├── Path.View.pointer, String.View.pointer
+    └── Property.View family (7 variants)
+
+Priority 3: Sentinel globals → add @safe (findings #24–25)
+    └── 4 globals in swift-memory-primitives
+
+Priority 4: .strictMemorySafety() gaps (finding #7)
+    └── 13 swift-foundations rendering packages
+
+Priority 5: Minor cleanup (findings #19, #26, #27)
+    └── Predicate Sendable soundness, CSS theming data races, over-specified unsafe
+```
