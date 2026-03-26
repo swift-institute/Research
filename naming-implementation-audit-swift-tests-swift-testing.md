@@ -3,8 +3,8 @@
 <!--
 ---
 version: 1.0.0
-last_updated: 2026-03-03
-status: IN_PROGRESS
+last_updated: 2026-03-26
+status: RECOMMENDATION
 tier: 1
 packages: [swift-tests, swift-testing]
 skills: [naming, implementation]

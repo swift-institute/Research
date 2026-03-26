@@ -3,8 +3,8 @@
 <!--
 ---
 version: 2.3.0
-last_updated: 2026-03-02
-status: IN_PROGRESS
+last_updated: 2026-03-26
+status: DECISION
 tier: 2
 trigger: Pointfree #355/#356 analysis — ~Escapable as third pillar alongside isolation and ~Copyable
 ---
