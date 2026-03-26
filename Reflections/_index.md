@@ -41,6 +41,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-24-swift-io-audit-consolidation.md](2026-03-24-swift-io-audit-consolidation.md) | 2026-03-24 | swift-io Audit Consolidation — From 3 Scattered Files to One Canonical Location | swift-io, swift-institute | processed (2026-03-26) |
 | [2026-03-25-io-prior-art-literature-study.md](2026-03-25-io-prior-art-literature-study.md) | 2026-03-25 | IO Prior Art Literature Study and Design Audit | swift-io, swift-file-system, swift-kernel-primitives, swift-kernel, swift-posix | processed (2026-03-26) |
 | [2026-03-26-channel-lifecycle-actor-removal-ownership-as-synchronization.md](2026-03-26-channel-lifecycle-actor-removal-ownership-as-synchronization.md) | 2026-03-26 | Channel Lifecycle Actor Removal — Ownership as Synchronization | swift-io | processed (2026-03-26) |
+| [2026-03-26-io-api-remediation-sync-submission.md](2026-03-26-io-api-remediation-sync-submission.md) | 2026-03-26 | IO API Remediation — Sync Submission and the Async Overload Ambiguity | swift-io, swift-kernel, swift-witnesses | pending |
 
 ## Legacy Archive
 
