@@ -3,11 +3,13 @@
 <!--
 ---
 version: 1.1.0
-last_updated: 2026-03-02
-status: IN_PROGRESS
+last_updated: 2026-03-26
+status: DEFERRED
 tier: 3
 ---
 -->
+
+> **Deferred 2026-03-26**: Research complete, comprehensive bibliography assembled. Needs 1-2 page synthesis/recommendation section before promotion. Resumption trigger: when snapshot testing infrastructure work resumes.
 
 ## Context
 
