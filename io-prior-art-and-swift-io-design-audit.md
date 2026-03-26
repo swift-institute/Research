@@ -8,6 +8,15 @@ status: RECOMMENDATION
 ---
 -->
 
+## How to Use This Document
+
+This document has two independent parts:
+
+- **Part I** (IO Systems Prior Art Survey): A language-agnostic literature survey of 15 IO systems, producing a 4-tier concept necessity spectrum. Useful as a standalone reference when evaluating any IO design decision.
+- **Part II** (swift-io Design Audit): Maps every swift-io concept against the Part I taxonomy. Useful when working on swift-io to understand where each concept sits relative to the broader IO landscape.
+
+Read Part I first for context, then Part II for ecosystem-specific conclusions. The per-system reference data is in a companion document: `swift-io/Research/io-prior-art-per-system-reference.md`.
+
 ## Context
 
 Swift Institute's `swift-io` (Layer 3 — Foundations) provides the IO infrastructure for the ecosystem. This document combines a literature survey of best-in-class IO systems with a concept-by-concept design audit of swift-io against those findings.
