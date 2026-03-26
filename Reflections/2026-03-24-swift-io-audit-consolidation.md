@@ -4,7 +4,18 @@ session_objective: Consolidate scattered swift-io audit files into a single cano
 packages:
   - swift-io
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-03-26
+triage_outcomes:
+  - type: skill_update
+    target: modularization
+    description: Add L3 naming convention guidance to [MOD-012] — layer adaptation table
+  - type: skill_update
+    target: audit
+    description: Add [AUDIT-016] wrong-scope file discovery during consolidation
+  - type: package_insight
+    target: swift-io
+    description: HIGH modularization findings — depublish IO Core, add missing MIV dependencies
 ---
 
 # swift-io Audit Consolidation — From 3 Scattered Files to One Canonical Location
