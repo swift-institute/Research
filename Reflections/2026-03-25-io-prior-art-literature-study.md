@@ -7,7 +7,18 @@ packages:
   - swift-kernel-primitives
   - swift-kernel
   - swift-posix
-status: pending
+status: processed
+processed_date: 2026-03-26
+triage_outcomes:
+  - type: skill_update
+    target: research-process
+    description: Add contextualization step to [RES-021] — prior art gaps must be concretized in ecosystem type system before classifying
+  - type: doc_improvement
+    target: io-prior-art-and-swift-io-design-audit.md
+    description: Add "How to Use This Document" section explaining Part I/Part II structure
+  - type: blog_idea
+    target: Blog/_index.md
+    description: "BLOG-IDEA-032: Why We Don't Have io.Reader — principled design vs. cargo-culting prior art"
 ---
 
 # IO Prior Art Literature Study and Design Audit
