@@ -42,6 +42,12 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-25-io-prior-art-literature-study.md](2026-03-25-io-prior-art-literature-study.md) | 2026-03-25 | IO Prior Art Literature Study and Design Audit | swift-io, swift-file-system, swift-kernel-primitives, swift-kernel, swift-posix | processed (2026-03-26) |
 | [2026-03-26-channel-lifecycle-actor-removal-ownership-as-synchronization.md](2026-03-26-channel-lifecycle-actor-removal-ownership-as-synchronization.md) | 2026-03-26 | Channel Lifecycle Actor Removal — Ownership as Synchronization | swift-io | processed (2026-03-26) |
 | [2026-03-26-io-api-remediation-sync-submission.md](2026-03-26-io-api-remediation-sync-submission.md) | 2026-03-26 | IO API Remediation — Sync Submission and the Async Overload Ambiguity | swift-io, swift-kernel, swift-witnesses | pending |
+| [2026-03-27-async-channel-noncopyable-restructure.md](2026-03-27-async-channel-noncopyable-restructure.md) | 2026-03-27 | Async Channel ~Copyable Restructure — Closure Capture as the Real Blocker | swift-async-primitives | pending |
+| [2026-03-29-se0461-concurrent-inference-macro-interaction.md](2026-03-29-se0461-concurrent-inference-macro-interaction.md) | 2026-03-29 | SE-0461 @concurrent Inference and @Witness Macro Interaction | swift-io, swift-witnesses | pending |
+| [2026-03-29-channel-split-full-duplex-io.md](2026-03-29-channel-split-full-duplex-io.md) | 2026-03-29 | Channel split() — Full-Duplex I/O via Ecosystem-Aligned Split Pattern | swift-io | pending |
+| [2026-03-30-split-tests-and-test-infrastructure-limits.md](2026-03-30-split-tests-and-test-infrastructure-limits.md) | 2026-03-30 | Split Tests, @Test Macro Symbol Limits, and ~Copyable Task Transfer Gaps | swift-io, swift-algebra-primitives | pending |
+| [2026-03-30-io-lane-boundary-collaborative-review.md](2026-03-30-io-lane-boundary-collaborative-review.md) | 2026-03-30 | IO.Lane Boundary Audit and Collaborative API Review | swift-io | pending |
+| [2026-03-30-modern-concurrency-sendability-pass.md](2026-03-30-modern-concurrency-sendability-pass.md) | 2026-03-30 | Modern Concurrency Conventions and Sendability Pass | swift-kernel-primitives, swift-async-primitives, swift-kernel, swift-async, swift-institute | pending |
 
 ## Legacy Archive
 
