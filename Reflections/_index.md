@@ -48,6 +48,9 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-30-split-tests-and-test-infrastructure-limits.md](2026-03-30-split-tests-and-test-infrastructure-limits.md) | 2026-03-30 | Split Tests, @Test Macro Symbol Limits, and ~Copyable Task Transfer Gaps | swift-io, swift-algebra-primitives | pending |
 | [2026-03-30-io-lane-boundary-collaborative-review.md](2026-03-30-io-lane-boundary-collaborative-review.md) | 2026-03-30 | IO.Lane Boundary Audit and Collaborative API Review | swift-io | pending |
 | [2026-03-30-modern-concurrency-sendability-pass.md](2026-03-30-modern-concurrency-sendability-pass.md) | 2026-03-30 | Modern Concurrency Conventions and Sendability Pass | swift-kernel-primitives, swift-async-primitives, swift-kernel, swift-async, swift-institute | pending |
+| [2026-03-30-io-lane-boundary-completion-typed-throws.md](2026-03-30-io-lane-boundary-completion-typed-throws.md) | 2026-03-30 | IO.Lane Boundary Completion and `do throws(E)` Discovery | swift-io | pending |
+| [2026-03-30-sending-sendable-migration-cascade.md](2026-03-30-sending-sendable-migration-cascade.md) | 2026-03-30 | Sending/Sendable Migration Cascade: Primitives → Foundations | swift-async-primitives, swift-async, swift-institute | pending |
+| [2026-03-30-noncopyable-descriptor-l3-cascade.md](2026-03-30-noncopyable-descriptor-l3-cascade.md) | 2026-03-30 | ~Copyable Descriptor L3 Cascade: Workaround Resistance and Experiment-Driven Correction | swift-io, swift-posix, swift-kernel, swift-memory, swift-iso-9945 | pending |
 
 ## Legacy Archive
 
