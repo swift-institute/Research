@@ -6,6 +6,7 @@ This directory contains research documents analyzing design decisions, exploring
 
 | Document | Topic | Status |
 |----------|-------|--------|
+| [async-mutex-rawlayout-inline-storage.md](async-mutex-rawlayout-inline-storage.md) | Can Async.Mutex adopt @_rawLayout for inline storage like stdlib Mutex? Tier 2. | IN_PROGRESS |
 | [noncopyable-closure-capture-relaxation.md](noncopyable-closure-capture-relaxation.md) | Can closure capture consumption be relaxed for non-escaping closures with total consumption guarantee? Would eliminate Slot-per-send overhead. Tier 2, cross-package. | IN_PROGRESS |
 | [noncopyable-peek-escapable.md](noncopyable-peek-escapable.md) | Non-closure peek for ~Copyable elements: `Borrowed<T: ~Copyable>: ~Escapable` wrapper enables `var peek: Borrowed<Element>?` property. Optional<Copyable & ~Escapable> works in Swift 6.3 for computed properties, functions, and coroutines. Key insight: blocker is ~Copyable+Optional (consumption), NOT ~Escapable+Optional (lifetime). 7/7 experiment variants CONFIRMED. SE-0519 `Borrow<T>` converges on same design. Tier 2, ecosystem-wide. | RECOMMENDATION |
 | [noncopyable-ownership-transfer-patterns.md](noncopyable-ownership-transfer-patterns.md) | Canonical ~Copyable ownership transfer: three patterns (always-consume, maybe-consume, borrow-only), layer model (Layer 0/1/2), action enum dispatch, future-proofing table. Codified as [MEM-OWN-010–012] and [IMPL-070]. Audit: 0 violations across Bridge + Channel. Tier 2, ecosystem-wide. | DECISION |
