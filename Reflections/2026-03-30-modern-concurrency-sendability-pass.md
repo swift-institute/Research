@@ -7,7 +7,18 @@ packages:
   - swift-kernel
   - swift-async
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: package_insight
+    target: swift-async-primitives
+    description: Async.Mutex Sendable constraint cascade — highest-leverage refactor
+  - type: skill_update
+    target: implementation
+    description: Add [IMPL-076] no @unchecked Sendable on struct-wrapping-class
+  - type: research_topic
+    target: async-mutex-rawlayout-inline-storage.md
+    description: Can Async.Mutex adopt @_rawLayout for inline storage?
 ---
 
 # Modern Concurrency Conventions and Sendability Pass
