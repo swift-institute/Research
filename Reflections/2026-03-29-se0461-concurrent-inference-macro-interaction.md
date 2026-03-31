@@ -4,7 +4,18 @@ session_objective: Investigate 50GB memory crash in swift-io tests, commit @conc
 packages:
   - swift-io
   - swift-witnesses
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: Add [IMPL-073] SE-0461 @concurrent inference is body-sensitive
+  - type: package_insight
+    target: swift-witnesses
+    description: nonisolated(nonsending) closures skip observation — known limitation
+  - type: skill_update
+    target: testing
+    description: Add [TEST-027] test target compilation gate
 ---
 
 # SE-0461 @concurrent Inference and @Witness Macro Interaction
