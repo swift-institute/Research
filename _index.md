@@ -6,6 +6,7 @@ This directory contains research documents analyzing design decisions, exploring
 
 | Document | Topic | Status |
 |----------|-------|--------|
+| [concrete-async-operator-types.md](concrete-async-operator-types.md) | Option C from stream-sendable research: ~20 concrete operator types for non-Sendable element flow. Tier 2. | IN_PROGRESS |
 | [async-mutex-rawlayout-inline-storage.md](async-mutex-rawlayout-inline-storage.md) | Can Async.Mutex adopt @_rawLayout for inline storage like stdlib Mutex? Tier 2. | IN_PROGRESS |
 | [noncopyable-closure-capture-relaxation.md](noncopyable-closure-capture-relaxation.md) | Can closure capture consumption be relaxed for non-escaping closures with total consumption guarantee? Would eliminate Slot-per-send overhead. Tier 2, cross-package. | IN_PROGRESS |
 | [noncopyable-peek-escapable.md](noncopyable-peek-escapable.md) | Non-closure peek for ~Copyable elements: `Borrowed<T: ~Copyable>: ~Escapable` wrapper enables `var peek: Borrowed<Element>?` property. Optional<Copyable & ~Escapable> works in Swift 6.3 for computed properties, functions, and coroutines. Key insight: blocker is ~Copyable+Optional (consumption), NOT ~Escapable+Optional (lifetime). 7/7 experiment variants CONFIRMED. SE-0519 `Borrow<T>` converges on same design. Tier 2, ecosystem-wide. | RECOMMENDATION |
