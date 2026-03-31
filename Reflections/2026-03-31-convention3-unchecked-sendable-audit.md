@@ -3,7 +3,18 @@ date: 2026-03-31
 session_objective: Convention 3 audit of @unchecked Sendable in swift-io
 packages:
   - swift-io
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: skill_update
+    target: memory-safety
+    description: Added [MEM-SEND-004] ~Copyable structs can use plain Sendable when all fields are Sendable
+  - type: doc_improvement
+    target: modern-concurrency-conventions.md
+    description: Updated swift-io inventory (29→16), removed phantom IO.Event.Waiter, updated Category C status
+  - type: package_insight
+    target: swift-io
+    description: SE-0518 ~Sendable deferred for IOCP.State and IOUring.Ring
 ---
 
 # Convention 3 Audit — @unchecked Sendable Truth-Telling

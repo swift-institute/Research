@@ -107,7 +107,7 @@ Modern Swift concurrency provides a hierarchy of mechanisms, ordered from most d
 - Types where an actor or Mutex would work (use the higher-ranked mechanism instead)
 - Types where the only reason is "the compiler is complaining" (address the root cause)
 
-**Ecosystem status**: 29 instances across swift-kernel/swift-io/swift-file-system. The `~Sendable` inventory identified 3 that are semantically incorrect (thread-confined types marked `@unchecked Sendable`) and 4 that are debatable.
+**Ecosystem status**: 16 instances across swift-kernel/swift-io/swift-file-system (originally 29; 3 migrated to plain `Sendable`, 2 thread-confined types made non-Sendable, others corrected in 2026-03-31 audit). The `~Sendable` inventory identified 2 remaining thread-confined types (now non-Sendable, awaiting SE-0518 for `~Sendable`).
 
 ### Anti-Pattern: Viral Sendability
 
@@ -160,7 +160,6 @@ These types have internal synchronization mechanisms. `@unchecked Sendable` is s
 |------|------|-----------|
 | `IO.Blocking.Threads.Runtime` | `IO.Blocking.Threads.Runtime.swift:22` | Internal mutex via `Synchronization<1>` |
 | `IO.Completion.Waiter` | (various) | Atomic state + continuation |
-| `IO.Event.Waiter` | (various) | Atomic state + continuation |
 | `IO.Event.Buffer.Pool` | (various) | Internal synchronization |
 | `IO.Blocking.Lane.Sharded.Selector` | (various) | Atomic counter + immutable array |
 | `IO.Blocking.Lane.Sharded.Snapshot.Storage` | (various) | All atomic fields |
@@ -188,10 +187,10 @@ These types are used exclusively on a single thread but marked `@unchecked Senda
 
 | Type | File | Current | Should Be |
 |------|------|---------|-----------|
-| `IO.Completion.IOUring.Ring` | (various) | `@unchecked Sendable` | `~Sendable` (SE-0518) |
-| `IO.Completion.IOCP.State` | (various) | `@unchecked Sendable` | `~Sendable` (SE-0518) |
+| `IO.Completion.IOUring.Ring` | (various) | Non-Sendable (fixed 2026-03-31) | `~Sendable` (SE-0518) |
+| `IO.Completion.IOCP.State` | (various) | Non-Sendable (fixed 2026-03-31) | `~Sendable` (SE-0518) |
 
-**Assessment**: These are the only types in swift-io where `@unchecked Sendable` is semantically incorrect. They are not thread-safe — all access happens on the poll thread. The `@unchecked Sendable` exists solely to cross the initialization boundary (main thread → poll thread). With `~Sendable` (SE-0518, experimental), the type-level annotation would tell the truth; the single boundary crossing would use an explicit unsafe transfer at the site, not a type-level lie.
+**Assessment**: These types had `@unchecked Sendable` removed (2026-03-31 audit). They are not thread-safe — all access happens on the poll thread. The `@unchecked Sendable` was unnecessary because both types are transferred via `Unmanaged` raw pointers, not typed Sendable crossings. Build confirmed no downstream breakage. When SE-0518 stabilizes, apply `~Sendable` to make thread confinement type-level truth.
 
 **Blocked on**: SE-0518 stability. Tracked in `tilde-sendable-semantic-inventory.md`.
 
