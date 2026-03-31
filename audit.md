@@ -935,3 +935,277 @@ All 9 are naming violations where the code uses an academically incorrect term. 
 8 findings: 0 critical, 1 high, 7 medium.
 
 77 types across the ecosystem conform to the deprecated `Binary.ASCII.Serializable` protocol. The replacement infrastructure (`Parseable`, `Serializable`, `Serializer.Protocol`) is operational at L1. Phase 1 (integers) is done at L1 but the redundant L3 conformances remain. 22 deprecation warnings in swift-ascii: 4 from redundant conformances (deletable), 18 from protocol infrastructure (deprecation cascade). Three Phase 0 convenience extensions needed before Phases 2-7 can proceed at scale.
+
+## Path Type Compliance — 2026-03-31
+
+### Scope
+
+- **Target**: swift-primitives, swift-standards (swift-iso-9945), swift-foundations (ecosystem-wide)
+- **Principle**: [string-path-type-inventory-file-system.md](string-path-type-inventory-file-system.md) v3.0 — "APIs that semantically operate on file system paths should accept/return path types. `Swift.String` should appear only at display boundaries and at explicit conversion points."
+- **Files**: Sources/ and Tests/ across three superrepos
+- **Subject**: `Swift.String` used where `Kernel.Path`, `Path_Primitives.Path`, `Paths.Path`, or `Path.View` is semantically correct
+
+### Type Hierarchy Reference
+
+```
+Layer 1 (Primitives)
+  Path_Primitives.Path          (~Copyable, platform-encoded, owns memory)
+  Path_Primitives.Path.View     (~Copyable, ~Escapable, borrowed view)
+  Kernel.Path = Tagged<Kernel, Path_Primitives.Path>
+  Kernel.Path.View              (non-escapable borrowed view)
+
+Layer 3 (Foundations)
+  Paths.Path                    (Copyable, Sendable, validated, user-facing)
+  Paths.Path.View               (~Copyable, ~Escapable, borrowed)
+  Paths.Path.Component          (validated single component)
+  File.Path = Paths.Path        (typealias in swift-file-system)
+```
+
+**Conversion boundary**: `Kernel.Path.scope(_:)` bridges `Swift.String` → scoped `Kernel.Path.View` for syscall use. Code that calls `.scope()` internally is evidence that the parameter should have been typed at the API boundary instead.
+
+### Per-Package Triage
+
+| Superrepo | Package | Source Findings | Test Findings | Worst Severity | Notes |
+|-----------|---------|-----------------|---------------|---------------|-------|
+| swift-primitives | swift-windows-primitives | 2 | 0 | HIGH | `Windows.Loader.Library.open(path: String)` |
+| swift-standards | swift-iso-9945 | 0 | 15 | HIGH | All test helpers: `KernelIOTest.*`, test-local `cleanup`, `makeTempPath` |
+| swift-foundations | swift-kernel | 14 | 8 | HIGH | `Kernel.File.Write+Shared` internals, `Atomic.Error` cases, test helpers |
+| swift-foundations | swift-posix | 6 | 4 | HIGH | POSIX Glob public API: `match(in: String)`, `body: (String) -> Void` |
+| swift-foundations | swift-windows | 5 | 3 | HIGH | Windows Glob public API (mirrors POSIX) |
+| swift-foundations | swift-tests | 4 | 0 | MEDIUM | `Test.Reporter.json(to:)`, `.structured(to:)` public APIs |
+| swift-foundations | swift-source | 4 | 0 | MEDIUM | `Source.Cache` keyed by `[String: [UInt8]]` |
+| swift-foundations | swift-file-system | 0 | 8 | MEDIUM | `File.Directory.Temporary`, `File.System Tests` helpers |
+| **Total** | | **35** | **38** | | **73 findings** |
+
+### Findings — Sources: Public API (Layer Boundary Violations)
+
+These are public APIs that accept or return `Swift.String` where consumers must pass file system paths. Highest priority — these define the contract.
+
+| # | Severity | Location | Finding | Status |
+|---|----------|----------|---------|--------|
+| 1 | HIGH | `swift-windows-primitives/.../Windows.Loader.Library.swift:39` | `open(path: String)` — DLL path as bare String. `Windows.Kernel.File.Open` already uses `borrowing Kernel.Path`. | OPEN |
+| 2 | HIGH | `swift-windows-primitives/.../Windows.Loader.Library.swift:59` | `open(path: String, flags: DWORD)` — same, with flags variant. | OPEN |
+| 3 | HIGH | `swift-posix/.../POSIX.Kernel.Glob.Match.swift:38` | `match(pattern:in directory: Swift.String, ...)` — directory parameter is a file system path. | OPEN |
+| 4 | HIGH | `swift-posix/.../POSIX.Kernel.Glob.Match.swift:40` | `body: (Swift.String) -> Void` — yields matched file paths as String. | OPEN |
+| 5 | HIGH | `swift-posix/.../POSIX.Kernel.Glob.Match.swift:82` | `match(include:excluding:in directory: Swift.String, ...)` — multi-pattern variant, same issue. | OPEN |
+| 6 | HIGH | `swift-posix/.../POSIX.Kernel.Glob.Match.swift:84` | `body: (Swift.String) -> Void` — multi-pattern yields. | OPEN |
+| 7 | HIGH | `swift-windows/.../Windows.Kernel.Glob.Match.swift:33` | Windows Glob `match(in directory: Swift.String)` — mirrors POSIX. | OPEN |
+| 8 | HIGH | `swift-windows/.../Windows.Kernel.Glob.Match.swift:35` | Windows Glob return type `-> [Swift.String]`. | OPEN |
+| 9 | MEDIUM | `swift-tests/.../Test.Reporter.JSON.swift:28` | `json(to path: Swift.String?)` — output file path as optional String. Should accept `File.Path?`. | OPEN |
+| 10 | MEDIUM | `swift-tests/.../Test.Reporter.Structured.swift:21` | `structured(to path: Swift.String)` — output file path as String. Should accept `File.Path`. | OPEN |
+| 11 | MEDIUM | `swift-source/.../Source.Cache.swift:36` | `_loaded: [Swift.String: [UInt8]]` — dictionary keyed by String file paths. Should be `[File.Path: [UInt8]]` or typed equivalent. | OPEN |
+| 12 | MEDIUM | `swift-source/.../Source.Cache.swift:54` | `load(contentsOf path: Swift.String)` — file path parameter. | OPEN |
+| 13 | MEDIUM | `swift-source/.../Source.Cache.swift:72` | `contains(path: Swift.String)` — file path parameter. | OPEN |
+| 14 | MEDIUM | `swift-source/.../Source.Cache.swift:81` | `remove(path: Swift.String)` — file path parameter. | OPEN |
+
+### Findings — Sources: Internal Implementation
+
+These are `internal` functions inside `Kernel.File.Write` that operate on String paths. They use `Kernel.Path.scope()` at the syscall boundary, meaning the entire path-manipulation pipeline above that call is untyped.
+
+| # | Severity | Location | Finding | Status |
+|---|----------|----------|---------|--------|
+| 15 | MEDIUM | `swift-kernel/.../Kernel.File.Write+Shared.swift:17-19` | `resolvePaths(_ pathString: String) -> (resolved: String, parent: String)` — path resolution returning String tuple. | OPEN |
+| 16 | MEDIUM | `swift-kernel/.../Kernel.File.Write+Shared.swift:31` | `normalizeWindowsPath(_ path: String) -> String` — Windows path normalization on bare String. | OPEN |
+| 17 | MEDIUM | `swift-kernel/.../Kernel.File.Write+Shared.swift:47-49` | `windowsParentDirectory(of path: String) -> String` — parent extraction on String. | OPEN |
+| 18 | MEDIUM | `swift-kernel/.../Kernel.File.Write+Shared.swift:63` | `fileName(of path: String) -> String` — Windows filename extraction. | OPEN |
+| 19 | MEDIUM | `swift-kernel/.../Kernel.File.Write+Shared.swift:70-72` | `posixParentDirectory(of path: String) -> String` — POSIX parent extraction. | OPEN |
+| 20 | MEDIUM | `swift-kernel/.../Kernel.File.Write+Shared.swift:82` | `fileName(of path: String) -> String` — POSIX filename extraction. | OPEN |
+| 21 | MEDIUM | `swift-kernel/.../Kernel.File.Write+Shared.swift:94` | `fileExists(_ pathString: String) -> Bool` — wraps `.scope()` internally. | OPEN |
+| 22 | MEDIUM | `swift-kernel/.../Kernel.File.Write+Shared.swift:307-309` | `atomicRename(from source: String, to dest: String)` — wraps `.scope()` internally. | OPEN |
+| 23 | MEDIUM | `swift-kernel/.../Kernel.File.Write+Shared.swift:338-341` | `atomicRenameNoClobber(from source: String, to dest: String)` — wraps `.scope()` internally. | OPEN |
+| 24 | MEDIUM | `swift-kernel/.../Kernel.File.Write+Shared.swift:371-373` | `syncDirectory(_ pathString: String)` — wraps `.scope()` internally. | OPEN |
+
+### Findings — Sources: Error Types (Diagnostic Strings)
+
+Error enum cases that store file paths as `Swift.String` for diagnostic/display purposes. These are borderline — the prior research ([string-path-type-inventory-file-system.md](string-path-type-inventory-file-system.md) Category E) identified 28 such cases and classified them as display-correct. However, the `Kernel.File.Write.Atomic.Error` cases propagate path values from the same internal String-pipeline (findings #15–24), meaning the String enters the error from an already-untyped source.
+
+| # | Severity | Location | Finding | Status |
+|---|----------|----------|---------|--------|
+| 25 | LOW | `swift-kernel/.../Kernel.File.Write.Atomic.Error.swift:18` | `parentVerificationFailed(path: String, ...)` | DEFERRED — diagnostic display; resolve when internal pipeline is typed |
+| 26 | LOW | `swift-kernel/.../Kernel.File.Write.Atomic.Error.swift:21` | `destinationStatFailed(path: String, ...)` | DEFERRED — same rationale |
+| 27 | LOW | `swift-kernel/.../Kernel.File.Write.Atomic.Error.swift:24` | `tempFileCreationFailed(directory: String, ...)` | DEFERRED — same rationale |
+| 28 | LOW | `swift-kernel/.../Kernel.File.Write.Atomic.Error.swift:42` | `renameFailed(from: String, to: String, ...)` | DEFERRED — same rationale |
+| 29 | LOW | `swift-kernel/.../Kernel.File.Write.Atomic.Error.swift:45` | `destinationExists(path: String)` | DEFERRED — same rationale |
+| 30 | LOW | `swift-kernel/.../Kernel.File.Write.Atomic.Error.swift:48` | `directorySyncFailed(path: String, ...)` | DEFERRED — same rationale |
+| 31 | LOW | `swift-kernel/.../Kernel.File.Write.Atomic.Error.swift:55` | `directorySyncFailedAfterCommit(path: String, ...)` | DEFERRED — same rationale |
+
+### Findings — Tests: swift-iso-9945 (Layer 2)
+
+All test support code in the standards layer. These helpers wrap `Kernel.Path.scope()` internally — the `Swift.String` parameter forces every call site to traffic in bare strings. Layer 2 can use `Kernel.Path` (L1) but NOT `Paths.Path` (L3).
+
+| # | Severity | Location | Finding | Status |
+|---|----------|----------|---------|--------|
+| 32 | HIGH | `swift-iso-9945/Tests/Support/Kernel.IO.Test.Helpers.swift:31` | `makeTempPath(prefix:) -> Swift.String` — returns temp path as String. | OPEN |
+| 33 | HIGH | `swift-iso-9945/Tests/Support/Kernel.IO.Test.Helpers.swift:36` | `open(at path: Swift.String)` — wraps `.scope()` internally. | OPEN |
+| 34 | HIGH | `swift-iso-9945/Tests/Support/Kernel.IO.Test.Helpers.swift:56` | `cleanup(path: Swift.String)` — the user's example violation. | OPEN |
+| 35 | HIGH | `swift-iso-9945/Tests/Support/Kernel.Temporary.swift:30` | `directory: Swift.String` — temp directory property. | OPEN |
+| 36 | HIGH | `swift-iso-9945/Tests/Support/Kernel.Temporary.swift:51` | `filePath(prefix:) -> Swift.String` — temp file path generation. | OPEN |
+| 37 | MEDIUM | `swift-iso-9945/Tests/.../ISO 9945.Kernel.File.Handle Tests.swift:32` | `cleanup(path: Swift.String)` — test-local duplicate. | OPEN |
+| 38 | MEDIUM | `swift-iso-9945/Tests/.../ISO 9945.Kernel.File.Clone Tests.swift:28` | `createTempFileWithContent(prefix:content:) -> Swift.String` | OPEN |
+| 39 | MEDIUM | `swift-iso-9945/Tests/.../ISO 9945.Kernel.File.Clone Tests.swift:38` | `readFileContent(_ path: Swift.String) -> String?` | OPEN |
+| 40 | MEDIUM | `swift-iso-9945/Tests/.../ISO 9945.Kernel.File.Clone Tests.swift:57` | `cleanup(_ path: Swift.String)` — another test-local duplicate. | OPEN |
+| 41 | MEDIUM | `swift-iso-9945/Tests/.../ISO 9945.Kernel.Lock.Integration Tests.swift:62` | `isExecutable(_ path: Swift.String)` — uses `withCString`/`access()` directly. | OPEN |
+| 42 | MEDIUM | `swift-iso-9945/Tests/.../ISO 9945.Kernel.Lock.Integration Tests.swift:74` | `spawn(lockingFile filePath: Swift.String, ...)` | OPEN |
+| 43 | MEDIUM | `swift-iso-9945/Tests/.../ISO 9945.Kernel.Lock.Integration Tests.swift:120` | `makeLockTestFile(prefix:) -> (path: Swift.String, fd: ...)` — tuple return. | OPEN |
+| 44 | MEDIUM | `swift-iso-9945/Tests/.../ISO 9945.Kernel.Process.Execute Tests.swift:39` | `findTruePath() -> Swift.String` — searches `/usr/bin/true`. | OPEN |
+| 45 | MEDIUM | `swift-iso-9945/Tests/.../ISO 9945.Kernel.TestHelper.swift:92` | `isExecutable(_ path: Swift.String)` — duplicate of #41. | OPEN |
+| 46 | MEDIUM | `swift-iso-9945/Tests/.../ISO 9945.Kernel.File.Open Tests.swift:130+` | Multiple test bodies using `let path = KernelIOTest.makeTempPath(...)` flowing String. | OPEN |
+
+### Findings — Tests: swift-foundations (Layer 3)
+
+| # | Severity | Location | Finding | Status |
+|---|----------|----------|---------|--------|
+| 47 | MEDIUM | `swift-kernel/Tests/Support/Kernel.Temporary.swift:39` | `directory: Swift.String` — duplicates iso-9945 pattern. | OPEN |
+| 48 | MEDIUM | `swift-kernel/Tests/Support/Kernel.Temporary.swift:60` | `filePath(prefix:) -> Swift.String` — duplicates iso-9945 pattern. | OPEN |
+| 49 | MEDIUM | `swift-kernel/Tests/Kernel Tests/Kernel.File.Open Tests.swift:27` | `makeTempFile(prefix:content:) -> String` — constructs path via string interpolation. | OPEN |
+| 50 | MEDIUM | `swift-kernel/Tests/Kernel Tests/Kernel.File.Open Tests.swift:41` | `removeTempFile(_ path: String)` — calls `unlink` via `withCString`. | OPEN |
+| 51 | MEDIUM | `swift-kernel/Tests/Kernel Tests/Kernel.File.Clone Tests.swift:28` | `createTempFile(prefix:content:) -> String` | OPEN |
+| 52 | MEDIUM | `swift-kernel/Tests/Kernel Tests/Kernel.File.Clone Tests.swift:42` | `readFileContent(_ path: String) -> String?` — `open()` syscall via String. | OPEN |
+| 53 | MEDIUM | `swift-kernel/Tests/Kernel Tests/Kernel.File.Clone Tests.swift:55` | `cleanup(_ path: String)` — `unlink` via `withCString`. | OPEN |
+| 54 | MEDIUM | `swift-file-system/Tests/.../File.System Tests.swift:35` | `createTempPath() -> Swift.String` | OPEN |
+| 55 | MEDIUM | `swift-file-system/Tests/.../File.System Tests.swift:39` | `cleanup(_ path: Swift.String)` — converts to `File.Path` internally. | OPEN |
+| 56 | MEDIUM | `swift-file-system/Tests/Support/File.Directory.Temporary.swift:39` | `directory: Swift.String` — temp directory property. | OPEN |
+| 57 | MEDIUM | `swift-posix/Tests/.../POSIX.Kernel.Glob Tests.swift:37+` | `removeDirectoryRecursively`, `parentDirectory(of:)`, `withTestDirectory`, `createTestFiles(in:)` — all use `String` for paths. | OPEN |
+| 58 | MEDIUM | `swift-windows/Tests/.../Windows.Kernel.Glob Tests.swift:56+` | Windows mirror of #57. | OPEN |
+
+### False Positives / Legitimate String Usage
+
+The following were evaluated and determined to be correct uses of `Swift.String`:
+
+| Location | Rationale |
+|----------|-----------|
+| `swift-source-primitives/.../Source.File.filePath: String` | Display metadata for diagnostics, not syscall-bound. L1 boundary — no file I/O. |
+| `swift-source-primitives/.../Source.Location.filePath: String?` | Matches Swift `#filePath` semantics. Display-only. |
+| `swift-kernel-primitives/.../Kernel.Glob.Error` path fields | Documented design decision: "Error paths are String by design — for diagnostics/logging, not further processing." |
+| `swift-kernel-primitives/.../Kernel.Glob.Pattern.init(_ pattern: String)` | Glob patterns are text syntax, not file system paths. |
+| `swift-test-primitives/.../Test.Snapshot.Result` path fields | Diagnostic reporting strings for test framework output. |
+| `swift-test-primitives/.../Test.Snapshot.Diff.Result.StructuralOperation` | JSON/YAML structural paths (e.g., `"user.name"`), not file system paths. |
+| `swift-darwin-primitives/.../Darwin.Loader.Image.pathString(at:)` | Diagnostic return with documented guidance toward scoped accessors. |
+| `Kernel.File.Write.randomToken` / `hexEncode` | Generate opaque tokens, not path data. |
+
+### Systemic Patterns
+
+1. **`.scope()` as symptom**: 16 of the 24 source-level findings (findings #15–24, #21–24, #33–34) wrap `Kernel.Path.scope()` internally. Each `.scope()` call is a typed-path conversion that should have happened at the API boundary. The scope call is the conversion *escape hatch* — its presence inside a function body signals that the parameter type is too weak.
+
+2. **Test helper duplication**: `Kernel.Temporary.directory`, `Kernel.Temporary.filePath(prefix:)`, and `cleanup(path:)` appear in three separate test support directories (swift-iso-9945, swift-kernel, swift-file-system) with identical String-based signatures. A single typed test helper would eliminate all three.
+
+3. **Glob pipeline end-to-end**: The POSIX/Windows Glob APIs accept `directory: Swift.String` and yield `body: (Swift.String) -> Void`. The entire traversal pipeline — directory entry, path concatenation, match filtering — operates on `Swift.String`. The prior research inventory counted this as the largest single cluster of String-as-path usage.
+
+4. **Error type coupling**: `Kernel.File.Write.Atomic.Error` stores paths as `Swift.String` because the internal functions that populate those errors (findings #15–24) traffic in String. Fixing the internal pipeline automatically enables typed error fields.
+
+5. **Layer-correct types**: L2 (swift-iso-9945) should use `Kernel.Path` / `Kernel.Path.View`. L3 (swift-foundations) should use `Paths.Path` / `File.Path` at public boundaries and may use `Kernel.Path.View` at syscall boundaries. No L3 type should appear at L1 or L2.
+
+6. **Architectural misplacement**: `Kernel.File.Write.Atomic` and `Kernel.File.Write.Streaming` are *composed operations* (resolve parent → create temp file → write → rename → sync directory). They require path decomposition (parent directory, filename extraction) which is not a kernel concern. The path manipulation lives in swift-kernel only because it was written before swift-paths existed — it belongs in swift-file-system where `Paths.Path` is available.
+
+### Architectural Decision: swift-kernel Must Not Depend on swift-paths
+
+**Context**: swift-kernel has 10 L3 dependents (swift-io, swift-clocks, swift-memory, swift-pools, swift-testing, swift-tests, swift-file-system, swift-environment, plus platform packages). swift-paths has 1 dependent (swift-file-system). Adding swift-paths as a dependency of swift-kernel would fan out to all 10 consumers — packages like swift-clocks and swift-memory would gain an indirect path dependency they don't need.
+
+**Decision**: swift-kernel MUST NOT depend on swift-paths. swift-kernel MUST NOT provide `Swift.String` APIs for file paths.
+
+**Consequence**: Composed file operations that require path decomposition (atomic write, streaming write) belong in **swift-file-system**, not swift-kernel. swift-kernel provides low-level syscall wrappers only:
+
+| Layer | Responsibility | Path Type |
+|-------|---------------|-----------|
+| swift-kernel | Syscall wrappers: open, close, move, delete, stat, flush, lock | `Kernel.Path.View` (L1, borrowed) |
+| swift-file-system | Composed operations: atomic write, streaming write, glob, file/directory | `Paths.Path` / `File.Path` (L3, Copyable) |
+
+The atomic write implementation uses `Paths.Path` for path decomposition (`.parent`, `.lastComponent`, `.appending`) and calls kernel primitives via `.kernelPath` at each syscall boundary.
+
+### Relationship to Prior Research
+
+This audit verifies the current state against the inventory and decisions in [string-path-type-inventory-file-system.md](string-path-type-inventory-file-system.md) v3.0 (2026-03-19). That research identified 93 Category A symbols (String in non-display API signatures). Since then, partial implementation has reduced the count:
+
+| Already resolved (post-inventory) | Mechanism |
+|-----------------------------------|-----------|
+| `Path.Component` in navigation APIs | Replaced `String` parameters |
+| `Path.Component.Extension` / `.Stem` | New validated types |
+| `File.Directory.init(validating:)` | Explicit String→Path conversion point |
+| `File.init(_ path: File.Path)` | Typed path in public API |
+| Glob callback-based API | Internal refactor (String still in public API) |
+
+**Remaining**: 35 source findings + 38 test findings = 73 total. The bulk of the remaining work is the Glob pipeline (findings #3–8), the `Kernel.File.Write` internals (#15–24), and the test helper unification (#32–58).
+
+### Remediation Plan
+
+#### Phase 1: Public API — Glob Pipeline (findings #3–8)
+
+Highest impact. The Glob APIs are the only public-facing functions that both accept AND return `Swift.String` for file paths. At L3 (swift-posix, swift-windows), the correct types are:
+
+```swift
+// Before
+public static func match(pattern: Pattern, in directory: Swift.String, ..., body: (Swift.String) -> Void)
+
+// After
+public static func match(pattern: Pattern, in directory: Paths.Path, ..., body: (Paths.Path) -> Void)
+```
+
+Internal helpers (`matchSegments`, `pathExists`, `isDirectory`) change from `String` to `Paths.Path` or `Paths.Path.View`.
+
+**Blast radius**: `File.Directory.Glob` in swift-file-system is the primary consumer. Already callback-based internally per prior research implementation.
+
+#### Phase 2: Public API — Windows.Loader (findings #1–2)
+
+```swift
+// Before
+public static func open(path: String) throws(Loader.Error) -> Handle
+
+// After
+public static func open(path: borrowing Kernel.Path) throws(Loader.Error) -> Handle
+```
+
+Matches `Windows.Kernel.File.Open` which already uses `borrowing Kernel.Path`.
+
+#### Phase 3: Public API — Test.Reporter + Source.Cache (findings #9–14)
+
+```swift
+// Test.Reporter: String → File.Path
+public static func json(to path: File.Path? = nil) -> Test.Reporter
+public static func structured(to path: File.Path) -> Test.Reporter
+
+// Source.Cache: String → File.Path as key
+internal var _loaded: [File.Path: [UInt8]]
+```
+
+#### Phase 4: Relocate Composed Write Operations (findings #15–24, #25–31)
+
+Move `Kernel.File.Write.Atomic` and `Kernel.File.Write.Streaming` from swift-kernel to swift-file-system. These are composed operations that require path decomposition — they belong where `Paths.Path` is available.
+
+**In swift-file-system** (new `File.Write.Atomic` / `File.Write.Streaming`):
+- Accept `File.Path` (= `Paths.Path`) at the public API
+- Use `.parent`, `.lastComponent`, `.appending()` for path decomposition
+- Call kernel primitives (`Kernel.File.Open.open`, `Kernel.File.Move.move`, `Kernel.File.Delete.delete`, `Kernel.File.Flush.flush`) via `.kernelPath` at each syscall boundary
+- Error types use `File.Path` instead of `Swift.String` for path fields
+
+**In swift-kernel** (removal):
+- Delete `Kernel.File.Write+Shared.swift` entirely (findings #15–24 eliminated)
+- Delete `Kernel.File.Write.Atomic+API.swift`, `Kernel.File.Write.Streaming+API.swift`, and associated types
+- Delete `Kernel.File.Write.Atomic.Error` (findings #25–31 eliminated — no longer deferred)
+- Keep low-level primitives: `Kernel.File.Open`, `Kernel.File.Move`, `Kernel.File.Delete`, `Kernel.File.Flush`, `Kernel.File.Stats` — these already use `Kernel.Path.View`
+
+This phase resolves all 17 findings (#15–31) by eliminating the code from swift-kernel rather than converting it.
+
+**Blast radius**: Consumers of `Kernel.File.Write.Atomic.write(to:)` must migrate to the new `File.Write.Atomic` API. Grep for `Kernel.File.Write.Atomic` and `Kernel.File.Write.Streaming` across swift-foundations to identify all call sites.
+
+#### Phase 5: Test Helpers (findings #32–58)
+
+Test helpers at each layer should use the layer-appropriate path type:
+
+- **L2 tests (swift-iso-9945)**: Use `Kernel.Path.View` with scoped patterns (`withTempFile { path, fd in }`). The existing scoped helpers in swift-kernel's test support already demonstrate this pattern.
+- **L3 tests (swift-foundations)**: Use `File.Path` (= `Paths.Path`). `ExpressibleByStringLiteral` gives ergonomic literal syntax. Runtime-constructed paths use `File.Path(stringValue)` or string interpolation.
+
+Unify duplicated helpers (3 copies of `Kernel.Temporary`) into layer-appropriate test support.
+
+#### Phase 6: Error Types (resolved by Phase 4)
+
+No longer deferred. Phase 4 eliminates the String-based `Kernel.File.Write.Atomic.Error` and `Kernel.File.Write.Streaming.Error` from swift-kernel. The new `File.Write` error types in swift-file-system use `File.Path` from the start.
+
+### Summary
+
+58 findings: 0 critical, 10 high, 41 medium, 7 low (deferred).
+
+**Systemic root cause**: The path type infrastructure (`Path_Primitives.Path`, `Kernel.Path`, `Paths.Path`) was introduced after many of these APIs were written. The prior research inventory (2026-03-19) identified the full scope; partial implementation has addressed the highest-value targets (navigation APIs, component types, `File`/`File.Directory` constructors). The remaining 73 findings represent the next wave — primarily the Glob pipeline, the composed write operations (architectural relocation), and test infrastructure.
+
+**Key insight**: 16 of 24 source findings contain `Kernel.Path.scope()` calls inside function bodies. Each `.scope()` is a smoking gun: it proves the function receives a path-as-String and must convert before the syscall. The architectural decision to relocate composed write operations to swift-file-system eliminates the entire String pipeline — `Paths.Path` provides typed decomposition, and `.kernelPath` provides zero-alloc syscall access.
+
+**Architectural principle**: swift-kernel wraps syscalls with L1 types (`Kernel.Path.View`). Composed operations that require path decomposition belong in swift-file-system where `Paths.Path` is available. swift-kernel MUST NOT depend on swift-paths and MUST NOT provide `Swift.String` APIs for file paths.
