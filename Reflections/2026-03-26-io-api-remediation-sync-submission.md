@@ -5,7 +5,18 @@ packages:
   - swift-io
   - swift-kernel
   - swift-witnesses
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: package_insight
+    target: swift-io
+    description: IO.run sync/async overload ambiguity documented in _Package-Insights.md
+  - type: skill_update
+    target: testing-swiftlang
+    description: Add [SWIFT-TEST-014] ~Copyable values in #expect
+  - type: skill_update
+    target: memory-safety
+    description: Add [MEM-OWN-013] consuming does not suppress deinit
 ---
 
 # IO API Remediation — Sync Submission and the Async Overload Ambiguity

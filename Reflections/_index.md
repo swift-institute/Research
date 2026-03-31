@@ -41,7 +41,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-24-swift-io-audit-consolidation.md](2026-03-24-swift-io-audit-consolidation.md) | 2026-03-24 | swift-io Audit Consolidation — From 3 Scattered Files to One Canonical Location | swift-io, swift-institute | processed (2026-03-26) |
 | [2026-03-25-io-prior-art-literature-study.md](2026-03-25-io-prior-art-literature-study.md) | 2026-03-25 | IO Prior Art Literature Study and Design Audit | swift-io, swift-file-system, swift-kernel-primitives, swift-kernel, swift-posix | processed (2026-03-26) |
 | [2026-03-26-channel-lifecycle-actor-removal-ownership-as-synchronization.md](2026-03-26-channel-lifecycle-actor-removal-ownership-as-synchronization.md) | 2026-03-26 | Channel Lifecycle Actor Removal — Ownership as Synchronization | swift-io | processed (2026-03-26) |
-| [2026-03-26-io-api-remediation-sync-submission.md](2026-03-26-io-api-remediation-sync-submission.md) | 2026-03-26 | IO API Remediation — Sync Submission and the Async Overload Ambiguity | swift-io, swift-kernel, swift-witnesses | pending |
+| [2026-03-26-io-api-remediation-sync-submission.md](2026-03-26-io-api-remediation-sync-submission.md) | 2026-03-26 | IO API Remediation — Sync Submission and the Async Overload Ambiguity | swift-io, swift-kernel, swift-witnesses | processed (2026-03-31) |
 | [2026-03-27-async-channel-noncopyable-restructure.md](2026-03-27-async-channel-noncopyable-restructure.md) | 2026-03-27 | Async Channel ~Copyable Restructure — Closure Capture as the Real Blocker | swift-async-primitives | pending |
 | [2026-03-29-se0461-concurrent-inference-macro-interaction.md](2026-03-29-se0461-concurrent-inference-macro-interaction.md) | 2026-03-29 | SE-0461 @concurrent Inference and @Witness Macro Interaction | swift-io, swift-witnesses | pending |
 | [2026-03-29-channel-split-full-duplex-io.md](2026-03-29-channel-split-full-duplex-io.md) | 2026-03-29 | Channel split() — Full-Duplex I/O via Ecosystem-Aligned Split Pattern | swift-io | pending |
@@ -51,6 +51,8 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-30-io-lane-boundary-completion-typed-throws.md](2026-03-30-io-lane-boundary-completion-typed-throws.md) | 2026-03-30 | IO.Lane Boundary Completion and `do throws(E)` Discovery | swift-io | pending |
 | [2026-03-30-sending-sendable-migration-cascade.md](2026-03-30-sending-sendable-migration-cascade.md) | 2026-03-30 | Sending/Sendable Migration Cascade: Primitives → Foundations | swift-async-primitives, swift-async, swift-institute | pending |
 | [2026-03-30-noncopyable-descriptor-l3-cascade.md](2026-03-30-noncopyable-descriptor-l3-cascade.md) | 2026-03-30 | ~Copyable Descriptor L3 Cascade: Workaround Resistance and Experiment-Driven Correction | swift-io, swift-posix, swift-kernel, swift-memory, swift-iso-9945 | pending |
+| [2026-03-31-noncopyable-io-completion-cascade-and-silgen-bug-discovery.md](2026-03-31-noncopyable-io-completion-cascade-and-silgen-bug-discovery.md) | 2026-03-31 | ~Copyable IO Completion Cascade and SILGen Bug Discovery | swift-io, swift-async-primitives, swift-witnesses | pending |
+| [2026-03-31-convention3-unchecked-sendable-audit.md](2026-03-31-convention3-unchecked-sendable-audit.md) | 2026-03-31 | Convention 3 Audit — @unchecked Sendable Truth-Telling | swift-io | pending |
 
 ## Legacy Archive
 
