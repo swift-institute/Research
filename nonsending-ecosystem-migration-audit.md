@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-22
-status: RECOMMENDATION
+version: 2.0.0
+last_updated: 2026-03-31
+status: IN PROGRESS
 tier: 2
 trigger: nonsending-compiler-patterns.md identified stdlib deprecated isolation: parameter pattern; audit ecosystem for migration candidates
 ---
@@ -32,16 +32,17 @@ Where does the Swift Institute ecosystem use the deprecated `isolation:` paramet
 
 The ecosystem is in strong shape. The migration surface is precisely scoped.
 
-### Classification: `isolation:` Parameter Usage
+### Classification: Migration Surface
 
-**26 total occurrences** across the ecosystem. Each classified as:
+**42 total occurrences** across the ecosystem. Each classified as:
 
-| Classification | Count | Action |
-|---------------|-------|--------|
-| SE-0421 protocol conformance (`next(isolation:)`) | 10 | KEEP — canonical pattern |
-| Convenience function (deprecated pattern) | 14 | MIGRATE to `nonisolated(nonsending)` |
-| Convenience function with `sending` parameter | 1 | MIGRATE with care |
-| Test fixture | 1 | MIGRATE to match production |
+| Classification | Count | Action | Status |
+|---------------|-------|--------|--------|
+| SE-0421 protocol conformance (`next(isolation:)`) | 10 | KEEP — canonical pattern | — |
+| Deprecated `isolation:` parameter (Tier 2) | 14 | MIGRATE to `nonisolated(nonsending)` | **COMPLETE** |
+| Deprecated `isolation:` + `sending` parameter (Tier 2) | 1 | MIGRATE with care | **COMPLETE** |
+| Test fixture with `isolation:` (Tier 2) | 1 | MIGRATE to match production | **COMPLETE** |
+| Bare `() async` closure parameter (Tier 3) | 16 | Add explicit `nonisolated(nonsending)` | PENDING |
 
 ### Tier 1: SE-0421 Protocol Conformances — KEEP
 
@@ -63,9 +64,9 @@ Plus 2 `receive(isolation:)` methods that are `next(isolation:)` wrappers:
 - `Async.Channel.Unbounded.Receiver.receive` (`:72`)
 - `Async.Channel.Bounded.Receiver.receive` (`:69`)
 
-### Tier 2: Migration Candidates — DEPRECATED PATTERN (14)
+### Tier 2: Migration Candidates — DEPRECATED PATTERN (16) — COMPLETE
 
-These are convenience functions that use `isolation: isolated (any Actor)? = #isolation` as a parameter when the function could instead be `nonisolated(nonsending)`.
+These convenience functions used `isolation: isolated (any Actor)? = #isolation` as a parameter. All have been migrated to `nonisolated(nonsending)` with the double-nonsending pattern on closure parameters.
 
 #### Layer 1: Primitives (7 functions)
 
@@ -98,9 +99,55 @@ These are convenience functions that use `isolation: isolated (any Actor)? = #is
 |----------|------|-----------|
 | `Dependency.Test.Scope.withOverrides` | `Dependency.Test.Scope.swift:63` | `static func withOverrides<T, E>(isolation:, _, operation:) async throws(E) -> T` |
 
+### Tier 3: Convention 4 Compliance — BARE CLOSURE PARAMETERS (16) — PENDING
+
+These functions take `() async` closure parameters without explicit `nonisolated(nonsending)` annotation on the closure type. Under `NonisolatedNonsendingByDefault` (SE-0461, enabled across all 252 packages), bare closure types are **implicitly** `nonisolated(nonsending)` — so these are functionally correct. The explicit annotation is required by Convention 4 for:
+
+1. **Readability** — documents that isolation inheritance is intended
+2. **Consistency** — matches the already-migrated Tier 2 functions
+3. **Forward safety** — protects against future feature-flag changes
+
+Unlike Tier 2 (which removed a deprecated parameter — a correctness fix), Tier 3 adds an explicit annotation that matches the implicit default — a consistency fix.
+
+#### Layer 1: Primitives (4 functions)
+
+| Function | Package | File | Closure Type |
+|----------|---------|------|-------------|
+| `Dependency.Scope.with` | swift-dependency-primitives | `Dependency.Scope.swift:143` | `operation: () async throws(E) -> T` |
+| `Effect.Context.with` (throwing) | swift-effect-primitives | `Effect.Context.swift:135` | `operation: () async throws(E) -> T` |
+| `Effect.Context.with` (non-throwing) | swift-effect-primitives | `Effect.Context.swift:148` | `operation: () async -> T` |
+| `withTaskCancellationHandler` | swift-standard-library-extensions | `withTaskCancellationHandler.swift:19` | `operation: () async throws(E) -> T` |
+
+#### Layer 3: Foundations — Witness infrastructure (7 functions)
+
+| Function | Package | File | Closure Type |
+|----------|---------|------|-------------|
+| `Witness.Context.withTest` | swift-witnesses | `Witness.Context.swift:371` | `operation: () async throws(E) -> T` |
+| `Witness.Context.withPreview` | swift-witnesses | `Witness.Context.swift:389` | `operation: () async throws(E) -> T` |
+| `Witness.CapturedContext.withValues` | swift-witnesses | `Witness.CapturedContext.swift:74` | `operation: () async throws(E) -> R` |
+| `Witness.Context.Escaped.yield` | swift-witnesses | `Witness.Context.Escaped.swift:76` | `operation: () async throws(E) -> R` |
+| `Witness.Scope.run` | swift-witnesses | `Witness.Scope.swift:87` | `operation: () async throws(E) -> R` |
+| `Witness.Resolution.Stack.withPushed` | swift-witnesses | `Witness.Resolution.Stack.swift:100` | `operation: () async -> Result<T, ...>` |
+| `prepareDependencies` | swift-dependencies | `prepareDependencies.swift:49` | `operation: () async throws(E) -> T` |
+
+#### Layer 3: Foundations — CSS theming (3 functions)
+
+| Function | Package | File | Closure Type |
+|----------|---------|------|-------------|
+| `DarkModeColor.Theme.withValue` | swift-css | `Color.Theme.swift:327` | `operation: () async throws -> R` |
+| `Font.Defaults.withValue` | swift-css | `Font.Theme.swift:252` | `operation: () async throws -> R` |
+| `withDependencies` (CSS) | swift-css | `exports.swift:76` | `operation: () async throws -> R` |
+
+#### Layer 3: Foundations — Memory (2 functions)
+
+| Function | Package | File | Closure Type |
+|----------|---------|------|-------------|
+| `Memory.Allocation.Tracker.measure` | swift-memory | `Memory.Allocation.Tracker.swift:28` | `operation: () async throws(E) -> T` |
+| `Memory.Allocation.Profiler.profile` | swift-memory | `Memory.Allocation.Profiler.swift:72` | `operation: () async throws(E) -> T` |
+
 ### The Double-Nonsending Pattern
 
-8 of the 14 migration candidates follow the `withTaskCancellationHandler` pattern: a function that takes an `operation` closure. The stdlib's canonical form marks **both** the function AND the closure as `nonisolated(nonsending)`:
+The stdlib's canonical form for operation-taking functions marks **both** the function AND the closure parameter as `nonisolated(nonsending)`:
 
 **Stdlib canonical** (`TaskCancellation.swift:77-79`):
 ```swift
@@ -110,24 +157,40 @@ public nonisolated(nonsending) func withTaskCancellationHandler<Return, Failure>
 ) async throws(Failure) -> Return
 ```
 
-**Our current pattern** (e.g., `withDependencies`):
+**Tier 2 migration** (completed): Removed deprecated `isolation:` parameter, added double-nonsending:
 ```swift
+// Before (deprecated pattern):
 public func withDependencies<T, E: Error>(
     isolation: isolated (any Actor)? = #isolation,
     _ modify: (inout __DependencyValues) -> Void,
     operation: () async throws(E) -> T
 ) async throws(E) -> T
-```
 
-**Proposed migration**:
-```swift
-public nonisolated(nonsending) func withDependencies<T, E: Error>(
+// After (migrated):
+nonisolated(nonsending)
+public func withDependencies<T, E: Error>(
     _ modify: (inout __DependencyValues) -> Void,
     operation: nonisolated(nonsending) () async throws(E) -> T
 ) async throws(E) -> T
 ```
 
-The `operation` closure should also be `nonisolated(nonsending)` because:
+**Tier 3 migration** (pending): Add explicit annotation to bare closure parameters:
+```swift
+// Before (implicit nonsending via feature flag):
+public static func with<T, E: Error>(
+    _ modify: (inout Dependency.Values) -> Void,
+    operation: () async throws(E) -> T
+) async throws(E) -> T
+
+// After (explicit annotation per Convention 4):
+nonisolated(nonsending)
+public static func with<T, E: Error>(
+    _ modify: (inout Dependency.Values) -> Void,
+    operation: nonisolated(nonsending) () async throws(E) -> T
+) async throws(E) -> T
+```
+
+The `operation` closure is annotated `nonisolated(nonsending)` because:
 1. It runs within the caller's isolation domain
 2. It should inherit the caller's actor for deterministic execution
 3. The `modify` closure is synchronous (no annotation needed)
@@ -157,44 +220,68 @@ The `operation` closure should also be `nonisolated(nonsending)` because:
 
 ## Outcome
 
-**Status**: RECOMMENDATION
+**Status**: IN PROGRESS
 
-### Migration Plan
+### Completed Work
 
-**Phase 1: Primitives (7 functions)**
+**Phase 1: Deprecated `isolation:` parameter removal (16 functions) — COMPLETE**
 
-Low risk — we control all consumers. Clean break (no deprecation shim needed).
+All functions that used the deprecated `isolation: isolated (any Actor)? = #isolation` parameter have been migrated to `nonisolated(nonsending)` with the double-nonsending pattern on closure parameters.
 
-| Priority | Function | Complexity |
-|----------|----------|------------|
-| 1 | `Async.Callback.callAsFunction` | Low — experiment required to validate `await self()` still works |
-| 2 | `Async.Promise.value` | Low — direct suspension, no composition |
-| 3 | `Async.Promise.wait` | Low — void return, simplest case |
-| 4 | `Async.Barrier.arrive` | Low — void return |
-| 5 | `Async.Bridge.next` | Medium — implements `AsyncIteratorProtocol.next` indirectly |
-| 6 | `Async.Channel.Bounded.Sender.send` | Medium — has `sending Element` parameter, needs validation |
-| 7 | `Pool.Bounded.Shutdown.wait` | Low — void return |
+| Phase | Scope | Functions | Status |
+|-------|-------|-----------|--------|
+| 1a | Primitives (swift-async-primitives) | 7 | **COMPLETE** |
+| 1b | Foundations (swift-dependencies, swift-witnesses, swift-testing) | 8 | **COMPLETE** |
+| 1c | Test infrastructure | 1 | **COMPLETE** |
 
-**Phase 2: Foundations — Witness/Dependency infrastructure (8 functions)**
+**Phase 2: Validation — COMPLETE**
 
-These share the double-nonsending pattern. Should be migrated together.
+Validated via build + test that `nonisolated(nonsending)` works correctly for:
+1. `callAsFunction()` — `await self()` propagates isolation
+2. Double-nonsending pattern — operation closures inherit caller isolation
+3. `sending Element` + `nonisolated(nonsending)` — Channel.send works correctly
 
-| Priority | Function | Complexity |
-|----------|----------|------------|
-| 1 | `withWitnesses` | Medium — public free function, double-nonsending pattern |
-| 2 | `Witness.Context.with` (2 overloads) | Medium — same pattern |
-| 3 | `Witness.Context._withScope` | Low — internal API |
-| 4 | `Witness.Preparation.with` | Medium — same pattern |
-| 5 | `withDependencies` (2 overloads) | Medium — same pattern |
-| 6 | `Test.withDependencies` | Low — test support |
-| 7 | `Dependency.Test.Scope.withOverrides` | Low — test helper |
+### Remaining Work
 
-**Phase 3: Validation**
+**Phase 3: Convention 4 compliance — bare closure parameters (16 functions) — PENDING**
 
-Before production migration, create an experiment validating:
-1. `nonisolated(nonsending)` on `callAsFunction()` — does `await self()` in `map`/`flatMap` still propagate isolation?
-2. Double-nonsending pattern on `withWitnesses` — does `operation` closure inherit caller isolation?
-3. `sending Element` parameter with `nonisolated(nonsending)` function — does `Channel.send` work correctly?
+These functions take `() async` closure parameters without explicit `nonisolated(nonsending)` on the closure type. Under `NonisolatedNonsendingByDefault`, the implicit default is already correct — this is an explicit annotation pass for Convention 4 compliance.
+
+**Phase 3a: Primitives (4 functions)**
+
+| Priority | Function | Package | Risk |
+|----------|----------|---------|------|
+| 1 | `Dependency.Scope.with` | swift-dependency-primitives | Low — core scoping function, delegates to `TaskLocal.withValue` |
+| 2 | `Effect.Context.with` (throwing) | swift-effect-primitives | Low — delegates to `Dependency.Scope.with` |
+| 3 | `Effect.Context.with` (non-throwing) | swift-effect-primitives | Low — same delegation |
+| 4 | `withTaskCancellationHandler` | swift-standard-library-extensions | Low — stdlib bridge, mirrors stdlib's own double-nonsending |
+
+**Phase 3b: Foundations — Witness infrastructure (7 functions)**
+
+| Priority | Function | Package | Risk |
+|----------|----------|---------|------|
+| 1 | `Witness.Context.withTest` | swift-witnesses | Low — delegates to `_withScope` (already migrated) |
+| 2 | `Witness.Context.withPreview` | swift-witnesses | Low — same delegation |
+| 3 | `Witness.CapturedContext.withValues` | swift-witnesses | Low — delegates to `Witness.Context.with` (already migrated) |
+| 4 | `Witness.Context.Escaped.yield` | swift-witnesses | Low — delegates to `Witness.Context.with` (already migrated) |
+| 5 | `Witness.Scope.run` | swift-witnesses | Low — `consuming func`, delegates to `Witness.Context.with` |
+| 6 | `Witness.Resolution.Stack.withPushed` | swift-witnesses | Low — internal resolution machinery |
+| 7 | `prepareDependencies` | swift-dependencies | Low — delegates to `Witness.Preparation.with` (already migrated) |
+
+**Phase 3c: Foundations — CSS theming (3 functions)**
+
+| Priority | Function | Package | Risk |
+|----------|----------|---------|------|
+| 1 | `DarkModeColor.Theme.withValue` | swift-css | Low — `TaskLocal.withValue` wrapper |
+| 2 | `Font.Defaults.withValue` | swift-css | Low — same pattern |
+| 3 | `withDependencies` (CSS) | swift-css | Low — composes the above two |
+
+**Phase 3d: Foundations — Memory (2 functions)**
+
+| Priority | Function | Package | Risk |
+|----------|----------|---------|------|
+| 1 | `Memory.Allocation.Tracker.measure` | swift-memory | Low — measurement wrapper |
+| 2 | `Memory.Allocation.Profiler.profile` | swift-memory | Low — delegates to `measure` |
 
 ### What NOT to Change
 
@@ -210,5 +297,6 @@ Before production migration, create an experiment validating:
 - `callback-isolated-nonsending-design.md` (v3.1) — Async.Callback specific migration note
 - `concurrent-expansion-audit.md` — `@concurrent` placement (validated: zero in stdlib)
 - `nonsending-adoption-audit.md` — Original @Sendable site inventory
+- `modern-concurrency-conventions.md` — Convention 4: double-nonsending pattern requirement
 - Swift stdlib `CheckedContinuation.swift:304-332` — Canonical deprecation pattern
 - Swift stdlib `TaskCancellation.swift:77-79` — Double-nonsending pattern
