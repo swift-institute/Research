@@ -2,13 +2,16 @@
 
 <!--
 ---
-version: 1.0.0
+version: 2.0.0
 last_updated: 2026-03-31
 status: DECISION
 tier: 2
 workflow: Investigation [RES-001]
 trigger: bridge-noncopyable-ownership experiment revealed 6 ergonomic pain points in ~Copyable ownership transfer through Mutex closures
 scope: Ecosystem-wide — affects all ~Copyable code across swift-primitives, swift-standards, swift-foundations
+changelog:
+  - v2.0.0 (2026-03-31): Reframed Pain Point 1 after ecosystem prior art survey (stdlib, swift-system, swift-nio, Swift Forums). The Optional wrapper is not a "workaround" — it's the stdlib-endorsed pattern. The correct framing: make consuming values closure parameters, not captures.
+  - v1.0.0 (2026-03-31): Initial compiler source investigation.
 ---
 -->
 
@@ -33,15 +36,27 @@ What is the current compiler state for each ~Copyable ergonomic limitation, and 
 
 ### Pain Point 1: Closure Capture of Consuming ~Copyable Values
 
-**Current state**: Non-escaping closures capture by reference/address, not by value ownership transfer. There is no mechanism for a `consuming` parameter to be passed into a closure. The compiler wraps noncopyable captures via `eliminateMoveOnlyWrapper` logic (`lib/SILGen/SILGenFunction.cpp:782-910`) to make them compatible with closure machinery.
+**Current state**: Non-escaping closures capture by reference/address, not by value ownership transfer. Consuming a captured variable requires reinitialization at closure exit because the compiler treats all closures as potentially callable multiple times — there is no "once-only closure" concept in the type system.
 
-**Workaround**: Wrap in `var slot: Element? = element`, capture the mutable Optional, use `.take()!` or `switch consume` inside the closure.
+**Ecosystem prior art survey** (Verified: 2026-03-31):
 
-**Compiler evidence**: `test/SILOptimizer/moveonly_self_captures.swift:68-79` — "noncopyable 'self' cannot be consumed when captured by an escaping closure." No TODOs or proposals address non-escaping consuming capture.
+The stdlib **never** consumes through closure capture. Instead, it uses two patterns:
 
-**Outlook**: **Fundamental architectural limitation.** Closure capture works via reference/storage access. A `consuming` capture would require a different calling convention for closures. No proposals exist. The Optional wrapper pattern is the indefinite solution.
+1. **`inout sending` parameters** — `Mutex.withLock` passes `inout sending Value` to the closure (`stdlib/public/Synchronization/Mutex/Mutex.swift:87-97`). The value stays in place; the closure mutates through a reference. Internally, Mutex uses `_Cell<Value>` with `@_rawLayout` and `unsafe body(&value._address.pointee)` — raw pointer access, no Optional wrapping.
 
-**Ecosystem action**: The `Mutex.withLock(consuming:body:)` and `Mutex.withLock(deposit:body:)` extensions from the experiment encapsulate the workaround. Consider adding these as ecosystem infrastructure if the pattern recurs.
+2. **`consuming` closure parameters** — `ExecutorJob` uses `(consuming ExecutorJob) -> ()` as a closure *parameter type* (`stdlib/public/Concurrency/CooperativeExecutor.swift:131`). `Result._consumingMap` takes `(consuming Success) -> NewSuccess` (`stdlib/public/core/Result.swift:88-97`). The value enters through the parameter, not through capture.
+
+The distinction is critical: **consuming a closure parameter works. Consuming a captured variable requires reinitialization.** The fix is to make the value a parameter, not a capture.
+
+**Community consensus**: The Swift Forums thread ["Missing reinitialization of closure capture after consume for closures executed only once"](https://forums.swift.org/t/missing-reinitialization-of-closure-capture-after-consume-for-closures-executed-only-once/76864) (Dec 2024) documents this as a known intentional constraint. The `Optional` + `.take()` pattern is the accepted workaround. A "consuming closure" or "once-only closure" concept would be the natural fix but has not been formally proposed.
+
+**swift-system**: Uses `~Copyable` for `Mach.Port<RightType>` with `withBorrowedName(body:)` — borrowing closure, no consuming capture (`swift-system/Sources/System/MachPort.swift`).
+
+**swift-nio**: Does not use `~Copyable`. Uses `NIOLockedValueBox` with `withLockedValue(body:)` — reference-counted lock box, sidesteps ownership entirely (`swift-nio/Sources/NIOConcurrencyHelpers/NIOLockedValueBox.swift`).
+
+**Outlook**: **Deliberate design, not a bug.** The reinitialization requirement follows from closures being re-invocable. The stdlib-endorsed pattern is: convert captured consuming values into closure parameters. Our `Mutex.withLock(consuming:body:)` extension does exactly this — the body receives `consuming V` as a parameter, matching `Result._consumingMap` and `CooperativeExecutor.forEachReadyJob`.
+
+**Ecosystem action**: The `Mutex.withLock(consuming:body:)` and `Mutex.withLock(deposit:body:)` extensions are the correct pattern, aligned with stdlib. The `.take()!` inside the extension is confined to one site, provably safe (value was just deposited), and hidden from all call sites.
 
 ### Pain Point 2: Implicit Copyable Constraint on Extensions
 
@@ -96,14 +111,14 @@ What is the current compiler state for each ~Copyable ergonomic limitation, and 
 
 ## Comparison
 
-| Pain Point | Nature | Fixable? | Workaround | Permanent? |
-|------------|--------|----------|------------|------------|
-| Consuming closure capture | Architectural | No | Optional wrapper + `.take()!` | Yes |
-| Implicit Copyable on extensions | Deliberate (SE-0427) | No | `where Value: ~Copyable` | Yes |
-| Force unwrap IRGen crash | Bug | Yes | `.take()!` | No (file bug) |
-| Continuations require Copyable | Deep runtime | No | Void-signal pattern | Yes |
-| `switch consume` required | Deliberate (SE-0432) | No | Write `switch consume` | Yes |
-| All Optional access consuming | Deliberate | No | `_read`/`_modify` projection | Yes |
+| Pain Point | Nature | Stdlib Pattern | Permanent? |
+|------------|--------|----------------|------------|
+| Consuming closure capture | Deliberate (re-invocable closures) | Make it a parameter, not a capture | Yes |
+| Implicit Copyable on extensions | Deliberate (SE-0427) | `where Value: ~Copyable` | Yes |
+| Force unwrap IRGen crash | Bug | `.take()!` | No (file bug) |
+| Continuations require Copyable | Deep runtime | Void-signal pattern | Yes |
+| `switch consume` required | Deliberate (SE-0432) | Write `switch consume` | Yes |
+| All Optional access consuming | Deliberate | `_read`/`_modify` projection | Yes |
 
 ## Outcome
 
@@ -111,9 +126,9 @@ What is the current compiler state for each ~Copyable ergonomic limitation, and 
 
 ### Summary
 
-Of the 6 pain points, **5 are permanent by design** and **1 is a compiler bug**:
+Of the 6 pain points, **5 are permanent by design** and **1 is a compiler bug**. The most important reframing: the closure capture limitation is not a workaround — it's the intended model. The stdlib pattern is to convert consuming captures into consuming parameters.
 
-1. The Optional wrapper dance for closure capture is an architectural consequence of how Swift closures work. No proposals or FIXMEs suggest change. **Accept and encapsulate** — the `Mutex.withLock(deposit:body:)` extension is a clean API over the workaround.
+1. **Closure capture**: The stdlib never consumes through capture. `Mutex.withLock` uses `inout sending` parameters. `Result._consumingMap` and `CooperativeExecutor.forEachReadyJob` use consuming closure parameters. Our `withLock(consuming:body:)` extension follows the same pattern — it converts the captured value into a body parameter. This is not a workaround; it's the correct approach.
 
 2. The implicit Copyable on extensions is SE-0427's deliberate design. **Accept and enforce** — add to copyable-remediation skill.
 
@@ -130,7 +145,13 @@ Of the 6 pain points, **5 are permanent by design** and **1 is a compiler bug**:
 For transferring a `consuming ~Copyable` value into a `Mutex.withLock` closure:
 
 ```swift
-// Pattern A: Caller-owned slot (no extension, simplest)
+// Pattern A (preferred): withLock(consuming:body:)
+// Matches stdlib pattern: consuming value as closure parameter
+let result = mutex.withLock(consuming: element) { state, element in
+    state.buffer.push(consume element, to: .back)
+}
+
+// Pattern B: Caller-owned slot (no extension needed)
 var slot: Element? = element
 let result = mutex.withLock { state in
     let el = slot.take()!
@@ -193,11 +214,27 @@ await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
 - SE-0430: `sending` parameter and result values
 - SE-0432: Borrowing and consuming pattern matching for noncopyable types
 
+### Stdlib Prior Art (verified 2026-03-31)
+- `stdlib/public/Synchronization/Mutex/Mutex.swift:87-97` — `withLock` uses `inout sending Value`, raw pointer access via `_Cell`
+- `stdlib/public/Synchronization/Cell.swift:17-38` — `@_rawLayout(like: Value, movesAsLike)` storage primitive
+- `stdlib/public/Concurrency/CooperativeExecutor.swift:131` — `(consuming ExecutorJob) -> ()` as closure parameter type
+- `stdlib/public/core/Result.swift:88-97` — `_consumingMap` with `(consuming Success) -> NewSuccess`
+- `stdlib/public/core/Optional.swift:449-453` — `.take()` generalized for noncopyable payloads
+
+### Ecosystem Prior Art (verified 2026-03-31)
+- swift-system `Mach.Port<RightType>: ~Copyable` — `withBorrowedName(body:)`, `consuming func relinquish()` with `discard self`
+- swift-nio `NIOLockedValueBox` — `withLockedValue(body:)`, reference-counted lock box, no ~Copyable
+- swift-collections — no ~Copyable usage
+
+### Community
+- [Missing reinitialization of closure capture after consume for closures executed only once](https://forums.swift.org/t/missing-reinitialization-of-closure-capture-after-consume-for-closures-executed-only-once/76864) (Dec 2024) — canonical thread documenting the limitation
+- [Escaping Consuming Functions](https://forums.swift.org/t/escaping-consuming-functions/69807) (2024)
+- [Capturing a noncopyable type in an async closure](https://forums.swift.org/t/capturing-a-noncopyable-type-in-an-async-closure/68118)
+
 ### Compiler Source (verified 2026-03-31)
 - `lib/SILGen/SILGenFunction.cpp:782-910` — Move-only wrapper elimination for closure captures
 - `lib/AST/Requirement.cpp:367-387` — `InverseRequirement::expandDefaults()` (implicit Copyable)
 - `lib/Sema/TypeCheckDeclPrimary.cpp:163-183` — Extension constraint rationale
 - `lib/SILGen/SILGenApply.cpp:3246-3391` — Force-unwrap forwarding fix
-- `stdlib/public/core/Optional.swift:449-453` — `.take()` for noncopyable
 - `stdlib/public/Concurrency/PartialAsyncTask.swift:694` — `UnsafeContinuation` declaration
 - `stdlib/public/Concurrency/CheckedContinuation.swift:126` — `CheckedContinuation` declaration
