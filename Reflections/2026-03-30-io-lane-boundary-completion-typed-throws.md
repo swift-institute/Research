@@ -3,7 +3,18 @@ date: 2026-03-30
 session_objective: Implement IO.Lane boundary completion (Batches 1A-2B) from converged Claude-ChatGPT plan
 packages:
   - swift-io
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: Add [IMPL-075] do throws(E) for typed catch blocks
+  - type: skill_update
+    target: memory-safety
+    description: Add [MEM-COPY-014] native ownership for resource types
+  - type: package_insight
+    target: swift-io
+    description: IO.open scoped overload deduplication deferred
 ---
 
 # IO.Lane Boundary Completion and `do throws(E)` Discovery
