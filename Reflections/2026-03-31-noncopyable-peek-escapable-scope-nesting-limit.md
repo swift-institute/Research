@@ -6,7 +6,18 @@ packages:
   - swift-buffer-primitives
   - swift-ownership-primitives
   - swift-property-primitives
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: Added [IMPL-079] Property.View is terminal ~Escapable layer
+  - type: skill_update
+    target: memory-safety
+    description: Added [MEM-LIFE-005] nested coroutine ~Escapable scope limitation
+  - type: experiment_topic
+    target: swift-queue-primitives/Experiments/nested-read-escapable-composition
+    description: Test whether nested _read limitation is fundamental or View-specific
 ---
 
 # ~Escapable Peek Investigation — Property.View Is the Terminal Scope
