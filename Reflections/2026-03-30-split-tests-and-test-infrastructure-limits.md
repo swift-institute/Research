@@ -4,7 +4,18 @@ session_objective: Write targeted tests for Channel split() API and rename ReadR
 packages:
   - swift-io
   - swift-algebra-primitives
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: research_topic
+    target: transfer-cell-cancellation-propagation.md
+    description: Why Task.detached cancellation doesn't propagate through Transfer.Cell
+  - type: package_insight
+    target: swift-algebra-primitives
+    description: Pair<~Copyable> as ecosystem tuple replacement
+  - type: skill_update
+    target: testing-swiftlang
+    description: Add [SWIFT-TEST-015] @Test symbol length at deep nesting
 ---
 
 # Split Tests, @Test Macro Symbol Limits, and ~Copyable Task Transfer Gaps
