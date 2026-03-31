@@ -3,7 +3,18 @@ date: 2026-03-30
 session_objective: Audit IO.Lane / IO.Blocking.Lane boundary, produce findings, and converge on a remediation plan via Claude-ChatGPT collaborative discussion
 packages:
   - swift-io
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: Add [IMPL-074] shared-vocabulary test for cross-layer type references
+  - type: skill_update
+    target: code-surface
+    description: Add [API-IMPL-011] wrapper completeness requirement
+  - type: package_insight
+    target: swift-io
+    description: Batch 2A public contract audit — @_exported + shared-vocabulary test
 ---
 
 # IO.Lane Boundary Audit and Collaborative API Review
