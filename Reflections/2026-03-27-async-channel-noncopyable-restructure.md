@@ -3,7 +3,18 @@ date: 2026-03-27
 session_objective: Restructure bounded and unbounded channel state machines for ~Copyable element flow
 packages:
   - swift-async-primitives
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: research_topic
+    target: noncopyable-closure-capture-relaxation.md
+    description: Can closure capture consumption be relaxed for non-escaping closures?
+  - type: skill_update
+    target: memory-safety
+    description: Add Category 6 to [MEM-COPY-006] — closure capture consumption limitation
+  - type: package_insight
+    target: swift-async-primitives
+    description: Slot-per-send overhead benchmark tracking
 ---
 
 # Async Channel ~Copyable Restructure — Closure Capture as the Real Blocker
