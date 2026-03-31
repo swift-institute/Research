@@ -52,7 +52,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-30-sending-sendable-migration-cascade.md](2026-03-30-sending-sendable-migration-cascade.md) | 2026-03-30 | Sending/Sendable Migration Cascade: Primitives → Foundations | swift-async-primitives, swift-async, swift-institute | processed (2026-03-31) |
 | [2026-03-30-noncopyable-descriptor-l3-cascade.md](2026-03-30-noncopyable-descriptor-l3-cascade.md) | 2026-03-30 | ~Copyable Descriptor L3 Cascade: Workaround Resistance and Experiment-Driven Correction | swift-io, swift-posix, swift-kernel, swift-memory, swift-iso-9945 | processed (2026-03-31) |
 | [2026-03-31-noncopyable-io-completion-cascade-and-silgen-bug-discovery.md](2026-03-31-noncopyable-io-completion-cascade-and-silgen-bug-discovery.md) | 2026-03-31 | ~Copyable IO Completion Cascade and SILGen Bug Discovery | swift-io, swift-async-primitives, swift-witnesses | pending |
-| [2026-03-31-convention3-unchecked-sendable-audit.md](2026-03-31-convention3-unchecked-sendable-audit.md) | 2026-03-31 | Convention 3 Audit — @unchecked Sendable Truth-Telling | swift-io | pending |
+| [2026-03-31-convention3-unchecked-sendable-audit.md](2026-03-31-convention3-unchecked-sendable-audit.md) | 2026-03-31 | Convention 3 Audit — @unchecked Sendable Truth-Telling | swift-io | processed (2026-03-31) |
 | [2026-03-31-issue-investigation-literature-study.md](2026-03-31-issue-investigation-literature-study.md) | 2026-03-31 | Issue Investigation Literature Study and Skill Strengthening | swift-institute | pending |
 | [2026-03-31-copypropagation-noncopyable-enum-already-fixed.md](2026-03-31-copypropagation-noncopyable-enum-already-fixed.md) | 2026-03-31 | CopyPropagation ~Copyable Enum Crash — Already Fixed Upstream, Prior Misattribution Corrected | swift-async-primitives | pending |
 | [2026-03-31-noncopyable-peek-escapable-scope-nesting-limit.md](2026-03-31-noncopyable-peek-escapable-scope-nesting-limit.md) | 2026-03-31 | ~Escapable Peek Investigation — Property.View Is the Terminal Scope | swift-queue-primitives, swift-buffer-primitives, swift-ownership-primitives | pending |
@@ -61,6 +61,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-31-nonisolated-nonsending-channel-migration.md](2026-03-31-nonisolated-nonsending-channel-migration.md) | 2026-03-31 | Nonisolated(nonsending) Channel Migration — Protocol Witness Confirmation | swift-async-primitives | pending |
 | [2026-03-31-se0499-ecosystem-audit-completion.md](2026-03-31-se0499-ecosystem-audit-completion.md) | 2026-03-31 | SE-0499 Ecosystem Audit Completion | swift-comparison-primitives, swift-ordering-primitives, swift-identity-primitives | pending |
 | [2026-03-31-async-primitives-code-surface-refactor.md](2026-03-31-async-primitives-code-surface-refactor.md) | 2026-03-31 | Code-Surface Audit and Full Remediation of swift-async-primitives | swift-async-primitives | processed (2026-03-31) |
+| [2026-03-31-path-type-compliance-audit-and-l1-decomposition-design.md](2026-03-31-path-type-compliance-audit-and-l1-decomposition-design.md) | 2026-03-31 | Path Type Compliance Audit and L1 Decomposition Design | swift-path-primitives, swift-kernel, swift-file-system, swift-paths | pending |
 
 ## Legacy Archive
 
