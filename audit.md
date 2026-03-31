@@ -1209,3 +1209,37 @@ No longer deferred. Phase 4 eliminates the String-based `Kernel.File.Write.Atomi
 **Key insight**: 16 of 24 source findings contain `Kernel.Path.scope()` calls inside function bodies. Each `.scope()` is a smoking gun: it proves the function receives a path-as-String and must convert before the syscall. The architectural decision to relocate composed write operations to swift-file-system eliminates the entire String pipeline — `Paths.Path` provides typed decomposition, and `.kernelPath` provides zero-alloc syscall access.
 
 **Architectural principle**: swift-kernel wraps syscalls with L1 types (`Kernel.Path.View`). Composed operations that require path decomposition belong in swift-file-system where `Paths.Path` is available. swift-kernel MUST NOT depend on swift-paths and MUST NOT provide `Swift.String` APIs for file paths.
+
+## Ownership Transfer Compliance — 2026-03-31
+
+### Scope
+
+Audit of `~Copyable` ownership transfer through `Mutex.withLock` closures against [IMPL-070] layer model and [MEM-OWN-010–012] patterns.
+
+**Target**: swift-async-primitives (Bridge, Channel.Bounded, Channel.Unbounded).
+
+### Requirement IDs
+
+- [IMPL-070] `.take()!` and `var slot: V?` confined to Layer 0/1 infrastructure
+- [MEM-OWN-010] Always-consume: `withLock(consuming:body:)`
+- [MEM-OWN-011] Maybe-consume: state machine takes `inout Element?`
+- [MEM-OWN-012] Action enum dispatch: `switch consume` outside lock
+
+### Findings
+
+Verified: 2026-03-31
+
+| Type | Pattern | `.take()!` Sites | Layer | Verdict |
+|------|---------|-----------------|-------|---------|
+| `Async.Bridge` | Always-consume [MEM-OWN-010] | 0 at Layer 2 | `withLock(consuming:)` | **Conforming** |
+| `Channel.Unbounded.State` | Maybe-consume [MEM-OWN-011] | 2 (lines 90, 92) | Layer 1 (state machine) | **Conforming** |
+| `Channel.Bounded.State` | Maybe-consume [MEM-OWN-011] | 2 (lines 198, 203) | Layer 1 (state machine) | **Conforming** |
+| `Channel.Unbounded.Sender` | Layer 2 consumer | 0 | Uses `Ownership.Slot` + `state.send(&opt)` | **Conforming** |
+| `Channel.Bounded.Sender` | Layer 2 consumer | 0 | Uses `Ownership.Slot` + `state.send(&opt)` | **Conforming** |
+| `Mutex+Ownership` | Layer 0 infrastructure | 1 (line 71) | Extension internals | **Conforming** |
+
+**Action enum dispatch** [MEM-OWN-012]: 15 `switch consume` sites across Bridge and Channel receivers/senders. All dispatch outside locks. Continuations resumed post-lock. **Conforming.**
+
+### Summary
+
+0 violations. All 6 `.take()!` sites are at Layer 0 (Mutex extension) or Layer 1 (state machine). No Layer 2 call site uses raw `.take()!`. Bridge uses `withLock(consuming:body:)`. Channels use `Ownership.Slot` + state machine `inout Element?`. Architecture is fully compliant with [IMPL-070].
