@@ -54,6 +54,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-31-noncopyable-io-completion-cascade-and-silgen-bug-discovery.md](2026-03-31-noncopyable-io-completion-cascade-and-silgen-bug-discovery.md) | 2026-03-31 | ~Copyable IO Completion Cascade and SILGen Bug Discovery | swift-io, swift-async-primitives, swift-witnesses | pending |
 | [2026-03-31-convention3-unchecked-sendable-audit.md](2026-03-31-convention3-unchecked-sendable-audit.md) | 2026-03-31 | Convention 3 Audit — @unchecked Sendable Truth-Telling | swift-io | pending |
 | [2026-03-31-issue-investigation-literature-study.md](2026-03-31-issue-investigation-literature-study.md) | 2026-03-31 | Issue Investigation Literature Study and Skill Strengthening | swift-institute | pending |
+| [2026-03-31-noncopyable-peek-escapable-scope-nesting-limit.md](2026-03-31-noncopyable-peek-escapable-scope-nesting-limit.md) | 2026-03-31 | ~Escapable Peek Investigation — Property.View Is the Terminal Scope | swift-queue-primitives, swift-buffer-primitives, swift-ownership-primitives | pending |
 
 ## Legacy Archive
 
