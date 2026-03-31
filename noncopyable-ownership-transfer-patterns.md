@@ -2,13 +2,16 @@
 
 <!--
 ---
-version: 1.0.0
+version: 2.0.0
 last_updated: 2026-03-31
 status: DECISION
 tier: 2
 workflow: Investigation [RES-001]
 trigger: Ecosystem-wide ~Copyable usage through Mutex closures needs canonical patterns
 scope: All ~Copyable code across swift-primitives, swift-standards, swift-foundations
+changelog:
+  - v2.0.0 (2026-03-31): Coroutine-capable struct Mutex eliminates closures. nonmutating _modify on ~Copyable Locked view enables direct property access with let binding. Closure patterns (withLock(consuming:)) become backward compat, not end state. Future-proofing table updated.
+  - v1.0.0 (2026-03-31): Three closure-based patterns codified.
 ---
 -->
 
@@ -200,50 +203,85 @@ Layer 2: Bridge.push(), Channel.send()        — domain API (call site)
 
 **Detection**: During code review, any `.take()!` at a Layer 2 call site is a compliance violation. The fix is to route through `withLock(consuming:body:)`, `withLock(deposit:body:)`, or a state machine method taking `inout Element?`.
 
+## Coroutine Accessor: The End State
+
+The `mutex-coroutine-rawlayout` experiment (2026-03-31) proves that the closure-based patterns above are **transitional, not permanent**. A struct Mutex with `@_rawLayout` inline storage and `nonmutating _modify` on a `~Copyable` Locked view eliminates closures entirely:
+
+```swift
+// End state — no closure, no Optional, no .take()!, direct property access:
+_state.locked.value.buffer.push(consume element, to: .back)
+```
+
+**Architecture**:
+- `@_rawLayout` inner structs for value and lock (ecosystem Memory.Inline pattern)
+- `nonmutating _modify` on `Locked.value` — pointer-based interior mutability
+- `_read` only on `StructMutex.locked` — borrows self, works with `let`
+- `borrowing func withLock` coexists for backward compatibility
+
+**Performance parity** with `Synchronization.Mutex`: struct, `@_rawLayout` inline storage, `let` binding, zero heap allocation, same `os_unfair_lock`. Plus coroutine accessor.
+
+**`~Escapable` limitation**: The `Locked` view uses `~Copyable` only (not `~Escapable`). The `~Escapable` lifetime checker rejects `~Escapable` views accessed through class stored properties. `~Copyable` alone is sufficient — the `_read` coroutine scope prevents escape, `~Copyable` prevents aliasing.
+
+**Migration path**: Existing `withLock` call sites continue working. New code uses `locked` accessor. The closure-based patterns ([MEM-OWN-010], [MEM-OWN-011]) remain valid for backward compatibility but are no longer the recommended approach for new code.
+
+## Layer Model [IMPL-070]
+
+**Closure-based (backward compatibility)**:
+```
+Layer 0: var slot: V? = value + .take()!     — inside Mutex extension only
+Layer 1: withLock(consuming:), withLock(deposit:), Ownership.Slot  — general tooling
+Layer 2: Bridge.push(), Channel.send()        — domain API (call site)
+```
+
+**Coroutine-based (end state)**:
+```
+Layer 1: StructMutex with @_rawLayout + Locked view with nonmutating _modify
+Layer 2: _state.locked.value.field = consume element  — direct property access
+```
+
+No Layer 0. No `.take()!` anywhere. No closures. The mechanism is inside the Mutex implementation (`_read` coroutine + `os_unfair_lock`). The call site reads as pure intent.
+
 ## Future-Proofing
 
-| Compiler Improvement | Layer 0 | Layer 1 | Layer 2 |
-|---------------------|---------|---------|---------|
-| Consuming closures / once-only closures | Eliminated | `withLock(consuming:)` impl simplifies (no Optional) | **API unchanged** |
-| ~Copyable continuations | — | Void-signal → element-carrying | **API unchanged** |
-| Implicit ~Copyable on extensions | — | Remove `where Value: ~Copyable` | **API unchanged** |
-| Better Optional<~Copyable> unwrapping | `.take()!` → direct unwrap | Impl simplifies | **API unchanged** |
-
-Layer 2 API never changes. The entire purpose of the layer model is that internal improvements don't propagate to consumers.
+| Improvement | Closure path | Coroutine path |
+|-------------|-------------|----------------|
+| Consuming closures | Layer 0 simplified | N/A (no closures) |
+| ~Copyable continuations | Void-signal → element-carrying | Same benefit |
+| Implicit ~Copyable on extensions | Remove annotations | Same benefit |
+| ~Escapable on class stored properties | N/A | Add `~Escapable` to Locked (stronger safety) |
 
 ## Outcome
 
 **Status**: DECISION
 
-Three canonical ownership transfer patterns for `~Copyable` values through `Mutex.withLock`:
+**End-state pattern**: Coroutine-capable struct Mutex with `@_rawLayout` inline storage and `nonmutating _modify` Locked view. Direct property access through `_state.locked.value`. Zero closures, zero Optional wrappers, zero `.take()!`, zero heap allocation. Performance parity with `Synchronization.Mutex`.
 
-1. **Always-Consume** ([MEM-OWN-010]) — `withLock(consuming:body:)`, body gets consuming parameter
-2. **Maybe-Consume** ([MEM-OWN-011]) — state machine takes `inout Element?`, decides per-path
-3. **Borrow-Only** — standard `withLock`, no special infrastructure
+**Backward compatibility**: Closure-based patterns ([MEM-OWN-010–012]) remain for existing code. `withLock` coexists on the same Mutex.
 
-Cross-cutting: **Action Enum Dispatch** ([MEM-OWN-012]) — lock produces `~Copyable` action, `switch consume` outside lock.
-
-Governed by **Layer Model** ([IMPL-070]) — `.take()!` confined to Layer 0/1 infrastructure, never at Layer 2 call sites.
+**Governed by**: [IMPL-070] — mechanism confined to Mutex internals, intent at call sites.
 
 ## References
 
 ### Stdlib Prior Art (verified 2026-03-31)
-- `Mutex.withLock` — `inout sending` parameter, `unsafe body(&value._address.pointee)`
-- `Result._consumingMap` — `(consuming Success) -> NewSuccess` as closure parameter type
-- `CooperativeExecutor.forEachReadyJob` — `(consuming ExecutorJob) -> ()` as closure parameter type
+- `Synchronization.Mutex` — `@_rawLayout` `_Cell`, `borrowing func withLock`, `os_unfair_lock`
+- `Result._consumingMap` — `(consuming Success) -> NewSuccess` closure parameter
+- `CooperativeExecutor.forEachReadyJob` — `(consuming ExecutorJob) -> ()` closure parameter
 
 ### Ecosystem Prior Art
-- `Async.Bridge.push()` — Pattern 1 (always-consume via `withLock(consuming:body:)`)
-- `Async.Channel.Unbounded.Sender.send()` — Pattern 2 (maybe-consume via `state.send(&opt)`)
-- `Async.Channel.Bounded.Sender.send()` — Pattern 2
-- `Async.Bridge.next()` — Action enum dispatch (`_Take`)
-- swift-system `Mach.Port` — `discard self` for consuming, `withBorrowedName(body:)` for borrowing
+- `Memory.Inline<E, N>` — `@_rawLayout` inner `_Raw` struct, pointer via `withUnsafePointer(to: _storage)`
+- `Property.View` — `~Copyable, ~Escapable` view with `mutating _read`/`_modify`
+- `Async.Bridge.push()` — closure pattern (withLock(consuming:body:))
+- `Async.Channel.Unbounded.Sender.send()` — state machine `inout Element?` pattern
+- swift-system `Mach.Port` — `discard self`, `withBorrowedName(body:)`
 
-### Research
-- `noncopyable-ergonomics-compiler-state.md` — Compiler investigation, 5/6 pain points permanent
-- `bridge-noncopyable-ownership` experiment — 9 variants, all CONFIRMED
-- `inout-noncopyable-optional-closure-capture` experiment — `inout Element?` pattern validated
-- `optional-noncopyable-unwrap` experiment — `_read`/`_modify` projection pattern
+### Experiments
+- `mutex-coroutine-rawlayout` — 6/6 CONFIRMED: struct, let, @_rawLayout, nonmutating _modify, concurrent safety
+- `mutex-coroutine-realistic` — 8/8 CONFIRMED: class Mutex with os_unfair_lock (superseded by rawlayout)
+- `mutex-escapable-accessor` — 4/5 CONFIRMED: ~Escapable works but not with Synchronization.Mutex
+- `bridge-noncopyable-ownership` — 9/9 CONFIRMED: closure-based Mutex extensions
+- `inout-noncopyable-optional-closure-capture` — inout Element? pattern
+- `optional-noncopyable-unwrap` — `_read`/`_modify` projection pattern
+- `noncopyable-ergonomics-compiler-state.md` — compiler source investigation
 
 ### Community
 - [Swift Forums: Missing reinitialization of closure capture after consume](https://forums.swift.org/t/missing-reinitialization-of-closure-capture-after-consume-for-closures-executed-only-once/76864) (Dec 2024)

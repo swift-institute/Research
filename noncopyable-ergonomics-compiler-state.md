@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 2.0.0
+version: 3.0.0
 last_updated: 2026-03-31
 status: DECISION
 tier: 2
@@ -10,6 +10,7 @@ workflow: Investigation [RES-001]
 trigger: bridge-noncopyable-ownership experiment revealed 6 ergonomic pain points in ~Copyable ownership transfer through Mutex closures
 scope: Ecosystem-wide — affects all ~Copyable code across swift-primitives, swift-standards, swift-foundations
 changelog:
+  - v3.0.0 (2026-03-31): Coroutine-capable struct Mutex with @_rawLayout eliminates closures entirely. nonmutating _modify on ~Copyable Locked view enables let binding + direct property access. Parity with Synchronization.Mutex. Closure-based patterns (withLock(consuming:)) remain as backward compat, not the end state.
   - v2.0.0 (2026-03-31): Reframed Pain Point 1 after ecosystem prior art survey (stdlib, swift-system, swift-nio, Swift Forums). The Optional wrapper is not a "workaround" — it's the stdlib-endorsed pattern. The correct framing: make consuming values closure parameters, not captures.
   - v1.0.0 (2026-03-31): Initial compiler source investigation.
 ---
@@ -56,7 +57,7 @@ The distinction is critical: **consuming a closure parameter works. Consuming a 
 
 **Outlook**: **Deliberate design, not a bug.** The reinitialization requirement follows from closures being re-invocable. The stdlib-endorsed pattern is: convert captured consuming values into closure parameters. Our `Mutex.withLock(consuming:body:)` extension does exactly this — the body receives `consuming V` as a parameter, matching `Result._consumingMap` and `CooperativeExecutor.forEachReadyJob`.
 
-**Ecosystem action**: The `Mutex.withLock(consuming:body:)` and `Mutex.withLock(deposit:body:)` extensions are the correct pattern, aligned with stdlib. The `.take()!` inside the extension is confined to one site, provably safe (value was just deposited), and hidden from all call sites.
+**Ecosystem action**: The `Mutex.withLock(consuming:body:)` and `Mutex.withLock(deposit:body:)` extensions are the closure-based pattern, aligned with stdlib. However, the `mutex-coroutine-rawlayout` experiment (2026-03-31) proves that a struct Mutex with `@_rawLayout` inline storage and `nonmutating _modify` on a `~Copyable` Locked view eliminates closures entirely. The coroutine-based `locked` accessor provides direct property access: `_state.locked.value.buffer.push(consume element, to: .back)` — no closure, no Optional, no `.take()!`. This works with `let` binding and achieves parity with `Synchronization.Mutex` on every performance axis. The closure-based extensions remain as backward compatibility, not the end state.
 
 ### Pain Point 2: Implicit Copyable Constraint on Extensions
 
@@ -113,7 +114,7 @@ The distinction is critical: **consuming a closure parameter works. Consuming a 
 
 | Pain Point | Nature | Stdlib Pattern | Permanent? |
 |------------|--------|----------------|------------|
-| Consuming closure capture | Deliberate (re-invocable closures) | Make it a parameter, not a capture | Yes |
+| Consuming closure capture | Deliberate (re-invocable closures) | Coroutine accessor eliminates closures; `nonmutating _modify` provides direct access | **Solved** |
 | Implicit Copyable on extensions | Deliberate (SE-0427) | `where Value: ~Copyable` | Yes |
 | Force unwrap IRGen crash | Bug | `.take()!` | No (file bug) |
 | Continuations require Copyable | Deep runtime | Void-signal pattern | Yes |
