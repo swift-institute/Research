@@ -45,7 +45,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-27-async-channel-noncopyable-restructure.md](2026-03-27-async-channel-noncopyable-restructure.md) | 2026-03-27 | Async Channel ~Copyable Restructure — Closure Capture as the Real Blocker | swift-async-primitives | processed (2026-03-31) |
 | [2026-03-29-se0461-concurrent-inference-macro-interaction.md](2026-03-29-se0461-concurrent-inference-macro-interaction.md) | 2026-03-29 | SE-0461 @concurrent Inference and @Witness Macro Interaction | swift-io, swift-witnesses | processed (2026-03-31) |
 | [2026-03-29-channel-split-full-duplex-io.md](2026-03-29-channel-split-full-duplex-io.md) | 2026-03-29 | Channel split() — Full-Duplex I/O via Ecosystem-Aligned Split Pattern | swift-io | processed (2026-03-31) |
-| [2026-03-30-split-tests-and-test-infrastructure-limits.md](2026-03-30-split-tests-and-test-infrastructure-limits.md) | 2026-03-30 | Split Tests, @Test Macro Symbol Limits, and ~Copyable Task Transfer Gaps | swift-io, swift-algebra-primitives | pending |
+| [2026-03-30-split-tests-and-test-infrastructure-limits.md](2026-03-30-split-tests-and-test-infrastructure-limits.md) | 2026-03-30 | Split Tests, @Test Macro Symbol Limits, and ~Copyable Task Transfer Gaps | swift-io, swift-algebra-primitives | processed (2026-03-31) |
 | [2026-03-30-io-lane-boundary-collaborative-review.md](2026-03-30-io-lane-boundary-collaborative-review.md) | 2026-03-30 | IO.Lane Boundary Audit and Collaborative API Review | swift-io | processed (2026-03-31) |
 | [2026-03-30-modern-concurrency-sendability-pass.md](2026-03-30-modern-concurrency-sendability-pass.md) | 2026-03-30 | Modern Concurrency Conventions and Sendability Pass | swift-kernel-primitives, swift-async-primitives, swift-kernel, swift-async, swift-institute | processed (2026-03-31) |
 | [2026-03-30-io-lane-boundary-completion-typed-throws.md](2026-03-30-io-lane-boundary-completion-typed-throws.md) | 2026-03-30 | IO.Lane Boundary Completion and `do throws(E)` Discovery | swift-io | processed (2026-03-31) |
@@ -53,6 +53,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-30-noncopyable-descriptor-l3-cascade.md](2026-03-30-noncopyable-descriptor-l3-cascade.md) | 2026-03-30 | ~Copyable Descriptor L3 Cascade: Workaround Resistance and Experiment-Driven Correction | swift-io, swift-posix, swift-kernel, swift-memory, swift-iso-9945 | processed (2026-03-31) |
 | [2026-03-31-noncopyable-io-completion-cascade-and-silgen-bug-discovery.md](2026-03-31-noncopyable-io-completion-cascade-and-silgen-bug-discovery.md) | 2026-03-31 | ~Copyable IO Completion Cascade and SILGen Bug Discovery | swift-io, swift-async-primitives, swift-witnesses | pending |
 | [2026-03-31-convention3-unchecked-sendable-audit.md](2026-03-31-convention3-unchecked-sendable-audit.md) | 2026-03-31 | Convention 3 Audit — @unchecked Sendable Truth-Telling | swift-io | pending |
+| [2026-03-31-issue-investigation-literature-study.md](2026-03-31-issue-investigation-literature-study.md) | 2026-03-31 | Issue Investigation Literature Study and Skill Strengthening | swift-institute | pending |
 
 ## Legacy Archive
 
