@@ -5,7 +5,16 @@ packages:
   - swift-io
   - swift-async-primitives
   - swift-witnesses
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: skill_update
+    target: experiment-process
+    description: Added build verification guidance to [EXP-004] — verify rm -rf .build succeeded
+  - type: no_action
+    description: "Check 6.4-dev first" — already captured in [ISSUE-001]
+  - type: no_action
+    description: "@_optimize(none) removal — merged into Entry 4 copypropagation package insight"
 ---
 
 # ~Copyable IO Completion Cascade and SILGen Bug Discovery
