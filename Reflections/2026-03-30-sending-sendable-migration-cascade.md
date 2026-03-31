@@ -5,7 +5,18 @@ packages:
   - swift-async-primitives
   - swift-async
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: skill_update
+    target: memory-safety
+    description: Add [MEM-OWN-014] batch Slot staging for non-Sendable sequences
+  - type: package_insight
+    target: swift-async-primitives
+    description: Ownership.Slot.store() discardable result warning at 3 sites
+  - type: research_topic
+    target: concrete-async-operator-types.md
+    description: Option C — concrete operator types for non-Sendable async pipelines
 ---
 
 # Sending/Sendable Migration Cascade: Primitives → Foundations
