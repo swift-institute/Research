@@ -1,8 +1,8 @@
 ---
 title: "sending Annotation Expansion Audit"
-version: 1.0.0
-status: COMPLETE
-last_updated: 2026-02-25
+version: 2.0.0
+status: ALL COMPLETE (v1.0 + v2.0)
+last_updated: 2026-03-31
 ---
 
 # `sending` Annotation Expansion Audit
@@ -434,39 +434,69 @@ public func complete(_ value: sending Success) throws(Transition.Error)
 
 ---
 
-## Summary
+## Summary — v1.0 Findings (All Complete)
 
-### Findings Requiring Action
+### v1.0 Findings Status
 
-| # | File | Line | Method | Priority |
-|---|------|------|--------|----------|
-| 1 | `Async.Stream.Scan.State.swift` | 34 | `init(... initial: Result ...)` | Medium |
-| 2 | `Async.Stream.FlatMap.Latest.State.Async.swift` | 91 | `receiveInner(_ element: U)` | High |
-| 3 | `Async.Stream.Unfold.State.swift` | 30 | `init(initial: S ...)` | Medium |
-| 4 | `Async.Bridge.swift` | 84 | `push(_ element: Element)` | Medium |
-| 5 | `Async.Promise.swift` | 83 | `fulfill(_ value: Value)` | High |
-| 6 | `Async.Channel.Bounded.Sender.swift` | 103 | `send(_ element: Element ...)` | High |
-| 7 | `Async.Channel.Bounded.Sender.swift` | 190 | `immediate(_ element: Element)` | High |
-| 8 | `Async.Channel.Unbounded.Sender.swift` | 66 | `send(_ element: Element)` | High |
-| 9 | `Async.Broadcast.swift` | 111 | `send(_ element: Element)` | High |
-| 10 | `Async.Completion.swift` | 166 | `complete(_ value: Success)` | Medium |
+All 10 original findings have been implemented. Verified 2026-03-31:
 
-### Findings -- Informational Only (No Action Required)
+| # | File | Method | Status |
+|---|------|--------|--------|
+| 1 | `Async.Stream.Scan.State.swift` | `init(... initial: sending Result ...)` | **COMPLETE** |
+| 2 | `Async.Stream.FlatMap.Latest.State.Async.swift` | `receiveInner(_ element: sending U)` | **COMPLETE** (file restructured) |
+| 3 | `Async.Stream.Unfold.State.swift` | `init(initial: sending S ...)` | **COMPLETE** |
+| 4 | `Async.Bridge.swift` | `push(_ element: sending Element)` | **COMPLETE** |
+| 5 | `Async.Promise.swift` | `fulfill(_ value: sending Value)` | **COMPLETE** |
+| 6 | `Async.Channel.Bounded.Sender.swift` | `send(_ element: consuming sending Element)` | **COMPLETE** |
+| 7 | `Async.Channel.Bounded.Sender.swift` | `immediate(_ element: consuming sending Element)` | **COMPLETE** |
+| 8 | `Async.Channel.Unbounded.Sender.swift` | `send(_ element: consuming sending Element)` | **COMPLETE** |
+| 9 | `Async.Broadcast.swift` | `send(_ element: sending Element)` | **COMPLETE** |
+| 10 | `Async.Completion.swift` | `complete(_ value: sending Success)` | **COMPLETE** |
 
-| # | File | Line | Method | Reason |
-|---|------|------|--------|--------|
-| 11 | `Async.Stream.State.swift` | 25 | `init(_ elements: [Element])` | Element: Sendable makes [Element] Sendable; low value |
-| 12 | All State actors | various | `next() -> T?` returns | Element: Sendable makes return Sendable; compiler does not require sending on return |
+Notes:
+- Findings 6–8 were implemented with `consuming sending` (stronger than audit recommended)
+- Finding 6: `isolation:` parameter removed, replaced by `nonisolated(nonsending)` on function
+- Finding 2: file restructured since v1.0, but `sending` is present on current equivalent
 
-### Priority Rationale
+### v1.0 Informational Findings (unchanged)
 
-- **High**: Inconsistency with existing patterns (finding 2), or core channel/broadcast/promise transfer operations where `sending` documents the fundamental ownership contract (findings 5-9).
-- **Medium**: Actor init parameters where `sending` strengthens the contract but all types are already Sendable-constrained (findings 1, 3, 4, 10).
+| # | File | Method | Reason |
+|---|------|--------|--------|
+| 11 | `Async.Stream.State.swift` | `init(_ elements: [Element])` | Element: Sendable makes [Element] Sendable; low value |
+| 12 | All State actors | `next() -> T?` returns | Element: Sendable makes return Sendable; compiler does not require sending on return |
 
-### Propagation Notes
+---
 
-When adding `sending` to internal actor methods, the corresponding public API entry points should also be updated to propagate the annotation through the call chain:
+## v2.0 Fresh Sweep — New Candidates (2026-03-31)
 
-- `Async.Stream.scan(_:_:)` (line 66 of Scan.State.swift) -- `initial` parameter
-- `Async.Stream.unfold(_:_:)` (line 67 of Unfold.State.swift) -- `initial` parameter
-- Channel send methods are already public-facing (no propagation needed)
+Fresh audit across swift-async-primitives and swift-async found 6 candidates the v1.0 audit missed.
+All implemented 2026-03-31.
+
+### Part A: swift-async — Actor Init Value Transfers (COMPLETE)
+
+Actor inits receiving values from outside the isolation boundary. `sending` added to all 4 inits.
+
+| # | File | Method | Status |
+|---|------|--------|--------|
+| 13 | `Async.Stream.Replay.Subscription.swift` | `init(replay: sending [Element], finished:)` | **COMPLETE** |
+| 14 | `Async.Stream.Repeat.State.swift` | `init(value: sending Element, count:)` | **COMPLETE** |
+| 15 | `Async.Stream.Repeat.Interval.State.swift` | `init(value: sending Element, interval:count:)` | **COMPLETE** |
+| 16 | `Async.Stream.Timer.Value.State.swift` | `init(delay:value: sending Element)` | **COMPLETE** |
+
+**Public API propagation note**: The corresponding public methods (`repeating(_:count:)`, `repeating(_:every:count:)`, `timer(after:value:)`) do NOT get `sending` because they capture the value in an escaping closure for deferred stream construction. The `sending` transfer happens at the actor init boundary, not the public API boundary. Adding `sending` to the public methods causes `#SendableClosureCaptures` errors.
+
+### Part B: swift-async-primitives — Callback Boundary Crossings (COMPLETE)
+
+Closure parameter types where values cross isolation boundaries through callbacks.
+
+| # | File | Method | Status |
+|---|------|--------|--------|
+| 17 | `Async.Continuation.swift` | `Storage.callback(@Sendable (sending T) -> Void)` + `init` | **COMPLETE** |
+| 18 | `Async.Callback.swift` | `init(wrapping:)` CPS inner callback `(sending Value) -> Void` | **COMPLETE** |
+
+**Cascade from finding 17**:
+- `Async.Promise.wait(_ callback: @Sendable (sending Value) -> Void)` — propagated
+- `Pool.Bounded.Acquire.Callback.enqueueWaiter` — local closure type updated
+- `Async.Barrier.arrive(_ callback: @Sendable () -> Void)` — unchanged (T=Void, vacuous)
+- `Pool.Bounded.Shutdown.wait(_ callback: @Sendable () -> Void)` — unchanged (Promise<Void>, vacuous)
+- `IO.Blocking.Lane.Handle.deinit` — closure literal, compiler infers sending on parameter
