@@ -7,7 +7,17 @@ packages:
   - swift-kernel
   - swift-memory
   - swift-iso-9945
-status: pending
+status: processed
+processed_date: 2026-03-31
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: Add [IMPL-077] verify constraints before workarounds
+  - type: skill_update
+    target: platform
+    description: Add [PATTERN-009] typed-throws-safe catch patterns
+  - type: no_action
+    description: "Extend noncopyable-throwing-init experiment — deferred to next implementation session touching Memory.Map; experiment exists, extension is incremental work"
 ---
 
 # ~Copyable Descriptor L3 Cascade: Workaround Resistance and Experiment-Driven Correction
