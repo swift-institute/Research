@@ -63,6 +63,8 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-03-31-async-primitives-code-surface-refactor.md](2026-03-31-async-primitives-code-surface-refactor.md) | 2026-03-31 | Code-Surface Audit and Full Remediation of swift-async-primitives | swift-async-primitives | processed (2026-03-31) |
 | [2026-03-31-path-type-compliance-audit-and-l1-decomposition-design.md](2026-03-31-path-type-compliance-audit-and-l1-decomposition-design.md) | 2026-03-31 | Path Type Compliance Audit and L1 Decomposition Design | swift-path-primitives, swift-kernel, swift-file-system, swift-paths | pending |
 | [2026-03-31-storage-free-arena-bounded-migration.md](2026-03-31-storage-free-arena-bounded-migration.md) | 2026-03-31 | Storage.Free to Buffer.Arena.Bounded — Prior Audit Retraction and Migration | swift-async-primitives, swift-buffer-primitives | pending |
+| [2026-04-01-swift-io-code-surface-remediation.md](2026-04-01-swift-io-code-surface-remediation.md) | 2026-04-01 | swift-io Code Surface Audit and 5-Phase Remediation | swift-io | pending |
+| [2026-04-01-async-primitives-audit-round-two.md](2026-04-01-async-primitives-audit-round-two.md) | 2026-04-01 | Async Primitives Audit Round Two — Agent Verification and Ecosystem Delegation | swift-async-primitives | pending |
 
 ## Legacy Archive
 
