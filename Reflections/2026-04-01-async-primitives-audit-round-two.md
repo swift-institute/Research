@@ -3,7 +3,18 @@ date: 2026-04-01
 session_objective: Fresh code-surface re-audit of swift-async-primitives, fix all findings, triage secondary data structures against ecosystem catalog
 packages:
   - swift-async-primitives
-status: pending
+status: processed
+processed_date: 2026-04-01
+triage_outcomes:
+  - type: skill_update
+    target: audit
+    description: Added agent finding verification step (step 5) to [AUDIT-006] methodology
+  - type: skill_update
+    target: code-surface
+    description: Added boolean naming exception (is+adjective) to [API-NAME-002]
+  - type: package_insight
+    target: swift-async-primitives
+    description: Timer Wheel intrusive list — List.Linked<E, 2> replacement candidate
 ---
 
 # Async Primitives Audit Round Two — Agent Verification and Ecosystem Delegation
