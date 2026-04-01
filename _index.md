@@ -8,6 +8,7 @@ This directory contains research documents analyzing design decisions, exploring
 |----------|-------|--------|
 | [transfer-cell-cancellation-propagation.md](transfer-cell-cancellation-propagation.md) | Why Task.detached cancellation doesn't propagate through Ownership.Transfer.Cell.take(). Tier 2. | IN_PROGRESS |
 | [treereduce-swift-feasibility.md](treereduce-swift-feasibility.md) | Feasibility of treereduce-swift using tree-sitter-swift grammar for automated test case reduction. Tier 2, ecosystem-wide. | IN_PROGRESS |
+| [path-decomposition-delegation-strategy.md](path-decomposition-delegation-strategy.md) | Should Paths.Path delegate decomposition to L1 via Span<Char> or raw offset? Tier 2, cross-package. | IN_PROGRESS |
 | [concrete-async-operator-types.md](concrete-async-operator-types.md) | Option C from stream-sendable research: ~20 concrete operator types for non-Sendable element flow. Tier 2. | IN_PROGRESS |
 | [async-mutex-rawlayout-inline-storage.md](async-mutex-rawlayout-inline-storage.md) | Can Async.Mutex adopt @_rawLayout for inline storage like stdlib Mutex? Tier 2. | IN_PROGRESS |
 | [noncopyable-closure-capture-relaxation.md](noncopyable-closure-capture-relaxation.md) | Can closure capture consumption be relaxed for non-escaping closures with total consumption guarantee? Would eliminate Slot-per-send overhead. Tier 2, cross-package. | IN_PROGRESS |
