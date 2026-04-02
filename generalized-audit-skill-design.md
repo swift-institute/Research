@@ -208,7 +208,7 @@ This eliminates version proliferation. There is never a v1/v2 problem because th
 
 **Prompt documents**: Eliminated. The audit skill's invocation *is* the prompt. No separate prompt files needed.
 
-**Staleness detection** (for research-meta-analysis [META-*]):
+**Staleness detection** (for corpus-meta-analysis [META-*]):
 
 An audit section is **stale** when:
 - The section date is older than 60 days, AND

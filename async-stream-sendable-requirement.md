@@ -206,3 +206,17 @@ The evidence points toward **Option C (Two-Tier Architecture)** as the strongest
 - SE-0430: `sending` parameter and result values
 - SE-0461: `NonisolatedNonsendingByDefault`
 - PF #360: Mutex soundness, viral Sendability anti-pattern
+
+## Update: Apple HTTP API Proposal (2026-04-02)
+
+Apple sidesteps the `Element: Sendable` question entirely by designing their own `AsyncReader`/`AsyncWriter` protocols — no `AsyncSequence`, no `AsyncStream`, no iterator-based streaming at all. This validates the "design alternative streaming protocols" workaround identified in Option C of the analysis above.
+
+Key observations:
+
+- Apple's protocols are `~Copyable & ~Escapable` — they are structurally incompatible with `AsyncSequence`, which requires `Copyable & Escapable` conformers. This is not a temporary workaround but a deliberate architectural choice.
+- Elements flow through `consuming Span<ReadElement>` (reader) and `inout OutputSpan<WriteElement>` (writer) — the element type itself can be `~Copyable`. No `Sendable` constraint on elements anywhere in the streaming layer.
+- The protocols use `EitherError<ReadFailure, Failure>` for typed throws instead of existential error erasure.
+
+This confirms that for high-performance IO streaming, purpose-built protocols that bypass `AsyncSequence`'s constraint requirements are the production-viable path. The `Async.Stream<Element: Sendable>` decision remains correct for type-erased async sequences; Apple simply chose not to use type-erased async sequences for IO.
+
+**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/Reader/AsyncReader.swift`

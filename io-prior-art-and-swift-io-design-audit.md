@@ -671,3 +671,14 @@ The absence of a generic Reader/Writer trait is a deliberate design decision, no
 **OS-level**: Axboe, "Efficient IO with io_uring"; epoll(7), kqueue(2) man pages; Microsoft IOCP documentation; libuv design overview
 
 **Academic**: Plotkin & Pretnar, "Handlers of Algebraic Effects" (2009); Leijen, "Algebraic Effects for Functional Programming"; Bernardy et al., "Linear Haskell" (2018); Strom & Yemini, "Typestate" (1986)
+
+## Update: Apple HTTP API Proposal (2026-04-02)
+
+Apple's `swift-http-api-proposal` is now a concrete reference implementation of the Span-based streaming model this research recommended. Key observations:
+
+- **AsyncReader** uses `@_lifetime(&self)` + `consuming Span<ReadElement>` body — validates the zero-copy borrowed-pointer recommendation from Part I. The caller receives a non-owning view into the reader's internal buffer; no allocation or copy occurs on the read path.
+- **AsyncWriter** uses `OutputSpan<WriteElement>` as the write-buffer API — callers append into the span inside a closure (`(inout OutputSpan<WriteElement>) async throws(Failure) -> Result`). The writer manages buffer allocation; the caller only sees a safe, bounded output region.
+- **Apple bypasses AsyncSequence/AsyncStream entirely** — custom `AsyncReader` and `AsyncWriter` protocols from scratch, both `~Copyable & ~Escapable`. This aligns with Part I's finding that type-erased async sequences are a poor fit for IO streaming (Tier 1 "Universal" concepts need direct protocol-level support, not adaptation).
+- **`EitherError<ReadFailure, Failure>`** for typed throws in streaming confirms the typed-error recommendation. Every read/write method uses typed throws with `EitherError` to separate infrastructure errors from user-closure errors — no existential `any Error` erasure on the fast path.
+
+**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/`

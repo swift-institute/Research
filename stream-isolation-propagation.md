@@ -384,3 +384,15 @@ A **practical middle ground** would be:
 - `/Users/coen/Developer/swift-primitives/swift-ownership-primitives/Sources/Ownership Primitives/Ownership.Mutable.Unchecked.swift` — Sendable bypass mechanism
 - `/Users/coen/Developer/swift-institute/Experiments/nonsending-closure-type-constraints/` — Empirical validation: nonsending async closure storage (B1a, B1b) and sync restriction (B1d)
 - `/Users/coen/Developer/swift-institute/Experiments/stdlib-concurrency-isolation/` — Empirical validation: continuation and cancellation handler isolation propagation (B2, B3)
+
+## Update: Apple HTTP API Proposal (2026-04-02)
+
+Apple's `swift-http-api-proposal` demonstrates a concrete alternative to the "concrete operators + late erasure" pattern documented here for stream isolation:
+
+- **`consuming sending` on closure parameters** transfers ownership across isolation boundaries. `ConcludingAsyncReader.consumeAndConclude` uses `(consuming sending Underlying) async throws(Failure) -> Return` — the reader is moved into the closure and sent to a potentially different isolation domain in a single step.
+- **Protocol itself is `Sendable`** (e.g., `Middleware: Sendable`) but the values flowing through are `~Copyable & ~Escapable`. This separates the concern: the middleware type can cross isolation boundaries, but the data it processes is linear and non-escaping.
+- Each middleware stage takes ownership via `consuming Input` and passes ownership via `consuming NextInput` — no shared mutable state, no isolation propagation needed because ownership transfer is the synchronization mechanism.
+
+This is a fundamentally different approach from isolation propagation: instead of threading caller isolation through operators, Apple makes the data itself linear so isolation is irrelevant. The `@Sendable` closures and actor boundaries that break isolation in `Async.Stream` are not a problem because there is no shared state to protect — each stage exclusively owns the data it processes.
+
+**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/Middleware/Middleware.swift`, `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/HTTPClient/DefaultHTTPClient.swift`

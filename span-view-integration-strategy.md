@@ -236,3 +236,15 @@ let processed = span.map { $0 + 1 }.filter { $0 > 5 }.collect()
 - `swift-sequence-primitives/.../Swift.Span.Iterator.swift` — Span.Iterator implementation
 - `swift-primitives/Research/view-vs-span-borrowed-access-types.md` — View vs Span distinction
 - `swift-primitives/Research/iterator-span-buffer-elimination.md` — Zero-allocation iteration
+
+## Update: Apple HTTP API Proposal (2026-04-02)
+
+Apple's proposal validates the Span-based streaming integration directly in a production-quality API:
+
+- **`read()` passes `consuming Span<ReadElement>` to body closure** — the reader's internal buffer is exposed as a Span, consumed by the body. Zero-copy path from IO source to user code. The `@_lifetime(&self)` annotation ties the Span's lifetime to the reader, preventing use-after-free without heap allocation.
+- **`write()` provides `inout OutputSpan<WriteElement>`** — the dual of Span for output. Callers append elements into the OutputSpan; the writer manages the underlying buffer allocation. This is the write-side equivalent of Span's read-side zero-copy model.
+- **Zero-copy pipeline confirmed**: `AsyncReader.read { span in ... }` reads into a Span, and `AsyncReader.read(into: &outputSpan)` bridges directly from Span to OutputSpan without intermediate copies. The `read(into:)` convenience iterates `span.indices` and appends each element — the only copy is the element-level copy required by `Copyable` elements.
+
+This directly addresses the "Span integration" question: in the streaming context, Span is the read view and OutputSpan is the write view, both closure-scoped to prevent escaping. The closure pattern that this research identified as "defeating Span's purpose" (wrapping Span in `withUnsafeBufferPointer`) does not appear — Apple's API is designed around Span as the native unit of streaming.
+
+**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/Reader/AsyncReader.swift`, `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/Writer/AsyncWriter.swift`

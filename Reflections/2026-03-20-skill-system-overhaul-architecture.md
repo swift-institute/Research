@@ -10,7 +10,7 @@ triage_outcomes:
     target: swift-institute
     description: "Test skill @-imports (composite SKILL.md referencing another) for non-destructive composition"
   - type: no_action
-    description: "[META-020] Skill Health Check already exists in research-meta-analysis skill"
+    description: "[META-020] Skill Health Check already exists in corpus-meta-analysis skill"
   - type: no_action
     description: "last_reviewed frontmatter already applied to all reviewed skills during overhaul session"
 ---
@@ -54,5 +54,5 @@ Total: 2 skills deleted, 5 superseded, 2 new skills created, 6 skills modified, 
 ## Action Items
 
 - [ ] **[experiment]** Test whether skill @-imports work in Claude Code (composite SKILL.md that references another SKILL.md) — determines whether composition can be non-destructive
-- [ ] **[skill]** research-meta-analysis: Add [META-020] Skill Health Check (staleness by last_reviewed, instability by update frequency, superseded retention)
+- [ ] **[skill]** corpus-meta-analysis: Add [META-020] Skill Health Check (staleness by last_reviewed, instability by update frequency, superseded retention)
 - [ ] **[skill]** all active skills: Add `last_reviewed: 2026-03-20` to YAML frontmatter for skills reviewed during this overhaul

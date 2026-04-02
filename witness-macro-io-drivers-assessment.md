@@ -192,3 +192,16 @@ The original assessment in next-steps-witnesses.md was correct: "manual forwardi
 - A separate `@WitnessLite` macro is introduced that only generates init + forwarding methods.
 
 **No action required.**
+
+## Update: Apple HTTP API Proposal (2026-04-02)
+
+Apple's proposal takes an alternative approach to the same problem space: direct protocol conformance with `~Copyable & ~Escapable`, not macro-generated witness structs. Their `AsyncReader`, `AsyncWriter`, and `Middleware` protocols all use suppressed constraints on associated types (`associatedtype Input: ~Copyable, ~Escapable`), demonstrating that protocols with suppressed constraints are now viable in Swift 6.3+.
+
+Key divergence:
+
+- **Apple uses protocol hierarchy**: `AsyncReader<ReadElement, ReadFailure>: ~Copyable, ~Escapable` with direct conformance by concrete types like `DefaultHTTPClient.RequestWriter`.
+- **Swift Institute uses witness structs**: `IO.Event.Driver` and `IO.Completion.Driver` are defunctionalized witnesses with closure-based dispatch, enabling composability and late binding.
+
+The witness macro approach remains valid for the Swift Institute ecosystem — different design goals (defunctionalization, composability, observation hooks) drive different solutions. Apple's approach optimizes for protocol-oriented API surface and static dispatch; the Swift Institute approach optimizes for runtime-composable driver injection.
+
+**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/` and `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/Middleware/Middleware.swift`

@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-10
-status: IN_PROGRESS
+version: 1.0.1
+last_updated: 2026-04-01
+status: RECOMMENDATION
 tier: 2
 ---
 -->
