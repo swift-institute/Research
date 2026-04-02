@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-01
-status: IN_PROGRESS
+version: 1.0.1
+last_updated: 2026-04-01
+status: RECOMMENDATION
 tier: 3
 ---
 -->
@@ -648,7 +648,7 @@ Assessment of both frameworks against Nielsen's Cognitive Dimensions of Notation
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+**Status**: RECOMMENDATION
 
 ### Key Findings
 

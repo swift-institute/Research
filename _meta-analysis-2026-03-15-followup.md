@@ -2,7 +2,7 @@
 
 **Context**: A full corpus sweep per [META-019] was completed on 2026-03-15. Phases 1-6 executed, phases 7-9 deferred. All status updates and supersession markings are committed. This document captures the remaining work.
 
-**Skills to invoke**: `research-meta-analysis` (for [META-017] scope migration protocol), `research-process` (for [RES-002a] scoping rules), `experiment-process` (for [EXP-002] experiment creation).
+**Skills to invoke**: `corpus-meta-analysis` (for [META-017] scope migration protocol), `research-process` (for [RES-002a] scoping rules), `experiment-process` (for [EXP-002] experiment creation).
 
 ---
 
@@ -115,8 +115,29 @@ The experiment `swift-institute/Experiments/noncopyable-nested-deinit-chain/` ex
 
 ---
 
-## 6. Deferred Phases (Next Sweep)
+## 6. Scope Model Simplification (2026-04-01)
+
+The location rules in `research-process` [RES-002/002a] and `experiment-process`
+[EXP-002/002a] were updated to a 2-level model: **swift-institute** (ecosystem-wide)
+and **per superrepo** (everything specific to that superrepo). The old `.../docc/`
+paths and `{package-repo}` placeholders were replaced with absolute paths. The stale
+`swift-primitives/Documentation.docc/Research/` tombstone was removed.
+
+**Impact on section 1 demotions**: The demotions listed above use per-package paths
+within superrepos (e.g., `swift-foundations/swift-pdf-html-rendering/Research/`).
+Under the simplified 2-level model, these would go to `swift-foundations/Research/`
+instead. Re-evaluate during next sweep.
+
+**Flagged for next sweep**: `swift-primitives/Research/` (53 files) needs a [META-017]
+scope migration audit. Some files may be ecosystem-wide and belong in
+`swift-institute/Research/`. Same check for `swift-primitives/Experiments/` (23
+experiments).
+
+---
+
+## 7. Deferred Phases (Next Sweep)
 
 - **Phase 7**: Experiment revalidation on next toolchain upgrade (~12 BUG REPRODUCED experiments are HIGH priority)
 - **Phase 8**: Full _index.md audit across all ~73 package-level indices in swift-primitives
 - **Phase 9**: Blog pipeline stall check (25 "Ready for Drafting" ideas — check for >30-day stalls)
+- **Phase 5 (scope migration)**: Audit `swift-primitives/Research/` and `swift-primitives/Experiments/` for ecosystem-wide items that should move to `swift-institute/`

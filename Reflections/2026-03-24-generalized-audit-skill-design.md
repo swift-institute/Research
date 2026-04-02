@@ -7,7 +7,7 @@ status: processed
 processed_date: 2026-03-26
 triage_outcomes:
   - type: skill_update
-    target: research-meta-analysis
+    target: corpus-meta-analysis
     description: Add audit section staleness check [META-021]
   - type: research_topic
     target: skill-as-input-composition-pattern.md
@@ -52,5 +52,5 @@ Deleted 12 files (3 workspace orphans, 6 prompt files, 3 scratch files). ~70 rem
 ## Action Items
 
 - [ ] **[skill]** audit: After first real `/audit` run, verify [AUDIT-015] consolidate-on-contact works in practice — the procedure for reading old files, extracting findings, and deleting may need refinement based on the variety of old formats encountered
-- [ ] **[skill]** research-meta-analysis: Add [META-*] check for audit.md staleness per [AUDIT-010] — meta-analysis currently doesn't know about audit sections
+- [ ] **[skill]** corpus-meta-analysis: Add [META-*] check for audit.md staleness per [AUDIT-010] — meta-analysis currently doesn't know about audit sections
 - [ ] **[research]** Should the "regarding" composition pattern (skill-as-input) be generalized? Other process skills could benefit — e.g., `/research regarding /memory` to scope research to memory-related concerns

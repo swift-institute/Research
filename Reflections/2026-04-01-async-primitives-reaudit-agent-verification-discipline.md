@@ -4,7 +4,18 @@ session_objective: Fresh strict /audit of swift-async-primitives against /code-s
 packages:
   - swift-async-primitives
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-01
+triage_outcomes:
+  - type: skill_update
+    target: code-surface
+    description: "Add guidance that marker protocol conformance declarations inline on type head are standard Swift — [API-IMPL-008] targets substantial conformances with method requirements"
+  - type: skill_update
+    target: code-surface
+    description: "Add _Namespace = Namespace module disambiguation as documented justified exception pattern for [API-NAME-004]"
+  - type: package_insight
+    target: swift-async-primitives
+    description: "handleReceive/handleSend WORKAROUND annotations should note [API-NAME-002] coupling alongside CopyPropagation crash documentation"
 ---
 
 # Async Primitives Re-Audit — Agent Verification Discipline and Handoff Triage

@@ -1095,22 +1095,47 @@ The following were evaluated and determined to be correct uses of `Swift.String`
 
 5. **Layer-correct types**: L2 (swift-iso-9945) should use `Kernel.Path` / `Kernel.Path.View`. L3 (swift-foundations) should use `Paths.Path` / `File.Path` at public boundaries and may use `Kernel.Path.View` at syscall boundaries. No L3 type should appear at L1 or L2.
 
-6. **Architectural misplacement**: `Kernel.File.Write.Atomic` and `Kernel.File.Write.Streaming` are *composed operations* (resolve parent → create temp file → write → rename → sync directory). They require path decomposition (parent directory, filename extraction) which is not a kernel concern. The path manipulation lives in swift-kernel only because it was written before swift-paths existed — it belongs in swift-file-system where `Paths.Path` is available.
+6. **Missing L1 path decomposition**: `Kernel.File.Write` needs path decomposition (parent directory, filename extraction) but `path-primitives` (L1) only provides `Path`, `Path.View`, and `Path.String.Scope` — no `.parent`, `.lastComponent`, or `.appending`. This forces the internal pipeline to convert to `Swift.String` for manipulation, then convert back via `Kernel.Path.scope()` at each syscall. The decomposition primitives should exist at L1.
 
-### Architectural Decision: swift-kernel Must Not Depend on swift-paths
+### Architectural Decision: Path Decomposition at L1
 
-**Context**: swift-kernel has 10 L3 dependents (swift-io, swift-clocks, swift-memory, swift-pools, swift-testing, swift-tests, swift-file-system, swift-environment, plus platform packages). swift-paths has 1 dependent (swift-file-system). Adding swift-paths as a dependency of swift-kernel would fan out to all 10 consumers — packages like swift-clocks and swift-memory would gain an indirect path dependency they don't need.
+**Context**: swift-kernel depends on `swift-kernel-primitives` which re-exports `path-primitives` (L1). swift-kernel MUST NOT depend on `swift-paths` (L3) — it has 10 L3 dependents and the fan-out would be inappropriate. swift-kernel MUST NOT use `Swift.String` for internal path manipulation.
 
-**Decision**: swift-kernel MUST NOT depend on swift-paths. swift-kernel MUST NOT provide `Swift.String` APIs for file paths.
+**Decision**: Add path decomposition primitives to `swift-path-primitives` (L1). Single implementation at L1; `Paths.Path` (L3) delegates to it — no double implementations.
 
-**Consequence**: Composed file operations that require path decomposition (atomic write, streaming write) belong in **swift-file-system**, not swift-kernel. swift-kernel provides low-level syscall wrappers only:
+**Design**: Following `string-primitives` pattern. `Path.View` is `pointer + count` (~Copyable, ~Escapable). Decomposition on View returns **sub-views** (different pointer+count over the same backing bytes) — zero allocation. Owned `Path` allocated only when ownership is needed.
 
-| Layer | Responsibility | Path Type |
-|-------|---------------|-----------|
-| swift-kernel | Syscall wrappers: open, close, move, delete, stat, flush, lock | `Kernel.Path.View` (L1, borrowed) |
-| swift-file-system | Composed operations: atomic write, streaming write, glob, file/directory | `Paths.Path` / `File.Path` (L3, Copyable) |
+**L1 primitives needed**:
 
-The atomic write implementation uses `Paths.Path` for path decomposition (`.parent`, `.lastComponent`, `.appending`) and calls kernel primitives via `.kernelPath` at each syscall boundary.
+| Primitive | On | Returns | Allocates? | Purpose |
+|-----------|-----|---------|------------|---------|
+| `parent` | `Path.View` | `Path.View` | No — sub-view | Parent directory (up to last separator) |
+| `lastComponent` | `Path.View` | `Path.View` | No — sub-view | Filename (after last separator) |
+| `appending(_: borrowing Path.View)` | `Path.View` | `Path` (owning) | Yes — new buffer | Joins with platform separator |
+
+**Why sub-views**: `Path.View` is `pointer + count`, ~Escapable. `parent` returns a view with the same pointer but shorter count (up to the last separator). `lastComponent` returns a view with an advanced pointer and shorter count. Both borrow the same backing bytes — zero allocation. The caller explicitly opts into allocation when ownership is needed: `Path(copying: view.parent)`.
+
+**Temp path construction**: Single allocation via `appending`. `parent.appending(tempComponent)` allocates one buffer: parent bytes + separator + component bytes + terminator. The random token in the component name is the only unavoidable String → bytes conversion.
+
+**Error type path fields**: `Swift.Error` requires `Copyable`, so error enum cases cannot store ~Copyable `Path`. Error path fields remain `Swift.String` for display. This is consistent with `Kernel.Glob.Error` which documents the same design choice.
+
+**Blast radius**: Zero direct consumers of `Kernel.File.Write.Atomic` / `Kernel.File.Write.Streaming` found outside swift-kernel. The `File.System.Write.Atomic` → `Kernel.File.Write.Atomic` delegation is the only call site. No consumer migration needed.
+
+**Layer responsibilities**:
+
+| Layer | Package | Responsibility | Path Type |
+|-------|---------|---------------|-----------|
+| L1 | path-primitives | Byte-level decomposition (sub-views) + construction (appending) | `Path` (~Copyable), `Path.View` (~Escapable) |
+| L1 | kernel-primitives | Syscall wrappers, re-exports path-primitives | `Kernel.Path`, `Kernel.Path.View` |
+| L3 | swift-kernel | Composed kernel operations (atomic write, streaming write) | `Kernel.Path.View` internally, no String |
+| L3 | swift-paths | Copyable wrapper, delegates decomposition to L1 | `Paths.Path` (Copyable, Sendable) |
+| L3 | swift-file-system | User-facing file API, delegates to swift-kernel | `File.Path` (= `Paths.Path`) |
+
+**Consequence for `Kernel.File.Write`**: The internal String pipeline (`resolvePaths`, `posixParentDirectory`, `fileName(of:)`, etc.) is replaced by L1 path decomposition. `Kernel.Path.scope()` happens once at the public API boundary; the internal pipeline operates on `Kernel.Path` / `Kernel.Path.View` throughout. Parent extraction is zero-alloc (sub-view). Temp path construction is one allocation (appending).
+
+**Consequence for `Paths.Path`**: Current `.parent`, `.lastComponent`, `.components`, `.appending()` in swift-paths are replaced with delegation to L1 primitives. `Paths.Path.parent` calls the L1 `Path.View.parent` on its internal storage, wraps the result in a new `Paths.Path`. No double implementations.
+
+**Consequence for Glob pipeline**: swift-posix and swift-windows depend on `swift-kernel-primitives` (L1) which re-exports path-primitives. The Glob APIs can use `Kernel.Path.View` for the directory parameter and yield `Kernel.Path` for matched paths. L1 decomposition (parent, lastComponent, appending) is available for directory traversal.
 
 ### Relationship to Prior Research
 
@@ -1130,17 +1155,17 @@ This audit verifies the current state against the inventory and decisions in [st
 
 #### Phase 1: Public API — Glob Pipeline (findings #3–8)
 
-Highest impact. The Glob APIs are the only public-facing functions that both accept AND return `Swift.String` for file paths. At L3 (swift-posix, swift-windows), the correct types are:
+Highest impact. Depends on Phase 4a (L1 decomposition). swift-posix and swift-windows depend on `swift-kernel-primitives` which re-exports `path-primitives` — L1 path types are available.
 
 ```swift
 // Before
 public static func match(pattern: Pattern, in directory: Swift.String, ..., body: (Swift.String) -> Void)
 
 // After
-public static func match(pattern: Pattern, in directory: Paths.Path, ..., body: (Paths.Path) -> Void)
+public static func match(pattern: Pattern, in directory: borrowing Kernel.Path.View, ..., body: (borrowing Kernel.Path.View) -> Void)
 ```
 
-Internal helpers (`matchSegments`, `pathExists`, `isDirectory`) change from `String` to `Paths.Path` or `Paths.Path.View`.
+Internal helpers (`matchSegments`, `pathExists`, `isDirectory`) use L1 `Kernel.Path.View` for directory parameters and L1 `appending` for path construction during traversal.
 
 **Blast radius**: `File.Directory.Glob` in swift-file-system is the primary consumer. Already callback-based internally per prior research implementation.
 
@@ -1167,25 +1192,57 @@ public static func structured(to path: File.Path) -> Test.Reporter
 internal var _loaded: [File.Path: [UInt8]]
 ```
 
-#### Phase 4: Relocate Composed Write Operations (findings #15–24, #25–31)
+#### Phase 4: L1 Path Decomposition + Kernel.File.Write Migration (findings #15–24, #25–31)
 
-Move `Kernel.File.Write.Atomic` and `Kernel.File.Write.Streaming` from swift-kernel to swift-file-system. These are composed operations that require path decomposition — they belong where `Paths.Path` is available.
+Three sub-phases, bottom-up:
 
-**In swift-file-system** (new `File.Write.Atomic` / `File.Write.Streaming`):
-- Accept `File.Path` (= `Paths.Path`) at the public API
-- Use `.parent`, `.lastComponent`, `.appending()` for path decomposition
-- Call kernel primitives (`Kernel.File.Open.open`, `Kernel.File.Move.move`, `Kernel.File.Delete.delete`, `Kernel.File.Flush.flush`) via `.kernelPath` at each syscall boundary
-- Error types use `File.Path` instead of `Swift.String` for path fields
+**Phase 4a: Add path decomposition as platform extensions on `Path.View`**
 
-**In swift-kernel** (removal):
-- Delete `Kernel.File.Write+Shared.swift` entirely (findings #15–24 eliminated)
-- Delete `Kernel.File.Write.Atomic+API.swift`, `Kernel.File.Write.Streaming+API.swift`, and associated types
-- Delete `Kernel.File.Write.Atomic.Error` (findings #25–31 eliminated — no longer deferred)
-- Keep low-level primitives: `Kernel.File.Open`, `Kernel.File.Move`, `Kernel.File.Delete`, `Kernel.File.Flush`, `Kernel.File.Stats` — these already use `Kernel.Path.View`
+Per [PLAT-ARCH-008c], decomposition methods live in platform packages — NOT in `swift-path-primitives` with `#if os()`. `Path.View` is visible in platform packages via the `Kernel_Primitives` re-export chain. Each platform package extends `Path.View` with `parentBytes`, `lastComponentBytes`, `appending`. No conditional compilation inside the implementations — the package boundary is the platform boundary.
 
-This phase resolves all 17 findings (#15–31) by eliminating the code from swift-kernel rather than converting it.
+| Platform | Package | File |
+|----------|---------|------|
+| POSIX | `swift-iso-9945` | `ISO 9945.Kernel.Path.Navigation.swift` |
+| Windows | `swift-windows-primitives` | `Windows.Kernel.Path.Navigation.swift` |
 
-**Blast radius**: Consumers of `Kernel.File.Write.Atomic.write(to:)` must migrate to the new `File.Write.Atomic` API. Grep for `Kernel.File.Write.Atomic` and `Kernel.File.Write.Streaming` across swift-foundations to identify all call sites.
+`swift-path-primitives` adds only `Path.init(_ span: Span<Char>)` — platform-agnostic allocation from a `Span` sub-view.
+
+`parentBytes` and `lastComponentBytes` return zero-alloc `Span<Char>` sub-views. `appending` returns owned `Path` (one allocation). Windows handles UNC paths (`\\server\share`), drive letters (`C:\`), and dual separators (`/` and `\`). Oracle: `Paths.Path.Navigation.swift` + `Kernel.File.Write+Shared.swift`.
+
+**Phase 4b: Migrate `Paths.Path` decomposition to delegate to L1**
+
+Current `Paths.Path.parent`, `.lastComponent`, `.components`, `.appending()` in swift-paths reimplement separator scanning on `Swift.String`. Replace with delegation to L1 primitives — `Paths.Path.parent` calls `Path.View.parent` on its internal storage, wraps the result in a new `Paths.Path`.
+
+**Sequencing**: 4b should follow 4a after the L1 primitives are verified by tests and by Phase 4c. The existing swift-paths implementation is working and tested; replacement should be incremental.
+
+**Phase 4c: Replace String pipeline in `Kernel.File.Write` with L1 path types**
+
+`Kernel.File.Write.Atomic` and `Kernel.File.Write.Streaming` stay in swift-kernel. The delegation from `File.System.Write.Atomic` → `Kernel.File.Write.Atomic` stays. What changes is the **internal pipeline**:
+
+```swift
+// Before (String pipeline):
+let (resolved, parent) = resolvePaths(pathString)           // String → String
+let baseName = fileName(of: dest)                            // String → String
+let tempPath = "\(parent)/.\(baseName).atomic.\(pid).tmp"   // String interpolation
+try Kernel.Path.scope(tempPath) { ... }                      // String → Kernel.Path at each syscall
+
+// After (L1 path pipeline):
+let parent = path.parent                                     // Kernel.Path.View → Kernel.Path
+let baseName = path.lastComponent                            // Kernel.Path.View → Kernel.Path
+let tempPath = parent.view.appending(tempComponent.view)     // L1 path construction
+try Kernel.File.Open.open(path: tempPath.view, ...)          // Kernel.Path.View at syscall — no .scope()
+```
+
+**Deletions from swift-kernel**:
+- `resolvePaths`, `normalizeWindowsPath`, `posixParentDirectory`, `windowsParentDirectory`, `fileName(of:)` — replaced by L1 primitives
+- `fileExists(_ pathString: String)` → `fileExists(_ path: borrowing Kernel.Path.View)`
+- `atomicRename(from: String, to: String)` → uses `Kernel.Path.View` directly
+- `syncDirectory(_ pathString: String)` → uses `Kernel.Path.View` directly
+- All `Kernel.Path.scope()` calls inside function bodies — eliminated
+
+**Error types**: `Kernel.File.Write.Atomic.Error` path fields change from `Swift.String` to `Kernel.Path` (or remain String for display — design decision at implementation time). The `File.System.Write.Atomic` type aliases continue to work.
+
+This phase resolves all 17 findings (#15–31) by replacing the String pipeline with L1 typed paths.
 
 #### Phase 5: Test Helpers (findings #32–58)
 
@@ -1196,19 +1253,19 @@ Test helpers at each layer should use the layer-appropriate path type:
 
 Unify duplicated helpers (3 copies of `Kernel.Temporary`) into layer-appropriate test support.
 
-#### Phase 6: Error Types (resolved by Phase 4)
+#### Phase 6: Error Types (findings #25–31)
 
-No longer deferred. Phase 4 eliminates the String-based `Kernel.File.Write.Atomic.Error` and `Kernel.File.Write.Streaming.Error` from swift-kernel. The new `File.Write` error types in swift-file-system use `File.Path` from the start.
+Depends on Phase 4c. Once the internal pipeline uses `Kernel.Path` / `Kernel.Path.View`, error cases can store typed paths instead of `Swift.String`. Design decision at implementation time: typed path for programmatic access vs. `.string` for display ergonomics.
 
 ### Summary
 
 58 findings: 0 critical, 10 high, 41 medium, 7 low (deferred).
 
-**Systemic root cause**: The path type infrastructure (`Path_Primitives.Path`, `Kernel.Path`, `Paths.Path`) was introduced after many of these APIs were written. The prior research inventory (2026-03-19) identified the full scope; partial implementation has addressed the highest-value targets (navigation APIs, component types, `File`/`File.Directory` constructors). The remaining 73 findings represent the next wave — primarily the Glob pipeline, the composed write operations (architectural relocation), and test infrastructure.
+**Systemic root cause**: Path decomposition was missing at L1. `path-primitives` provides `Path` and `Path.View` but no `.parent`, `.lastComponent`, or `.appending`. This forced `Kernel.File.Write` to convert to `Swift.String` for path manipulation, and forced `Paths.Path` (L3) to reimplement decomposition. The fix is bottom-up: add decomposition to L1, then both swift-kernel and swift-paths delegate to the single implementation.
 
 **Key insight**: 16 of 24 source findings contain `Kernel.Path.scope()` calls inside function bodies. Each `.scope()` is a smoking gun: it proves the function receives a path-as-String and must convert before the syscall. The architectural decision to relocate composed write operations to swift-file-system eliminates the entire String pipeline — `Paths.Path` provides typed decomposition, and `.kernelPath` provides zero-alloc syscall access.
 
-**Architectural principle**: swift-kernel wraps syscalls with L1 types (`Kernel.Path.View`). Composed operations that require path decomposition belong in swift-file-system where `Paths.Path` is available. swift-kernel MUST NOT depend on swift-paths and MUST NOT provide `Swift.String` APIs for file paths.
+**Architectural principle**: Path decomposition is an L1 primitive. Single implementation in `swift-path-primitives`; `Paths.Path` (L3) delegates to it. swift-kernel uses L1 path types internally — no `Swift.String`, no L3 dependency. The delegation chain `File.System.Write.Atomic` → `Kernel.File.Write.Atomic` → kernel syscall primitives stays intact; what changes is that String exits the internal pipeline entirely.
 
 ## Ownership Transfer Compliance — 2026-03-31
 
