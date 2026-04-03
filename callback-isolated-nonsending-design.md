@@ -4,7 +4,8 @@
 ---
 version: 3.1.0
 last_updated: 2026-03-22
-status: IMPLEMENTED
+status: SUPERSEDED
+superseded_by: ownership-transfer-conventions.md
 tier: 2
 trigger: nonsending-adoption-audit.md identified Callback as primary dual-mode candidate (P1–P5)
 experiment: callback-isolated-prototype (5 approaches, 15 tests — C with callAsFunction confirmed)
@@ -33,6 +34,9 @@ changelog:
   - 1.0.0: Initial research — feasibility, type design, API surface, implementation sketch.
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [ownership-transfer-conventions.md](ownership-transfer-conventions.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

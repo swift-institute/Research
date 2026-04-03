@@ -1300,3 +1300,117 @@ Verified: 2026-03-31
 ### Summary
 
 0 violations. All 6 `.take()!` sites are at Layer 0 (Mutex extension) or Layer 1 (state machine). No Layer 2 call site uses raw `.take()!`. Bridge uses `withLock(consuming:body:)`. Channels use `Ownership.Slot` + state machine `inout Element?`. Architecture is fully compliant with [IMPL-070].
+
+---
+
+## Pre-Publication — 2026-04-02
+
+### Scope
+
+- **Target**: Priority 1 packages (unpushed commits) from the GitHub organization migration plan
+- **Skills**: code-surface, implementation, platform, modularization, documentation
+- **Requirement IDs**: [API-NAME-001–004a], [API-ERR-001–005], [API-IMPL-003–011], [IMPL-002–060], [PLAT-ARCH-001–005], [MOD-001–014], [DOC-001–005]
+- **Packages**: 7 (swift-rfc-4648, swift-rfc-9110, swift-iso-8601, swift-iso-32000, swift-iso-3166, swift-w3c-css, swift-base62-primitives)
+- **Purpose**: Verify code quality before making all standards-body and primitives repos public
+
+### Per-Package Triage
+
+| Package | Findings | Worst | Blocker Summary |
+|---------|----------|-------|-----------------|
+| swift-rfc-4648 | 23 | HIGH | Multi-type files (6), compound convenience methods on String/Data/Collection extensions |
+| swift-rfc-9110 | 65 (45 after spec-mirror exception) | CRITICAL | 5 compound type names, multi-type files (8), 20 bare-throws Codable (deferred), avoidable compound methods (~8) |
+| swift-iso-8601 | 59 | CRITICAL | 4 top-level `__`-prefixed compound error types, multi-type files (17), methods in type bodies (5), compound property names (7) |
+| swift-iso-32000 | 87 | CRITICAL | Foundation import (1), ContentStream compound methods (~37), multi-type files (~12), pervasive `.rawValue` extraction (~40 sites) |
+| swift-iso-3166 | 22 | CRITICAL | Multi-type error file (4 types in 1 file), validation logic in type bodies (3), extension separation (6) |
+| swift-w3c-css | 10 (systemic) | CRITICAL | **All ~724 types** use flat compound names (`BackgroundColor` not `CSS.Background.Color`). Entire package requires restructuring. |
+| swift-base62-primitives | 11 | CRITICAL | Multi-type file (4 types in 1 file), methods in type bodies (4), compound method names (3) |
+
+**Aggregate: 277 findings across 7 packages. 45 CRITICAL, 122 HIGH, 76 MEDIUM, 27 LOW, 7 informational.**
+
+### Systemic Patterns
+
+#### 1. [API-IMPL-005] One Type Per File — ALL 7 PACKAGES
+
+The most pervasive violation. Every package bundles multiple type declarations into single files. Common patterns:
+- Parser + Formatter + Output in one file (swift-iso-8601)
+- Namespace enum + 4–15 concrete types in one file (swift-iso-32000 `7.3 Objects.swift`)
+- Multiple error types in one file (swift-iso-3166, swift-iso-8601)
+- Struct + Iterator in one file (swift-rfc-9110)
+
+**Recommendation**: This is the highest-volume fix. Consider a script-assisted split: for each file with >1 type declaration, extract each type into `{Namespace}.{Type}.swift`.
+
+#### 2. [API-NAME-002] Compound Identifiers — 5/7 PACKAGES
+
+Compound method/property names are widespread, with two distinct categories:
+
+**Spec-mirroring compounds** (EXCEPTED): HTTP status names (`notFound`, `badRequest`), header field names (`contentType`, `userAgent`), CSS property names. These mirror specification terminology. **Decision (2026-04-02): spec-mirroring static constants, enum cases, and type names that directly encode spec-defined terms are exempt from [API-NAME-002].** This exception covers identifiers whose compound form IS the specification's terminology.
+
+**Avoidable compounds**: `saveGraphicsState()`, `setStrokeColorRGB()`, `headerValue`, `base64URLEncodedString()`, `formatHeader()`. These are NOT spec terms — they are implementation choices. They should use nested accessor patterns (`graphicsState.save()`, `stroke.color.rgb()`, `header.value`, etc.).
+
+**Recommendation**: Fix avoidable compounds. Spec-mirroring compounds are now excepted.
+
+#### 3. [API-IMPL-008] Minimal Type Body — 6/7 PACKAGES
+
+Computed properties, validation logic, methods, and protocol conformance implementations inside type bodies instead of extensions. The most common violations:
+- Computed properties (`isZero`, `description`, `headerValue`) in type body
+- Init with validation logic (guard/throw) in type body
+- `Equatable`/`Hashable` implementations in type body
+
+**Recommendation**: Mechanical fix — move everything except stored properties and the canonical init into extensions.
+
+#### 4. [API-ERR-001] Codable Bare Throws — SYSTEMIC (4 PACKAGES)
+
+Every package with `Codable` conformance has bare `throws` on `init(from:)` and `encode(to:)`. This is a protocol-imposed limitation: Swift's `Codable` protocol declarations use untyped `throws`, and conformances cannot narrow to typed throws.
+
+**Recommendation**: Mark as DEFERRED — known protocol limitation. Not fixable without custom coding patterns or Swift language changes.
+
+#### 5. [API-NAME-001] Compound Type Names — 3 PACKAGES (1 SYSTEMIC)
+
+- **swift-w3c-css**: ALL ~724 types use flat compound names. Entire package requires namespace restructuring.
+- **swift-rfc-9110**: 5 types (`ContentNegotiation`, `ContentEncoding`, `ContentLanguage`, `EntityTag`, `MediaType`).
+- **swift-iso-8601**: 5 top-level `__`-prefixed error types violate both naming and nesting conventions.
+
+**Recommendation**: swift-w3c-css needs a dedicated restructuring pass. swift-rfc-9110 and swift-iso-8601 are localized fixes.
+
+#### 6. [PRIM-FOUND-001] Foundation Import — 1 PACKAGE
+
+swift-iso-32000 imports Foundation in `12.8 Digital signatures.swift`. Foundation is forbidden in L2 Standards packages.
+
+**Recommendation**: Fix immediately — single file.
+
+### Known Deviations
+
+| Pattern | Packages | Status | Reason |
+|---------|----------|--------|--------|
+| Codable bare `throws` | swift-rfc-9110, swift-iso-8601, swift-iso-3166, swift-iso-32000 | DEFERRED | Protocol-imposed: `Codable` declares `throws`, not `throws(E)` |
+| HTTP status/header compound names | swift-rfc-9110 | EXCEPTED | Spec-mirroring static constants are exempt from [API-NAME-002] per 2026-04-02 decision |
+| Relative path dependencies in Package.swift | All 7 packages | DEFERRED | Required for local development; publication uses versioned URLs via subtree extraction |
+| Platform minimum `.v26` | All 7 packages | DEFERRED | Matches current development toolchain; adjustable at publication time |
+
+### Publication Blockers (Must Fix)
+
+| Priority | Issue | Packages | Estimated Scope |
+|----------|-------|----------|-----------------|
+| P0 | Foundation import in L2 | swift-iso-32000 | 1 file |
+| P0 | Top-level `__` compound error types | swift-iso-8601 | 4 types → nest as `.Parse.Error` |
+| P1 | Compound type names | swift-rfc-9110 (5 types), swift-w3c-css (724 types) | swift-rfc-9110: localized; swift-w3c-css: full restructure |
+| P1 | One-type-per-file | All 7 packages | ~80 files need splitting |
+| P2 | Methods in type bodies | 6/7 packages | ~60 types need method extraction |
+| P2 | Compound method/property names (avoidable) | 5/7 packages | ~50 identifiers |
+| P3 | Missing doc comments | All 7 packages | ~70 declarations |
+
+### Verdict
+
+**Not ready for publication.** The P0 and P1 blockers must be resolved first. swift-w3c-css requires the most work (full namespace restructuring). The remaining 6 packages have localized issues that can be fixed incrementally. Recommend:
+
+1. Fix P0 items (Foundation import, `__` error types) — immediate
+2. Fix swift-rfc-9110 compound type names — localized rename
+3. Make a decision on spec-mirroring compound identifiers (HTTP status/header names)
+4. Script-assisted one-type-per-file split across all packages
+5. Defer swift-w3c-css restructuring — flag as blocked on namespace design decision
+6. After P0–P1 clean, proceed to Priority 2 packages (swift-file-system transitive closure)
+
+### Summary
+
+277 findings across 7 packages: 45 critical, 122 high, 76 medium, 27 low.
+Dominant patterns: multi-type files (all 7), compound identifiers (5/7), methods in type bodies (6/7), Codable bare throws (systemic).

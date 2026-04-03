@@ -4,11 +4,15 @@
 ---
 version: 1.0.0
 last_updated: 2026-03-22
-status: RECOMMENDATION
+status: SUPERSEDED
+superseded_by: ownership-transfer-conventions.md
 tier: 2
 trigger: Discovery — explore how the Swift compiler uses nonisolated(nonsending) internally to extract patterns applicable to our ecosystem
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [ownership-transfer-conventions.md](ownership-transfer-conventions.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

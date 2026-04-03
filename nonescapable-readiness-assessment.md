@@ -4,11 +4,15 @@
 ---
 version: 2.3.0
 last_updated: 2026-03-26
-status: DECISION
+status: SUPERSEDED
+superseded_by: nonescapable-ecosystem-state.md
 tier: 2
 trigger: Pointfree #355/#356 analysis — ~Escapable as third pillar alongside isolation and ~Copyable
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [nonescapable-ecosystem-state.md](nonescapable-ecosystem-state.md) (swift-institute).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

@@ -4,11 +4,15 @@
 ---
 version: 1.0.0
 last_updated: 2026-03-03
-status: DECISION
+status: SUPERSEDED
+superseded_by: witness-ownership-integration.md
 tier: 1
 trigger: Parser.Machine.Compile.Witness is a legitimate non-Sendable witness excluded by Witness.Protocol's Sendable constraint
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [witness-ownership-integration.md](witness-ownership-integration.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

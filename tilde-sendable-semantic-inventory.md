@@ -4,13 +4,17 @@
 ---
 version: 1.0.0
 last_updated: 2026-03-25
-status: RECOMMENDATION
+status: SUPERSEDED
+superseded_by: ownership-transfer-conventions.md
 tier: 2
 workflow: Discovery [RES-012]
 trigger: Swift 6.3 release (SE-0518 TildeSendable experimental)
 scope: swift-kernel-primitives, swift-kernel, swift-io, swift-file-system
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [ownership-transfer-conventions.md](ownership-transfer-conventions.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

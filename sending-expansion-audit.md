@@ -11,9 +11,13 @@ last_updated: 2026-03-31
 ---
 date: 2026-02-25
 scope: swift-async (foundations), swift-async-primitives (primitives)
-status: COMPLETE
+status: SUPERSEDED
+superseded_by: ownership-transfer-conventions.md
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [ownership-transfer-conventions.md](ownership-transfer-conventions.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Background
 

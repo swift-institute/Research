@@ -4,7 +4,8 @@
 ---
 version: 3.0.0
 last_updated: 2026-03-31
-status: DECISION
+status: SUPERSEDED
+superseded_by: noncopyable-ecosystem-state.md
 tier: 2
 workflow: Investigation [RES-001]
 trigger: bridge-noncopyable-ownership experiment revealed 6 ergonomic pain points in ~Copyable ownership transfer through Mutex closures
@@ -15,6 +16,9 @@ changelog:
   - v1.0.0 (2026-03-31): Initial compiler source investigation.
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [noncopyable-ecosystem-state.md](noncopyable-ecosystem-state.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

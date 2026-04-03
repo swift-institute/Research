@@ -4,11 +4,15 @@
 ---
 version: 2.0.0
 last_updated: 2026-03-31
-status: IN PROGRESS
+status: SUPERSEDED
+superseded_by: ownership-transfer-conventions.md
 tier: 2
 trigger: nonsending-compiler-patterns.md identified stdlib deprecated isolation: parameter pattern; audit ecosystem for migration candidates
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [ownership-transfer-conventions.md](ownership-transfer-conventions.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 
