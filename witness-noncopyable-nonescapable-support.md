@@ -4,7 +4,8 @@
 ---
 version: 2.0.0
 last_updated: 2026-02-24
-status: RECOMMENDATION
+status: SUPERSEDED
+superseded_by: witness-ownership-integration.md
 tier: 3
 changelog:
   - v2.0.0 (2026-02-24): Corrected three misidentified blockers. TaskLocal is NOT a blocker
@@ -15,6 +16,9 @@ changelog:
   - v1.0.0 (2026-02-24): Initial analysis. Overstated compiler blockers.
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [witness-ownership-integration.md](witness-ownership-integration.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

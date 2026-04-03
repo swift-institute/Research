@@ -3,12 +3,16 @@
 <!--
 ---
 title: ~Copyable Closure Capture Consumption Relaxation
-status: IN_PROGRESS
+status: SUPERSEDED
+superseded_by: noncopyable-ecosystem-state.md
 tier: 2
 created: 2026-03-31
 applies_to: [swift-async-primitives, swift-io, swift-ownership-primitives]
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [noncopyable-ecosystem-state.md](noncopyable-ecosystem-state.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

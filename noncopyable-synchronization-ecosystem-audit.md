@@ -2,7 +2,8 @@
 ---
 title: ~Copyable Types with Unnecessary Synchronization — Ecosystem Audit
 version: 1.0.0
-status: IN_PROGRESS
+status: SUPERSEDED
+superseded_by: noncopyable-ecosystem-state.md
 created: 2026-03-26
 last_updated: 2026-03-26
 tier: 2
@@ -11,6 +12,9 @@ applies_to: [swift-io, swift-primitives, swift-foundations]
 normative: false
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [noncopyable-ecosystem-state.md](noncopyable-ecosystem-state.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 # ~Copyable Types with Unnecessary Synchronization — Ecosystem Audit
 

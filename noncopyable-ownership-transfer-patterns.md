@@ -4,7 +4,8 @@
 ---
 version: 2.0.0
 last_updated: 2026-03-31
-status: DECISION
+status: SUPERSEDED
+superseded_by: noncopyable-ecosystem-state.md
 tier: 2
 workflow: Investigation [RES-001]
 trigger: Ecosystem-wide ~Copyable usage through Mutex closures needs canonical patterns
@@ -14,6 +15,9 @@ changelog:
   - v1.0.0 (2026-03-31): Three closure-based patterns codified.
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [noncopyable-ecosystem-state.md](noncopyable-ecosystem-state.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

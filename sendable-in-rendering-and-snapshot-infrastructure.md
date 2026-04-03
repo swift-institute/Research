@@ -5,10 +5,13 @@
 version: 1.4.0
 last_updated: 2026-03-22
 status: SUPERSEDED
-superseded_by: non-sendable-strategy-isolation-design.md
+superseded_by: ownership-transfer-conventions.md
 tier: 2
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [ownership-transfer-conventions.md](ownership-transfer-conventions.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

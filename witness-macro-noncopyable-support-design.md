@@ -4,12 +4,16 @@
 ---
 version: 2.0.0
 last_updated: 2026-03-04
-status: RECOMMENDATION
+status: SUPERSEDED
+superseded_by: witness-ownership-integration.md
 source: witness-macro-noncopyable-feasibility experiment (13 variants)
 supersedes: witness-macro-io-drivers-assessment.md (partial — revises "DEFERRED" to "VIABLE")
 tier: 2
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [witness-ownership-integration.md](witness-ownership-integration.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

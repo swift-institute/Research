@@ -4,10 +4,14 @@
 ---
 version: 1.0.0
 last_updated: 2026-03-15
-status: DECISION
+status: SUPERSEDED
+superseded_by: noncopyable-ecosystem-state.md
 tier: 2
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [noncopyable-ecosystem-state.md](noncopyable-ecosystem-state.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Summary
 

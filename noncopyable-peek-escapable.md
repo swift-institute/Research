@@ -4,9 +4,13 @@
 ---
 version: 1.0.0
 last_updated: 2026-03-31
-status: RECOMMENDATION
+status: SUPERSEDED
+superseded_by: nonescapable-ecosystem-state.md
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [nonescapable-ecosystem-state.md](nonescapable-ecosystem-state.md) (swift-institute).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 

@@ -1,12 +1,16 @@
 ---
 title: Swift Bug Report — mark_dependence CopyPropagation Interaction
-status: IN_PROGRESS
+status: SUPERSEDED
+superseded_by: noncopyable-ecosystem-state.md
 date: 2026-03-22
 tier: 2
 packages:
   - swift-property-primitives
 provenance: 2026-03-22-copypropagation-nonescapable-root-cause-and-fix.md
 ---
+
+> **SUPERSEDED** (2026-04-02) by [noncopyable-ecosystem-state.md](noncopyable-ecosystem-state.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 # Swift Bug Report: mark_dependence CopyPropagation Interaction
 

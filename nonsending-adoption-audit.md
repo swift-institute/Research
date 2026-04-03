@@ -4,11 +4,15 @@
 ---
 version: 1.2.0
 last_updated: 2026-02-25
-status: COMPLETE
+status: SUPERSEDED
+superseded_by: ownership-transfer-conventions.md
 tier: 2
 trigger: Pointfree #355 analysis — nonisolated(nonsending) as default interface pattern
 ---
 -->
+
+> **SUPERSEDED** (2026-04-02) by [ownership-transfer-conventions.md](ownership-transfer-conventions.md).
+> All findings consolidated into the topic-based document. This file retained as historical rationale.
 
 ## Context
 
