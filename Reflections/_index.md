@@ -106,7 +106,10 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-04-06-io-stream-span-async-validation.md](2026-04-06-io-stream-span-async-validation.md) | 2026-04-06 | Span and MutableSpan Survive Async — The Perfect IO API Is Achievable Today | swift-io, swift-institute | pending |
 | [2026-04-06-intent-over-machinery-module-design.md](2026-04-06-intent-over-machinery-module-design.md) | 2026-04-06 | Intent Over Machinery — Module Boundaries Must Reflect User Concepts | swift-io | pending |
 | [2026-04-04-array-name-shadowing-exported-import-precedence.md](2026-04-04-array-name-shadowing-exported-import-precedence.md) | 2026-04-04 | Array Name Shadowing: @_exported Import Already Works | swift-array-primitives, swift-io, swift-tree-primitives, swift-memory-primitives | pending |
+| [2026-04-06-shutdown-view-pointer-elimination-investigation.md](2026-04-06-shutdown-view-pointer-elimination-investigation.md) | 2026-04-06 | Shutdown View Pointer Elimination — @_unsafeNonescapableResult Is Orthogonal to TemporaryPointers | swift-io, swift-property-primitives, swift-storage-primitives | pending |
 | [2026-04-06-unsafe-pointer-audit-span-migration.md](2026-04-06-unsafe-pointer-audit-span-migration.md) | 2026-04-06 | Unsafe Pointer Audit — Span Migration Eliminates 18 Sites | swift-io, swift-iso-9945, swift-ownership-primitives | pending |
+| [2026-04-06-downstream-span-audit-benchmark-drift.md](2026-04-06-downstream-span-audit-benchmark-drift.md) | 2026-04-06 | Downstream Span Audit — Benchmark Drift as Predictable Gap | swift-io | pending |
+| [2026-04-06-executor-threading-and-noncopyable-closure-constraints.md](2026-04-06-executor-threading-and-noncopyable-closure-constraints.md) | 2026-04-06 | Executor Threading and ~Copyable Closure Constraints | swift-io, swift-kernel | pending |
 
 ## Legacy Archive
 
