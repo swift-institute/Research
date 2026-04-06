@@ -101,6 +101,12 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-04-05-readiness-driver-domain-model.md](2026-04-05-readiness-driver-domain-model.md) | 2026-04-05 | Readiness Driver Domain Model: From Handle + Closures to Recipe + Thing | swift-kernel, swift-io | pending |
 | [2026-04-06-epoll-port-management-and-api-research.md](2026-04-06-epoll-port-management-and-api-research.md) | 2026-04-06 | Epoll Port Management and IO Events API Research Review | swift-kernel, swift-kernel-primitives, swift-linux-primitives, swift-io | pending |
 | [2026-04-06-epoll-port-kernel-readiness.md](2026-04-06-epoll-port-kernel-readiness.md) | 2026-04-06 | Epoll Port to Kernel.Readiness — ~Copyable Ownership Design Under Review Pressure | swift-kernel-primitives, swift-linux-primitives, swift-kernel, swift-io | pending |
+| [2026-04-06-linux-docker-verification-cross-repo.md](2026-04-06-linux-docker-verification-cross-repo.md) | 2026-04-06 | Linux Docker Verification Exposes Cross-Repo Compilation Debt | swift-linux-primitives, swift-linux, swift-iso-9945, swift-kernel, swift-io | pending |
+| [2026-04-06-io-events-tier0-api-design.md](2026-04-06-io-events-tier0-api-design.md) | 2026-04-06 | IO Events Tier 0 API Design — From Specification to Architectural Challenge | swift-io | pending |
+| [2026-04-06-io-stream-span-async-validation.md](2026-04-06-io-stream-span-async-validation.md) | 2026-04-06 | Span and MutableSpan Survive Async — The Perfect IO API Is Achievable Today | swift-io, swift-institute | pending |
+| [2026-04-06-intent-over-machinery-module-design.md](2026-04-06-intent-over-machinery-module-design.md) | 2026-04-06 | Intent Over Machinery — Module Boundaries Must Reflect User Concepts | swift-io | pending |
+| [2026-04-04-array-name-shadowing-exported-import-precedence.md](2026-04-04-array-name-shadowing-exported-import-precedence.md) | 2026-04-04 | Array Name Shadowing: @_exported Import Already Works | swift-array-primitives, swift-io, swift-tree-primitives, swift-memory-primitives | pending |
+| [2026-04-06-unsafe-pointer-audit-span-migration.md](2026-04-06-unsafe-pointer-audit-span-migration.md) | 2026-04-06 | Unsafe Pointer Audit — Span Migration Eliminates 18 Sites | swift-io, swift-iso-9945, swift-ownership-primitives | pending |
 
 ## Legacy Archive
 
