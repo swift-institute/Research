@@ -99,6 +99,8 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-04-03-sending-mutex-nesting-flip.md](2026-04-03-sending-mutex-nesting-flip.md) | 2026-04-03 | Sending-Mutex Composition — Nesting Flip Eliminates Hot-Path Allocation | swift-io, swift-property-primitives, swift-queue-primitives | pending |
 | [2026-04-04-darwin-primitives-kernel-narrowing.md](2026-04-04-darwin-primitives-kernel-narrowing.md) | 2026-04-04 | Darwin Primitives Kernel Narrowing — Re-export Chain as Narrowing Leverage | swift-darwin-primitives, swift-ascii-parser-primitives | pending |
 | [2026-04-05-readiness-driver-domain-model.md](2026-04-05-readiness-driver-domain-model.md) | 2026-04-05 | Readiness Driver Domain Model: From Handle + Closures to Recipe + Thing | swift-kernel, swift-io | pending |
+| [2026-04-06-epoll-port-management-and-api-research.md](2026-04-06-epoll-port-management-and-api-research.md) | 2026-04-06 | Epoll Port Management and IO Events API Research Review | swift-kernel, swift-kernel-primitives, swift-linux-primitives, swift-io | pending |
+| [2026-04-06-epoll-port-kernel-readiness.md](2026-04-06-epoll-port-kernel-readiness.md) | 2026-04-06 | Epoll Port to Kernel.Readiness — ~Copyable Ownership Design Under Review Pressure | swift-kernel-primitives, swift-linux-primitives, swift-kernel, swift-io | pending |
 
 ## Legacy Archive
 
