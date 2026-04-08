@@ -305,10 +305,12 @@ Fixes are ordered by propagation (root → leaf) and priority:
 
 ---
 
-## Individual Audit Reports
+## Individual Audit Reports (Consolidated)
 
-- [swift-rendering-primitives.md](swift-rendering-primitives.md)
-- [swift-html-rendering.md](swift-html-rendering.md)
-- [swift-pdf-rendering.md](swift-pdf-rendering.md)
-- [swift-pdf-html-rendering.md](swift-pdf-html-rendering.md)
-- [swift-pdf.md](swift-pdf.md)
+Per-package findings have been consolidated into each package's `Research/audit.md`:
+
+- swift-rendering-primitives -> `/Users/coen/Developer/swift-primitives/Research/audit.md` (Legacy section)
+- swift-html-rendering -> `/Users/coen/Developer/swift-foundations/Research/audit.md` (Legacy section)
+- swift-pdf-rendering -> `/Users/coen/Developer/swift-foundations/Research/audit.md` (Legacy section)
+- swift-pdf-html-rendering -> `/Users/coen/Developer/swift-foundations/Research/audit.md` (Legacy section)
+- swift-pdf -> `/Users/coen/Developer/swift-foundations/Research/audit.md` (Legacy section)
