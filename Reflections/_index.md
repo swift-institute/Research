@@ -112,6 +112,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-04-06-executor-threading-and-noncopyable-closure-constraints.md](2026-04-06-executor-threading-and-noncopyable-closure-constraints.md) | 2026-04-06 | Executor Threading and ~Copyable Closure Constraints | swift-io, swift-kernel | pending |
 | [2026-04-06-executor-first-architecture-research-and-phase2.md](2026-04-06-executor-first-architecture-research-and-phase2.md) | 2026-04-06 | Executor-First Architecture Research and Phase 2 Implementation | swift-io, swift-institute | pending |
 | [2026-04-08-descriptor-ownership-aliasing-anti-pattern.md](2026-04-08-descriptor-ownership-aliasing-anti-pattern.md) | 2026-04-08 | Constructing ~Copyable Resource Wrappers from Raw Values Implies Ownership | swift-path-primitives, swift-iso-9945, swift-kernel-primitives | pending |
+| [2026-04-08-pool-primitives-canonical-form-second-round.md](2026-04-08-pool-primitives-canonical-form-second-round.md) | 2026-04-08 | Pool Primitives Canonical Form: Second-Round Refactor — The "Go Further" Pattern | swift-pool-primitives, swift-pools, swift-io, swift-algebra-primitives | pending |
 
 ## Legacy Archive
 
