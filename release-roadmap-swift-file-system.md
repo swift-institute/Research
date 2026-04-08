@@ -1,8 +1,8 @@
 # Release Roadmap: swift-file-system
 
-**Date**: 2026-03-30
+**Date**: 2026-03-30 (updated 2026-04-08)
 **Goal**: Release swift-file-system as a consumable SwiftPM package
-**Status**: Inventory complete, cycle fix decided, migration map ready
+**Status**: Cycle 1 done, Cycle 3 determined non-issue, Cycle 2 open; swift-file-system itself builds/tests clean; Category B ASCII migration (22 L2 packages) and GitHub org migration still outstanding
 
 ---
 
@@ -168,40 +168,31 @@ git remote set-url origin https://github.com/<org>/<repo>.git
 > Standards (L2) depend on Primitives (L1) solely.
 > Foundations (L3) depend on Standards (L2) or Primitives (L1).
 
-### Cycle 1: swift-rfc-4648 (L2) → swift-ascii (L3)
+### Cycle 1: swift-rfc-4648 (L2) → swift-ascii (L3) — **DONE** (verified 2026-04-07)
 
-**Current state**:
-- 5 source files `import ASCII`
-- `exports.swift`: `@_exported public import ASCII` (re-exports entire L3 module)
-- Actual usage: character tables for base16/32/64 encoding
+`swift-ietf/swift-rfc-4648/Package.swift` now depends on `swift-ascii-primitives` (L1); the `RFC 4648` target imports `ASCII Primitives`. No `swift-ascii` dependency remains.
 
-**Fix**: Replace `swift-ascii` dependency with `swift-ascii-primitives` (L1).
-- Change `@_exported public import ASCII` → `@_exported public import ASCII_Primitives`
-- Verify base encoding tables compile with only L1 ASCII types
-- This changes RFC 4648's public API surface (consumers who relied on ASCII re-export will need to add their own ASCII dependency)
-
-### Cycle 2: swift-iso-9945 (L2) → swift-ascii (L3)
+### Cycle 2: swift-iso-9945 (L2) → swift-ascii (L3) — **OPEN**
 
 **Current state**:
 - 1 file: `ISO 9945.Kernel.File.Clone.swift`
 - `internal import ASCII`
 - Uses only `Binary.ASCII.equals.nulTerminated(...)` for path comparison
+- `swift-iso/swift-iso-9945/Package.swift:39` still declares `.package(path: "../../swift-foundations/swift-ascii")` and target `ISO 9945 Kernel` imports `.product(name: "ASCII", package: "swift-ascii")`
 
 **Fix**: Remove `swift-ascii` dependency. Replace with inline byte comparison or a utility from `swift-ascii-primitives`.
 - `Binary.ASCII.equals.nulTerminated` compares two nul-terminated C strings for ASCII equality
 - This is a ~10 line function that can be inlined or moved to a primitives-level utility
 
-### Cycle 3: swift-linux (L3) → swift-systems (L3) → swift-linux
+### ~~Cycle 3: swift-linux (L3) → swift-systems (L3) → swift-linux~~ — **NOT A CYCLE** (verified 2026-04-07)
 
-**Current state**:
-- `swift-linux/Sources/Linux Kernel/Linux.Thread.Affinity.swift`: `public import Systems`
-- Uses `System.topology()` for NUMA-aware thread affinity
-- Same pattern in `swift-windows`
+Previously listed as a cycle. The target-level graph is already split and acyclic:
 
-**Fix options** (in order of preference):
-1. **Move topology type to system-primitives (L1)**: The topology description is a data type, not platform-specific code. Platform packages populate it, systems provides the unified API.
-2. **Move thread affinity to swift-systems**: Since affinity inherently needs the unified topology, put it in the package that owns topology.
-3. **Break into core/full**: swift-systems-core (no platform deps) provides topology type; platform packages and swift-systems-full depend on core.
+- `swift-linux.Linux System` → primitives only (no `swift-systems` dep)
+- `swift-systems.Systems` → `Linux System` / `Darwin System` / `Windows System` (platform-conditional)
+- `swift-linux.Linux Kernel` → `Systems` (for `Linux.Thread.Affinity`)
+
+Same split in `swift-windows` (`Windows System` → primitives only; `Windows Kernel` → `Systems`). SwiftPM's package-level mutual path-dep between `swift-linux` and `swift-systems` is tolerated because the target DAG is clean. No action required.
 
 ---
 
@@ -258,9 +249,10 @@ Each package is an independent release. Dependencies must be released before dep
 
 ### Phase 0: Preparation
 
-- [ ] Fix Cycle 1: swift-rfc-4648 → drop swift-ascii, use swift-ascii-primitives
+- [x] Fix Cycle 1: swift-rfc-4648 → drop swift-ascii, use swift-ascii-primitives (done; verified 2026-04-07)
 - [ ] Fix Cycle 2: swift-iso-9945 → drop swift-ascii, inline or use primitives
-- [ ] Fix Cycle 3: swift-linux/swift-windows → drop swift-systems (move topology or affinity)
+- [x] ~~Fix Cycle 3: swift-linux/swift-windows → drop swift-systems~~ (not a cycle — target graph already acyclic via split `Linux System` / `Linux Kernel` pattern)
+- [ ] Category B ASCII migration: 22 L2 standards packages still import `swift-ascii` (L3); see dedicated handoff
 - [ ] Execute repo migrations (Section 2)
 - [ ] Update all Package.swift files: path deps → url + version deps for release
 
@@ -322,19 +314,11 @@ swift-posix             (swift-iso-9945)
 ```
 swift-ascii             (swift-incits-4-1986 + 8 primitives)
 swift-darwin            (swift-posix + 4 primitives)
-swift-environment       (swift-kernel, swift-strings) — BLOCKED on swift-kernel
-swift-kernel            (swift-posix, swift-darwin, swift-linux, swift-windows, swift-strings + 7 primitives)
+swift-linux             (swift-posix + swift-systems + 4 primitives)
+swift-windows           (swift-systems + 4 primitives)
 ```
 
-**Wave 2 has a problem**: swift-kernel depends on swift-linux and swift-windows, which (currently) depend on swift-systems, which depends on swift-kernel path. After fixing cycle 3:
-
-**Wave 2 (after cycle 3 fix):**
-```
-swift-ascii             (swift-incits-4-1986 + 8 primitives)
-swift-darwin            (swift-posix + 4 primitives)
-swift-linux             (swift-posix + 4 primitives)     ← no longer depends on swift-systems
-swift-windows           (4 primitives)                    ← no longer depends on swift-systems
-```
+Note: `swift-linux` and `swift-windows` each have two targets — `<Platform> System` (primitives only, ships with `Wave 2`) and `<Platform> Kernel` (depends on `Systems` from swift-systems, ships with Wave 3 after swift-systems). SwiftPM's package-level mutual path-dep between `swift-linux` and `swift-systems` is tolerated because the target DAG is acyclic.
 
 **Wave 3:**
 ```
