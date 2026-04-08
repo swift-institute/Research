@@ -1,10 +1,15 @@
 # ASCII Parsing Domain Ownership: Adversarial Review
 
+> **RETAINED AS VALIDATION HISTORY** (2026-04-08) — referenced from the consolidated
+> plan [`../../swift-primitives/swift-ascii-primitives/Research/ascii-migration-category-b.md`](../../swift-primitives/swift-ascii-primitives/Research/ascii-migration-category-b.md).
+> This document validated v4.2.0 of the domain-ownership decision; its findings stand.
+> Not a migration source for Category B.
+
 <!--
 ---
 version: 2.0.0
 last_updated: 2026-03-04
-status: RECOMMENDATION
+status: RECOMMENDATION (validation history)
 tier: 2
 ---
 -->
