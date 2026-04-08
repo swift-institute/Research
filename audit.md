@@ -578,92 +578,6 @@ Plus 3 swift-standards test sub-packages and the stale `swift-rfc-template/Packa
 | F26 | `swift-css/.../Color.Theme.swift:13`, `Font.Theme.swift:13` | Mutable static with data race risk. Consider `Mutex` or `Atomic`. |
 | F27 | `swift-file-system/.../File.Handle.swift:104,160,190` | Remove over-specified `unsafe` on `.isEmpty` |
 
-## Accepted Compiler Warnings — 2026-03-25
-
-### Scope
-
-- **Target**: swift-primitives (swift-ordering-primitives, swift-buffer-primitives)
-- **Trigger**: Build log warning triage from `swift test` on swift-foundations
-- **Files**: Ordering comparator extensions, buffer inline primitives
-
-### Context
-
-During a full warning audit of the swift-foundations test build, two classes of warnings in swift-primitives were identified as **not fixable** without either restricting the public API surface or introducing incorrect code. Both are accepted as compiler limitations pending future Swift evolution.
-
-### Findings
-
-| # | Severity | Diagnostic | Location | Finding | Status |
-|---|----------|------------|----------|---------|--------|
-| 1 | — | `#SendableMetatypes` | `Ordering.Comparator+Swift.Comparable.swift:28,83` | "capture of non-Sendable type 'T.Type' / 'Value.Type' in an isolated closure." Metatypes are stateless global descriptors — inherently thread-safe. The `nonisolated(unsafe) let _: T.Type = T.self` workaround documents intent but does not suppress implicit metatype captures. Adding `& Sendable` to constraints was attempted and reverted: it caused cascade failures in downstream callers (`Ordering.Order+Swift.Comparable.swift`, etc.) where `Sendable` is not required. | ACCEPTED |
-| 2 | — | `#SendableMetatypes` | `Ordering.Comparator+Comparable.swift:25` | Same diagnostic for `T: Comparison.Protocol & ~Copyable`. Adding `& Sendable` would exclude non-Sendable `~Copyable` comparable types — a legitimate use case. | ACCEPTED |
-| 3 | — | `#SendableMetatypes` | `Ordering.Comparator+Projection.swift:35` | Same diagnostic for `Value: Comparison.Protocol & ~Copyable` in the `by` method. Same rationale as #2. | ACCEPTED |
-| 4 | — | "variable was never mutated" | `Buffer.Arena.Small.swift`, `Buffer.Linear.Small.swift`, `Buffer.Linear.Small Copyable.swift`, `Buffer.Ring.Small Copyable.swift`, `Buffer.Linked.Small Copyable.swift` (17 sites) | All flagged `var buf` / `var inlineBuf` declarations use `consume buf` for ownership transfer. `consume` requires a `var` binding — `let` produces "'buf' is borrowed and cannot be consumed." The compiler's mutation analysis does not recognize `consume` as requiring mutability. | ACCEPTED |
-
-### Rationale
-
-**`#SendableMetatypes`**: Metatypes (`T.Type`) are pointers into read-only type metadata in the binary. They carry no mutable state and are inherently safe to share across concurrency boundaries. The Swift compiler's `#SendableMetatypes` diagnostic is conservative — it flags all metatype captures in `@Sendable` closures where the type itself is not `Sendable`. This is a known area where the type system lacks the expressivity to distinguish "the metatype of `T`" (always safe) from "a value of type `T`" (may not be safe). Future Swift evolution is expected to make metatypes unconditionally `Sendable`.
-
-**`var` never mutated**: The `consume` keyword performs a move — transferring ownership out of a binding. This is semantically distinct from mutation, but syntactically requires `var` because the binding's value is invalidated after the consume. The compiler's "never mutated" analysis predates ownership annotations and does not account for `consume`. This is a known false positive that will be resolved when the warning analysis is updated to recognize ownership operations.
-
-### Re-evaluation triggers
-
-- **`#SendableMetatypes`**: Re-evaluate when Swift adds unconditional metatype Sendability (likely via SE proposal) or when `nonisolated(unsafe)` is extended to cover implicit metatype captures.
-- **`var` never mutated**: Re-evaluate when the compiler's mutation analysis recognizes `consume` as requiring `var`.
-
-## Prior Art Compliance — swift-io — 2026-03-25
-
-### Scope
-
-- **Target**: swift-io (Layer 3, swift-foundations) + IO types in swift-kernel-primitives (Layer 1, swift-primitives)
-- **Method**: Design audit against external IO systems literature — 15 systems surveyed, 72 swift-io concepts evaluated
-- **Files**: 279 source files across 7 targets
-- **Research**: [io-prior-art-and-swift-io-design-audit.md](io-prior-art-and-swift-io-design-audit.md) (consolidated literature survey + concept-by-concept evaluation)
-
-### Context
-
-Proactive Discovery audit ([RES-012]) to determine whether swift-io introduces unnecessary custom concepts or whether its design is justified by established IO systems practice. Conducted without internal requirement IDs — evaluation criteria are the 4-tier concept necessity spectrum derived from the literature:
-
-| Tier | Definition | Expectation |
-|------|-----------|-------------|
-| 1 (Irreducible) | Every IO system has this | Must have |
-| 2 (Expected) | Best-in-class systems have this | Should have |
-| 3 (Valuable) | Present in many systems | May have |
-| 4 (Paradigm-specific) | Justified only by language context | Requires justification |
-
-### Systems Surveyed
-
-Rust (std::io, tokio, mio, tokio-uring, monoio), Go (io, bufio, os, net), Java (java.io, java.nio, NIO.2, Loom), .NET (System.IO, Pipelines, Span/Memory), Zig (std.io pre-0.15, std.Io 0.15.1+), OCaml (classic IO, Eio), Haskell (System.IO, conduit, pipes), SwiftNIO, Swift System, epoll, kqueue, IOCP, io_uring, libuv.
-
-### Findings
-
-| # | Category | Concepts | Prior Art Tier | Verdict |
-|---|----------|----------|---------------|---------|
-| 1 | Kernel primitives (L1) | 12 (Descriptor, IO.Error, Event, Interest, Flags, Socket.*, File.Offset/Delta/Size) | All Tier 1-2 | CLEAN — direct mappings to POSIX/kernel structures |
-| 2 | IO Core | 5 (IO namespace, Lifecycle, Lifecycle.Error, Closable, Backpressure.Strategy) | Tier 2-4 | CLEAN — Closable with `consuming close()` + `~Copyable` is well-precedented (Rust OwnedFd, Clean uniqueness types) |
-| 3 | IO Events | ~18 (Selector, Driver, Channel, Poll, Registration, Token type-state, Waiter, Wakeup, Backoff, Deadline, Batch, etc.) | Tier 2-4 | CLEAN — all map to mio/NIO/libuv/Java NIO patterns; Token type-state is a justified Swift adaptation of known typestate technique |
-| 4 | IO Completions | ~15 (Completion.ID, Operation, Event, Outcome, Queue, Submission, Driver, IOCP, IOUring, Read/Write/Accept/Connect) | All Tier 2 | CLEAN — direct typed Swift interface over io_uring SQ/CQ and IOCP |
-| 5 | IO Blocking | ~10 (Lane, Capabilities, Deadline, Execution.Semantics, Ticket, Sharded, Abandoning, Threads) | Tier 2-3 | CLEAN — maps to tokio spawn_blocking, libuv thread pool, Java ExecutorService |
-| 6 | IO Executor | ~12 (Executor, Handle, Registry, Waiter, Lane, Pool, Backend, Scope, Slot, Teardown, Ready/Pending) | Tier 2-4 | CLEAN — 1 truly novel concept (IO.Executor.Slot), justified by Swift's unique actor + ~Copyable combination |
-
-### Summary
-
-72 concepts audited. **0 findings.** Distribution:
-
-| Prior Art Tier | Count | % |
-|---------------|-------|---|
-| Tier 1-2 (universal/expected) | ~56 | 78% |
-| Tier 3 (valuable) | ~10 | 14% |
-| Tier 4 (paradigm-specific) | ~5 | 7% |
-| Truly novel | 1 | 1% |
-
-**Verdict: CLEAN.** swift-io does not introduce unnecessary custom concepts. Every abstraction maps to recognized IO systems prior art or is a justified adaptation of Swift's type system (`~Copyable`, typed throws, token type-state, witness structs). The 279-file count reflects the ecosystem's namespace-first file organization ([API-IMPL-005], [API-NAME-001]), not conceptual bloat — the concept set is isomorphic to tokio/mio/libuv.
-
-The single truly novel concept — `IO.Executor.Slot` (cross-actor `~Copyable` value transfer) — has no prior art because no other language combines actors with move-only types. Its existence is justified by the language constraint it addresses.
-
-**Notable strengths relative to prior art**: dual-model IO (events + completions) as first-class peers (only Zig 0.15.1+ does this), compile-time resource safety via `~Copyable`, type-state enforcement for event registration, typed throws with composite errors matching Zig's precision.
-
----
-
 ## Variant Naming — 2026-03-25
 
 ### Scope
@@ -1266,42 +1180,6 @@ Depends on Phase 4c. Once the internal pipeline uses `Kernel.Path` / `Kernel.Pat
 **Key insight**: 16 of 24 source findings contain `Kernel.Path.scope()` calls inside function bodies. Each `.scope()` is a smoking gun: it proves the function receives a path-as-String and must convert before the syscall. The architectural decision to relocate composed write operations to swift-file-system eliminates the entire String pipeline — `Paths.Path` provides typed decomposition, and `.kernelPath` provides zero-alloc syscall access.
 
 **Architectural principle**: Path decomposition is an L1 primitive. Single implementation in `swift-path-primitives`; `Paths.Path` (L3) delegates to it. swift-kernel uses L1 path types internally — no `Swift.String`, no L3 dependency. The delegation chain `File.System.Write.Atomic` → `Kernel.File.Write.Atomic` → kernel syscall primitives stays intact; what changes is that String exits the internal pipeline entirely.
-
-## Ownership Transfer Compliance — 2026-03-31
-
-### Scope
-
-Audit of `~Copyable` ownership transfer through `Mutex.withLock` closures against [IMPL-070] layer model and [MEM-OWN-010–012] patterns.
-
-**Target**: swift-async-primitives (Bridge, Channel.Bounded, Channel.Unbounded).
-
-### Requirement IDs
-
-- [IMPL-070] `.take()!` and `var slot: V?` confined to Layer 0/1 infrastructure
-- [MEM-OWN-010] Always-consume: `withLock(consuming:body:)`
-- [MEM-OWN-011] Maybe-consume: state machine takes `inout Element?`
-- [MEM-OWN-012] Action enum dispatch: `switch consume` outside lock
-
-### Findings
-
-Verified: 2026-03-31
-
-| Type | Pattern | `.take()!` Sites | Layer | Verdict |
-|------|---------|-----------------|-------|---------|
-| `Async.Bridge` | Always-consume [MEM-OWN-010] | 0 at Layer 2 | `withLock(consuming:)` | **Conforming** |
-| `Channel.Unbounded.State` | Maybe-consume [MEM-OWN-011] | 2 (lines 90, 92) | Layer 1 (state machine) | **Conforming** |
-| `Channel.Bounded.State` | Maybe-consume [MEM-OWN-011] | 2 (lines 198, 203) | Layer 1 (state machine) | **Conforming** |
-| `Channel.Unbounded.Sender` | Layer 2 consumer | 0 | Uses `Ownership.Slot` + `state.send(&opt)` | **Conforming** |
-| `Channel.Bounded.Sender` | Layer 2 consumer | 0 | Uses `Ownership.Slot` + `state.send(&opt)` | **Conforming** |
-| `Mutex+Ownership` | Layer 0 infrastructure | 1 (line 71) | Extension internals | **Conforming** |
-
-**Action enum dispatch** [MEM-OWN-012]: 15 `switch consume` sites across Bridge and Channel receivers/senders. All dispatch outside locks. Continuations resumed post-lock. **Conforming.**
-
-### Summary
-
-0 violations. All 6 `.take()!` sites are at Layer 0 (Mutex extension) or Layer 1 (state machine). No Layer 2 call site uses raw `.take()!`. Bridge uses `withLock(consuming:body:)`. Channels use `Ownership.Slot` + state machine `inout Element?`. Architecture is fully compliant with [IMPL-070].
-
----
 
 ## Pre-Publication — 2026-04-02
 
