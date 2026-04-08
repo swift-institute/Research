@@ -1,10 +1,16 @@
 # ASCII Parsing Domain Ownership
 
+> **PARTIALLY SUPERSEDED** (2026-04-08) — Category B migration phasing is consolidated into
+> [`../../swift-primitives/swift-ascii-primitives/Research/ascii-migration-category-b.md`](../../swift-primitives/swift-ascii-primitives/Research/ascii-migration-category-b.md).
+> The architectural principle ("domains as namespaces, capabilities as nested types") and
+> the namespace design rationale remain canonical and are NOT superseded. Phase 4
+> (swift-ascii restructuring) is tracked in the consolidated plan.
+
 <!--
 ---
 version: 4.2.0
 last_updated: 2026-03-04
-status: RECOMMENDATION
+status: RECOMMENDATION (architecture) / SUPERSEDED (Category B phasing)
 tier: 2
 ---
 -->

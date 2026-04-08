@@ -1,10 +1,17 @@
 # ASCII Serialization Migration
 
+> **DEFERRED POST-RELEASE** (2026-04-08) — this full 8-phase `Parseable`/`Serializable`
+> witness migration is explicitly DEFERRED while the Category B release-readiness work
+> executes Strategy (c) (protocol relocation only). See
+> [`../../swift-primitives/swift-ascii-primitives/Research/ascii-migration-category-b.md`](../../swift-primitives/swift-ascii-primitives/Research/ascii-migration-category-b.md)
+> for the release-scoped plan. This document remains the canonical plan for the full
+> witness migration and is NOT superseded for that purpose.
+
 <!--
 ---
 version: 2.0.0
 last_updated: 2026-03-25
-status: IN_PROGRESS
+status: DEFERRED (post-release)
 tier: 2
 ---
 -->

@@ -1,10 +1,15 @@
 # Handoff: ASCII Domain Ownership & Transformation Architecture Audit
 
+> **SUPERSEDED** (2026-04-08) for Category B migration scope — consolidated into
+> [`../../swift-primitives/swift-ascii-primitives/Research/ascii-migration-category-b.md`](../../swift-primitives/swift-ascii-primitives/Research/ascii-migration-category-b.md).
+> This is the 2026-03-05 prior handoff for the Parser/Serializer L1 split (now done).
+> Retained for history.
+
 <!--
 ---
 version: 1.0.0
 last_updated: 2026-03-05
-status: RECOMMENDATION
+status: SUPERSEDED
 tier: 2
 ---
 -->
