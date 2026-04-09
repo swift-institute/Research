@@ -113,6 +113,12 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-04-06-executor-first-architecture-research-and-phase2.md](2026-04-06-executor-first-architecture-research-and-phase2.md) | 2026-04-06 | Executor-First Architecture Research and Phase 2 Implementation | swift-io, swift-institute | pending |
 | [2026-04-08-descriptor-ownership-aliasing-anti-pattern.md](2026-04-08-descriptor-ownership-aliasing-anti-pattern.md) | 2026-04-08 | Constructing ~Copyable Resource Wrappers from Raw Values Implies Ownership | swift-path-primitives, swift-iso-9945, swift-kernel-primitives | pending |
 | [2026-04-08-pool-primitives-canonical-form-second-round.md](2026-04-08-pool-primitives-canonical-form-second-round.md) | 2026-04-08 | Pool Primitives Canonical Form: Second-Round Refactor — The "Go Further" Pattern | swift-pool-primitives, swift-pools, swift-io, swift-algebra-primitives | pending |
+| [2026-04-08-io-blocking-domain-model-redesign.md](2026-04-08-io-blocking-domain-model-redesign.md) | 2026-04-08 | IO.Blocking Domain Model Redesign — From Surface Cleanup to Category-Error Discovery | swift-io, swift-pools, swift-pool-primitives, swift-kernel, swift-async-primitives, swift-executors | pending |
+| [2026-04-08-io-blocking-refactor-regressions.md](2026-04-08-io-blocking-refactor-regressions.md) | 2026-04-08 | IO.Blocking Refactor Regressions — Honest Post-Completion Assessment | swift-io, swift-executors, swift-async-primitives, swift-collection-primitives | pending |
+| [2026-04-08-descriptor-ownership-remediation.md](2026-04-08-descriptor-ownership-remediation.md) | 2026-04-08 | Descriptor Ownership Remediation — Language Features Over Custom Types | swift-kernel-primitives, swift-linux-primitives, swift-iso-9945, swift-kernel, swift-io | pending |
+
+| [2026-04-08-parallel-handoff-execution-and-blocking-refactor.md](2026-04-08-parallel-handoff-execution-and-blocking-refactor.md) | 2026-04-08 | Parallel Handoff Execution and IO.Blocking Refactor | swift-async-primitives, swift-kernel, swift-executors, swift-io | pending |
+| [2026-04-08-io-uring-integration-foundation.md](2026-04-08-io-uring-integration-foundation.md) | 2026-04-08 | io_uring Integration Foundation — Architecture Validated, Type Design Iterated | swift-kernel-primitives, swift-kernel, swift-io, swift-iso-9945, swift-linux-primitives, swift-linux | pending |
 
 ## Legacy Archive
 
