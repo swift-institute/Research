@@ -119,11 +119,14 @@ This directory contains structured post-session reflection entries. Each entry i
 
 | [2026-04-08-parallel-handoff-execution-and-blocking-refactor.md](2026-04-08-parallel-handoff-execution-and-blocking-refactor.md) | 2026-04-08 | Parallel Handoff Execution and IO.Blocking Refactor | swift-async-primitives, swift-kernel, swift-executors, swift-io | pending |
 | [2026-04-08-io-uring-integration-foundation.md](2026-04-08-io-uring-integration-foundation.md) | 2026-04-08 | io_uring Integration Foundation — Architecture Validated, Type Design Iterated | swift-kernel-primitives, swift-kernel, swift-io, swift-iso-9945, swift-linux-primitives, swift-linux | pending |
+| [2026-04-08-io-uring-integration-architecture-and-l1-migration.md](2026-04-08-io-uring-integration-architecture-and-l1-migration.md) | 2026-04-08 | io_uring Integration Architecture and L1 Completion Migration (advisory) | swift-io, swift-kernel, swift-kernel-primitives | pending |
 
 ## Legacy Archive
 
 Prior to the structured reflection system, reflections were captured informally in:
 - `Documentation.docc/_Reflections.md` — 15 entries (2026-01-17 to 2026-02-10), archived in place
+
+| [2026-04-09-kernel-event-consolidation-domain-model.md](2026-04-09-kernel-event-consolidation-domain-model.md) | 2026-04-09 | Kernel.Event Consolidation + io_uring Domain Model Refactor | swift-linux-primitives, swift-darwin-primitives, swift-system-primitives, swift-kernel-primitives | pending |
 
 ## See Also
 
