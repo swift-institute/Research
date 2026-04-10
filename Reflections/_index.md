@@ -129,6 +129,8 @@ Prior to the structured reflection system, reflections were captured informally 
 - `Documentation.docc/_Reflections.md` — 15 entries (2026-01-17 to 2026-02-10), archived in place
 
 | [2026-04-09-kernel-event-consolidation-domain-model.md](2026-04-09-kernel-event-consolidation-domain-model.md) | 2026-04-09 | Kernel.Event Consolidation + io_uring Domain Model Refactor | swift-linux-primitives, swift-darwin-primitives, swift-system-primitives, swift-kernel-primitives | pending |
+| [2026-04-09-completion-api-architecture-pivot.md](2026-04-09-completion-api-architecture-pivot.md) | 2026-04-09 | Completion API Architecture Pivot — Tactical Refactor Reveals Design Question | swift-kernel, swift-kernel-primitives, swift-linux-primitives | pending |
+| [2026-04-10-l2-reclassification-migration.md](2026-04-10-l2-reclassification-migration.md) | 2026-04-10 | L2 Reclassification: 6 Platform/ISA Packages Migrated from swift-primitives | swift-linux-standard, swift-darwin-standard, swift-windows-standard, swift-arm-standard, swift-x86-standard, swift-riscv-standard, swift-kernel-primitives, swift-kernel | pending |
 
 ## See Also
 
