@@ -133,6 +133,9 @@ Prior to the structured reflection system, reflections were captured informally 
 | [2026-04-09-completion-api-architecture-pivot.md](2026-04-09-completion-api-architecture-pivot.md) | 2026-04-09 | Completion API Architecture Pivot — Tactical Refactor Reveals Design Question | swift-kernel, swift-kernel-primitives, swift-linux-primitives | pending |
 | [2026-04-10-l2-reclassification-migration.md](2026-04-10-l2-reclassification-migration.md) | 2026-04-10 | L2 Reclassification: 6 Platform/ISA Packages Migrated from swift-primitives | swift-linux-standard, swift-darwin-standard, swift-windows-standard, swift-arm-standard, swift-x86-standard, swift-riscv-standard, swift-kernel-primitives, swift-kernel | pending |
 | [2026-04-12-io-uring-sqe-typed-domain-model.md](2026-04-12-io-uring-sqe-typed-domain-model.md) | 2026-04-12 | io_uring SQE Typed Domain Model — Design Convergence | swift-linux-standard | pending |
+| [2026-04-12-eintr-relayering-and-posix-knowledge-cleanup.md](2026-04-12-eintr-relayering-and-posix-knowledge-cleanup.md) | 2026-04-12 | EINTR Relayering — POSIX Knowledge Out of L1 | swift-kernel-primitives, swift-iso-9945, swift-posix, swift-darwin-standard, swift-linux-standard | pending |
+| [2026-04-12-io-uring-escapable-coroutine-discovery.md](2026-04-12-io-uring-escapable-coroutine-discovery.md) | 2026-04-12 | io_uring: ~Escapable Coroutine Architecture Discovery | swift-linux-standard | pending |
+| [2026-04-12-iso-9945-posix-gap-analysis-and-implementation.md](2026-04-12-iso-9945-posix-gap-analysis-and-implementation.md) | 2026-04-12 | ISO 9945 POSIX Gap Analysis and Implementation | swift-iso-9945, swift-linux-standard | pending |
 
 ## See Also
 
