@@ -119,6 +119,7 @@ This directory contains structured post-session reflection entries. Each entry i
 | [2026-04-08-descriptor-ownership-remediation.md](2026-04-08-descriptor-ownership-remediation.md) | 2026-04-08 | Descriptor Ownership Remediation — Language Features Over Custom Types | swift-kernel-primitives, swift-linux-primitives, swift-iso-9945, swift-kernel, swift-io | pending |
 
 | [2026-04-08-parallel-handoff-execution-and-blocking-refactor.md](2026-04-08-parallel-handoff-execution-and-blocking-refactor.md) | 2026-04-08 | Parallel Handoff Execution and IO.Blocking Refactor | swift-async-primitives, swift-kernel, swift-executors, swift-io | pending |
+| [2026-04-10-iso-9945-posix-modularization.md](2026-04-10-iso-9945-posix-modularization.md) | 2026-04-10 | ISO 9945 + swift-posix Domain Modularization | swift-iso-9945, swift-posix | pending |
 | [2026-04-08-io-uring-integration-foundation.md](2026-04-08-io-uring-integration-foundation.md) | 2026-04-08 | io_uring Integration Foundation — Architecture Validated, Type Design Iterated | swift-kernel-primitives, swift-kernel, swift-io, swift-iso-9945, swift-linux-primitives, swift-linux | pending |
 | [2026-04-08-io-uring-integration-architecture-and-l1-migration.md](2026-04-08-io-uring-integration-architecture-and-l1-migration.md) | 2026-04-08 | io_uring Integration Architecture and L1 Completion Migration (advisory) | swift-io, swift-kernel, swift-kernel-primitives | pending |
 | [2026-04-09-c-shim-placement-and-platform-separation.md](2026-04-09-c-shim-placement-and-platform-separation.md) | 2026-04-09 | C Shim Placement and Platform Code Separation | swift-kernel-primitives, swift-linux-primitives, swift-darwin-primitives, swift-iso-9945, swift-terminal-primitives | pending |
@@ -131,6 +132,7 @@ Prior to the structured reflection system, reflections were captured informally 
 | [2026-04-09-kernel-event-consolidation-domain-model.md](2026-04-09-kernel-event-consolidation-domain-model.md) | 2026-04-09 | Kernel.Event Consolidation + io_uring Domain Model Refactor | swift-linux-primitives, swift-darwin-primitives, swift-system-primitives, swift-kernel-primitives | pending |
 | [2026-04-09-completion-api-architecture-pivot.md](2026-04-09-completion-api-architecture-pivot.md) | 2026-04-09 | Completion API Architecture Pivot — Tactical Refactor Reveals Design Question | swift-kernel, swift-kernel-primitives, swift-linux-primitives | pending |
 | [2026-04-10-l2-reclassification-migration.md](2026-04-10-l2-reclassification-migration.md) | 2026-04-10 | L2 Reclassification: 6 Platform/ISA Packages Migrated from swift-primitives | swift-linux-standard, swift-darwin-standard, swift-windows-standard, swift-arm-standard, swift-x86-standard, swift-riscv-standard, swift-kernel-primitives, swift-kernel | pending |
+| [2026-04-12-io-uring-sqe-typed-domain-model.md](2026-04-12-io-uring-sqe-typed-domain-model.md) | 2026-04-12 | io_uring SQE Typed Domain Model — Design Convergence | swift-linux-standard | pending |
 
 ## See Also
 
