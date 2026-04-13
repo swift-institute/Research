@@ -138,6 +138,7 @@ Prior to the structured reflection system, reflections were captured informally 
 | [2026-04-12-eintr-relayering-and-posix-knowledge-cleanup.md](2026-04-12-eintr-relayering-and-posix-knowledge-cleanup.md) | 2026-04-12 | EINTR Relayering — POSIX Knowledge Out of L1 | swift-kernel-primitives, swift-iso-9945, swift-posix, swift-darwin-standard, swift-linux-standard | pending |
 | [2026-04-12-io-uring-escapable-coroutine-discovery.md](2026-04-12-io-uring-escapable-coroutine-discovery.md) | 2026-04-12 | io_uring: ~Escapable Coroutine Architecture Discovery | swift-linux-standard | pending |
 | [2026-04-12-iso-9945-posix-gap-analysis-and-implementation.md](2026-04-12-iso-9945-posix-gap-analysis-and-implementation.md) | 2026-04-12 | ISO 9945 POSIX Gap Analysis and Implementation | swift-iso-9945, swift-linux-standard | pending |
+| [2026-04-13-actor-isolation-techniques-from-pointfree.md](2026-04-13-actor-isolation-techniques-from-pointfree.md) | 2026-04-13 | Actor Isolation Techniques: From Video Study to Ecosystem Application | swift-standard-library-extensions, swift-async, swift-io | pending |
 
 ## See Also
 
