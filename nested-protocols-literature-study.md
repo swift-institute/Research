@@ -14,7 +14,7 @@ depends_on: nested-protocols-in-generic-types.md
 
 The companion document ([nested-protocols-in-generic-types.md](nested-protocols-in-generic-types.md))
 established that Swift's restriction against nesting protocols in generic types is hard-coded
-with no feature flag. The pitch draft (SE-Pitches/Draft/PITCH-AAAA) proposes the "without
+with no feature flag. The pitch draft (Swift Evolution/Drafts/PITCH-AAAA) proposes the "without
 capture" approach as the minimum viable extension of SE-0404.
 
 This document asks the broader question: **What is the ideal design**, informed by the full
