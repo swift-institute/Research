@@ -4,7 +4,7 @@ session_objective: Implement swift-io Tier 0 public API from converged design sp
 packages:
   - swift-io
   - swift-institute
-status: pending
+status: processed
 ---
 
 # Span and MutableSpan Survive Async — The Perfect IO API Is Achievable Today

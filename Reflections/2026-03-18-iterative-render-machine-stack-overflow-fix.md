@@ -20,7 +20,7 @@ triage_outcomes:
 
 ## What Happened
 
-Session implemented the iterative render machine (Strategy B) to eliminate recursive `_render -> body -> _render` stack overflow on the 544 KB cooperative thread pool. The production crash occurred at ~20 nesting levels in `rule-besloten-vennootschap`'s aandeelhoudersregister PDF rendering.
+Session implemented the iterative render machine (Strategy B) to eliminate recursive `_render -> body -> _render` stack overflow on the 544 KB cooperative thread pool. The production crash occurred at ~20 nesting levels in a deeply-nested PDF rendering consumer.
 
 The implementation progressed through validated experiment (`iterative-render-machine/`, 15 tests) then production changes across three packages:
 

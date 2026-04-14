@@ -6,7 +6,7 @@ packages:
   - swift-linux-primitives
   - swift-kernel
   - swift-io
-status: pending
+status: processed
 ---
 
 # Epoll Port to Kernel.Readiness — ~Copyable Ownership Design Under Review Pressure

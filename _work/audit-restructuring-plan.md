@@ -96,7 +96,6 @@
 - async-pool-primitives-audit.md ← referenced by pool + async audit as "to be moved"
 - concurrent-expansion-audit.md
 - dependencies-ecosystem-adoption-audit.md
-- document-infrastructure-ergonomic-audit.md
 - effects-ecosystem-adoption-audit.md
 - file-path-type-unification-audit.md
 - foundations-dependency-utilization-audit.md
@@ -220,7 +219,6 @@ Best guesses from filenames:
 - `foundations-dependency-utilization-audit.md` → cross-cutting
 - `platform-compliance-audit.md` → cross-cutting platform
 - `ascii-domain-ownership-audit.md` + `handoff-ascii-domain-ownership-audit.md` → swift-ascii ecosystem
-- `document-infrastructure-ergonomic-audit.md` → unclear
 - `noncopyable-synchronization-ecosystem-audit.md` → Discovery research
 - `audits/implementation-naming-2026-03-13/` — subdirectory, likely per-package
 - `audits/implementation-naming-2026-03-20/` — subdirectory, per-package (already partially consumed by swift-pool-primitives)

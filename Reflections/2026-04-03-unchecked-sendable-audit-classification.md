@@ -3,7 +3,7 @@ date: 2026-04-03
 session_objective: Audit and classify 10 @unchecked Sendable types in swift-io, eliminating those that can be replaced with principled alternatives
 packages:
   - swift-io
-status: pending
+status: processed
 ---
 
 # @unchecked Sendable Audit — Classification Taxonomy and Layer-Boundary Discipline

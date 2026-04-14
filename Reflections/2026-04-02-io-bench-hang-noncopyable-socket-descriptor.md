@@ -6,7 +6,7 @@ packages:
   - swift-kernel-primitives
   - swift-iso-9945
   - swift-algebra-primitives
-status: pending
+status: processed
 ---
 
 # io-bench Hang Fix and ~Copyable Socket.Descriptor Migration

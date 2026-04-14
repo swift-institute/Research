@@ -10,7 +10,7 @@ packages:
   - swift-riscv-standard
   - swift-kernel-primitives
   - swift-kernel
-status: pending
+status: processed
 ---
 
 # L2 Reclassification: 6 Platform/ISA Packages Migrated from swift-primitives
@@ -46,5 +46,4 @@ All 6 old submodules removed from `swift-primitives` superrepo. Old GitHub repos
 ## Action Items
 
 - [ ] **[skill]** platform: Add [PLAT-ARCH-001] note that `@_exported` re-exports inherit the layer classification of the re-exported module, creating implicit upward dependency constraints
-- [ ] **[skill]** quick-commit-and-push-all: Add EU court orgs (`swift-eu-court-of-justice`, `swift-eu-general-court`) when they are created on GitHub
 - [ ] **[research]** Should the module/product rename (Primitives to Standard) happen as one batch or incrementally per package? User deferred this; needs a plan when the time comes

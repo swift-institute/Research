@@ -6,16 +6,14 @@ packages:
   - swift-primitives
   - swift-standards
   - swift-foundations
-  - rule-law
-  - swift-nl-wetgever
-status: pending
+status: processed
 ---
 
 # First Full Corpus Sweep Remediation
 
 ## What Happened
 
-Executed the first complete META-019 corpus sweep across all 6 repositories (722 total items: 395 research, 157 experiments, 76 reflections, 32 blog ideas, 56 skills, 6 .bib files). The corpus exceeds the 500-document threshold from META-014, confirming monthly sweeps are warranted.
+Executed the first complete META-019 corpus sweep across all repositories (722 total items: 395 research, 157 experiments, 76 reflections, 32 blog ideas, 56 skills, 6 .bib files). The corpus exceeds the 500-document threshold from META-014, confirming monthly sweeps are warranted.
 
 Remediation was executed in 4 phases:
 
@@ -34,10 +32,10 @@ Remediation was executed in 4 phases:
 **Worked well**:
 - Agent parallelization was highly effective. 5 concurrent agents for index fixes, 4 concurrent for triage, 4 concurrent for Phase 3+4. Total wall-clock time was dominated by the largest agent in each batch, not the sum.
 - The phased approach (infrastructure → triage → consolidation → cleanup) prevented cascading issues. Index fixes completed before triage needed accurate indices.
-- The inventory agents provided comprehensive data despite the corpus scale (722 items across 6 repos).
+- The inventory agents provided comprehensive data despite the corpus scale (722 items across the ecosystem).
 
 **Didn't work well**:
-- Inventory agents significantly overestimated ghost entries (124 estimated → 59 actual). The standards, rule-law, and swift-nl-wetgever indices were already correct, but agents counted index table structure (headers, separators) as ghost entries. This inflated the urgency signal.
+- Inventory agents significantly overestimated ghost entries (124 estimated → 59 actual). The standards indices were already correct, but agents counted index table structure (headers, separators) as ghost entries. This inflated the urgency signal.
 - One agent hit a usage limit mid-task (SHOULD-triage experiments), requiring session resumption and re-launch with two replacement agents. Splitting large experiment batches alphabetically (A-M, N-Z) worked as a recovery strategy.
 - The initial reflection count was wrong (4 reported → 7 actual). The inventory agent missed 3 pending reflections because they shared the same date as processed ones.
 

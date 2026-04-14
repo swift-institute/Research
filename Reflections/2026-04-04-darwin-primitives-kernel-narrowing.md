@@ -4,7 +4,7 @@ session_objective: Narrow Kernel Primitives umbrella imports in darwin-primitive
 packages:
   - swift-darwin-primitives
   - swift-ascii-parser-primitives
-status: pending
+status: processed
 ---
 
 # Darwin Primitives Kernel Narrowing — Re-export Chain as Narrowing Leverage

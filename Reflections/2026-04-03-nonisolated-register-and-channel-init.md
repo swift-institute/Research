@@ -4,7 +4,7 @@ session_objective: Investigate and fix io-bench Channel benchmark hang, then imp
 packages:
   - swift-io
   - swift-async-primitives
-status: pending
+status: processed
 ---
 
 # Nonisolated Register/Deregister and Channel.init — From Diagnosis to Regression

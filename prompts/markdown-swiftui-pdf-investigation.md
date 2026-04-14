@@ -510,19 +510,19 @@ The `Markdown { ... }` syntax change is complete and tested independently of the
 
 ```bash
 # swift-markdown-html-rendering (foundations)
-cd ~/Developer/swift-foundations/swift-markdown-html-rendering
+cd swift-markdown-html-rendering
 git add Sources/Markdown\ HTML\ Rendering/Markdown.HTML.swift
 git add Sources/Markdown\ Previews/MarkdownPreviews.swift
 git add Sources/Markdown\ Previews/MarkdownPreviews\ Configuration.swift
 git commit -m "Change Markdown from enum to struct, enabling Markdown { ... } syntax"
 
 # swift-pdf
-cd ~/Developer/swift-foundations/swift-pdf
+cd swift-pdf
 git add Tests/PDF\ Tests/PDF\ Tests.swift
 git commit -m "Use simplified Markdown { ... } syntax in tests"
 
 # coenttb donor
-cd ~/Developer/coenttb/swift-markdown-html-rendering
+cd swift-markdown-html-rendering
 git add Sources/Markdown\ HTML\ Rendering/Markdown.HTML.swift
 git add Sources/Markdown\ Previews/MarkdownPreviews.swift
 git add Sources/Markdown\ Previews/MarkdownPreviews\ Configuration.swift

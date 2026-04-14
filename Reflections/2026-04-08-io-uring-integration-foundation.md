@@ -8,7 +8,7 @@ packages:
   - swift-iso-9945
   - swift-linux-primitives
   - swift-linux
-status: pending
+status: processed
 ---
 
 # io_uring Integration Foundation — Architecture Validated, Type Design Iterated

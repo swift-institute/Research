@@ -5,7 +5,7 @@ packages:
   - swift-io
   - swift-iso-9945
   - swift-ownership-primitives
-status: pending
+status: processed
 ---
 
 # Unsafe Pointer Audit — Span Migration Eliminates 18 Sites

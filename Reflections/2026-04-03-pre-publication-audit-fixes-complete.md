@@ -19,7 +19,7 @@ packages:
   - swift-handle-primitives
   - swift-binary-primitives
   - swift-test-primitives
-status: pending
+status: processed
 ---
 
 # Pre-Publication Audit Fixes — 18 Packages Across 3 Layers

@@ -10,7 +10,7 @@ packages:
   - swift-bitset-primitives
   - swift-test-primitives
   - swift-binary-parser-primitives
-status: pending
+status: processed
 ---
 
 # Array Name Shadowing: @_exported Import Already Works

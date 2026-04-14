@@ -5,7 +5,7 @@ packages:
   - swift-io
   - swift-kernel
   - swift-kernel-primitives
-status: pending
+status: processed
 ---
 
 # io_uring Integration Architecture and L1 Completion Migration

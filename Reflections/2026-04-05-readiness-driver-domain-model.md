@@ -4,7 +4,7 @@ session_objective: Port kqueue driver from swift-io to swift-kernel (Phase 3) an
 packages:
   - swift-kernel
   - swift-io
-status: pending
+status: processed
 ---
 
 # Readiness Driver Domain Model: From Handle + Closures to Recipe + Thing

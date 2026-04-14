@@ -3,9 +3,10 @@
 <!--
 ---
 title: Concrete Async Operator Types
-status: IN_PROGRESS
+status: DEFERRED
 tier: 2
 created: 2026-03-31
+last_updated: 2026-04-13
 applies_to: [swift-async-primitives, swift-async]
 ---
 -->
@@ -33,6 +34,11 @@ When and whether to implement the ~20 concrete async operator types that would e
 ## Outcome
 
 *Pending prioritization — the prerequisite Mutex refactor must complete first. The concrete types are a medium-term investment.*
+
+### Deferred
+
+- **Blocker**: Async.Mutex sending refactor must complete first
+- **Resumption trigger**: Mutex refactor completion
 
 ## References
 

@@ -6,7 +6,7 @@ packages:
   - swift-executors
   - swift-async-primitives
   - swift-collection-primitives
-status: pending
+status: processed
 ---
 
 # IO.Blocking Refactor Regressions — Honest Post-Completion Assessment

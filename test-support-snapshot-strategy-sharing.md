@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-14
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-04-13
+status: DEFERRED
 ---
 -->
 
@@ -326,7 +326,12 @@ To share: the question returns to "how does another nested package import this?"
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+**Status**: DEFERRED
+
+### Deferred
+
+- **Blocker**: SE-0450 package traits stabilization
+- **Resumption trigger**: Swift 6.2 release
 
 ### Preliminary Assessment
 

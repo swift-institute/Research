@@ -5,7 +5,7 @@ packages:
   - swift-io
   - swift-witnesses
   - swift-ownership-primitives
-status: pending
+status: processed
 ---
 
 # Sending Over Sendable Migration — Viral Sendability Removal Across Three Packages

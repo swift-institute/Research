@@ -3,7 +3,7 @@ date: 2026-04-06
 session_objective: Audit downstream Channel consumers for raw pointer usage after Span migration
 packages:
   - swift-io
-status: pending
+status: processed
 ---
 
 # Downstream Span Audit — Benchmark Drift as Predictable Gap

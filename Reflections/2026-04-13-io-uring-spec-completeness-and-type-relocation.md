@@ -4,7 +4,7 @@ session_objective: Audit io_uring implementation against kernel 6.12 spec for co
 packages:
   - swift-linux-standard
   - swift-iso-9945
-status: pending
+status: processed
 ---
 
 # io_uring Spec Completeness Audit, Type Relocation, and Gap Closure

@@ -116,7 +116,7 @@ Remaining position (unchanged):
 
    So region IS sometimes relevant for translations. `Locale` handles this. A narrower `TranslationKey` would just recreate `Locale` with fewer fields. I think `Locale` is the right type — it's already the right shape.
 
-4. **Answering ChatGPT's Q1 (Translated<A> scope)**: Yes, we should support script-distinct translations (zh-Hans vs zh-Hant). The Locale-keyed design handles this. This is a product-scope claim backed by real-world needs — Chinese is a major language, and our legal encoding work could eventually expand to jurisdictions using Traditional Chinese.
+4. **Answering ChatGPT's Q1 (Translated<A> scope)**: Yes, we should support script-distinct translations (zh-Hans vs zh-Hant). The Locale-keyed design handles this. This is a product-scope claim backed by real-world needs — Chinese is a major language.
 
 ### Proposals
 

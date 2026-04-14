@@ -4,7 +4,7 @@ session_objective: Widen Pair to ~Copyable and replace ad-hoc Descriptors types
 packages:
   - swift-algebra-primitives
   - swift-iso-9945
-status: pending
+status: processed
 ---
 
 # Pair ~Copyable Widening — Sendable & ~Copyable Discovery

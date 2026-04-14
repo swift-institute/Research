@@ -309,8 +309,8 @@ Fixes are ordered by propagation (root → leaf) and priority:
 
 Per-package findings have been consolidated into each package's `Research/audit.md`:
 
-- swift-rendering-primitives -> `~/Developer/swift-primitives/Research/audit.md` (Legacy section)
-- swift-html-rendering -> `~/Developer/swift-foundations/Research/audit.md` (Legacy section)
-- swift-pdf-rendering -> `~/Developer/swift-foundations/Research/audit.md` (Legacy section)
-- swift-pdf-html-rendering -> `~/Developer/swift-foundations/Research/audit.md` (Legacy section)
-- swift-pdf -> `~/Developer/swift-foundations/Research/audit.md` (Legacy section)
+- swift-rendering-primitives -> `https://github.com/swift-primitives/Research/blob/main/audit.md` (Legacy section)
+- swift-html-rendering -> `https://github.com/swift-foundations/Research/blob/main/audit.md` (Legacy section)
+- swift-pdf-rendering -> `https://github.com/swift-foundations/Research/blob/main/audit.md` (Legacy section)
+- swift-pdf-html-rendering -> `https://github.com/swift-foundations/Research/blob/main/audit.md` (Legacy section)
+- swift-pdf -> `https://github.com/swift-foundations/Research/blob/main/audit.md` (Legacy section)

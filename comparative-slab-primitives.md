@@ -19,7 +19,7 @@ status: DECISION
 
 ### 1.1 Package Structure
 
-**Location**: `~/Developer/swift-primitives/swift-slab-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-slab-primitives`
 
 Four modules organized in a layered structure:
 

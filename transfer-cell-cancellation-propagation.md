@@ -3,9 +3,10 @@
 <!--
 ---
 title: Transfer.Cell and Task Cancellation Propagation
-status: IN_PROGRESS
+status: DEFERRED
 tier: 2
 created: 2026-03-31
+last_updated: 2026-04-13
 applies_to: [swift-ownership-primitives, swift-io, swift-async-primitives]
 ---
 -->
@@ -31,6 +32,11 @@ Is this a Transfer.Cell implementation issue, a Receiver.receive() issue, or a f
 ## Outcome
 
 *Pending investigation — requires reading Transfer.Cell implementation and tracing the cancellation path through a debugger or targeted experiment.*
+
+### Deferred
+
+- **Blocker**: Requires hands-on debugging session
+- **Resumption trigger**: Explicit investigation request
 
 ## References
 

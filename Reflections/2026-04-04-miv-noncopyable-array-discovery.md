@@ -8,7 +8,7 @@ packages:
   - swift-kernel-primitives
   - swift-posix
   - swift-io
-status: pending
+status: processed
 ---
 
 # MIV Remediation: ~Copyable Array Discovery and Cross-Layer Cascade

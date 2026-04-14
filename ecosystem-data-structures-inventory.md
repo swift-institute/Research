@@ -564,7 +564,7 @@ All types support `~Copyable` elements. All types use typed throws ([API-ERR-001
 
 ## References
 
-- Primitives Tiers: `~/Developer/swift-primitives/Documentation.docc/Primitives Tiers.md`
-- Five Layer Architecture: `~/Developer/swift-institute/Documentation.docc/Five Layer Architecture.md`
+- Primitives Tiers: `https://github.com/swift-primitives/Documentation.docc/tree/main/Primitives Tiers.md`
+- Five Layer Architecture: `Documentation.docc/Five Layer Architecture.md`
 - Comparative analyses: `swift-institute/Research/comparative-*.md` (per-package deep dives)
 - Storage-buffer analysis: `swift-institute/Research/storage-buffer-abstraction-analysis.md`

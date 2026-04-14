@@ -4,7 +4,7 @@ session_objective: Investigate and implement dedicated executor threading for IO
 packages:
   - swift-io
   - swift-kernel
-status: pending
+status: processed
 ---
 
 # Executor Threading and ~Copyable Closure Constraints

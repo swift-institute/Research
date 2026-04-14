@@ -3,9 +3,10 @@
 <!--
 ---
 title: Async.Mutex @_rawLayout Inline Storage
-status: IN_PROGRESS
+status: DEFERRED
 tier: 2
 created: 2026-03-31
+last_updated: 2026-04-13
 applies_to: [swift-async-primitives]
 ---
 -->
@@ -32,6 +33,11 @@ Can `Async.Mutex` adopt stdlib's `@_rawLayout` pattern for inline storage, elimi
 ## Outcome
 
 *Pending investigation — depends on `@_rawLayout` stabilization timeline and whether the ecosystem's `nonmutating _modify` pattern ([IMPL-071]) transfers to Mutex.*
+
+### Deferred
+
+- **Blocker**: @_rawLayout stabilization + IMPL-071 validation
+- **Resumption trigger**: Swift 6.2 release or IMPL-071 documented
 
 ## References
 

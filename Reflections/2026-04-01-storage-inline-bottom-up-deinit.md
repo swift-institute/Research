@@ -13,7 +13,7 @@ packages:
   - swift-list-primitives
   - swift-slab-primitives
   - swift-tree-primitives
-status: pending
+status: processed
 ---
 
 # Storage.Inline Bottom-Up Deinit — From Workaround Cascade to One-Line Fix

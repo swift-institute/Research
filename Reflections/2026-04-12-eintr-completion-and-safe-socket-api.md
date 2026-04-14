@@ -7,7 +7,7 @@ packages:
   - swift-darwin-standard
   - swift-linux-standard
   - swift-posix
-status: pending
+status: processed
 ---
 
 # EINTR Completion, Either Error Composition, and Safe Socket API

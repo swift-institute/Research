@@ -1,7 +1,7 @@
 # Actor Ecosystem Inventory
 
 Survey date: 2026-04-13  
-Scope: swift-primitives, swift-standards, swift-foundations, swift-law, swift-nl-wetgever, rule-law
+Scope: swift-primitives, swift-standards, swift-foundations
 
 ---
 
@@ -107,10 +107,6 @@ No `distributed actor` declarations found in any repo.
 | `swift-io/Experiments/actor-state-cross-thread-inline/Sources/main.swift` | 167 | `actor Runtime` | Cross-thread actor + inline storage repro |
 | `swift-io/Experiments/tilde-sendable-thread-confined/Sources/main.swift` | 91 | `actor Worker` | ~Sendable thread-confinement experiment |
 
-### swift-law, swift-nl-wetgever, rule-law
-
-No actor declarations found in any of these repos.
-
 ---
 
 ## 2. SerialExecutor Conformances and `unownedExecutor` Overrides
@@ -211,4 +207,3 @@ The following production patterns are notable:
 
 5. **`nonisolated(nonsending)` is the primary isolation-preservation tool at L1**: Used in `swift-pool-primitives`, `swift-effect-primitives`, `swift-dependency-primitives`, and `swift-clock-primitives` to thread caller isolation through async `withX` boundaries.
 
-6. **Legal repos are actor-free**: `swift-law`, `swift-nl-wetgever`, and `rule-law` contain zero actor declarations, consistent with their synchronous encoding model.

@@ -3,7 +3,7 @@ date: 2026-04-03
 session_objective: Investigate and fix the io-bench Channel benchmark hang after poll-thread dispatch migration
 packages:
   - swift-io
-status: pending
+status: processed
 ---
 
 # io-bench Echo Hang — Pipeline Deadlock, Not Pool Starvation
