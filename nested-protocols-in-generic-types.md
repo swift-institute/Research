@@ -34,7 +34,7 @@ alternative mechanism exists to lift this restriction.
 
 **Constraints**:
 - Swift 6.2 nightly toolchains (February 2026)
-- Local Swift compiler source at `/Users/coen/Developer/swiftlang/swift/`
+- Local Swift compiler source at `https://github.com/swiftlang/swift`
 - Ecosystem-wide impact: affects all generic namespace types (`Buffer<Element>`,
   `Storage<Element>`, and any future generic namespaces)
 

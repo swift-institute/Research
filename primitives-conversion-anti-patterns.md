@@ -381,7 +381,7 @@ let index: Index<Int> = 5      // ✓ Test Support literal
 
 ## References
 
-- `/Users/coen/Developer/swift-primitives/swift-ordinal-primitives/Sources/Ordinal Primitives/Tagged+Ordinal.swift` — Extension init APIs
-- `/Users/coen/Developer/swift-primitives/swift-identity-primitives/Tests/Support/Identity Primitives Test Support.swift` — Literal conformances
-- `/Users/coen/Developer/swift-primitives/swift-cyclic-primitives/Tests/Support/Cyclic.Group.Element+Literals.swift` — Cyclic literal conformance
-- `/Users/coen/Developer/swift-primitives/swift-pointer-primitives/Tests/Pointer Primitives Tests/Pointer Arithmetic Tests.swift` — Correct test patterns
+- `https://github.com/swift-primitives/swift-ordinal-primitives/blob/main/Sources/Ordinal Primitives/Tagged+Ordinal.swift` — Extension init APIs
+- `https://github.com/swift-primitives/swift-identity-primitives/blob/main/Tests/Support/Identity Primitives Test Support.swift` — Literal conformances
+- `https://github.com/swift-primitives/swift-cyclic-primitives/blob/main/Tests/Support/Cyclic.Group.Element+Literals.swift` — Cyclic literal conformance
+- `https://github.com/swift-primitives/swift-pointer-primitives/blob/main/Tests/Pointer Primitives Tests/Pointer Arithmetic Tests.swift` — Correct test patterns

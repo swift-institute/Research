@@ -667,12 +667,12 @@ extension Markdown.Configuration {
 
 | Package | Path |
 |---------|------|
-| swift-rendering-primitives | `/Users/coen/Developer/swift-primitives/swift-rendering-primitives/` |
-| swift-html-rendering | `/Users/coen/Developer/swift-foundations/swift-html-rendering/` |
-| swift-markdown-html-rendering | `/Users/coen/Developer/swift-foundations/swift-markdown-html-rendering/` |
-| swift-pdf-html-rendering | `/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/` |
-| swift-pdf | `/Users/coen/Developer/swift-foundations/swift-pdf/` |
-| diagnostic-primitives | `/Users/coen/Developer/swift-primitives/swift-diagnostic-primitives/` |
+| swift-rendering-primitives | `https://github.com/swift-primitives/swift-rendering-primitives` |
+| swift-html-rendering | `https://github.com/swift-foundations/swift-html-rendering` |
+| swift-markdown-html-rendering | `https://github.com/swift-foundations/swift-markdown-html-rendering` |
+| swift-pdf-html-rendering | `https://github.com/swift-foundations/swift-pdf-html-rendering` |
+| swift-pdf | `https://github.com/swift-foundations/swift-pdf` |
+| diagnostic-primitives | `https://github.com/swift-primitives/swift-diagnostic-primitives` |
 
 ### Key files to study
 

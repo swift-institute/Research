@@ -1,7 +1,7 @@
 # Implementation & Naming Audit — Data Structures Batch
 
 **Date**: 2026-03-20
-**Scope**: 11 packages under `/Users/coen/Developer/swift-primitives/`
+**Scope**: 11 packages under `https://github.com/swift-primitives`
 **Skills**: [API-NAME-001], [API-NAME-002], [IMPL-002], [IMPL-010], [IMPL-020], [PATTERN-017], [API-IMPL-005]
 **Status**: READ-ONLY audit, no modifications made
 

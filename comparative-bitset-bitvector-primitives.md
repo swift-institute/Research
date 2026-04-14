@@ -98,8 +98,8 @@ This is the canonical example of Bit.Vector serving as infrastructure bitmap in 
 ### 2.1 Waiter State Machines (Two Instances)
 
 **Files**:
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Waiter.State.swift` (lines 17-34)
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.Waiter.swift` (lines 51-68)
+- `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Waiter.State.swift` (lines 17-34)
+- `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.Waiter.swift` (lines 51-68)
 
 Both implement the same pattern:
 
@@ -128,7 +128,7 @@ Used with `Atomic<State>` via `compareExchange` for lock-free state transitions.
 
 ### 2.2 Blocking Lane Job State
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Job.State.swift` (lines 10-20)
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Job.State.swift` (lines 10-20)
 
 ```swift
 enum State: UInt8, AtomicRepresentable {
@@ -145,7 +145,7 @@ This is a linear state machine (enum, not a bitset). States are mutually exclusi
 
 ### 2.3 Completion Flags (OptionSet)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.Flags.swift` (lines 21-46)
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.Flags.swift` (lines 21-46)
 
 ```swift
 public struct Flags: OptionSet, Sendable, Hashable {
@@ -160,7 +160,7 @@ public struct Flags: OptionSet, Sendable, Hashable {
 
 ### 2.4 Completion Kind Set (OptionSet)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.Kind.Set.swift` (lines 19-68)
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.Kind.Set.swift` (lines 19-68)
 
 ```swift
 public struct Set: OptionSet, Sendable, Hashable {
@@ -172,7 +172,7 @@ Capability set of operation kinds (nop, read, write, accept, connect, send, recv
 
 ### 2.5 Half-Close State (OptionSet)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Channel.HalfClose.State.swift` (lines 8-22)
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Channel.HalfClose.State.swift` (lines 8-22)
 
 ```swift
 struct State: OptionSet, Sendable {
@@ -186,7 +186,7 @@ struct State: OptionSet, Sendable {
 
 ### 2.6 Shutdown Flag (Atomic)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.Poll.Shutdown.Flag.swift` (lines 11-17)
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.Poll.Shutdown.Flag.swift` (lines 11-17)
 
 ```swift
 public typealias Flag = Tagged<IO.Completion.Poll.Shutdown, Kernel.Atomic.Flag>
@@ -196,25 +196,25 @@ Single atomic boolean via `Kernel.Atomic.Flag`.
 
 ### 2.7 Metrics Counters
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Metrics.swift` (lines 35-73)
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Threads.Metrics.swift` (lines 35-73)
 
 9 independent `Cell` instances (each wrapping `Atomic<UInt64>`), with nested accessor structs for fluent API. Not a bitset — these are monotonic counters.
 
 ### 2.8 Advisory Gauges
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Runtime.State.swift` (lines 406-419)
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Threads.Runtime.State.swift` (lines 406-419)
 
 3 independent `Atomic<Int>` values for lock-free reads. Not a bitset.
 
 ### 2.9 Executor Handle State
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO/IO.Executor.Handle.State.swift` (lines 34-41)
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO/IO.Executor.Handle.State.swift` (lines 34-41)
 
 Linear state enum with associated data (`reserved(waiterToken:)`). Not bit-based.
 
 ### 2.10 Slab Bitmap (via Acceptance Queue)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Acceptance.Queue.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Threads.Acceptance.Queue.swift`
 
 Uses `Slab<Entry>` (which internally uses `Bit.Vector` bitmap). Already leveraging bit-vector primitives transitively.
 

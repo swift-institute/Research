@@ -45,8 +45,6 @@ Surveying all README.md files across the ecosystem reveals three tiers of qualit
 | Missing Error Handling section | Most packages with typed throws |
 | No Table of Contents (>200 lines) | swift-io (338), swift-kernel (277), swift-rfc-4648 (320) |
 
-**Legal/statute packages** (wet-zeggenschap-lichaamsmateriaal, NRS-78) have NO README at all.
-
 **GitHub organization profile READMEs** (`.github/profile/README.md`) are all empty placeholders — `# Swift Institute` (1 line).
 
 ### Best-Quality Internal Examples
@@ -219,9 +217,9 @@ The skill promotes existing non-normative documentation to normative skill requi
 
 ## References
 
-- `/Users/coen/Developer/swift-institute/Research/documentation-skill-design.md` — Parent research (separation decision)
-- `/Users/coen/Developer/swift-institute/Documentation.docc/Documentation Standards.md` — Existing README specifications
-- `/Users/coen/Developer/swift-institute/Skills/documentation/SKILL.md` — Companion skill
+- `Research/documentation-skill-design.md` — Parent research (separation decision)
+- `Documentation.docc/Documentation Standards.md` — Existing README specifications
+- `Skills/documentation/SKILL.md` — Companion skill
 - https://github.com/hackergrrl/art-of-readme — Cognitive funneling principle
 - https://www.makeareadme.com/ — Section guidance
 - https://github.com/RichardLitt/standard-readme — Standard Readme spec

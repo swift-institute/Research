@@ -8,7 +8,7 @@ packages:
   - swift-kernel
   - swift-async-primitives
   - swift-executors
-status: pending
+status: processed
 ---
 
 # IO.Blocking Domain Model Redesign — From Surface Cleanup to Category-Error Discovery

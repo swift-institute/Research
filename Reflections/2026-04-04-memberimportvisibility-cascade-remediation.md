@@ -11,7 +11,7 @@ packages:
   - swift-pool-primitives
   - swift-darwin-primitives
   - swift-kernel-primitives
-status: pending
+status: processed
 ---
 
 # MemberImportVisibility Cascade Remediation

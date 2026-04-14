@@ -738,12 +738,12 @@ Memory.Contiguous.Protocol overload differences, while noting zero external cons
 
 ## References
 
-- binary-parser-primitives reference architecture: `/Users/coen/Developer/swift-primitives/swift-binary-parser-primitives/`
-- ascii-primitives current API: `/Users/coen/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/`
-- parser-primitives ASCII target: `/Users/coen/Developer/swift-primitives/swift-parser-primitives/Sources/Parser ASCII Integer Primitives/`
-- parser-primitives protocols: `/Users/coen/Developer/swift-primitives/swift-parser-primitives/Sources/Parser Primitives Core/`
-- swift-ascii foundations: `/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/`
-- Primitives Tiers: `/Users/coen/Developer/swift-primitives/Documentation.docc/Primitives Tiers.md`
+- binary-parser-primitives reference architecture: `https://github.com/swift-primitives/swift-binary-parser-primitives`
+- ascii-primitives current API: `https://github.com/swift-primitives/swift-ascii-primitives/tree/main/Sources/ASCII Primitives/`
+- parser-primitives ASCII target: `https://github.com/swift-primitives/swift-parser-primitives/tree/main/Sources/Parser ASCII Integer Primitives/`
+- parser-primitives protocols: `https://github.com/swift-primitives/swift-parser-primitives/tree/main/Sources/Parser Primitives Core/`
+- swift-ascii foundations: `https://github.com/swift-foundations/swift-ascii/tree/main/Sources/ASCII/`
+- Primitives Tiers: `https://github.com/swift-primitives/Documentation.docc/tree/main/Primitives Tiers.md`
 - Adversarial review: [ascii-parsing-adversarial-review.md](ascii-parsing-adversarial-review.md)
 - [API-NAME-001] Namespace Structure
 - [API-NAME-003] Specification-Mirroring Names

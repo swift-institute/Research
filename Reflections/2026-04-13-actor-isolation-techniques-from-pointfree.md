@@ -5,7 +5,7 @@ packages:
   - swift-standard-library-extensions
   - swift-async
   - swift-io
-status: pending
+status: processed
 ---
 
 # Actor Isolation Techniques: From Video Study to Ecosystem Application

@@ -321,7 +321,7 @@ Each subsystem (Events, Completions, Blocking) provides a concrete runtime; the 
 
 ## References
 
-- TCA26 source: `/Users/coen/Developer/pointfreeco/TCA26`
+- TCA26 source: `https://github.com/pointfreeco/TCA26`
 - Completion Queue redesign: `swift-io/Research/completion-queue-ownership-redesign.md`
 - Ownership transfer conventions: `swift-institute/Research/ownership-transfer-conventions.md`
 - Modern concurrency conventions: `swift-institute/Research/modern-concurrency-conventions.md`

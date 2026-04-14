@@ -3,7 +3,7 @@ date: 2026-04-02
 session_objective: Investigate whether Builtin.addressof + UnsafeMutableRawPointer can replace ManagedBuffer for ~Escapable heap storage
 packages:
   - swift-storage-primitives
-status: pending
+status: processed
 ---
 
 # ~Escapable Heap Storage — Builtin.addressof Blocker and Upstream Resolution
@@ -16,7 +16,7 @@ Built `swift-storage-primitives/Experiments/escapable-heap-storage/` with 10 var
 
 A field-by-field workaround (decompose to Escapable fields, store individually, reconstruct via init) was confirmed working for the full lifecycle. However, this was correctly identified as a workaround that doesn't generalize to `Storage.Heap<Element: ~Escapable>`.
 
-Searched `swiftlang/swift` at `/Users/coen/Developer/swiftlang/swift` and found `origin/nonescapable-pointers` branch (Nate Cook, 2026-03-19, commit `885fa6e1f87`). This WIP changes `UnsafePointer<Pointee: ~Copyable>` to `UnsafePointer<Pointee: ~Copyable & ~Escapable>` with conditional `Escapable` conformance. Also updates `Span`, `assumingMemoryBound`, and adds `@_lifetime(copy self)` to accessors. This is the proper fix — once it lands, `Storage.Heap<Element: ~Escapable>` via `ManagedBuffer` becomes possible without workarounds.
+Searched `swiftlang/swift` at `https://github.com/swiftlang/swift` and found `origin/nonescapable-pointers` branch (Nate Cook, 2026-03-19, commit `885fa6e1f87`). This WIP changes `UnsafePointer<Pointee: ~Copyable>` to `UnsafePointer<Pointee: ~Copyable & ~Escapable>` with conditional `Escapable` conformance. Also updates `Span`, `assumingMemoryBound`, and adds `@_lifetime(copy self)` to accessors. This is the proper fix — once it lands, `Storage.Heap<Element: ~Escapable>` via `ManagedBuffer` becomes possible without workarounds.
 
 Decision: wait for `nonescapable-pointers` to land. Do not build a workaround layer.
 

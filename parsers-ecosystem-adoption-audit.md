@@ -29,7 +29,7 @@ Where across the Swift Institute ecosystem are there opportunities to use the pa
 
 ### Parser Primitives Core (Layer 1)
 
-The core protocol at `/Users/coen/Developer/swift-primitives/swift-parser-primitives/Sources/Parser Primitives Core/Parser.Parser.swift`:
+The core protocol at `https://github.com/swift-primitives/swift-parser-primitives/blob/main/Sources/Parser Primitives Core/Parser.Parser.swift`:
 
 ```swift
 public protocol `Protocol`<Input, ParseOutput, Failure> {
@@ -75,7 +75,7 @@ Key characteristics:
 
 ### Foundations-Level Parsers (Layer 3)
 
-At `/Users/coen/Developer/swift-foundations/swift-parsers/Sources/Parsers/`:
+At `https://github.com/swift-foundations/swift-parsers/tree/main/Sources/Parsers/`:
 
 | Parser | Purpose |
 |--------|---------|
@@ -94,13 +94,13 @@ At `/Users/coen/Developer/swift-foundations/swift-parsers/Sources/Parsers/`:
 
 ### Binary Parser Primitives (Layer 1)
 
-At `/Users/coen/Developer/swift-primitives/swift-binary-parser-primitives/Sources/`:
+At `https://github.com/swift-primitives/swift-binary-parser-primitives/tree/main/Sources/`:
 
 Binary integer parsers, `Binary.Coder`, `Binary.Bytes.Input.View`, `Binary.Bytes.Machine` for structured binary format parsing.
 
 ### Parser Machine Primitives (Layer 1)
 
-At `/Users/coen/Developer/swift-primitives/swift-parser-machine-primitives/Sources/`:
+At `https://github.com/swift-primitives/swift-parser-machine-primitives/tree/main/Sources/`:
 
 Compiled parser machines with memoization for performance-critical parsing.
 

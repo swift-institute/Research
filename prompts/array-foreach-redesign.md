@@ -49,24 +49,24 @@ Three candidates named `forEach` exist on every `Array` conformer:
 
 In non-mutating contexts, only #1 is available. But when #1's `Void` constraint fails (because `withElement<R>` propagates a non-Void inner return like `Set.insert`'s tuple), the compiler evaluates all three, finds all failing for different reasons, and reports "ambiguous" instead of the real error.
 
-**Reproducer** (in rule-burgerlijk-wetboek-2):
+**Reproducer**:
 ```swift
 // FAILS — Set.insert returns (Bool, Element), withElement propagates it,
 // outer forEach closure becomes non-Void, method #1 fails, ambiguity with #2/#3
-inschrijvingen.forEach { idx in
-    inschrijvingen.withElement(at: idx) { result.insert($0.registratie.houder.persoon) }
+entries.forEach { idx in
+    entries.withElement(at: idx) { result.insert($0.field) }
 }
 
 // WORKS — assignment returns Void
-inschrijvingen.forEach { idx in
-    inschrijvingen.withElement(at: idx) { total = total + $0.aandeel.`nominaal bedrag` }
+entries.forEach { idx in
+    entries.withElement(at: idx) { total = total + $0.amount }
 }
 ```
 
 **Current workaround**: Annotate inner closure `-> Void`:
 ```swift
-inschrijvingen.withElement(at: idx) { (inschrijving: borrowing Inschrijving) -> Void in
-    result.insert(inschrijving.registratie.houder.persoon)
+entries.withElement(at: idx) { (entry: borrowing Entry) -> Void in
+    result.insert(entry.field)
 }
 ```
 
@@ -102,27 +102,24 @@ What should the iteration API surface look like on `Array.Protocol` so that:
 ### Files to Read
 
 **Array iteration infrastructure**:
-- `/Users/coen/Developer/swift-primitives/swift-array-primitives/Sources/Array Primitives Core/Array.Protocol.swift`
-- `/Users/coen/Developer/swift-primitives/swift-array-primitives/Sources/Array Primitives Core/Array.Protocol+defaults.swift`
-- `/Users/coen/Developer/swift-primitives/swift-array-primitives/Sources/Array Dynamic Primitives/Array.Dynamic ~Copyable.swift` (forEach property)
+- `https://github.com/swift-primitives/swift-array-primitives/blob/main/Sources/Array Primitives Core/Array.Protocol.swift`
+- `https://github.com/swift-primitives/swift-array-primitives/blob/main/Sources/Array Primitives Core/Array.Protocol+defaults.swift`
+- `https://github.com/swift-primitives/swift-array-primitives/blob/main/Sources/Array Dynamic Primitives/Array.Dynamic ~Copyable.swift` (forEach property)
 
 **Collection iteration infrastructure**:
-- `/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.Protocol+ForEach.swift`
-- `/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.ForEach+Property.View.swift`
-- `/Users/coen/Developer/swift-primitives/swift-collection-primitives/Sources/Collection Primitives/Collection.ForEach.swift`
+- `https://github.com/swift-primitives/swift-collection-primitives/blob/main/Sources/Collection Primitives/Collection.Protocol+ForEach.swift`
+- `https://github.com/swift-primitives/swift-collection-primitives/blob/main/Sources/Collection Primitives/Collection.ForEach+Property.View.swift`
+- `https://github.com/swift-primitives/swift-collection-primitives/blob/main/Sources/Collection Primitives/Collection.ForEach.swift`
 
 **Other Array variants** (also have forEach properties):
-- `/Users/coen/Developer/swift-primitives/swift-array-primitives/Sources/Array Fixed Primitives/Array.Fixed ~Copyable.swift`
-- `/Users/coen/Developer/swift-primitives/swift-array-primitives/Sources/Array Static Primitives/Array.Static ~Copyable.swift`
-- `/Users/coen/Developer/swift-primitives/swift-array-primitives/Sources/Array Small Primitives/Array.Small ~Copyable.swift`
+- `https://github.com/swift-primitives/swift-array-primitives/blob/main/Sources/Array Fixed Primitives/Array.Fixed ~Copyable.swift`
+- `https://github.com/swift-primitives/swift-array-primitives/blob/main/Sources/Array Static Primitives/Array.Static ~Copyable.swift`
+- `https://github.com/swift-primitives/swift-array-primitives/blob/main/Sources/Array Small Primitives/Array.Small ~Copyable.swift`
 
 **Swift stdlib reference**:
-- `/Users/coen/Developer/swiftlang/swift/stdlib/public/core/Sequence.swift` (lines 850-858)
+- `https://github.com/swiftlang/swift/blob/main/stdlib/public/core/Sequence.swift` (lines 850-858)
 
-**Consumer showing the problem**:
-- `/Users/coen/Developer/rule-law/rule-law-nl/rule-burgerlijk-wetboek-2/Sources/Rule Burgerlijk Wetboek 2/Besloten Vennootschap.Aandeelhoudersregister.swift`
-
-**Ecosystem usage scan**: Grep for `.forEach { idx in` and `.withElement(at:` across swift-primitives, swift-standards, swift-foundations, rule-law to measure migration cost.
+**Ecosystem usage scan**: Grep for `.forEach { idx in` and `.withElement(at:` across swift-primitives, swift-standards, swift-foundations to measure migration cost.
 
 ## Constraints
 
@@ -133,6 +130,6 @@ What should the iteration API surface look like on `Array.Protocol` so that:
 
 ## Output
 
-Write research document to `/Users/coen/Developer/swift-primitives/swift-array-primitives/Research/array-foreach-redesign.md`. Follow [RES-003] structure. Include ecosystem usage scan results and migration cost.
+Write research document to `https://github.com/swift-primitives/swift-array-primitives/blob/main/Research/array-foreach-redesign.md`. Follow [RES-003] structure. Include ecosystem usage scan results and migration cost.
 
 If a clear recommendation emerges, implement it. Run `swift build` and `swift test` on swift-array-primitives. Then grep for broken call sites across the workspace and fix them.

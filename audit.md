@@ -637,7 +637,7 @@ Each rename touches 5 layers: struct declarations, all type references, module/t
 **swift-queue-primitives** (3 Fixed types, 1 hoisted error, 1 module/target):
 
 ```bash
-PKG="/Users/coen/Developer/swift-primitives/swift-queue-primitives"
+PKG="swift-queue-primitives"
 find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
   -e 's/\.Fixed/.Bounded/g' \
   -e 's/struct Fixed/struct Bounded/g' \
@@ -650,7 +650,7 @@ find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xarg
 **swift-heap-primitives** (2 Fixed types, 1 module/target):
 
 ```bash
-PKG="/Users/coen/Developer/swift-primitives/swift-heap-primitives"
+PKG="swift-heap-primitives"
 find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
   -e 's/\.Fixed/.Bounded/g' \
   -e 's/struct Fixed/struct Bounded/g' \
@@ -661,7 +661,7 @@ find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xarg
 **swift-set-primitives** (1 Fixed type, 1 hoisted error, no separate module):
 
 ```bash
-PKG="/Users/coen/Developer/swift-primitives/swift-set-primitives"
+PKG="swift-set-primitives"
 find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
   -e 's/\.Fixed/.Bounded/g' \
   -e 's/struct Fixed/struct Bounded/g' \
@@ -671,7 +671,7 @@ find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xarg
 **swift-bitset-primitives** (1 Fixed type, 1 hoisted error, no separate module):
 
 ```bash
-PKG="/Users/coen/Developer/swift-primitives/swift-bitset-primitives"
+PKG="swift-bitset-primitives"
 find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
   -e 's/\.Fixed/.Bounded/g' \
   -e 's/struct Fixed/struct Bounded/g' \
@@ -681,7 +681,7 @@ find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xarg
 **swift-list-primitives** (1 Inline→Static, 1 hoisted error):
 
 ```bash
-PKG="/Users/coen/Developer/swift-primitives/swift-list-primitives"
+PKG="swift-list-primitives"
 find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
   -e 's/List\.Linked\.Inline/List.Linked.Static/g' \
   -e 's/__ListLinkedInlineError/__ListLinkedStaticError/g'
@@ -693,7 +693,7 @@ sed -i '' 's/public struct Inline<let capacity/public struct Static<let capacity
 **swift-tree-primitives** (1 Inline→Static, 1 hoisted error, 1 module/target):
 
 ```bash
-PKG="/Users/coen/Developer/swift-primitives/swift-tree-primitives"
+PKG="swift-tree-primitives"
 find "$PKG" \( -name '*.swift' -o -name '*.md' \) -not -path '*/.build/*' | xargs sed -i '' \
   -e 's/Tree\.N\.Inline/Tree.N.Static/g' \
   -e 's/__TreeNInlineError/__TreeNStaticError/g' \
@@ -708,10 +708,10 @@ sed -i '' 's/public struct Inline<let capacity/public struct Static<let capacity
 
 ```bash
 sed -i '' 's/\.Fixed/.Bounded/g' \
-  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Worker.swift" \
-  "/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Runtime.State.swift"
+  "swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Worker.swift" \
+  "swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Runtime.State.swift"
 sed -i '' 's/Queue\.Fixed/Queue.Bounded/g; s/Heap\.Fixed/Heap.Bounded/g; s/DoubleEnded\.Fixed/DoubleEnded.Bounded/g' \
-  "/Users/coen/Developer/swift-foundations/swift-io/Research/data-structure-ecosystem-triage.md"
+  "swift-io/Research/data-structure-ecosystem-triage.md"
 ```
 
 #### File and Directory Renames (git mv)
@@ -719,7 +719,7 @@ sed -i '' 's/Queue\.Fixed/Queue.Bounded/g; s/Heap\.Fixed/Heap.Bounded/g; s/Doubl
 **swift-queue-primitives:**
 
 ```bash
-cd /Users/coen/Developer/swift-primitives/swift-queue-primitives
+cd swift-queue-primitives
 git mv "Sources/Queue Fixed Primitives" "Sources/Queue Bounded Primitives"
 git mv "Sources/Queue Primitives Core/Queue.Fixed.swift" "Sources/Queue Primitives Core/Queue.Bounded.swift"
 git mv "Sources/Queue Bounded Primitives/Queue.Fixed Copyable.swift" "Sources/Queue Bounded Primitives/Queue.Bounded Copyable.swift"
@@ -728,7 +728,7 @@ git mv "Sources/Queue Bounded Primitives/Queue.Fixed Copyable.swift" "Sources/Qu
 **swift-heap-primitives:**
 
 ```bash
-cd /Users/coen/Developer/swift-primitives/swift-heap-primitives
+cd swift-heap-primitives
 git mv "Sources/Heap Fixed Primitives" "Sources/Heap Bounded Primitives"
 git mv "Sources/Heap Primitives Core/Heap.Fixed.Error.swift" "Sources/Heap Primitives Core/Heap.Bounded.Error.swift"
 git mv "Sources/Heap Bounded Primitives/Heap.Fixed ~Copyable.swift" "Sources/Heap Bounded Primitives/Heap.Bounded ~Copyable.swift"
@@ -742,7 +742,7 @@ git mv "Tests/Heap Primitives Tests/Heap.Fixed Tests.swift" "Tests/Heap Primitiv
 **swift-set-primitives:**
 
 ```bash
-cd /Users/coen/Developer/swift-primitives/swift-set-primitives
+cd swift-set-primitives
 git mv "Sources/Set Ordered Primitives/Set.Ordered.Fixed.swift" "Sources/Set Ordered Primitives/Set.Ordered.Bounded.swift"
 git mv "Sources/Set Ordered Primitives/Set.Ordered.Fixed Copyable.swift" "Sources/Set Ordered Primitives/Set.Ordered.Bounded Copyable.swift"
 git mv "Sources/Set Ordered Primitives/Set.Ordered.Fixed.Indexed.swift" "Sources/Set Ordered Primitives/Set.Ordered.Bounded.Indexed.swift"
@@ -753,7 +753,7 @@ git mv "Sources/Set Ordered Primitives/Set.Ordered.Fixed+Sequence.Drain.swift" "
 **swift-bitset-primitives:**
 
 ```bash
-cd /Users/coen/Developer/swift-primitives/swift-bitset-primitives
+cd swift-bitset-primitives
 git mv "Sources/Bitset Primitives/Bitset.Fixed.swift" "Sources/Bitset Primitives/Bitset.Bounded.swift"
 git mv "Sources/Bitset Primitives/Bitset.Fixed.Error.swift" "Sources/Bitset Primitives/Bitset.Bounded.Error.swift"
 git mv "Sources/Bitset Primitives/Bitset.Fixed.Algebra.swift" "Sources/Bitset Primitives/Bitset.Bounded.Algebra.swift"
@@ -764,14 +764,14 @@ git mv "Sources/Bitset Primitives/Bitset.Fixed.Relation.swift" "Sources/Bitset P
 **swift-list-primitives:**
 
 ```bash
-cd /Users/coen/Developer/swift-primitives/swift-list-primitives
+cd swift-list-primitives
 git mv "Sources/List Linked Primitives/List.Linked.Inline.swift" "Sources/List Linked Primitives/List.Linked.Static.swift"
 ```
 
 **swift-tree-primitives:**
 
 ```bash
-cd /Users/coen/Developer/swift-primitives/swift-tree-primitives
+cd swift-tree-primitives
 git mv "Sources/Tree N Inline Primitives" "Sources/Tree N Static Primitives"
 git mv "Sources/Tree N Static Primitives/Tree.N.Inline.swift" "Sources/Tree N Static Primitives/Tree.N.Static.swift"
 git mv "Sources/Tree N Static Primitives/Tree.N.Inline.Error.swift" "Sources/Tree N Static Primitives/Tree.N.Static.Error.swift"
@@ -781,10 +781,10 @@ git mv "Sources/Tree N Static Primitives/Tree.N.Inline.Error.swift" "Sources/Tre
 
 ```bash
 # Per package:
-cd /Users/coen/Developer/swift-primitives/{package} && swift build && swift test
+cd {package} && swift build && swift test
 
 # Downstream:
-cd /Users/coen/Developer/swift-foundations && swift build
+cd swift-foundations && swift build
 ```
 
 #### Safety Constraints

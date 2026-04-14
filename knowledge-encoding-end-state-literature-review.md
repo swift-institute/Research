@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-18
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-04-13
+status: RECOMMENDATION
 tier: 2
 ---
 -->
@@ -13,7 +13,7 @@ tier: 2
 
 Software development has traditionally followed an **island approach**: build isolated software to solve a particular problem. An alternative vision reverses this: what if the goal were to **encode all knowledge as executable code**, following rigorous domain modeling? This would represent a fundamentally different paradigm — software development as knowledge encoding rather than problem-solving.
 
-The Swift Institute and rule-law / swift-law ecosystems embody this latter approach: the five-layer architecture, typed primitives, specification-mirroring names, and statute encoding are all oriented toward **comprehensive domain encoding** rather than building applications. This document surveys the academic and industry literature that supports, explores, or contributes to this vision.
+The Swift Institute ecosystem embodies this latter approach: the five-layer architecture, typed primitives, and specification-mirroring names are all oriented toward **comprehensive domain encoding** rather than building applications. This document surveys the academic and industry literature that supports, explores, or contributes to this vision.
 
 ## Question
 
@@ -138,7 +138,7 @@ Ontologies formalize domain knowledge as categories, properties, and relations �
 
 ### Tradition 9: Computational Law / Rules as Code
 
-The most direct parallel to the Swift Institute's rule-law ecosystem: encoding entire statutory domains as executable specifications.
+A tradition adjacent to comprehensive domain encoding: encoding entire statutory domains as executable specifications.
 
 #### Foundational
 
@@ -174,7 +174,7 @@ The most direct parallel to the Swift Institute's rule-law ecosystem: encoding e
 | Athan, Boley, Governatori et al., OASIS LegalRuleML | 2013/2021 | ICAIL / OASIS Standard | XML standard for normative legal rules; defeasibility, jurisdiction, temporal management |
 | Governatori & Hashmi, "Normative Requirements for BPC" | 2013-2015 | Springer | Formal framework: how legal norms impose constraints on business processes |
 
-**Relevance**: The rule-law/swift-law ecosystem is a direct implementation of this tradition, but using Swift's type system rather than logic programming or XML. The `@Splat` pattern, `Bool?` per condition, and `Bool?.any/all` composition implement computational law through algebraic types rather than Prolog-style inference. The statute encoding pattern (1057 Dutch statute packages, 820 NRS packages) demonstrates that comprehensive legislative encoding is feasible at scale.
+**Relevance**: This tradition shows that comprehensive statutory domains can be encoded as executable specifications. The techniques (logic programming, XML, DSLs) differ from the Swift Institute's type-driven approach, but the shared premise — that entire normative domains can be captured in code — supports the knowledge-encoding end-state more broadly.
 
 ---
 
@@ -187,7 +187,7 @@ A philosophical bridge between law and computation: formalizing how institutiona
 | John Searle, *The Construction of Social Reality* | 1995 | Free Press | "X counts as Y in context C" — constitutive rules create institutional facts; amenable to encoding |
 | Sergot & Jones, "A Computational Theory of Normative Positions" | 2001 | ACM TOCL | Hohfeld/Kanger normative positions (rights, duties, powers) formalized computationally |
 
-**Relevance**: The legal encoding ecosystem's four-layer architecture (legislature → judiciary → composition → products) mirrors Searle's constitutive rules: statutes define what counts as what, judicial decisions apply those definitions, and the composition layer assembles institutional facts.
+**Relevance**: Constitutive rules ("X counts as Y in context C") apply directly to typed domain encoding: types define what counts as what, and the composition layer assembles higher-order institutional or domain facts from lower-order constituents.
 
 ---
 
@@ -211,7 +211,7 @@ Category theory provides the mathematical foundation for composition — the cor
 |--------|------|-------|-----------------|
 | Donald Knuth, "Literate Programming" | 1984 | The Computer Journal | Programs as literature; code and explanation unified in one artifact; knowledge preservation |
 
-**Relevance**: The Swift Institute's documentation skill ([DOC-*]) and the Catala-like literate quality of statute encoding (where article structure mirrors code structure) inherit this tradition.
+**Relevance**: The Swift Institute's documentation skill ([DOC-*]) and the Catala-like literate tradition of specification-mirroring code (where source-document structure informs code structure) inherit this tradition.
 
 ---
 
@@ -278,15 +278,6 @@ Knowledge is encoded once, completely, and applications are derived from the kno
 | Components | "What is opinionated?" — curated assemblies | Domain-Driven Design, Generative Programming |
 | Applications | "What serves users?" — derived products | Traditional software development |
 
-The legal encoding ecosystem makes this even more explicit:
-
-| Layer | Knowledge Function | Tradition |
-|-------|-------------------|-----------|
-| Legislature encoding | Statute text → typed Swift code | Computational Law, Rules as Code |
-| Judiciary encoding | Case law → typed Swift code | Normative Positions, Institutional Theory |
-| Composition | Cross-statute integration | Ontology-Driven Development |
-| Products | Legal applications | Traditional software development |
-
 ### Key Differentiators from Traditional Software
 
 1. **Domain completeness over consumer counting** — Types exist because the domain requires them, not because an application needs them
@@ -306,8 +297,8 @@ This literature review establishes that the Swift Institute's approach draws fro
 ### Identified Gaps for Further Investigation
 
 1. **No unified theory** — These traditions exist in silos. No single academic work synthesizes them into a coherent "end-state" theory of software development. This could be a contribution.
-2. **Scale evidence** — The Swift Institute (61 primitives packages, 1057 statute packages) may be one of the largest real-world implementations of this vision. Documenting the practical challenges would be valuable.
-3. **Composition theory** — How knowledge from different domains composes (e.g., legal + financial) is underexplored in the literature.
+2. **Scale evidence** — The Swift Institute (61 primitives packages, tiered standards and foundations) is a substantial real-world implementation of this vision. Documenting the practical challenges would be valuable.
+3. **Composition theory** — How knowledge from different domains composes (e.g., networking + cryptography) is underexplored in the literature.
 4. **LLM implications** — How comprehensive knowledge encoding interacts with AI-assisted development is an emerging area (cf. arXiv:2502.10708).
 
 ## References

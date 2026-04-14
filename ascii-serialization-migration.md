@@ -477,9 +477,9 @@ For each `Binary.ASCII.Serializable` conformer:
 - canonical-witness-capability-attachment: [canonical-witness-capability-attachment.md](canonical-witness-capability-attachment.md) (v1.2.0, DECISION)
 - parsing-serialization-capability-organization: [parsing-serialization-capability-organization.md](parsing-serialization-capability-organization.md) (v1.2.0, RECOMMENDATION)
 - parsers-adoption-implementation-plan: [parsers-adoption-implementation-plan.md](parsers-adoption-implementation-plan.md)
-- Binary.ASCII.Serializable: `/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Serializable.swift`
-- Binary.ASCII.Wrapper: `/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/Binary.ASCII.Wrapper.swift`
-- Serialization witnesses: `/Users/coen/Developer/swift-primitives/swift-serialization-primitives/Sources/Serialization Primitives/`
+- Binary.ASCII.Serializable: `https://github.com/swift-foundations/swift-ascii/blob/main/Sources/ASCII/Binary.ASCII.Serializable.swift`
+- Binary.ASCII.Wrapper: `https://github.com/swift-foundations/swift-ascii/blob/main/Sources/ASCII/Binary.ASCII.Wrapper.swift`
+- Serialization witnesses: `https://github.com/swift-primitives/swift-serialization-primitives/tree/main/Sources/Serialization Primitives/`
 - parsers-ecosystem-adoption-audit: [parsers-ecosystem-adoption-audit.md](parsers-ecosystem-adoption-audit.md)
 - [API-NAME-001] Namespace Structure
 - [MOD-DOMAIN] One domain per package

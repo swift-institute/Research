@@ -19,24 +19,24 @@ The existing `Documentation Standards.md` covers both, but as a monolithic non-n
 
 This research focuses on `/documentation`. A separate research document will cover `/readme`.
 
-Two exemplar projects inform the design:
+Two exemplar project styles inform the design:
 
-| Project | .docc Approach | Content Distribution |
-|---------|---------------|---------------------|
-| `swift-us-nv-nrs-78-private-corporations` | Navigation stubs (7-line @Metadata files) | All content in inline `///` comments |
-| `wet-zeggenschap-lichaamsmateriaal` | Substantive content layer | Spec text + examples mirrored in both layers; explanatory material exclusive to .docc |
+| Style | .docc Approach | Content Distribution |
+|-------|---------------|---------------------|
+| Navigation-only | Navigation stubs (7-line @Metadata files) | All content in inline `///` comments |
+| Substantive content | Substantive content layer | Spec text + examples mirrored in both layers; explanatory material exclusive to .docc |
 
-The Wzl project demonstrates a significantly richer pattern that the skill must accommodate.
+The substantive-content style demonstrates a significantly richer pattern that the skill must accommodate.
 
 ## Question
 
-What should a `/documentation` skill contain, given the two-skill split and the substantive .docc catalogue patterns observed in Wzl?
+What should a `/documentation` skill contain, given the two-skill split and the substantive .docc catalogue pattern?
 
 ## Analysis
 
 ### Two Documentation Maturity Levels
 
-#### Level 1: Navigation Scaffolding (NRS-78 Pattern)
+#### Level 1: Navigation Scaffolding
 
 The `.docc` catalogue provides pure navigation:
 - Root page with `## Topics` grouping symbols
@@ -46,11 +46,11 @@ The `.docc` catalogue provides pure navigation:
 
 **When appropriate**: Early development; types not yet fully documented; primitives packages.
 
-#### Level 2: Substantive Content Layer (Wzl Pattern)
+#### Level 2: Substantive Content Layer
 
 The `.docc` catalogue carries substantive content alongside navigation:
 
-**Article page structure** (e.g., `Artikel 14.md`):
+**Article page structure** (e.g., `Section 3.md`):
 ```markdown
 # ``Module/Symbol``
 
@@ -61,37 +61,37 @@ The `.docc` catalogue carries substantive content alongside navigation:
 
 {Brief description}
 
-## Wetsartikel
+## Specification
 
 > **Section Title**
 >
 > [1.](<doc:Symbol/Subsection 1>) Verbatim specification text with
 > [cross-references](<doc:Related/Term>) to defined terms...
 
-## Voorbeeld
+## Example
 
 ` ` `swift
 // Working Swift code example
 ` ` `
 
-## Memorie van Toelichting
+## Rationale
 
-{Explanatory prose — legislative rationale, design context, relationship
-to other specifications. This content is EXCLUSIVE to the .docc article
-and does NOT appear in inline comments.}
+{Explanatory prose — design context, relationship to other specifications.
+This content is EXCLUSIVE to the .docc article and does NOT appear in inline
+comments.}
 ```
 
 **Key observations**:
 
 1. **Specification text is mirrored** between inline `///` and `.docc` articles. Both contain the same blockquoted text with the same cross-reference links. This is intentional — inline docs are self-sufficient for source readers; .docc articles render the same content in a navigable format.
 
-2. **Explanatory material is exclusive to .docc**. The Memorie van Toelichting (explanatory memorandum) appears only in .docc articles, not in inline comments. This is the key differentiator — .docc articles ADD context that doesn't belong in source code.
+2. **Explanatory material is exclusive to .docc**. Rationale and explanatory memoranda appear only in .docc articles, not in inline comments. This is the key differentiator — .docc articles ADD context that doesn't belong in source code.
 
 3. **Blockquote convention** delineates spec text from commentary. The `>` prefix clearly marks verbatim specification text versus original prose.
 
-4. **Companion document subdirectories** within `.docc/` host large related documents (14 MvT chapters, 300+ KB total).
+4. **Companion document subdirectories** within `.docc/` host large related documents (e.g., multi-chapter explanatory memoranda).
 
-5. **Conclusion patterns**: Articles may include `## Topics → ### Conclusies` with derived conclusions as navigable symbols.
+5. **Conclusion patterns**: Articles may include `## Topics → ### Conclusions` with derived conclusions as navigable symbols.
 
 ### Content Distribution Rules
 
@@ -102,7 +102,7 @@ and does NOT appear in inline comments.}
 | Subsection enumeration with links | MUST | MAY mirror |
 | Code examples | SHOULD | MAY mirror |
 | Cross-references to related specs | MUST | MAY mirror |
-| Explanatory material (MvT, rationale) | MUST NOT | MUST (when available) |
+| Explanatory material (rationale) | MUST NOT | MUST (when available) |
 | Companion documents (full chapters) | MUST NOT | MUST (as subdirectories) |
 | @Metadata, @DisplayName | — | MUST |
 | Topics organization | — | MUST |
@@ -139,36 +139,24 @@ Every public declaration MUST have a one-line `///` summary describing caller-vi
 Type declarations MUST follow:
 1. One-line summary
 2. Blank line
-3. Section heading for specification content (e.g., `## Wetsartikel`, `## RFC Section`)
+3. Section heading for specification content (e.g., `## RFC Section`, `## ISO Section`)
 4. Specification text in blockquote (`>`) when modeling external specs
-5. `## Voorbeeld` / `## Example` with working Swift code (when implemented)
+5. `## Example` with working Swift code (when implemented)
 
-**Correct** (Wzl pattern):
+**Correct** (specification-mirroring pattern):
 ```swift
-/// Toestemming bij leven
+/// Resource Identifier
 ///
-/// ## Wetsartikel
+/// ## RFC 3986 Section 3
 ///
-/// > **Toestemming bij leven**
-/// >
-/// > [1.](<doc:Artikel 14/Lid 1>) Het bij leven [afnemen](<doc:Artikel 1/Afnemen>)
-/// > van [lichaamsmateriaal](<doc:Artikel 1/Lichaamsmateriaal>) ...
+/// > [3.1.](<doc:RFC_3986/Section/3/1>) A URI scheme is the first
+/// > component of a URI reference...
 ///
-/// ## Voorbeeld
+/// ## Example
 ///
 /// ```swift
-/// let artikel14 = try `Artikel 14`(...)
+/// let uri = try RFC_3986.URI(...)
 /// ```
-```
-
-**Correct** (NRS-78 pattern):
-```swift
-/// Committees of board of directors; Designation.
-///
-/// # Statute
-///
-/// [1.](<doc:NRS 78/125/1>) Unless otherwise provided in articles, board
-/// may designate one or more committees...
 ```
 
 **[DOC-003] Method Documentation**
@@ -189,9 +177,9 @@ The `>` blockquote prefix MUST be used for verbatim specification text to visual
 **[DOC-006] Subsection Enumeration**
 When a specification section has numbered subsections, each MUST be listed with a DocC link and one-line summary:
 ```swift
-/// > [1.](<doc:Artikel 14/Lid 1>) Het bij leven afnemen van lichaamsmateriaal...
+/// > [1.](<doc:RFC_3986/Section/3/1>) A URI scheme is the first component...
 /// >
-/// > [2.](<doc:Artikel 14/Lid 2>) De beheerder draagt zorg voor het vragen...
+/// > [2.](<doc:RFC_3986/Section/3/2>) The authority component is preceded...
 ```
 
 **[DOC-007] Abbreviated Subsection Syntax**
@@ -205,21 +193,21 @@ When subsections are too dense to reproduce verbatim, they MAY be abbreviated us
 
 | Format | Use Case | Example |
 |--------|----------|---------|
-| DocC link | Explicit authored links, cross-article | `[artikel 8](<doc:Artikel 8>)` |
-| DocC link with term | Links to defined terms | `[afnemen](<doc:Artikel 1/Afnemen>)` |
-| Backtick auto-link | Casual sibling references | `` ``195`` `` |
+| DocC link | Explicit authored links, cross-article | `[section 3.2](<doc:RFC_3986/Section/3/2>)` |
+| DocC link with term | Links to defined terms | `[authority](<doc:RFC_3986/Glossary/Authority>)` |
+| Backtick auto-link | Casual sibling references | `` ``Section_3_2`` `` |
 
 DocC links MUST be used when linking to a different specification section or a defined term. Backtick auto-links MAY be used for sibling references within the same parent scope.
 
 **[DOC-009] Definition Index Pattern**
 When a section defines multiple terms, the documentation SHOULD list each definition with an italic title and DocC link:
 ```swift
-/// > _[afnemen](<doc:Artikel 1/Afnemen>)_: handeling waardoor stoffen...
-/// > _[beheerder](<doc:Artikel 1/Beheerder>)_: de rechtspersoon die...
+/// > _[scheme](<doc:RFC_3986/Glossary/Scheme>)_: The first component of a URI...
+/// > _[authority](<doc:RFC_3986/Glossary/Authority>)_: The component identified by...
 ```
 
 **[DOC-010] Explanatory Material Exclusion**
-Explanatory material (legislative rationale, design commentary, Memorie van Toelichting) MUST NOT appear in inline `///` comments. Inline docs contain specification text and code examples only. Explanatory material belongs exclusively in `.docc` articles.
+Explanatory material (design commentary, rationale, explanatory memoranda) MUST NOT appear in inline `///` comments. Inline docs contain specification text and code examples only. Explanatory material belongs exclusively in `.docc` articles.
 
 ---
 
@@ -252,7 +240,7 @@ The catalogue MUST contain a root page matching the module name:
 - ``{Symbol}``
 ```
 
-`@TitleHeading` provides domain context: "Nevada Revised Statutes", "Wet zeggenschap lichaamsmateriaal", "RFC 4122", "Swift Institute".
+`@TitleHeading` provides domain context: "RFC 4122", "ISO 32000", "Swift Institute".
 
 **[DOC-022] Article Pages — Navigation Level**
 Article pages at minimum MUST contain @Metadata:
@@ -272,10 +260,10 @@ Article pages MAY expand with substantive content sections. Recognized sections,
 
 | Section | Purpose | Required |
 |---------|---------|----------|
-| `## Wetsartikel` / `## Specification` | Blockquoted spec text with cross-links | MAY (mirrors inline docs) |
-| `## Voorbeeld` / `## Example` | Working Swift code example | MAY (mirrors inline docs) |
-| `## Memorie van Toelichting` / `## Rationale` | Explanatory material exclusive to .docc | MAY |
-| `## Topics → ### Conclusies` | Derived conclusions as navigable symbols | MAY |
+| `## Specification` | Blockquoted spec text with cross-links | MAY (mirrors inline docs) |
+| `## Example` | Working Swift code example | MAY (mirrors inline docs) |
+| `## Rationale` | Explanatory material exclusive to .docc | MAY |
+| `## Topics → ### Conclusions` | Derived conclusions as navigable symbols | MAY |
 
 When specification text appears in a .docc article, it MUST match the inline `///` version exactly. The .docc article is the superset — it mirrors inline content and adds explanatory depth.
 
@@ -306,16 +294,6 @@ Sources/{Module Name}/{Module Name}.docc/
 
 The root page MUST link to companion documents in its `## Topics` section.
 
-Example from Wzl:
-```
-Wet Zeggenschap Lichaamsmateriaal.docc/
-├── Wet Zeggenschap Lichaamsmateriaal.md
-├── Artikel 1.md ... Artikel 35.md
-└── Memorie van Toelichting/
-    ├── Memorie van Toelichting.md
-    └── MvT Hoofdstuk 1 ... 14.md
-```
-
 **[DOC-027] Content Layering Principle**
 Inline `///` documentation is the **self-sufficient developer reference** — reading source alone must suffice to understand a type. The `.docc` catalogue is the **expanded reference** — it mirrors core content for navigation and adds explanatory depth exclusive to .docc.
 
@@ -334,32 +312,29 @@ Specification text appearing in both layers is intentional mirroring, not prohib
 **[DOC-030] External Links**
 The root page's `## Overview` or preamble MUST include a link to the authoritative external specification:
 ```markdown
-- [NRS Chapter 78](https://www.leg.state.nv.us/nrs/NRS-078.html)
-```
-```markdown
-Officiële publicatie: [Kamerstuk 35844, nr. 3](https://zoek.officielebekendmakingen.nl/kst-35844-3.html)
+- [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986)
 ```
 
 **[DOC-031] Cross-Module References**
 When inline documentation references specifications outside the current module, the reference MUST use the full specification identifier:
 ```swift
-/// as required by NRS 77.310
+/// as required by RFC 3986 Section 3.1
 ```
 DocC links SHOULD be used when the referenced specification has a corresponding Swift module.
 
 **[DOC-032] Range Reference Pattern**
 When a specification references a range of sections, the documentation MUST link both endpoints and preserve the specification's range language:
 ```swift
-/// [NRS 78.191](<doc:NRS 78/191>) to [NRS 78.307](<doc:NRS 78/307>), inclusive
+/// [RFC 3986 Section 3.1](<doc:RFC_3986/Section/3/1>) to [RFC 3986 Section 3.3](<doc:RFC_3986/Section/3/3>), inclusive
 ```
 
 **[DOC-033] Blockquote Convention for Specification Text**
 Verbatim specification text MUST use the `>` blockquote prefix in both inline docs and .docc articles. This visually delineates normative specification text from original commentary:
 
 ```swift
-/// > **Toestemming bij leven**
+/// > **Scheme**
 /// >
-/// > [1.](<doc:Artikel 14/Lid 1>) Het bij leven afnemen...
+/// > [3.1.](<doc:RFC_3986/Section/3/1>) A URI scheme is the first...
 ```
 
 ---
@@ -383,8 +358,6 @@ Specification section headings SHOULD mirror the specification's own terminology
 
 | Domain | Heading | Example |
 |--------|---------|---------|
-| Dutch legislation | `## Wetsartikel` | Wet zeggenschap lichaamsmateriaal |
-| US state statutes | `# Statute` | NRS Chapter 78 |
 | RFCs | `## RFC {N} Section {M}` | RFC 4122 |
 | ISO standards | `## ISO {N} Section {M}` | ISO 32000 |
 | General | `## Specification` | Fallback |
@@ -393,7 +366,6 @@ Explanatory material headings:
 
 | Domain | Heading |
 |--------|---------|
-| Dutch legislation | `## Memorie van Toelichting` |
 | General | `## Rationale` or `## Design Notes` |
 
 **[DOC-042] Documentation Currency**
@@ -427,8 +399,7 @@ This separation is clean because README conventions are structurally independent
 | `naming` skill [API-NAME-003] | Spec-mirroring names; [DOC-005] extends to documentation content. |
 | `code-organization` skill [API-IMPL-005] | One type per file; [DOC-022] one article per type. |
 | `errors` skill [API-ERR-001] | Typed throws; [DOC-003] requires documenting thrown errors. |
-| NRS-78 project | Exemplar for Level 1 (navigation scaffolding) .docc pattern. |
-| Wzl project | Exemplar for Level 2 (substantive content layer) .docc pattern. |
+
 
 ---
 
@@ -438,9 +409,9 @@ This separation is clean because README conventions are structurally independent
 
 2. **Spec-mirroring documentation MUST vs SHOULD?** Recommendation: MUST for standards-layer packages (they exist to model specs), SHOULD for all others.
 
-3. **Should mirrored spec text be literally identical between inline and .docc?** The Wzl project shows near-identical text. Recommendation: MUST be semantically identical; minor formatting differences (e.g., line wrapping) are acceptable.
+3. **Should mirrored spec text be literally identical between inline and .docc?** Observed practice shows near-identical text. Recommendation: MUST be semantically identical; minor formatting differences (e.g., line wrapping) are acceptable.
 
-4. **Should the blockquote convention (`>`) apply to non-legal specifications (RFCs, ISOs)?** Recommendation: yes — the pattern generalizes well to any verbatim specification text.
+4. **Should the blockquote convention (`>`) apply to all specification types (RFCs, ISOs)?** Recommendation: yes — the pattern generalizes well to any verbatim specification text.
 
 ## Outcome
 
@@ -450,9 +421,7 @@ This research was absorbed into the documentation skill. It remains as historica
 
 ## References
 
-- `/Users/coen/Developer/swift-institute/Documentation.docc/Documentation Standards.md`
-- `/Users/coen/Developer/swift-us-nv-legislature/swift-us-nv-nrs-78-private-corporations/`
-- `/Users/coen/Developer/swift-statute-nl/wet-zeggenschap-lichaamsmateriaal/`
-- `/Users/coen/Developer/swift-institute/Skills/skill-creation/SKILL.md`
-- `/Users/coen/Developer/swift-institute/Skills/testing/SKILL.md`
-- `/Users/coen/Developer/swift-institute/Skills/implementation/SKILL.md`
+- `Documentation.docc/Documentation Standards.md`
+- `Skills/skill-creation/SKILL.md`
+- `Skills/testing/SKILL.md`
+- `Skills/implementation/SKILL.md`

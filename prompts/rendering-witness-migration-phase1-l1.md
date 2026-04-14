@@ -14,7 +14,7 @@ Convert `Rendering.Context` from a protocol to a hand-written witness struct in 
 
 ### 1. Replace `Rendering.Context` protocol with witness struct
 
-**Current** (protocol, 262 lines): `/Users/coen/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.Context.swift`
+**Current** (protocol, 262 lines): `https://github.com/swift-primitives/swift-rendering-primitives/blob/main/Sources/Rendering Primitives Core/Rendering.Context.swift`
 
 **New** (witness struct with 24 stored closures):
 
@@ -310,7 +310,7 @@ Also update the test leaf views (`TextLeaf`, `LineBreakLeaf`, `BlockWrapper`) an
 After all changes:
 
 ```bash
-cd /Users/coen/Developer/swift-primitives/swift-rendering-primitives
+cd swift-rendering-primitives
 swift build    # must succeed
 swift test     # all tests must pass
 ```
@@ -318,7 +318,7 @@ swift test     # all tests must pass
 **Also verify downstream packages still resolve** (they won't BUILD because their conformances are now invalid, but they should resolve dependencies):
 
 ```bash
-cd /Users/coen/Developer/swift-foundations
+cd swift-foundations
 swift package resolve   # should not error on dependency resolution
 ```
 
@@ -327,7 +327,7 @@ swift package resolve   # should not error on dependency resolution
 ## Reference: Validated Experiment
 
 The exact pattern to follow is validated in:
-`/Users/coen/Developer/swift-institute/Experiments/rendering-witness-migration-blockers/`
+`Experiments/rendering-witness-migration-blockers/`
 
 This experiment has 24 passing tests covering: non-generic `_render` protocol requirement, Property.View with `Base == Rendering.Context`, AnyView existential opening, and tee transform. Use it as a reference for the exact syntax and patterns.
 
@@ -336,7 +336,7 @@ This experiment has 24 passing tests covering: non-generic `_render` protocol re
 ## Reference: Package.swift
 
 The current Package.swift is at:
-`/Users/coen/Developer/swift-primitives/swift-rendering-primitives/Package.swift`
+`https://github.com/swift-primitives/swift-rendering-primitives/blob/main/Package.swift`
 
 Read it to understand dependencies, targets, and Swift settings before making changes.
 

@@ -1,7 +1,7 @@
 # Apple swift-http-api-proposal: Ownership and Concurrency Patterns
 
 **Date**: 2026-04-02
-**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/`
+**Source**: `https://github.com/apple/swift-http-api-proposal/tree/main/Sources/`
 **Status**: External prior art analysis
 **Relevance**: ~Copyable / ~Escapable API design at Apple's proposed HTTP layer
 

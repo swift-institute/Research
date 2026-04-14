@@ -5,7 +5,7 @@ packages:
   - swift-io
   - swift-darwin-primitives
   - swift-kernel-primitives
-status: pending
+status: processed
 ---
 
 # Handle Descriptor Ownership Refactor — Ownership Cascades and Lifecycle Footguns

@@ -17,7 +17,7 @@ status: RECOMMENDATION
 
 ## 1. Hash-Table-Primitives Catalog
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-hash-table-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-hash-table-primitives`
 
 ### 1.1 Module Structure
 
@@ -98,7 +98,7 @@ status: RECOMMENDATION
 
 ## 2. Hash-Primitives Catalog
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-hash-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-hash-primitives`
 
 | Type | Purpose |
 |------|---------|
@@ -111,7 +111,7 @@ status: RECOMMENDATION
 
 ## 3. Dictionary-Primitives Catalog
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-dictionary-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-dictionary-primitives`
 
 Dictionary-primitives is a **consumer** of Hash-table-primitives. It provides the full key-value map abstraction:
 

@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 3.0.0
-last_updated: 2026-03-16
-status: IN_PROGRESS
+version: 3.1.0
+last_updated: 2026-04-13
+status: DECISION
 source: adoption-implementation-review.md, parsers-ecosystem-adoption-audit.md
 ---
 -->
@@ -51,7 +51,7 @@ Work in dependency order: shared parsers first, then consumers.
 | **swift-rfc-9110** | 8 files: OWS, Token, QuotedString, Parameter, ParameterList, CommaSeparated, QualityValue | `HTTP.MediaType.swift:101`, `HTTP.ContentNegotiation.swift:155`, `HTTP.ContentLanguage.swift:53`, `HTTP.ContentEncoding.swift:84`, `HTTP.Authentication.swift:164`, `HTTP.EntityTag.swift:110`, `HTTP.Precondition.swift:144` | Replace all `split(separator:)` calls (17 occurrences in 6 files) with new parsers. These are reusable building blocks — get them right. |
 
 ```bash
-cd /Users/coen/Developer/swift-standards/swift-rfc-9110 && swift build && swift test
+cd swift-rfc-9110 && swift build && swift test
 ```
 
 #### Tier 2: URI (unblocks many dependents)
@@ -61,7 +61,7 @@ cd /Users/coen/Developer/swift-standards/swift-rfc-9110 && swift build && swift 
 | **swift-rfc-3986** | 10 files: Scheme, PercentEncoded, Port, Userinfo, Host, PathSegments, Query, Fragment, Authority | `RFC_3986.URI.swift`, `*.Authority.swift`, `*.Query.swift:170`, `*.Path.swift`, `*.Scheme.swift`, `*.Userinfo.swift` | Down to 1 remaining `.split()` — find and eliminate it. Verify all public inits delegate to combinators. |
 
 ```bash
-cd /Users/coen/Developer/swift-standards/swift-rfc-3986 && swift build && swift test
+cd swift-rfc-3986 && swift build && swift test
 ```
 
 #### Tier 3: Date/Time
@@ -71,7 +71,7 @@ cd /Users/coen/Developer/swift-standards/swift-rfc-3986 && swift build && swift 
 | **swift-iso-8601** | 12 files: CalendarDate, DateTime, Duration, Interval, RecurringInterval, TimeOfDay, TimezoneOffset, WeekDate, OrdinalDate, Digits, Error | `ISO_8601.DateTime.swift:619-1011` (~400 lines), `ISO_8601.Duration.swift:186-324`, `ISO_8601.Time.swift:221-395`, `ISO_8601.RecurringInterval.swift:101`, `ISO_8601.Interval.swift:99` | Remove 12 `.split()` occurrences across 4 files. Replace init bodies with combinator calls. |
 
 ```bash
-cd /Users/coen/Developer/swift-standards/swift-iso-8601 && swift build && swift test
+cd swift-iso-8601 && swift build && swift test
 ```
 
 #### Tier 4: Email/MIME
@@ -109,7 +109,7 @@ cd /Users/coen/Developer/swift-standards/swift-iso-8601 && swift build && swift 
 
 After each package: `swift build && swift test` in the submodule directory.
 
-After all: `cd /Users/coen/Developer/swift-standards && swift build` (full monorepo build).
+After all: `cd swift-standards && swift build` (full monorepo build).
 
 ## Task 2: Gap Packages — Write New Parser Combinators
 
@@ -136,7 +136,7 @@ This is the single largest gap. The shared HTTP parsers from RFC 9110 (Task 1 Ti
 **Approach:** Import `Parser_Primitives`. Reuse `RFC_9110.Parse.OWS`, `RFC_9110.Parse.Token`, `RFC_9110.Parse.CommaSeparated` from the shared parsers. Create `RFC_9112.Parse` namespace with sub-parsers.
 
 ```bash
-cd /Users/coen/Developer/swift-standards/swift-rfc-9112
+cd swift-rfc-9112
 # Add Parser_Primitives dependency to Package.swift
 swift build && swift test
 ```
@@ -276,7 +276,7 @@ For each package in Task 1 (replacement pass):
    - Maximum-length input
    - Unicode where ASCII is expected
 6. **Remove old code** — Delete the `.split()`-based implementation only after validation passes
-7. **Build monorepo** — `cd /Users/coen/Developer/swift-standards && swift build` to catch cross-package breakage
+7. **Build monorepo** — `cd swift-standards && swift build` to catch cross-package breakage
 
 ### What NOT to Do
 

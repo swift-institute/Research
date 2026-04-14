@@ -1,6 +1,6 @@
 # Pass 6b: Nested Type Splits — Handoff Prompt
 
-Read `/Users/coen/Developer/swift-institute/Research/audits/implementation-naming-2026-03-20/01-remediation-plan.md` for full context. This prompt continues **Pass 6: File Organization** for packages that were previously deferred as "justified exceptions" due to Swift compiler limitations.
+Read `Research/audits/implementation-naming-2026-03-20/01-remediation-plan.md` for full context. This prompt continues **Pass 6: File Organization** for packages that were previously deferred as "justified exceptions" due to Swift compiler limitations.
 
 ## Background
 

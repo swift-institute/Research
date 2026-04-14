@@ -33,7 +33,7 @@ Swift unconditionally unifies same-named associated types across all protocol co
 
 ### Compiler Evidence
 
-Investigation of the Swift compiler source (`/Users/coen/Developer/swiftlang/swift`) confirms:
+Investigation of the Swift compiler source (`https://github.com/swiftlang/swift`) confirms:
 
 1. **Associated type anchor system** (`lib/AST/Decl.cpp:6458–6487`): Same-named associated types are unified through a hierarchy-based override system. No mechanism exists to keep them separate.
 

@@ -111,7 +111,7 @@ The v4.1.0 document states: "No `Binary.LEB128.Serializer` exists. LEB128 is a o
 
 This is **factually incorrect**. LEB128 serialization exists in `swift-binary-primitives`:
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-binary-primitives/Sources/Binary Primitives Core/Binary.LEB128.Serialize.swift`
+**File**: `https://github.com/swift-primitives/swift-binary-primitives/blob/main/Sources/Binary Primitives Core/Binary.LEB128.Serialize.swift`
 
 ```swift
 extension [UInt8] {
@@ -365,11 +365,11 @@ Neither correction changes the recommendation. The architectural direction — d
 
 - ascii-parsing-domain-ownership.md v4.1.0 (document under review)
 - ascii-parsing-domain-ownership.md v4.0.0 (previously reviewed)
-- binary-parser-primitives: `/Users/coen/Developer/swift-primitives/swift-binary-parser-primitives/`
-- binary-primitives LEB128 serialization: `/Users/coen/Developer/swift-primitives/swift-binary-primitives/Sources/Binary Primitives Core/Binary.LEB128.Serialize.swift`
-- parser-primitives protocols: `/Users/coen/Developer/swift-primitives/swift-parser-primitives/Sources/Parser Primitives Core/`
-- ascii-primitives: `/Users/coen/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/`
-- swift-ascii: `/Users/coen/Developer/swift-foundations/swift-ascii/Sources/ASCII/`
+- binary-parser-primitives: `https://github.com/swift-primitives/swift-binary-parser-primitives`
+- binary-primitives LEB128 serialization: `https://github.com/swift-primitives/swift-binary-primitives/blob/main/Sources/Binary Primitives Core/Binary.LEB128.Serialize.swift`
+- parser-primitives protocols: `https://github.com/swift-primitives/swift-parser-primitives/tree/main/Sources/Parser Primitives Core/`
+- ascii-primitives: `https://github.com/swift-primitives/swift-ascii-primitives/tree/main/Sources/ASCII Primitives/`
+- swift-ascii: `https://github.com/swift-foundations/swift-ascii/tree/main/Sources/ASCII/`
 - Standards Parser.Protocol conformances: 47 types across swift-standards (22 `.Parse`, 25 `.Parser`)
 - [API-NAME-001] Namespace Structure
 - [RES-004] Investigation Methodology

@@ -1,7 +1,7 @@
 # File / Directory / Path Consumer Call-Site Inventory
 
 **Date**: 2026-03-19
-**Scope**: All repos under `/Users/coen/Developer/` that import `File_System`, `File_System_Primitives`, `Paths`, or `Path_Primitives` — excluding `swift-file-system` and `swift-paths` source/test files.
+**Scope**: All repos in the workspace that import `File_System`, `File_System_Primitives`, `Paths`, or `Path_Primitives` — excluding `swift-file-system` and `swift-paths` source/test files.
 
 ---
 
@@ -14,9 +14,6 @@
 | swift-foundations/swift-pdf (tests) | PDF Tests | `File_System` (via PDF re-export) |
 | swift-primitives/swift-kernel-primitives | Kernel Path Primitives | `Path_Primitives` |
 | swift-iso/swift-iso-9945 | ISO 9945 Kernel | `Path_Primitives` |
-| rule-legal/rule-legal-demo | Tests (3 files) | `File_System` |
-| rule-legal/rule-legal-us-nv-private-corporation | Tests (2 files) | `File_System` |
-| rule-legal/rule-legal-nl/rule-besloten-vennootschap | Aandeelhoudersregister PDF (exports) | `@_exported File_System` |
 | swift-foundations/swift-tests (tests) | Test.Snapshot.Storage Tests | `Paths` |
 
 ---
@@ -32,9 +29,8 @@
 | swift-tests/.../Test.Snapshot.Storage.swift | 63 | `File.Path(stringLiteral: testFilePath)` | Converting `#filePath` String to `File.Path` — **must use `stringLiteral:` because the variable is a String, not a literal** |
 | swift-tests/.../Test.Snapshot.Inline.Rewriter.swift | 52 | `File(File.Path(stringLiteral: filePath)).read.full { }` | Same pattern — String variable to File.Path |
 | swift-tests/.../Test.Snapshot.Inline.Rewriter.swift | 82 | `File(File.Path(stringLiteral: filePath)).write.atomic(output)` | Same |
-| rule-legal-demo/.../IncorporationTests.swift | 19 | `let output: File.Path = "/tmp/rule-legal-demo/Swift Technologies Inc"` | **String literal assigned to File.Path type annotation — ergonomic** |
 
-**Count**: 6 occurrences of `File.Path(stringLiteral:)`, 1 string literal with type annotation.
+**Count**: 5 occurrences of `File.Path(stringLiteral:)` (all in swift-tests).
 
 **Ergonomic assessment**: The `File.Path(stringLiteral: variable)` pattern is **clunky**. It is necessary because Swift's `ExpressibleByStringLiteral` only works for actual literals, not String variables. The `let x: File.Path = "/literal"` pattern is clean. A `File.Path(_ string:)` throwing init exists but requires `try`.
 
@@ -42,25 +38,10 @@
 
 | File | Line | Code | Notes |
 |------|------|------|-------|
-| rule-legal/.../StressTests.swift | 195 | `try File.Path("\(corpDir)/\(filename)")` | String interpolation, throwing |
-| rule-legal/.../StressTests.swift | 233 | `try File.Path(basePath)` | Variable, throwing |
-| rule-legal/.../StressTests.swift | 302 | `File.Path(corpDir)` | Non-try variant (string literal passed) |
-| rule-legal/.../StressTests.swift | 370 | `try File.Path("\(basePath)/corp-0000/01-articles-of-incorporation.pdf")` | Interpolation |
-| rule-legal/.../StressTests.swift | 373 | `try File.Path("\(basePath)/corp-\(...)/.../")` | Interpolation |
-| rule-legal/.../IncorporationTests.swift | 932 | `File.Path("/tmp/.../articles-of-incorporation-simple.pdf")` | Literal as argument |
-| rule-legal/.../IncorporationTests.swift | 1000, 1041, 1071, 1101 | `File.Path("/tmp/.../<name>.pdf")` | 4 more literal-as-argument |
-| rule-legal/.../IncorporationTests.swift | 1192-1268 | `File.Path("\(basePath)/01-articles-of-incorporation.pdf")` | 10 interpolation paths |
-| rule-legal/.../ScaleDemoTests.swift | 28 | `File.Path(output)` | Variable |
-| rule-legal/.../ScaleDemoTests.swift | 54 | `File.Path(filePath)` | Variable |
-| rule-legal/.../ScaleDemoTests.swift | 74-76 | `try File.Path("\(output)/0001-Apex Industries Inc.pdf")` | 3 interpolated |
-| rule-legal/.../AnnualComplianceTests.swift | 22 | `File.Path(output)` | Variable |
-| rule-legal/.../AnnualComplianceTests.swift | 34 | `File.Path("\(output)/Annual List of Officers.pdf")` | Interpolation |
-| rule-legal/.../AnnualComplianceTests.swift | 37 | `try File.Path("\(output)/Annual List of Officers.pdf")` | Same with try |
 | swift-tests/.../Test.Snapshot.Storage Tests.swift | 29 | `File.Path("/custom/snapshots")` | Literal as argument |
 | swift-tests/.../Test.Snapshot.Storage Tests.swift | 95 | `File.Path("/custom")` | Literal as argument |
-| rule-legal/.../Aandeelhoudersregister PDF Tests.swift | 146 | `document.write(to: "/tmp/aandeelhoudersregister-hakuna.pdf", ...)` | String literal directly to `write(to:)` — works via `ExpressibleByStringLiteral` on `File.Path` |
 
-**Count**: ~30+ occurrences.
+**Count**: ~2 occurrences in swift-tests.
 
 **Ergonomic assessment**: `try File.Path(string)` is fine for variables. The interpolation pattern `File.Path("\(base)/\(name).pdf")` is common and **somewhat clunky** — in many cases, the `/` operator would be more natural: `base / "\(name).pdf"`. However, some call sites must build an entire path string from a non-Path base.
 
@@ -79,17 +60,11 @@
 | swift-tests/.../Tests.History.Storage.swift | 181 | `File(path)` | Same |
 | swift-tests/.../Test.Snapshot.Inline.Rewriter.swift | 52 | `File(File.Path(stringLiteral: filePath))` | **Double-wrapping** — String to Path to File |
 | swift-tests/.../Test.Snapshot.Inline.Rewriter.swift | 82 | `File(File.Path(stringLiteral: filePath))` | Same |
-| rule-legal/.../StressTests.swift | 234 | `File(basePathObj).exists` | Construction + property access |
-| rule-legal/.../StressTests.swift | 371 | `File(samplePath).exists` | Same |
-| rule-legal/.../StressTests.swift | 374 | `File(lastPath).exists` | Same |
-| rule-legal/.../ScaleDemoTests.swift | 74-76 | `File(try File.Path("...")).exists` | **Triple nesting**: `File(try File.Path(...)).exists` |
-| rule-legal/.../IncorporationTests.swift (demo) | 36 | `File(output/"Articles of Incorporation.pdf").exists` | Clean — path composition inside File() |
-| rule-legal/.../AnnualComplianceTests.swift | 37 | `File(try File.Path("...")).exists` | Same double-wrapping |
 | swift-pdf/.../PDF Tests.swift | 58 | `File("/tmp/swift-pdf/markdown-to-pdf-test.pdf")` | **Direct string literal to File** — very clean |
 | swift-pdf/.../PDF Tests.swift | 97 | `File("/tmp/swift-pdf/markdown-table-to-pdf-test.pdf")` | Same |
 | swift-pdf/.../PDF Tests.swift | 189 | `File("/tmp/swift-pdf/markdown-complex-to-pdf-test.pdf")` | Same |
 
-**Count**: ~20 occurrences.
+**Count**: ~14 occurrences.
 
 **Ergonomic assessment**: `File(path)` is clean. `File("/literal")` is the most ergonomic form (File accepts string literals because File.Path does). `File(File.Path(stringLiteral: variable))` is the worst — needs a convenience `File(path: String)` or similar.
 
@@ -161,29 +136,12 @@
 
 | File | Line | Code | Notes |
 |------|------|------|-------|
-| rule-legal/.../IncorporationTests.swift | 932 | `try doc.write(to: File.Path("..."))` | PDF via Binary.Serializable |
-| rule-legal/.../IncorporationTests.swift | 1000, 1041, 1071, 1101 | `try doc.write(to: File.Path("..."))` | 4 more |
-| rule-legal/.../IncorporationTests.swift | 1192-1268 | `try ...Doc.write(to: File.Path("\(basePath)/..."))` | 10 more |
-| rule-legal/.../Aandeelhoudersregister PDF Tests.swift | 146 | `try document.write(to: "/tmp/...", createIntermediates: true)` | String literal — **most ergonomic** |
-| rule-legal/.../ScaleDemoTests.swift | 54 | `.write(to: File.Path(filePath))` | Via File.Path |
-| rule-legal/.../AnnualComplianceTests.swift | 34 | `.write(to: File.Path("\(output)/..."))` | Interpolation |
-| rule-legal/.../IncorporationTests.swift (demo) | 33 | `.write(to: output/"\(name).pdf")` | **`/` operator composition** — most ergonomic |
 | swift-pdf/.../PDF Tests.swift | 58 | `try doc.write(to: File("..."), createIntermediates: true)` | File literal |
 | swift-pdf/.../PDF Tests.swift | 97, 189 | Same pattern | 2 more |
 
-**Count**: ~25 occurrences.
+**Count**: 3 occurrences in swift-pdf tests.
 
-**Ergonomic assessment**: The `doc.write(to: File.Path(...))` pattern is the **dominant PDF output pattern**. The `doc.write(to: output/"\(name).pdf")` variant using the `/` operator is the most ergonomic form. `doc.write(to: "/tmp/file.pdf", createIntermediates: true)` with a string literal is also very clean.
-
-### 2e. `File.System.Write.Atomic.write(bytes, to: path)` — Static Atomic Write
-
-| File | Line | Code | Notes |
-|------|------|------|-------|
-| rule-legal/.../StressTests.swift | 309 | `try await File.System.Write.Atomic.write(pdf.bytes, to: pdf.path, options: .init(durability: .dataOnly))` | Async, with options |
-
-**Count**: 1 occurrence.
-
-**Ergonomic assessment**: The fully qualified `File.System.Write.Atomic.write(...)` is verbose but necessary for the async variant with explicit options.
+**Ergonomic assessment**: The `doc.write(to: File.Path(...))` pattern is the dominant PDF output pattern. `doc.write(to: File("/tmp/file.pdf"), createIntermediates: true)` with a string literal is very clean.
 
 ---
 
@@ -202,15 +160,11 @@
 | swift-tests/.../Tests.Complexity.Baseline+Storage.swift | 119 | `dir.stat.exists` | |
 | swift-tests/.../Tests.History.Storage.swift | 141 | `dir.stat.exists` | |
 | swift-tests/.../Tests.History.Storage.swift | 182 | `file.stat.exists` | |
-| rule-legal/.../StressTests.swift | 234 | `File(basePathObj).exists` | **Note**: `.exists` not `.stat.exists` |
-| rule-legal/.../StressTests.swift | 371, 374 | `File(samplePath).exists` | Same |
-| rule-legal/.../ScaleDemoTests.swift | 74-76 | `File(try File.Path("...")).exists` | 3x, uses `.exists` |
-| rule-legal/.../IncorporationTests.swift (demo) | 36 | `File(output/"...").exists` | `.exists` |
-| rule-legal/.../AnnualComplianceTests.swift | 37 | `File(try File.Path("...")).exists` | `.exists` |
 
-**Count**: 14 occurrences (9 `.stat.exists`, 5 `.exists`).
+**Count**: 9 occurrences of `.stat.exists`.
 
-**Ergonomic assessment**: There is a **split between `.stat.exists` and `.exists`**. The swift-tests code consistently uses `.stat.exists` while rule-legal code uses `.exists` directly. This suggests either a convenience accessor was added or the APIs differ between contexts.
+**Ergonomic assessment**: The swift-tests code consistently uses `.stat.exists`. A convenience `.exists` accessor would likely be more ergonomic for common existence checks.
+
 
 ### 3b. `dir.create.recursive()` — Directory Creation
 
@@ -224,30 +178,6 @@
 **Count**: 4 occurrences.
 
 **Ergonomic assessment**: `.create.recursive()` is clean and reads well.
-
-### 3c. `File.System.Create.Directory.create(at:)` — Static Directory Creation
-
-| File | Line | Code | Notes |
-|------|------|------|-------|
-| rule-legal/.../StressTests.swift | 237 | `try await File.System.Create.Directory.create(at: basePathObj)` | Async |
-| rule-legal/.../StressTests.swift | 302 | `try await File.System.Create.Directory.create(at: File.Path(corpDir))` | Async |
-| rule-legal/.../ScaleDemoTests.swift | 27-29 | `try File.System.Create.Directory.create(at: File.Path(output), options: .init(createIntermediates: true))` | With options |
-| rule-legal/.../IncorporationTests.swift (demo) | 20-22 | `try File.System.Create.Directory.create(at: output, options: .init(createIntermediates: true))` | With options |
-| rule-legal/.../AnnualComplianceTests.swift | 21-23 | `try File.System.Create.Directory.create(at: File.Path(output), options: .init(createIntermediates: true))` | With options |
-
-**Count**: 5 occurrences.
-
-**Ergonomic assessment**: `File.System.Create.Directory.create(at:options:)` is **very verbose**. Compare with the instance method `dir.create.recursive()` which is much more readable. The static form is used in async contexts where the instance method may not be available.
-
-### 3d. `File.System.Delete.delete(at:options:)` — Static Delete
-
-| File | Line | Code | Notes |
-|------|------|------|-------|
-| rule-legal/.../StressTests.swift | 235 | `try await File.System.Delete.delete(at: basePathObj, options: .init(recursive: true))` | Async recursive delete |
-
-**Count**: 1 occurrence.
-
-**Ergonomic assessment**: Verbose but clear.
 
 ---
 
@@ -266,10 +196,8 @@
 | swift-tests/.../Tests.Baseline.Storage.swift | 77 | `result / "\(fingerprint).json"` | Path / interpolated String |
 | swift-tests/.../Tests.Complexity.Baseline+Storage.swift | 95 | `baseRoot / "complexity" / "\(key).json"` | **Chained `/`** |
 | swift-tests/.../Tests.History.Storage.swift | 39-54 | Same pattern as Baseline.Storage | 5 uses |
-| rule-legal/.../IncorporationTests.swift (demo) | 33 | `output/"\(name).pdf"` | **No spaces around `/`** — infix operator |
-| rule-legal/.../IncorporationTests.swift (demo) | 36 | `output/"Articles of Incorporation.pdf"` | Same |
 
-**Count**: ~15 occurrences.
+**Count**: ~13 occurrences.
 
 **Ergonomic assessment**: The `/` operator is the **most ergonomic path composition pattern**. `baseRoot / "complexity" / "\(key).json"` reads naturally. The pattern `output/"\(name).pdf"` without spaces is also used and reads like filesystem paths.
 
@@ -353,7 +281,6 @@
 | swift-tests/.../Tests.History.Storage.swift | 203 | `root: File.Path` |
 | swift-tests/.../snapshot.swift | 335 | `snapshotDirectory: File.Path? = nil` |
 | swift-tests/.../snapshot.swift | 336 | `subdirectory: File.Path.Component? = nil` |
-| rule-legal/.../StressTests.swift | 176 | `let path: File.Path` (struct property) |
 
 **Count**: ~25 function parameter annotations + 2 stored property annotations.
 
@@ -364,9 +291,8 @@
 | File | Line | Code |
 |------|------|------|
 | swift-tests/.../Test.Snapshot.Storage.swift | 63 | `let testPath: File.Path = File.Path(stringLiteral: testFilePath)` |
-| rule-legal/.../IncorporationTests.swift (demo) | 19 | `let output: File.Path = "/tmp/rule-legal-demo/Swift Technologies Inc"` |
 
-**Count**: 2 explicit type annotations. Most other variables infer the type.
+**Count**: 1 explicit type annotation. Most other variables infer the type.
 
 ---
 
@@ -394,24 +320,17 @@ These are not `File_System` consumers but use the lower-level `Path_Primitives` 
 
 | Pattern | Count | Ergonomic? | Notes |
 |---------|-------|------------|-------|
-| `File(path)` | ~20 | Good | Clean construction |
+| `File(path)` | ~14 | Good | Clean construction |
 | `File("/literal")` | 3 | Excellent | String literal directly to File |
-| `File.Path(stringLiteral: variable)` | 6 | Poor | Needed for String variables when ExpressibleByStringLiteral doesn't apply |
-| `try File.Path(string)` | ~30 | OK | Correct but verbose for known-good paths |
-| `File.Path("/literal")` | ~15 | Good | Literal as argument |
-| `let x: File.Path = "/literal"` | 1 | Excellent | Type annotation + literal |
+| `File.Path(stringLiteral: variable)` | 5 | Poor | Needed for String variables when ExpressibleByStringLiteral doesn't apply |
+| `File.Path("/literal")` | 2 | Good | Literal as argument |
 | `file.read.full { span in ... }` | 5 | Verbose | Always requires unsafe buffer pointer dance |
 | `file.write.atomic(...)` | 5 | Good | Clean chained API |
 | `file.write.append(...)` | 1 | Good | |
-| `doc.write(to: File.Path(...))` | ~25 | OK | Binary.Serializable convenience |
-| `doc.write(to: path / "name.pdf")` | 1 | Excellent | / operator composition into write |
+| `doc.write(to: File(...))` | 3 | OK | Binary.Serializable convenience |
 | `file.stat.exists` | 9 | OK | Somewhat verbose for a common check |
-| `file.exists` | 5 | Good | Convenience shorthand |
 | `dir.create.recursive()` | 4 | Good | Instance method |
-| `File.System.Create.Directory.create(at:)` | 5 | Poor | Very verbose static form |
-| `File.System.Write.Atomic.write(...)` | 1 | Poor | Very verbose static form |
-| `File.System.Delete.delete(at:)` | 1 | Poor | Very verbose static form |
-| `path / "component"` | ~15 | Excellent | Natural path composition |
+| `path / "component"` | ~13 | Excellent | Natural path composition |
 | `path.parent` | 5 | Excellent | |
 | `Swift.String(path)` vs `Swift.String(describing: path)` | ~15 | Inconsistent | No clear canonical conversion |
 
@@ -421,19 +340,18 @@ These are not `File_System` consumers but use the lower-level `Path_Primitives` 
 
 ### Pain Points
 
-1. **String-to-Path conversion**: `File.Path(stringLiteral: variable)` is the worst pattern, used 6 times. There is no clean `File.Path(string: someString)` non-throwing convenience for known-good paths from `#filePath`.
+1. **String-to-Path conversion**: `File.Path(stringLiteral: variable)` is the worst pattern, used 5 times. There is no clean `File.Path(string: someString)` non-throwing convenience for known-good paths from `#filePath`.
 
 2. **`file.read.full` boilerplate**: Every consumer does `span.withUnsafeBufferPointer { Array($0) }` or the String equivalent. A convenience `file.read.bytes()` or `file.read.string()` would eliminate this.
 
-3. **Static `File.System.*` verbosity**: `File.System.Create.Directory.create(at:options:)` and `File.System.Write.Atomic.write(...)` are used 6 times total. These are **extremely verbose** compared to the instance methods `dir.create.recursive()` and `file.write.atomic(...)`. The static forms are needed for async contexts.
+3. **Path-to-String inconsistency**: Consumers use `Swift.String(path)`, `Swift.String(describing: path)`, and `"\(path)"` interchangeably. Need one canonical conversion.
 
-4. **Path-to-String inconsistency**: Consumers use `Swift.String(path)`, `Swift.String(describing: path)`, and `"\(path)"` interchangeably. Need one canonical conversion.
+4. **`.stat.exists` verbosity**: The `.stat.exists` pattern is used 9 times for what is often a simple existence check. A convenience `.exists` accessor would reduce boilerplate.
 
-5. **`.stat.exists` vs `.exists` split**: swift-tests uses `.stat.exists` (9 times), rule-legal uses `.exists` (5 times). If `.exists` is a convenience over `.stat.exists`, the older code should be updated.
 
 ### Strengths
 
-1. **`/` operator**: The most natural and ergonomic API. `path / "component" / "file.json"` reads cleanly. Used ~15 times.
+1. **`/` operator**: The most natural and ergonomic API. `path / "component" / "file.json"` reads cleanly. Used ~13 times.
 
 2. **`File(path)` and `File("/literal")`**: Clean construction. `File("/tmp/output.pdf")` is the most ergonomic file construction pattern.
 
@@ -441,4 +359,4 @@ These are not `File_System` consumers but use the lower-level `Path_Primitives` 
 
 4. **`File.Path` as typealias for `Paths.Path`**: Clean integration between layers. `File.Path.Component` for validated single-component names works well.
 
-5. **`doc.write(to: path, createIntermediates: true)`**: The Binary.Serializable convenience is well-used (~25 times for PDF output).
+5. **`doc.write(to: path, createIntermediates: true)`**: The Binary.Serializable convenience is well-used for PDF output in swift-pdf tests.

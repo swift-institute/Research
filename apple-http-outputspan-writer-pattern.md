@@ -47,4 +47,4 @@ try await writer.write { outputSpan in
 
 ## Source
 
-`/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/Writer/AsyncWriter.swift`
+`https://github.com/apple/swift-http-api-proposal/blob/main/Sources/AsyncStreaming/Writer/AsyncWriter.swift`

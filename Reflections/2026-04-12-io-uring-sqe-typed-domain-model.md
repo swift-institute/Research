@@ -3,7 +3,7 @@ date: 2026-04-12
 session_objective: Restore @inlinable on 65 io_uring Prepare methods via typed SQE field accessors
 packages:
   - swift-linux-standard
-status: pending
+status: processed
 ---
 
 # io_uring SQE Typed Domain Model — Design Convergence

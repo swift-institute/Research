@@ -104,7 +104,7 @@ The upstream issue is in `PredictableDeadAllocationElimination` (`lib/SILOptimiz
 Repository: https://github.com/coenttb/swift-issue-copypropagation-nonescapable-mark-dependence
 
 ```bash
-cd /Users/coen/Developer/coenttb/swift-issue-copypropagation-nonescapable-mark-dependence
+cd swift-issue-copypropagation-nonescapable-mark-dependence
 swift build            # ✅ Debug builds
 swift build -c release # ❌ Crashes with "Found over consume?!"
 ```
@@ -136,7 +136,7 @@ swift build -c release \
 ## Building and Testing
 
 ```bash
-cd /Users/coen/Developer/swiftlang/swift
+cd swift
 
 # Build the compiler:
 utils/build-script --skip-build-benchmarks --skip-ios --skip-watchos --skip-tvos --release-debuginfo
@@ -161,5 +161,5 @@ llvm-lit test/SILOptimizer/lifetime_dependence/
 
 - Issue: https://github.com/swiftlang/swift/issues/88022
 - Related issue (Bug 1): https://github.com/swiftlang/swift/issues/86652
-- Research: `/Users/coen/Developer/swift-primitives/swift-property-primitives/Research/property-view-escapable-removal.md`
-- Reflection: `/Users/coen/Developer/swift-institute/Research/Reflections/2026-03-22-copypropagation-nonescapable-root-cause-and-fix.md`
+- Research: `https://github.com/swift-primitives/swift-property-primitives/blob/main/Research/property-view-escapable-removal.md`
+- Reflection: `Research/Reflections/2026-03-22-copypropagation-nonescapable-root-cause-and-fix.md`

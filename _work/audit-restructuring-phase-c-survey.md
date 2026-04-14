@@ -1,7 +1,7 @@
 # Phase C Survey: 25 Unsurveyed Legacy Audit Files
 
 **Date**: 2026-04-08
-**Source**: Agent survey of `/Users/coen/Developer/swift-institute/Research/` files
+**Source**: Agent survey of `Research/` files
 
 ## Summary
 
@@ -39,7 +39,6 @@
 | nonsending-adoption-audit.md | Adoption/migration survey |
 | nonsending-ecosystem-migration-audit.md | Migration inventory |
 | sending-expansion-audit.md | Expansion inventory |
-| document-infrastructure-ergonomic-audit.md | Ergonomic assessment |
 | file-path-type-unification-audit.md | Design investigation (ancestor of Path Type Compliance section in institute audit.md) |
 | noncopyable-synchronization-ecosystem-audit.md | Ecosystem inventory |
 | io-prior-art-and-swift-io-design-audit.md | Literature survey (referenced by relocated Prior Art section in swift-io/audit.md) |

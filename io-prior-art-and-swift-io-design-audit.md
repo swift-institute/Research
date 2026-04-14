@@ -681,4 +681,4 @@ Apple's `swift-http-api-proposal` is now a concrete reference implementation of 
 - **Apple bypasses AsyncSequence/AsyncStream entirely** — custom `AsyncReader` and `AsyncWriter` protocols from scratch, both `~Copyable & ~Escapable`. This aligns with Part I's finding that type-erased async sequences are a poor fit for IO streaming (Tier 1 "Universal" concepts need direct protocol-level support, not adaptation).
 - **`EitherError<ReadFailure, Failure>`** for typed throws in streaming confirms the typed-error recommendation. Every read/write method uses typed throws with `EitherError` to separate infrastructure errors from user-closure errors — no existential `any Error` erasure on the fast path.
 
-**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/`
+**Source**: `https://github.com/apple/swift-http-api-proposal/tree/main/Sources/AsyncStreaming/`

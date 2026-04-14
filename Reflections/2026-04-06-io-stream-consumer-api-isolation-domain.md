@@ -3,7 +3,7 @@ date: 2026-04-06
 session_objective: Audit and build the consumer-first Tier 0 IO Stream API with strict isolation domain correctness
 packages:
   - swift-io
-status: pending
+status: processed
 ---
 
 # IO Stream Consumer API: Progressive Disclosure, Sendable Reduction, and Cooperative Pool Discovery

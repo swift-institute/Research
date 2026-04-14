@@ -5,7 +5,7 @@ packages:
   - swift-io
   - swift-kernel-primitives
   - swift-ownership-primitives
-status: pending
+status: processed
 ---
 
 # ~Copyable Closure Capture Investigation — Hypothesis Disproven, Verification Order Matters

@@ -399,13 +399,13 @@ This is the exception, not the rule. Prefer Pattern 1 (parameterized) or Pattern
 
 - transformation-domain-architecture: [transformation-domain-architecture.md](transformation-domain-architecture.md) (v3.1.0)
 - parsing-serialization-capability-organization: [parsing-serialization-capability-organization.md](parsing-serialization-capability-organization.md) (v1.1.0)
-- Binary.Coder: `/Users/coen/Developer/swift-primitives/swift-binary-parser-primitives/Sources/Binary Coder Primitives/Binary.Coder.swift`
-- Binary.Serializable: `/Users/coen/Developer/swift-primitives/swift-binary-primitives/Sources/Binary Serializable Primitives/Binary.Serializable.swift`
-- Binary.Serializable witness bridge: `/Users/coen/Developer/swift-primitives/swift-binary-primitives/Sources/Binary Serializable Primitives/Binary.Serializable+Witness.swift`
-- Witness.Protocol: `/Users/coen/Developer/swift-primitives/swift-witness-primitives/Sources/Witness Primitives/Witness.Protocol.swift`
-- Dependency.Key: `/Users/coen/Developer/swift-primitives/swift-dependency-primitives/Sources/Dependency Primitives/Dependency.Key.swift`
-- IPv4.Address dual conformance: `/Users/coen/Developer/swift-standards/swift-rfc-791/Sources/RFC 791/RFC_791.IPv4.Address.swift`
-- UInt32 parameterized coder: `/Users/coen/Developer/swift-primitives/swift-binary-parser-primitives/Sources/Binary Integer Primitives/UInt32+Parser.swift`
+- Binary.Coder: `https://github.com/swift-primitives/swift-binary-parser-primitives/blob/main/Sources/Binary Coder Primitives/Binary.Coder.swift`
+- Binary.Serializable: `https://github.com/swift-primitives/swift-binary-primitives/blob/main/Sources/Binary Serializable Primitives/Binary.Serializable.swift`
+- Binary.Serializable witness bridge: `https://github.com/swift-primitives/swift-binary-primitives/blob/main/Sources/Binary Serializable Primitives/Binary.Serializable+Witness.swift`
+- Witness.Protocol: `https://github.com/swift-primitives/swift-witness-primitives/blob/main/Sources/Witness Primitives/Witness.Protocol.swift`
+- Dependency.Key: `https://github.com/swift-primitives/swift-dependency-primitives/blob/main/Sources/Dependency Primitives/Dependency.Key.swift`
+- IPv4.Address dual conformance: `https://github.com/swift-standards/swift-rfc-791/blob/main/Sources/RFC 791/RFC_791.IPv4.Address.swift`
+- UInt32 parameterized coder: `https://github.com/swift-primitives/swift-binary-parser-primitives/blob/main/Sources/Binary Integer Primitives/UInt32+Parser.swift`
 - Experiment: `swift-institute/Experiments/canonical-witness-capability/` (10/10 CONFIRMED)
 - [API-NAME-001] Namespace Structure
 - [RES-001] Investigation Triggers

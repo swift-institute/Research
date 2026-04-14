@@ -6,7 +6,7 @@ packages:
   - swift-darwin-primitives
   - swift-system-primitives
   - swift-kernel-primitives
-status: pending
+status: processed
 ---
 
 # Kernel.Event Consolidation + io_uring Domain Model Refactor

@@ -24,7 +24,7 @@ The new types are:
 - `Rendering.Action` — enum with nested `Push`/`Pop`
 - `Rendering.Context.interpret(_:)` — applies actions to the witness
 
-**Read the Phase 1 code before starting**: `/Users/coen/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/`
+**Read the Phase 1 code before starting**: `https://github.com/swift-primitives/swift-rendering-primitives/tree/main/Sources/Rendering Primitives Core/`
 
 ---
 
@@ -181,7 +181,7 @@ This should compile unchanged. `Rendering.View` now has `_render(_ view: Self, c
 ## Validation
 
 ```bash
-cd /Users/coen/Developer/swift-foundations/swift-html-rendering
+cd swift-html-rendering
 swift build    # must succeed
 swift test     # all tests must pass
 ```
@@ -189,7 +189,7 @@ swift test     # all tests must pass
 Also verify that packages depending on swift-html-rendering can still resolve:
 
 ```bash
-cd /Users/coen/Developer/swift-foundations/swift-markdown-html-rendering
+cd swift-markdown-html-rendering
 swift package resolve
 ```
 
@@ -202,7 +202,7 @@ swift package resolve
 - **Only modify swift-html-rendering** — do not touch swift-rendering-primitives or other packages
 - **[API-IMPL-005]** one type per file — the factory extension can go in a new file `Rendering.Context+HTML.swift` or in `HTML.Context.swift`
 - **[API-NAME-001]** `Rendering.Context.html(state:)` — correct namespace nesting
-- Follow the exact patterns from the validated experiment: `/Users/coen/Developer/swift-institute/Experiments/rendering-witness-migration-blockers/`
+- Follow the exact patterns from the validated experiment: `Experiments/rendering-witness-migration-blockers/`
 - If `Ownership.Mutable` is needed, add swift-ownership-primitives as a dependency
 - The `HTML.Context` type itself does NOT change shape — it keeps all its stored properties and methods. Only the protocol conformance is removed and a factory is added.
 

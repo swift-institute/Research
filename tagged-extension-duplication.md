@@ -29,7 +29,7 @@ Following the Experiment Investigation methodology, exploring protocol-based gen
 
 ### Existing Proof: Protocol Constraints on RawValue Work
 
-`/Users/coen/Developer/swift-primitives/swift-dimension-primitives/Sources/Dimension Primitives/Tagged+Arithmatic.swift:43`:
+`https://github.com/swift-primitives/swift-dimension-primitives/blob/main/Sources/Dimension Primitives/Tagged+Arithmatic.swift:43`:
 ```swift
 extension Tagged where RawValue: AdditiveArithmetic {
     @inlinable

@@ -492,8 +492,8 @@ The 8-10x reduction from TypeScript is due to: no React reconciler, no flexbox e
 
 ## References
 
-- Kuberwastaken/claurst repository: `/Users/coen/Developer/Kuberwastaken/claurst/`
+- Kuberwastaken/claurst repository: `https://github.com/Kuberwastaken/claurst`
 - Spec documents: `claurst/spec/00_overview.md` through `claurst/spec/13_rust_codebase.md`
 - Companion analyses: `claurst-analysis.md`, `claurst-rust-patterns.md` (this directory)
-- Five-layer architecture: `/Users/coen/Developer/swift-institute/Documentation.docc/Five Layer Architecture.md`
+- Five-layer architecture: `Documentation.docc/Five Layer Architecture.md`
 - Ecosystem data structures: `ecosystem-data-structures-inventory.md` (this directory)

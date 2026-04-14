@@ -5,7 +5,7 @@ packages:
   - swift-darwin-primitives
   - swift-linux-primitives
   - swift-foundations
-status: pending
+status: processed
 ---
 
 # Kernel.Event Audit and C Type Elimination

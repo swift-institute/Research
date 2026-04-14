@@ -218,8 +218,8 @@ At each site, resolve the boundary-crossing mechanism. The single transfer (e.g.
 ### Phase 3: Build, test, triage warnings
 
 ```bash
-cd /Users/coen/Developer/swift-primitives && swift build 2>&1 | grep -c 'SemanticCopies\|DynamicExclusivity'
-cd /Users/coen/Developer/swift-foundations && swift build 2>&1 | grep -c 'SemanticCopies\|DynamicExclusivity'
+cd swift-primitives && swift build 2>&1 | grep -c 'SemanticCopies\|DynamicExclusivity'
+cd swift-foundations && swift build 2>&1 | grep -c 'SemanticCopies\|DynamicExclusivity'
 ```
 
 Triage any `SemanticCopies` warnings — these flag unintended copies in `~Copyable` code. High signal given the ecosystem's heavy `~Copyable` usage.

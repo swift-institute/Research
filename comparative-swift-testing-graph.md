@@ -848,5 +848,5 @@ Backed by a production-quality, arena-allocated, phantom-tagged, generation-vali
 - `swiftlang/swift-testing/Sources/Testing/Events/Recorder/Event.AdvancedConsoleOutputRecorder.swift`
 
 ### swift-primitives Sources
-- `/Users/coen/Developer/swift-primitives/swift-tree-primitives/` — Tree primitives (audit target)
-- `/Users/coen/Developer/swift-primitives/swift-graph-primitives/` — Graph primitives (comparison)
+- `https://github.com/swift-primitives/swift-tree-primitives` — Tree primitives (audit target)
+- `https://github.com/swift-primitives/swift-graph-primitives` — Graph primitives (comparison)

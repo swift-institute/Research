@@ -92,4 +92,4 @@ Most packages that follow MOD-002 correctly use Option B via `exports.swift`. Th
 
 The swift-primitives modularization audit from 2026-03-14 remains fully current. No structural changes have occurred. All 68 FAIL violations, 18 REVIEW items, and 14 ADVISORY observations stand as documented in `swift-primitives/Research/modularization-audit/SUMMARY.md` and batch files A-J.
 
-**Cross-reference**: Full audit details in `/Users/coen/Developer/swift-primitives/Research/modularization-audit/`
+**Cross-reference**: Full audit details in `https://github.com/swift-primitives/Research/tree/main/modularization-audit/`

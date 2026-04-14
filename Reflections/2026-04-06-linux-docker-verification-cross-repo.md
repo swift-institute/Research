@@ -7,7 +7,7 @@ packages:
   - swift-iso-9945
   - swift-kernel
   - swift-io
-status: pending
+status: processed
 ---
 
 # Linux Docker Verification Exposes Cross-Repo Compilation Debt

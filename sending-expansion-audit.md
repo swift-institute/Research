@@ -44,7 +44,7 @@ For each actor method, check whether:
 
 ### 1.1 `Async.Stream.Scan.State` -- init takes `initial` without `sending`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Scan.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Scan.State.swift`
 **Line**: 34
 
 **Current signature**:
@@ -68,7 +68,7 @@ public func scan<Result: Sendable>(_ initial: sending Result, _ accumulator: ...
 
 ### 1.2 `Async.Stream.Scan.State.next()` -- return crosses isolation boundary
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Scan.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Scan.State.swift`
 **Line**: 44
 
 **Current signature**:
@@ -89,7 +89,7 @@ func next() async -> sending Result?
 
 ### 1.3 `Async.Stream.FlatMap.State` -- no missing annotations
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.FlatMap.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.FlatMap.State.swift`
 
 The `init` receives a `stream` and `transform` closure. The stream is `Sendable` (it's `Async.Stream<Element>` which is already `Sendable`). The transform closure is `@Sendable`. No non-Sendable values cross the boundary. **No action needed.**
 
@@ -97,7 +97,7 @@ The `init` receives a `stream` and `transform` closure. The stream is `Sendable`
 
 ### 1.4 `Async.Stream.FlatMap.State.Async` -- no missing annotations
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.FlatMap.State.Async.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.FlatMap.State.Async.swift`
 
 Same analysis as 1.3. All values crossing the boundary are already `Sendable`-constrained. **No action needed.**
 
@@ -105,7 +105,7 @@ Same analysis as 1.3. All values crossing the boundary are already `Sendable`-co
 
 ### 1.5 `Async.Stream.FlatMap.Latest.State.Async.receiveInner` -- MISSING `sending`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.FlatMap.Latest.State.Async.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.FlatMap.Latest.State.Async.swift`
 **Line**: 91
 
 **Current signature**:
@@ -124,7 +124,7 @@ func receiveInner(_ element: sending U) async
 
 ### 1.6 `Async.Stream.Debounce.State` -- no missing annotations
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Debounce.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Debounce.State.swift`
 
 The `init` receives `stream` (Sendable) and `duration` (value type). The `next()` method operates within the actor. Elements flow through `box.next()` which already handles the isolation boundary via the `Iterator.Box` pattern. **No action needed.**
 
@@ -132,7 +132,7 @@ The `init` receives `stream` (Sendable) and `duration` (value type). The `next()
 
 ### 1.7 `Async.Stream.Throttle.State` -- no missing annotations
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Throttle.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Throttle.State.swift`
 
 Same pattern as Debounce. All init parameters are Sendable or value types. **No action needed.**
 
@@ -140,7 +140,7 @@ Same pattern as Debounce. All init parameters are Sendable or value types. **No 
 
 ### 1.8 `Async.Stream.Buffer.Count.State` -- no missing annotations
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Buffer.Count.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Buffer.Count.State.swift`
 
 Init receives stream (Sendable) and count (Int). **No action needed.**
 
@@ -148,7 +148,7 @@ Init receives stream (Sendable) and count (Int). **No action needed.**
 
 ### 1.9 `Async.Stream.Concat.State` -- no missing annotations
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Concat.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Concat.State.swift`
 
 Init receives two streams, both Sendable. **No action needed.**
 
@@ -156,7 +156,7 @@ Init receives two streams, both Sendable. **No action needed.**
 
 ### 1.10 `Async.Stream.Distinct.State` -- no missing annotations
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Distinct.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Distinct.State.swift`
 
 Init receives stream (Sendable) and `areEqual` closure (@Sendable). **No action needed.**
 
@@ -164,7 +164,7 @@ Init receives stream (Sendable) and `areEqual` closure (@Sendable). **No action 
 
 ### 1.11 `Async.Stream.Last.State` -- no missing annotations
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Last.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Last.State.swift`
 
 Init receives stream (Sendable). Element storage is internal to the actor. **No action needed.**
 
@@ -172,7 +172,7 @@ Init receives stream (Sendable). Element storage is internal to the actor. **No 
 
 ### 1.12 `Async.Stream.Unfold.State` -- init takes `initial` without `sending`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Unfold.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Unfold.State.swift`
 **Line**: 30
 
 **Current signature**:
@@ -196,7 +196,7 @@ public static func unfold<State: Sendable>(_ initial: sending State, _ next: ...
 
 ### 1.13 `Async.Stream.Transducer.Run` -- no missing annotations
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Transducer.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Transducer.State.swift`
 
 The `init` receives `upstream` (Sendable stream) and `transducer` (Sendable struct with Sendable closures). All values crossing the boundary satisfy Sendable. **No action needed.**
 
@@ -204,7 +204,7 @@ The `init` receives `upstream` (Sendable stream) and `transducer` (Sendable stru
 
 ### 1.14 `Async.Stream.State` -- init takes `elements` without `sending`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.State.swift`
 **Line**: 25
 
 **Current signature**:
@@ -225,7 +225,7 @@ init(_ elements: sending [Element])
 
 ### 1.15 `Async.Stream.Repeat.State` -- no missing annotations
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Repeat.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Repeat.State.swift`
 
 Init receives `value` (Element, which is Sendable) and `count` (Int?). **No action needed.**
 
@@ -233,7 +233,7 @@ Init receives `value` (Element, which is Sendable) and `count` (Int?). **No acti
 
 ### 1.16 `Async.Stream.Replay.State` -- already has `sending` on `send`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Replay.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Replay.State.swift`
 
 `send(_ element: sending Element)` at line 39 is already annotated. `subscribe()` returns a Subscription reference (Sendable actor). **No action needed.**
 
@@ -241,7 +241,7 @@ Init receives `value` (Element, which is Sendable) and `count` (Int?). **No acti
 
 ### 1.17 `Async.Stream.Merge.State` -- already has `sending` on `send`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Merge.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Merge.State.swift`
 
 `send(_ element: sending Element)` at line 37 is already annotated. **No action needed.**
 
@@ -249,7 +249,7 @@ Init receives `value` (Element, which is Sendable) and `count` (Int?). **No acti
 
 ### 1.18 `Async.Stream.CombineLatest.State` -- already has `sending` on updates
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.CombineLatest.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.CombineLatest.State.swift`
 
 `updateA(_ value: sending A)` at line 43 and `updateB(_ value: sending B)` at line 49 are already annotated. **No action needed.**
 
@@ -257,7 +257,7 @@ Init receives `value` (Element, which is Sendable) and `count` (Int?). **No acti
 
 ### 1.19 `Async.Stream.Sample.State` -- already has `sending` on updateLatest
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Sample.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Sample.State.swift`
 
 `updateLatest(_ element: sending Element)` at line 59 is already annotated. **No action needed.**
 
@@ -265,7 +265,7 @@ Init receives `value` (Element, which is Sendable) and `count` (Int?). **No acti
 
 ### 1.20 `Async.Stream.WithLatestFrom.State` -- already has `sending` on updateLatestOther
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.WithLatestFrom.State.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.WithLatestFrom.State.swift`
 
 `updateLatestOther(_ element: sending Other)` at line 55 is already annotated. **No action needed.**
 
@@ -275,7 +275,7 @@ Init receives `value` (Element, which is Sendable) and `count` (Int?). **No acti
 
 ### 2.1 `Async.Bridge` -- `push(_:)` missing `sending`
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Bridge.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Bridge.swift`
 **Line**: 84
 
 **Current signature**:
@@ -296,7 +296,7 @@ public func push(_ element: sending Element)
 
 ### 2.2 `Async.Bridge` -- `push(_: [Element])` missing `sending`
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Bridge.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Bridge.swift`
 **Line**: 110
 
 **Current signature**:
@@ -310,7 +310,7 @@ public func push(_ elements: borrowing [Element])
 
 ### 2.3 `Async.Promise` -- `fulfill(_:)` missing `sending`
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Promise.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Promise.swift`
 **Line**: 83
 
 **Current signature**:
@@ -329,7 +329,7 @@ public func fulfill(_ value: sending Value) -> Bool
 
 ### 2.4 `Async.Barrier` -- no missing annotations
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Barrier.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Barrier.swift`
 
 `Barrier` coordinates via `Void` signals -- `arrive()` and `arrive(_:)` carry no payload values. The callback parameter is `@Sendable`. **No action needed.**
 
@@ -337,7 +337,7 @@ public func fulfill(_ value: sending Value) -> Bool
 
 ### 2.5 `Async.Channel.Bounded.Sender.send(_:)` -- missing `sending`
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Channel.Bounded.Sender.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Channel.Bounded.Sender.swift`
 **Line**: 103
 
 **Current signature**:
@@ -356,7 +356,7 @@ public func send(_ element: sending Element, isolation: isolated (any Actor)? = 
 
 ### 2.6 `Async.Channel.Bounded.Sender.Send.immediate(_:)` -- missing `sending`
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Channel.Bounded.Sender.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Channel.Bounded.Sender.swift`
 **Line**: 190
 
 **Current signature**:
@@ -375,7 +375,7 @@ public func immediate(_ element: sending Element) throws(Async.Channel<Element>.
 
 ### 2.7 `Async.Channel.Unbounded.Sender.send(_:)` -- missing `sending`
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Channel.Unbounded.Sender.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Channel.Unbounded.Sender.swift`
 **Line**: 66
 
 **Current signature**:
@@ -394,7 +394,7 @@ public func send(_ element: sending Element) throws(Async.Channel<Element>.Error
 
 ### 2.8 `Async.Broadcast.send(_:)` -- missing `sending`
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Broadcast.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Broadcast.swift`
 **Line**: 111
 
 **Current signature**:
@@ -413,7 +413,7 @@ public func send(_ element: sending Element)
 
 ### 2.9 `Async.Completion.complete(_:)` -- missing `sending`
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Completion.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Completion.swift`
 **Line**: 166
 
 **Current signature**:
@@ -432,7 +432,7 @@ public func complete(_ value: sending Success) throws(Transition.Error)
 
 ### 2.10 `Async.Publication` -- already has `sending`
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Publication.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Publication.swift`
 
 `init(_ initial: sending Value?)` at line 78 and `publish(_ value: sending Value)` at line 92 are already annotated. **No action needed.**
 

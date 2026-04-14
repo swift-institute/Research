@@ -5,7 +5,7 @@ packages:
   - swift-io
   - swift-async-primitives
   - swift-kernel
-status: pending
+status: processed
 ---
 
 # CQ Poll Thread Hang — Structural Analysis via Code Tracing

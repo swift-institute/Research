@@ -70,4 +70,4 @@ This is now the accepted industry workaround, not just a temporary measure. Appl
 
 The relaxation pitch remains worthwhile — the `Optional` wrapper adds a branch and a byte of storage — but the urgency is reduced given that Apple has normalized this pattern in their reference implementation.
 
-**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/Writer/AsyncWriter.swift:123-140`
+**Source**: `https://github.com/apple/swift-http-api-proposal/blob/main/Sources/AsyncStreaming/Writer/AsyncWriter.swift:123-140`

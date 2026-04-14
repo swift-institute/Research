@@ -53,7 +53,7 @@ Based on the current infrastructure, skill creation involves:
 - Update Loading Order section if skill has dependents
 
 **6. CLAUDE.md updates**
-- Update `/Users/coen/Developer/CLAUDE.md` Skill Routing table
+- Update the workspace-level `CLAUDE.md` Skill Routing table
 - Update relevant repo CLAUDE.md "Before Writing Code" sections
 
 **7. Sync infrastructure**
@@ -190,7 +190,7 @@ Use prefix `[SKILL-CREATE-*]`:
 
 ### Next Steps
 
-1. Create `/Users/coen/Developer/swift-institute/Skills/skill-creation/SKILL.md`
+1. Create `Skills/skill-creation/SKILL.md`
 2. Add to swift-institute-core Skill Index
 3. Update workspace CLAUDE.md Skill Routing table
 4. Run sync-skills.sh
@@ -198,6 +198,6 @@ Use prefix `[SKILL-CREATE-*]`:
 
 ## References
 
-- Existing skills in `/Users/coen/Developer/swift-institute/Skills/`
+- Existing skills in `Skills/`
 - `sync-skills.sh` script
 - `swift-institute-core/SKILL.md` for index and loading order patterns

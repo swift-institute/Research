@@ -362,7 +362,7 @@ Every converted renderer MUST produce byte-identical HTML to the `capture {}` ve
 
 ### Correctness
 ```bash
-cd /Users/coen/Developer/swift-foundations/swift-markdown-html-rendering
+cd swift-markdown-html-rendering
 swift build && swift test   # 96 tests must pass
 ```
 
@@ -388,7 +388,7 @@ old string pipeline - 100 sections:     ~2,400ms (unchanged, for reference)
 
 ### PDF smoke test
 ```bash
-cd /Users/coen/Developer/swift-foundations/swift-pdf
+cd swift-pdf
 rm -rf .build && swift test   # markdown-to-PDF tests must pass (no stack overflow)
 ```
 

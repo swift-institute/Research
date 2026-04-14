@@ -426,7 +426,7 @@ This allows gradual migration — existing code keeps working, new code uses the
 ## Validation
 
 ```bash
-cd /Users/coen/Developer/swift-foundations/swift-markdown-html-rendering
+cd swift-markdown-html-rendering
 swift build
 swift test
 ```
@@ -434,7 +434,7 @@ swift test
 Also verify the PDF markdown tests (these were the ones that crashed with stack overflow):
 
 ```bash
-cd /Users/coen/Developer/swift-foundations/swift-pdf
+cd swift-pdf
 swift test
 ```
 

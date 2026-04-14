@@ -54,7 +54,7 @@ applies_to:
 
 ## Loading Mechanism
 
-Skills are loaded via symlinks in `/Users/coen/Developer/.claude/skills/` pointing to skill directories in repositories.
+Skills are loaded via symlinks in the workspace-level `.claude/skills/` pointing to skill directories in repositories.
 
 ## Outcome
 
@@ -68,4 +68,4 @@ Adopted this architecture. Skills are the canonical source for rules. Documentat
 
 ## Implementation
 
-See plan: `/Users/coen/.claude/plans/rustling-booping-seal.md`
+See internal implementation plan.

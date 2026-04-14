@@ -284,7 +284,7 @@ The `values` array on `Test.Expression` can hold the captured lhs and rhs. The `
 
 **File: `Test.check.swift`** (new)
 
-Path: `/Users/coen/Developer/swift-foundations/swift-tests/Sources/Tests Core/Test.check.swift`
+Path: `https://github.com/swift-foundations/swift-tests/blob/main/Sources/Tests Core/Test.check.swift`
 
 ```swift
 /// Checks a binary operation and captures operand values on failure.
@@ -322,7 +322,7 @@ Implementation: evaluates `op(lhs, rhs)`. On failure, constructs `Test.Expressio
 
 **File: `Test.check.require.swift`** (new)
 
-Path: `/Users/coen/Developer/swift-foundations/swift-tests/Sources/Tests Core/Test.check.require.swift`
+Path: `https://github.com/swift-foundations/swift-tests/blob/main/Sources/Tests Core/Test.check.require.swift`
 
 ```swift
 /// Checks a binary operation and throws on failure, capturing operand values.
@@ -353,7 +353,7 @@ public func __requireBinaryOperation<L, R>(
 
 **File: `ExpectMacro.swift`** (modify)
 
-Path: `/Users/coen/Developer/swift-foundations/swift-testing/Sources/Testing Macros Implementation/ExpectMacro.swift`
+Path: `https://github.com/swift-foundations/swift-testing/blob/main/Sources/Testing Macros Implementation/ExpectMacro.swift`
 
 Changes:
 1. Add AST analysis to detect `InfixOperatorExprSyntax` with `BinaryOperatorExprSyntax`
@@ -413,13 +413,13 @@ public struct ExpectMacro: ExpressionMacro {
 
 **File: `RequireMacro.swift`** (modify)
 
-Path: `/Users/coen/Developer/swift-foundations/swift-testing/Sources/Testing Macros Implementation/RequireMacro.swift`
+Path: `https://github.com/swift-foundations/swift-testing/blob/main/Sources/Testing Macros Implementation/RequireMacro.swift`
 
 Parallel changes: detect binary operations and expand to `Testing.__requireBinaryOperation(...)`.
 
 **File: `Testing.Helpers.swift`** (modify)
 
-Path: `/Users/coen/Developer/swift-foundations/swift-testing/Sources/Testing/Testing.Helpers.swift`
+Path: `https://github.com/swift-foundations/swift-testing/blob/main/Sources/Testing/Testing.Helpers.swift`
 
 Add forwarding helpers:
 
@@ -624,7 +624,7 @@ This would analyze `InfixOperatorExprSyntax`, `FunctionCallExprSyntax`, `MemberA
 
 ## References
 
-- Apple swift-testing source: `/Users/coen/Developer/swiftlang/swift-testing/`
+- Apple swift-testing source: `https://github.com/swiftlang/swift-testing`
   - `Sources/TestingMacros/ConditionMacro.swift` -- macro protocol and expansion
   - `Sources/TestingMacros/Support/ConditionArgumentParsing.swift` -- expression analysis
   - `Sources/TestingMacros/Support/SourceCodeCapturing.swift` -- `__Expression` construction

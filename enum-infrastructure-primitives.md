@@ -312,7 +312,7 @@ This name is admittedly mechanical rather than domain-elegant. It violates the e
 - "Codegen" identifies the layer (compile-time source generation, not runtime types).
 - The name distinguishes it from the runtime packages (`swift-optic-primitives`, `swift-finite-primitives`) that define the types being generated.
 
-**Package location**: `/Users/coen/Developer/swift-foundations/swift-enum-infrastructure-codegen/`
+**Package location**: `https://github.com/swift-foundations/swift-enum-infrastructure-codegen`
 
 Layer 3 is correct because:
 - The codegen is implementation machinery for Layer 3 macros.
@@ -402,12 +402,12 @@ If the preference is to avoid creating a package before the third consumer exist
 
 ## References
 
-- Converged architecture: `/Users/coen/Developer/swift-institute/Research/prompts/swift-dual-implementation.md`
+- Converged architecture: `Research/prompts/swift-dual-implementation.md`
 - Architecture memory: `dual-defunctionalize-architecture.md` (MEMORY.md)
-- swift-witnesses EnumExpansion.swift: `/Users/coen/Developer/swift-foundations/swift-witnesses/Sources/Witnesses Macros Implementation/EnumExpansion.swift`
-- swift-witnesses WitnessMacro.swift: `/Users/coen/Developer/swift-foundations/swift-witnesses/Sources/Witnesses Macros Implementation/WitnessMacro.swift`
-- [MOD-DOMAIN], [MOD-001]–[MOD-005]: `/Users/coen/Developer/swift-institute/Skills/modularization/SKILL.md`
-- [RES-003], [RES-021]: `/Users/coen/Developer/swift-institute/Skills/research-process/SKILL.md`
+- swift-witnesses EnumExpansion.swift: `https://github.com/swift-foundations/swift-witnesses/blob/main/Sources/Witnesses Macros Implementation/EnumExpansion.swift`
+- swift-witnesses WitnessMacro.swift: `https://github.com/swift-foundations/swift-witnesses/blob/main/Sources/Witnesses Macros Implementation/WitnessMacro.swift`
+- [MOD-DOMAIN], [MOD-001]–[MOD-005]: `Skills/modularization/SKILL.md`
+- [RES-003], [RES-021]: `Skills/research-process/SKILL.md`
 - Rust precedent: `serde_derive_internals` crate (serde-rs/serde, proc-macro shared internals)
 - Swift precedent: `swift-macro-toolkit` (stackotter, shared SwiftSyntax utility library)
 - CasePaths (Point-Free): single-package enum case path macro, no shared codegen extraction

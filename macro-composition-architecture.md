@@ -171,9 +171,9 @@ To evaluate composition options, here is a precise inventory of what each macro 
 
 The enum infrastructure (extraction, Case, Prisms, accessors) is duplicated across ALL three macro implementation targets. The `PrismCodegen.swift`, `CaseDiscriminantCodegen.swift`, `ExtractionCodegen.swift`, and `Utilities.swift` files exist as identical or near-identical copies in:
 
-1. `/Users/coen/Developer/swift-foundations/swift-dual/Sources/Dual Macros Implementation/`
-2. `/Users/coen/Developer/swift-foundations/swift-defunctionalize/Sources/Defunctionalize Macros Implementation/`
-3. `/Users/coen/Developer/swift-foundations/swift-witnesses/Sources/Witnesses Macros Implementation/EnumExpansion.swift` (inline, plus `PrismCase` and `generatePrism` duplicated)
+1. `https://github.com/swift-foundations/swift-dual/tree/main/Sources/Dual Macros Implementation/`
+2. `https://github.com/swift-foundations/swift-defunctionalize/tree/main/Sources/Defunctionalize Macros Implementation/`
+3. `https://github.com/swift-foundations/swift-witnesses/blob/main/Sources/Witnesses Macros Implementation/EnumExpansion.swift` (inline, plus `PrismCase` and `generatePrism` duplicated)
 
 ---
 
@@ -399,7 +399,6 @@ It does not compose with them at the macro level. `@Witness` is self-contained: 
 |----------|-------|--------|
 | Witness struct for DI | `@Witness` | Calls, methods, observe, unimplemented, mock |
 | Plain enum with infrastructure | `@Dual` | Extraction, Case, Prisms, Scott encoding |
-| Statute questionnaire struct | `@Dual` | Dual enum, homogeneous subscript, Case enumeration |
 | Call algebra only (no DI) | `@Defunctionalize` | Calls enum with extraction, Case, Prisms |
 
 **Q4: Can Swift macros compose?**
@@ -499,7 +498,7 @@ The L1 primitives are correctly scoped: they define the concepts (what a depende
 
 ### Implementation sequence
 
-1. **Create `swift-enum-infrastructure-codegen`** at `/Users/coen/Developer/swift-foundations/swift-enum-infrastructure-codegen/`. Extract the four shared files. Make all types and functions `public`.
+1. **Create `swift-enum-infrastructure-codegen`** at `https://github.com/swift-foundations/swift-enum-infrastructure-codegen`. Extract the four shared files. Make all types and functions `public`.
 
 2. **Migrate `swift-dual`** macro implementation to import `Enum_Infrastructure_Codegen`. Remove local copies of `PrismCodegen.swift`, `CaseDiscriminantCodegen.swift`, `ExtractionCodegen.swift`, `Utilities.swift`. Retain `DualMacro.swift`, `StructExpansion.swift`, `EnumExpansion.swift`.
 
@@ -529,16 +528,16 @@ The L1 primitives are correctly scoped: they define the concepts (what a depende
 
 ## References
 
-- `/Users/coen/Developer/swift-institute/Research/dual-defunctionalize-decomposition.md` -- Converged three-macro architecture (Claude + ChatGPT Round 4)
-- `/Users/coen/Developer/swift-institute/Research/enum-infrastructure-primitives.md` -- Shared codegen analysis (recommends Option F/shared library)
-- `/Users/coen/Developer/swift-institute/Research/witness-enum-direction-and-dual.md` -- Remove @Witness enum support (recommends Option A/removal)
-- `/Users/coen/Developer/swift-institute/Research/prompts/swift-dual-implementation.md` -- @Dual implementation handoff
-- `/Users/coen/Developer/swift-foundations/swift-dual/Sources/Dual Macros Implementation/` -- @Dual codegen
-- `/Users/coen/Developer/swift-foundations/swift-defunctionalize/Sources/Defunctionalize Macros Implementation/` -- @Defunctionalize codegen
-- `/Users/coen/Developer/swift-foundations/swift-witnesses/Sources/Witnesses Macros Implementation/` -- @Witness codegen
-- `/Users/coen/Developer/swift-foundations/swift-dependencies/Sources/Dependencies/` -- DI container
-- `/Users/coen/Developer/swift-primitives/swift-dependency-primitives/` -- L1 DI primitives
-- `/Users/coen/Developer/swift-primitives/swift-witness-primitives/` -- L1 witness primitives
+- `Research/dual-defunctionalize-decomposition.md` -- Converged three-macro architecture (Claude + ChatGPT Round 4)
+- `Research/enum-infrastructure-primitives.md` -- Shared codegen analysis (recommends Option F/shared library)
+- `Research/witness-enum-direction-and-dual.md` -- Remove @Witness enum support (recommends Option A/removal)
+- `Research/prompts/swift-dual-implementation.md` -- @Dual implementation handoff
+- `https://github.com/swift-foundations/swift-dual/tree/main/Sources/Dual Macros Implementation/` -- @Dual codegen
+- `https://github.com/swift-foundations/swift-defunctionalize/tree/main/Sources/Defunctionalize Macros Implementation/` -- @Defunctionalize codegen
+- `https://github.com/swift-foundations/swift-witnesses/tree/main/Sources/Witnesses Macros Implementation/` -- @Witness codegen
+- `https://github.com/swift-foundations/swift-dependencies/tree/main/Sources/Dependencies/` -- DI container
+- `https://github.com/swift-primitives/swift-dependency-primitives` -- L1 DI primitives
+- `https://github.com/swift-primitives/swift-witness-primitives` -- L1 witness primitives
 - PointFree `swift-case-paths`: https://github.com/pointfreeco/swift-case-paths
 - PointFree `swift-dependencies`: https://github.com/pointfreeco/swift-dependencies
 - Reynolds, J.C. (1972). "Definitional interpreters for higher-order programming languages." -- Defunctionalization origin

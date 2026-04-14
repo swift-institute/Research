@@ -63,10 +63,6 @@
 |-----------|--------------|------------|--------|---------|-------------------|
 | sending-continuation-dispatch | 2026-04-08 | 0 | OK | Find minimal correct pattern for dispatching `sending @escaping () -> T` | Currently active (uncommitted changes today) |
 
-### swift-nl-wetgever/Experiments/
-
-No active experiments. `conclusion-type-architecture` is completed.
-
 ---
 
 ## Active Multi-Module Experiments (no main.swift, no `// Result:` anywhere)
@@ -148,8 +144,7 @@ Several active experiments appear to test the same underlying compiler behavior 
 | swift-primitives | 28 | 18 | 4 | 2 | 1 |
 | swift-standards | 2 | 1 | 1 | 0 | 0 |
 | swift-foundations | 7 | 6 | 1 | 0 | 0 |
-| swift-nl-wetgever | 1 | 1 | 0 | 0 | 0 |
-| **Total** | **169** | **115** | **21** | **9** | **3** |
+| **Total** | **168** | **114** | **21** | **9** | **3** |
 
 Note: 23 multi-module experiments without main.swift were confirmed completed via `// Result:` lines in alternative source files. These are counted in the "Completed" column above (correcting the initial summary which counted 120 main.swift-completed + 23 multi-module-completed = 143 total completed; the remaining 26 are the 21 active + 9 active-no-main + 3 empty, but the 9 active-no-main and 7 from the no-main list that were actually completed overlap, giving 169 - 143 - 3 = 23 unresolved, matching the 21 active + 9 no-main - 7 reclassified = 23).
 

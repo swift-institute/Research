@@ -2,7 +2,7 @@
 
 ## Objective
 
-Create `/Users/coen/Developer/swift-foundations/swift-dual/` — a new Swift package providing the `@Dual` macro that computes the categorical dual of a type:
+Create `https://github.com/swift-foundations/swift-dual` — a new Swift package providing the `@Dual` macro that computes the categorical dual of a type:
 
 - **Struct → Enum**: product → coproduct (one case per stored property, literal field types)
 - **Enum → Struct**: coproduct → product (Scott encoding: one handler closure per case, parameterized by result R)
@@ -23,7 +23,7 @@ These decisions are final. Do not revisit them.
 
 ## Repository and Package Location
 
-**New package**: `/Users/coen/Developer/swift-foundations/swift-dual/`
+**New package**: `https://github.com/swift-foundations/swift-dual`
 
 This is inside the `swift-foundations` superrepo (Layer 3).
 
@@ -412,7 +412,7 @@ Extract from swift-witnesses `EnumExpansion.swift` lines 350-360 and EXTEND for 
 
 /// Escapes an identifier with backticks if it's a Swift keyword or contains spaces.
 func escapeIdentifier(_ identifier: String) -> String {
-    // Space-containing identifiers (Dutch legal text)
+    // Space-containing identifiers
     if identifier.contains(" ") {
         return "`\(identifier)`"
     }
@@ -509,9 +509,9 @@ struct Homogeneous: Sendable {
     var z: Int
 }
 
-/// Bool? pattern (statute encoding use case) with space-containing identifiers.
+/// Bool? pattern with space-containing identifiers.
 @Dual
-struct StatuteArgs: Sendable {
+struct Questionnaire: Sendable {
     var `condition one`: Bool? = nil
     var `condition two`: Bool? = nil
     var `condition three`: Bool? = nil
@@ -594,9 +594,9 @@ struct StructDualTests {
 - `h[case: .y] == 2`
 - `h[case: .x] = 10; #expect(h.x == 10)`
 
-**StatuteArgs tests** (space-containing identifiers):
-- `StatuteArgs.Dual.Case.allCases` or iterate via Finite.Enumerable
-- `var args = StatuteArgs(); args[case: .`condition one`] = true; #expect(args.`condition one` == true)`
+**Questionnaire tests** (space-containing identifiers):
+- `Questionnaire.Dual.Case.allCases` or iterate via Finite.Enumerable
+- `var args = Questionnaire(); args[case: .`condition one`] = true; #expect(args.`condition one` == true)`
 
 **LetOnly tests**:
 - Subscript is get-only (verify reads work; compiler enforces no setter)
@@ -674,9 +674,9 @@ For public structs, non-public stored properties need `@usableFromInline` so tha
 
 The `escapeIdentifier` function MUST handle:
 1. Swift keywords (`default`, `return`, `class`, etc.) → backtick wrap
-2. Identifiers with spaces (Dutch legal text) → backtick wrap
+2. Identifiers with spaces → backtick wrap
 
-The AST's `IdentifierPatternSyntax.identifier.text` returns the text WITHOUT backticks. So `var \`betreft het de Staat\`: Bool?` gives identifier text `"betreft het de Staat"`. The codegen must add backticks back.
+The AST's `IdentifierPatternSyntax.identifier.text` returns the text WITHOUT backticks. So `var \`condition one\`: Bool?` gives identifier text `"condition one"`. The codegen must add backticks back.
 
 ### Fully qualified type references in generated code
 
@@ -694,7 +694,7 @@ This prevents name collisions with user types.
 ## Build and Test
 
 ```bash
-cd /Users/coen/Developer/swift-foundations/swift-dual
+cd swift-dual
 swift build 2>&1 | tail -20
 swift test 2>&1 | tail -30
 ```
@@ -709,13 +709,13 @@ Read these files to understand the existing patterns:
 
 | File | Path | What to reference |
 |------|------|-------------------|
-| WitnessMacro.swift | `/Users/coen/Developer/swift-foundations/swift-witnesses/Sources/Witnesses Macros Implementation/WitnessMacro.swift` | MemberMacro/MemberAttributeMacro/ExtensionMacro dispatch, property extraction, generateCaseEnum, diagnostics, canInline, access level handling |
-| EnumExpansion.swift | `/Users/coen/Developer/swift-foundations/swift-witnesses/Sources/Witnesses Macros Implementation/EnumExpansion.swift` | PrismCase, generatePrism, escapeIdentifier, EnumCase, extractEnumCases, generateEnumPrismMembers, generateEnumComputedProperty |
-| Plugin.swift | `/Users/coen/Developer/swift-foundations/swift-witnesses/Sources/Witnesses Macros Implementation/Plugin.swift` | CompilerPlugin entry point pattern |
-| Witness.swift (macros) | `/Users/coen/Developer/swift-foundations/swift-witnesses/Sources/Witnesses Macros/Witness.swift` | @attached macro declaration pattern |
-| Package.swift | `/Users/coen/Developer/swift-foundations/swift-witnesses/Package.swift` | Package.swift structure |
-| Optic.Prism.swift | `/Users/coen/Developer/swift-primitives/swift-optic-primitives/Sources/Optic Primitives/Optic.Prism.swift` | Optic.Prism type, __OpticPrismAccessible protocol |
-| Finite.Enumerable.swift | `/Users/coen/Developer/swift-primitives/swift-finite-primitives/Sources/Finite Primitives Core/Finite.Enumerable.swift` | Finite.Enumerable protocol |
+| WitnessMacro.swift | `https://github.com/swift-foundations/swift-witnesses/blob/main/Sources/Witnesses Macros Implementation/WitnessMacro.swift` | MemberMacro/MemberAttributeMacro/ExtensionMacro dispatch, property extraction, generateCaseEnum, diagnostics, canInline, access level handling |
+| EnumExpansion.swift | `https://github.com/swift-foundations/swift-witnesses/blob/main/Sources/Witnesses Macros Implementation/EnumExpansion.swift` | PrismCase, generatePrism, escapeIdentifier, EnumCase, extractEnumCases, generateEnumPrismMembers, generateEnumComputedProperty |
+| Plugin.swift | `https://github.com/swift-foundations/swift-witnesses/blob/main/Sources/Witnesses Macros Implementation/Plugin.swift` | CompilerPlugin entry point pattern |
+| Witness.swift (macros) | `https://github.com/swift-foundations/swift-witnesses/blob/main/Sources/Witnesses Macros/Witness.swift` | @attached macro declaration pattern |
+| Package.swift | `https://github.com/swift-foundations/swift-witnesses/blob/main/Package.swift` | Package.swift structure |
+| Optic.Prism.swift | `https://github.com/swift-primitives/swift-optic-primitives/blob/main/Sources/Optic Primitives/Optic.Prism.swift` | Optic.Prism type, __OpticPrismAccessible protocol |
+| Finite.Enumerable.swift | `https://github.com/swift-primitives/swift-finite-primitives/blob/main/Sources/Finite Primitives Core/Finite.Enumerable.swift` | Finite.Enumerable protocol |
 
 ---
 
@@ -723,7 +723,7 @@ Read these files to understand the existing patterns:
 
 | What | Details |
 |------|---------|
-| **Package** | `/Users/coen/Developer/swift-foundations/swift-dual/` |
+| **Package** | `https://github.com/swift-foundations/swift-dual` |
 | **Macro** | `@Dual` — structural duality, both directions |
 | **Struct → Enum** | `T.Dual` enum, literal types, extraction, Case, Prisms, homogeneous subscript |
 | **Enum → Struct** | `T.Dual<R>` struct (Scott encoding), `match`, extraction, Case, Prisms |

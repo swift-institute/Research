@@ -43,9 +43,7 @@ Each scope level has exactly one `audit.md`, with sections per target skill:
 |-------|----------|
 | Single package | `{package}/Research/audit.md` |
 | Superrepo-wide | `{superrepo}/Research/audit.md` |
-| Ecosystem-wide (Swift) | `swift-institute/Research/audit.md` |
-| Legislature-wide (legal) | `swift-nl-wetgever/Research/audit.md` |
-| Ecosystem-wide (legal) | `rule-law/Research/audit.md` |
+| Ecosystem-wide | `swift-institute/Research/audit.md` |
 
 This mirrors [RES-002] triage exactly. Location is predictable and discoverable.
 

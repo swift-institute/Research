@@ -8,32 +8,19 @@ This is **not** a compile-time issue — the code compiles fine on Swift 6.2.4. 
 
 ## Confirmed Crash Reproduction
 
-```bash
-cd /Users/coen/Developer/rule-legal/rule-legal-nl/rule-besloten-vennootschap
-swift test --filter "renders Hakuna"
-# → Exited with unexpected signal code 10
-```
+The crash is reproducible with any `HTML.View` that nests multiple `Section` elements containing multiple `Table > TableBody > TableRow > TableDataCell` hierarchies with CSS modifier chains and `if/let` conditionals, producing a concrete type with extreme generic depth.
 
 The crash happens regardless of whether the view is iterated via `for` loop or `HTMLForEach` — it's the **view itself** that overflows during rendering, not the iteration mechanism.
 
-## The Crashing View
+## Representative Crashing View Shape
 
-**File**: `/Users/coen/Developer/rule-legal/rule-legal-nl/rule-besloten-vennootschap/Sources/Aandeelhoudersregister PDF/Register.Aandeelhouder.swift`
-
-The `Aandeelhouder` struct conforms to `HTML.View`. Its `body` returns two `Section` elements (each with `.css.breakBefore(.page)` modifier), containing:
-
-- `persoonsgegevens`: 1 Table with 6 rows + if/else conditional
-- `eersteInschrijving`: 3 Tables (each with CSS modifier) + 1 conditional Paragraph
-- `handtekening`: 1 Table with chained CSS (`.css.breakInside(.avoid).css.margin(top:)`)
-- `mutatieBlok` (×3): Each has 4 Tables (with CSS modifiers), producing deeply nested `_Tuple` types
-
-The concrete type behind `body: some HTML.View` is approximately:
+A typical crashing view contains two `Section` elements (each with `.css.breakBefore(.page)` modifier), each containing several Tables with CSS modifier chains and conditional content. The concrete type behind `body: some HTML.View` looks approximately:
 ```
 _Tuple<
   CSS.Modified<Section<_Tuple<
     H<1, String>,
     H<3, String>,
-    Optional<_Tuple<...persoonsgegevens ~6 nested rows...>>,
+    Optional<_Tuple<...~6 nested rows...>>,
     Optional<_Tuple<
       CSS.Modified<H<3, String>>,
       CSS.Modified<Table<TableBody<_Tuple<...6 rows...>>>>,
@@ -41,14 +28,14 @@ _Tuple<
       CSS.Modified<Table<TableBody<_Tuple<...4 rows...>>>>,
       Optional<Paragraph<String>>
     >>,
-    Optional<_Tuple<...handtekening...>>,
-    Optional<_Tuple<...mutatieBlok with 4 tables each...>>
+    Optional<_Tuple<...more tables...>>,
+    Optional<_Tuple<...more tables...>>
   >>>,
   CSS.Modified<Section<_Tuple<
     H<1, String>,
     Paragraph<String>,
-    Optional<_Tuple<...mutatieBlok...>>,
-    Optional<_Tuple<...mutatieBlok...>>
+    Optional<_Tuple<...>>,
+    Optional<_Tuple<...>>
   >>>
 >
 ```
@@ -65,12 +52,12 @@ The rendering infrastructure uses recursive static dispatch:
 4. Container types (`Section`, `Table`, `TableBody`, etc.) call `Content._render` on their generic content
 5. CSS modifier wrappers add another frame per `.css.xxx()` call
 
-For the Aandeelhouder view, this creates a call stack roughly 200-400+ frames deep. The default thread stack (typically 512KB on macOS for non-main threads, 8MB for main) overflows.
+For a sufficiently deep view, this creates a call stack roughly 200-400+ frames deep. The default thread stack (typically 512KB on macOS for non-main threads, 8MB for main) overflows.
 
 ## Architecture: How Rendering Works
 
 ### Layer 1: Rendering Primitives
-**Package**: `/Users/coen/Developer/swift-primitives/swift-rendering-primitives/`
+**Package**: `https://github.com/swift-primitives/swift-rendering-primitives`
 
 Key files:
 - `Sources/Rendering Primitives Core/Rendering.View.swift` — Protocol with default `_render` that calls `body._render()`
@@ -82,7 +69,7 @@ Key files:
 - `Sources/Rendering Primitives Core/Array+Rendering.swift` — Array: Rendering.View conformance
 
 ### Layer 3: HTML Rendering
-**Package**: `/Users/coen/Developer/swift-foundations/swift-html-rendering/`
+**Package**: `https://github.com/swift-foundations/swift-html-rendering`
 
 Key files:
 - `Sources/HTML Renderable/HTML.View.swift` — `HTML.View: Rendering.View` protocol refinement
@@ -91,19 +78,19 @@ Key files:
 - `Sources/HTML Renderable/ForEach+HTML.swift` — Conditional `HTML.View` conformance for `ForEach`
 
 ### Layer 3: CSS HTML Rendering
-**Package**: `/Users/coen/Developer/swift-foundations/swift-css-html-rendering/`
+**Package**: `https://github.com/swift-foundations/swift-css-html-rendering`
 
 This is where CSS modifiers wrap views in additional generic layers. Each `.css.xxx()` call wraps the view in a modifier type, adding generic depth.
 
 ### WHATWG HTML Elements
-**Package**: `/Users/coen/Developer/swift-whatwg/swift-whatwg-html/`
+**Package**: `https://github.com/swift-whatwg/swift-whatwg-html`
 
 Defines `Table`, `TableBody`, `TableRow`, `TableDataCell`, `Section`, `H`, `Paragraph`, etc. — each a generic struct `Type<Content: HTML.View>: HTML.View` that calls `Content._render` in its implementation.
 
 ## What Was Already Tried
 
 ### Experiment: for-loop-result-builder
-**Location**: `/Users/coen/Developer/swift-institute/Experiments/for-loop-result-builder/`
+**Location**: `Experiments/for-loop-result-builder/`
 
 This experiment has a multi-module setup (LocalPackages/RenderingPrimitives + LocalPackages/HTMLRenderable) simulating the L1→L3 module chain. **Could not reproduce the crash** because the simulated types lack the real generic depth of WHATWG elements + CSS modifier chains. The experiment is still useful as a test harness.
 
@@ -170,36 +157,31 @@ Restructure views so that each computed property doesn't return `some HTML.View`
 
 ## Files to Read First
 
-1. `/Users/coen/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.View.swift` — Default `_render` implementation
-2. `/Users/coen/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering._Tuple.swift` — Pack iteration in `_render`
-3. `/Users/coen/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.Context.swift` — Context structure
-4. `/Users/coen/Developer/rule-legal/rule-legal-nl/rule-besloten-vennootschap/Sources/Aandeelhoudersregister PDF/Register.Aandeelhouder.swift` — The crashing view
-5. `/Users/coen/Developer/swift-institute/Experiments/for-loop-result-builder/` — Existing experiment (doesn't reproduce but has multi-module harness)
-6. `/Users/coen/Developer/swift-foundations/swift-css-html-rendering/Tests/CSS HTML Rendering Tests/ForLoopBuilderTests.swift` — Tests that PASS (simple types)
+1. `https://github.com/swift-primitives/swift-rendering-primitives/blob/main/Sources/Rendering Primitives Core/Rendering.View.swift` — Default `_render` implementation
+2. `https://github.com/swift-primitives/swift-rendering-primitives/blob/main/Sources/Rendering Primitives Core/Rendering._Tuple.swift` — Pack iteration in `_render`
+3. `https://github.com/swift-primitives/swift-rendering-primitives/blob/main/Sources/Rendering Primitives Core/Rendering.Context.swift` — Context structure
+4. `Experiments/for-loop-result-builder/` — Existing experiment (doesn't reproduce but has multi-module harness)
+5. `https://github.com/swift-foundations/swift-css-html-rendering/blob/main/Tests/CSS HTML Rendering Tests/ForLoopBuilderTests.swift` — Tests that PASS (simple types)
 
 ## Build & Test Commands
 
 ```bash
-# Reproduce the crash:
-cd /Users/coen/Developer/rule-legal/rule-legal-nl/rule-besloten-vennootschap
-swift test --filter "renders Hakuna"
-
 # Build the rendering primitives:
-cd /Users/coen/Developer/swift-primitives/swift-rendering-primitives
+cd swift-rendering-primitives
 swift build
 
 # Build/test the experiment:
-cd /Users/coen/Developer/swift-institute/Experiments/for-loop-result-builder
+cd Experiments/for-loop-result-builder
 swift build && swift run
 
 # Build CSS HTML rendering tests (for-loop tests that pass):
-cd /Users/coen/Developer/swift-foundations/swift-css-html-rendering
+cd swift-css-html-rendering
 swift test --filter ForLoopBuilderTests
 ```
 
 ## Success Criteria
 
-1. `swift test --filter "renders Hakuna"` in rule-besloten-vennootschap passes without signal 10
+1. A representative deeply-nested HTML view can render without signal 10 stack overflow
 2. No performance regression in rendering simple views
 3. Fix is in L1 (Rendering Primitives), not a consumer-side workaround
 4. `HTMLForEach` becomes truly unnecessary (can use native `for` loops everywhere)

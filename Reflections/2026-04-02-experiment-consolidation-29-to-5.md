@@ -4,7 +4,7 @@ session_objective: Consolidate ~30 ownership/memory-safety experiments into 5 to
 packages:
   - swift-institute
   - swift-primitives
-status: pending
+status: processed
 ---
 
 # Experiment Consolidation — 29 Scattered Packages to 5 Topic-Based Packages

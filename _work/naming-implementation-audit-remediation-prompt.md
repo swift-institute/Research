@@ -13,7 +13,7 @@ Paste this into a new Claude Code chat to address the audit findings.
 
 ## Prompt
 
-Read `/Users/coen/Developer/swift-institute/Research/naming-implementation-audit-swift-tests-swift-testing.md` — this is the full audit of swift-tests and swift-testing against the `/naming` and `/implementation` skills. 88 violations identified, organized by priority.
+Read `Research/naming-implementation-audit-swift-tests-swift-testing.md` — this is the full audit of swift-tests and swift-testing against the `/naming` and `/implementation` skills. 88 violations identified, organized by priority.
 
 Invoke `/naming` and `/implementation` before writing any code.
 
@@ -22,8 +22,8 @@ Work through the findings in priority order. For each priority group:
 1. Read the relevant source files first
 2. Apply fixes
 3. Build both packages after each group to verify nothing breaks:
-   - `cd /Users/coen/Developer/swift-foundations/swift-tests && swift build`
-   - `cd /Users/coen/Developer/swift-foundations/swift-testing && swift build`
+   - `cd swift-tests && swift build`
+   - `cd swift-testing && swift build`
 4. When a rename affects a public API, use the LSP `rename_symbol` tool to catch all references across both packages
 
 **Specific guidance per priority:**

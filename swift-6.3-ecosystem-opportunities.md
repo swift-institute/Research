@@ -113,7 +113,7 @@ Exposes function implementations for cross-module optimization in ABI-stable lib
 
 Stabilized from `@_section` / `@_used`. Places globals in specific object file sections.
 
-**Ecosystem opportunity**: Niche. Could be relevant for embedded targets or legal encoding metadata tables. Not actionable now.
+**Ecosystem opportunity**: Niche. Could be relevant for embedded targets. Not actionable now.
 
 #### SE-0487: `@nonexhaustive` Attribute
 
@@ -192,7 +192,7 @@ Opt-out of `Sendable` via `~Sendable`, mirroring `~Copyable`/`~Escapable`.
 | `TildeSendable` | `~Sendable` | Track for stabilization |
 | `EmbeddedExistentials` | `Any` in Embedded mode | Track for embedded targets |
 | `ImportMacroAliases` | C macro alias imports | Low |
-| `CompileTimeValuesPreview` | Compile-time values | **MEDIUM** — could enable compile-time legal statute validation |
+| `CompileTimeValuesPreview` | Compile-time values | **MEDIUM** — could enable compile-time specification validation |
 | `DeferredCodeGen` | Embedded deferred codegen | Low |
 
 ---
@@ -274,7 +274,7 @@ Opt-out of `Sendable` via `~Sendable`, mirroring `~Copyable`/`~Escapable`.
 
 ## Phase 2: Ecosystem Audit Results
 
-Exhaustive grep of all ecosystem repositories on 2026-03-25. Scope: swift-primitives, swift-standards (including swift-ietf, swift-iso, swift-ieee, swift-ecma, swift-iec, swift-w3c, swift-whatwg, swift-incits), swift-foundations, rule-law, swift-law, swift-nl-wetgever. Excluded: `.build/`, `swiftlang/`, third-party forks.
+Exhaustive grep of all ecosystem repositories on 2026-03-25. Scope: swift-primitives, swift-standards (including swift-ietf, swift-iso, swift-ieee, swift-ecma, swift-iec, swift-w3c, swift-whatwg, swift-incits), swift-foundations. Excluded: `.build/`, `swiftlang/`, third-party forks.
 
 ---
 
@@ -295,11 +295,9 @@ Only 1 hit ecosystem-wide: `#if $IsolatedAny` in `swiftlang/swift` stdlib (not o
 | swift-primitives | 133 |
 | swift-foundations | 56 |
 | swift-standards | 17 |
-| swift-nl-wetgever | 1,057 |
-| rule-law | 3 |
 | swift-ietf | (counted in standards org) |
 | swift-iso | (counted in standards org) |
-| **Total** | **~1,390** |
+| **Total** | **~206** |
 
 #### Feature Flags in Use (our repos, excluding third-party)
 
@@ -350,8 +348,6 @@ Only 1 hit ecosystem-wide: `#if $IsolatedAny` in `swiftlang/swift` stdlib (not o
 | swift-ietf | 10 | 4 |
 | swift-whatwg | 1 | 1 |
 | swift-standards (direct) | 0 | 0 |
-| swift-nl-wetgever | 0 | 0 |
-| rule-law | 0 | 0 |
 
 **Dominant location**: swift-iso-9899 (ISO C standard library bindings) accounts for 57% of all occurrences. swift-primitives accounts for 27%.
 

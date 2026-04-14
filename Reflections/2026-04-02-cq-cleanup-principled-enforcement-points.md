@@ -4,7 +4,7 @@ session_objective: CQ redesign cleanup — verify state, apply remaining guards,
 packages:
   - swift-io
   - swift-kernel
-status: pending
+status: processed
 ---
 
 # CQ Cleanup — Principled Enforcement Points and the Nonisolated Guard Reversal

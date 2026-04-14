@@ -219,4 +219,4 @@ Key observations:
 
 This confirms that for high-performance IO streaming, purpose-built protocols that bypass `AsyncSequence`'s constraint requirements are the production-viable path. The `Async.Stream<Element: Sendable>` decision remains correct for type-erased async sequences; Apple simply chose not to use type-erased async sequences for IO.
 
-**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/Reader/AsyncReader.swift`
+**Source**: `https://github.com/apple/swift-http-api-proposal/blob/main/Sources/AsyncStreaming/Reader/AsyncReader.swift`

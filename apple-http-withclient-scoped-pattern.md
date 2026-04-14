@@ -42,4 +42,4 @@ The combination eliminates the need for `Result`-based workarounds or two-phase 
 
 ## Source
 
-`/Users/coen/Developer/apple/swift-http-api-proposal/Sources/HTTPClient/DefaultHTTPClient.swift:96-123`
+`https://github.com/apple/swift-http-api-proposal/blob/main/Sources/HTTPClient/DefaultHTTPClient.swift:96-123`

@@ -16,7 +16,7 @@ Three skills govern documentation artifacts:
 - `/research-process` — Research/ documents ([RES-*])
 - `/experiment-process` — Experiments/ packages ([EXP-*])
 
-These three are currently disconnected. Research/ and Experiments/ live as siblings to Documentation.docc/ with no DocC integration. The Wzl project's Memorie van Toelichting pattern (companion documents physically inside .docc/) demonstrates that explanatory material CAN be DocC-navigable.
+These three are currently disconnected. Research/ and Experiments/ live as siblings to Documentation.docc/ with no DocC integration. The pattern of hosting companion documents physically inside .docc/ demonstrates that explanatory material CAN be DocC-navigable.
 
 ## Question
 
@@ -32,7 +32,7 @@ How should Research/ and Experiments/ integrate with .docc to create a unified, 
 
 **Hard constraint**: Experiments are Swift packages. They cannot physically reside inside .docc. Only references to them can.
 
-**Naming**: Research uses kebab-case filenames ([RES-003b]). Wzl's MvT/ inside .docc also uses kebab-case. This is already acceptable in .docc subdirectories.
+**Naming**: Research uses kebab-case filenames ([RES-003b]). Kebab-case subdirectories are already acceptable inside .docc.
 
 ## Analysis
 
@@ -194,7 +194,7 @@ Regardless of which option is chosen, .docc article pages gain two new optional 
 | `## Research` | Links to relevant research documents | `<doc:>` (Options 1/2/4) or markdown (Option 3) |
 | `## Experiments` | Links to relevant experiments | Markdown links (always — experiments can't be in .docc) |
 
-These follow the same pattern as `## Memorie van Toelichting` in Wzl — explanatory depth exclusive to .docc, not in inline docs.
+These follow the same pattern as explanatory-material sections (e.g., `## Rationale`) — explanatory depth exclusive to .docc, not in inline docs.
 
 ## Inline Documentation Rule
 
@@ -223,6 +223,5 @@ Rationale:
 ## References
 
 - `swift-institute/Research/documentation-skill-design.md` — Parent research
-- `/Users/coen/Developer/swift-statute-nl/wet-zeggenschap-lichaamsmateriaal/` — Wzl MvT pattern exemplar
-- `/Users/coen/Developer/swift-institute/Skills/research-process/SKILL.md` — [RES-002]
-- `/Users/coen/Developer/swift-institute/Skills/experiment-process/SKILL.md` — [EXP-002]
+- `Skills/research-process/SKILL.md` — [RES-002]
+- `Skills/experiment-process/SKILL.md` — [EXP-002]

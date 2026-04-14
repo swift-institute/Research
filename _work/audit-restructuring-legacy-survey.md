@@ -26,9 +26,9 @@
 **References**: Not referenced in any current audit.md; this is a standalone institute-level report
 
 **Merge Target**: Split into three package-specific documents:
-- `/Users/coen/Developer/swift-iso/swift-iso-9899/Research/audit.md` (P2 portion)
-- `/Users/coen/Developer/swift-iso/swift-iso-9945/Research/audit.md` (P2 portion)
-- `/Users/coen/Developer/swift-incits/swift-incits-4-1986/Research/audit.md` (P2 portion)
+- `https://github.com/swift-iso/swift-iso-9899/blob/main/Research/audit.md` (P2 portion)
+- `https://github.com/swift-iso/swift-iso-9945/blob/main/Research/audit.md` (P2 portion)
+- `https://github.com/swift-incits/swift-incits-4-1986/blob/main/Research/audit.md` (P2 portion)
 
 ---
 
@@ -139,8 +139,8 @@
 **References**: Referenced in naming-implementation-audit-remediation-prompt.md (below)
 
 **Merge Target**: Split into two:
-- `/Users/coen/Developer/swift-foundations/swift-tests/Research/audit.md` — 46 violations
-- `/Users/coen/Developer/swift-foundations/swift-testing/Research/audit.md` — 42 violations
+- `https://github.com/swift-foundations/swift-tests/blob/main/Research/audit.md` — 46 violations
+- `https://github.com/swift-foundations/swift-testing/blob/main/Research/audit.md` — 42 violations
 
 Each should keep the same priority-group structure and code locations for actionable guidance.
 
@@ -223,7 +223,7 @@ Each should keep the same priority-group structure and code locations for action
 **Provenance**: References naming-implementation-audit-swift-tests-swift-testing.md (points to R5)  
 **References**: Is referenced BY swift-institute team as a runbook
 
-**Merge Target**: This is a **meta-document** that should live at `/Users/coen/Developer/swift-foundations/Research/_work/` as a working artifact or instruction guide. It does NOT belong in any single package. Keep at institute level or in a _work directory for ongoing remediation tracking.
+**Merge Target**: This is a **meta-document** that should live at `https://github.com/swift-foundations/Research/tree/main/_work/` as a working artifact or instruction guide. It does NOT belong in any single package. Keep at institute level or in a _work directory for ongoing remediation tracking.
 
 **Notes**: Once remediation of audit #5 is complete, this document can be archived or deleted. It's a bridge document between audit and implementation.
 
@@ -278,7 +278,7 @@ Each should keep the same priority-group structure and code locations for action
 **Provenance**: Explicitly compares against prior audit (2026-03-14, modularization-audit/SUMMARY.md in swift-primitives repo)  
 **References**: Would be referenced when validating whether ecosystem-summary.md findings are still valid
 
-**Merge Target**: KEEP at institute level. This is a **meta-policy validation document** that tracks ecosystem stability. It should live at `/Users/coen/Developer/swift-institute/Research/` or in `_work/` as a durable artifact. Not package-specific. Update it monthly to detect drift across the 132 primitives packages.
+**Merge Target**: KEEP at institute level. This is a **meta-policy validation document** that tracks ecosystem stability. It should live at `Research/` or in `_work/` as a durable artifact. Not package-specific. Update it monthly to detect drift across the 132 primitives packages.
 
 **Notes**: This is the "early warning system" for modularization drift. The fact that no Package.swift files changed in 6 days suggests good stability. Keep this as an institute-level health check.
 

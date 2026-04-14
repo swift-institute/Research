@@ -505,12 +505,12 @@ Should Rendering.Context be expressed as a protocol (current) or a witness struc
 
 | Package | Path |
 |---------|------|
-| swift-rendering-primitives | `/Users/coen/Developer/swift-primitives/swift-rendering-primitives/` |
-| swift-html-rendering | `/Users/coen/Developer/swift-foundations/swift-html-rendering/` |
-| swift-pdf-html-rendering | `/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/` |
-| swift-witnesses | `/Users/coen/Developer/swift-foundations/swift-witnesses/` |
-| swift-testing | `/Users/coen/Developer/swift-foundations/swift-testing/` |
-| swift-institute | `/Users/coen/Developer/swift-institute/` |
+| swift-rendering-primitives | `https://github.com/swift-primitives/swift-rendering-primitives` |
+| swift-html-rendering | `https://github.com/swift-foundations/swift-html-rendering` |
+| swift-pdf-html-rendering | `https://github.com/swift-foundations/swift-pdf-html-rendering` |
+| swift-witnesses | `https://github.com/swift-foundations/swift-witnesses` |
+| swift-testing | `https://github.com/swift-foundations/swift-testing` |
+| swift-institute | `./` |
 
 ### Key files to study
 

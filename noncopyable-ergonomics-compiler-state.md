@@ -31,7 +31,7 @@ The `bridge-noncopyable-ownership` experiment (2026-03-31) tested ownership tran
 - **Pattern matching requires `switch consume`** — bare `switch` on `Optional<Optional<~Copyable>>` borrows the inner value
 - **All Optional access is consuming** — `if let`, `guard let`, `switch .some(var)`, `!`, and `?.` all consume; only `_read` coroutine borrows
 
-This research investigates the Swift compiler source (`/Users/coen/Developer/swiftlang/swift`) to determine which pain points are fundamental, which are known bugs, and which have improvement paths.
+This research investigates the Swift compiler source (`https://github.com/swiftlang/swift`) to determine which pain points are fundamental, which are known bugs, and which have improvement paths.
 
 ## Question
 

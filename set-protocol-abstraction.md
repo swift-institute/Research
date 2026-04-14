@@ -287,8 +287,8 @@ subscript/count/isSpilled are all non-mutating. The closure capture
 
 ## References
 
-- swift-array-primitives `Array.Protocol`: `/Users/coen/Developer/swift-primitives/swift-array-primitives/Sources/Array Primitives Core/Array.Protocol.swift`
-- swift-set-primitives algebra: `/Users/coen/Developer/swift-primitives/swift-set-primitives/Sources/Set Ordered Primitives/Set.Ordered.Algebra.swift`
+- swift-array-primitives `Array.Protocol`: `https://github.com/swift-primitives/swift-array-primitives/blob/main/Sources/Array Primitives Core/Array.Protocol.swift`
+- swift-set-primitives algebra: `https://github.com/swift-primitives/swift-set-primitives/blob/main/Sources/Set Ordered Primitives/Set.Ordered.Algebra.swift`
 - Nested protocols research: `swift-institute/Research/nested-protocols-in-generic-types.md`
 - Small exclusivity workaround: `Set.Ordered.Small.swift:117-124`
 - Swift.SetAlgebra: stdlib `SetAlgebra.swift`

@@ -689,10 +689,10 @@ Assessment of both frameworks against Nielsen's Cognitive Dimensions of Notation
 
 ### Swift Institute Internal
 - [testing-conventions.md](testing-conventions.md) — Testing conventions research (Tier 3, DECISION)
-- `/Users/coen/Developer/swift-institute/Skills/testing/skill.md` — Testing skill (canonical)
-- `/Users/coen/Developer/swift-institute/Documentation.docc/Testing Requirements.md` — Testing requirements documentation
-- `/Users/coen/Developer/swift-foundations/swift-testing/` — Institute swift-testing source
-- `/Users/coen/Developer/swiftlang/swift-testing/` — Apple swift-testing source
+- `Skills/testing/skill.md` — Testing skill (canonical)
+- `Documentation.docc/Testing Requirements.md` — Testing requirements documentation
+- `https://github.com/swift-foundations/swift-testing` — Institute swift-testing source
+- `https://github.com/swiftlang/swift-testing` — Apple swift-testing source
 
 ### Swift Evolution
 - SE-0382: Expression macros

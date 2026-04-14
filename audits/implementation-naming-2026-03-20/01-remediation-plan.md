@@ -603,6 +603,6 @@ Swept all packages listed in plan. 3 packages split, remainder justified as exce
 
 Each pass is a self-contained unit of work for a new conversation:
 
-> Read `/Users/coen/Developer/swift-institute/Research/audits/implementation-naming-2026-03-20/01-remediation-plan.md` and execute Pass N. Work tier 0 → tier 20. For each tier, edit the code, run `swift build && swift test`, fix any downstream breakage at the next tier, and commit per tier.
+> Read `Research/audits/implementation-naming-2026-03-20/01-remediation-plan.md` and execute Pass N. Work tier 0 → tier 20. For each tier, edit the code, run `swift build && swift test`, fix any downstream breakage at the next tier, and commit per tier.
 
 For detailed findings per package, read the corresponding audit file in the same directory.

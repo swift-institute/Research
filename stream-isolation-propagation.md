@@ -14,7 +14,7 @@ trigger: Pointfree #355 analysis — isolation propagation as foundation for det
 
 Pointfree #355 (Feb 23, 2026) demonstrated that **isolation propagation is the key to deterministic, synchronous execution** in Swift concurrency. When caller isolation flows through every layer of a call chain, no thread hops occur, and effects execute synchronously. When isolation breaks — via `@Sendable` closures, new `Task` creations, actor boundaries, or task groups — thread hops and non-determinism are introduced.
 
-Our `Async.Stream` at `/Users/coen/Developer/swift-foundations/swift-async/` provides 40+ operators that compose into pipelines. The fundamental question is: at each step in a composed pipeline, does isolation propagate from the caller, or does it break?
+Our `Async.Stream` at `https://github.com/swift-foundations/swift-async` provides 40+ operators that compose into pipelines. The fundamental question is: at each step in a composed pipeline, does isolation propagate from the caller, or does it break?
 
 This matters because if a `@MainActor` caller writes:
 ```swift
@@ -378,12 +378,12 @@ A **practical middle ground** would be:
 
 - Pointfree #355: Beyond Basics: Isolation, ~Copyable, ~Escapable (Feb 23, 2026)
 - SE-0461: Isolation regions and `nonsending` closures
-- `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.swift` — Core stream type
-- `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Iterator.swift` — Iterator with `@Sendable` `_next`
-- `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Iterator.Box.swift` — `@unchecked Sendable` bypass
-- `/Users/coen/Developer/swift-primitives/swift-ownership-primitives/Sources/Ownership Primitives/Ownership.Mutable.Unchecked.swift` — Sendable bypass mechanism
-- `/Users/coen/Developer/swift-institute/Experiments/nonsending-closure-type-constraints/` — Empirical validation: nonsending async closure storage (B1a, B1b) and sync restriction (B1d)
-- `/Users/coen/Developer/swift-institute/Experiments/stdlib-concurrency-isolation/` — Empirical validation: continuation and cancellation handler isolation propagation (B2, B3)
+- `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.swift` — Core stream type
+- `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Iterator.swift` — Iterator with `@Sendable` `_next`
+- `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Iterator.Box.swift` — `@unchecked Sendable` bypass
+- `https://github.com/swift-primitives/swift-ownership-primitives/blob/main/Sources/Ownership Primitives/Ownership.Mutable.Unchecked.swift` — Sendable bypass mechanism
+- `Experiments/nonsending-closure-type-constraints/` — Empirical validation: nonsending async closure storage (B1a, B1b) and sync restriction (B1d)
+- `Experiments/stdlib-concurrency-isolation/` — Empirical validation: continuation and cancellation handler isolation propagation (B2, B3)
 
 ## Update: Apple HTTP API Proposal (2026-04-02)
 
@@ -395,4 +395,4 @@ Apple's `swift-http-api-proposal` demonstrates a concrete alternative to the "co
 
 This is a fundamentally different approach from isolation propagation: instead of threading caller isolation through operators, Apple makes the data itself linear so isolation is irrelevant. The `@Sendable` closures and actor boundaries that break isolation in `Async.Stream` are not a problem because there is no shared state to protect — each stage exclusively owns the data it processes.
 
-**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/Middleware/Middleware.swift`, `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/HTTPClient/DefaultHTTPClient.swift`
+**Source**: `https://github.com/apple/swift-http-api-proposal/blob/main/Sources/Middleware/Middleware.swift`, `https://github.com/apple/swift-http-api-proposal/blob/main/Sources/HTTPClient/DefaultHTTPClient.swift`

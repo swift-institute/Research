@@ -8,7 +8,7 @@ status: COMPLETE
 -->
 
 > Generated: 2026-03-04
-> Scope: `/Users/coen/Developer/swift-standards/`
+> Scope: `https://github.com/swift-standards`
 > Excludes: test targets, macro conformances, already-typed functions
 > Method: Exhaustive grep of all 2316 source files across 94 packages with Sources directories
 

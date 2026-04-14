@@ -12,7 +12,7 @@ collaborative_discussion: swift-institute/Research/localization-architecture-dis
 
 ## Context
 
-While implementing a Dutch aandeelhoudersregister PDF, we needed `Format.Datum` — a Dutch date formatter producing "21 november 2018". This required hardcoding Dutch month names in a product-layer file (`rule-besloten-vennootschap/Sources/Aandeelhoudersregister PDF/Time+Formatting.swift`), because no locale-aware formatting path exists in the ecosystem.
+While implementing a Dutch-locale PDF product, we needed `Format.Datum` — a Dutch date formatter producing "21 november 2018". This required hardcoding Dutch month names in a product-layer file, because no locale-aware formatting path exists in the ecosystem.
 
 The same product file also contains `Format.Euro` and `Format.Nummer` — Dutch-locale currency and number formatters — both hardcoding Dutch conventions (€ prefix, period thousand separators, comma decimal separator).
 
@@ -28,7 +28,7 @@ What is the current state of localization across the Swift Institute ecosystem, 
 
 ### Layer 1 — Primitives
 
-#### swift-locale-primitives (`/Users/coen/Developer/swift-primitives/swift-locale-primitives/`)
+#### swift-locale-primitives (`https://github.com/swift-primitives/swift-locale-primitives`)
 
 **Status**: Empty placeholder.
 
@@ -42,7 +42,7 @@ public struct Locale: Sendable, Equatable, Hashable {
 
 No fields, no properties, no methods. The TODO comments reference BCP 47, ISO 639, ISO 3166, ISO 4217 as future backing. Depends only on `Standard_Library_Extensions`.
 
-#### swift-formatting-primitives (`/Users/coen/Developer/swift-primitives/swift-formatting-primitives/`)
+#### swift-formatting-primitives (`https://github.com/swift-primitives/swift-formatting-primitives`)
 
 **Status**: Functional but locale-unaware.
 
@@ -61,7 +61,7 @@ Extensions on `BinaryFloatingPoint`, `BinaryInteger`, and `Tagged<_, BinaryFloat
 
 **Key observation**: `Format.FloatingPoint.format(_:)` directly interpolates with `"."` as decimal separator, `"E"` for scientific notation, and English compact names (K, M, B). These are NOT configurable.
 
-#### swift-time-primitives (`/Users/coen/Developer/swift-primitives/swift-time-primitives/`)
+#### swift-time-primitives (`https://github.com/swift-primitives/swift-time-primitives`)
 
 **Status**: Rich calendar type system with Duration formatting only.
 
@@ -90,7 +90,7 @@ Formatting: `Time.Format` struct conforming to `FormatStyle<Duration, String>` w
 
 ### Layer 2 — Standards
 
-#### swift-locale-standard (`/Users/coen/Developer/swift-standards/swift-locale-standard/`)
+#### swift-locale-standard (`https://github.com/swift-standards/swift-locale-standard`)
 
 **Status**: Structurally complete, well-designed. Disconnected from formatting.
 
@@ -112,7 +112,7 @@ Static locale accessors: `Locale.en`, `Locale.en_US`, `Locale.en_GB`, etc.
 
 **Key observation**: This `Language` wraps `ISO_639.LanguageCode` (a struct). It is a **different type** from `BCP47.LanguageTag` used in swift-translating.
 
-#### swift-time-standard (`/Users/coen/Developer/swift-standards/swift-time-standard/`)
+#### swift-time-standard (`https://github.com/swift-standards/swift-time-standard`)
 
 **Status**: Format conversion hub, no locale-aware formatting.
 
@@ -130,13 +130,13 @@ Re-exports `ISO_8601` and `RFC_5322`. Provides bidirectional conversions: ISO 86
 
 ### Layer 3 — Foundations
 
-#### swift-locale (`/Users/coen/Developer/swift-foundations/swift-locale/`)
+#### swift-locale (`https://github.com/swift-foundations/swift-locale`)
 
 **Status**: Pure re-export.
 
 Single file `exports.swift` re-exporting `Locale_Standard`. No additional API.
 
-#### swift-translating (`/Users/coen/Developer/swift-foundations/swift-translating/`)
+#### swift-translating (`https://github.com/swift-foundations/swift-translating`)
 
 **Status**: Full translation system. Uses Foundation for date/number formatting. Different `Language` type than L2.
 
@@ -166,7 +166,7 @@ Single file `exports.swift` re-exporting `Locale_Standard`. No additional API.
 - `Date.formatted(...)` — `Date.FormatStyle` with per-language locale
 - `Numeric.numberInWriting(...)` — `NumberFormatter(.spellOut)` with per-language locale
 
-#### swift-time (`/Users/coen/Developer/swift-foundations/swift-time/`)
+#### swift-time (`https://github.com/swift-foundations/swift-time`)
 
 **Status**: Pure re-export.
 
@@ -174,7 +174,7 @@ Re-exports `Time_Primitives`, `Clock_Primitives`, `Time_Standard`. No additional
 
 ### Product Layer — Triggering Example
 
-`rule-besloten-vennootschap/Sources/Aandeelhoudersregister PDF/Time+Formatting.swift`:
+A product-layer file required Dutch-locale formatters:
 
 ```swift
 extension Format {
@@ -283,7 +283,7 @@ The product layer workaround (`Format.Datum`, `Format.Euro`, `Format.Nummer`) de
 
 This is the only Foundation bridge for locale-aware formatting in the ecosystem. The prior research document (`foundation-free-time-and-locale-in-swift-translating.md`) recommended Option C: Trait-Gated Foundation Bridge, which isolates Foundation into gated targets.
 
-**What that research did NOT address**: Where does the Foundation-free locale-aware formatting *actually live* once Foundation is isolated? The trait-gated approach removes Foundation from core modules but doesn't create a replacement. The aandeelhoudersregister `Format.Datum` exists precisely because no Foundation-free formatting path exists.
+**What that research did NOT address**: Where does the Foundation-free locale-aware formatting *actually live* once Foundation is isolated? The trait-gated approach removes Foundation from core modules but doesn't create a replacement. The triggering `Format.Datum` exists precisely because no Foundation-free formatting path exists.
 
 ### GAP-6: Time.Format Namespace Collision
 
@@ -548,7 +548,7 @@ extension Time {
 }
 ```
 
-**Product layer** (the aandeelhoudersregister):
+**Product layer**:
 ```swift
 // Before (hardcoded Dutch):
 let dateString = Format.Datum().format(time)  // "21 november 2018"
@@ -640,7 +640,7 @@ withDependencies {
     @Dependency(\.locale) var locale
 
     // Translated: for static text (reads locale.language)
-    let title: TranslatedString = [.en: "Shareholder Register", .nl: "Aandeelhoudersregister"]
+    let title: TranslatedString = [.en: "Report", .nl: "Rapport"]
 
     // Locale-aware formatting: for dynamic values (reads locale)
     let dateString = time.formatted(.long)  // "21 november 2018"
@@ -658,7 +658,7 @@ withDependencies {
 
 ```
 Layer 5: Applications
-  └── rule-besloten-vennootschap (uses Format.Date, TranslatedString)
+  └── Dutch-locale PDF product (uses Format.Date, TranslatedString)
           ↓
 Layer 4: Components
           ↓
@@ -749,7 +749,7 @@ Layer 1: Primitives
 
 ### Phase 5: Product Layer Cleanup
 
-11. **Replace `Format.Datum`/`Format.Euro`/`Format.Nummer`** in aandeelhoudersregister with L3 formatters:
+11. **Replace `Format.Datum`/`Format.Euro`/`Format.Nummer`** in the product layer with L3 formatters:
     - `Format.Datum()` → `Format.Date(locale: .nl, style: .long)`
     - `Format.Euro()` → `Format.Currency(locale: .nl, currency: .EUR)`
     - `Format.Nummer()` → `Format.Number(locale: .nl)`
@@ -938,11 +938,10 @@ L3: swift-formatting checks L2 providers first, falls back to ICU
 ## References
 
 - Collaborative discussion transcript: `swift-institute/Research/localization-architecture-discussion-transcript.md`
-- Prior research: `/Users/coen/Developer/swift-institute/Research/foundation-free-time-and-locale-in-swift-translating.md` (Option C recommendation)
-- Apple swift-foundation ICU pattern: `/Users/coen/Developer/swiftlang/swift-foundation/Sources/FoundationInternationalization/`
-- Triggering file: `/Users/coen/Developer/rule-legal/rule-legal-nl/rule-besloten-vennootschap/Sources/Aandeelhoudersregister PDF/Time+Formatting.swift`
-- L2 Locale: `/Users/coen/Developer/swift-standards/swift-locale-standard/Sources/Locale Standard/`
-- L3 Translating: `/Users/coen/Developer/swift-foundations/swift-translating/Sources/`
-- L1 Formatting: `/Users/coen/Developer/swift-primitives/swift-formatting-primitives/Sources/Formatting Primitives/`
-- L1 Time: `/Users/coen/Developer/swift-primitives/swift-time-primitives/Sources/Time Primitives Core/`
+- Prior research: `Research/foundation-free-time-and-locale-in-swift-translating.md` (Option C recommendation)
+- Apple swift-foundation ICU pattern: `https://github.com/swiftlang/swift-foundation/tree/main/Sources/FoundationInternationalization/`
+- L2 Locale: `https://github.com/swift-standards/swift-locale-standard/tree/main/Sources/Locale Standard/`
+- L3 Translating: `https://github.com/swift-foundations/swift-translating/tree/main/Sources/`
+- L1 Formatting: `https://github.com/swift-primitives/swift-formatting-primitives/tree/main/Sources/Formatting Primitives/`
+- L1 Time: `https://github.com/swift-primitives/swift-time-primitives/tree/main/Sources/Time Primitives Core/`
 - CLDR: Unicode Common Locale Data Repository (accessed via ICU, not embedded)

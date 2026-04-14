@@ -166,7 +166,7 @@ Ordered leaf-first (packages with fewest dependents first), building shared infr
 ### Phase 0: Layer 1 ASCII Integer Parser
 
 **Package:** `swift-parser-primitives`
-**Path:** `/Users/coen/Developer/swift-primitives/swift-parser-primitives/`
+**Path:** `https://github.com/swift-primitives/swift-parser-primitives`
 **Scope:** New module, ~4 files, ~150 lines
 
 **Deliverables:**
@@ -186,7 +186,7 @@ Ordered leaf-first (packages with fewest dependents first), building shared infr
 ### Phase 1: RFC 9110 HTTP Shared Parsers
 
 **Package:** `swift-rfc-9110`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-9110/`
+**Path:** `https://github.com/swift-standards/swift-rfc-9110`
 **Scope:** ~8 new shared parser files + rewrite 7 existing files (30 parse functions total)
 
 **Step 1.1: Add parser-primitives dependency**
@@ -235,7 +235,7 @@ Add `"Parser Primitives"` to the `RFC 9110` target's dependencies.
 ### Phase 2: RFC 9111 + RFC 9112
 
 **Packages:** `swift-rfc-9111`, `swift-rfc-9112`
-**Paths:** `/Users/coen/Developer/swift-standards/swift-rfc-9111/`, `/Users/coen/Developer/swift-standards/swift-rfc-9112/`
+**Paths:** `https://github.com/swift-standards/swift-rfc-9111`, `https://github.com/swift-standards/swift-rfc-9112`
 **Scope:** Rewrite 14 parse functions across 12 files
 
 These packages depend on RFC 9110, so Phase 1's shared parsers are available.
@@ -273,7 +273,7 @@ Add `swift-parser-primitives` dependency to `swift-rfc-9112/Package.swift`.
 ### Phase 3: RFC 3986 URI Parser
 
 **Package:** `swift-rfc-3986`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-3986/`
+**Path:** `https://github.com/swift-standards/swift-rfc-3986`
 **Scope:** Rewrite 9+ parse functions, ~430 lines of hand-rolled parsing → combinator-based, eliminate duplicate Authority parser
 
 Add `swift-parser-primitives` dependency to `swift-rfc-3986/Package.swift`.
@@ -319,7 +319,7 @@ These packages depend on RFC 3986 and can reuse its sub-parsers.
 #### 4A: WHATWG URL
 
 **Package:** `swift-whatwg-url`
-**Path:** `/Users/coen/Developer/swift-standards/swift-whatwg-url/`
+**Path:** `https://github.com/swift-standards/swift-whatwg-url`
 **Scope:** 5 files, ~6 parse functions
 
 | File | Current | Replacement |
@@ -335,7 +335,7 @@ These packages depend on RFC 3986 and can reuse its sub-parsers.
 #### 4B: RFC 6570 URI Templates
 
 **Package:** `swift-rfc-6570`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-6570/`
+**Path:** `https://github.com/swift-standards/swift-rfc-6570`
 **Scope:** 3 parse functions, ~140 lines
 
 | Function | Current | Replacement |
@@ -351,7 +351,7 @@ These packages depend on RFC 3986 and can reuse its sub-parsers.
 #### 4C: RFC 6068 Mailto
 
 **Package:** `swift-rfc-6068`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-6068/`
+**Path:** `https://github.com/swift-standards/swift-rfc-6068`
 **Scope:** 1 main parse function with internal byte loops
 
 | Function | Current | Replacement |
@@ -363,7 +363,7 @@ These packages depend on RFC 3986 and can reuse its sub-parsers.
 #### 4D: RFC 2369 List Headers
 
 **Package:** `swift-rfc-2369`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-2369/`
+**Path:** `https://github.com/swift-standards/swift-rfc-2369`
 **Scope:** 2 parse functions
 
 | Function | Current | Replacement |
@@ -378,7 +378,7 @@ These packages depend on RFC 3986 and can reuse its sub-parsers.
 ### Phase 5: ISO 8601 + Date/Time
 
 **Package:** `swift-iso-8601`
-**Path:** `/Users/coen/Developer/swift-standards/swift-iso-8601/`
+**Path:** `https://github.com/swift-standards/swift-iso-8601`
 **Scope:** ~15 parse functions, ~500 lines → combinator-based
 
 This is the single most impactful rewrite by line count. All parsing is ASCII digit extraction with separators.
@@ -416,12 +416,12 @@ The existing `DateTime.Parser`, `Time.Parser`, `Duration.Parser`, `Interval.Pars
 **Basic vs Extended format:** ISO 8601 supports both `2024-01-15` (extended) and `20240115` (basic). Use `Parser.OneOf` at the `Date` level to try extended first (with `-` separators), then basic (fixed-width groups).
 
 **Transitive benefits:**
-- RFC 3339 (at `/Users/coen/Developer/swift-standards/swift-rfc-3339/`) delegates to ISO 8601 parsing — benefits automatically.
+- RFC 3339 (at `https://github.com/swift-standards/swift-rfc-3339`) delegates to ISO 8601 parsing — benefits automatically.
 
 #### RFC 5322 Date/Time
 
 **Package:** `swift-rfc-5322`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-5322/`
+**Path:** `https://github.com/swift-standards/swift-rfc-5322`
 **Scope:** 7 working parse functions + 1 stub
 
 Add `swift-parser-primitives` dependency.
@@ -437,7 +437,7 @@ Add `swift-parser-primitives` dependency.
 #### RFC 9557 Timezone Suffix
 
 **Package:** `swift-rfc-9557`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-9557/`
+**Path:** `https://github.com/swift-standards/swift-rfc-9557`
 **Scope:** 2 parse functions, minimal changes needed (already mostly byte-level)
 
 Only the `split(separator: "-")` in `RFC_9557.Suffix.swift:207` for multi-value tag parsing would change to `Parser.Many.Separated`. Low priority within this phase.
@@ -449,7 +449,7 @@ Only the `split(separator: "-")` in `RFC_9557.Suffix.swift:207` for multi-value 
 #### 6A: RFC 5321 SMTP Email
 
 **Package:** `swift-rfc-5321`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-5321/`
+**Path:** `https://github.com/swift-standards/swift-rfc-5321`
 **Scope:** 2 parse functions
 
 | Function | Current | Replacement |
@@ -462,7 +462,7 @@ Add `swift-parser-primitives` dependency.
 #### 6B: RFC 2045 Content-Type
 
 **Package:** `swift-rfc-2045`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-2045/`
+**Path:** `https://github.com/swift-standards/swift-rfc-2045`
 **Scope:** 4 parse functions
 
 | Function | Current | Replacement |
@@ -477,7 +477,7 @@ Add `swift-parser-primitives` dependency.
 #### 6C: RFC 2183 Content-Disposition
 
 **Package:** `swift-rfc-2183`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-2183/`
+**Path:** `https://github.com/swift-standards/swift-rfc-2183`
 **Scope:** 3 parse functions
 
 | Function | Current | Replacement |
@@ -491,7 +491,7 @@ Already depends on RFC 2045 — shared parameter parsing available.
 #### 6D: RFC 2388 Form Data
 
 **Package:** `swift-rfc-2388`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-2388/`
+**Path:** `https://github.com/swift-standards/swift-rfc-2388`
 **Scope:** 1 public + 4 private parse functions
 
 | Function | Current | Replacement |
@@ -504,7 +504,7 @@ Lower priority — currently non-throwing (lenient parsing). Combinator rewrite 
 #### 6E: RFC 2822 Email Format
 
 **Package:** `swift-rfc-2822`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-2822/`
+**Path:** `https://github.com/swift-standards/swift-rfc-2822`
 **Scope:** 4 working parsers + 1 stub (`Timestamp`)
 
 | Function | Current | Replacement | Notes |
@@ -526,7 +526,7 @@ These are leaf packages with no dependents among candidates. Order within this p
 #### 7A: RFC 6750 Bearer Tokens — Foundation Elimination
 
 **Package:** `swift-rfc-6750`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-6750/`
+**Path:** `https://github.com/swift-standards/swift-rfc-6750`
 **Scope:** 4 parse functions, **removes `import Foundation`**
 
 This is the highest-priority Foundation elimination target. The package has `public import Foundation` at line 8 of `RFC_6750.swift`, uses `trimmingCharacters(in:)`, `components(separatedBy:)`, `URLQueryItem`, and `LocalizedError`.
@@ -550,7 +550,7 @@ This is the highest-priority Foundation elimination target. The package has `pub
 #### 7B: RFC 7617 Basic Auth
 
 **Package:** `swift-rfc-7617`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-7617/`
+**Path:** `https://github.com/swift-standards/swift-rfc-7617`
 **Scope:** 2 parse functions
 
 | Function | Current | Replacement |
@@ -563,7 +563,7 @@ Add `swift-parser-primitives` dependency.
 #### 7C: RFC 7519 JWT
 
 **Package:** `swift-rfc-7519`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-7519/`
+**Path:** `https://github.com/swift-standards/swift-rfc-7519`
 **Scope:** 1 parse function
 
 | Function | Current | Replacement |
@@ -577,7 +577,7 @@ Add `swift-parser-primitives` dependency.
 #### 7D: RFC 5646 Language Tags
 
 **Package:** `swift-rfc-5646`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rfc-5646/`
+**Path:** `https://github.com/swift-standards/swift-rfc-5646`
 **Scope:** 1 public + 6 private parse functions
 
 | Function | Current | Replacement |
@@ -591,7 +591,7 @@ Add `swift-parser-primitives` dependency.
 #### 7E: RSS Standard Duration
 
 **Package:** `swift-rss-standard`
-**Path:** `/Users/coen/Developer/swift-standards/swift-rss-standard/`
+**Path:** `https://github.com/swift-standards/swift-rss-standard`
 **Scope:** 1 parse function
 
 | Function | Current | Replacement |
@@ -603,7 +603,7 @@ Add `swift-parser-primitives` dependency.
 #### 7F: W3C SVG Path Parser
 
 **Package:** `swift-w3c-svg`
-**Path:** `/Users/coen/Developer/swift-standards/swift-w3c-svg/`
+**Path:** `https://github.com/swift-standards/swift-w3c-svg`
 **Scope:** ~500 lines of manual parsing, 1 parse entry + helpers
 
 | Function | Current | Replacement |
@@ -734,6 +734,6 @@ Phases 5, 6, and 7 are independent of each other and can be executed in parallel
 ## References
 
 - [parsers-ecosystem-adoption-audit.md](parsers-ecosystem-adoption-audit.md) — Audit identifying 95 adoption opportunities
-- RFC 8259 `ParserPrinter.Prototype` — `/Users/coen/Developer/swift-standards/swift-rfc-8259/Sources/RFC 8259/RFC_8259.ParserPrinter.Prototype.swift`
-- W3C XML parser (most advanced adoption) — `/Users/coen/Developer/swift-standards/swift-w3c-xml/Sources/W3C XML/W3C_XML.Parse.*.swift`
-- Parser Primitives API — `/Users/coen/Developer/swift-primitives/swift-parser-primitives/Sources/`
+- RFC 8259 `ParserPrinter.Prototype` — `https://github.com/swift-standards/swift-rfc-8259/blob/main/Sources/RFC 8259/RFC_8259.ParserPrinter.Prototype.swift`
+- W3C XML parser (most advanced adoption) — `https://github.com/swift-standards/swift-w3c-xml/blob/main/Sources/W3C XML/W3C_XML.Parse.*.swift`
+- Parser Primitives API — `https://github.com/swift-primitives/swift-parser-primitives/tree/main/Sources/`

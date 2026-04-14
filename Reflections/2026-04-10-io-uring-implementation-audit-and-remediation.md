@@ -11,7 +11,7 @@ packages:
   - swift-x86-standard
   - swift-arm-standard
   - swift-riscv-standard
-status: pending
+status: processed
 ---
 
 # IO Uring Implementation Audit, Remediation, and Semantic Flag Modeling

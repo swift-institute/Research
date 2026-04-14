@@ -114,7 +114,7 @@ status: DECISION
 
 ### 2a. `IO.Event.Buffer.Pool` (IO Events module)
 
-**Location**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Buffer.Pool.swift`
+**Location**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Buffer.Pool.swift`
 
 **What it does**: Wraps `Memory.Pool` behind a `Mutex` for thread-safe event buffer allocation. The pool pre-allocates fixed-size slots where each slot holds `maxEvents * stride` bytes of `IO.Event` data.
 
@@ -146,7 +146,7 @@ final class Pool: @unchecked Sendable {
 
 ### 2b. `IO.Event.Batch` (IO Events module)
 
-**Location**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Batch.swift`
+**Location**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Batch.swift`
 
 **What it does**: Lightweight value type referencing a pool slot. Carries (slot index, count, base pointer). The poll thread creates a Batch after writing events into an allocated slot; the selector reads events via the base pointer, then returns the slot.
 
@@ -166,7 +166,7 @@ struct Batch: @unchecked Sendable {
 
 ### 2c. `IO.Executor.Slot.Pool` (IO module)
 
-**Location**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO/IO.Executor.Slot.Pool.swift`
+**Location**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO/IO.Executor.Slot.Pool.swift`
 
 **What it does**: Pre-allocated pool of transaction slot memory. Identical pattern to `IO.Event.Buffer.Pool` but for executor transaction slots rather than event buffers.
 
@@ -193,7 +193,7 @@ final class Pool: @unchecked Sendable {
 
 ### 2d. `IO.Executor.Slot.Container` (IO module)
 
-**Location**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO/IO.Executor.Slot.Container.swift`
+**Location**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO/IO.Executor.Slot.Container.swift`
 
 **What it does**: Raw pointer lifecycle manager for temporarily holding a `~Copyable` resource during lane execution. Tracks initialization/consumption state with boolean flags.
 
@@ -222,7 +222,7 @@ struct Container<Resource: ~Copyable & Sendable>: ~Copyable {
 
 ### 2e. `IO.Handle.Registry` (IO module)
 
-**Location**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO/IO.Handle.Registry.swift`
+**Location**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO/IO.Handle.Registry.swift`
 
 **Key observation**: The registry stores handles in `Dictionary<IO.Handle.ID, IO.Executor.Handle.Entry<Resource>>`. While this uses Dictionary (covered by the dictionary-primitives analysis), the relevant buffer pattern here is the `transactionPool: IO.Executor.Slot.Pool` which provides pre-allocated memory for transaction slots.
 

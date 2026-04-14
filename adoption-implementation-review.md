@@ -53,8 +53,8 @@ Review of implementation work for the dependencies, witnesses, and parsers ecosy
 
 | Research Item | Priority | Reason/Notes |
 |--------------|----------|-------------|
-| HTML.Context.Configuration as Dependency.Key | HIGH (per action plan) / N/A (per category analysis) | Research document self-contradicts: Category 1 says "KEEP @TaskLocal — N/A" but Phase 1 action plan says "HIGH — replace". The `@TaskLocal` remains at `/Users/coen/Developer/swift-foundations/swift-html-rendering/Sources/HTML Renderable/HTML.Context.Configuration.swift:139`. |
-| HTML.Element.Style.Context as Dependency.Key | HIGH (per action plan) / N/A (per category analysis) | Same contradiction. `@TaskLocal` remains at `/Users/coen/Developer/swift-foundations/swift-html-rendering/Sources/HTML Renderable/HTML.Style.Context.swift:62`. |
+| HTML.Context.Configuration as Dependency.Key | HIGH (per action plan) / N/A (per category analysis) | Research document self-contradicts: Category 1 says "KEEP @TaskLocal — N/A" but Phase 1 action plan says "HIGH — replace". The `@TaskLocal` remains at `https://github.com/swift-foundations/swift-html-rendering/blob/main/Sources/HTML Renderable/HTML.Context.Configuration.swift:139`. |
+| HTML.Element.Style.Context as Dependency.Key | HIGH (per action plan) / N/A (per category analysis) | Same contradiction. `@TaskLocal` remains at `https://github.com/swift-foundations/swift-html-rendering/blob/main/Sources/HTML Renderable/HTML.Style.Context.swift:62`. |
 | IO.Executor as Dependency.Key | LOW | Not implemented. Internal singleton at `IO.Executor.swift:43`. |
 | IO.Event.Selector as Dependency.Key | LOW | Not implemented. Async failable init makes this complex. |
 | IO.Completion.Queue as Dependency.Key | LOW | Not implemented. Same async init complexity. |
@@ -83,7 +83,7 @@ Review of implementation work for the dependencies, witnesses, and parsers ecosy
 - Commit `4ded6c5` (later) re-extracts the Apple Testing bridge with the note "breaking circular dependency" — the revert was likely needed because the Testing ↔ Tests_Core circular module dependency broke clean builds.
 - Commit `c92eb44` (later) fixes "silent failure drop and auto-install Apple Testing bridge" — the externalFailureHandler was never invoked, so failures were silently dropped when running under Apple's runner without the Institute's `Test.Runner`.
 
-The bridge extraction and failure reporting were re-implemented in separate commits (`4ded6c5`, `c92eb44`) without the Dependency.Key migration for Collector. The Collector remains `@TaskLocal` at `/Users/coen/Developer/swift-foundations/swift-tests/Sources/Tests Core/Test.Expectation.Collector.swift:33`.
+The bridge extraction and failure reporting were re-implemented in separate commits (`4ded6c5`, `c92eb44`) without the Dependency.Key migration for Collector. The Collector remains `@TaskLocal` at `https://github.com/swift-foundations/swift-tests/blob/main/Sources/Tests Core/Test.Expectation.Collector.swift:33`.
 
 ---
 

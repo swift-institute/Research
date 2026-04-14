@@ -16,26 +16,25 @@ first-class values (iterable, passable, serializable).
 
 ## Repository and Files
 
-**Repository**: `/Users/coen/Developer/swift-foundations/swift-witnesses/`
+**Repository**: `https://github.com/swift-foundations/swift-witnesses`
 
 **Files to modify**:
-1. `/Users/coen/Developer/swift-foundations/swift-witnesses/Sources/Witnesses Macros Implementation/WitnessMacro.swift` — main macro implementation
-2. `/Users/coen/Developer/swift-foundations/swift-witnesses/Sources/Witnesses Macros Implementation/EnumExpansion.swift` — may need shared utilities
-3. `/Users/coen/Developer/swift-foundations/swift-witnesses/Tests/Witnesses Tests/Test Fixtures.swift` — add test fixtures
-4. `/Users/coen/Developer/swift-foundations/swift-witnesses/Tests/Witnesses Tests/Witness.Enum Tests.swift` — or create new test file
+1. `https://github.com/swift-foundations/swift-witnesses/blob/main/Sources/Witnesses Macros Implementation/WitnessMacro.swift` — main macro implementation
+2. `https://github.com/swift-foundations/swift-witnesses/blob/main/Sources/Witnesses Macros Implementation/EnumExpansion.swift` — may need shared utilities
+3. `https://github.com/swift-foundations/swift-witnesses/blob/main/Tests/Witnesses Tests/Test Fixtures.swift` — add test fixtures
+4. `https://github.com/swift-foundations/swift-witnesses/blob/main/Tests/Witnesses Tests/Witness.Enum Tests.swift` — or create new test file
 
 **Files to read for context**:
-- `/Users/coen/Developer/rule-law/Skills/legal-encoding/SKILL.md` — the use case driving this change
-- `/Users/coen/Developer/swift-nl-wetgever/burgerlijk-wetboek-boek-2/Sources/Burgerlijk Wetboek Boek 2/Artikel 1.1.swift` — example of a struct with Bool? properties that would benefit from @Witness
+- Any struct with `Bool?` (or other uniform-typed) stored properties benefits from this expansion — pick a representative fixture from the existing test suite.
 
 **Build command**:
 ```bash
-cd /Users/coen/Developer/swift-foundations/swift-witnesses && swift build 2>&1 | tail -10
+cd swift-witnesses && swift build 2>&1 | tail -10
 ```
 
 **Test command**:
 ```bash
-cd /Users/coen/Developer/swift-foundations/swift-witnesses && swift test 2>&1 | tail -20
+cd swift-witnesses && swift test 2>&1 | tail -20
 ```
 
 ---
@@ -65,9 +64,9 @@ Generates:
 ```swift
 @Witness
 struct Arguments: Sendable {
-    var `betreft het de Staat`: Bool? = nil
-    var `betreft het een provincie`: Bool? = nil
-    var `betreft het een gemeente`: Bool? = nil
+    var `is the first condition satisfied`: Bool? = nil
+    var `is the second condition satisfied`: Bool? = nil
+    var `is the third condition satisfied`: Bool? = nil
 }
 ```
 
@@ -104,11 +103,11 @@ Given:
 ```swift
 @Witness
 struct Arguments: Sendable {
-    var `betreft het de Staat`: Bool? = nil
-    var `betreft het een provincie`: Bool? = nil
-    var `betreft het een gemeente`: Bool? = nil
-    var `betreft het een waterschap`: Bool? = nil
-    var `is het een lichaam waaraan krachtens de Grondwet verordenende bevoegdheid is verleend`: Bool? = nil
+    var `condition one`: Bool? = nil
+    var `condition two`: Bool? = nil
+    var `condition three`: Bool? = nil
+    var `condition four`: Bool? = nil
+    var `condition five with a longer descriptive phrase`: Bool? = nil
 }
 ```
 
@@ -118,11 +117,11 @@ Generate:
 
 ```swift
 public enum Case: CaseIterable, Sendable {
-    case `betreft het de Staat`
-    case `betreft het een provincie`
-    case `betreft het een gemeente`
-    case `betreft het een waterschap`
-    case `is het een lichaam waaraan krachtens de Grondwet verordenende bevoegdheid is verleend`
+    case `condition one`
+    case `condition two`
+    case `condition three`
+    case `condition four`
+    case `condition five with a longer descriptive phrase`
 }
 ```
 
@@ -138,22 +137,22 @@ simpler initially.
 public subscript(`case`: Case) -> Bool? {
     get {
         switch `case` {
-        case .`betreft het de Staat`: self.`betreft het de Staat`
-        case .`betreft het een provincie`: self.`betreft het een provincie`
-        case .`betreft het een gemeente`: self.`betreft het een gemeente`
-        case .`betreft het een waterschap`: self.`betreft het een waterschap`
-        case .`is het een lichaam waaraan krachtens de Grondwet verordenende bevoegdheid is verleend`:
-            self.`is het een lichaam waaraan krachtens de Grondwet verordenende bevoegdheid is verleend`
+        case .`condition one`: self.`condition one`
+        case .`condition two`: self.`condition two`
+        case .`condition three`: self.`condition three`
+        case .`condition four`: self.`condition four`
+        case .`condition five with a longer descriptive phrase`:
+            self.`condition five with a longer descriptive phrase`
         }
     }
     set {
         switch `case` {
-        case .`betreft het de Staat`: self.`betreft het de Staat` = newValue
-        case .`betreft het een provincie`: self.`betreft het een provincie` = newValue
-        case .`betreft het een gemeente`: self.`betreft het een gemeente` = newValue
-        case .`betreft het een waterschap`: self.`betreft het een waterschap` = newValue
-        case .`is het een lichaam waaraan krachtens de Grondwet verordenende bevoegdheid is verleend`:
-            self.`is het een lichaam waaraan krachtens de Grondwet verordenende bevoegdheid is verleend` = newValue
+        case .`condition one`: self.`condition one` = newValue
+        case .`condition two`: self.`condition two` = newValue
+        case .`condition three`: self.`condition three` = newValue
+        case .`condition four`: self.`condition four` = newValue
+        case .`condition five with a longer descriptive phrase`:
+            self.`condition five with a longer descriptive phrase` = newValue
         }
     }
 }
@@ -365,11 +364,11 @@ Verify:
 - `PureValueStruct.Case.allCases.count == 3`
 - `var s = PureValueStruct(); s[.name] = "test"; #expect(s.name == "test")`
 
-### Test Fixture 2: Pure value property struct (Bool? — the statute encoding pattern)
+### Test Fixture 2: Pure value property struct (Bool? — backticked identifiers)
 
 ```swift
 @Witness
-struct StatuteArguments: Sendable {
+struct Questionnaire: Sendable {
     var `condition one`: Bool? = nil
     var `condition two`: Bool? = nil
     var `condition three`: Bool? = nil
@@ -379,9 +378,9 @@ struct StatuteArguments: Sendable {
 Verify:
 - `Case` enum generated with 3 backticked cases
 - Subscript generated (all Bool?)
-- `StatuteArguments.Case.allCases.count == 3`
-- `var args = StatuteArguments(); args[.`condition one`] = true; #expect(args.`condition one` == true)`
-- Iteration: `for c in StatuteArguments.Case.allCases { ... }`
+- `Questionnaire.Case.allCases.count == 3`
+- `var args = Questionnaire(); args[.`condition one`] = true; #expect(args.`condition one` == true)`
+- Iteration: `for c in Questionnaire.Case.allCases { ... }`
 
 ### Test Fixture 3: Mixed types (no subscript)
 
@@ -434,12 +433,12 @@ Verify:
 
 ### Backticked identifiers
 
-Dutch legal text uses backticked identifiers with spaces:
+Some domains use backticked identifiers with spaces:
 ```swift
-var `betreft het de Staat`: Bool? = nil
+var `condition one`: Bool? = nil
 ```
 
-The AST's `IdentifierPatternSyntax.identifier.text` returns `"betreft het de Staat"`
+The AST's `IdentifierPatternSyntax.identifier.text` returns `"condition one"`
 (without backticks). When generating switch cases in the subscript, you need to add
 backticks back if the identifier contains spaces or is a keyword. The existing
 `escapeIdentifier` function only checks for Swift keywords. You may need to also check
@@ -460,7 +459,7 @@ identifiers and what `identifier.text` returns for them.
 ### Coexistence with @Splat
 
 The `@Witness` expansion on the `Arguments` struct must coexist with `@Splat` on the
-outer lid struct. `@Splat` generates a convenience init on the OUTER struct. `@Witness`
+outer struct. `@Splat` generates a convenience init on the OUTER struct. `@Witness`
 generates the Case enum on the INNER Arguments struct. They operate on different types
 and should not conflict.
 
@@ -472,7 +471,7 @@ public struct `1`: Sendable {
 
     @Witness
     public struct Arguments: Sendable {
-        public var `betreft het de Staat`: Bool? = nil
+        public var `condition one`: Bool? = nil
         // ...
     }
 
@@ -509,10 +508,10 @@ After implementation:
 
 ```bash
 # Build the macro
-cd /Users/coen/Developer/swift-foundations/swift-witnesses && swift build
+cd swift-witnesses && swift build
 
 # Run all tests (existing + new)
-cd /Users/coen/Developer/swift-foundations/swift-witnesses && swift test
+cd swift-witnesses && swift test
 
 # Verify existing tests still pass (no regressions)
 # The DriverPatternAPI fixture has non-closure properties — verify it still works

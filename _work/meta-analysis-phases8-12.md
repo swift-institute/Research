@@ -58,8 +58,6 @@ All `[CLAIM-*]` and `[ASSUMP-*]` identifiers are scoped to swift-institute Exper
 | swift-primitives/Research/ | 52 (excl. audit.md) | 16 (+38 in sub-tables) | 3 | 0 |
 | swift-standards/Research/ | 1 | 1 | 0 | 0 |
 | swift-foundations/Research/ | 2 | 2 | 0 | 0 |
-| rule-law/Research/ | 9 | 10 (incl. Reflections/) | 0 | 0 |
-| swift-nl-wetgever/Research/ | 3 | 3 | 0 | 0 |
 
 #### swift-institute/Research/ — 9 Missing Files
 
@@ -131,7 +129,7 @@ The `swift-foundations/Experiments/` directory has 7 experiment directories and 
 
 ### References [META-010] — COMPLETE
 
-All 6 required `.bib` files exist in `/Users/coen/Developer/swift-institute/References/`:
+All 6 required `.bib` files exist in `References/`:
 
 | File | Present |
 |------|---------|
@@ -147,13 +145,12 @@ All 6 required `.bib` files exist in `/Users/coen/Developer/swift-institute/Refe
 | Location | Total | Processed | Pending | % Pending |
 |----------|-------|-----------|---------|-----------|
 | swift-institute/Research/Reflections/ | 104 | 57 | 46 | 44% |
-| rule-law/Research/Reflections/ | 3 | 3 | 0 | 0% |
 
 **Finding**: 46 unprocessed reflections in swift-institute is a significant backlog. At the current rate of ~1 reflection per session, this represents weeks of unprocessed insight. The most recent pending reflections include entries dated 2026-04-08 (today), while some pending entries date back to early April and late March. A dedicated reflections-processing session is recommended.
 
 ### Blog Pipeline [META-012]
 
-Blog index at `/Users/coen/Developer/swift-institute/Blog/_index.md` reviewed.
+Blog index at `Blog/_index.md` reviewed.
 
 #### "Ready for Drafting" Items >30 Days Stalled
 
@@ -195,7 +192,6 @@ Today is 2026-04-08. Implementation skills stale after 90 days, process skills a
 | package-export | 2026-03-20 | 19 | OK |
 | ecosystem-data-structures | 2026-03-26 | 13 | OK |
 | modularization | 2026-04-03 | 5 | OK |
-| dutch-law | 2026-03-20 | 19 | OK |
 | code-surface | 2026-03-20 | 19 | OK |
 | issue-investigation | 2026-03-31 | 8 | OK |
 | audit | 2026-03-26 | 13 | OK |
@@ -214,9 +210,6 @@ Today is 2026-04-08. Implementation skills stale after 90 days, process skills a
 | swift-institute-core | 2026-03-27 | 12 | OK |
 | handoff | 2026-03-26 | 13 | OK |
 | primitives | 2026-03-26 | 13 | OK |
-| rule-law-core | 2026-03-20 | 19 | OK |
-| legal-encoding | 2026-03-20 | 19 | OK |
-| legal-testing | 2026-03-20 | 19 | OK |
 
 **All implementation skills are within the 90-day window.** All were reviewed in the March 2026 skill overhaul.
 
@@ -245,8 +238,8 @@ No `superseded_by` fields found in any skill YAML frontmatter. No retained super
 
 #### audit.md Files Found
 
-- `/Users/coen/Developer/swift-institute/Research/audit.md` — Ecosystem-wide
-- `/Users/coen/Developer/swift-primitives/Research/audit.md` — Primitives-wide
+- `Research/audit.md` — Ecosystem-wide
+- `https://github.com/swift-primitives/Research/blob/main/audit.md` — Primitives-wide
 - 40 package-level audit.md files in swift-foundations
 - ~150 package-level audit.md files in swift-primitives
 

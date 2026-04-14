@@ -17,9 +17,9 @@ While adding parallel execution to `swift-dependency-analysis` using `IO.Blockin
 
 The failure is **not fixable** by qualifying `Swift.String` at the call site — the ambiguity is in the compiler's generic type inference for `withTaskGroup`'s closure parameter. The only workaround was splitting code into separate files: one that imports `IO_Blocking_Threads` and one that doesn't.
 
-**Trigger file**: `/Users/coen/Developer/swift-foundations/swift-dependency-analysis/Sources/Dependency Analysis CLI/parallel.swift` — uses `IO.Blocking.Lane.threads()` for concurrent analysis.
+**Trigger file**: `https://github.com/swift-foundations/swift-dependency-analysis/blob/main/Sources/Dependency Analysis CLI/parallel.swift` — uses `IO.Blocking.Lane.threads()` for concurrent analysis.
 
-**Workaround file**: `/Users/coen/Developer/swift-foundations/swift-dependency-analysis/Sources/Dependency Analysis CLI/CLI.swift` — contains `withTaskGroup` calls, does NOT import `IO_Blocking_Threads`.
+**Workaround file**: `https://github.com/swift-foundations/swift-dependency-analysis/blob/main/Sources/Dependency Analysis CLI/CLI.swift` — contains `withTaskGroup` calls, does NOT import `IO_Blocking_Threads`.
 
 ### The @_exported Chain
 
@@ -84,7 +84,7 @@ How should the ecosystem's `@_exported` chain be restructured to prevent primiti
 
 ### Part 1: String_Primitives.String Is Legitimate
 
-`String_Primitives.String` is defined at `/Users/coen/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/String.swift`:
+`String_Primitives.String` is defined at `https://github.com/swift-primitives/swift-string-primitives/blob/main/Sources/String Primitives/String.swift`:
 
 1. **Null-terminated, platform-native string** — `typealias Char = UInt8` on POSIX, `typealias Char = UInt16` on Windows
 2. **Unique ownership via `~Copyable`** — prevents double-free of the underlying `Memory.Contiguous<Char>` allocation
@@ -112,7 +112,7 @@ How should the ecosystem's `@_exported` chain be restructured to prevent primiti
 
 #### ISO_9899.String Relationship
 
-`ISO_9899.String` (at `/Users/coen/Developer/swift-iso/swift-iso-9899/`) is complementary, not redundant:
+`ISO_9899.String` (at `https://github.com/swift-iso/swift-iso-9899`) is complementary, not redundant:
 - `ISO_9899.String.Char = UInt8` always (ISO C byte strings)
 - `String_Primitives.String.Char = UInt8` on POSIX, `UInt16` on Windows
 
@@ -124,7 +124,7 @@ The root cause is structural: `Kernel_Primitives_Core` @_exports `String_Primiti
 
 #### Option A: Remove @_exported String_Primitives from Kernel_Primitives_Core
 
-Remove `@_exported public import String_Primitives` from `/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Primitives Core/exports.swift` (line 19).
+Remove `@_exported public import String_Primitives` from `https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Primitives Core/exports.swift` (line 19).
 
 **Why this is the critical change**: Kernel_Primitives_Core's own source files (`Kernel.swift`, `Kernel.File.swift`, `Kernel.File.Offset.swift`, `Kernel.File.Size.swift`, `Kernel.Memory.swift`) do NOT use `String_Primitives.String` in any type definition or public API. The @_exported is purely convenience — it makes String_Primitives available to ALL downstream modules, even those that don't need it.
 
@@ -141,8 +141,8 @@ Kernel_Primitives → @_exported Kernel_String_Primitives → needs String_Primi
 
 To fully break this chain, must ALSO change the umbrella to NOT @_export Kernel_String_Primitives:
 
-3. `/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Primitives/Exports.swift` — change line 11 from `@_exported public import Kernel_String_Primitives` to `public import Kernel_String_Primitives`
-4. `/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Environment Primitives/exports.swift` (line 5) — change to non-exported
+3. `https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Primitives/Exports.swift` — change line 11 from `@_exported public import Kernel_String_Primitives` to `public import Kernel_String_Primitives`
+4. `https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Environment Primitives/exports.swift` (line 5) — change to non-exported
 
 **Effect after all changes**:
 - Consumers of `Kernel_Primitives_Core` (e.g., IO) do NOT get String_Primitives — no shadowing
@@ -306,19 +306,19 @@ The bare name `String` in `String_Primitives` is correct and consistent with the
 
 #### Changes Required
 
-1. **`/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Primitives Core/exports.swift`** (line 19):
+1. **`https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Primitives Core/exports.swift`** (line 19):
    Remove `@_exported public import String_Primitives`
 
-2. **`/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel String Primitives/Kernel.String.swift`**:
+2. **`https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel String Primitives/Kernel.String.swift`**:
    Add `public import String_Primitives` at top
 
-3. **`/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Package.swift`**:
+3. **`https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Package.swift`**:
    Add `"String Primitives"` as a direct dependency of the `"Kernel String Primitives"` target
 
-4. **`/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Primitives/Exports.swift`** (line 11):
+4. **`https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Primitives/Exports.swift`** (line 11):
    Change `@_exported public import Kernel_String_Primitives` to `public import Kernel_String_Primitives`
 
-5. **`/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Environment Primitives/exports.swift`** (line 5):
+5. **`https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Environment Primitives/exports.swift`** (line 5):
    Change `@_exported public import Kernel_String_Primitives` to `public import Kernel_String_Primitives`.
    Add `public import String_Primitives` (for `String.Char` used in public API at `Kernel.Environment.Entry.swift:24,28,40,41`)
 
@@ -361,10 +361,10 @@ Apply the same principle ecosystem-wide: **@_export only what your own public AP
 
 ## References
 
-- [PRIM-FOUND-001] No Foundation — `/Users/coen/Developer/swift-institute/Skills/primitives/SKILL.md`
+- [PRIM-FOUND-001] No Foundation — `Skills/primitives/SKILL.md`
 - SE-0339 Module Aliasing for Disambiguation — `https://github.com/swiftlang/swift-evolution/blob/main/proposals/0339-module-aliasing-for-disambiguation.md`
 - SE-0409 Access Level on Imports — `https://github.com/swiftlang/swift-evolution/blob/main/proposals/0409-access-level-on-imports.md`
 - SE-0444 Member Import Visibility — `https://github.com/swiftlang/swift-evolution/blob/main/proposals/0444-member-import-visibility.md`
 - Swift PR #21370 (Doug Gregor) — Shadowing rules for stdlib types
 - Swift `docs/Modules.md` — Selective `@_exported import` documentation
-- OS Native Path String Semantics — `/Users/coen/Developer/swift-primitives/swift-string-primitives/Research/OS Native Path String Semantics.md`
+- OS Native Path String Semantics — `https://github.com/swift-primitives/swift-string-primitives/blob/main/Research/OS Native Path String Semantics.md`

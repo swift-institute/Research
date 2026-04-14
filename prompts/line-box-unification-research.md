@@ -2,7 +2,7 @@
 
 ## Objective
 
-Execute the `/research-process` skill to produce a Tier 2 research document analyzing where and how to unify the duplicated line box (half-leading) computation that currently exists in two Layer 3 packages. The research must evaluate placement in `text-primitives`, `layout-primitives`, a new package, or leaving the duplication in place. The output is a single research document written to `/Users/coen/Developer/swift-institute/Research/line-box-unification.md`.
+Execute the `/research-process` skill to produce a Tier 2 research document analyzing where and how to unify the duplicated line box (half-leading) computation that currently exists in two Layer 3 packages. The research must evaluate placement in `text-primitives`, `layout-primitives`, a new package, or leaving the duplication in place. The output is a single research document written to `Research/line-box-unification.md`.
 
 **You are doing RESEARCH ONLY. Do NOT write implementation code. Do NOT modify any source files. Your sole deliverable is the research document.**
 
@@ -10,15 +10,15 @@ Execute the `/research-process` skill to produce a Tier 2 research document anal
 
 ## Skills to Load
 
-Before starting, you MUST read these skill files (they are the canonical source for all requirement IDs):
+Before starting, you MUST consult these skills (they are the canonical source for all requirement IDs):
 
-1. **research-process**: `/Users/coen/Developer/.claude/skills/research-process` — governs research document format, tiers, methodology
-2. **naming**: `/Users/coen/Developer/.claude/skills/naming` — [API-NAME-001] through [API-NAME-004]
-3. **implementation**: `/Users/coen/Developer/.claude/skills/implementation` — [IMPL-INTENT], [IMPL-000] through [IMPL-053], [PATTERN-009] through [PATTERN-022]
-4. **code-organization**: `/Users/coen/Developer/.claude/skills/code-organization` — [API-IMPL-005] one type per file
-5. **primitives**: `/Users/coen/Developer/.claude/skills/primitives` — [PRIM-*] primitives conventions, including [PRIM-FOUND-001] no Foundation
-6. **swift-institute**: `/Users/coen/Developer/.claude/skills/swift-institute` — [ARCH-LAYER-*] five-layer architecture
-7. **modularization**: `/Users/coen/Developer/.claude/skills/modularization` — [MOD-*] intra-package target structure
+1. The **research-process** skill — governs research document format, tiers, methodology
+2. The **naming** skill — [API-NAME-001] through [API-NAME-004]
+3. The **implementation** skill — [IMPL-INTENT], [IMPL-000] through [IMPL-053], [PATTERN-009] through [PATTERN-022]
+4. The **code-organization** skill — [API-IMPL-005] one type per file
+5. The **primitives** skill — [PRIM-*] primitives conventions, including [PRIM-FOUND-001] no Foundation
+6. The **swift-institute** skill — [ARCH-LAYER-*] five-layer architecture
+7. The **modularization** skill — [MOD-*] intra-package target structure
 
 Read ALL of these before writing anything. They contain the rules that govern every design decision.
 
@@ -58,10 +58,10 @@ Packages MUST depend only on layers below them. Upward and lateral dependencies 
 
 | Package | Path | Layer |
 |---------|------|-------|
-| swift-primitives (monorepo) | `/Users/coen/Developer/swift-primitives/` | 1 |
-| swift-standards (monorepo) | `/Users/coen/Developer/swift-standards/` | 2 |
-| swift-foundations (monorepo) | `/Users/coen/Developer/swift-foundations/` | 3 |
-| swift-institute | `/Users/coen/Developer/swift-institute/` | Docs |
+| swift-primitives (monorepo) | `https://github.com/swift-primitives` | 1 |
+| swift-standards (monorepo) | `https://github.com/swift-standards` | 2 |
+| swift-foundations (monorepo) | `https://github.com/swift-foundations` | 3 |
+| swift-institute | `./` | Docs |
 
 ### The Duplication
 
@@ -70,7 +70,7 @@ Two independent implementations of the CSS half-leading model exist in Layer 3:
 **Implementation A: `PDF.HTML.LineBox`** in swift-pdf-html-rendering (Layer 3)
 
 ```
-File: /Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/PDF HTML Rendering/CSS/CSS.LineBox.swift
+File: https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Sources/PDF HTML Rendering/CSS/CSS.LineBox.swift
 ```
 
 - Stored struct with 4 properties: `height`, `baselineOffset`, `belowBaseline`, `halfLeading`
@@ -82,7 +82,7 @@ File: /Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/P
 **Implementation B: `PDF.Context.Style.Resolved.Line`** in swift-pdf-rendering (Layer 3)
 
 ```
-File: /Users/coen/Developer/swift-foundations/swift-pdf-rendering/Sources/PDF Rendering/PDF.Context.Style.Resolved.swift
+File: https://github.com/swift-foundations/swift-pdf-rendering/blob/main/Sources/PDF Rendering/PDF.Context.Style.Resolved.swift
 ```
 
 - Computed property on `Style.Resolved` — recomputes each access
@@ -128,7 +128,7 @@ swift-geometry-primitives, swift-dimension-primitives, etc. (Layer 1)
 
 ### Candidate 1: `swift-text-primitives` (Layer 1)
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-text-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-text-primitives`
 **Module**: `Text_Primitives`
 
 **Current contents:**
@@ -159,7 +159,7 @@ swift-geometry-primitives, swift-dimension-primitives, etc. (Layer 1)
 
 ### Candidate 2: `swift-layout-primitives` (Layer 1)
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-layout-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-layout-primitives`
 **Module**: `Layout_Primitives`
 
 **Current contents:**
@@ -654,61 +654,61 @@ You MUST read these files as part of your analysis. Do not skip any.
 ### The two implementations being unified:
 
 ```
-/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/PDF HTML Rendering/CSS/CSS.LineBox.swift
-/Users/coen/Developer/swift-foundations/swift-pdf-rendering/Sources/PDF Rendering/PDF.Context.Style.Resolved.swift
+https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Sources/PDF HTML Rendering/CSS/CSS.LineBox.swift
+https://github.com/swift-foundations/swift-pdf-rendering/blob/main/Sources/PDF Rendering/PDF.Context.Style.Resolved.swift
 ```
 
 ### The candidate packages:
 
 ```
-/Users/coen/Developer/swift-primitives/swift-text-primitives/Package.swift
-/Users/coen/Developer/swift-primitives/swift-text-primitives/Sources/Text Primitives/Text.swift
-/Users/coen/Developer/swift-primitives/swift-text-primitives/Sources/Text Primitives/Text.Line.swift
-/Users/coen/Developer/swift-primitives/swift-text-primitives/Sources/Text Primitives/Text.Line.Number.swift
-/Users/coen/Developer/swift-primitives/swift-text-primitives/Sources/Text Primitives/Text.Line.Map.swift
+https://github.com/swift-primitives/swift-text-primitives/blob/main/Package.swift
+https://github.com/swift-primitives/swift-text-primitives/blob/main/Sources/Text Primitives/Text.swift
+https://github.com/swift-primitives/swift-text-primitives/blob/main/Sources/Text Primitives/Text.Line.swift
+https://github.com/swift-primitives/swift-text-primitives/blob/main/Sources/Text Primitives/Text.Line.Number.swift
+https://github.com/swift-primitives/swift-text-primitives/blob/main/Sources/Text Primitives/Text.Line.Map.swift
 
-/Users/coen/Developer/swift-primitives/swift-layout-primitives/Package.swift
-/Users/coen/Developer/swift-primitives/swift-layout-primitives/Sources/Layout Primitives/Layout.swift
-/Users/coen/Developer/swift-primitives/swift-layout-primitives/Sources/Layout Primitives/Layout.Flow.swift
-/Users/coen/Developer/swift-primitives/swift-layout-primitives/Sources/Layout Primitives/Layout.Flow.Line.swift
-/Users/coen/Developer/swift-primitives/swift-layout-primitives/Sources/Layout Primitives/Vertical.Alignment.swift
-/Users/coen/Developer/swift-primitives/swift-layout-primitives/Sources/Layout Primitives/Vertical.Baseline.swift
+https://github.com/swift-primitives/swift-layout-primitives/blob/main/Package.swift
+https://github.com/swift-primitives/swift-layout-primitives/blob/main/Sources/Layout Primitives/Layout.swift
+https://github.com/swift-primitives/swift-layout-primitives/blob/main/Sources/Layout Primitives/Layout.Flow.swift
+https://github.com/swift-primitives/swift-layout-primitives/blob/main/Sources/Layout Primitives/Layout.Flow.Line.swift
+https://github.com/swift-primitives/swift-layout-primitives/blob/main/Sources/Layout Primitives/Vertical.Alignment.swift
+https://github.com/swift-primitives/swift-layout-primitives/blob/main/Sources/Layout Primitives/Vertical.Baseline.swift
 ```
 
 ### Font metrics (to understand what feeds into LineBox):
 
 ```
-/Users/coen/Developer/swift-standards/swift-iso-32000/Sources/ISO 32000 9 Text/9.8 Font descriptors.swift
+https://github.com/swift-standards/swift-iso-32000/blob/main/Sources/ISO 32000 9 Text/9.8 Font descriptors.swift
 ```
 
 ### All consumer files:
 
 ```
-/Users/coen/Developer/swift-foundations/swift-pdf-rendering/Sources/PDF Rendering/PDF.Context.swift
-/Users/coen/Developer/swift-foundations/swift-pdf-rendering/Sources/PDF Rendering/PDF.Context.Text.Run+Rendering.swift
-/Users/coen/Developer/swift-foundations/swift-pdf-rendering/Sources/PDF Rendering/ISO_32000+PDF.View/ISO_32000.Text+PDF.View.swift
-/Users/coen/Developer/swift-foundations/swift-pdf-rendering/Sources/PDF Rendering/Rendering/Pair+PDF.View.swift
+https://github.com/swift-foundations/swift-pdf-rendering/blob/main/Sources/PDF Rendering/PDF.Context.swift
+https://github.com/swift-foundations/swift-pdf-rendering/blob/main/Sources/PDF Rendering/PDF.Context.Text.Run+Rendering.swift
+https://github.com/swift-foundations/swift-pdf-rendering/blob/main/Sources/PDF Rendering/ISO_32000+PDF.View/ISO_32000.Text+PDF.View.swift
+https://github.com/swift-foundations/swift-pdf-rendering/blob/main/Sources/PDF Rendering/Rendering/Pair+PDF.View.swift
 
-/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/PDF HTML Rendering/HTML.Element.Tag+TableRow.swift
-/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/PDF HTML Rendering/HTML.Element.Tag+TableCell.swift
-/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/PDF HTML Rendering/HTML.Element.Tag+Table.swift
-/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/PDF HTML Rendering/HTML.Element.Tag+HeaderRepetition.swift
-/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/PDF HTML Rendering/HTML.Element+PDF.HTML.View.swift
-/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/PDF HTML Rendering/PDF.HTML.Configuration.swift
+https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Sources/PDF HTML Rendering/HTML.Element.Tag+TableRow.swift
+https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Sources/PDF HTML Rendering/HTML.Element.Tag+TableCell.swift
+https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Sources/PDF HTML Rendering/HTML.Element.Tag+Table.swift
+https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Sources/PDF HTML Rendering/HTML.Element.Tag+HeaderRepetition.swift
+https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Sources/PDF HTML Rendering/HTML.Element+PDF.HTML.View.swift
+https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Sources/PDF HTML Rendering/PDF.HTML.Configuration.swift
 ```
 
 ### Dimension/geometry type definitions (to understand the type chain):
 
 ```
-/Users/coen/Developer/swift-primitives/swift-dimension-primitives/Sources/Dimension Primitives/Scale.swift
-/Users/coen/Developer/swift-primitives/swift-geometry-primitives/Sources/Geometry Primitives/Geometry.Size.swift
-/Users/coen/Developer/swift-primitives/swift-geometry-primitives/Sources/Geometry Primitives/Geometry.swift
+https://github.com/swift-primitives/swift-dimension-primitives/blob/main/Sources/Dimension Primitives/Scale.swift
+https://github.com/swift-primitives/swift-geometry-primitives/blob/main/Sources/Geometry Primitives/Geometry.Size.swift
+https://github.com/swift-primitives/swift-geometry-primitives/blob/main/Sources/Geometry Primitives/Geometry.swift
 ```
 
 ### Existing research (check for related research):
 
 ```
-/Users/coen/Developer/swift-institute/Research/_index.md
+Research/_index.md
 ```
 
 ---
@@ -718,7 +718,7 @@ You MUST read these files as part of your analysis. Do not skip any.
 Write the research document to:
 
 ```
-/Users/coen/Developer/swift-institute/Research/line-box-unification.md
+Research/line-box-unification.md
 ```
 
 The document MUST follow [RES-003] format:
@@ -794,7 +794,7 @@ The document MUST follow [RES-003] format:
 - [Any other references discovered during prior art survey]
 ```
 
-After writing the research document, update the index at `/Users/coen/Developer/swift-institute/Research/_index.md` if it exists (add a row for the new document).
+After writing the research document, update the index at `Research/_index.md` if it exists (add a row for the new document).
 
 ---
 
@@ -808,4 +808,4 @@ After writing the research document, update the index at `/Users/coen/Developer/
 - The document should be thorough enough that an implementer can execute without further research.
 - Do not abbreviate the analysis. Show full reasoning for every option.
 - The comparison table must cover all 8 evaluation criteria for all 4 options.
-- Write output to `/Users/coen/Developer/swift-institute/Research/line-box-unification.md`. Return ONLY a one-line confirmation: "Wrote line-box-unification.md to /Users/coen/Developer/swift-institute/Research/".
+- Write output to `Research/line-box-unification.md`. Return ONLY a one-line confirmation: "Wrote line-box-unification.md to Research/".

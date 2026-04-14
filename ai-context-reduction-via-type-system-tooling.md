@@ -63,7 +63,7 @@ Available tools, tested 2026-03-10 against swift-buffer-primitives:
 | `get_diagnostics(file)` | Errors, warnings for a file | ✅ Available |
 | `prepare_call_hierarchy(file, line, char)` | Prerequisite for call analysis | Untested |
 
-**Key finding**: CCLSP's workspace-level features (`find_workspace_symbols`) require SourceKit-LSP to have a Package.swift at or above the working directory. The CWD `/Users/coen/Developer` has no Package.swift, so workspace queries return empty. File-targeted queries (`find_definition`) work because they trigger single-file indexing.
+**Key finding**: CCLSP's workspace-level features (`find_workspace_symbols`) require SourceKit-LSP to have a Package.swift at or above the working directory. The CWD `<workspace root>` has no Package.swift, so workspace queries return empty. File-targeted queries (`find_definition`) work because they trigger single-file indexing.
 
 **Implication**: A root-level Package.swift would unlock workspace-wide symbol search.
 
@@ -119,7 +119,7 @@ SDK=$(xcrun --show-sdk-path) && swift symbolgraph-extract \
 
 ### Option A: Root Package.swift for CCLSP Workspace Indexing
 
-Add a `Package.swift` at `/Users/coen/Developer` that declares all ecosystem packages as local dependencies.
+Add a `Package.swift` at `<workspace root>` that declares all ecosystem packages as local dependencies.
 
 **What it unlocks**:
 - `find_workspace_symbols` across all 361 sub-packages
@@ -135,7 +135,7 @@ Add a `Package.swift` at `/Users/coen/Developer` that declares all ecosystem pac
 
 **Mitigation**: Layered Package.swift files:
 ```
-/Users/coen/Developer/Package.swift          → all layers (for occasional full-index)
+workspace-root/Package.swift   → all layers (for occasional full-index)
   or per-layer:
 swift-primitives/Package.swift (existing per-sub-package)
 swift-standards/Package.swift  (existing per-sub-package)
@@ -267,7 +267,7 @@ This replaces reading hundreds of source files. The `typed-throws-standards-inve
 - Start with per-monorepo workspace-level Package.swift files (primitives, standards, foundations)
 - These already have `.xcworkspace` files — explore `buildServer.json` for SourceKit-LSP delegation
 - Test whether SourceKit-LSP can index at this scale
-- If viable, add a root-level `/Users/coen/Developer/Package.swift` that unifies all layers
+- If viable, add a workspace-root Package.swift that unifies all layers
 - **Payoff**: CCLSP workspace queries, hover, call hierarchy
 
 **Phase 3: Meta-Analysis Scripts** (Option D)

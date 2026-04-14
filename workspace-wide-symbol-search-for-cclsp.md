@@ -11,7 +11,7 @@ tier: 2
 
 ## Context
 
-Claude Code sessions start from `/Users/coen/Developer`, a local-only directory that is not a git repository and does not exist on GitHub. The Swift Institute ecosystem lives in sub-directories (swift-primitives/, swift-standards/, swift-foundations/), each containing monorepos of independent Swift packages.
+Claude Code sessions start from `<workspace root>`, a local-only directory that is not a git repository and does not exist on GitHub. The Swift Institute ecosystem lives in sub-directories (swift-primitives/, swift-standards/, swift-foundations/), each containing monorepos of independent Swift packages.
 
 CCLSP (the Claude Code LSP MCP server, [ktnyt/cclsp](https://github.com/ktnyt/cclsp)) provides type-aware code intelligence via SourceKit-LSP. Currently, workspace-wide symbol search (`find_workspace_symbols`) returns empty results, while file-targeted operations (`find_definition`, `find_references`) work correctly.
 
@@ -73,7 +73,7 @@ workspaceFolders: [{
 }]
 ```
 
-It always sends **one** workspace folder: `rootDir` if configured, otherwise `process.cwd()`. Since `rootDir` isn't set and CWD is `/Users/coen/Developer` (no Package.swift), SourceKit-LSP gets a workspace root with no discoverable build system.
+It always sends **one** workspace folder: `rootDir` if configured, otherwise `process.cwd()`. Since `rootDir` isn't set and CWD is `<workspace root>` (no Package.swift), SourceKit-LSP gets a workspace root with no discoverable build system.
 
 #### Finding 3: `.xcworkspace` Is Not Supported by SourceKit-LSP
 
@@ -99,7 +99,7 @@ Despite CCLSP's single-root limitation, SourceKit-LSP itself is quite capable:
 
 **Implicit workspace discovery** (PR #1081): When a file is opened that no existing workspace handles, SourceKit-LSP walks up parent directories (within explicit workspace roots) looking for `Package.swift`. If found, it creates an **implicit workspace** and indexes that package. This is how file-targeted operations (`find_definition`) currently work — they trigger implicit workspace creation for the relevant package.
 
-**Constraint**: Implicit discovery only searches within the explicit workspace root. If the root is `/Users/coen/Developer`, any sub-directory's Package.swift is discoverable. If the root were `/Users/coen/Developer/swift-primitives/swift-buffer-primitives`, siblings would not be.
+**Constraint**: Implicit discovery only searches within the explicit workspace root. If the root is `<workspace root>`, any sub-directory's Package.swift is discoverable. If the root were `https://github.com/swift-primitives/swift-buffer-primitives`, siblings would not be.
 
 ### Option A: Set `rootDir` in cclsp.json (Minimal Fix)
 
@@ -109,13 +109,13 @@ Despite CCLSP's single-root limitation, SourceKit-LSP itself is quite capable:
     {
       "extensions": ["swift"],
       "command": ["sourcekit-lsp"],
-      "rootDir": "/Users/coen/Developer"
+      "rootDir": "<workspace root>"
     }
   ]
 }
 ```
 
-**What changes**: SourceKit-LSP gets `/Users/coen/Developer` as the explicit workspace root. No Package.swift there, so no SwiftPM workspace is created at the root level. But implicit workspace discovery now covers the entire Developer tree — any file opened in any sub-package triggers an implicit workspace for that package.
+**What changes**: SourceKit-LSP gets `<workspace root>` as the explicit workspace root. No Package.swift there, so no SwiftPM workspace is created at the root level. But implicit workspace discovery now covers the entire Developer tree — any file opened in any sub-package triggers an implicit workspace for that package.
 
 **What works**:
 - `find_definition`, `find_references`, `get_hover`, call hierarchy — all work via file-targeted queries
@@ -133,11 +133,11 @@ Despite CCLSP's single-root limitation, SourceKit-LSP itself is quite capable:
 ### Option B: `rootDir` + Lightweight Root Package.swift
 
 Add both:
-1. `rootDir: "/Users/coen/Developer"` in cclsp.json
-2. A `Package.swift` at `/Users/coen/Developer` declaring dependencies on key packages
+1. `rootDir: "<workspace root>"` in cclsp.json
+2. A `Package.swift` at the workspace root declaring dependencies on key packages
 
 ```swift
-// /Users/coen/Developer/Package.swift
+// workspace-root/Package.swift
 // Local-only workspace manifest for SourceKit-LSP indexing.
 // Not a git-tracked file. Not published anywhere.
 import PackageDescription
@@ -182,17 +182,17 @@ let package = Package(
     {
       "extensions": ["swift"],
       "command": ["sourcekit-lsp"],
-      "rootDir": "/Users/coen/Developer/swift-primitives"
+      "rootDir": "https://github.com/swift-primitives"
     },
     {
       "extensions": ["swift"],
       "command": ["sourcekit-lsp"],
-      "rootDir": "/Users/coen/Developer/swift-standards"
+      "rootDir": "https://github.com/swift-standards"
     },
     {
       "extensions": ["swift"],
       "command": ["sourcekit-lsp"],
-      "rootDir": "/Users/coen/Developer/swift-foundations"
+      "rootDir": "https://github.com/swift-foundations"
     }
   ]
 }
@@ -221,7 +221,7 @@ swift-standards/Package.swift       → all 111 sub-packages
 swift-foundations/Package.swift     → all 118 sub-packages
 ```
 
-Combine with Option A (`rootDir: "/Users/coen/Developer"`) for workspace root.
+Combine with Option A (`rootDir: "<workspace root>"`) for workspace root.
 
 **What changes**: Each monorepo becomes a single SwiftPM workspace. SourceKit-LSP indexes all modules within each monorepo.
 
@@ -239,7 +239,7 @@ Combine with Option A (`rootDir: "/Users/coen/Developer"`) for workspace root.
 
 ### Option E: Custom BSP Server
 
-Place a BSP connection file at `/Users/coen/Developer/.bsp/swift-institute.json`:
+Place a BSP connection file at the workspace-level `.bsp/swift-institute.json`:
 
 ```json
 {
@@ -270,9 +270,9 @@ Fork or PR [ktnyt/cclsp](https://github.com/ktnyt/cclsp) to support an array of 
       "extensions": ["swift"],
       "command": ["sourcekit-lsp"],
       "workspaceFolders": [
-        "/Users/coen/Developer/swift-primitives",
-        "/Users/coen/Developer/swift-standards",
-        "/Users/coen/Developer/swift-foundations"
+        "https://github.com/swift-primitives",
+        "https://github.com/swift-standards",
+        "https://github.com/swift-foundations"
       ]
     }
   ]
@@ -323,7 +323,7 @@ Change `~/.claude/cclsp.json` to:
     {
       "extensions": ["swift"],
       "command": ["sourcekit-lsp"],
-      "rootDir": "/Users/coen/Developer"
+      "rootDir": "<workspace root>"
     }
   ]
 }
@@ -353,9 +353,9 @@ With this, the config becomes:
       "extensions": ["swift"],
       "command": ["sourcekit-lsp"],
       "workspaceFolders": [
-        "/Users/coen/Developer/swift-primitives",
-        "/Users/coen/Developer/swift-standards",
-        "/Users/coen/Developer/swift-foundations"
+        "https://github.com/swift-primitives",
+        "https://github.com/swift-standards",
+        "https://github.com/swift-foundations"
       ]
     }
   ]

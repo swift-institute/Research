@@ -14,7 +14,7 @@ status: RECOMMENDATION
 
 ### 1.1 Package Structure
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-queue-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-queue-primitives`
 
 Seven internal modules re-exported via `Queue_Primitives`:
 
@@ -81,7 +81,7 @@ Seven internal modules re-exported via `Queue_Primitives`:
 
 ### 2.1 `IO.Event.Registration.Queue` — MPSC via `Mutex<Deque<T>>`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Registration.Queue.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Registration.Queue.swift`
 
 **Structure**:
 ```swift
@@ -98,7 +98,7 @@ public typealias Queue<T> = Ownership.Mutable<Mutex<Deque<T>>>.Unchecked
 
 ### 2.2 `IO.Completion.Submission.Queue` — MPSC via `Mutex<Deque<T>>`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.Submission.Queue.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.Submission.Queue.swift`
 
 **Structure**:
 ```swift
@@ -113,7 +113,7 @@ public typealias Queue = Ownership.Mutable<Mutex<Deque<IO.Completion.Operation.S
 
 ### 2.3 `IO.Blocking.Threads.Runtime.State` — Shared work queue
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Runtime.State.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Threads.Runtime.State.swift`
 
 **Structure**:
 ```swift
@@ -128,7 +128,7 @@ var queue: Queue<IO.Blocking.Threads.Job.Instance>.DoubleEnded.Fixed
 
 ### 2.4 `IO.Blocking.Threads.Worker` — Local batch buffer
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Worker.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Threads.Worker.swift`
 
 **Structure**:
 ```swift
@@ -143,7 +143,7 @@ var localBatch = Queue<IO.Blocking.Threads.Job.Instance>.DoubleEnded.Fixed(capac
 
 ### 2.5 `IO.Blocking.Lane.Abandoning.Runtime.State` — `Kernel.Thread.Queue`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Runtime.State.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking/IO.Blocking.Lane.Abandoning.Runtime.State.swift`
 
 **Structure**:
 ```swift
@@ -152,7 +152,7 @@ var queue = Kernel.Thread.Queue<IO.Blocking.Lane.Abandoning.Job>()
 
 **Semantics**: Unbounded FIFO queue for the abandoning runtime. `Kernel.Thread.Queue` is a thin wrapper around `Deque` (from queue-primitives) with `enqueue/dequeue/peek/removeAll`. Thread safety is external (via `Kernel.Thread.DualSync`).
 
-**Source**: `/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/Kernel.Thread.Queue.swift`
+**Source**: `https://github.com/swift-foundations/swift-kernel/blob/main/Sources/Kernel/Kernel.Thread.Queue.swift`
 
 ```swift
 public struct Queue<Element> {
@@ -165,7 +165,7 @@ public struct Queue<Element> {
 
 ### 2.6 `IO.Blocking.Threads.Acceptance.Queue` — Three-plane composite
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Acceptance.Queue.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Threads.Acceptance.Queue.swift`
 
 **Structure**:
 ```swift

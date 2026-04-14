@@ -42,7 +42,7 @@ None of the three features under investigation are currently enabled in producti
 
 The codebase has a pervasive pattern where `borrowing` parameters need stable pointers, forcing a `withUnsafePointer(to:)` closure indirection:
 
-**Storage.Inline ~Copyable.swift** (`/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Inline Primitives/Storage.Inline ~Copyable.swift`, line 59):
+**Storage.Inline ~Copyable.swift** (`https://github.com/swift-primitives/swift-storage-primitives/blob/main/Sources/Storage Inline Primitives/Storage.Inline ~Copyable.swift`, line 59):
 ```swift
 @unsafe
 @_lifetime(borrow self)
@@ -151,19 +151,19 @@ The feature directly solves the most common ergonomic pain in the codebase. Howe
 The codebase has several types that are semantically always-addressed:
 
 **`@_rawLayout` types** -- These already use raw layout which implies addressable storage, but the compiler does not formally guarantee address stability for borrows:
-- `Storage.Inline._Raw` (`/Users/coen/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Primitives Core/Storage.swift`, line 314): `@_rawLayout(likeArrayOf: Element, count: capacity)`
+- `Storage.Inline._Raw` (`https://github.com/swift-primitives/swift-storage-primitives/blob/main/Sources/Storage Primitives Core/Storage.swift`, line 314): `@_rawLayout(likeArrayOf: Element, count: capacity)`
 - `Storage.Arena.Inline._Raw` (same file, line 516)
 - `Storage.Pool.Inline._Raw` (same file, line 595 area)
 
 **Memory-mapped regions** -- These types wrap OS-provided memory that is inherently address-stable:
-- `Memory.Map` in swift-foundations (`/Users/coen/Developer/swift-foundations/swift-memory/Sources/Memory/Memory.Map+Operations.swift`) -- stores `baseAddress` as `UnsafeRawPointer`
-- `Kernel.Memory.Map.Region` (`/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Memory Primitives/Kernel.Memory.Map.Region.swift`) -- wraps `Kernel.Memory.Address`
+- `Memory.Map` in swift-foundations (`https://github.com/swift-foundations/swift-memory/blob/main/Sources/Memory/Memory.Map+Operations.swift`) -- stores `baseAddress` as `UnsafeRawPointer`
+- `Kernel.Memory.Map.Region` (`https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Memory Primitives/Kernel.Memory.Map.Region.swift`) -- wraps `Kernel.Memory.Address`
 
 **IO ring state** -- Always heap-allocated, always accessed by address:
-- `IO.Completion.IOUring.Ring` (`/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.IOUring.Ring.swift`) -- final class with cached mmap'd pointers (lines 53-79: sqHead, sqTail, sqes, cqHead, cqTail, cqes)
+- `IO.Completion.IOUring.Ring` (`https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.IOUring.Ring.swift`) -- final class with cached mmap'd pointers (lines 53-79: sqHead, sqTail, sqes, cqHead, cqTail, cqes)
 
 **IO Executor.Slot.Container** -- Wraps raw memory for ~Copyable resource transfer:
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO/IO.Executor.Slot.Container.swift` -- `UnsafeMutableRawPointer?` storage that must remain address-stable during lane execution
+- `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO/IO.Executor.Slot.Container.swift` -- `UnsafeMutableRawPointer?` storage that must remain address-stable during lane execution
 
 ### Before/After
 
@@ -237,7 +237,7 @@ The `BorrowInout` feature introduces safe, first-class types `Borrow<T>` and `In
 
 The codebase has extensive manual pointer management that exists solely to express borrow/inout semantics:
 
-**Property.View** (`/Users/coen/Developer/swift-primitives/swift-property-primitives/Sources/Property Primitives/Property.View.swift`, line 134-169):
+**Property.View** (`https://github.com/swift-primitives/swift-property-primitives/blob/main/Sources/Property Primitives/Property.View.swift`, line 134-169):
 ```swift
 @safe
 public struct View: ~Copyable, ~Escapable {
@@ -267,7 +267,7 @@ This pattern appears ~50 times across production source files via `base.pointee`
 - `Comparison.Compare+Property.View.swift` (lines 33, 35, 48, 57, 66, 75, 84)
 - `Vector.Drain+Property.View.swift` (lines 27, 36)
 
-**IO Executor.Slot** (`/Users/coen/Developer/swift-foundations/swift-io/Sources/IO/IO.Executor.Slot.Container.swift`, line 106-112):
+**IO Executor.Slot** (`https://github.com/swift-foundations/swift-io/blob/main/Sources/IO/IO.Executor.Slot.Container.swift`, line 106-112):
 ```swift
 internal static func withResource<T, E: Swift.Error>(
     at address: IO.Executor.Slot.Address,
@@ -278,9 +278,9 @@ internal static func withResource<T, E: Swift.Error>(
 }
 ```
 
-**Ownership.Transfer.Box** (`/Users/coen/Developer/swift-primitives/swift-ownership-primitives/Sources/Ownership Primitives/Ownership.Transfer.Box.swift`) -- Uses raw pointer arithmetic for type-erased ownership transfer where `Borrow`/`Inout` could clarify intent.
+**Ownership.Transfer.Box** (`https://github.com/swift-primitives/swift-ownership-primitives/blob/main/Sources/Ownership Primitives/Ownership.Transfer.Box.swift`) -- Uses raw pointer arithmetic for type-erased ownership transfer where `Borrow`/`Inout` could clarify intent.
 
-**Vector.Iterator.nextSpan** (`/Users/coen/Developer/swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Vector+Sequence.Protocol.swift`, lines 31-36):
+**Vector.Iterator.nextSpan** (`https://github.com/swift-primitives/swift-vector-primitives/blob/main/Sources/Vector Primitives Core/Vector+Sequence.Protocol.swift`, lines 31-36):
 ```swift
 let ptr = withUnsafeMutablePointer(to: &_spanValue) { p in
     unsafe UnsafePointer<Bound>(UnsafeRawPointer(p).assumingMemoryBound(to: Bound.self))

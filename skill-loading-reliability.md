@@ -11,7 +11,7 @@ tier: 2
 
 ## Context
 
-**Trigger**: After completing the skill-first documentation refactor, we discovered that skills are not reliably applied during implementation. When a user starts Claude from `/Users/coen/Developer` and asks to create a new package in swift-primitives, there is no guarantee that naming, errors, or primitives skills will be invoked.
+**Trigger**: After completing the skill-first documentation refactor, we discovered that skills are not reliably applied during implementation. When a user starts Claude from the workspace root and asks to create a new package in swift-primitives, there is no guarantee that naming, errors, or primitives skills will be invoked.
 
 **Constraints**:
 - Skills require explicit `Skill()` tool invocation to load full content
@@ -49,13 +49,13 @@ Claude Code has two independent content systems:
 2. **Skills**: Discovered at project-level (`cwd/.claude/skills/`) and home-level (`~/.claude/skills/`). Subdirectory skills are discovered lazily.
 3. **Rules**: `.claude/rules/*.md` files are auto-loaded eagerly at session start, similar to CLAUDE.md.
 
-**Critical finding**: Launching from `/Users/coen/Developer` loads `/Users/coen/Developer/.claude/skills/` (16 skills). But launching from `/Users/coen/Developer/swift-primitives` only loads `swift-primitives/.claude/skills/` (10 skills) plus `~/.claude/skills/` (11 skills) — **not** the Developer-level skills.
+**Critical finding**: Launching from the workspace root loads the workspace-level `.claude/skills/` (16 skills). But launching from the `swift-primitives` repository only loads `swift-primitives/.claude/skills/` (10 skills) plus `~/.claude/skills/` (11 skills) — **not** the workspace-level skills.
 
 ### Current State
 
 | Repo | CLAUDE.md | `.claude/skills/` | Skill discovery |
 |------|-----------|-------------------|-----------------|
-| `/Users/coen/Developer/` | Yes (routing table) | Yes (16 symlinks) | Only when cwd = Developer |
+| Workspace root | Yes (routing table) | Yes (16 symlinks) | Only when cwd = workspace root |
 | `swift-primitives/` | No | Yes (10 symlinks) | Only when cwd = swift-primitives |
 | `swift-standards/` | No | No | None |
 | `swift-foundations/` | No | No | None |
@@ -190,7 +190,7 @@ This research was absorbed into the per-repo CLAUDE.md convention. It remains as
 
 4. **Simplicity**: One file per repo, a few lines each. No new infrastructure (rules directories), no import chain risks.
 
-5. **Lazy loading works**: Even when launching from `/Users/coen/Developer`, a CLAUDE.md in `swift-primitives/` will load when Claude first reads files in that directory — which happens before any code is written.
+5. **Lazy loading works**: Even when launching from `<workspace root>`, a CLAUDE.md in `swift-primitives/` will load when Claude first reads files in that directory — which happens before any code is written.
 
 **Implementation**:
 

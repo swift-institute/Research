@@ -706,13 +706,13 @@ should default to leaf parsers and escalate to Machine IR only when constrained.
 
 ## References
 
-- parser-primitives protocols: `/Users/coen/Developer/swift-primitives/swift-parser-primitives/Sources/Parser Primitives Core/`
-- serialization-primitives witnesses: `/Users/coen/Developer/swift-primitives/swift-serialization-primitives/Sources/Serialization Primitives/`
-- Binary.Coder: `/Users/coen/Developer/swift-primitives/swift-binary-parser-primitives/Sources/Binary Coder Primitives/Binary.Coder.swift`
+- parser-primitives protocols: `https://github.com/swift-primitives/swift-parser-primitives/tree/main/Sources/Parser Primitives Core/`
+- serialization-primitives witnesses: `https://github.com/swift-primitives/swift-serialization-primitives/tree/main/Sources/Serialization Primitives/`
+- Binary.Coder: `https://github.com/swift-primitives/swift-binary-parser-primitives/blob/main/Sources/Binary Coder Primitives/Binary.Coder.swift`
 - ascii-parsing-domain-ownership: [ascii-parsing-domain-ownership.md](ascii-parsing-domain-ownership.md)
 - ascii-parsing-adversarial-review: [ascii-parsing-adversarial-review.md](ascii-parsing-adversarial-review.md)
 - parser-combinator-algebraic-foundations: [parser-combinator-algebraic-foundations.md](parser-combinator-algebraic-foundations.md)
-- parser-bridge-architecture plan: `/Users/coen/.claude/plans/cuddly-painting-wilkinson.md`
+- parser-bridge-architecture: internal implementation plan
 - parsers-ecosystem-adoption-audit: [parsers-ecosystem-adoption-audit.md](parsers-ecosystem-adoption-audit.md)
 - parsers-adoption-implementation-plan: [parsers-adoption-implementation-plan.md](parsers-adoption-implementation-plan.md)
 - [API-NAME-001] Namespace Structure

@@ -4,7 +4,7 @@ session_objective: Investigate test runner hang after Handle refactor, design pr
 packages:
   - swift-io
   - swift-kernel
-status: pending
+status: processed
 ---
 
 # Test Hang Investigation — Executor Ownership as Architectural Question

@@ -12,7 +12,7 @@ trigger: Experiment stream-isolation-preservation confirmed concrete operator ty
 
 ## Context
 
-Our `Async.Stream` at `/Users/coen/Developer/swift-foundations/swift-async/` provides 40+ composable operators. Every operator breaks caller isolation — 100% breakage rate (documented in `stream-isolation-propagation.md`). The root cause is the stored `@Sendable () async -> Element?` closure in `Iterator`.
+Our `Async.Stream` at `https://github.com/swift-foundations/swift-async` provides 40+ composable operators. Every operator breaks caller isolation — 100% breakage rate (documented in `stream-isolation-propagation.md`). The root cause is the stored `@Sendable () async -> Element?` closure in `Iterator`.
 
 The experiment `stream-isolation-preservation` (2026-02-25) discovered that **concrete operator types compiled with `NonisolatedNonsendingByDefault` preserve caller isolation** — including with `@unchecked Sendable` conformance, with sync closures, and even after late type erasure. This opens a path to isolation-preserving stream operators with no language changes required.
 

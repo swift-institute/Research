@@ -18,7 +18,7 @@ trigger: Discovery — explore how the Swift compiler uses nonisolated(nonsendin
 
 The Swift Institute ecosystem has adopted `nonisolated(nonsending)` across several primitives (see `nonsending-adoption-audit.md`, `callback-isolated-nonsending-design.md`). Our adoption is informed by Point-Free #355 and our own experiments but has not systematically examined how the Swift compiler and stdlib themselves use the feature internally.
 
-The Swift compiler source at `/Users/coen/Developer/swiftlang/swift` is the canonical reference for `nonisolated(nonsending)` semantics. By studying the compiler's type system representation, the stdlib's API migration patterns, and the test suite's edge cases, we can validate our existing patterns and discover opportunities we missed.
+The Swift compiler source at `https://github.com/swiftlang/swift` is the canonical reference for `nonisolated(nonsending)` semantics. By studying the compiler's type system representation, the stdlib's API migration patterns, and the test suite's edge cases, we can validate our existing patterns and discover opportunities we missed.
 
 ## Question
 

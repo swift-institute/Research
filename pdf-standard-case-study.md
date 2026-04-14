@@ -101,8 +101,6 @@ swift-pdf-standard
 swift-pdf-rendering ──→ swift-pdf-html-rendering ──→ swift-pdf
     ↓ (external fork)                                    ↓
 coenttb/swift-pdf-rendering                         coenttb/swift-pdf
-                                                         ↓
-                                                    rule-legal, rule-law (applications)
 ```
 
 Total reach: 273 Swift files import `PDF_Standard`. But all go through one gateway: `swift-pdf-rendering`.

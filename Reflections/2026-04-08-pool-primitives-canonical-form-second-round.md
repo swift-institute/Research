@@ -6,7 +6,7 @@ packages:
   - swift-foundations/swift-pools
   - swift-foundations/swift-io
   - swift-algebra-primitives
-status: pending
+status: processed
 ---
 
 # Pool Primitives Canonical Form: Second-Round Refactor

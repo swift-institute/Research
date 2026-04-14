@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-19
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-04-13
+status: DECISION
 tier: 3
 ---
 -->
@@ -247,4 +247,4 @@ Apple's proposal validates the Span-based streaming integration directly in a pr
 
 This directly addresses the "Span integration" question: in the streaming context, Span is the read view and OutputSpan is the write view, both closure-scoped to prevent escaping. The closure pattern that this research identified as "defeating Span's purpose" (wrapping Span in `withUnsafeBufferPointer`) does not appear — Apple's API is designed around Span as the native unit of streaming.
 
-**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/Reader/AsyncReader.swift`, `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/Writer/AsyncWriter.swift`
+**Source**: `https://github.com/apple/swift-http-api-proposal/blob/main/Sources/AsyncStreaming/Reader/AsyncReader.swift`, `https://github.com/apple/swift-http-api-proposal/blob/main/Sources/AsyncStreaming/Writer/AsyncWriter.swift`

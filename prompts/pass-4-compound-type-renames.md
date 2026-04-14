@@ -1,6 +1,6 @@
 # Pass 4: Compound Type Renames — Handoff Prompt
 
-Read `/Users/coen/Developer/swift-institute/Research/audits/implementation-naming-2026-03-20/01-remediation-plan.md` for full context. This prompt executes **Pass 4: Compound Type Renames**.
+Read `Research/audits/implementation-naming-2026-03-20/01-remediation-plan.md` for full context. This prompt executes **Pass 4: Compound Type Renames**.
 
 ## Context
 
@@ -30,7 +30,7 @@ Tier 20 (6 pkgs):  binary-parser, cache, parser-machine, pool, rendering, test
 For each rename (working tier 0 → tier 20):
 
 1. **Grep the entire superrepo** first: `grep -rn 'OldName' swift-*/Sources/ swift-*/Tests/` to find all usage sites
-2. **Also grep cross-repo**: `grep -rn 'OldName' /Users/coen/Developer/swift-standards/*/Sources/ /Users/coen/Developer/swift-foundations/*/Sources/` — note cross-repo usage but do NOT fix it in this pass (separate follow-up)
+2. **Also grep cross-repo**: `grep -rn 'OldName' https://github.com/swift-standards*/Sources/ https://github.com/swift-foundations*/Sources/` — note cross-repo usage but do NOT fix it in this pass (separate follow-up)
 3. **Rename the declaration** in the declaring package
 4. **Update all usage sites** within swift-primitives (Sources AND Tests)
 5. **Build the declaring package**: `cd swift-X-primitives && swift build`

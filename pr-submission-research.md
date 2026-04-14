@@ -316,11 +316,11 @@ Based on examination of 6 recent merged SIL optimizer / mark_dependence PRs:
 
 ## Sources Consulted
 
-- `/Users/coen/Developer/swiftlang/swift/CONTRIBUTING.md`
-- `/Users/coen/Developer/swiftlang/swift/docs/HowToGuides/FirstPullRequest.md`
-- `/Users/coen/Developer/swiftlang/swift/docs/HowToGuides/GettingStarted.md` (lines 345-367)
-- `/Users/coen/Developer/swiftlang/swift/docs/ContinuousIntegration.md`
-- `/Users/coen/Developer/swiftlang/swift/.github/CODEOWNERS`
+- `https://github.com/swiftlang/swift/blob/main/CONTRIBUTING.md`
+- `https://github.com/swiftlang/swift/blob/main/docs/HowToGuides/FirstPullRequest.md`
+- `https://github.com/swiftlang/swift/blob/main/docs/HowToGuides/GettingStarted.md` (lines 345-367)
+- `https://github.com/swiftlang/swift/blob/main/docs/ContinuousIntegration.md`
+- `https://github.com/swiftlang/swift/tree/main/.github/CODEOWNERS`
 - `https://www.swift.org/contributing/`
 - `swiftlang/.github/PULL_REQUEST_TEMPLATE/release.md` (via GitHub API)
 - `git log --oneline -40` on local `swiftlang/swift` checkout

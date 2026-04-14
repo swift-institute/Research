@@ -4,7 +4,7 @@
 ---
 version: 1.0.0
 date: 2026-03-03
-source: /Users/coen/Developer/swiftlang/swift/
+source: https://github.com/swiftlang/swift
 scope: Nine experimental feature flags relevant to ownership, accessors, and compile-time values
 method: Static analysis of compiler source, test counts, implementation depth
 status: SUPERSEDED
@@ -17,7 +17,7 @@ superseded_by: feature-flags-assessment.md
 ## Summary
 
 Analysis of nine experimental Swift feature flags by examining the compiler source at
-`/Users/coen/Developer/swiftlang/swift/`. Each feature is evaluated by its definition
+`https://github.com/swiftlang/swift`. Each feature is evaluated by its definition
 in `Features.def`, implementation depth (file count across `lib/`, `include/`), test
 coverage, known issues, and stdlib adoption.
 
@@ -28,7 +28,7 @@ the flag cannot be dropped in the future. None have an SE proposal number (SE = 
 
 ## Feature Definitions
 
-Source: `/Users/coen/Developer/swiftlang/swift/include/swift/Basic/Features.def`
+Source: `https://github.com/swiftlang/swift/tree/main/include/swift/Basic/Features.def`
 
 | Feature | Macro | AvailableInProd | Suppressible | Line |
 |---------|-------|-----------------|--------------|------|
@@ -539,7 +539,7 @@ Notes on ranking:
 ## Method
 
 All data collected by static analysis of the compiler source tree at
-`/Users/coen/Developer/swiftlang/swift/` on 2026-03-03. File counts are based on
+`https://github.com/swiftlang/swift` on 2026-03-03. File counts are based on
 `grep -r` for feature flag names across `lib/`, `include/`, `test/`, `stdlib/`, and
 `validation-test/` directories. "Implementation files" count only `lib/` and `include/`
 (excluding test and Features.def itself). "Test files" count files in `test/` and

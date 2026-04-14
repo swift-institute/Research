@@ -132,7 +132,7 @@ The workaround has been applied to 21 types across 9 packages in swift-primitive
 
 ## Experiment
 
-**Path**: `/Users/coen/Developer/swift-institute/Experiments/noncopyable-nested-deinit-chain/`
+**Path**: `Experiments/noncopyable-nested-deinit-chain/`
 
 The experiment contains 11 variants testing increasingly complex nesting patterns:
 
@@ -168,9 +168,9 @@ Removal should be validated by the canary tests in swift-buffer-primitives, whic
 
 ## References
 
-- **Experiment**: `/Users/coen/Developer/swift-institute/Experiments/noncopyable-nested-deinit-chain/`
-- **Queue.Static workaround**: `/Users/coen/Developer/swift-primitives/swift-queue-primitives/Sources/Queue Primitives Core/Queue.Static.swift`
-- **Queue.DoubleEnded.Static workaround**: `/Users/coen/Developer/swift-primitives/swift-queue-primitives/Sources/Queue Primitives Core/Queue.DoubleEnded.Static.swift`
-- **Buffer canary tests**: `/Users/coen/Developer/swift-primitives/swift-buffer-primitives/Tests/Buffer Ring Inline Primitives Tests/Buffer.Ring.Inline Canary Tests.swift`
-- **Storage inline deinit research**: `/Users/coen/Developer/swift-primitives/swift-storage-primitives/Research/inline-deinit-ownership.md`
+- **Experiment**: `Experiments/noncopyable-nested-deinit-chain/`
+- **Queue.Static workaround**: `https://github.com/swift-primitives/swift-queue-primitives/blob/main/Sources/Queue Primitives Core/Queue.Static.swift`
+- **Queue.DoubleEnded.Static workaround**: `https://github.com/swift-primitives/swift-queue-primitives/blob/main/Sources/Queue Primitives Core/Queue.DoubleEnded.Static.swift`
+- **Buffer canary tests**: `https://github.com/swift-primitives/swift-buffer-primitives/blob/main/Tests/Buffer Ring Inline Primitives Tests/Buffer.Ring.Inline Canary Tests.swift`
+- **Storage inline deinit research**: `https://github.com/swift-primitives/swift-storage-primitives/blob/main/Research/inline-deinit-ownership.md`
 - **Swift issue**: https://github.com/swiftlang/swift/issues/86652

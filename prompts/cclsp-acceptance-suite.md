@@ -4,8 +4,8 @@ Run these tests after regenerating compile_commands.json or patching the cclsp a
 
 ## Prerequisites
 
-- `/Users/coen/Developer/compile_commands.json` exists and is fresh
-- `/Users/coen/Developer/.sourcekit-lsp/config.json` has `defaultWorkspaceType: "compilationDatabase"`
+- The compilation database exists and is fresh
+- SourceKit-LSP is configured with `defaultWorkspaceType: "compilationDatabase"`
 - cclsp MCP server is running (restart after adapter patches)
 
 ## Test Matrix
@@ -13,9 +13,9 @@ Run these tests after regenerating compile_commands.json or patching the cclsp a
 ### T1: find_definition — one symbol from each layer
 
 ```
-find_definition(file_path="/Users/coen/Developer/swift-primitives/swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.swift", symbol_name="Buffer", symbol_kind="enum")
-find_definition(file_path="/Users/coen/Developer/swift-standards/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.swift", symbol_name="ISO_9899", symbol_kind="enum")
-find_definition(file_path="/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Primitives/IO.swift", symbol_name="IO", symbol_kind="enum")
+find_definition(file_path="swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.swift", symbol_name="Buffer", symbol_kind="enum")
+find_definition(file_path="swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.swift", symbol_name="ISO_9899", symbol_kind="enum")
+find_definition(file_path="swift-io/Sources/IO Primitives/IO.swift", symbol_name="IO", symbol_kind="enum")
 ```
 
 **PASS**: All three return definition locations without timeout.
@@ -23,9 +23,9 @@ find_definition(file_path="/Users/coen/Developer/swift-foundations/swift-io/Sour
 ### T2: get_hover — one symbol from each layer
 
 ```
-get_hover(file_path="/Users/coen/Developer/swift-primitives/swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.swift", line=19, character=13)
-get_hover(file_path="/Users/coen/Developer/swift-standards/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.swift", line=54, character=13)
-get_hover(file_path="/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Primitives/IO.swift", line=14, character=13)
+get_hover(file_path="swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.swift", line=19, character=13)
+get_hover(file_path="swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.swift", line=54, character=13)
+get_hover(file_path="swift-io/Sources/IO Primitives/IO.swift", line=14, character=13)
 ```
 
 **PASS**: All three return type information.
@@ -33,10 +33,10 @@ get_hover(file_path="/Users/coen/Developer/swift-foundations/swift-io/Sources/IO
 ### T3: find_references — cross-layer validation
 
 ```
-find_references(file_path="/Users/coen/Developer/swift-primitives/swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.swift", symbol_name="Buffer", symbol_kind="enum")
-find_references(file_path="/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Primitives Core/Kernel.swift", symbol_name="Kernel", symbol_kind="enum")
-find_references(file_path="/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.swift", symbol_name="Memory", symbol_kind="enum")
-find_references(file_path="/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Primitives/IO.swift", symbol_name="IO", symbol_kind="enum")
+find_references(file_path="swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.swift", symbol_name="Buffer", symbol_kind="enum")
+find_references(file_path="swift-kernel-primitives/Sources/Kernel Primitives Core/Kernel.swift", symbol_name="Kernel", symbol_kind="enum")
+find_references(file_path="swift-memory-primitives/Sources/Memory Primitives Core/Memory.swift", symbol_name="Memory", symbol_kind="enum")
+find_references(file_path="swift-io/Sources/IO Primitives/IO.swift", symbol_name="IO", symbol_kind="enum")
 ```
 
 **PASS criteria**:
@@ -48,7 +48,7 @@ find_references(file_path="/Users/coen/Developer/swift-foundations/swift-io/Sour
 ### T4: find_references — extension-nested type (regression tracker)
 
 ```
-find_references(file_path="/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Address.swift", symbol_name="Address")
+find_references(file_path="swift-memory-primitives/Sources/Memory Primitives Core/Memory.Address.swift", symbol_name="Address")
 ```
 
 **Current status**: PARTIAL — resolves to `type_parameter` instead of struct, but now returns cross-layer references (109+ locations across primitives + foundations). This improved after adding the SourceKit-LSP adapter with extended timeouts.
@@ -91,17 +91,17 @@ Adapter: `coenttb/cclsp` branch `sourcekit-lsp-adapter`
 
 ## Regeneration
 
-When the compilation database or index store needs refreshing:
+When the compilation database or index store needs refreshing, run the local regeneration script:
 
 ```bash
-/Users/coen/Developer/regenerate-compile-commands.sh          # full rebuild + regenerate
-/Users/coen/Developer/regenerate-compile-commands.sh --fast   # regenerate from existing build
+./regenerate-compile-commands.sh          # full rebuild + regenerate
+./regenerate-compile-commands.sh --fast   # regenerate from existing build
 ```
 
 ## Architecture
 
-- **Compilation database**: `/Users/coen/Developer/compile_commands.json` (3413 entries, 408 modules, 3 layers)
-- **Index store**: `/Users/coen/Developer/swift-foundations/swift-io/.build/arm64-apple-macosx/debug/index/store/v5/` (50MB, 2923 units)
+- **Compilation database**: the local `compile_commands.json` (3413 entries, 408 modules, 3 layers)
+- **Index store**: `https://github.com/swift-foundations/swift-io/tree/main/.build/arm64-apple-macosx/debug/index/store/v5/` (50MB, 2923 units)
 - **Indexing anchor**: swift-io (foundations layer, depends on nearly everything)
 - **SourceKit-LSP adapter**: `coenttb/cclsp` fork, branch `sourcekit-lsp-adapter`
 - **Converged plan**: `/tmp/cclsp-compilation-db-converged.md`

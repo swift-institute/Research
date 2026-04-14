@@ -7,7 +7,7 @@ packages:
   - swift-executors
   - swift-io
   - swift-pools
-status: pending
+status: processed
 ---
 
 # Parallel Handoff Execution and IO.Blocking Refactor
@@ -39,7 +39,7 @@ Executed 5 handoff documents across 4 packages. Three ran as background agents i
 - Initial `sending` vs `@Sendable` mistake: I defaulted to `@Sendable` on closure parameters and `T: Sendable` bounds. User corrected immediately. The ecosystem uses `sending` throughout — I should have picked this up from the loaded skills.
 - Underestimated the IO.Blocking refactor scope: the handoff estimated ~7 IO Executor files to update. Actual was 12 source files + 4 test files + moving IO.Failure types.
 - The sync path regression: I used `Task { }` wrapping for convenience (Option C from the handoff) without recognizing it contradicts the subsystem's purpose ("don't starve the cooperative pool"). The user's post-completion regression analysis caught this — it should have been caught during design.
-- Worktree isolation failed: `/Users/coen/Developer` isn't a git repo, so `isolation: "worktree"` couldn't create git worktrees. Fell back to regular agents, which worked because the packages were independent.
+- Worktree isolation failed: `<workspace root>` isn't a git repo, so `isolation: "worktree"` couldn't create git worktrees. Fell back to regular agents, which worked because the packages were independent.
 
 ## Patterns and Root Causes
 

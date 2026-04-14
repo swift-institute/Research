@@ -349,7 +349,7 @@ Cognitive Dimensions Framework assessment for Option D:
 
 ### Phase 1: `swift-sample-primitives` (Layer 1) — IMPLEMENTED
 
-Package created at `/Users/coen/Developer/swift-primitives/swift-sample-primitives/`. Types in use across the ecosystem:
+Package created at `https://github.com/swift-primitives/swift-sample-primitives`. Types in use across the ecosystem:
 
 | Type | Description | Status |
 |------|-------------|--------|

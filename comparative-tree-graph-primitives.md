@@ -20,7 +20,7 @@ swift-tree-primitives provides general-purpose arena-based n-ary trees with trav
 
 ## 1. swift-tree-primitives Catalog
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-tree-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-tree-primitives`
 **Module**: `Tree Primitives` (single module)
 
 ### 1.1 Type Hierarchy
@@ -87,7 +87,7 @@ These are explicitly structural trees — they model parent/child relationships,
 
 ## 2. swift-graph-primitives Catalog
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-graph-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-graph-primitives`
 **Modules**: 17 modules (Core + 16 algorithm modules)
 
 ### 2.1 Type Hierarchy
@@ -151,7 +151,7 @@ Graph                                   (namespace enum)
 
 ### 2.3 Also found: swift-abstract-syntax-tree-primitives
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-abstract-syntax-tree-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-abstract-syntax-tree-primitives`
 
 This package exists but contains only a single empty/placeholder file. No public types are defined. It appears to be reserved for future use.
 

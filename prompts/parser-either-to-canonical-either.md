@@ -10,12 +10,12 @@ Replace `Parser.Error.Either<Left, Right>` in swift-parser-primitives with the c
 2. `/errors`
 3. `/code-organization`
 
-Read the CLAUDE.md at `/Users/coen/Developer/CLAUDE.md` and `/Users/coen/Developer/swift-primitives/CLAUDE.md`.
+Read the workspace-level CLAUDE.md and `https://github.com/swift-primitives/CLAUDE.md`.
 
 ## Background
 
 `Either<Left, Right>` was added to swift-algebra-primitives as the canonical binary coproduct. It lives at:
-`/Users/coen/Developer/swift-primitives/swift-algebra-primitives/Sources/Algebra Primitives/Either.swift`
+`https://github.com/swift-primitives/swift-algebra-primitives/blob/main/Sources/Algebra Primitives/Either.swift`
 
 Read it first. Key differences from `Parser.Error.Either`:
 
@@ -31,7 +31,7 @@ Read it first. Key differences from `Parser.Error.Either`:
 
 ## Scope
 
-Package: `/Users/coen/Developer/swift-primitives/swift-parser-primitives/`
+Package: `https://github.com/swift-primitives/swift-parser-primitives`
 
 ### Files that reference `Parser.Error.Either` (11 total):
 
@@ -127,7 +127,7 @@ Wait — `.error.map` is not on Either. It's likely on a parser type. Read the t
 ### Step 5: Build and test
 
 ```bash
-cd /Users/coen/Developer/swift-primitives/swift-parser-primitives
+cd swift-parser-primitives
 swift build
 swift test
 ```

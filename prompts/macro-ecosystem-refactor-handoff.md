@@ -6,16 +6,15 @@
 
 | Package | Location | Status |
 |---------|----------|--------|
-| `swift-dual` | `/Users/coen/Developer/swift-foundations/swift-dual/` | Done, pushed to `coenttb/swift-dual` (private). 30 tests. |
-| `swift-defunctionalize` | `/Users/coen/Developer/swift-foundations/swift-defunctionalize/` | Done, pushed to `coenttb/swift-defunctionalize` (private). 18 tests. |
-| `swift-witnesses` | `/Users/coen/Developer/swift-foundations/swift-witnesses/` | Refactored: `Action` → `Calls`, Result/Outcome moved to siblings of Calls. 132 tests. Pushed. |
-| `burgerlijk-wetboek-boek-2` | `/Users/coen/Developer/swift-nl-wetgever/burgerlijk-wetboek-boek-2/` | `@Dual` added to all 203 Arguments structs. Pushed to `coenttb/burgerlijk-wetboek-boek-2` (private). |
+| `swift-dual` | `https://github.com/swift-foundations/swift-dual` | Done, pushed to `coenttb/swift-dual` (private). 30 tests. |
+| `swift-defunctionalize` | `https://github.com/swift-foundations/swift-defunctionalize` | Done, pushed to `coenttb/swift-defunctionalize` (private). 18 tests. |
+| `swift-witnesses` | `https://github.com/swift-foundations/swift-witnesses` | Refactored: `Action` → `Calls`, Result/Outcome moved to siblings of Calls. 132 tests. Pushed. |
 
 ### What @Dual does
 
 - **Struct → enum**: `T.Dual` with one case per stored property (literal types preserved). Extraction properties, `Case` discriminant (`Finite.Enumerable`), Prisms, `is(_:)`, `subscript[prism:]`, `modify(_:_:)`. Homogeneous `subscript(case:)` when all properties share the same type. Empty structs produce uninhabited Dual enum.
 - **Enum → struct**: `T.Dual<R>` (Scott encoding) with one handler closure per case + `match` function. Same enum infrastructure.
-- Handles backtick-escaped identifiers (keywords, space-containing Dutch legal text). Key insight: `TokenSyntax.text` returns text WITH backticks — do NOT re-escape.
+- Handles backtick-escaped identifiers (keywords, space-containing identifiers). Key insight: `TokenSyntax.text` returns text WITH backticks — do NOT re-escape.
 
 ### What @Defunctionalize does
 
@@ -31,7 +30,6 @@ Two primary user-facing macros (mirrors PointFree's `@CasePathable` + `@Dependen
 |----------|-------|-------------|
 | Witness struct for DI | `@Witness` | `T.Calls` (defunctionalized) + observe + unimplemented + mock + methods + init |
 | Enum with infrastructure | `@Dual` | `T.Dual<R>` (Scott encoding) + match + extraction + Case + Prisms |
-| Statute questionnaire | `@Dual` | `T.Dual` enum + homogeneous subscript for Bool? access by case |
 | Pure call algebra (no DI) | `@Defunctionalize` | `T.Calls` only (niche/academic) |
 
 One macro per type. Never stack for common cases. @Defunctionalize exists as independent primitive but isn't primary.
@@ -93,10 +91,6 @@ enum Outcome: ~Copyable {
 
 One type instead of two. Result has no independent consumers.
 
-### 4. Other BW boeken
-
-Boeken 3–10 presumably have the same Arguments pattern and could get `@Dual`. Mechanical: add dependency + `@Dual` annotation to each Arguments struct. Same pattern as boek 2.
-
 ---
 
 ## Research documents produced
@@ -138,4 +132,3 @@ Boeken 3–10 presumably have the same Arguments pattern and could get `@Dual`. 
 2. Migrate swift-dual, swift-defunctionalize, swift-witnesses to import them
 3. Remove @Witness enum support
 4. Unify Result/Outcome
-5. Add @Dual to other BW boeken

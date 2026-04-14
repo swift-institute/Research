@@ -4,7 +4,7 @@ session_objective: Implement V6 ~Escapable coroutine architecture for io_uring S
 packages:
   - swift-linux-standard
   - swift-iso-9945
-status: pending
+status: processed
 ---
 
 # io_uring V6: ~Copyable ~Escapable Slot Architecture

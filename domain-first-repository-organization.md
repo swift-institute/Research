@@ -965,7 +965,7 @@ Pre-launch. No phasing needed. One script, one execution.
 | Directory names | `swift-algebra-group-primitives/` → `algebra-group/` | — |
 | Package.swift paths | `../swift-X-primitives` → `../X` | Module names, target names, product names |
 | Import statements | — | `import Algebra_Group_Primitives` unchanged |
-| Local repo dirs | `/Users/coen/Developer/swift-primitives/` → `/Users/coen/Developer/reality-primitives/` | — |
+| Local repo dirs | `swift-primitives/` → `reality-primitives/` | — |
 | CLAUDE.md | Org names, package resolution, deep links | Layer architecture, skills, conventions |
 | Naming principle | Domain-first, language-second | Five-layer architecture |
 
@@ -1060,8 +1060,8 @@ Pre-launch. No phasing needed. One script, one execution.
 
 ### Swift Institute Internal
 
-32. Five Layer Architecture. `/Users/coen/Developer/swift-institute/Documentation.docc/Five Layer Architecture.md`
-33. Semantic Dependencies. `/Users/coen/Developer/swift-institute/Documentation.docc/Semantic Dependencies.md`
-34. Primitives Taxonomy Naming and Layering Audit. `/Users/coen/Developer/swift-primitives/Research/primitives-taxonomy-naming-layering-audit.md`
-35. Identity: Why "Institute". `/Users/coen/Developer/swift-institute/Documentation.docc/Identity.md`
-36. Prior Art Scratch Notes. `/Users/coen/Developer/swift-institute/Research/_scratch-domain-first-prior-art.md`
+32. Five Layer Architecture. `Documentation.docc/Five Layer Architecture.md`
+33. Semantic Dependencies. `Documentation.docc/Semantic Dependencies.md`
+34. Primitives Taxonomy Naming and Layering Audit. `https://github.com/swift-primitives/Research/blob/main/primitives-taxonomy-naming-layering-audit.md`
+35. Identity: Why "Institute". `Documentation.docc/Identity.md`
+36. Prior Art Scratch Notes. `Research/_scratch-domain-first-prior-art.md`

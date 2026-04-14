@@ -5,7 +5,7 @@ packages:
   - swift-io
   - swift-property-primitives
   - swift-queue-primitives
-status: pending
+status: processed
 ---
 
 # Sending-Mutex Composition — Nesting Flip Eliminates Hot-Path Allocation

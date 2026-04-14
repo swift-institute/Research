@@ -556,7 +556,7 @@ Identified during analysis, independent of Machine.Interpret:
 2. `cd swift-machine-primitives && swift test` — Machine Interpret unit tests pass
 3. `cd swift-parser-machine-primitives && swift build && swift test` — parser machine works with shared infrastructure
 4. `cd swift-binary-parser-primitives && swift build && swift test` — binary parser works with shared infrastructure + Stack
-5. `cd /Users/coen/Developer/swift-foundations && swift build` — swift-parsers (downstream) still builds
+5. `cd swift-foundations && swift build` — swift-parsers (downstream) still builds
 
 ## References
 

@@ -19,7 +19,7 @@ Their findings:
 - `NonsendingClock` is backwards-compatible with `Clock` (retroactive conformance via default implementations)
 - Swift still needs `nonisolated(nonsending)` variants of `withUnsafeContinuation` and `withTaskCancellationHandler` for full test clock support
 
-Our temporal operators at `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/` must be assessed for deterministic testability under this new paradigm.
+Our temporal operators at `https://github.com/swift-foundations/swift-async/tree/main/Sources/Async Stream/` must be assessed for deterministic testability under this new paradigm.
 
 ## Experiment Validation
 
@@ -458,7 +458,7 @@ This rewrite changes the semantics: instead of racing, it **serializes** timer a
 
 ### Timer.Wheel as Foundation
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Timer.Wheel*.swift`
+**Location**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Timer.Wheel*.swift`
 
 #### Current State
 
@@ -617,9 +617,9 @@ The `Async.Timer.Wheel` primitive is the right foundation for server-side timer 
 - Pointfree #355: Beyond Basics: Isolation, ~Copyable, ~Escapable (Feb 23, 2026)
 - Swift Evolution SE-0430: `nonisolated(nonsending)` (accepted)
 - TCA2 migration: elimination of `Task.yield()` calls via NonsendingClock
-- Async.Stream temporal sources: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/`
-- Async.Timer.Wheel primitive: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Timer.Wheel*.swift`
-- Existing stream tests: `/Users/coen/Developer/swift-foundations/swift-async/Tests/Sources/Async Stream Tests/Async.Stream Tests.swift`
+- Async.Stream temporal sources: `https://github.com/swift-foundations/swift-async/tree/main/Sources/Async Stream/`
+- Async.Timer.Wheel primitive: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Timer.Wheel*.swift`
+- Existing stream tests: `https://github.com/swift-foundations/swift-async/blob/main/Tests/Sources/Async Stream Tests/Async.Stream Tests.swift`
 - Experiment validation (2026-02-25): `swift-institute/Experiments/nonsending-clock-feasibility/` (B5: NonsendingClock)
 - Experiment validation (2026-02-25): `swift-institute/Experiments/stdlib-concurrency-isolation/` (B2, B3: continuation/cancellation handler)
 - Experiment validation (2026-02-25): `swift-institute/Experiments/nonsending-closure-type-constraints/` (B1: closure type constraints)

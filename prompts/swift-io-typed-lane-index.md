@@ -12,16 +12,16 @@ The `thread(at: Int)` accessor was added as a stopgap (concentrates the conversi
 
 ## Package Locations
 
-- swift-io: `/Users/coen/Developer/swift-foundations/swift-io/`
-- swift-array-primitives: `/Users/coen/Developer/swift-primitives/swift-array-primitives/`
-- swift-kernel: `/Users/coen/Developer/swift-foundations/swift-kernel/`
+- swift-io: `https://github.com/swift-foundations/swift-io`
+- swift-array-primitives: `https://github.com/swift-primitives/swift-array-primitives`
+- swift-kernel: `https://github.com/swift-foundations/swift-kernel`
 
 ## Skills to Load
 
 Load these skills before any implementation work:
-1. `/Users/coen/Developer/.claude/skills/implementation.md` — [IMPL-002], [IMPL-010], [IMPL-INTENT]
-2. `/Users/coen/Developer/.claude/skills/naming.md` — [API-NAME-001], [API-NAME-002]
-3. `/Users/coen/Developer/.claude/skills/existing-infrastructure.md` — [INFRA-003], [INFRA-100], [INFRA-103]
+1. The **implementation** skill — [IMPL-002], [IMPL-010], [IMPL-INTENT]
+2. The **naming** skill — [API-NAME-001], [API-NAME-002]
+3. The **existing-infrastructure** skill — [INFRA-003], [INFRA-100], [INFRA-103]
 
 ## Task
 

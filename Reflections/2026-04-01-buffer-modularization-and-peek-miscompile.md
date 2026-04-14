@@ -4,7 +4,7 @@ session_objective: Redo per-variant-core modularization from current main and fi
 packages:
   - swift-buffer-primitives
   - swift-property-primitives
-status: pending
+status: processed
 ---
 
 # Buffer Modularization Redo and Property.View.Read Release-Mode Miscompile

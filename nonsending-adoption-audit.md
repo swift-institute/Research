@@ -419,8 +419,8 @@ This means `nonisolated(nonsending)` is ONLY applicable to `async` closure param
 - Pointfree #355: Beyond Basics: Isolation, ~Copyable, ~Escapable (Feb 23, 2026)
 - SE-0430: `nonisolated(nonsending)` as default for function types
 - Swift Concurrency: Sendable and actor isolation model
-- `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/` (14 @Sendable sites)
-- `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/` (38 @Sendable sites)
+- `https://github.com/swift-primitives/swift-async-primitives/tree/main/Sources/Async Primitives/` (14 @Sendable sites)
+- `https://github.com/swift-foundations/swift-async/tree/main/Sources/Async Stream/` (38 @Sendable sites)
 - `swift-institute/Experiments/nonsending-closure-type-constraints/` — closure type applicability (B1a, B1b, B1d)
 - `swift-institute/Experiments/stdlib-concurrency-isolation/` — continuation and cancellation handler isolation (B2, B3)
 - `swift-institute/Experiments/nonsending-clock-feasibility/` — NonsendingClock protocol (B5)

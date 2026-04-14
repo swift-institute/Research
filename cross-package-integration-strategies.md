@@ -64,8 +64,8 @@ Tier 3 because:
 |----------|-------------|-----------|
 | [spm-nested-package-publication.md](spm-nested-package-publication.md) | Nested `Package.swift` rejected — SPM hard limitation | Eliminates nested packages as a publication strategy |
 | [dual-mode-package-publication.md](dual-mode-package-publication.md) | Release branch with publish tool for `path:` → `url:` transformation | Informs how integration packages would be published |
-| [intra-package-modularization-patterns.md](/Users/coen/Developer/swift-primitives/Research/intra-package-modularization-patterns.md) | 13 patterns for targets within a single Package.swift | Codifies the intra-package solution (Problem 1) |
-| [finite-collection-join-point-integration.md](/Users/coen/Developer/swift-primitives/Research/finite-collection-join-point-integration.md) | Recommended separate integration package; NOT_PURSUED due to CaseIterable | Shows cross-package integration can be impractical when protocol constraints couple the packages |
+| [intra-package-modularization-patterns.md](https://github.com/swift-primitives/Research/blob/main/intra-package-modularization-patterns.md) | 13 patterns for targets within a single Package.swift | Codifies the intra-package solution (Problem 1) |
+| [finite-collection-join-point-integration.md](https://github.com/swift-primitives/Research/blob/main/finite-collection-join-point-integration.md) | Recommended separate integration package; NOT_PURSUED due to CaseIterable | Shows cross-package integration can be impractical when protocol constraints couple the packages |
 
 ### Swift Evolution Proposals
 
@@ -543,5 +543,5 @@ This research subsumes and extends:
 ### Internal Research
 - [spm-nested-package-publication.md](spm-nested-package-publication.md) — Nested packages rejected
 - [dual-mode-package-publication.md](dual-mode-package-publication.md) — Release branch publication
-- [intra-package-modularization-patterns.md](/Users/coen/Developer/swift-primitives/Research/intra-package-modularization-patterns.md) — 13 intra-package patterns
-- [finite-collection-join-point-integration.md](/Users/coen/Developer/swift-primitives/Research/finite-collection-join-point-integration.md) — Finite × Collection case study
+- [intra-package-modularization-patterns.md](https://github.com/swift-primitives/Research/blob/main/intra-package-modularization-patterns.md) — 13 intra-package patterns
+- [finite-collection-join-point-integration.md](https://github.com/swift-primitives/Research/blob/main/finite-collection-join-point-integration.md) — Finite × Collection case study

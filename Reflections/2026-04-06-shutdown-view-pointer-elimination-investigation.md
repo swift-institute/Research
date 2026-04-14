@@ -5,7 +5,7 @@ packages:
   - swift-io
   - swift-property-primitives
   - swift-storage-primitives
-status: pending
+status: processed
 ---
 
 # Shutdown View Pointer Elimination — @_unsafeNonescapableResult Is Orthogonal to TemporaryPointers

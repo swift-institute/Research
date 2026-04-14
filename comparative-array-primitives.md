@@ -98,7 +98,7 @@ These are set once during initialization and never mutated afterward.
 
 #### 2.1.1 IO.Executor.Shards — `registries`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO/IO.Executor.Shards.swift:56`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO/IO.Executor.Shards.swift:56`
 
 ```swift
 private let registries: [IO.Handle.Registry<Resource>]
@@ -112,7 +112,7 @@ private let registries: [IO.Handle.Registry<Resource>]
 
 #### 2.1.2 IO.Blocking.Lane.Sharded.Selector — `threads`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Lane.Sharded.Selector.swift:20`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Lane.Sharded.Selector.swift:20`
 
 ```swift
 private let threads: [IO.Blocking.Threads]
@@ -125,7 +125,7 @@ private let threads: [IO.Blocking.Threads]
 
 #### 2.1.3 IO.Blocking.Lane.Sharded.Snapshot.Storage — `threads`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Lane.Sharded.Snapshot.Storage.swift:21`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Lane.Sharded.Snapshot.Storage.swift:21`
 
 ```swift
 private let threads: [IO.Blocking.Threads]
@@ -138,7 +138,7 @@ private let threads: [IO.Blocking.Threads]
 
 #### 2.1.4 IO.Blocking.Lane.sharded (generic) — `lanes` (captured)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking/IO.Blocking.Lane.swift:244-267`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking/IO.Blocking.Lane.swift:244-267`
 
 ```swift
 let lanes = (0..<Int(laneCount)).map { _ in make() }
@@ -153,7 +153,7 @@ let lane = lanes[Int(index % UInt64(lanes.count))]
 
 #### 2.1.5 IO.Blocking.Lane.sharded (NUMA-aware) — `threads` (captured)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Lane.Sharded+Threads.swift:58,146`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Lane.Sharded+Threads.swift:58,146`
 
 ```swift
 let threads = (0..<Int(laneCount)).map { make($0) }
@@ -164,7 +164,7 @@ let threads = nodes.map { make($0) }
 
 #### 2.1.6 IO.Blocking.Lane.sharded (NUMA) — `nodes`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Lane.Sharded+Threads.swift:123`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Lane.Sharded+Threads.swift:123`
 
 ```swift
 let nodes: [System.Topology.NUMA.Node]
@@ -180,7 +180,7 @@ These are allocated once and reused across iterations with `removeAll(keepingCap
 
 #### 2.2.1 IO.Event.Poll.Loop — `eventBuffer`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Poll.Loop.swift:63-66`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Poll.Loop.swift:63-66`
 
 ```swift
 var eventBuffer = [IO.Event](
@@ -197,7 +197,7 @@ var eventBuffer = [IO.Event](
 
 #### 2.2.2 IO.Completion.Poll — `submissionBuffer` and `eventBuffer`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.Poll.swift:52-56`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.Poll.swift:52-56`
 
 ```swift
 var submissionBuffer: [IO.Completion.Operation.Storage] = []
@@ -213,7 +213,7 @@ eventBuffer.reserveCapacity(driver.capabilities.maxCompletions)
 
 #### 2.2.3 IO.Event.Poll.Operations (epoll) — `rawEvents`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Poll.Operations.swift:229-232`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Poll.Operations.swift:229-232`
 
 ```swift
 var rawEvents = [Kernel.Event.Poll.Event](
@@ -231,7 +231,7 @@ var rawEvents = [Kernel.Event.Poll.Event](
 
 #### 2.3.1 IO.Blocking.Threads.Runtime — `threads`
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Runtime.swift:24`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Threads.Runtime.swift:24`
 
 ```swift
 private(set) var threads: [Kernel.Thread.Handle.Reference] = []
@@ -247,8 +247,8 @@ private(set) var threads: [Kernel.Thread.Handle.Reference] = []
 #### 2.4.1 Queue.drain() return values
 
 **Files**:
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Registration.Queue.swift:26-33`
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.Submission.Queue.swift:25-34`
+- `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Registration.Queue.swift:26-33`
+- `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.Submission.Queue.swift:25-34`
 
 ```swift
 public func drain<Element>() -> [Element] {

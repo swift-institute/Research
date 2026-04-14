@@ -204,12 +204,12 @@ let fn = { ne.ptr.pointee }; fn()  // STILL BLOCKED
 
 Both packages enable the `Lifetimes` experimental feature:
 
-**swift-async-primitives** (`/Users/coen/Developer/swift-primitives/swift-async-primitives/Package.swift`, line 64):
+**swift-async-primitives** (`https://github.com/swift-primitives/swift-async-primitives/blob/main/Package.swift`, line 64):
 ```swift
 .enableExperimentalFeature("Lifetimes"),
 ```
 
-**swift-async** (`/Users/coen/Developer/swift-foundations/swift-async/Package.swift`, line 55):
+**swift-async** (`https://github.com/swift-foundations/swift-async/blob/main/Package.swift`, line 55):
 ```swift
 .enableExperimentalFeature("Lifetimes"),
 ```
@@ -240,7 +240,7 @@ Both packages also use Swift 6.2 toolchains (swift-tools-version: 6.2) and enabl
 
 #### 1. `Async.Waiter.Entry` -- HIGH PRIORITY
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Waiter.Entry.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Waiter.Entry.swift`
 
 **Current design**: `~Copyable, Sendable` struct holding a continuation, flag, and metadata. Created under lock, consumed via `resumption(with:)` which yields a `Resumption` thunk.
 
@@ -260,7 +260,7 @@ Both packages also use Swift 6.2 toolchains (swift-tools-version: 6.2) and enabl
 
 #### 2. `Async.Waiter.Resumption` -- **REVERTED** (v2.3.0, was IMPLEMENTED in v2.0.0)
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Waiter Primitives/Async.Waiter.Resumption.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Waiter Primitives/Async.Waiter.Resumption.swift`
 
 **Current design**: `~Copyable, Sendable` struct wrapping `@escaping @Sendable () -> Void` with `consuming func resume()`. The `~Escapable` was reverted.
 
@@ -292,8 +292,8 @@ Dynamic arrays are heap-backed (`UnsafeMutablePointer`) and require `Element: Es
 #### 3. `Async.Channel.{Bounded,Unbounded}.Receiver` -- MEDIUM PRIORITY
 
 **Files**:
-- `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Channel.Bounded.Receiver.swift`
-- `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Channel.Unbounded.Receiver.swift`
+- `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Channel.Bounded.Receiver.swift`
+- `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Channel.Unbounded.Receiver.swift`
 
 **Current design**: `~Copyable, @unchecked Sendable` structs holding a reference to shared `Storage`. Exactly one Receiver exists per channel. The Receiver borrows from the channel's Storage (a heap-allocated mutex-protected state).
 
@@ -315,8 +315,8 @@ Dynamic arrays are heap-backed (`UnsafeMutablePointer`) and require `Element: Es
 #### 4. `Async.Channel.{Bounded,Unbounded}.Ends` -- MEDIUM PRIORITY
 
 **Files**:
-- `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Channel.Bounded.swift` (lines 135-178)
-- `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Channel.Unbounded.swift` (lines 136-179)
+- `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Channel.Bounded.swift` (lines 135-178)
+- `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Channel.Unbounded.swift` (lines 136-179)
 
 **Current design**: `~Copyable, @unchecked Sendable` struct bundling a Storage reference and a Receiver. Created by `channel.take().ends()` which consumes the channel.
 
@@ -324,7 +324,7 @@ Dynamic arrays are heap-backed (`UnsafeMutablePointer`) and require `Element: Es
 
 #### 5. `Async.Stream.Iterator` -- HIGH PRIORITY (but blocked)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Stream/Async.Stream.Iterator.swift`
+**File**: `https://github.com/swift-foundations/swift-async/blob/main/Sources/Async Stream/Async.Stream.Iterator.swift`
 
 **Current design**: Sendable struct wrapping `@escaping @Sendable () async -> Element?`. The iterator is an "async closure thunk" -- each call to `next()` invokes the stored closure.
 
@@ -349,7 +349,7 @@ Dynamic arrays are heap-backed (`UnsafeMutablePointer`) and require `Element: Es
 
 #### 6. `Async.Callback` -- MEDIUM-HIGH PRIORITY (but blocked)
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Callback.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Callback.swift`
 
 **Current design**: Sendable struct wrapping `@escaping @Sendable ((@escaping @Sendable (Value) -> Void)) -> Void`. Double-escaping: the `run` closure escapes, and it receives a callback closure that also escapes.
 
@@ -367,7 +367,7 @@ Dynamic arrays are heap-backed (`UnsafeMutablePointer`) and require `Element: Es
 
 #### 7. `Async.Publication` -- LOW PRIORITY
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Publication.swift`
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Publication.swift`
 
 **Current design**: `final class, @unchecked Sendable`. Reference type with mutex-protected optional value. Used in `withTaskCancellationHandler` patterns where both the operation closure and `onCancel:` race to `take()`.
 
@@ -377,7 +377,7 @@ Dynamic arrays are heap-backed (`UnsafeMutablePointer`) and require `Element: Es
 
 #### 8. `Async.Broadcast.Subscription` -- LOW PRIORITY
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Broadcast.swift` (lines 212-325)
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Broadcast.swift` (lines 212-325)
 
 **Current design**: Sendable struct holding a reference to the `Broadcast` and a subscriber ID. Conforms to `AsyncSequence` for `for await` iteration.
 
@@ -385,7 +385,7 @@ Dynamic arrays are heap-backed (`UnsafeMutablePointer`) and require `Element: Es
 
 #### 9. `Async.Waiter.Queue.Flagged` -- MEDIUM PRIORITY
 
-**File**: `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Waiter.Queue.swift` (lines 81-125)
+**File**: `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Waiter.Queue.swift` (lines 81-125)
 
 **Current design**: `~Copyable, Sendable` struct containing a `Flag.Reason` and an `Entry`. Created during `popEligible(flaggedInto:)` under lock, consumed outside lock to create resumptions.
 
@@ -450,7 +450,7 @@ Dynamic arrays are heap-backed (`UnsafeMutablePointer`) and require `Element: Es
 
 #### The Closure Context Gaps (Critical Path)
 
-Related analysis in `/Users/coen/Developer/swift-primitives/swift-memory-primitives/Research/lifetime-dependent-borrowed-cursors.md`.
+Related analysis in `https://github.com/swift-primitives/swift-memory-primitives/blob/main/Research/lifetime-dependent-borrowed-cursors.md`.
 
 Experiment validation (Finding 2) identifies two precise closure context gaps:
 
@@ -561,17 +561,17 @@ The Swift Institute async ecosystem has **8 candidate types** for `~Escapable`, 
 - SE-0456: Lifetime dependency annotations (@_lifetime)
 - SE-0465: Noncopyable/non-escapable Optional (enables `Optional<~Escapable>`)
 - SE-0474: Import non-copyable and non-escapable C/C++ types (partial)
-- `/Users/coen/Developer/swift-primitives/swift-memory-primitives/Research/lifetime-dependent-borrowed-cursors.md` -- Closure integration gap analysis
-- `/Users/coen/Developer/swift-primitives/swift-memory-primitives/Research/span-access-abstraction.md` -- Span access patterns
-- `/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Primitives/Kernel.Path.View.swift` -- Existing ~Escapable type in ecosystem
-- `/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Primitives Standard Library Integration/Swift.Span.Iterator.swift` -- Existing ~Escapable iterator
-- `/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Sources/Sequence Primitives Core/Sequence.Map.swift` -- Canonical conditional Escapable pattern
-- `/Users/coen/Developer/swift-institute/Experiments/nonescapable-closure-storage/` -- Experiment: ~Escapable edge case validation (2026-02-25)
-- `/Users/coen/Developer/swift-institute/Experiments/resumption-nonescapable-noncopyable/` -- Experiment: Resumption ~Copyable + ~Escapable (2026-03-02)
-- `/Users/coen/Developer/swift-institute/Experiments/conditional-escapable-container/` -- Experiment: Conditional Escapable containers (2026-03-02)
-- `/Users/coen/Developer/swift-institute/Experiments/nonescapable-gap-revalidation-624/` -- Experiment: Gap A/B re-validation on Swift 6.2.4 (2026-03-02)
-- `/Users/coen/Developer/swift-primitives/Experiments/nonescapable-edge-cases/` -- Experiment: ~Escapable edge cases (2026-02-28)
-- `/Users/coen/Developer/swift-institute/Experiments/pointer-nonescapable-storage/` -- Experiment: Exhaustive storage mechanism test including @_rawLayout (2026-03-02, v2.2.0)
-- `/Users/coen/Developer/swift-institute/Research/nonescapable-storage-mechanisms.md` -- Research: Storage mechanisms analysis including @_rawLayout gap (2026-03-02, v1.1.0)
+- `https://github.com/swift-primitives/swift-memory-primitives/blob/main/Research/lifetime-dependent-borrowed-cursors.md` -- Closure integration gap analysis
+- `https://github.com/swift-primitives/swift-memory-primitives/blob/main/Research/span-access-abstraction.md` -- Span access patterns
+- `https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Primitives/Kernel.Path.View.swift` -- Existing ~Escapable type in ecosystem
+- `https://github.com/swift-primitives/swift-sequence-primitives/blob/main/Sources/Sequence Primitives Standard Library Integration/Swift.Span.Iterator.swift` -- Existing ~Escapable iterator
+- `https://github.com/swift-primitives/swift-sequence-primitives/blob/main/Sources/Sequence Primitives Core/Sequence.Map.swift` -- Canonical conditional Escapable pattern
+- `Experiments/nonescapable-closure-storage/` -- Experiment: ~Escapable edge case validation (2026-02-25)
+- `Experiments/resumption-nonescapable-noncopyable/` -- Experiment: Resumption ~Copyable + ~Escapable (2026-03-02)
+- `Experiments/conditional-escapable-container/` -- Experiment: Conditional Escapable containers (2026-03-02)
+- `Experiments/nonescapable-gap-revalidation-624/` -- Experiment: Gap A/B re-validation on Swift 6.2.4 (2026-03-02)
+- `https://github.com/swift-primitives/Experiments/tree/main/nonescapable-edge-cases/` -- Experiment: ~Escapable edge cases (2026-02-28)
+- `Experiments/pointer-nonescapable-storage/` -- Experiment: Exhaustive storage mechanism test including @_rawLayout (2026-03-02, v2.2.0)
+- `Research/nonescapable-storage-mechanisms.md` -- Research: Storage mechanisms analysis including @_rawLayout gap (2026-03-02, v1.1.0)
 - Swift compiler source: `swiftlang/swift/lib/ClangImporter/ImportType.cpp:507` -- FIXME confirming pointer ~Escapable gap
 - SE-0437: Noncopyable Standard Library Primitives (pointer ~Copyable support without ~Escapable)

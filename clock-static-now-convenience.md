@@ -129,8 +129,8 @@ Clock.Continuous.now (static)     — proposed, in platform package
 Since `Self().now` delegates to the instance property that already lives in the platform package, the static property must live in the same file. It cannot live in `Clock_Primitives` (L1) because the instance `now` is not available there.
 
 Locations:
-- POSIX: `/Users/coen/Developer/swift-standards/swift-iso-9945/Sources/ISO 9945 Kernel/ISO 9945.Clock.Continuous.swift`
-- Windows: `/Users/coen/Developer/swift-primitives/swift-windows-primitives/Sources/Windows Kernel Primitives/Windows.Clock.Continuous.swift`
+- POSIX: `https://github.com/swift-standards/swift-iso-9945/blob/main/Sources/ISO 9945 Kernel/ISO 9945.Clock.Continuous.swift`
+- Windows: `https://github.com/swift-primitives/swift-windows-primitives/blob/main/Sources/Windows Kernel Primitives/Windows.Clock.Continuous.swift`
 
 ### Performance analysis: `Self().now` vs stdlib
 

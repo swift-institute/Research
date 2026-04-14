@@ -13,8 +13,8 @@ tier: 2
 
 This document applies the findings from `tca26-isolation-patterns-investigation.md` to the two async infrastructure packages in the Swift Institute ecosystem:
 
-- **swift-async-primitives** (`/Users/coen/Developer/swift-primitives/swift-async-primitives/`) — Layer 1 primitives: Mutex, Callback, Continuation, Bridge, Channel, Broadcast, Promise/Gate, Barrier, Waiter, Publication, Completion, Timer.Wheel, Lifecycle. 12 targets, ~95 source files.
-- **swift-async** (`/Users/coen/Developer/swift-foundations/swift-async/`) — Layer 3 foundations: Async.Stream (concrete type-erased stream), Async.Stream operators (~40 operators: merge, zip, combine.latest, debounce, throttle, scan, flatMap, etc.), isolation-preserving AsyncSequence operators (Map, Filter, CompactMap, FlatMap). 4 targets, ~90 source files.
+- **swift-async-primitives** (`https://github.com/swift-primitives/swift-async-primitives`) — Layer 1 primitives: Mutex, Callback, Continuation, Bridge, Channel, Broadcast, Promise/Gate, Barrier, Waiter, Publication, Completion, Timer.Wheel, Lifecycle. 12 targets, ~95 source files.
+- **swift-async** (`https://github.com/swift-foundations/swift-async`) — Layer 3 foundations: Async.Stream (concrete type-erased stream), Async.Stream operators (~40 operators: merge, zip, combine.latest, debounce, throttle, scan, flatMap, etc.), isolation-preserving AsyncSequence operators (Map, Filter, CompactMap, FlatMap). 4 targets, ~90 source files.
 
 Both packages have `NonisolatedNonsendingByDefault` enabled. The TCA26 investigation identified 10 patterns; this document evaluates each against the actual source of both packages, with code citations.
 

@@ -206,7 +206,7 @@ The publish tool:
 # Example: publish-layer.sh swift-primitives 1.4.0
 ORG=$1
 VERSION=$2
-LAYER_DIR="/Users/coen/Developer/$ORG"
+LAYER_DIR="$HOME/Developer/$ORG"
 
 for repo in "$LAYER_DIR"/swift-*/; do
     cd "$repo"

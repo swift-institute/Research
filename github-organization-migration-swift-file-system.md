@@ -230,7 +230,7 @@ The URL rewrite is mechanical — replace `swift-standards/{repo}` with `{new-or
 Only `swift-iso-9945`. Note: this directory is already a git repo with a mispointed remote (origin → `swift-primitives/swift-posix-primitives`). Do NOT `git init` — fix the remote instead:
 
 ```bash
-cd /Users/coen/Developer/swift-iso/swift-iso-9945
+cd swift-iso-9945
 gh repo create swift-iso/swift-iso-9945 --private
 git remote set-url origin https://github.com/swift-iso/swift-iso-9945.git
 git push origin main

@@ -20,8 +20,8 @@ Migrate swift-pdf-rendering and swift-pdf-html-rendering from protocol-based `Re
 - Property.View push/pop accessors use `Base == Rendering.Context`
 
 **Read the Phase 1–2 code before starting:**
-- `/Users/coen/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.Context.swift`
-- `/Users/coen/Developer/swift-foundations/swift-html-rendering/Sources/HTML Renderable/Rendering.Context +HTML.swift`
+- `https://github.com/swift-primitives/swift-rendering-primitives/blob/main/Sources/Rendering Primitives Core/Rendering.Context.swift`
+- `https://github.com/swift-foundations/swift-html-rendering/blob/main/Sources/HTML Renderable/Rendering.Context +HTML.swift`
 
 ---
 
@@ -35,7 +35,7 @@ The only change is the conformance:
 
 ### 1. Remove `PDF.Context: Rendering.Context` conformance
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-pdf-rendering/Sources/PDF Rendering/PDF.Context+Rendering.swift`
+**File**: `https://github.com/swift-foundations/swift-pdf-rendering/blob/main/Sources/PDF Rendering/PDF.Context+Rendering.swift`
 
 This file has `extension PDF.Context: Rendering.Context { ... }` with 15 protocol method implementations. Remove the conformance. The methods STAY as regular methods on `PDF.Context`.
 
@@ -100,7 +100,7 @@ The research recommends expressing this as a **context transformer** — a `cons
 
 ### 1. Remove `PDF.HTML.Context: Rendering.Context` conformance
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/PDF HTML Rendering/PDF.HTML.Context+Rendering.swift`
+**File**: `https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Sources/PDF HTML Rendering/PDF.HTML.Context+Rendering.swift`
 
 This file has `extension PDF.HTML.Context: Rendering.Context { ... }` with many methods. Remove the conformance. The methods STAY as regular methods.
 
@@ -157,13 +157,13 @@ Check Package.swift.
 
 | File | Why |
 |------|-----|
-| Phase 1 Rendering.Context | `/Users/coen/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.Context.swift` |
-| Phase 2 HTML factory | `/Users/coen/Developer/swift-foundations/swift-html-rendering/Sources/HTML Renderable/Rendering.Context +HTML.swift` |
-| PDF.Context conformance | `/Users/coen/Developer/swift-foundations/swift-pdf-rendering/Sources/PDF Rendering/PDF.Context+Rendering.swift` |
-| PDF.HTML.Context conformance | `/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/PDF HTML Rendering/PDF.HTML.Context+Rendering.swift` |
-| PDF.HTML.Context main type | `/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Sources/PDF HTML Rendering/PDF.HTML.Context.swift` |
-| PDF rendering Package.swift | `/Users/coen/Developer/swift-foundations/swift-pdf-rendering/Package.swift` |
-| PDF HTML rendering Package.swift | `/Users/coen/Developer/swift-foundations/swift-pdf-html-rendering/Package.swift` |
+| Phase 1 Rendering.Context | `https://github.com/swift-primitives/swift-rendering-primitives/blob/main/Sources/Rendering Primitives Core/Rendering.Context.swift` |
+| Phase 2 HTML factory | `https://github.com/swift-foundations/swift-html-rendering/blob/main/Sources/HTML Renderable/Rendering.Context +HTML.swift` |
+| PDF.Context conformance | `https://github.com/swift-foundations/swift-pdf-rendering/blob/main/Sources/PDF Rendering/PDF.Context+Rendering.swift` |
+| PDF.HTML.Context conformance | `https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Sources/PDF HTML Rendering/PDF.HTML.Context+Rendering.swift` |
+| PDF.HTML.Context main type | `https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Sources/PDF HTML Rendering/PDF.HTML.Context.swift` |
+| PDF rendering Package.swift | `https://github.com/swift-foundations/swift-pdf-rendering/blob/main/Package.swift` |
+| PDF HTML rendering Package.swift | `https://github.com/swift-foundations/swift-pdf-html-rendering/blob/main/Package.swift` |
 
 ---
 
@@ -171,19 +171,19 @@ Check Package.swift.
 
 ```bash
 # Package 1
-cd /Users/coen/Developer/swift-foundations/swift-pdf-rendering
+cd swift-pdf-rendering
 swift build
 swift test
 
 # Package 2
-cd /Users/coen/Developer/swift-foundations/swift-pdf-html-rendering
+cd swift-pdf-html-rendering
 swift build
 swift test
 ```
 
 Also check that the PDF end-to-end package still resolves:
 ```bash
-cd /Users/coen/Developer/swift-foundations/swift-pdf
+cd swift-pdf
 swift package resolve
 ```
 

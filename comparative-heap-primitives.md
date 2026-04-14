@@ -99,7 +99,7 @@ Per `heap-operations-audit.md` and `heap-discipline-boundary-analysis.md`:
 
 ### Site A: `IO.Event.Selector` -- Event Deadline Scheduling
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Selector.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Selector.swift`
 
 **Declaration** (line 105):
 ```swift
@@ -144,7 +144,7 @@ A separate `[Permit.Key: UInt64]` dictionary tracks the current generation per k
 
 ### Site B: `IO.Blocking.Threads.Acceptance.Queue` -- Blocking Thread Deadline Scheduling
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Acceptance.Queue.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Threads.Acceptance.Queue.swift`
 
 **Declaration** (line 68):
 ```swift
@@ -381,11 +381,11 @@ This is Foundations-layer (Layer 3) or Components-layer (Layer 4) infrastructure
 
 ## References
 
-- `/Users/coen/Developer/swift-primitives/swift-heap-primitives/Research/heap-operations-audit.md` -- canonical operations inventory
-- `/Users/coen/Developer/swift-primitives/swift-heap-primitives/Research/heap-discipline-boundary-analysis.md` -- layering analysis
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Selector.swift` -- event deadline scheduling
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.DeadlineScheduling.Entry.swift` -- generation-based entry
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Arm.Handle.swift` -- generation in arm handles
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Acceptance.Queue.swift` -- bounded deadline scheduling
+- `https://github.com/swift-primitives/swift-heap-primitives/blob/main/Research/heap-operations-audit.md` -- canonical operations inventory
+- `https://github.com/swift-primitives/swift-heap-primitives/blob/main/Research/heap-discipline-boundary-analysis.md` -- layering analysis
+- `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Selector.swift` -- event deadline scheduling
+- `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.DeadlineScheduling.Entry.swift` -- generation-based entry
+- `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Arm.Handle.swift` -- generation in arm handles
+- `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Threads.Acceptance.Queue.swift` -- bounded deadline scheduling
 - Varghese & Lauck, "Hashed and Hierarchical Timing Wheels" (1987) -- timer wheel reference
 - Cormen, Leiserson, Rivest, Stein, "Introduction to Algorithms" -- Chapter 6 (Heapsort), Chapter 19 (Fibonacci Heaps)

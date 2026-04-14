@@ -10,7 +10,7 @@
 
 ### 3a. Research Supersession by Skill Absorption [META-003]
 
-RECOMMENDATION documents checked against skills in `/Users/coen/Developer/.claude/skills/`. A document is a supersession candidate when its recommendations are now codified as requirement IDs in a skill.
+RECOMMENDATION documents checked against the workspace-level skills directory. A document is a supersession candidate when its recommendations are now codified as requirement IDs in a skill.
 
 | Document | Skill | Evidence | Verdict |
 |----------|-------|----------|---------|

@@ -932,12 +932,12 @@ No Body/Builder split needed. No diamonds. [MOD-DOMAIN] satisfied.
 
 - parsing-serialization-capability-organization: [parsing-serialization-capability-organization.md](parsing-serialization-capability-organization.md)
 - ascii-parsing-domain-ownership: [ascii-parsing-domain-ownership.md](ascii-parsing-domain-ownership.md)
-- parser-primitives protocols: `/Users/coen/Developer/swift-primitives/swift-parser-primitives/Sources/Parser Primitives Core/`
-- Binary.Coder: `/Users/coen/Developer/swift-primitives/swift-binary-parser-primitives/Sources/Binary Coder Primitives/Binary.Coder.swift`
-- Witness.Protocol: `/Users/coen/Developer/swift-primitives/swift-witness-primitives/Sources/Witness Primitives/Witness.Protocol.swift`
-- Dependency.Key: `/Users/coen/Developer/swift-primitives/swift-dependency-primitives/Sources/Dependency Primitives/Dependency.Key.swift`
-- Binary.Serializable: `/Users/coen/Developer/swift-primitives/swift-binary-primitives/Sources/Binary Serializable Primitives/Binary.Serializable.swift`
-- serialization-primitives witnesses: `/Users/coen/Developer/swift-primitives/swift-serializer-primitives/Sources/Serialization Primitives/`
+- parser-primitives protocols: `https://github.com/swift-primitives/swift-parser-primitives/tree/main/Sources/Parser Primitives Core/`
+- Binary.Coder: `https://github.com/swift-primitives/swift-binary-parser-primitives/blob/main/Sources/Binary Coder Primitives/Binary.Coder.swift`
+- Witness.Protocol: `https://github.com/swift-primitives/swift-witness-primitives/blob/main/Sources/Witness Primitives/Witness.Protocol.swift`
+- Dependency.Key: `https://github.com/swift-primitives/swift-dependency-primitives/blob/main/Sources/Dependency Primitives/Dependency.Key.swift`
+- Binary.Serializable: `https://github.com/swift-primitives/swift-binary-primitives/blob/main/Sources/Binary Serializable Primitives/Binary.Serializable.swift`
+- serialization-primitives witnesses: `https://github.com/swift-primitives/swift-serializer-primitives/tree/main/Sources/Serialization Primitives/`
 - Rust serde: https://docs.rs/serde
 - pointfreeco/swift-parsing: https://github.com/pointfreeco/swift-parsing
 - Boost.Spirit: https://www.boost.org/doc/libs/release/libs/spirit/

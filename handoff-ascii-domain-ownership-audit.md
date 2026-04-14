@@ -77,7 +77,7 @@ The hex parser's `exports.swift` re-exports `Parser_Primitives_Core` + `ASCII_Pr
 
 ## Research Document Chain
 
-Read these in order for full context. All in `/Users/coen/Developer/swift-institute/Research/`:
+Read these in order for full context. All in `Research/`:
 
 ### Tier 1: Core Architecture Decisions
 
@@ -236,38 +236,38 @@ The research documents contain some inaccuracies discovered during implementatio
 
 ### New packages (implementation)
 ```
-/Users/coen/Developer/swift-primitives/swift-ascii-parser-primitives/
-/Users/coen/Developer/swift-primitives/swift-ascii-serializer-primitives/
+https://github.com/swift-primitives/swift-ascii-parser-primitives
+https://github.com/swift-primitives/swift-ascii-serializer-primitives
 ```
 
 ### Modified packages
 ```
-/Users/coen/Developer/swift-primitives/swift-ascii-primitives/
-/Users/coen/Developer/swift-primitives/swift-parser-primitives/
-/Users/coen/Developer/swift-primitives/swift-serializer-primitives/
+https://github.com/swift-primitives/swift-ascii-primitives
+https://github.com/swift-primitives/swift-parser-primitives
+https://github.com/swift-primitives/swift-serializer-primitives
 ```
 
 ### Coder package (pre-existing, has uncommitted changes)
 ```
-/Users/coen/Developer/swift-primitives/swift-coder-primitives/
+https://github.com/swift-primitives/swift-coder-primitives
 ```
 
 ### Research documents
 ```
-/Users/coen/Developer/swift-institute/Research/transformation-domain-architecture.md
-/Users/coen/Developer/swift-institute/Research/parsing-serialization-capability-organization.md
-/Users/coen/Developer/swift-institute/Research/ascii-parsing-domain-ownership.md
-/Users/coen/Developer/swift-institute/Research/ascii-parsing-adversarial-review.md
-/Users/coen/Developer/swift-institute/Research/ascii-serialization-migration.md
-/Users/coen/Developer/swift-institute/Research/canonical-witness-capability-attachment.md
-/Users/coen/Developer/swift-institute/Research/parsers-ecosystem-adoption-audit.md
-/Users/coen/Developer/swift-institute/Research/parsers-adoption-implementation-plan.md
-/Users/coen/Developer/swift-institute/Research/next-steps-parsers.md
+Research/transformation-domain-architecture.md
+Research/parsing-serialization-capability-organization.md
+Research/ascii-parsing-domain-ownership.md
+Research/ascii-parsing-adversarial-review.md
+Research/ascii-serialization-migration.md
+Research/canonical-witness-capability-attachment.md
+Research/parsers-ecosystem-adoption-audit.md
+Research/parsers-adoption-implementation-plan.md
+Research/next-steps-parsers.md
 ```
 
 ### Reference architecture
 ```
-/Users/coen/Developer/swift-primitives/swift-binary-parser-primitives/
+https://github.com/swift-primitives/swift-binary-parser-primitives
 ```
 
 ### Downstream consumers with stale imports
@@ -283,15 +283,15 @@ swift-standards/swift-iso-8601/Sources/ISO 8601/ISO_8601.Parse.Digits.swift — 
 
 ```bash
 # New packages
-cd /Users/coen/Developer/swift-primitives/swift-ascii-parser-primitives && swift build && swift test
-cd /Users/coen/Developer/swift-primitives/swift-ascii-serializer-primitives && swift build && swift test
+cd swift-ascii-parser-primitives && swift build && swift test
+cd swift-ascii-serializer-primitives && swift build && swift test
 
 # Modified packages
-cd /Users/coen/Developer/swift-primitives/swift-parser-primitives && swift build && swift test
-cd /Users/coen/Developer/swift-primitives/swift-serializer-primitives && swift build && swift test
+cd swift-parser-primitives && swift build && swift test
+cd swift-serializer-primitives && swift build && swift test
 
 # Search for stale references
-grep -r "Parser\.ASCII\|Parser_ASCII_Integer\|Serializer\.ASCII\|Serializer_ASCII_Integer" /Users/coen/Developer/swift-primitives/ --include="*.swift" -l
-grep -r "Parser\.ASCII\|Parser_ASCII_Integer\|Serializer\.ASCII\|Serializer_ASCII_Integer" /Users/coen/Developer/swift-standards/ --include="*.swift" -l
-grep -r "Parser\.ASCII\|Parser_ASCII_Integer\|Serializer\.ASCII\|Serializer_ASCII_Integer" /Users/coen/Developer/swift-foundations/ --include="*.swift" -l
+grep -r "Parser\.ASCII\|Parser_ASCII_Integer\|Serializer\.ASCII\|Serializer_ASCII_Integer" https://github.com/swift-primitives --include="*.swift" -l
+grep -r "Parser\.ASCII\|Parser_ASCII_Integer\|Serializer\.ASCII\|Serializer_ASCII_Integer" https://github.com/swift-standards --include="*.swift" -l
+grep -r "Parser\.ASCII\|Parser_ASCII_Integer\|Serializer\.ASCII\|Serializer_ASCII_Integer" https://github.com/swift-foundations --include="*.swift" -l
 ```

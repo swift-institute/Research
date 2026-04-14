@@ -87,7 +87,7 @@ Dictionary<Key: Hash.Protocol, Value: ~Copyable>          — unordered, slab-ba
 
 ### 2.1 IO.Handle.Registry (actor-isolated)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO/IO.Handle.Registry.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO/IO.Handle.Registry.swift`
 
 ```swift
 private var handles: [IO.Handle.ID: IO.Executor.Handle.Entry<Resource>] = [:]
@@ -111,7 +111,7 @@ private var handles: [IO.Handle.ID: IO.Executor.Handle.Entry<Resource>] = [:]
 
 ### 2.2 IO.Event.Selector (actor-isolated, 5 dictionaries)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Selector.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Selector.swift`
 
 #### 2.2.1 registrations
 
@@ -165,7 +165,7 @@ private var pendingReplies: [IO.Event.Registration.Reply.ID: CheckedContinuation
 
 ### 2.3 IO.Event.Registry (global Mutex-protected)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Registry.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Registry.swift`
 
 ```swift
 typealias Registry = Synchronization.Mutex<[Int32: [IO.Event.ID: IO.Event.Registration.Entry]]>
@@ -175,7 +175,7 @@ typealias Registry = Synchronization.Mutex<[Int32: [IO.Event.ID: IO.Event.Regist
 
 ### 2.4 IO.Completion.Queue (actor-isolated)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.Queue.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.Queue.swift`
 
 ```swift
 private var entries: [IO.Completion.ID: Entry] = [:]
@@ -187,7 +187,7 @@ private var entries: [IO.Completion.ID: Entry] = [:]
 
 ### 2.5 IO.Completion.IOCP.Registry (poll-thread-confined, Windows only)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.IOCP.Registry.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.IOCP.Registry.swift`
 
 ```swift
 private var entries: [IO.Completion.ID: Entry] = [:]
@@ -199,7 +199,7 @@ private var entries: [IO.Completion.ID: Entry] = [:]
 
 ### 2.6 IO.Blocking.Threads.Acceptance.Queue
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Acceptance.Queue.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Threads.Acceptance.Queue.swift`
 
 ```swift
 private var index: Dictionary<IO.Blocking.Ticket, Coordination>.Ordered.Bounded

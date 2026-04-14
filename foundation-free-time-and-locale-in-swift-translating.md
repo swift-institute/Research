@@ -183,9 +183,9 @@ extension Time {
 
 ## References
 
-- swift-time-primitives: `/Users/coen/Developer/swift-primitives/swift-time-primitives/`
-- swift-locale-primitives: `/Users/coen/Developer/swift-primitives/swift-locale-primitives/`
-- swift-formatting-primitives: `/Users/coen/Developer/swift-primitives/swift-formatting-primitives/`
+- swift-time-primitives: `https://github.com/swift-primitives/swift-time-primitives`
+- swift-locale-primitives: `https://github.com/swift-primitives/swift-locale-primitives`
+- swift-formatting-primitives: `https://github.com/swift-primitives/swift-formatting-primitives`
 - SE-0450: Package traits (trait-gated targets)
 - Prior research: `sendable-in-rendering-and-snapshot-infrastructure.md`
 - `swift-identity-primitives/Research/tagged-literal-conformances.md` v3.0 — production literal conformance approved

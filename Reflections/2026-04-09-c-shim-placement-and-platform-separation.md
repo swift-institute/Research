@@ -7,7 +7,7 @@ packages:
   - swift-darwin-primitives
   - swift-iso-9945
   - swift-terminal-primitives
-status: pending
+status: processed
 ---
 
 # C Shim Placement and Platform Code Separation

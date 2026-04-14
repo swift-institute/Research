@@ -20,7 +20,7 @@ toolchain: Apple Swift 6.2.4 (swiftlang-6.2.4.1.4)
 
 ## 1. Summary
 
-This document assesses nine experimental Swift feature flags for adoption in swift-primitives and swift-foundations. Each feature was analyzed from two angles: compiler implementation maturity (depth of implementation, test coverage, red flags) via static analysis of the compiler source at `/Users/coen/Developer/swiftlang/swift/`, and ecosystem impact (current usage patterns, migration scope, before/after examples) across both monorepos. The assessment was performed on 2026-03-03 and consolidates four prior research documents into a single recommendation.
+This document assesses nine experimental Swift feature flags for adoption in swift-primitives and swift-foundations. Each feature was analyzed from two angles: compiler implementation maturity (depth of implementation, test coverage, red flags) via static analysis of the compiler source at `https://github.com/swiftlang/swift`, and ecosystem impact (current usage patterns, migration scope, before/after examples) across both monorepos. The assessment was performed on 2026-03-03 and consolidates four prior research documents into a single recommendation.
 
 None of the nine features are currently enabled in production. The overall recommendation is conservative: wait for proposal acceptance and graduation from experimental status before adopting, with one exception (Reparenting, which should be enabled as soon as it stabilizes).
 
@@ -318,7 +318,7 @@ When features stabilize, adopt in this order (smallest risk/largest benefit firs
 
 ## 6. Method
 
-Static analysis of the Swift compiler source at `/Users/coen/Developer/swiftlang/swift/` performed on 2026-03-03. File counts derived from grep across `lib/`, `include/`, `test/`, `stdlib/`, and `validation-test/` directories. Implementation maturity assessed by: number of files touched, presence in stdlib, test file count, presence of crash paths (`llvm_unreachable`, `fatalError`), TODO count, and suppressibility.
+Static analysis of the Swift compiler source at `https://github.com/swiftlang/swift` performed on 2026-03-03. File counts derived from grep across `lib/`, `include/`, `test/`, `stdlib/`, and `validation-test/` directories. Implementation maturity assessed by: number of files touched, presence in stdlib, test file count, presence of crash paths (`llvm_unreachable`, `fatalError`), TODO count, and suppressibility.
 
 Ecosystem impact analysis performed across swift-primitives and swift-foundations on the same date. Site counts derived from grep for usage patterns (`_read`, `_modify`, `withUnsafePointer`, `static let`, `Property.View`, protocol declarations). Before/after examples verified against compiler behavior with each feature flag enabled.
 

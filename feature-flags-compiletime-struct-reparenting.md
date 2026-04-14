@@ -81,7 +81,7 @@ Packages with heaviest value generic usage:
 
 #### 1. ASCII Code Points (swift-ascii-primitives)
 
-`/Users/coen/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.ControlCharacters.swift`
+`https://github.com/swift-primitives/swift-ascii-primitives/blob/main/Sources/ASCII Primitives/ASCII.ControlCharacters.swift`
 
 ```swift
 // Current (35+ static let constants)
@@ -106,7 +106,7 @@ These are specification-mandated byte values. Marking them `@const` would:
 
 #### 2. Memory Constants (swift-memory-primitives)
 
-`/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Primitives Core/Memory.Shift.swift:42`
+`https://github.com/swift-primitives/swift-memory-primitives/blob/main/Sources/Memory Primitives Core/Memory.Shift.swift:42`
 
 ```swift
 public static let maxValue: UInt8 = 63
@@ -114,7 +114,7 @@ public static let maxValue: UInt8 = 63
 
 #### 3. Binary Format Markers (swift-foundations/swift-plist)
 
-`/Users/coen/Developer/swift-foundations/swift-plist/Sources/Plist Binary/Plist.Binary.Marker.swift`
+`https://github.com/swift-foundations/swift-plist/blob/main/Sources/Plist Binary/Plist.Binary.Marker.swift`
 
 ```swift
 static let null: UInt8 = 0x00
@@ -130,13 +130,13 @@ static let dictType: UInt8 = 0xD0
 
 #### 4. IO Configuration Constants (swift-foundations/swift-io)
 
-`/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Threads.Worker.swift:41`
+`https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Threads.Worker.swift:41`
 
 ```swift
 static let drainLimit: Int = 16
 ```
 
-`/Users/coen/Developer/swift-foundations/swift-io/Sources/IO/IO.Handle.Waiters.swift:51`
+`https://github.com/swift-foundations/swift-io/blob/main/Sources/IO/IO.Handle.Waiters.swift:51`
 
 ```swift
 internal static let defaultCapacity: Int = 64
@@ -144,7 +144,7 @@ internal static let defaultCapacity: Int = 64
 
 #### 5. Parser Whitespace Constants (swift-foundations/swift-parsers)
 
-`/Users/coen/Developer/swift-foundations/swift-parsers/Sources/Parsers/Parsers.Whitespace.swift`
+`https://github.com/swift-foundations/swift-parsers/blob/main/Sources/Parsers/Parsers.Whitespace.swift`
 
 ```swift
 static let space: UInt8 = 0x20
@@ -197,7 +197,7 @@ Throughout the codebase, `~Copyable` structs that need decomposition implement m
 
 #### Example 1: Path.take() (swift-primitives)
 
-`/Users/coen/Developer/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.swift:135`
+`https://github.com/swift-primitives/swift-path-primitives/blob/main/Sources/Path Primitives/Path.swift:135`
 
 ```swift
 public struct Path: ~Copyable, @unchecked Sendable {
@@ -215,7 +215,7 @@ public struct Path: ~Copyable, @unchecked Sendable {
 
 #### Example 2: String.take() (swift-primitives)
 
-`/Users/coen/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/String.swift:158`
+`https://github.com/swift-primitives/swift-string-primitives/blob/main/Sources/String Primitives/String.swift:158`
 
 ```swift
 public struct String: ~Copyable, @unchecked Sendable {
@@ -230,7 +230,7 @@ public struct String: ~Copyable, @unchecked Sendable {
 
 #### Example 3: Continuation decomposition (swift-primitives)
 
-`/Users/coen/Developer/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Continuation.One.swift:86`
+`https://github.com/swift-primitives/swift-effect-primitives/blob/main/Sources/Effect Primitives/Effect.Continuation.One.swift:86`
 
 ```swift
 public struct One<Value: Sendable, Failure: Error>: ~Copyable, Sendable {
@@ -372,7 +372,7 @@ check at the call site rather than encoding it in the witness table, preserving 
 ### Relevance to the Ecosystem
 
 This feature is directly relevant to a documented challenge in the primitives. From
-`/Users/coen/Developer/swift-primitives/swift-sequence-primitives/Research/sequence-iterator-protocol-architecture.md:604`:
+`https://github.com/swift-primitives/swift-sequence-primitives/blob/main/Research/sequence-iterator-protocol-architecture.md:604`:
 
 > The Swift stdlib team attempted to reparent `Sequence` on `BorrowingSequence`:
 >

@@ -1,6 +1,6 @@
 # Pass 3: Consumer Cleanup — Handoff Prompt
 
-Read `/Users/coen/Developer/swift-institute/Research/audits/implementation-naming-2026-03-20/01-remediation-plan.md` for full context. This prompt executes **Pass 3: Consumer Cleanup**.
+Read `Research/audits/implementation-naming-2026-03-20/01-remediation-plan.md` for full context. This prompt executes **Pass 3: Consumer Cleanup**.
 
 ## Goal
 

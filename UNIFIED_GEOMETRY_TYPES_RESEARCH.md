@@ -443,7 +443,7 @@ public struct Length: CustomStringConvertible {
 ## Files to Reference
 
 ### INCITS Namespacing Pattern
-`/Users/coen/Developer/swift-standards/swift-incits-4-1986/Sources/INCITS_4_1986/UInt8.ASCII.swift`
+`https://github.com/swift-standards/swift-incits-4-1986/blob/main/Sources/INCITS_4_1986/UInt8.ASCII.swift`
 
 Key pattern:
 ```swift
@@ -454,9 +454,9 @@ extension UInt8 {
 ```
 
 ### Existing Integration Examples
-- **SVG Geometry**: `/Users/coen/Developer/swift-standards/swift-w3c-svg/Sources/W3C SVG/W3C_SVG2.GeometryTypes.swift`
-- **HTML Geometry**: `/Users/coen/Developer/swift-standards/swift-whatwg-html/Sources/WHATWG HTML MediaAttributes/Width.swift`
-- **CSS Formatting**: `/Users/coen/Developer/swift-standards/swift-w3c-css/Sources/W3C CSS Shared/exports.swift`
+- **SVG Geometry**: `https://github.com/swift-standards/swift-w3c-svg/blob/main/Sources/W3C SVG/W3C_SVG2.GeometryTypes.swift`
+- **HTML Geometry**: `https://github.com/swift-standards/swift-whatwg-html/blob/main/Sources/WHATWG HTML MediaAttributes/Width.swift`
+- **CSS Formatting**: `https://github.com/swift-standards/swift-w3c-css/blob/main/Sources/W3C CSS Shared/exports.swift`
 
 ---
 
@@ -1039,7 +1039,7 @@ extension WHATWG_HTML {
 
 ### After: Unified Types with Namespace Pattern (ISO 32000 Style)
 
-**The ISO 32000 pattern** (from `/Users/coen/Developer/swift-standards/swift-iso-32000/`) provides convenient namespace access:
+**The ISO 32000 pattern** (from `https://github.com/swift-standards/swift-iso-32000`) provides convenient namespace access:
 
 ```swift
 // ISO 32000 pattern example:
@@ -1223,6 +1223,6 @@ All types and properties follow the dot notation convention:
 
 ### Reference Files
 
-- ISO 32000 pattern: `/Users/coen/Developer/swift-standards/swift-iso-32000/Sources/ISO 32000 Shared/ISO_32000.swift`
-- Existing SVG integration: `/Users/coen/Developer/swift-standards/swift-w3c-svg/Sources/W3C SVG/W3C_SVG2.GeometryTypes.swift`
-- INCITS namespacing pattern: `/Users/coen/Developer/swift-standards/swift-incits-4-1986/Sources/INCITS_4_1986/UInt8.ASCII.swift`
+- ISO 32000 pattern: `https://github.com/swift-standards/swift-iso-32000/blob/main/Sources/ISO 32000 Shared/ISO_32000.swift`
+- Existing SVG integration: `https://github.com/swift-standards/swift-w3c-svg/blob/main/Sources/W3C SVG/W3C_SVG2.GeometryTypes.swift`
+- INCITS namespacing pattern: `https://github.com/swift-standards/swift-incits-4-1986/blob/main/Sources/INCITS_4_1986/UInt8.ASCII.swift`

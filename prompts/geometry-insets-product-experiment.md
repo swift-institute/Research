@@ -9,7 +9,7 @@ Determine whether `Geometry.Insets` (currently a struct with four `Scalar` prope
 `Geometry.Insets` was recently renamed from `EdgeInsets` (Pass 4). It lives at:
 
 ```
-/Users/coen/Developer/swift-primitives/swift-geometry-primitives/Sources/Geometry Primitives/Geometry.EdgeInsets.swift
+https://github.com/swift-primitives/swift-geometry-primitives/blob/main/Sources/Geometry Primitives/Geometry.EdgeInsets.swift
 ```
 
 Current declaration (read this file for full code):
@@ -43,7 +43,7 @@ Labels (`top`, `leading`, `bottom`, `trailing`) would be added via extensions on
 
 Read the `Product` type in algebra-primitives:
 ```
-/Users/coen/Developer/swift-primitives/swift-algebra-primitives/
+https://github.com/swift-primitives/swift-algebra-primitives
 ```
 
 Grep for `struct Product` or `enum Product` to find it. Understand:
@@ -57,7 +57,7 @@ Grep for `struct Product` or `enum Product` to find it. Understand:
 These are typed scalars from the affine/linear algebra layer. Find their declarations:
 ```bash
 grep -rn "typealias Height\|typealias Width\|struct Height\|struct Width" \
-  /Users/coen/Developer/swift-primitives/swift-geometry-primitives/Sources/
+  https://github.com/swift-primitives/swift-geometry-primitives/tree/main/Sources/
 ```
 
 Understand:
@@ -67,7 +67,7 @@ Understand:
 
 ### 3. Create experiment
 
-Location: `/Users/coen/Developer/swift-primitives/swift-geometry-primitives/Experiments/insets-as-product/`
+Location: `https://github.com/swift-primitives/swift-geometry-primitives/tree/main/Experiments/insets-as-product/`
 
 Follow `/experiment-process` skill conventions ([EXP-002] through [EXP-006]).
 

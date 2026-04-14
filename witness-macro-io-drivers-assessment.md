@@ -204,4 +204,4 @@ Key divergence:
 
 The witness macro approach remains valid for the Swift Institute ecosystem — different design goals (defunctionalization, composability, observation hooks) drive different solutions. Apple's approach optimizes for protocol-oriented API surface and static dispatch; the Swift Institute approach optimizes for runtime-composable driver injection.
 
-**Source**: `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/AsyncStreaming/` and `/Users/coen/Developer/apple/swift-http-api-proposal/Sources/Middleware/Middleware.swift`
+**Source**: `https://github.com/apple/swift-http-api-proposal/tree/main/Sources/AsyncStreaming/` and `https://github.com/apple/swift-http-api-proposal/blob/main/Sources/Middleware/Middleware.swift`

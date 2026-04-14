@@ -376,5 +376,5 @@ Phase 1 alone eliminates the hot-path allocation identified in H-3. Phase 2 is a
 
 - [swift-io-deep-audit.md](swift-io-deep-audit.md) — H-3 finding and triage
 - [foundations-dependency-utilization-audit.md](foundations-dependency-utilization-audit.md) — Previous dependency audit
-- `Memory.Pool` — `/Users/coen/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Pool Primitives/Memory.Pool.swift`
-- `Async.Bridge` — `/Users/coen/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async.Bridge.swift`
+- `Memory.Pool` — `https://github.com/swift-primitives/swift-memory-primitives/blob/main/Sources/Memory Pool Primitives/Memory.Pool.swift`
+- `Async.Bridge` — `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Bridge.swift`

@@ -582,9 +582,9 @@ This research was absorbed into the testing skill. It remains as historical rati
 - [swiftlang/swift-testing#1508](https://github.com/swiftlang/swift-testing/issues/1508) — Generic type suite discovery bug
 - [swift-testing-extras](https://github.com/coenttb/swift-testing-extras) — Current `#TestSuites` macro
 - [swift-testing](https://github.com/coenttb/swift-testing) — Future `#Tests` macro (in development)
-- pointer-primitives: `/Users/coen/Developer/swift-primitives/swift-pointer-primitives/Tests/`
-- memory-primitives: `/Users/coen/Developer/swift-primitives/swift-memory-primitives/Tests/`
-- swift-testing-crash experiment: `/Users/coen/Developer/swift-primitives/swift-set-primitives/Experiments/swift-testing-crash/`
+- pointer-primitives: `https://github.com/swift-primitives/swift-pointer-primitives/tree/main/Tests/`
+- memory-primitives: `https://github.com/swift-primitives/swift-memory-primitives/tree/main/Tests/`
+- swift-testing-crash experiment: `https://github.com/swift-primitives/swift-set-primitives/tree/main/Experiments/swift-testing-crash/`
 
 ### External
 - [Swift Testing - Apple Developer](https://developer.apple.com/xcode/swift-testing)

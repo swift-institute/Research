@@ -18,7 +18,7 @@ The Swift Institute ecosystem is adopting `~Escapable` types (SE-0446) for lifet
 
 The initial experiment (`conditional-escapable-container`) reported that heap-backed containers are blocked because `UnsafeMutablePointer<T>` requires `T: Escapable`. This research investigates whether the blocker is absolute or if workarounds exist.
 
-**Trigger**: User requested verification of the blocker against the Swift compiler source at `/Users/coen/Developer/swiftlang/swift/`.
+**Trigger**: User requested verification of the blocker against the Swift compiler source at `https://github.com/swiftlang/swift`.
 
 ## Question
 

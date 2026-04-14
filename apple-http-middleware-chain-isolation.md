@@ -65,5 +65,5 @@ This design avoids the isolation propagation problem entirely:
 
 ## Source
 
-`/Users/coen/Developer/apple/swift-http-api-proposal/Sources/Middleware/Middleware.swift`
-`/Users/coen/Developer/apple/swift-http-api-proposal/Sources/Middleware/ChainedMiddleware.swift`
+`https://github.com/apple/swift-http-api-proposal/blob/main/Sources/Middleware/Middleware.swift`
+`https://github.com/apple/swift-http-api-proposal/blob/main/Sources/Middleware/ChainedMiddleware.swift`

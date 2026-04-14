@@ -253,8 +253,8 @@ For packages that still have `.split()` calls AND no parse structs yet:
 
 ## References
 
-- `swift-parser-primitives`: `/Users/coen/Developer/swift-primitives/swift-parser-primitives/`
-- `swift-input-primitives`: `/Users/coen/Developer/swift-primitives/swift-input-primitives/`
-- `swift-collection-primitives`: `/Users/coen/Developer/swift-primitives/swift-collection-primitives/`
-- `swift-array-primitives`: `/Users/coen/Developer/swift-primitives/swift-array-primitives/`
-- Previous research: `/Users/coen/Developer/swift-institute/Research/next-steps-parsers.md`
+- `swift-parser-primitives`: `https://github.com/swift-primitives/swift-parser-primitives`
+- `swift-input-primitives`: `https://github.com/swift-primitives/swift-input-primitives`
+- `swift-collection-primitives`: `https://github.com/swift-primitives/swift-collection-primitives`
+- `swift-array-primitives`: `https://github.com/swift-primitives/swift-array-primitives`
+- Previous research: `Research/next-steps-parsers.md`

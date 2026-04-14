@@ -517,4 +517,4 @@ The revised position: `~Copyable` witness values are *feasible*, but the typical
 
 ### Ecosystem-Internal
 
-- "Protocol Witness Effects Capability Abstraction." swift-institute Research, 2026. `/Users/coen/Developer/swift-institute/Research/protocol-witness-effects-capability-abstraction.md`
+- "Protocol Witness Effects Capability Abstraction." swift-institute Research, 2026. `Research/protocol-witness-effects-capability-abstraction.md`

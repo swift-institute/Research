@@ -6,7 +6,7 @@ packages:
   - swift-kernel-primitives
   - swift-linux-primitives
   - swift-io
-status: pending
+status: processed
 ---
 
 # Epoll Port Management and IO Events API Research Review

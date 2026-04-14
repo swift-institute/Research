@@ -35,33 +35,33 @@ Which TCA26 isolation patterns (F1, F2, F3 and Patterns 1-10) are applicable to 
 
 ### Package Inventory
 
-**swift-kernel-primitives** (Layer 1, `/Users/coen/Developer/swift-primitives/swift-kernel-primitives/`):
+**swift-kernel-primitives** (Layer 1, `https://github.com/swift-primitives/swift-kernel-primitives`):
 - 27 source target directories (Kernel Descriptor Primitives, Kernel Thread Primitives, Kernel Event Primitives, Kernel Syscall Primitives, Kernel File Primitives, etc.)
 - Key types: `Kernel.Descriptor` (~Copyable, Sendable), `Kernel.File.Handle` (~Copyable, Sendable), `Kernel.Environment.Entry` (~Copyable, ~Escapable), `Kernel.Syscall.Rule<T>` (Sendable)
 - C shim targets: CDarwinShim, CLinuxShim, CPosixShim, CWindowsShim
 - Thread Handle, Mutex, Condition are placeholder files -- actual implementations live in platform-specific packages (swift-iso-9945, swift-windows-primitives)
 
-**swift-kernel** (Layer 3, `/Users/coen/Developer/swift-foundations/swift-kernel/`):
+**swift-kernel** (Layer 3, `https://github.com/swift-foundations/swift-kernel`):
 - 6 targets: Kernel, Kernel Core, Kernel Continuation, Kernel File, Kernel System, Kernel Thread
 - Key types: `Kernel.Thread.Executor` (@unchecked Sendable), `Kernel.Thread.Executors` (Sendable), `Kernel.Thread.Worker` (~Copyable, Sendable), `Kernel.Thread.Synchronization<N>` (@unchecked Sendable), `Kernel.Thread.Gate` (@unchecked Sendable), `Kernel.Thread.Barrier` (@unchecked Sendable), `Kernel.Continuation.Context` (@unchecked Sendable), `Kernel.Thread.Handle.Reference` (@unchecked Sendable)
 
-**swift-darwin-primitives** (Layer 1, `/Users/coen/Developer/swift-primitives/swift-darwin-primitives/`):
+**swift-darwin-primitives** (Layer 1, `https://github.com/swift-primitives/swift-darwin-primitives`):
 - Targets: Darwin Kernel Primitives, Darwin Loader Primitives, Darwin Memory Primitives, Darwin Primitives
 - Key types: `Kernel.Kqueue` (static syscall wrappers), `Kernel.Kqueue.Event`, `Kernel.Kqueue.Filter`
 
-**swift-linux-primitives** (Layer 1, `/Users/coen/Developer/swift-primitives/swift-linux-primitives/`):
+**swift-linux-primitives** (Layer 1, `https://github.com/swift-primitives/swift-linux-primitives`):
 - Target: Linux Kernel Primitives (60+ files for io_uring)
 - Key types: `Kernel.IO.Uring.*` (Submission.Queue, Completion.Queue, Params, etc.)
 
-**swift-cpu-primitives** (Layer 1, `/Users/coen/Developer/swift-primitives/swift-cpu-primitives/`):
+**swift-cpu-primitives** (Layer 1, `https://github.com/swift-primitives/swift-cpu-primitives`):
 - Types: `CPU.Atomic` (load/store with memory ordering), `CPU.Barrier` (hardware/compiler), `CPU.Spin` (hint), `CPU.Timestamp`, `CPU.Cache.Prefetch`
 
-**swift-darwin** / **swift-linux** / **swift-posix** (Layer 3, `/Users/coen/Developer/swift-foundations/`):
+**swift-darwin** / **swift-linux** / **swift-posix** (Layer 3, `https://github.com/swift-foundations`):
 - Darwin: system info (processor count, memory, NUMA), random
 - Linux: thread affinity, random, NUMA discovery
 - POSIX: EINTR-safe write wrappers, glob, error messages
 
-**swift-system-primitives** (Layer 1, `/Users/coen/Developer/swift-primitives/swift-system-primitives/`):
+**swift-system-primitives** (Layer 1, `https://github.com/swift-primitives/swift-system-primitives`):
 - Types: `System.Processor`, `System.Memory`, `System.Page`, `System.Topology.NUMA`
 
 ---
@@ -428,18 +428,18 @@ The TCA26 recommendations (R1-R5 from the prior investigation) remain valid for 
 ## References
 
 - TCA26 investigation: `swift-institute/Research/tca26-isolation-patterns-investigation.md`
-- Kernel.Thread.Executor: `/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel Thread/Kernel.Thread.Executor.swift`
-- Kernel.Thread.Synchronization: `/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel Thread/Kernel.Thread.Synchronization.swift`
-- Kernel.Thread.spawn: `/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel Thread/Kernel.Thread.spawn.swift`
-- Kernel.Thread.Worker: `/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel Thread/Kernel.Thread.Worker.swift`
-- Kernel.Continuation.Context: `/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel Continuation/Kernel.Continuation.Context.swift`
-- Kernel.Descriptor: `/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Descriptor Primitives/Kernel.Descriptor.swift`
-- Kernel.Syscall.Rule: `/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Syscall Primitives/Kernel.Syscall.swift`
-- Kernel.Environment.Entry: `/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Environment Primitives/Kernel.Environment.Entry.swift`
-- Darwin.Kernel.Kqueue: `/Users/coen/Developer/swift-primitives/swift-darwin-primitives/Sources/Darwin Kernel Primitives/Darwin.Kernel.Kqueue.swift`
-- CPU.Atomic: `/Users/coen/Developer/swift-primitives/swift-cpu-primitives/Sources/CPU Primitives/CPU.Atomic.Load.Operations.swift`
-- POSIX.Kernel.IO.Write: `/Users/coen/Developer/swift-foundations/swift-posix/Sources/POSIX Kernel/POSIX.Kernel.IO.Write.swift`
-- Kernel.Thread.Worker.Token: `/Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel Thread/Kernel.Thread.Worker.Token.swift`
+- Kernel.Thread.Executor: `https://github.com/swift-foundations/swift-kernel/blob/main/Sources/Kernel Thread/Kernel.Thread.Executor.swift`
+- Kernel.Thread.Synchronization: `https://github.com/swift-foundations/swift-kernel/blob/main/Sources/Kernel Thread/Kernel.Thread.Synchronization.swift`
+- Kernel.Thread.spawn: `https://github.com/swift-foundations/swift-kernel/blob/main/Sources/Kernel Thread/Kernel.Thread.spawn.swift`
+- Kernel.Thread.Worker: `https://github.com/swift-foundations/swift-kernel/blob/main/Sources/Kernel Thread/Kernel.Thread.Worker.swift`
+- Kernel.Continuation.Context: `https://github.com/swift-foundations/swift-kernel/blob/main/Sources/Kernel Continuation/Kernel.Continuation.Context.swift`
+- Kernel.Descriptor: `https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Descriptor Primitives/Kernel.Descriptor.swift`
+- Kernel.Syscall.Rule: `https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Syscall Primitives/Kernel.Syscall.swift`
+- Kernel.Environment.Entry: `https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Environment Primitives/Kernel.Environment.Entry.swift`
+- Darwin.Kernel.Kqueue: `https://github.com/swift-primitives/swift-darwin-primitives/blob/main/Sources/Darwin Kernel Primitives/Darwin.Kernel.Kqueue.swift`
+- CPU.Atomic: `https://github.com/swift-primitives/swift-cpu-primitives/blob/main/Sources/CPU Primitives/CPU.Atomic.Load.Operations.swift`
+- POSIX.Kernel.IO.Write: `https://github.com/swift-foundations/swift-posix/blob/main/Sources/POSIX Kernel/POSIX.Kernel.IO.Write.swift`
+- Kernel.Thread.Worker.Token: `https://github.com/swift-foundations/swift-kernel/blob/main/Sources/Kernel Thread/Kernel.Thread.Worker.Token.swift`
 - Modern concurrency conventions: `swift-institute/Research/modern-concurrency-conventions.md`
 - ~Sendable semantic inventory: `swift-institute/Research/tilde-sendable-semantic-inventory.md`
 - Concurrent expansion audit: `swift-institute/Research/concurrent-expansion-audit.md`

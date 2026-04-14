@@ -11,7 +11,7 @@ status: DECISION
 
 ## 1. swift-set-primitives Type Catalog
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-set-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-set-primitives`
 
 **Modules**: `Set Primitives Core`, `Set Ordered Primitives`, `Set Primitives` (umbrella)
 
@@ -91,13 +91,13 @@ All use typed throws per [API-ERR-001].
 
 ## 2. swift-io Set Usage
 
-**Location**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/`
+**Location**: `https://github.com/swift-foundations/swift-io/tree/main/Sources/`
 
 ### 2.1 `Swift.Set<IO.Event.ID>` — Stale Event Filtering (kqueue + epoll)
 
 **Files**:
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Queue.Operations.swift:350`
-- `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Events/IO.Event.Poll.Operations.swift:250`
+- `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Queue.Operations.swift:350`
+- `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Events/IO.Event.Poll.Operations.swift:250`
 
 **Pattern** (identical in both):
 ```swift
@@ -120,7 +120,7 @@ guard registeredIDs.contains(id) else { continue }
 
 ### 2.2 `Swift.Set<UInt>` — IOCP Handle Association Tracking (Windows)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.IOCP.swift:65`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.IOCP.swift:65`
 
 ```swift
 var associatedHandles: Set<UInt> = []
@@ -140,13 +140,13 @@ if !state.associatedHandles.contains(key) {
 
 ### 2.3 `IO.Completion.Kind.Set` — Custom OptionSet (NOT Swift.Set)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Completions/IO.Completion.Kind.Set.swift`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Completions/IO.Completion.Kind.Set.swift`
 
 This is a custom `OptionSet` with `UInt16` raw value. Not a `Swift.Set` usage — it is a bitmask for capability declarations. **Not a replacement candidate** — it is already an appropriate bit-level representation.
 
 ### 2.4 `Swift.Set<Int>` — NUMA CPU Sets (Synthetic Fallback)
 
-**File**: `/Users/coen/Developer/swift-foundations/swift-io/Sources/IO Blocking Threads/IO.Blocking.Lane.Sharded+Threads.swift:130,138`
+**File**: `https://github.com/swift-foundations/swift-io/blob/main/Sources/IO Blocking Threads/IO.Blocking.Lane.Sharded+Threads.swift:130,138`
 
 ```swift
 cpus: Set(0..<topology.cpuCount)

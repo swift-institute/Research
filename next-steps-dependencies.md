@@ -23,22 +23,22 @@ The Collector Dependency.Key migration was reverted due to a circular dependency
 
 ### Files to modify
 
-1. **`/Users/coen/Developer/swift-foundations/swift-tests/Sources/Tests Core/Test.Expectation.Collector.swift`** (line 33)
+1. **`https://github.com/swift-foundations/swift-tests/blob/main/Sources/Tests Core/Test.Expectation.Collector.swift`** (line 33)
    - Current: `@TaskLocal public static var current: Collector?`
    - Change to: Add nested `enum Key: Dependency.Key` with `liveValue: nil`, `testValue: nil`
    - Change `current` to resolve from `Dependency.Scope.current[Key.self]`
 
-2. **`/Users/coen/Developer/swift-foundations/swift-tests/Sources/Tests Core/`** — all call sites using `$current.withValue(collector)` → `Dependency.Scope.with({ $0[Key.self] = collector })`
+2. **`https://github.com/swift-foundations/swift-tests/tree/main/Sources/Tests Core/`** — all call sites using `$current.withValue(collector)` → `Dependency.Scope.with({ $0[Key.self] = collector })`
 
-3. **`/Users/coen/Developer/swift-foundations/swift-testing/`** — update test call sites similarly
+3. **`https://github.com/swift-foundations/swift-testing`** — update test call sites similarly
 
-4. **`/Users/coen/Developer/swift-foundations/swift-tests/Package.swift`** — add `swift-dependency-primitives` dependency to `Tests Core` target if not already present
+4. **`https://github.com/swift-foundations/swift-tests/blob/main/Package.swift`** — add `swift-dependency-primitives` dependency to `Tests Core` target if not already present
 
 ### Verification
 
 ```bash
-cd /Users/coen/Developer/swift-foundations/swift-tests && swift build
-cd /Users/coen/Developer/swift-foundations/swift-testing && swift build
+cd swift-tests && swift build
+cd swift-testing && swift build
 ```
 
 ### Pitfall to avoid
@@ -55,7 +55,7 @@ The research document `dependencies-ecosystem-adoption-audit.md` contains an int
 
 ### Fix
 
-In `/Users/coen/Developer/swift-institute/Research/dependencies-ecosystem-adoption-audit.md`:
+In `Research/dependencies-ecosystem-adoption-audit.md`:
 
 1. Remove Phase 1 entirely (lines 172-184) or replace with a note: "Category 1 analysis concluded these should KEEP @TaskLocal. No action."
 2. Change Summary Statistics HIGH from `2` to `0`

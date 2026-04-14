@@ -11,12 +11,12 @@ Follow [RES-004] Investigation Methodology: enumerate options, identify evaluati
 
 The research document MUST be created at:
 ```
-/Users/coen/Developer/swift-institute/Research/string-primitives-shadowing.md
+Research/string-primitives-shadowing.md
 ```
 
 Update the research index at:
 ```
-/Users/coen/Developer/swift-institute/Research/_index.md
+Research/_index.md
 ```
 
 Use the [RES-003] document structure (Title, Metadata, Context, Question, Analysis, Outcome, References).
@@ -56,7 +56,7 @@ Every module that touches `Kernel` (which is most of swift-io, swift-file, swift
 
 #### The String type definition
 ```
-/Users/coen/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/String.swift
+https://github.com/swift-primitives/swift-string-primitives/blob/main/Sources/String Primitives/String.swift
 ```
 - `public struct String: ~Copyable, @unchecked Sendable`
 - Owned, null-terminated platform string
@@ -66,7 +66,7 @@ Every module that touches `Kernel` (which is most of swift-io, swift-file, swift
 
 #### The String.View type
 ```
-/Users/coen/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/String.View.swift
+https://github.com/swift-primitives/swift-string-primitives/blob/main/Sources/String Primitives/String.View.swift
 ```
 - `public struct View: ~Copyable, ~Escapable`
 - Borrowed, non-escapable view of a null-terminated string
@@ -74,35 +74,35 @@ Every module that touches `Kernel` (which is most of swift-io, swift-file, swift
 
 #### Other files in the package
 ```
-/Users/coen/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/String.Char.swift
-/Users/coen/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/String.Length.swift
-/Users/coen/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/Tagged+String.swift
-/Users/coen/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/Tagged+String.View.swift
+https://github.com/swift-primitives/swift-string-primitives/blob/main/Sources/String Primitives/String.Char.swift
+https://github.com/swift-primitives/swift-string-primitives/blob/main/Sources/String Primitives/String.Length.swift
+https://github.com/swift-primitives/swift-string-primitives/blob/main/Sources/String Primitives/Tagged+String.swift
+https://github.com/swift-primitives/swift-string-primitives/blob/main/Sources/String Primitives/Tagged+String.View.swift
 ```
 
 #### Package.swift
 ```
-/Users/coen/Developer/swift-primitives/swift-string-primitives/Package.swift
+https://github.com/swift-primitives/swift-string-primitives/blob/main/Package.swift
 ```
 - Dependencies: swift-ascii-primitives, swift-memory-primitives, swift-identity-primitives
 - Experimental features: Lifetimes, SuppressedAssociatedTypes
 
 #### The @_exported import that propagates it
 ```
-/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Primitives Core/exports.swift
+https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Primitives Core/exports.swift
 ```
 - Contains `@_exported public import String_Primitives` (guarded by `#if KERNEL_AVAILABLE`)
 
 #### Research on the String type's purpose
 ```
-/Users/coen/Developer/swift-primitives/swift-string-primitives/Research/OS Native Path String Semantics.md
+https://github.com/swift-primitives/swift-string-primitives/blob/main/Research/OS Native Path String Semantics.md
 ```
 - ~359 lines covering POSIX vs Windows path encoding, ownership safety, lifetime safety
 
 #### The dependency-analysis workaround (the trigger for this research)
 ```
-/Users/coen/Developer/swift-foundations/swift-dependency-analysis/Sources/Dependency Analysis CLI/CLI.swift
-/Users/coen/Developer/swift-foundations/swift-dependency-analysis/Sources/Dependency Analysis CLI/parallel.swift
+https://github.com/swift-foundations/swift-dependency-analysis/blob/main/Sources/Dependency Analysis CLI/CLI.swift
+https://github.com/swift-foundations/swift-dependency-analysis/blob/main/Sources/Dependency Analysis CLI/parallel.swift
 ```
 - CLI.swift: no IO import, uses `Swift.String` naturally, has `withTaskGroup`
 - parallel.swift: imports `IO_Blocking_Threads`, uses `Swift.String` qualification everywhere, avoids `withTaskGroup`
@@ -124,7 +124,7 @@ You MUST verify these by reading the actual source files. Do not rely on this li
 
 ### swift-strings (MUST investigate thoroughly)
 
-`swift-strings` at `/Users/coen/Developer/swift-foundations/swift-strings/` is the primary consumer of `String_Primitives`. You MUST:
+`swift-strings` at `https://github.com/swift-foundations/swift-strings` is the primary consumer of `String_Primitives`. You MUST:
 
 1. Read its `Package.swift` to understand its targets and dependencies
 2. Read its `exports.swift` — does it re-export `String_Primitives`?
@@ -198,7 +198,7 @@ Per [API-NAME-001], types must use the `Nest.Name` pattern. A top-level `String`
 
 Read the existing research at:
 ```
-/Users/coen/Developer/swift-primitives/swift-string-primitives/Research/OS Native Path String Semantics.md
+https://github.com/swift-primitives/swift-string-primitives/blob/main/Research/OS Native Path String Semantics.md
 ```
 This document likely explains the naming rationale. Evaluate whether that rationale still holds given the shadowing consequences.
 
@@ -220,7 +220,7 @@ Filter for names that match Swift stdlib types.
 
 The research document mentions `ISO_9899.String`. Check:
 ```
-/Users/coen/Developer/swift-standards/
+https://github.com/swift-standards
 ```
 Is there an ISO 9899 (C standard) implementation? How does it relate to `String_Primitives.String`? Is one redundant?
 
@@ -255,7 +255,7 @@ This option MUST be investigated thoroughly. It may be the correct fix if few co
 **Investigation steps:**
 1. Read the exports.swift at:
    ```
-   /Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Primitives Core/exports.swift
+   https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Primitives Core/exports.swift
    ```
 2. Remove `@_exported public import String_Primitives` mentally and trace the impact:
    - Which targets in `swift-kernel-primitives` have `String_Primitives` as a dependency?
@@ -265,7 +265,7 @@ This option MUST be investigated thoroughly. It may be the correct fix if few co
 4. Check `Kernel String Primitives` target — this is likely where all `String_Primitives` usage lives. If so, removing the re-export from `Kernel Primitives Core` and keeping it only in `Kernel String Primitives` would isolate the shadowing.
 5. Check the Kernel target in swift-kernel (foundations layer):
    ```
-   /Users/coen/Developer/swift-foundations/swift-kernel/Sources/Kernel/exports.swift
+   https://github.com/swift-foundations/swift-kernel/blob/main/Sources/Kernel/exports.swift
    ```
    Does it re-export `Kernel_String_Primitives`? If not, the shadowing is already not propagating through that path.
 6. Trace which targets in swift-io actually use any type from `String_Primitives`. If none do, the re-export is pure waste.
@@ -285,7 +285,7 @@ Change the kernel primitives to use `@_implementationOnly import String_Primitiv
 
 `swift-kernel-primitives` already has a `Kernel String Primitives` target. Check:
 ```
-/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Package.swift
+https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Package.swift
 ```
 - Is `String_Primitives` only re-exported from `Kernel Primitives Core`, or also from `Kernel String Primitives`?
 - Could the re-export be moved to ONLY `Kernel String Primitives` (which wouldn't be @_exported from the main chain)?
@@ -388,8 +388,8 @@ You MUST investigate:
 
 ## Expected Deliverables
 
-1. A research document at `/Users/coen/Developer/swift-institute/Research/string-primitives-shadowing.md` following [RES-003] structure
-2. Updated `_index.md` at `/Users/coen/Developer/swift-institute/Research/_index.md`
+1. A research document at `Research/string-primitives-shadowing.md` following [RES-003] structure
+2. Updated `_index.md` at `Research/_index.md`
 3. Clear DECISION or RECOMMENDATION outcome
 4. If recommending a rename: the exact new name, with rationale
 5. If recommending export chain changes: the exact files and changes needed
@@ -427,18 +427,18 @@ Before starting, invoke these skills:
 
 | Repository | Path |
 |------------|------|
-| swift-primitives | `/Users/coen/Developer/swift-primitives/` |
-| swift-foundations | `/Users/coen/Developer/swift-foundations/` |
-| swift-standards | `/Users/coen/Developer/swift-standards/` |
-| swift-institute | `/Users/coen/Developer/swift-institute/` |
-| swift-string-primitives | `/Users/coen/Developer/swift-primitives/swift-string-primitives/` |
-| swift-kernel-primitives | `/Users/coen/Developer/swift-primitives/swift-kernel-primitives/` |
-| swift-path-primitives | `/Users/coen/Developer/swift-primitives/swift-path-primitives/` |
-| swift-loader-primitives | `/Users/coen/Developer/swift-primitives/swift-loader-primitives/` |
-| swift-kernel (foundations) | `/Users/coen/Developer/swift-foundations/swift-kernel/` |
-| swift-strings (foundations) | `/Users/coen/Developer/swift-foundations/swift-strings/` |
-| swift-io (foundations) | `/Users/coen/Developer/swift-foundations/swift-io/` |
-| swift-dependency-analysis | `/Users/coen/Developer/swift-foundations/swift-dependency-analysis/` |
+| swift-primitives | `https://github.com/swift-primitives` |
+| swift-foundations | `https://github.com/swift-foundations` |
+| swift-standards | `https://github.com/swift-standards` |
+| swift-institute | `./` |
+| swift-string-primitives | `https://github.com/swift-primitives/swift-string-primitives` |
+| swift-kernel-primitives | `https://github.com/swift-primitives/swift-kernel-primitives` |
+| swift-path-primitives | `https://github.com/swift-primitives/swift-path-primitives` |
+| swift-loader-primitives | `https://github.com/swift-primitives/swift-loader-primitives` |
+| swift-kernel (foundations) | `https://github.com/swift-foundations/swift-kernel` |
+| swift-strings (foundations) | `https://github.com/swift-foundations/swift-strings` |
+| swift-io (foundations) | `https://github.com/swift-foundations/swift-io` |
+| swift-dependency-analysis | `https://github.com/swift-foundations/swift-dependency-analysis` |
 
 ---
 
@@ -483,8 +483,8 @@ The ONLY workaround was to move `withTaskGroup` to a different file that does NO
 ### Tagged<String, Tag>
 The package also provides `Tagged<String, Tag>` extensions and `Tagged<String, Tag>.View`. If `String` is renamed, these extensions need updating too. Check:
 ```
-/Users/coen/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/Tagged+String.swift
-/Users/coen/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/Tagged+String.View.swift
+https://github.com/swift-primitives/swift-string-primitives/blob/main/Sources/String Primitives/Tagged+String.swift
+https://github.com/swift-primitives/swift-string-primitives/blob/main/Sources/String Primitives/Tagged+String.View.swift
 ```
 
 ### The Platform.String Angle
@@ -497,7 +497,7 @@ This suggests the type's identity is fundamentally about platform-native encodin
 ### Formatting Primitives
 `swift-formatting-primitives` has a commented-out dependency on `String_Primitives`. Check:
 ```
-/Users/coen/Developer/swift-primitives/swift-formatting-primitives/Package.swift
+https://github.com/swift-primitives/swift-formatting-primitives/blob/main/Package.swift
 ```
 This might indicate the type was considered for formatting but not yet integrated.
 
@@ -536,12 +536,12 @@ Questions for the research:
 
 Check the guard condition:
 ```
-/Users/coen/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Primitives Core/exports.swift
+https://github.com/swift-primitives/swift-kernel-primitives/blob/main/Sources/Kernel Primitives Core/exports.swift
 ```
 
 And verify what `KERNEL_AVAILABLE` is defined as:
 ```
-grep -r "KERNEL_AVAILABLE" /Users/coen/Developer/swift-primitives/swift-kernel-primitives/
+grep -r "KERNEL_AVAILABLE" https://github.com/swift-primitives/swift-kernel-primitives
 ```
 
 ---

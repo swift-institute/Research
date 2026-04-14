@@ -12,7 +12,7 @@ trigger: Concrete operator types (Async.Map, Async.Filter, Async.CompactMap, Asy
 
 ## Context
 
-We implemented four concrete `AsyncSequence` operator types in `swift-async` at `/Users/coen/Developer/swift-foundations/swift-async/Sources/Async Sequence/`:
+We implemented four concrete `AsyncSequence` operator types in `swift-async` at `https://github.com/swift-foundations/swift-async/tree/main/Sources/Async Sequence/`:
 
 - `Async.Map<Base, Output>`
 - `Async.Filter<Base>`

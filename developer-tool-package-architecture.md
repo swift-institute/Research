@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-13
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-04-13
+status: DECISION
 tier: 3
 ---
 -->
@@ -195,7 +195,7 @@ Tools live alongside documentation, skills, and research in the Institute reposi
 
 #### Option C: Standalone Tool Packages in Developer/
 
-Independent Swift packages at `/Users/coen/Developer/swift-{tool-name}/`. Not part of any super-repo. Use SwiftPM for structure, ArgumentParser for CLI, and can be built/tested independently.
+Independent Swift packages, one per tool (e.g., `swift-{tool-name}`). Not part of any super-repo. Use SwiftPM for structure, ArgumentParser for CLI, and can be built/tested independently.
 
 **Advantages**: Proper Swift package with full tooling (tests, dependencies, versioning). Independent — no circular dependency risk. Can serve as case study for tool package patterns.
 **Disadvantages**: Proliferates top-level directories. No clear grouping for tools vs. library packages.
@@ -621,4 +621,4 @@ If the tool does not reproduce this known result, the algorithm has a bug.
 ### Ecosystem
 - MemberImportVisibility + @_exported validation: `swift-institute/Experiments/member-import-visibility-reexport/`
 - Manual redundancy discovery: `swift-pdf-html-rendering` cleanup (2026-03-13)
-- Existing bash prototype: `/Users/coen/Developer/detect-redundant-deps.sh`
+- Existing bash prototype: a local `detect-redundant-deps.sh` script

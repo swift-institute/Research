@@ -5,7 +5,7 @@ packages:
   - swift-path-primitives
   - swift-iso-9945
   - swift-kernel-primitives
-status: pending
+status: processed
 ---
 
 # Constructing ~Copyable Resource Wrappers from Raw Values Implies Ownership
@@ -26,7 +26,7 @@ Verification required running `swift test` on `swift-iso-9945`. The test target 
 
 After all this: **527 tests in 258 suites pass, zero issues**.
 
-A branching investigation handoff (`/Users/coen/Developer/HANDOFF-descriptor-ownership-audit.md`) was created to audit the same anti-pattern across the rest of the ecosystem. The investigation completed during the session and **confirmed 3 CRITICAL production bugs and 4 HIGH/MEDIUM groups** spanning 14 call sites:
+A branching investigation handoff was created to audit the same anti-pattern across the rest of the ecosystem. The investigation completed during the session and **confirmed 3 CRITICAL production bugs and 4 HIGH/MEDIUM groups** spanning 14 call sites:
 
 - `ISO 9945.Terminal.Stream.Read.swift:30` (production twin of the disabled tests — closes stdin/stdout/stderr)
 - `Linux.Kernel.IO.Uring.Submission.Queue.Entry.swift:90` (getter returns owning Descriptor wrapping borrowed cValue.fd)

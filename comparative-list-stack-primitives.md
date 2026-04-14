@@ -14,7 +14,7 @@ status: DECISION
 
 ### 1.1 swift-list-primitives
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-list-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-list-primitives`
 
 **Modules** (3):
 - `List Primitives Core` — namespace, index, error types
@@ -55,7 +55,7 @@ status: DECISION
 
 ### 1.2 swift-stack-primitives
 
-**Location**: `/Users/coen/Developer/swift-primitives/swift-stack-primitives/`
+**Location**: `https://github.com/swift-primitives/swift-stack-primitives`
 
 **Modules** (5):
 - `Stack Primitives Core` — namespace, index, error types, type declarations

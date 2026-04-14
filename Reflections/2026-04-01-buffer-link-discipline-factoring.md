@@ -5,7 +5,7 @@ packages:
   - swift-buffer-primitives
   - swift-async-primitives
   - swift-list-primitives
-status: pending
+status: processed
 ---
 
 # Buffer.Link Discipline — Algorithm Factoring as the Unification Primitive
