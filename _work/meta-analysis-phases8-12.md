@@ -129,7 +129,7 @@ The `swift-foundations/Experiments/` directory has 7 experiment directories and 
 
 ### References [META-010] — COMPLETE
 
-All 6 required `.bib` files exist in `References/`:
+All 6 required `.bib` files exist in `Research/References/`:
 
 | File | Present |
 |------|---------|
@@ -287,7 +287,7 @@ No `superseded_by` fields found in any skill YAML frontmatter. No retained super
 | 8-1 | 8 | No version tags exist in any superrepo — discovery coverage check N/A | Monitor for first release |
 | 9-2 | 9 | ASSUMP-* namespace completely unused | Consider deprecating or documenting intended use |
 | 9-4 | 9 | Claims exist only inside experiments, never linked from Research | Consider Research → Experiment claim linkage |
-| 11-2 | 11 | All References/.bib files present | No action |
+| 11-2 | 11 | All Research/References/.bib files present | No action |
 | 12-2 | 12 | All skills within review cadence | No action |
 | 12-3 | 12 | No stale audit sections (all <60 days) | No action |
 | 12-4 | 12 | No superseded skills with retained directories | No action |

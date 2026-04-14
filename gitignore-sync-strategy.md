@@ -31,7 +31,7 @@ How should the canonical `.gitignore` template be defined, and what sync mechani
 | **Primitives canonical** (full) | 122 primitives sub-repos | Has `!/Experiments/`, `!/Research/`, `!**/Research/**/*.md` |
 | **Foundations canonical** (reduced) | 102 foundations sub-repos | Missing `!/Experiments/`, `!/Research/`, `!**/Research/**/*.md` |
 | **Foundations canonical** (full) | 5 foundations sub-repos | Matches primitives canonical |
-| **Institute canonical** | swift-institute + nested copies | Extended dirs (Blog, Skills, SE-Pitches, Implementation) |
+| **Institute canonical** | swift-institute + nested copies | Extended dirs (Blog, Skills, Swift Evolution, Implementation) |
 | **Legacy** (no header) | 3 foundations sub-repos | Missing `.build/`, `.swiftpm/`, `/*` opt-in, `.DS_Store` |
 | **Minimal** | standards parent | 2 lines: `.build/`, `*.xcworkspace/` |
 | **Missing** | 11 repos (7 primitives, 4 foundations) | No `.gitignore` at all |
@@ -185,7 +185,7 @@ These repos have the **same canonical section** as sub-repos, plus **local overr
 | swift-primitives parent | `!/swift-*/`, `!/Scripts/`, `!/Documentation.docc/`, `!/Skills/`, `!/.gitmodules`, `!/.claude/` + skills, `!CLAUDE.md` |
 | swift-standards parent | `!/swift-*/`, `!/Scripts/`, `!/Documentation.docc/` (upgrade from 2-line legacy) |
 | swift-foundations parent | `!/swift-*/`, `!/Scripts/`, `!/Documentation.docc/`, `!/.gitmodules`, `!/.claude/` + skills, `!CLAUDE.md` |
-| swift-institute | `!/Blog/`, `!/Documentation.docc/`, `!/Implementation/`, `!/SE-Pitches/`, `!/Skills/`, `!/Scripts/`, `!/.claude/` + skills, `!CLAUDE.md`, `!**/Skills/**/*.md`, `!**/Implementation/**/*.md`, `!**/Blog/**/*.md`, `!**/SE-Pitches/**/*.md` |
+| swift-institute | `!/Blog/`, `!/Documentation.docc/`, `!/Implementation/`, `!/Swift Evolution/`, `!/Skills/`, `!/Scripts/`, `!/.claude/` + skills, `!CLAUDE.md`, `!**/Skills/**/*.md`, `!**/Implementation/**/*.md`, `!**/Blog/**/*.md`, `!**/Swift Evolution/**/*.md` |
 
 This means swift-institute does NOT need a separate canonical template — its unique directories are local overrides.
 

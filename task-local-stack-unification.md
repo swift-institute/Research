@@ -599,7 +599,7 @@ Two files. No L1 changes. No L3 changes (beyond what Phase 1/2 already did). `Wi
 
 ### Implemented: Dictionary-Key Approach (via Collaborative Discussion)
 
-Option E (Always Push Both) was implemented first but was then superseded by a better design discovered through a [collaborative Claude-ChatGPT discussion](/tmp/tasklocal-unification-transcript.md). The key insight from ChatGPT: **store `Witness.Context` in L1's existing `[ObjectIdentifier: any Sendable]` dictionary under an internal `Dependency.Key` conformance defined in L3** — no new `_layerContext` field on L1, no separate @TaskLocal.
+Option E (Always Push Both) was implemented first but was then superseded by a better design discovered through a collaborative Claude-ChatGPT discussion. The key insight from ChatGPT: **store `Witness.Context` in L1's existing `[ObjectIdentifier: any Sendable]` dictionary under an internal `Dependency.Key` conformance defined in L3** — no new `_layerContext` field on L1, no separate @TaskLocal.
 
 The existential constraint (C2) that blocked Option C was misapplied: L1 is already entirely existential-based (`[ObjectIdentifier: any Sendable]`). Using L1's existing dictionary for one more key — `_ContextKey` — adds zero new existential categories. The `as? Witness.Context` downcast uses the same pattern L1 already uses for every key read (`as? K.Value`).
 
@@ -702,7 +702,7 @@ The dictionary-key approach is a refinement of Option C that avoids its specific
 ### Implementation History
 
 1. Option E (Always Push Both) was implemented first based on the v2.0.0 recommendation
-2. A [collaborative Claude-ChatGPT discussion](/tmp/tasklocal-unification-transcript.md) (3 rounds) identified the dictionary-key approach as strictly superior
+2. A collaborative Claude-ChatGPT discussion (3 rounds) identified the dictionary-key approach as strictly superior
 3. Dictionary-key approach implemented, replacing Option E entirely
 4. Committed: `swift-witnesses` `07d5e0a`, `swift-dependencies` `b8dc901`
 
@@ -728,8 +728,7 @@ The dictionary-key approach is a refinement of Option C that avoids its specific
 - `dependency-witness-store-coherence.md` v3.0 — Phased approach (B + D + C), all phases complete/superseded
 
 ### Collaborative Discussion
-- `/tmp/tasklocal-unification-transcript.md` — Full 3-round Claude-ChatGPT transcript
-- `/tmp/tasklocal-unification-converged.md` — Converged action plan
+- (3-round Claude-ChatGPT transcript and converged action plan — internal working files)
 
 ### Source Files (Post-Implementation)
 - `swift-dependency-primitives/.../Dependency.Scope.swift` — L1 @TaskLocal (unchanged — single source of truth)

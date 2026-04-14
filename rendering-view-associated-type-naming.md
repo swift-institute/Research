@@ -127,4 +127,4 @@ Avoids the protocol conflict entirely by not conforming `HTML.Document` to `Swif
 ## Blog potential
 
 This finding has been captured as a blog idea:
-- [BLOG-IDEA-031: The associated type trap](../Blog/_index.md) — [Draft](../Blog/Draft/associated-type-trap.md)
+- [BLOG-IDEA-031: The associated type trap](../Blog/_index.md) — [Draft](../Blog/Draft/associated-type-trap-final.md)
