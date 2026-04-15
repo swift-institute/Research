@@ -1064,4 +1064,4 @@ Pre-launch. No phasing needed. One script, one execution.
 33. Semantic Dependencies. `Documentation.docc/Semantic Dependencies.md`
 34. Primitives Taxonomy Naming and Layering Audit. `https://github.com/swift-primitives/Research/blob/main/primitives-taxonomy-naming-layering-audit.md`
 35. Identity: Why "Institute". `Documentation.docc/Identity.md`
-36. Prior Art Scratch Notes. `Research/_scratch-domain-first-prior-art.md`
+36. Prior Art Survey. `Research/domain-first-prior-art.md`

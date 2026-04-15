@@ -11,7 +11,7 @@ tier: 2
 
 ## Context
 
-The swift-io deep audit (H-3 in [swift-io-deep-audit.md](swift-io-deep-audit.md)) identified a per-poll heap allocation in the event pipeline:
+The swift-io deep audit (H-3) identified a per-poll heap allocation in the event pipeline:
 
 ```swift
 // IO.Event.Poll.Loop.swift:83
@@ -374,7 +374,6 @@ Phase 1 alone eliminates the hot-path allocation identified in H-3. Phase 2 is a
 
 ## References
 
-- [swift-io-deep-audit.md](swift-io-deep-audit.md) — H-3 finding and triage
 - [foundations-dependency-utilization-audit.md](foundations-dependency-utilization-audit.md) — Previous dependency audit
 - `Memory.Pool` — `https://github.com/swift-primitives/swift-memory-primitives/blob/main/Sources/Memory Pool Primitives/Memory.Pool.swift`
 - `Async.Bridge` — `https://github.com/swift-primitives/swift-async-primitives/blob/main/Sources/Async Primitives/Async.Bridge.swift`
