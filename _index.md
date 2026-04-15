@@ -6,6 +6,7 @@ This directory contains research documents analyzing design decisions, exploring
 
 | Document | Topic | Status |
 |----------|-------|--------|
+| [documentation-docc-alpha-launch.md](documentation-docc-alpha-launch.md) | Documentation.docc structure for public alpha launch: principles-first root page, three-layer framing, selective examples over catalogs. Option B (substantial root page) recommended. | IN_PROGRESS |
 | [l1-resource-promotion-event-completion.md](l1-resource-promotion-event-completion.md) | Push Event.Source/Driver and Completion resource/Driver/Submission from L3 to L1, leaving only backend factories (+Kqueue/+Epoll/+IOUring/+IOCP) at L3. Forces backend-agnosticism as structural constraint. Full feasibility verified. Tier 2, cross-layer. | IN_PROGRESS |
 | [c-shim-placement-architecture.md](c-shim-placement-architecture.md) | C shim placement across five-layer architecture: kernel-primitives shims are redundant (platform packages have identical copies) or misplaced (POSIX shims belong in iso-9945). Recommends zero shims in kernel-primitives, CISO9945Shim in iso-9945, Linux/Darwin Swift code migration to platform packages. | RECOMMENDATION |
 | [github-organization-migration-swift-file-system.md](github-organization-migration-swift-file-system.md) | GitHub org migration: 79 repos from swift-standards to 9 body-specific orgs. Local repos already have git history — transfer + remote update + push. 9-phase manifest-driven execution. Converged via Claude–ChatGPT review (4 rounds). Tier 2, ecosystem-wide. | DECISION |
