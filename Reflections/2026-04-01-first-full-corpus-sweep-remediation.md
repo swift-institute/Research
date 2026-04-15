@@ -13,7 +13,7 @@ status: processed
 
 ## What Happened
 
-Executed the first complete META-019 corpus sweep across all repositories (722 total items: 395 research, 157 experiments, 76 reflections, 32 blog ideas, 56 skills, 6 .bib files). The corpus exceeds the 500-document threshold from META-014, confirming monthly sweeps are warranted.
+Executed the first complete META-019 corpus sweep across all repositories (722 total items: 395 research, 157 experiments, 76 reflections, 32 blog ideas, 56 skills). The corpus exceeds the 500-document threshold from META-014, confirming monthly sweeps are warranted.
 
 Remediation was executed in 4 phases:
 
