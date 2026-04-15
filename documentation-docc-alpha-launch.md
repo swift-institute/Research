@@ -4,7 +4,7 @@
 ---
 version: 1.0.0
 last_updated: 2026-04-15
-status: IN_PROGRESS
+status: DECISION
 ---
 -->
 
@@ -195,7 +195,7 @@ This belongs in the root page's Foundation independence principle and in Getting
 
 ## Outcome
 
-**Status**: IN_PROGRESS — awaiting review before implementation.
+**Status**: DECISION — implemented in commits 8f77efb, 9627194, 954be4c, 75eba04.
 
 **Recommendation**: Option B (substantial root page) with the following structure:
 
