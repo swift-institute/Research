@@ -430,7 +430,6 @@ swift-institute/
 
 **Normative Rules**:
 
-> - Tier 2+ research SHOULD reference entries from `Research/References/`
 > - Tier 3 research MUST include a References section traceable to `.bib` entries
 > - Citations may be informal Markdown links, but canonical metadata lives in `.bib`
 
@@ -511,7 +510,6 @@ Content absorbed into the research-process skill as tiered research requirements
 
 **Phase 2: Minimal Integration**
 - Add RES-020 through RES-026 to Research.md as new section
-- Create `Research/References/` directory with initial `.bib` files
 - Do NOT rewrite existing RES-001 through RES-017
 
 ### Compatibility
@@ -533,6 +531,5 @@ Content absorbed into the research-process skill as tiered research requirements
 
 1. Approve this proposal (move to DECISION)
 2. Add RES-020–026 section to Research.md
-3. Create `Research/References/` directory structure
 4. Pilot Tier 2 methodology on next cross-package decision
 5. Reserve Tier 3 for foundational decisions only
