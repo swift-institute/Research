@@ -242,6 +242,10 @@ This directory contains research documents analyzing design decisions, exploring
 | [workspace-wide-symbol-search-for-cclsp.md](workspace-wide-symbol-search-for-cclsp.md) | Workspace-wide symbol search for CCLSP (Tier 2) — 6 options evaluated. Key findings: `rootMarkers` in cclsp.json is silently ignored (not in schema), CCLSP sends exactly one workspace folder, `.xcworkspace` not supported by SourceKit-LSP. Recommends Phase 1: set `rootDir` (trivial, enables implicit workspace discovery), Phase 2: contribute `workspaceFolders` support to ktnyt/cclsp, Phase 3: lightweight root Package.swift if progressive discovery insufficient. | RECOMMENDATION |
 | [zero-copy-event-pipeline.md](zero-copy-event-pipeline.md) | Zero-copy event pipeline design using Memory.Pool (Tier 2) — eliminates per-poll Array allocation in IO.Event.Poll.Loop via pooled buffer slots. Phased: Phase 1 (pool + memcpy), Phase 2 (direct-to-pool polling). | RECOMMENDATION |
 
+## Reflections
+
+Post-session reflections are captured via the **reflect-session** skill and processed via **reflections-processing**. They live under [Reflections/](Reflections/); see [Reflections/_index.md](Reflections/_index.md) for the date/title/packages/status table.
+
 ## Moved to swift-memory-primitives/Research/
 
 The following memory/pointer research has been consolidated into `swift-primitives/swift-memory-primitives/Research/`:
