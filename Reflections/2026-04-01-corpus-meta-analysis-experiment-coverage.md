@@ -71,7 +71,6 @@ sweep sequence.
 - `swift-institute/Research/Reflections/2026-03-24-generalized-audit-skill-design.md` — triage target
 - `swift-institute/Research/Reflections/2026-03-20-skill-system-overhaul-architecture.md` — 2 references
 - `swift-institute/Research/generalized-audit-skill-design.md` — cross-reference
-- `swift-institute/Research/_meta-analysis-2026-03-15-followup.md` — invocation reference
 
 ## What Surprised Me
 
