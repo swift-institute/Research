@@ -148,6 +148,10 @@ Prior to the structured reflection system, reflections were captured informally 
 | [2026-04-10-io-uring-implementation-audit-and-remediation.md](2026-04-10-io-uring-implementation-audit-and-remediation.md) | 2026-04-10 | io_uring Implementation Audit + L2 Reclassification + Semantic Flag Modeling | swift-linux-standard, swift-kernel-primitives, swift-cpu-primitives, swift-iso-9945, swift-darwin-standard, swift-windows-standard, swift-x86-standard, swift-arm-standard, swift-riscv-standard | processed (2026-04-14) IMPLEMENTED — io_uring audit + remediation, L2 reclassification, platform skill updated |
 | [2026-04-12-io-uring-v6-escapable-slot-architecture.md](2026-04-12-io-uring-v6-escapable-slot-architecture.md) | 2026-04-12 | io_uring V6: ~Copyable ~Escapable Slot Architecture | swift-linux-standard, swift-iso-9945 | processed (2026-04-14) IMPLEMENTED — V6 Slot yielded via mutating _read coroutine replaces pointer-backed Prepare |
 | [2026-04-14-io-witness-pivot-review-convergence.md](2026-04-14-io-witness-pivot-review-convergence.md) | 2026-04-14 | IO Witness Pivot — Multi-Agent Review Convergence and the Elided Events/Completions Elephant | swift-io, swift-witnesses | pending |
+| [2026-04-15-supervise-skill-creation-from-handoff.md](2026-04-15-supervise-skill-creation-from-handoff.md) | 2026-04-15 | /supervise Skill Creation — Handoff vs Convention, Self-Review Yield | swift-institute | pending |
+| [2026-04-15-agent-workflow-cluster-audit-and-fixes.md](2026-04-15-agent-workflow-cluster-audit-and-fixes.md) | 2026-04-15 | Agent-Workflow Cluster Audit and Composition Refinement | swift-institute | pending |
+| [2026-04-15-three-phase-perfection-check-and-supervision.md](2026-04-15-three-phase-perfection-check-and-supervision.md) | 2026-04-15 | Three-Phase Perfection Check and First Production Supervision | swift-institute | pending |
+| [2026-04-15-phase3-perfection-audit-and-fix-cycle.md](2026-04-15-phase3-perfection-audit-and-fix-cycle.md) | 2026-04-15 | Phase 3 Perfection Audit: Receipt-Model Integrity as the New Audit Lens | swift-institute | pending |
 
 ## See Also
 
