@@ -4,7 +4,16 @@ session_objective: Review the new IO witness + actor architecture produced by pa
 packages:
   - swift-io
   - swift-witnesses
-status: pending
+status: processed
+processed_date: 2026-04-16
+triage_outcomes:
+  - type: research_topic
+    target: witness-uniformity-vs-strategy-specialization.md
+    description: "Resolve witness-uniformity vs strategy-specialization tension in @Witness macro design"
+  - type: no_action
+    description: "[package] Document load-bearing decisions in Package-Insights — generic guidance, no specific insight attached"
+  - type: no_action
+    description: "[skill] Require re-audit when scope generalizes — captured via research stub converged-scope-annotation-protocol.md"
 ---
 
 # IO Witness Pivot — Multi-Agent Review Convergence and the Elided Events/Completions Elephant
