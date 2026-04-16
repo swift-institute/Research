@@ -3,7 +3,17 @@ date: 2026-04-15
 session_objective: Create a new /supervise skill from the parent session's branching handoff brief, covering ground-rules setup, drift detection, termination, and composition with /handoff
 packages:
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-16
+triage_outcomes:
+  - type: skill_update
+    target: skill-lifecycle
+    description: "Added [SKILL-CREATE-006a] Internal Consistency Pass (cross-ref correctness, terminology collisions, research-vs-shipped ID divergence, ghost references)"
+  - type: research_topic
+    target: handoff-vs-convention-resolution-protocol.md
+    description: "Codify: when handoff specifies structural choice conflicting with skill convention, skills win"
+  - type: no_action
+    description: "[x] handoff reciprocal cross-reference — already resolved in-session per entry's own triage_outcomes"
 ---
 
 # /supervise Skill Creation — Handoff vs Convention, Self-Review Yield
