@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.0.1
 date: 2026-03-03
-last_updated: 2026-03-15
+last_updated: 2026-04-16
 status: RECOMMENDATION
 tier: 2
 consolidates:
@@ -90,6 +90,17 @@ var storage: Storage {
 #### Verdict: WAIT
 
 The feature is well-implemented but still experimental with no SE proposal number. The FUTURE availability gate means library evolution builds cannot use it in public API. Wait until it graduates from experimental; then execute the mechanical sed across all 394 sites.
+
+#### Re-evaluation 2026-04-16 (Swift 6.3 baseline, post noncopyable-accessor-incompatibility fix)
+
+Re-checked after the `noncopyable-accessor-incompatibility` experiment moved to FIXED in Swift 6.2.4 (`_read`/`_modify` now work with `~Copyable` containers). The two concerns are independent:
+
+- The 6.2.4 fix restored the legacy `_read`/`_modify` accessors on `~Copyable` types. The 394 ecosystem sites continue to use that legacy syntax with no regressions.
+- The CoroutineAccessors WAIT verdict is grounded in (a) absence of an SE proposal number, (b) `FUTURE` availability gate that blocks library-evolution public API exposure, and (c) experimental-feature gating in the compiler — none of which are affected by the `~Copyable` accessor fix.
+
+Confirmed against `swift-6.3-revalidation-status.md` (2026-04-14): CoroutineAccessors is not listed under "Known Fixed in Swift 6.3" and remains an experimental feature. Production references (`swift-property-primitives/Experiments/borrowing-read-accessor-test/Sources/Test/main.swift:338`, `swift-input-primitives/Sources/Input Primitives/Input.Stream.Protocol.swift:54-58`) still explicitly call it experimental.
+
+**Verdict unchanged: WAIT.**
 
 ---
 

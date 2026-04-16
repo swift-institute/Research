@@ -2,10 +2,11 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-03-20
-status: RECOMMENDATION
+version: 1.2.0
+last_updated: 2026-04-16
+status: SUPERSEDED
 tier: 2
+superseded_by: benchmark skill [BENCH-001..009]
 ---
 -->
 
