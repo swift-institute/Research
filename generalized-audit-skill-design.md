@@ -2,11 +2,12 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-03-24
-status: RECOMMENDATION
+version: 1.2.0
+last_updated: 2026-04-16
+status: SUPERSEDED
 tier: 2
 scope: ecosystem-wide
+superseded_by: audit skill [AUDIT-001..019]
 ---
 -->
 

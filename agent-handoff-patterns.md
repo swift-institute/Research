@@ -2,9 +2,10 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-03-25
-status: RECOMMENDATION
+version: 1.2.0
+last_updated: 2026-04-16
+status: SUPERSEDED
+superseded_by: handoff skill [HANDOFF-001..016]
 ---
 -->
 

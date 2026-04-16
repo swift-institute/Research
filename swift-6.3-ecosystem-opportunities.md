@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 2.0.0
-last_updated: 2026-03-25
+version: 2.0.1
+last_updated: 2026-04-16
 status: RECOMMENDATION
 tier: 2
 workflow: Discovery [RES-012]
@@ -435,6 +435,8 @@ The 6.3 compiler changes:
 The 6.3 `@_rawLayout` changes address a different aspect (removing the deinit *requirement*) — they do not fix the cross-module LLVM IR domination bug triggered by 2+ `@_rawLayout`+deinit fields from a generic enum.
 
 **Result**: All 36 `_deinitWorkaround` fields must remain. Field-ordering constraint stays. No action possible until the upstream fix lands.
+
+**Re-evaluation 2026-04-16**: Confirmed against `swift-6.3-revalidation-status.md` and the `Swift 6.3 Fix Status` memory: bug #86652 (`@_rawLayout` element destruction LLVM IR domination) remains broken in Swift 6.3. The unrelated `value-generic-nested-type-bug` experiment was FIXED in Swift 6.2.4 — that bug concerned nested types in extensions of value-generic types, not `@_rawLayout` deinit. The two are distinct compiler issues, and the 6.2.4 fix does not enable removal of any of the 36 `_deinitWorkaround` sites.
 
 #### CopyPropagation Workaround (Property.View)
 
