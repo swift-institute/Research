@@ -1,0 +1,16 @@
+.DS_Store
+*~
+Thumbs.db
+
+.build/
+.swiftpm/
+.benchmarks/
+DerivedData/
+Package.resolved
+
+*.pdf
+
+# Working artifacts (per RES conventions)
+/_*/
+!/_archived/
+/prompts/
