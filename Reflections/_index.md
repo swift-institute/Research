@@ -14,6 +14,14 @@ This directory contains structured post-session reflection entries. Each entry i
 
 | File | Date | Title | Packages | Status |
 |------|------|-------|----------|--------|
+| [2026-04-16-chase-lev-deque-production-implementation.md](2026-04-16-chase-lev-deque-production-implementation.md) | 2026-04-16 | Chase-Lev Deque — From Spike to Production L1 Primitive | swift-executor-primitives, swift-executors | pending |
+| [2026-04-16-io-completion-storage-elimination.md](2026-04-16-io-completion-storage-elimination.md) | 2026-04-16 | IO.Completion.Storage Elimination — Dictionary as Sole Correlation and Lifetime Manager | swift-io | pending |
+| [2026-04-16-supervise-in-practice-three-failure-modes.md](2026-04-16-supervise-in-practice-three-failure-modes.md) | 2026-04-16 | Supervise-in-Practice — Three Failure Modes Across a Multi-Revision Dispatch | swift-executors, swift-kernel, swift-institute | pending |
+| [2026-04-16-reflect-session-cleanup-completeness.md](2026-04-16-reflect-session-cleanup-completeness.md) | 2026-04-16 | /reflect-session Cleanup Completeness — "Done" Without Running the Protocol | swift-institute | pending |
+| [2026-04-16-parameter-ordering-skill-lifecycle-routing-gap.md](2026-04-16-parameter-ordering-skill-lifecycle-routing-gap.md) | 2026-04-16 | Parameter Ordering Conventions — and a Skill-Lifecycle Routing Gap | swift-institute | pending |
+| [2026-04-16-executor-main-witness-pattern-four-revision-journey.md](2026-04-16-executor-main-witness-pattern-four-revision-journey.md) | 2026-04-16 | Executor.Main Witness Pattern — A Four-Revision Architectural Journey | swift-executors, swift-kernel, swift-kernel-primitives, swift-darwin-standard, swift-institute | pending |
+| [2026-04-16-docc-landing-restructure-and-layers-show.md](2026-04-16-docc-landing-restructure-and-layers-show.md) | 2026-04-16 | DocC Landing Restructure and the Layers-Necessity SHOW | swift-institute, swift-identity-primitives, swift-geometry-primitives, swift-dimension-primitives, swift-w3c-css, swift-css-standard, swift-html, swift-io | pending |
+| [2026-04-16-swift-institute-alpha-launch.md](2026-04-16-swift-institute-alpha-launch.md) | 2026-04-16 | Swift Institute Alpha Launch — Claim Triage, HTTPS Kick, Landing-Page Constraints | swift-institute | pending |
 | [2026-02-12-bit-vector-zeros-sequence-first-disambiguation.md](2026-02-12-bit-vector-zeros-sequence-first-disambiguation.md) | 2026-02-12 | Bit Vector Zeros Infrastructure and Sequence.first Disambiguation | swift-bit-vector-primitives, swift-sequence-primitives, swift-storage-primitives | processed |
 | [2026-02-12-storage-primitives-audit-completion.md](2026-02-12-storage-primitives-audit-completion.md) | 2026-02-12 | Storage Primitives Audit Completion — Infrastructure Discovery as Force Multiplier | swift-storage-primitives, swift-bit-vector-primitives, swift-buffer-primitives | processed |
 | [2026-02-12-data-structures-plan-completion.md](2026-02-12-data-structures-plan-completion.md) | 2026-02-12 | Data Structures Plan Completion — Audit Staleness and Verification Depth | swift-bit-vector-primitives, swift-array-primitives, swift-hash-table-primitives, swift-list-primitives, swift-queue-primitives, swift-pool-primitives | processed |
@@ -155,6 +163,8 @@ Prior to the structured reflection system, reflections were captured informally 
 | [2026-04-15-three-phase-perfection-check-and-supervision.md](2026-04-15-three-phase-perfection-check-and-supervision.md) | 2026-04-15 | Three-Phase Perfection Check and First Production Supervision | swift-institute | processed |
 | [2026-04-15-phase3-perfection-audit-and-fix-cycle.md](2026-04-15-phase3-perfection-audit-and-fix-cycle.md) | 2026-04-15 | Phase 3 Perfection Audit: Receipt-Model Integrity as the New Audit Lens | swift-institute | processed |
 | [2026-04-15-ecosystem-unsafe-audit.md](2026-04-15-ecosystem-unsafe-audit.md) | 2026-04-15 | Ecosystem @unsafe Audit — Full Lifecycle in One Session | swift-primitives, swift-foundations, swift-institute | processed |
+| [2026-04-16-executor-deque-peer-review-to-production.md](2026-04-16-executor-deque-peer-review-to-production.md) | 2026-04-16 | Executor Deque: Peer Review to Production via Supervised Implementation | swift-executor-primitives, swift-executors, swift-institute | pending |
+| [2026-04-16-cooperative-donation-contract-and-sdk-interface-gap.md](2026-04-16-cooperative-donation-contract-and-sdk-interface-gap.md) | 2026-04-16 | Cooperative Donation Contract Landing and SDK Interface Gap Discovery | swift-executors | pending |
 
 ## See Also
 
