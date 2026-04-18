@@ -6,6 +6,22 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-18-ecosystem-index-migration-completion-and-batch-git-edges.md",
+      "date": "2026-04-18",
+      "title": "Ecosystem Index Migration Completion and Batch Git Edges",
+      "packages": [
+        "swift-primitives",
+        "swift-foundations",
+        "swift-standards",
+        "swift-institute-Scripts"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-18-path-type-compliance-audit-refresh-and-architecture-decisions.md",
       "date": "2026-04-18",
       "title": "Path Type Compliance Audit Refresh and Architecture Decisions",
