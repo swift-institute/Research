@@ -6,6 +6,24 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-18-json-authoritative-migration-sweep.md",
+      "date": "2026-04-18",
+      "title": "JSON-Authoritative Migration Sweep + The Over-Built Copy Step",
+      "packages": [
+        "swift-institute.org",
+        "swift-institute-Research",
+        "swift-institute-Experiments",
+        "swift-institute-Audits",
+        "swift-institute-Blog",
+        "swift-institute-Skills"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-18-two-homepages-mixed-chrome-dashboard.md",
       "date": "2026-04-18",
       "title": "Two Homepages — DocC-Merge Experiment, Mixed-Chrome Pivot, Dashboard Live",
