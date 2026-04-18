@@ -1,0 +1,1774 @@
+{
+  "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Reflections Index",
+  "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
+  "reflections": [
+    {
+      "file": "2026-04-18-two-homepages-mixed-chrome-dashboard.md",
+      "date": "2026-04-18",
+      "title": "Two Homepages — DocC-Merge Experiment, Mixed-Chrome Pivot, Dashboard Live",
+      "packages": [
+        "swift-institute.org",
+        "swift-institute-Research",
+        "swift-institute-Experiments",
+        "swift-institute-Skills"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-17-institute-repo-split-and-supervise-absentia-review.md",
+      "date": "2026-04-17",
+      "title": "Institute Repo Split and Supervise-in-Absentia Review Cycle",
+      "packages": [
+        "swift-institute.org",
+        "swift-institute-Research",
+        "swift-institute-Experiments",
+        "swift-institute-Skills",
+        "swift-institute-Blog",
+        "swift-institute-Audits",
+        "swift-institute-Swift-Evolution",
+        "swift-institute-Scripts",
+        "swift-institute-.github"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-17-swift-6-3-1-corpus-completion-and-drift-relocation.md",
+      "date": "2026-04-17",
+      "title": "Swift 6.3.1 Corpus Completion + Drift Relocation + FIXED Verdict",
+      "packages": [
+        "swift-institute",
+        "swift-primitives/swift-index-primitives",
+        "swift-primitives/swift-array-primitives"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-17-effect-primitives-ncopyable-widening-silgen-workaround.md",
+      "date": "2026-04-17",
+      "title": "Effect-Primitives `~Copyable` Widening — Two-Callback Workaround for a Swift 6.3.1 SILGen Bug",
+      "packages": [
+        "swift-effect-primitives",
+        "swift-equation-primitives",
+        "swift-hash-primitives"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-17-swift-6-3-1-experiment-revalidation.md",
+      "date": "2026-04-17",
+      "title": "Swift 6.3.1 Experiment Re-Run — Memory Drift, Repo Splits, and the Experiment-Header Convention That Saved Time",
+      "packages": [
+        "swift-institute",
+        "swift-parser-primitives",
+        "swift-io"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-16-chase-lev-deque-production-implementation.md",
+      "date": "2026-04-16",
+      "title": "Chase-Lev Deque — From Spike to Production L1 Primitive",
+      "packages": [
+        "swift-executor-primitives",
+        "swift-executors"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-16-io-completion-storage-elimination.md",
+      "date": "2026-04-16",
+      "title": "IO.Completion.Storage Elimination — Dictionary as Sole Correlation and Lifetime Manager",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-16-supervise-in-practice-three-failure-modes.md",
+      "date": "2026-04-16",
+      "title": "Supervise-in-Practice — Three Failure Modes Across a Multi-Revision Dispatch",
+      "packages": [
+        "swift-executors",
+        "swift-kernel",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-16-reflect-session-cleanup-completeness.md",
+      "date": "2026-04-16",
+      "title": "/reflect-session Cleanup Completeness — \"Done\" Without Running the Protocol",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-16-parameter-ordering-skill-lifecycle-routing-gap.md",
+      "date": "2026-04-16",
+      "title": "Parameter Ordering Conventions — and a Skill-Lifecycle Routing Gap",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-16-executor-main-witness-pattern-four-revision-journey.md",
+      "date": "2026-04-16",
+      "title": "Executor.Main Witness Pattern — A Four-Revision Architectural Journey",
+      "packages": [
+        "swift-executors",
+        "swift-kernel",
+        "swift-kernel-primitives",
+        "swift-darwin-standard",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-16-docc-landing-restructure-and-layers-show.md",
+      "date": "2026-04-16",
+      "title": "DocC Landing Restructure and the Layers-Necessity SHOW",
+      "packages": [
+        "swift-institute",
+        "swift-identity-primitives",
+        "swift-geometry-primitives",
+        "swift-dimension-primitives",
+        "swift-w3c-css",
+        "swift-css-standard",
+        "swift-html",
+        "swift-io"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-16-swift-institute-alpha-launch.md",
+      "date": "2026-04-16",
+      "title": "Swift Institute Alpha Launch — Claim Triage, HTTPS Kick, Landing-Page Constraints",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-02-12-bit-vector-zeros-sequence-first-disambiguation.md",
+      "date": "2026-02-12",
+      "title": "Bit Vector Zeros Infrastructure and Sequence.first Disambiguation",
+      "packages": [
+        "swift-bit-vector-primitives",
+        "swift-sequence-primitives",
+        "swift-storage-primitives"
+      ],
+      "status": "processed",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-02-12-storage-primitives-audit-completion.md",
+      "date": "2026-02-12",
+      "title": "Storage Primitives Audit Completion — Infrastructure Discovery as Force Multiplier",
+      "packages": [
+        "swift-storage-primitives",
+        "swift-bit-vector-primitives",
+        "swift-buffer-primitives"
+      ],
+      "status": "processed",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-02-12-data-structures-plan-completion.md",
+      "date": "2026-02-12",
+      "title": "Data Structures Plan Completion — Audit Staleness and Verification Depth",
+      "packages": [
+        "swift-bit-vector-primitives",
+        "swift-array-primitives",
+        "swift-hash-table-primitives",
+        "swift-list-primitives",
+        "swift-queue-primitives",
+        "swift-pool-primitives"
+      ],
+      "status": "processed",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-02-12-stack-buffer-remediation-bounded-canonical.md",
+      "date": "2026-02-12",
+      "title": "Stack/Buffer Remediation — Bounded Indices as Sole Canonical API",
+      "packages": [
+        "swift-stack-primitives",
+        "swift-buffer-primitives"
+      ],
+      "status": "processed",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-02-13-input-stream-noncopyable-element.md",
+      "date": "2026-02-13",
+      "title": "Input.Stream.Protocol ~Copyable Element — Constraint Cascade and ~Escapable Discovery",
+      "packages": [
+        "swift-input-primitives",
+        "swift-parser-primitives"
+      ],
+      "status": "processed",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-02-13-collection-sequence-inheritance-deduplication.md",
+      "date": "2026-02-13",
+      "title": "Collection-Sequence Inheritance — Deduplication Through Protocol Refinement",
+      "packages": [
+        "swift-collection-primitives",
+        "swift-sequence-primitives"
+      ],
+      "status": "processed",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-02-13-suppressed-associatedtype-domain-unification.md",
+      "date": "2026-02-13",
+      "title": "SuppressedAssociatedTypes Unblocks Phase 2 Domain Unification",
+      "packages": [
+        "swift-affine-primitives",
+        "swift-vector-primitives",
+        "swift-ordinal-primitives",
+        "swift-cardinal-primitives"
+      ],
+      "status": "processed",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-02-25-async-callback-nonsending-replacement.md",
+      "date": "2026-02-25",
+      "title": "Async.Callback Nonsending Replacement — Research-to-Production Pipeline",
+      "packages": [
+        "swift-async-primitives",
+        "swift-test-primitives",
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-10",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-10)"
+    },
+    {
+      "file": "2026-02-27-tagged-string-crossmodule-access-levels-and-shadowing.md",
+      "date": "2026-02-27",
+      "title": "Tagged String Cross-Module — Access Levels and Shadowing",
+      "packages": [
+        "swift-identity-primitives",
+        "swift-string-primitives",
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-10",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-10)"
+    },
+    {
+      "file": "2026-02-27-source-location-and-located-error-unification.md",
+      "date": "2026-02-27",
+      "title": "Source Location and Located Error Unification — Type Deduplication at Scale",
+      "packages": [
+        "swift-text-primitives",
+        "swift-source-primitives",
+        "swift-test-primitives",
+        "swift-witnesses",
+        "swift-parsers",
+        "swift-parser-primitives",
+        "swift-json"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-10",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-10)"
+    },
+    {
+      "file": "2026-03-03-typed-throws-rethrows-overload-resolution.md",
+      "date": "2026-03-03",
+      "title": "Typed Throws Conversion — rethrows Overload Resolution and E Inference",
+      "packages": [
+        "swift-standard-library-extensions",
+        "swift-geometry-primitives",
+        "swift-kernel-primitives",
+        "swift-algebra-primitives",
+        "swift-async-primitives",
+        "swift-cache-primitives",
+        "swift-dictionary-primitives",
+        "swift-ownership-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-10",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-10)"
+    },
+    {
+      "file": "2026-03-18-iterative-render-machine-stack-overflow-fix.md",
+      "date": "2026-03-18",
+      "title": "Iterative Render Machine — Stack Overflow Fix via Heap-Deferred Traversal",
+      "packages": [
+        "swift-rendering-primitives",
+        "swift-html-rendering",
+        "swift-pdf-html-rendering"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-20",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-20)"
+    },
+    {
+      "file": "2026-03-18-store-view-not-body-noncopyable-rendering.md",
+      "date": "2026-03-18",
+      "title": "Store VIEW Not BODY — ~Copyable Body Support and Protocol Witness Ownership",
+      "packages": [
+        "swift-rendering-primitives",
+        "swift-css-html-rendering"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-20",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-20)"
+    },
+    {
+      "file": "2026-03-20-file-path-literal-vs-throwing-init-harmonization.md",
+      "date": "2026-03-20",
+      "title": "File/Path Literal vs Throwing Init — Harmonization",
+      "packages": [
+        "swift-file-system",
+        "swift-paths",
+        "swift-tests"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-20",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-20)"
+    },
+    {
+      "file": "2026-03-20-skill-system-overhaul-architecture.md",
+      "date": "2026-03-20",
+      "title": "Skill System Overhaul — Application Gap, Research-Grounded Restructuring",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-20",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-20)"
+    },
+    {
+      "file": "2026-03-20-pass4-compound-renames-and-generic-nesting.md",
+      "date": "2026-03-20",
+      "title": "Pass 4: Compound Type Renames — Generic Nesting Discoveries",
+      "packages": [
+        "swift-pool-primitives",
+        "swift-cache-primitives",
+        "swift-parser-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-22",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-22)"
+    },
+    {
+      "file": "2026-03-20-release-mode-llvm-verifier-crash-investigation.md",
+      "date": "2026-03-20",
+      "title": "Release Mode LLVM Verifier Crash: Investigation and File-Split Fix",
+      "packages": [
+        "swift-buffer-primitives",
+        "swift-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-22",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-22)"
+    },
+    {
+      "file": "2026-03-21-rawlayout-experiment-consolidation-and-workaround-exhaustion.md",
+      "date": "2026-03-21",
+      "title": "@_rawLayout Experiment Consolidation and Workaround Exhaustion",
+      "packages": [
+        "swift-buffer-primitives",
+        "swift-storage-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-22",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-22)"
+    },
+    {
+      "file": "2026-03-22-swift-64-dev-compatibility-and-dual-compiler-discovery.md",
+      "date": "2026-03-22",
+      "title": "Swift 6.4-dev Compatibility: Three Fix Categories and the Dual-Compiler Discovery",
+      "packages": [
+        "swift-primitives (superrepo)",
+        "swift-kernel-primitives",
+        "swift-buffer-primitives",
+        "12+ others"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-22",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-22)"
+    },
+    {
+      "file": "2026-03-22-sil-copypropagation-bug2-workaround.md",
+      "date": "2026-03-22",
+      "title": "SIL CopyPropagation Bug 2: Scope Was 10x Wider Than Expected",
+      "packages": [
+        "swift-stack/queue/array/heap/set/dictionary/parser/async/graph-primitives"
+      ],
+      "status": "superseded",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": "root-cause fix",
+      "statusRaw": "SUPERSEDED by root-cause fix"
+    },
+    {
+      "file": "2026-03-22-copypropagation-nonescapable-root-cause-and-fix.md",
+      "date": "2026-03-22",
+      "title": "CopyPropagation ~Escapable Root Cause: mark_dependence Classification and Fix",
+      "packages": [
+        "swift-property-primitives",
+        "swift-buffer-primitives",
+        "10+ others"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-22",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-22)"
+    },
+    {
+      "file": "2026-03-22-rawlayout-deinit-compiler-fix.md",
+      "date": "2026-03-22",
+      "title": "From \"Provably Impossible\" to Compiler Fix in One Session",
+      "packages": [
+        "swift-storage-primitives",
+        "swift-buffer-primitives",
+        "9+ others"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-22",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-22)"
+    },
+    {
+      "file": "2026-03-22-nonsending-compiler-discovery-and-ecosystem-migration.md",
+      "date": "2026-03-22",
+      "title": "Nonsending Compiler Discovery and Ecosystem Migration",
+      "packages": [
+        "swift-async-primitives",
+        "swift-pool-primitives",
+        "swift-witnesses",
+        "swift-dependencies",
+        "swift-testing",
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-22",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-22)"
+    },
+    {
+      "file": "2026-03-24-generalized-audit-skill-design.md",
+      "date": "2026-03-24",
+      "title": "Generalized Audit Skill — From 82 Orphans to One Canonical Location",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-26",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-26)"
+    },
+    {
+      "file": "2026-03-24-swift-io-audit-consolidation.md",
+      "date": "2026-03-24",
+      "title": "swift-io Audit Consolidation — From 3 Scattered Files to One Canonical Location",
+      "packages": [
+        "swift-io",
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-26",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-26)"
+    },
+    {
+      "file": "2026-03-25-io-prior-art-literature-study.md",
+      "date": "2026-03-25",
+      "title": "IO Prior Art Literature Study and Design Audit",
+      "packages": [
+        "swift-io",
+        "swift-file-system",
+        "swift-kernel-primitives",
+        "swift-kernel",
+        "swift-posix"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-26",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-26)"
+    },
+    {
+      "file": "2026-03-26-channel-lifecycle-actor-removal-ownership-as-synchronization.md",
+      "date": "2026-03-26",
+      "title": "Channel Lifecycle Actor Removal — Ownership as Synchronization",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-26",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-26)"
+    },
+    {
+      "file": "2026-03-26-io-api-remediation-sync-submission.md",
+      "date": "2026-03-26",
+      "title": "IO API Remediation — Sync Submission and the Async Overload Ambiguity",
+      "packages": [
+        "swift-io",
+        "swift-kernel",
+        "swift-witnesses"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-27-async-channel-noncopyable-restructure.md",
+      "date": "2026-03-27",
+      "title": "Async Channel ~Copyable Restructure — Closure Capture as the Real Blocker",
+      "packages": [
+        "swift-async-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-29-se0461-concurrent-inference-macro-interaction.md",
+      "date": "2026-03-29",
+      "title": "SE-0461 @concurrent Inference and @Witness Macro Interaction",
+      "packages": [
+        "swift-io",
+        "swift-witnesses"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-29-channel-split-full-duplex-io.md",
+      "date": "2026-03-29",
+      "title": "Channel split() — Full-Duplex I/O via Ecosystem-Aligned Split Pattern",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-30-split-tests-and-test-infrastructure-limits.md",
+      "date": "2026-03-30",
+      "title": "Split Tests, @Test Macro Symbol Limits, and ~Copyable Task Transfer Gaps",
+      "packages": [
+        "swift-io",
+        "swift-algebra-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-30-io-lane-boundary-collaborative-review.md",
+      "date": "2026-03-30",
+      "title": "IO.Lane Boundary Audit and Collaborative API Review",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-30-modern-concurrency-sendability-pass.md",
+      "date": "2026-03-30",
+      "title": "Modern Concurrency Conventions and Sendability Pass",
+      "packages": [
+        "swift-kernel-primitives",
+        "swift-async-primitives",
+        "swift-kernel",
+        "swift-async",
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-30-io-lane-boundary-completion-typed-throws.md",
+      "date": "2026-03-30",
+      "title": "IO.Lane Boundary Completion and `do throws(E)` Discovery",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-30-sending-sendable-migration-cascade.md",
+      "date": "2026-03-30",
+      "title": "Sending/Sendable Migration Cascade: Primitives → Foundations",
+      "packages": [
+        "swift-async-primitives",
+        "swift-async",
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-30-noncopyable-descriptor-l3-cascade.md",
+      "date": "2026-03-30",
+      "title": "~Copyable Descriptor L3 Cascade: Workaround Resistance and Experiment-Driven Correction",
+      "packages": [
+        "swift-io",
+        "swift-posix",
+        "swift-kernel",
+        "swift-memory",
+        "swift-iso-9945"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-31-noncopyable-io-completion-cascade-and-silgen-bug-discovery.md",
+      "date": "2026-03-31",
+      "title": "~Copyable IO Completion Cascade and SILGen Bug Discovery",
+      "packages": [
+        "swift-io",
+        "swift-async-primitives",
+        "swift-witnesses"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-31-convention3-unchecked-sendable-audit.md",
+      "date": "2026-03-31",
+      "title": "Convention 3 Audit — @unchecked Sendable Truth-Telling",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-31-issue-investigation-literature-study.md",
+      "date": "2026-03-31",
+      "title": "Issue Investigation Literature Study and Skill Strengthening",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-31-copypropagation-noncopyable-enum-already-fixed.md",
+      "date": "2026-03-31",
+      "title": "CopyPropagation ~Copyable Enum Crash — Already Fixed Upstream, Prior Misattribution Corrected",
+      "packages": [
+        "swift-async-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-31-noncopyable-peek-escapable-scope-nesting-limit.md",
+      "date": "2026-03-31",
+      "title": "~Escapable Peek Investigation — Property.View Is the Terminal Scope",
+      "packages": [
+        "swift-queue-primitives",
+        "swift-buffer-primitives",
+        "swift-ownership-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-31-bridge-noncopyable-ownership-completion.md",
+      "date": "2026-03-31",
+      "title": "Bridge ~Copyable Ownership Completion — Unification Over Duplication",
+      "packages": [
+        "swift-queue-primitives",
+        "swift-async-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-31-se0499-contextual-lookup-misdiagnosis.md",
+      "date": "2026-03-31",
+      "title": "SE-0499 Contextual Lookup Misdiagnosis — Constraint Landscape Shift, Not Compiler Regression",
+      "packages": [
+        "swift-comparison-primitives",
+        "swift-ordering-primitives",
+        "swift-input-primitives",
+        "swift-collection-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-31-nonisolated-nonsending-channel-migration.md",
+      "date": "2026-03-31",
+      "title": "Nonisolated(nonsending) Channel Migration — Protocol Witness Confirmation",
+      "packages": [
+        "swift-async-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-31-se0499-ecosystem-audit-completion.md",
+      "date": "2026-03-31",
+      "title": "SE-0499 Ecosystem Audit Completion",
+      "packages": [
+        "swift-comparison-primitives",
+        "swift-ordering-primitives",
+        "swift-identity-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-31-async-primitives-code-surface-refactor.md",
+      "date": "2026-03-31",
+      "title": "Code-Surface Audit and Full Remediation of swift-async-primitives",
+      "packages": [
+        "swift-async-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-03-31",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-03-31)"
+    },
+    {
+      "file": "2026-03-31-path-type-compliance-audit-and-l1-decomposition-design.md",
+      "date": "2026-03-31",
+      "title": "Path Type Compliance Audit and L1 Decomposition Design",
+      "packages": [
+        "swift-path-primitives",
+        "swift-kernel",
+        "swift-file-system",
+        "swift-paths"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-01",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-04-01)"
+    },
+    {
+      "file": "2026-03-31-storage-free-arena-bounded-migration.md",
+      "date": "2026-03-31",
+      "title": "Storage.Free to Buffer.Arena.Bounded — Prior Audit Retraction and Migration",
+      "packages": [
+        "swift-async-primitives",
+        "swift-buffer-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-01",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-04-01)"
+    },
+    {
+      "file": "2026-04-01-swift-io-code-surface-remediation.md",
+      "date": "2026-04-01",
+      "title": "swift-io Code Surface Audit and 5-Phase Remediation",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-01",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-04-01)"
+    },
+    {
+      "file": "2026-04-01-async-primitives-audit-round-two.md",
+      "date": "2026-04-01",
+      "title": "Async Primitives Audit Round Two — Agent Verification and Ecosystem Delegation",
+      "packages": [
+        "swift-async-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-01",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-04-01)"
+    },
+    {
+      "file": "2026-04-01-deferred-compound-methods-and-generic-scoping.md",
+      "date": "2026-04-01",
+      "title": "Deferred Compound Methods — Generic Scoping Constraint and Dead Code Discovery",
+      "packages": [
+        "swift-async-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-01",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-04-01)"
+    },
+    {
+      "file": "2026-04-03-sending-over-sendable-migration.md",
+      "date": "2026-04-03",
+      "title": "Sending Over Sendable Migration — Viral Sendability Removal Across Three Packages",
+      "packages": [
+        "swift-io",
+        "swift-witnesses",
+        "swift-ownership-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "sending-over-sendable pattern already in memory + code shipped",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — sending-over-sendable pattern already in memory + code shipped"
+    },
+    {
+      "file": "2026-04-12-eintr-completion-and-safe-socket-api.md",
+      "date": "2026-04-12",
+      "title": "EINTR Completion, Either Error Composition, and Safe Socket API",
+      "packages": [
+        "swift-kernel-primitives",
+        "swift-iso-9945",
+        "swift-darwin-standard",
+        "swift-linux-standard",
+        "swift-posix"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "Either error composition in memory, EINTR wrappers shipped",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Either error composition in memory, EINTR wrappers shipped"
+    },
+    {
+      "file": "2026-04-02-experiment-consolidation-29-to-5.md",
+      "date": "2026-04-02",
+      "title": "Experiment Consolidation — 29 Scattered Packages to 5 Topic-Based Packages",
+      "packages": [
+        "swift-institute",
+        "swift-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "corpus consolidation complete, META skills updated",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — corpus consolidation complete, META skills updated"
+    },
+    {
+      "file": "2026-04-13-io-uring-spec-completeness-and-type-relocation.md",
+      "date": "2026-04-13",
+      "title": "io_uring Spec Completeness Audit, Type Relocation, and Gap Closure",
+      "packages": [
+        "swift-linux-standard",
+        "swift-iso-9945"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "spec audit + type relocation shipped",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — spec audit + type relocation shipped"
+    },
+    {
+      "file": "2026-04-13-iso9945-glob-encoding-and-fnmatch-delegation.md",
+      "date": "2026-04-13",
+      "title": "ISO 9945 Glob Encoding and fnmatch Delegation",
+      "packages": [
+        "swift-kernel-primitives",
+        "swift-iso-9945",
+        "swift-posix"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "three-layer glob/fnmatch encoding shipped",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — three-layer glob/fnmatch encoding shipped"
+    },
+    {
+      "file": "2026-04-01-async-primitives-reaudit-agent-verification-discipline.md",
+      "date": "2026-04-01",
+      "title": "Async Primitives Re-Audit — Agent Verification Discipline and Handoff Triage",
+      "packages": [
+        "swift-async-primitives",
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-01",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-04-01)"
+    },
+    {
+      "file": "2026-04-01-swift-io-code-surface-reaudit.md",
+      "date": "2026-04-01",
+      "title": "swift-io Code Surface Re-Audit — Agent Accuracy and ~Copyable Test Patterns",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-01",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-04-01)"
+    },
+    {
+      "file": "2026-04-01-implementation-skill-condensation.md",
+      "date": "2026-04-01",
+      "title": "Implementation Skill Condensation — Experiment Audit as Quality Gate",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-01",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-04-01)"
+    },
+    {
+      "file": "2026-04-06-readiness-driver-platform-stack-alignment.md",
+      "date": "2026-04-06",
+      "title": "Readiness Driver Platform Stack Alignment — ~Copyable Witness Design Discovery",
+      "packages": [
+        "swift-io",
+        "swift-kernel",
+        "swift-memory-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "readiness driver moved to swift-kernel, witness pattern validated",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — readiness driver moved to swift-kernel, witness pattern validated"
+    },
+    {
+      "file": "2026-04-01-path-protocol-architecture-and-platform-extension-principle.md",
+      "date": "2026-04-01",
+      "title": "Path.Protocol Architecture and Platform Extension Principle",
+      "packages": [
+        "swift-path-primitives",
+        "swift-iso-9945",
+        "swift-windows-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-01",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-04-01)"
+    },
+    {
+      "file": "2026-04-04-memberimportvisibility-cascade-remediation.md",
+      "date": "2026-04-04",
+      "title": "MemberImportVisibility Cascade Remediation",
+      "packages": [
+        "swift-storage/network/terminal/queue/tree/parser/pool/darwin/kernel-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "MIV import fixes shipped across 9 packages",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — MIV import fixes shipped across 9 packages"
+    },
+    {
+      "file": "2026-04-01-kernel-descriptor-deinit-test-hang.md",
+      "date": "2026-04-01",
+      "title": "Kernel.Descriptor Deinit — Process fd Corruption and ~Copyable Ownership Gaps",
+      "packages": [
+        "swift-io",
+        "swift-kernel-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-01",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-04-01)"
+    },
+    {
+      "file": "2026-04-09-kernel-event-audit-and-c-type-elimination.md",
+      "date": "2026-04-09",
+      "title": "Kernel.Event Audit and C Type Elimination",
+      "packages": [
+        "swift-darwin-primitives",
+        "swift-linux-primitives",
+        "swift-foundations"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "audit findings remediated, C types eliminated",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — audit findings remediated, C types eliminated"
+    },
+    {
+      "file": "2026-04-01-corpus-meta-analysis-experiment-coverage.md",
+      "date": "2026-04-01",
+      "title": "Corpus Meta-Analysis Experiment Coverage — META-022 through META-026",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-01",
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed (2026-04-01)"
+    },
+    {
+      "file": "2026-04-01-first-full-corpus-sweep-remediation.md",
+      "date": "2026-04-01",
+      "title": "First Full Corpus Sweep Remediation — 722 Items, 4-Phase Remediation",
+      "packages": [
+        "swift-institute",
+        "swift-primitives",
+        "swift-standards",
+        "swift-foundations"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "full corpus sweep remediation complete",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — full corpus sweep remediation complete"
+    },
+    {
+      "file": "2026-04-01-handle-descriptor-ownership-refactor.md",
+      "date": "2026-04-01",
+      "title": "Handle Descriptor Ownership Refactor — Ownership Cascades and Lifecycle Footguns",
+      "packages": [
+        "swift-io",
+        "swift-darwin-primitives",
+        "swift-kernel-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "Handle owns Kernel.Descriptor, EBADF fixed",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Handle owns Kernel.Descriptor, EBADF fixed"
+    },
+    {
+      "file": "2026-04-15-executor-primitives-l1-and-l3-compositions.md",
+      "date": "2026-04-15",
+      "title": "Executor Primitives L1 and L3 Compositions — Layering Discoveries and ~Copyable Atomics",
+      "packages": [
+        "swift-executor-primitives",
+        "swift-executors"
+      ],
+      "status": "processed",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-04-01-buffer-link-discipline-factoring.md",
+      "date": "2026-04-01",
+      "title": "Buffer.Link Discipline — Algorithm Factoring as the Unification Primitive",
+      "packages": [
+        "swift-buffer-primitives",
+        "swift-async-primitives",
+        "swift-list-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "Buffer.Link<N> factored, compositions re-derived",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Buffer.Link<N> factored, compositions re-derived"
+    },
+    {
+      "file": "2026-04-01-buffer-modularization-and-peek-miscompile.md",
+      "date": "2026-04-01",
+      "title": "Buffer Modularization Redo and Property.View.Read Release-Mode Miscompile",
+      "packages": [
+        "swift-buffer-primitives",
+        "swift-property-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "MEMORY",
+      "outcomeDescription": "release-mode miscompile tracked in copypropagation memory",
+      "statusRaw": "processed (2026-04-13) MEMORY — release-mode miscompile tracked in copypropagation memory"
+    },
+    {
+      "file": "2026-04-01-link-primitives-audit-and-tests.md",
+      "date": "2026-04-01",
+      "title": "Link Primitives Audit — Compound Identifier Blind Spot and Test Harness",
+      "packages": [
+        "swift-link-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "audit fixes + Sendable correction shipped",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — audit fixes + Sendable correction shipped"
+    },
+    {
+      "file": "2026-04-01-test-hang-executor-ownership-architecture.md",
+      "date": "2026-04-01",
+      "title": "Test Hang Investigation — Executor Ownership as Architectural Question",
+      "packages": [
+        "swift-io",
+        "swift-kernel"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "MEMORY",
+      "outcomeDescription": "executor shutdown footgun tracked in project_executor_shutdown_footgun.md",
+      "statusRaw": "processed (2026-04-13) MEMORY — executor shutdown footgun tracked in project_executor_shutdown_footgun.md"
+    },
+    {
+      "file": "2026-04-01-storage-inline-bottom-up-deinit.md",
+      "date": "2026-04-01",
+      "title": "Storage.Inline Bottom-Up Deinit — From Workaround Cascade to One-Line Fix",
+      "packages": [
+        "swift-storage-primitives",
+        "swift-buffer-primitives",
+        "+8 more"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "deinit workaround tracked in noncopyable-deinit-workaround.md memory",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — deinit workaround tracked in noncopyable-deinit-workaround.md memory"
+    },
+    {
+      "file": "2026-04-02-escapable-heap-storage-addressof-blocker.md",
+      "date": "2026-04-02",
+      "title": "~Escapable Heap Storage — Builtin.addressof Blocker and Upstream Resolution",
+      "packages": [
+        "swift-storage-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "INFORMATIONAL",
+      "outcomeDescription": "upstream blocker confirmed, no workaround possible",
+      "statusRaw": "processed (2026-04-13) INFORMATIONAL — upstream blocker confirmed, no workaround possible"
+    },
+    {
+      "file": "2026-04-02-ownership-corpus-consolidation.md",
+      "date": "2026-04-02",
+      "title": "Ownership Corpus Consolidation: 22 → 4 Research Documents",
+      "packages": [
+        "swift-institute",
+        "swift-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "22 docs consolidated to 4 topic-based documents",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — 22 docs consolidated to 4 topic-based documents"
+    },
+    {
+      "file": "2026-04-02-cq-poll-thread-hang-structural-analysis.md",
+      "date": "2026-04-02",
+      "title": "CQ Poll Thread Hang — Structural Analysis via Code Tracing",
+      "packages": [
+        "swift-io",
+        "swift-async-primitives",
+        "swift-kernel"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "poll thread hang root cause found and fixed",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — poll thread hang root cause found and fixed"
+    },
+    {
+      "file": "2026-04-02-cq-cleanup-principled-enforcement-points.md",
+      "date": "2026-04-02",
+      "title": "CQ Cleanup — Principled Enforcement Points and Nonisolated Guard Reversal",
+      "packages": [
+        "swift-io",
+        "swift-kernel"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "guard reversal and enforcement points shipped",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — guard reversal and enforcement points shipped"
+    },
+    {
+      "file": "2026-04-02-io-bench-hang-noncopyable-socket-descriptor.md",
+      "date": "2026-04-02",
+      "title": "io-bench Hang Fix and ~Copyable Socket.Descriptor Migration",
+      "packages": [
+        "swift-io",
+        "swift-kernel-primitives",
+        "swift-iso-9945"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "Socket.Descriptor made ~Copyable, hang fixed",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Socket.Descriptor made ~Copyable, hang fixed"
+    },
+    {
+      "file": "2026-04-03-noncopyable-closure-capture-red-herring.md",
+      "date": "2026-04-03",
+      "title": "~Copyable Closure Capture Investigation — Hypothesis Disproven, Verification Order Matters",
+      "packages": [
+        "swift-io",
+        "swift-kernel-primitives",
+        "swift-ownership-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "MEMORY",
+      "outcomeDescription": "verify hypotheses before acting, handoff misattribution pattern",
+      "statusRaw": "processed (2026-04-13) MEMORY — verify hypotheses before acting, handoff misattribution pattern"
+    },
+    {
+      "file": "2026-04-03-pair-noncopyable-widening-sendable-discovery.md",
+      "date": "2026-04-03",
+      "title": "Pair ~Copyable Widening — Sendable & ~Copyable Discovery",
+      "packages": [
+        "swift-algebra-primitives",
+        "swift-iso-9945"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "Pair widened to ~Copyable, Sendable & ~Copyable composition validated",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Pair widened to ~Copyable, Sendable & ~Copyable composition validated"
+    },
+    {
+      "file": "2026-04-03-unchecked-sendable-audit-classification.md",
+      "date": "2026-04-03",
+      "title": "@unchecked Sendable Audit — Classification Taxonomy and Layer-Boundary Discipline",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "MEMORY",
+      "outcomeDescription": "audit classification in project_unchecked_sendable_audit.md",
+      "statusRaw": "processed (2026-04-13) MEMORY — audit classification in project_unchecked_sendable_audit.md"
+    },
+    {
+      "file": "2026-04-03-io-bench-echo-hang-pipeline-deadlock.md",
+      "date": "2026-04-03",
+      "title": "io-bench Echo Hang — Pipeline Deadlock, Not Pool Starvation",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "pipeline deadlock fixed via split() pattern",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — pipeline deadlock fixed via split() pattern"
+    },
+    {
+      "file": "2026-04-03-swift-io-implementation-audit-quick-wins.md",
+      "date": "2026-04-03",
+      "title": "swift-io Implementation Audit — Three Mechanisms + Quick Wins",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "82 findings triaged, quick wins shipped",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — 82 findings triaged, quick wins shipped"
+    },
+    {
+      "file": "2026-04-03-pre-publication-audit-fixes-complete.md",
+      "date": "2026-04-03",
+      "title": "Pre-Publication Audit Fixes — 18 Packages Across 3 Layers",
+      "packages": [
+        "swift-iso-32000",
+        "swift-iso-8601",
+        "swift-rfc-9110",
+        "+15 more"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "pre-publication fixes shipped across 18 packages",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — pre-publication fixes shipped across 18 packages"
+    },
+    {
+      "file": "2026-04-03-nonisolated-register-and-channel-init.md",
+      "date": "2026-04-03",
+      "title": "Nonisolated Register/Deregister and Channel.init — From Diagnosis to Regression",
+      "packages": [
+        "swift-io",
+        "swift-async-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "nonisolated register/deregister shipped, regression tracked",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — nonisolated register/deregister shipped, regression tracked"
+    },
+    {
+      "file": "2026-04-04-miv-noncopyable-array-discovery.md",
+      "date": "2026-04-04",
+      "title": "MIV Remediation: ~Copyable Array Discovery and Cross-Layer Cascade",
+      "packages": [
+        "swift-pool-primitives",
+        "swift-cache-primitives",
+        "swift-posix",
+        "swift-io",
+        "+2 more"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "MIV fixes + ~Copyable Array discovery shipped",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — MIV fixes + ~Copyable Array discovery shipped"
+    },
+    {
+      "file": "2026-04-03-sending-mutex-nesting-flip.md",
+      "date": "2026-04-03",
+      "title": "Sending-Mutex Composition — Nesting Flip Eliminates Hot-Path Allocation",
+      "packages": [
+        "swift-io",
+        "swift-property-primitives",
+        "swift-queue-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "inout-sending-mechanism memory already captures pattern",
+      "statusRaw": "processed (2026-04-13) SKILL_UPDATE — inout-sending-mechanism memory already captures pattern"
+    },
+    {
+      "file": "2026-04-04-darwin-primitives-kernel-narrowing.md",
+      "date": "2026-04-04",
+      "title": "Darwin Primitives Kernel Narrowing — Re-export Chain as Narrowing Leverage",
+      "packages": [
+        "swift-darwin-primitives",
+        "swift-ascii-parser-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "umbrella imports narrowed to variant modules",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — umbrella imports narrowed to variant modules"
+    },
+    {
+      "file": "2026-04-05-readiness-driver-domain-model.md",
+      "date": "2026-04-05",
+      "title": "Readiness Driver Domain Model: From Handle + Closures to Recipe + Thing",
+      "packages": [
+        "swift-kernel",
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "kqueue driver ported, Recipe+Thing domain model landed",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — kqueue driver ported, Recipe+Thing domain model landed"
+    },
+    {
+      "file": "2026-04-06-epoll-port-management-and-api-research.md",
+      "date": "2026-04-06",
+      "title": "Epoll Port Management and IO Events API Research Review",
+      "packages": [
+        "swift-kernel",
+        "swift-kernel-primitives",
+        "swift-linux-primitives",
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "epoll port + API research commissioned",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — epoll port + API research commissioned"
+    },
+    {
+      "file": "2026-04-06-epoll-port-kernel-readiness.md",
+      "date": "2026-04-06",
+      "title": "Epoll Port to Kernel.Readiness — ~Copyable Ownership Design Under Review Pressure",
+      "packages": [
+        "swift-kernel-primitives",
+        "swift-linux-primitives",
+        "swift-kernel",
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "epoll ported to Kernel.Readiness",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — epoll ported to Kernel.Readiness"
+    },
+    {
+      "file": "2026-04-06-linux-docker-verification-cross-repo.md",
+      "date": "2026-04-06",
+      "title": "Linux Docker Verification Exposes Cross-Repo Compilation Debt",
+      "packages": [
+        "swift-linux-primitives",
+        "swift-linux",
+        "swift-iso-9945",
+        "swift-kernel",
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "INFORMATIONAL",
+      "outcomeDescription": "cross-repo compilation debt exposed and tracked",
+      "statusRaw": "processed (2026-04-13) INFORMATIONAL — cross-repo compilation debt exposed and tracked"
+    },
+    {
+      "file": "2026-04-06-io-events-tier0-api-design.md",
+      "date": "2026-04-06",
+      "title": "IO Events Tier 0 API Design — From Specification to Architectural Challenge",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "RESEARCH",
+      "outcomeDescription": "Tier 0 API design captured in io-events research docs",
+      "statusRaw": "processed (2026-04-13) RESEARCH — Tier 0 API design captured in io-events research docs"
+    },
+    {
+      "file": "2026-04-06-io-stream-span-async-validation.md",
+      "date": "2026-04-06",
+      "title": "Span and MutableSpan Survive Async — The Perfect IO API Is Achievable Today",
+      "packages": [
+        "swift-io",
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "Span/MutableSpan async validation confirmed, IO.run shipped",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Span/MutableSpan async validation confirmed, IO.run shipped"
+    },
+    {
+      "file": "2026-04-06-intent-over-machinery-module-design.md",
+      "date": "2026-04-06",
+      "title": "Intent Over Machinery — Module Boundaries Must Reflect User Concepts",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "principle reinforces implementation skill axiom",
+      "statusRaw": "processed (2026-04-13) SKILL_UPDATE — principle reinforces implementation skill axiom"
+    },
+    {
+      "file": "2026-04-04-array-name-shadowing-exported-import-precedence.md",
+      "date": "2026-04-04",
+      "title": "Array Name Shadowing: @_exported Import Already Works",
+      "packages": [
+        "swift-array-primitives",
+        "swift-io",
+        "swift-tree-primitives",
+        "swift-memory-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "@_exported import precedence confirmed, disambiguation removed",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — @_exported import precedence confirmed, disambiguation removed"
+    },
+    {
+      "file": "2026-04-06-shutdown-view-pointer-elimination-investigation.md",
+      "date": "2026-04-06",
+      "title": "Shutdown View Pointer Elimination — @_unsafeNonescapableResult Is Orthogonal to TemporaryPointers",
+      "packages": [
+        "swift-io",
+        "swift-property-primitives",
+        "swift-storage-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "INFORMATIONAL",
+      "outcomeDescription": "investigation concluded, orthogonality confirmed",
+      "statusRaw": "processed (2026-04-13) INFORMATIONAL — investigation concluded, orthogonality confirmed"
+    },
+    {
+      "file": "2026-04-06-unsafe-pointer-audit-span-migration.md",
+      "date": "2026-04-06",
+      "title": "Unsafe Pointer Audit — Span Migration Eliminates 18 Sites",
+      "packages": [
+        "swift-io",
+        "swift-iso-9945",
+        "swift-ownership-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "18 unsafe pointer sites replaced with Span",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — 18 unsafe pointer sites replaced with Span"
+    },
+    {
+      "file": "2026-04-06-downstream-span-audit-benchmark-drift.md",
+      "date": "2026-04-06",
+      "title": "Downstream Span Audit — Benchmark Drift as Predictable Gap",
+      "packages": [
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "downstream consumers audited, benchmark gap tracked",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — downstream consumers audited, benchmark gap tracked"
+    },
+    {
+      "file": "2026-04-06-executor-threading-and-noncopyable-closure-constraints.md",
+      "date": "2026-04-06",
+      "title": "Executor Threading and ~Copyable Closure Constraints",
+      "packages": [
+        "swift-io",
+        "swift-kernel"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "MEMORY",
+      "outcomeDescription": "noncopyable-sendable-capture memory covers this constraint",
+      "statusRaw": "processed (2026-04-13) MEMORY — noncopyable-sendable-capture memory covers this constraint"
+    },
+    {
+      "file": "2026-04-06-executor-first-architecture-research-and-phase2.md",
+      "date": "2026-04-06",
+      "title": "Executor-First Architecture Research and Phase 2 Implementation",
+      "packages": [
+        "swift-io",
+        "swift-institute"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "RESEARCH",
+      "outcomeDescription": "executor-first architecture research doc produced, Phase 2 implemented",
+      "statusRaw": "processed (2026-04-13) RESEARCH — executor-first architecture research doc produced, Phase 2 implemented"
+    },
+    {
+      "file": "2026-04-08-descriptor-ownership-aliasing-anti-pattern.md",
+      "date": "2026-04-08",
+      "title": "Constructing ~Copyable Resource Wrappers from Raw Values Implies Ownership",
+      "packages": [
+        "swift-path-primitives",
+        "swift-iso-9945",
+        "swift-kernel-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "MEMORY",
+      "outcomeDescription": "no_raw_descriptor_reconstruction memory covers this anti-pattern",
+      "statusRaw": "processed (2026-04-13) MEMORY — no_raw_descriptor_reconstruction memory covers this anti-pattern"
+    },
+    {
+      "file": "2026-04-08-pool-primitives-canonical-form-second-round.md",
+      "date": "2026-04-08",
+      "title": "Pool Primitives Canonical Form: Second-Round Refactor — The \"Go Further\" Pattern",
+      "packages": [
+        "swift-pool-primitives",
+        "swift-pools",
+        "swift-io",
+        "swift-algebra-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "second-round canonical form refactor complete",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — second-round canonical form refactor complete"
+    },
+    {
+      "file": "2026-04-08-io-blocking-domain-model-redesign.md",
+      "date": "2026-04-08",
+      "title": "IO.Blocking Domain Model Redesign — From Surface Cleanup to Category-Error Discovery",
+      "packages": [
+        "swift-io",
+        "swift-pools",
+        "swift-pool-primitives",
+        "swift-kernel",
+        "swift-async-primitives",
+        "swift-executors"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "IO.Blocking.Driver pattern shipped, status in project_blocking_refactor_complete.md",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — IO.Blocking.Driver pattern shipped, status in project_blocking_refactor_complete.md"
+    },
+    {
+      "file": "2026-04-08-io-blocking-refactor-regressions.md",
+      "date": "2026-04-08",
+      "title": "IO.Blocking Refactor Regressions — Honest Post-Completion Assessment",
+      "packages": [
+        "swift-io",
+        "swift-executors",
+        "swift-async-primitives",
+        "swift-collection-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "MEMORY",
+      "outcomeDescription": "regressions tracked in project_blocking_refactor_complete.md",
+      "statusRaw": "processed (2026-04-13) MEMORY — regressions tracked in project_blocking_refactor_complete.md"
+    },
+    {
+      "file": "2026-04-08-descriptor-ownership-remediation.md",
+      "date": "2026-04-08",
+      "title": "Descriptor Ownership Remediation — Language Features Over Custom Types",
+      "packages": [
+        "swift-kernel-primitives",
+        "swift-linux-primitives",
+        "swift-iso-9945",
+        "swift-kernel",
+        "swift-io"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-13",
+      "triageOutcome": "IMPLEMENTED",
+      "outcomeDescription": "language_features_over_custom_types memory captures principle",
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — language_features_over_custom_types memory captures principle"
+    }
+  ]
+}
