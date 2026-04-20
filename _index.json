@@ -2444,6 +2444,16 @@
       "statusRaw": "IN_PROGRESS",
       "tier": 2,
       "scope": "ecosystem-wide"
+    },
+    {
+      "file": "ip-address-value-type-memory-layout.md",
+      "displayName": "ip-address-value-type-memory-layout.md",
+      "topic": "Whether RFC_791.IPv4.Address / RFC_4291.IPv6.Address should change internal storage to match POSIX in_addr / in6_addr for zero-copy unification with sockaddr wrappers. Empirical experiment (swift-rfc-4291/Experiments/ipv6-address-alignment) measured current layouts; prior-art survey (Rust, Go, .NET, Python) shows universal rejection of layout compatibility — Rust explicitly abandoned C sockaddr layout in PR #78802. Recommendation: keep host-order storage, fix inaccurate docstrings, compose at API boundary (iso-9945 / windows-standard accept RFC values, marshal into native sockaddr). Motivated by swift-kernel Finding #17 Windows gap.",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-layer"
     }
   ],
   "narrativeSections": [
