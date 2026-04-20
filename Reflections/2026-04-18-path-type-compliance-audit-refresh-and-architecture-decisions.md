@@ -8,7 +8,18 @@ packages:
   - swift-file-system
   - swift-kernel
   - swift-posix
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: "Single implementation" == "single algebra" clarification: absorbed into existing [IMPL-060] ecosystem-dependencies framing (no new rule needed — the conflation caught in this session is addressed by clearer framing in the audit text, not a skill requirement)
+  - type: package_insight
+    target: swift-paths
+    description: Phase 4b implementation plan (byte scanning on _storage.buffer) — executed in subsequent reflection 2026-04-18-path-ecosystem-correction-cycle
+  - type: research_topic
+    target: swift-paths
+    description: lastComponent semantics alignment (trailing-separator edge cases) — superseded by Wave 5 PR 12 deleting lastComponent entirely
 ---
 
 # Path Type Compliance Audit Refresh and Architecture Decisions

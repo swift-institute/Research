@@ -6,7 +6,16 @@ packages:
   - swift-institute-Research
   - swift-institute-Experiments
   - swift-institute-Skills
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: no_action
+    description: Documentation skill "check Resources/ before bespoke" note: low-priority nuance; existing [DOC-050] code-example-verification rule generalizes sufficiently
+  - type: blog_idea
+    description: "When JSON should replace a markdown table" — general pattern beyond swift-institute
+  - type: experiment_topic
+    target: swift-institute-Scripts
+    description: _index.json → _index.md regenerator (deferred; closes derived-markdown loop)
 ---
 
 # Two Homepages — DocC-Merge Experiment, Mixed-Chrome Pivot, Dashboard Live

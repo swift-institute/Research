@@ -4,7 +4,18 @@ session_objective: Implement production Chase-Lev work-stealing deque for Unowne
 packages:
   - swift-executor-primitives
   - swift-executors
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: testing-swiftlang
+    description: ~Copyable in #expect: property-access expansion + @unchecked Sendable class harness for group.addTask (extended [SWIFT-TEST-014])
+  - type: skill_update
+    target: testing
+    description: Added [TEST-028] null-pointer offset for Optional<pointer-wrapping> mock factories
+  - type: package_insight
+    target: swift-executors
+    description: Worker.swift back-pressure behavior change noted for work-stealing-scheduler-design.md
 ---
 
 # Chase-Lev Deque — From Spike to Production L1 Primitive

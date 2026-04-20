@@ -6,7 +6,18 @@ packages:
   - swift-foundations
   - swift-standards
   - swift-institute-Scripts
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: reflect-session
+    description: [REFL-006] re-verify rule extended to multi-item/multi-repo scope
+  - type: research_topic
+    target: ecosystem
+    description: Multi-repo automation design patterns — taxonomy of per-repo state axes (deferred)
+  - type: package_insight
+    target: swift-institute-Scripts
+    description: migrate-index.py pitfall documentation (noted for follow-up header comment)
 ---
 
 # Ecosystem Index Migration Completion and Batch Git Edges

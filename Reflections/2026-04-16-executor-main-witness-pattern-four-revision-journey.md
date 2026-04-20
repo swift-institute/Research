@@ -7,7 +7,17 @@ packages:
   - swift-kernel-primitives
   - swift-darwin-standard
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: supervise
+    description: [SUPER-002a] scope-lock-precedes-architecture-lock (merged with 2026-04-16-supervise-in-practice)
+  - type: skill_update
+    target: supervise
+    description: [SUPER-015] operational compression trigger at pivot boundaries
+  - type: no_action
+    description: Architectural-need vs current-code rule for research-process: related pattern already covered by [RES-021] contextualization step; defer as potential research topic
 ---
 
 # Executor.Main Witness Pattern — A Four-Revision Architectural Journey

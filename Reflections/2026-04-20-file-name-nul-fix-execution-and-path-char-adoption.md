@@ -6,7 +6,18 @@ packages:
   - swift-kernel-primitives
   - swift-string-primitives
   - swift-path-primitives
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: handoff
+    description: [HANDOFF-016] extended with scope-flag-staleness axis
+  - type: skill_update
+    target: implementation
+    description: [PATTERN-056] dead-case-per-platform enum anti-pattern
+  - type: skill_update
+    target: reflect-session
+    description: Post-commit memory scan step added to [REFL-006]
 ---
 
 # File.Name NUL fix execution and Path.Char adoption

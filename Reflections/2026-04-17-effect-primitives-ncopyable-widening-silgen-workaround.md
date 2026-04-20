@@ -5,7 +5,18 @@ packages:
   - swift-effect-primitives
   - swift-equation-primitives
   - swift-hash-primitives
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: Extended [IMPL-092] with two-callback storage fallback for toolchain-blocked composition; heuristic for recognizing the failure mode
+  - type: experiment_topic
+    target: swift-effect-primitives
+    description: Re-run noncopyable-optional-capture-crash on 6.4-dev nightly (deferred to future session)
+  - type: research_topic
+    target: ecosystem
+    description: Survey of ≥3-primitive SILGen-bug-prone compositions (deferred)
 ---
 
 # Effect-Primitives `~Copyable` Widening — Two-Callback Workaround for a Swift 6.3.1 SILGen Bug

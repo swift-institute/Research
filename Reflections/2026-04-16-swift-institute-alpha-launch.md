@@ -3,7 +3,13 @@ date: 2026-04-16
 session_objective: Take swift-institute ecosystem from private to public alpha — DocC restructure, claim triage, GitHub Pages deployment, custom domain, launch content.
 packages:
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: no_action
+    description: Landing-page DocC skill note: low-priority, subsumed by existing documentation skill guidance and swift-institute.org source as de facto example
+  - type: blog_idea
+    description: "Alpha-launching a Swift ecosystem" — checklist-style post: claim-inventory, cert kick, DocC-native landing
 ---
 
 # Swift Institute Alpha Launch — Claim Triage, HTTPS Kick, Landing-Page Constraints

@@ -5,7 +5,15 @@ packages:
   - swift-institute
   - swift-parser-primitives
   - swift-io
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: experiment-process
+    description: [EXP-007a] header anchor requirement; [EXP-002c] placement rule (merged with corpus-completion)
+  - type: research_topic
+    target: compiler
+    description: Upstream status of fix for #85743 CopyPropagation on ~Copyable enum switch consume (deferred to compiler-tracking)
 ---
 
 # Swift 6.3.1 Experiment Re-Run — Memory Drift, Repo Splits, and the Experiment-Header Convention That Saved Time

@@ -11,7 +11,18 @@ packages:
   - swift-institute-Swift-Evolution
   - swift-institute-Scripts
   - swift-institute-.github
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: handoff
+    description: [HANDOFF-016] extended with live-revisions staleness axis
+  - type: skill_update
+    target: supervise
+    description: [SUPER-006] user-authorization qualifier for signals #3/#6 (absentia-return case)
+  - type: research_topic
+    target: ecosystem
+    description: Org-as-directory vs flat layout decision rule (deferred as a future research stub)
 ---
 
 # Institute Repo Split and Supervise-in-Absentia Review Cycle

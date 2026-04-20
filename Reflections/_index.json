@@ -6,6 +6,60 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-20-kernel-file-flush-plat-arch-008e-execution.md",
+      "date": "2026-04-20",
+      "title": "Executing the flush-family L3 relanding per [PLAT-ARCH-008e]",
+      "packages": [
+        "swift-iso-9945",
+        "swift-windows-standard",
+        "swift-posix",
+        "swift-kernel",
+        "swift-file-system"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:platform] [skill:handoff] [package:swift-windows]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:platform] [skill:handoff] [package:swift-windows]"
+    },
+    {
+      "file": "2026-04-20-l3-unifier-composition-discipline.md",
+      "date": "2026-04-20",
+      "title": "Codifying the L3 Unifier Composition Discipline from a flush-family vestige",
+      "packages": [
+        "swift-file-system",
+        "swift-iso-9945",
+        "swift-windows-standard",
+        "swift-strings",
+        "swift-paths",
+        "swift-posix",
+        "swift-kernel",
+        "swift-institute/Skills/platform"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:handoff] [research:ecosystem] [skill:platform]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [research:ecosystem] [skill:platform]"
+    },
+    {
+      "file": "2026-04-20-kernel-error-code-predicates-handoff-premise-audit.md",
+      "date": "2026-04-20",
+      "title": "Kernel.Error.Code predicates — handoff premise audit and the test opt-out reading",
+      "packages": [
+        "swift-iso-9945",
+        "swift-windows-standard",
+        "swift-file-system",
+        "swift-kernel",
+        "swift-kernel-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:handoff] [skill:handoff] [no-action]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:handoff] [no-action]"
+    },
+    {
       "file": "2026-04-20-at-implements-bridge-pattern-and-defensive-l1-walkback.md",
       "date": "2026-04-20",
       "title": "Walking back defensive naming at L1: @_implements as the real bridge-site escape hatch",
@@ -16,11 +70,11 @@
         "swift-algebra-linear-primitives",
         "swift-markdown-html-rendering"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:implementation] [experiment:swift-institute] [no-action]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [experiment:swift-institute] [no-action]"
     },
     {
       "file": "2026-04-20-file-name-nul-fix-execution-and-path-char-adoption.md",
@@ -32,11 +86,11 @@
         "swift-string-primitives",
         "swift-path-primitives"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:handoff] [skill:implementation] [skill:reflect-session]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:implementation] [skill:reflect-session]"
     },
     {
       "file": "2026-04-20-swift-file-system-io-migration-and-l1-vocabulary-overreach.md",
@@ -49,11 +103,11 @@
         "swift-kernel-primitives",
         "swift-kernel"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:handoff] [no-action] [package:swift-file-system]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [no-action] [package:swift-file-system]"
     },
     {
       "file": "2026-04-18-path-ecosystem-correction-cycle-and-process-distillation.md",
@@ -66,11 +120,11 @@
         "swift-kernel-primitives",
         "swift-file-system"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:handoff] [skill:implementation] [research:ecosystem]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:implementation] [research:ecosystem]"
     },
     {
       "file": "2026-04-18-ecosystem-index-migration-completion-and-batch-git-edges.md",
@@ -82,11 +136,11 @@
         "swift-standards",
         "swift-institute-Scripts"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:reflect-session] [research:ecosystem] [package:swift-institute-Scripts]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:reflect-session] [research:ecosystem] [package:swift-institute-Scripts]"
     },
     {
       "file": "2026-04-18-path-type-compliance-audit-refresh-and-architecture-decisions.md",
@@ -100,11 +154,11 @@
         "swift-kernel",
         "swift-posix"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:implementation] [package:swift-paths] [research:swift-paths]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [package:swift-paths] [research:swift-paths]"
     },
     {
       "file": "2026-04-18-json-authoritative-migration-sweep.md",
@@ -118,11 +172,11 @@
         "swift-institute-Blog",
         "swift-institute-Skills"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:research-process] [blog] [research:swift-institute.org]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:research-process] [blog] [research:swift-institute.org]"
     },
     {
       "file": "2026-04-18-two-homepages-mixed-chrome-dashboard.md",
@@ -134,11 +188,11 @@
         "swift-institute-Experiments",
         "swift-institute-Skills"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "RESEARCH",
+      "outcomeDescription": "[no-action] [blog] [experiment:swift-institute-Scripts]",
+      "statusRaw": "processed (2026-04-20) RESEARCH — [no-action] [blog] [experiment:swift-institute-Scripts]"
     },
     {
       "file": "2026-04-17-institute-repo-split-and-supervise-absentia-review.md",
@@ -155,11 +209,11 @@
         "swift-institute-Scripts",
         "swift-institute-.github"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:handoff] [skill:supervise] [research:ecosystem]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:supervise] [research:ecosystem]"
     },
     {
       "file": "2026-04-17-swift-6-3-1-corpus-completion-and-drift-relocation.md",
@@ -170,11 +224,11 @@
         "swift-primitives/swift-index-primitives",
         "swift-primitives/swift-array-primitives"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:experiment-process] [blog] [no-action]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:experiment-process] [blog] [no-action]"
     },
     {
       "file": "2026-04-17-effect-primitives-ncopyable-widening-silgen-workaround.md",
@@ -185,11 +239,11 @@
         "swift-equation-primitives",
         "swift-hash-primitives"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:implementation] [experiment:swift-effect-primitives] [research:ecosystem]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [experiment:swift-effect-primitives] [research:ecosystem]"
     },
     {
       "file": "2026-04-17-swift-6-3-1-experiment-revalidation.md",
@@ -200,11 +254,11 @@
         "swift-parser-primitives",
         "swift-io"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:experiment-process] [research:compiler]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:experiment-process] [research:compiler]"
     },
     {
       "file": "2026-04-16-chase-lev-deque-production-implementation.md",
@@ -214,11 +268,11 @@
         "swift-executor-primitives",
         "swift-executors"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:testing-swiftlang] [skill:testing] [package:swift-executors]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:testing-swiftlang] [skill:testing] [package:swift-executors]"
     },
     {
       "file": "2026-04-16-io-completion-storage-elimination.md",
@@ -227,11 +281,11 @@
       "packages": [
         "swift-io"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:implementation] [package:swift-io] [experiment:swift-io]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [package:swift-io] [experiment:swift-io]"
     },
     {
       "file": "2026-04-16-supervise-in-practice-three-failure-modes.md",
@@ -242,11 +296,11 @@
         "swift-kernel",
         "swift-institute"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:supervise] [skill:supervise] [no-action]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:supervise] [skill:supervise] [no-action]"
     },
     {
       "file": "2026-04-16-reflect-session-cleanup-completeness.md",
@@ -255,11 +309,11 @@
       "packages": [
         "swift-institute"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:reflect-session] [no-action]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:reflect-session] [no-action]"
     },
     {
       "file": "2026-04-16-parameter-ordering-skill-lifecycle-routing-gap.md",
@@ -268,11 +322,11 @@
       "packages": [
         "swift-institute"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:skill-lifecycle] [no-action]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:skill-lifecycle] [no-action]"
     },
     {
       "file": "2026-04-16-executor-main-witness-pattern-four-revision-journey.md",
@@ -285,11 +339,11 @@
         "swift-darwin-standard",
         "swift-institute"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "[skill:supervise] [skill:supervise] [no-action]",
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:supervise] [skill:supervise] [no-action]"
     },
     {
       "file": "2026-04-16-docc-landing-restructure-and-layers-show.md",
@@ -305,11 +359,11 @@
         "swift-html",
         "swift-io"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "RESEARCH",
+      "outcomeDescription": "[no-action] [research:ecosystem] [blog]",
+      "statusRaw": "processed (2026-04-20) RESEARCH — [no-action] [research:ecosystem] [blog]"
     },
     {
       "file": "2026-04-16-swift-institute-alpha-launch.md",
@@ -318,11 +372,11 @@
       "packages": [
         "swift-institute"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-04-20",
+      "triageOutcome": "INFORMATIONAL",
+      "outcomeDescription": "[no-action] [blog]",
+      "statusRaw": "processed (2026-04-20) INFORMATIONAL — [no-action] [blog]"
     },
     {
       "file": "2026-02-12-bit-vector-zeros-sequence-first-disambiguation.md",
