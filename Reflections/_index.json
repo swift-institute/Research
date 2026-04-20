@@ -6,6 +6,45 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-20-consumer-migration-pickup-l3-name-parity-collision.md",
+      "date": "2026-04-20",
+      "title": "Consumer migration pickup reveals L3 unifier name-parity collision on POSIX-literal syscalls",
+      "packages": [
+        "swift-file-system",
+        "swift-kernel",
+        "swift-iso-9945",
+        "swift-posix",
+        "swift-institute/Skills/platform",
+        "swift-institute/Skills/handoff"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-20-file-system-typed-path-and-l2-l3-io-ambiguity.md",
+      "date": "2026-04-20",
+      "title": "swift-file-system typed-path migration, error-payload upgrade, and the L2/L3 IO.Read/Write namespace-alias collision",
+      "packages": [
+        "swift-file-system",
+        "swift-windows-standard",
+        "swift-iso-9945",
+        "swift-posix",
+        "swift-kernel"
+      ],
+      "status": "pending"
+    },
+    {
+      "file": "2026-04-20-l2-l3-same-signature-latent-ambiguity.md",
+      "date": "2026-04-20",
+      "title": "Same-signature L2/L3 extensions create latent ambiguity — Phase A was not optional",
+      "packages": [
+        "swift-kernel",
+        "swift-iso-9945",
+        "swift-posix"
+      ],
+      "status": "pending"
+    },
+    {
       "file": "2026-04-20-kernel-file-flush-plat-arch-008e-execution.md",
       "date": "2026-04-20",
       "title": "Executing the flush-family L3 relanding per [PLAT-ARCH-008e]",
