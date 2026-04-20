@@ -14,7 +14,7 @@ triage_outcomes:
     description: [REFL-006] re-verify rule extended to multi-item/multi-repo scope
   - type: research_topic
     target: ecosystem
-    description: Multi-repo automation design patterns — taxonomy of per-repo state axes (deferred)
+    description: Multi-repo automation design patterns — stub landed at Research/multi-repo-automation-design-patterns.md (Tier 2, IN_PROGRESS)
   - type: package_insight
     target: swift-institute-Scripts
     description: migrate-index.py pitfall documentation (noted for follow-up header comment)

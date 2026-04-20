@@ -16,7 +16,7 @@ triage_outcomes:
     description: Re-run noncopyable-optional-capture-crash on 6.4-dev nightly (deferred to future session)
   - type: research_topic
     target: ecosystem
-    description: Survey of ≥3-primitive SILGen-bug-prone compositions (deferred)
+    description: Survey of ≥3-primitive SILGen-bug-prone compositions — stub landed at Research/silgen-bug-prone-primitive-compositions.md (Tier 2, IN_PROGRESS)
 ---
 
 # Effect-Primitives `~Copyable` Widening — Two-Callback Workaround for a Swift 6.3.1 SILGen Bug

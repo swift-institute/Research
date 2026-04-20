@@ -17,7 +17,7 @@ triage_outcomes:
     description: DOC-050 source-verification already aligned with feedback_verify_prior_findings memory — adding skill row would be duplication without changing behavior
   - type: research_topic
     target: ecosystem
-    description: Geometry ↔ CSS.Length bridge design — Tier 2, cross-package pattern (deferred: noted in reflection text, not yet routed to Research/)
+    description: Primitive-to-spec length bridge design — stub landed at Research/primitive-to-spec-length-bridge-design.md (Tier 2, IN_PROGRESS); Geometry ↔ CSS.Length is the motivating case, generalizes to all primitive→spec bridges
   - type: blog_idea
     description: "Four imports, four layers" — pattern-documentation post for landing-page layers-necessity SHOW
 ---

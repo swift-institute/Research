@@ -18,7 +18,7 @@ triage_outcomes:
     description: "The over-built copy step" — architectural simplification narrative around raw.githubusercontent.com pivot
   - type: research_topic
     target: swift-institute.org
-    description: Scope-filter dashboard aggregation strategy (deferred; Tier 2)
+    description: Scope-filter dashboard aggregation strategy — stub landed at Research/scope-filter-dashboard-aggregation-strategy.md (Tier 2, IN_PROGRESS)
 ---
 
 # JSON-Authoritative Migration Sweep + The Over-Built Copy Step

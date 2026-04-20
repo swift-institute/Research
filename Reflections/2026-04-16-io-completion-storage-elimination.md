@@ -12,9 +12,8 @@ triage_outcomes:
   - type: package_insight
     target: swift-io
     description: Stale README.md in Sources/IO Completions/ — references Storage, Unmanaged, old dispatch flow (noted for follow-up)
-  - type: experiment_topic
-    target: swift-io
-    description: Linux io_uring CQE dispatch verification (deferred — Linux-only testable)
+  - type: no_action
+    description: Linux io_uring CQE dispatch verification: deferred as a natural revisit trigger — the fix is code-landed; on next Linux Docker test run, the token-correlation path will be exercised. No new experiment package needed; the existing test suite carries the verification when run in the appropriate environment.
 ---
 
 # IO.Completion.Storage Elimination — Dictionary as Sole Correlation and Lifetime Manager

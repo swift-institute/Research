@@ -16,9 +16,8 @@ triage_outcomes:
   - type: skill_update
     target: implementation
     description: [PATTERN-058] .enumerated() + subscript-by-Int on custom Collections anti-pattern
-  - type: research_topic
-    target: ecosystem
-    description: Cross-layer equivalence test scope (upfront vs per-wave) — deferred
+  - type: no_action
+    description: Cross-layer equivalence test scope: absorbed into [HANDOFF-020] correction-cycle pattern rationale. The trade-off (upfront cost vs catch rate) is a session-level judgment call; the skill provides the pattern shape, each cycle picks scope against its own risk profile.
 ---
 
 # Path Ecosystem Correction Cycle and Process Distillation
