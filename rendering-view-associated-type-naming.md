@@ -2,11 +2,18 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-13
-status: DECISION
+version: 2.0.0
+last_updated: 2026-04-20
+status: SUPERSEDED
+supersedes: 1.0.0 (2026-03-13 — chose RenderBody rename)
 ---
 -->
+
+> **SUPERSEDED 2026-04-20**: The v1 decision (rename `Body` → `RenderBody` at the `Rendering.View` protocol) has been walked back. `@_implements(Rendering.View, Body)` at the one bridge type (`HTML.Document`) is strictly better — it keeps the idiomatic `Body` name at L1 and concentrates the bridge cost at the site that actually bridges two frameworks. The v1 analysis below is preserved for historical context; the v2 decision is at the end of this document.
+
+---
+
+## v1 analysis (2026-03-13 — SUPERSEDED)
 
 ## Context
 
@@ -128,3 +135,57 @@ Avoids the protocol conflict entirely by not conforming `HTML.Document` to `Swif
 
 This finding has been captured as a blog idea:
 - [BLOG-IDEA-031: The associated type trap](../Blog/_index.md) — [Draft](../Blog/Draft/associated-type-trap-final.md)
+
+---
+
+## v2 decision (2026-04-20)
+
+**Status**: CURRENT
+
+**Choice**: Keep `associatedtype Body` at `Rendering.View`. Add `@_implements(Rendering.View, Body)` on `HTML.Document` — the one type that bridges `Rendering.View` to `SwiftUI.View`.
+
+**What changed since v1**
+
+The v1 analysis concluded "No experimental features address this" and "`@_implements` and `@_nonoverride` exist but operate on value witnesses and override chains respectively — neither splits a unified associated type." This was wrong. Direct experiment (see `Experiments/member-import-visibility-body-conflict/V11_Implements/`) shows that:
+
+1. `@_implements(Protocol, Name)` **does** work on associated types. The attribute lets a typealias satisfy a specifically-named requirement of a specifically-named protocol, even when the type conforms to another protocol that declares an associated type with the same name.
+2. `BASELINE_LANGUAGE_FEATURE(AssociatedTypeImplements, 0, "@_implements on associated types")` in `Features.def` confirms this is always-on baseline behavior — not experimental.
+3. Release-mode verification (`-O`, `-O -whole-module-optimization`) shows witness tables dispatch correctly. The two `Self.Body` lookups return different concrete types per protocol, as expected.
+
+**Why v2 is better than v1**
+
+| Criterion | v1 (rename to `RenderBody`) | v2 (`@_implements`) |
+|-----------|------------------------------|---------------------|
+| L1 primitive API | Compound identifier `RenderBody` | Idiomatic `Body` |
+| Blast radius | ~20 files across swift-rendering-primitives + swift-html-rendering | 1 line on `HTML.Document` |
+| Cost paid at | Every conforming type, ecosystem-wide | One bridge site |
+| Future-proof against further collisions | Yes (at the cost of every new conformer inheriting the compound name) | Yes (each new bridge type pays for itself) |
+| Language stability | Non-underscored, Evolution-stable | Baseline feature, but underscored surface |
+| Layer discipline | Violates ([API-NAME-002] — L1 shouldn't pre-optimize for L3) | Respects — idiomatic at L1, bridge cost at L3 |
+
+v2 trades ecosystem-wide compound naming for one underscored attribute at one bridge type. Since `AssociatedTypeImplements` is a BASELINE language feature (not experimental), the stability trade-off is narrow: the attribute is always on and dispatches correctly, it's just not on the promoted API surface.
+
+**Applied changes** (2026-04-20)
+
+- `swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.View.swift` — `associatedtype RenderBody` → `associatedtype Body`
+- 8 other source files in `swift-rendering-primitives` — `typealias RenderBody = Never` → `typealias Body = Never`
+- 1 test support file in `swift-rendering-primitives`
+- `swift-html-rendering/Sources/HTML Rendering Core/HTML.View.swift` — `where RenderBody: HTML.View` → `where Body: HTML.View`
+- 7 other source/test files in `swift-html-rendering` — typealias renames
+- `swift-html-rendering/Sources/HTML Rendering Core/HTML.Document.swift` — **added** `@_implements(Rendering.View, Body) public typealias _RenderingBody = Body`
+
+**Verification**
+
+- `swift-rendering-primitives`: clean build + 100/100 tests pass
+- `swift-html-rendering`: full-workspace build blocked by pre-existing bugs in unrelated packages (`swift-algebra-linear-primitives` imports a module not declared in its manifest; `swift-incits-4-1986` references missing source files). Fix logic verified against standalone minimal test matching the exact refinement chain.
+
+**Corollary: `@_implements` as a general tool**
+
+The finding generalizes. Whenever a conforming type needs to satisfy two protocols that declare same-named associated types, `@_implements` on a differently-named typealias is the preferred fix over renaming either protocol. The rename-at-protocol approach only makes sense if you own the protocol AND the bridge case is dominant at its layer — rarely true at primitives layers.
+
+**References**
+
+- Experiment: [`member-import-visibility-body-conflict/V11_Implements`](../Experiments/member-import-visibility-body-conflict/Sources/V11_Implements/V11.swift) — CONFIRMED
+- Blog: [`associated-type-trap-final.md`](../Blog/Draft/associated-type-trap-final.md) — "The associated type trap, and the escape hatch I missed"
+- Swift compiler: `include/swift/Basic/Features.def` — `BASELINE_LANGUAGE_FEATURE(AssociatedTypeImplements, ...)`
+- Swift compiler: `docs/ReferenceGuides/UnderscoredAttributes.md` — `@_implements(ProtocolName, Requirement)`

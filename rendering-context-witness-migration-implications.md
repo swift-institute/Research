@@ -406,33 +406,33 @@ The 1095-line conformance extension becomes closure bodies in the transformer. T
 ```swift
 // Before
 public protocol View: ~Copyable {
-    associatedtype RenderBody: View & ~Copyable
-    @Builder var body: RenderBody { get }
+    associatedtype Body: View & ~Copyable
+    @Builder var body: Body { get }
     static func _render<C: Context>(_ view: borrowing Self, context: inout C)
 }
 
 // After
 public protocol View: ~Copyable {
-    associatedtype RenderBody: View & ~Copyable
-    @Builder var body: RenderBody { get }
+    associatedtype Body: View & ~Copyable
+    @Builder var body: Body { get }
     static func _render(_ view: borrowing Self, context: inout Context)
 }
 ```
 
 The default implementation changes from:
 ```swift
-extension Rendering.View where RenderBody: Rendering.View {
+extension Rendering.View where Body: Rendering.View {
     public static func _render<C: Rendering.Context>(_ view: borrowing Self, context: inout C) {
-        RenderBody._render(view.body, context: &context)
+        Body._render(view.body, context: &context)
     }
 }
 ```
 
 To:
 ```swift
-extension Rendering.View where RenderBody: Rendering.View {
+extension Rendering.View where Body: Rendering.View {
     public static func _render(_ view: borrowing Self, context: inout Rendering.Context) {
-        RenderBody._render(view.body, context: &context)
+        Body._render(view.body, context: &context)
     }
 }
 ```
@@ -466,12 +466,12 @@ The existential opening on `V: HTML.View` still works — it's the VIEW that's t
 ```swift
 // Before
 var bodyContext = HTML.Context(configuration)
-RenderBody._render(html.body, context: &bodyContext)
+Body._render(html.body, context: &bodyContext)
 
 // After
 let bodyState = Ownership.Mutable(HTML.Context(configuration))
 var bodyContext = Rendering.Context.html(state: bodyState)
-RenderBody._render(html.body, context: &bodyContext)
+Body._render(html.body, context: &bodyContext)
 let bodyBytes = bodyState.value.bytes
 let collectedStyles = bodyState.value.styles
 ```
@@ -543,7 +543,7 @@ The two-phase pattern is preserved. The concrete `HTML.Context` is created insid
 
 With the witness + Action enum in place:
 1. `Markdown.Rendering` witness produces `[Rendering.Action]`
-2. `Markdown` becomes leaf view (`RenderBody = Never`)
+2. `Markdown` becomes leaf view (`Body = Never`)
 3. `DirectConverter` interprets actions against the concrete context
 4. Stack overflow resolved
 

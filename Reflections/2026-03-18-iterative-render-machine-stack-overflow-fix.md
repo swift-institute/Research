@@ -34,7 +34,7 @@ Four deviations from the original plan emerged and were validated:
 1. `context.open(push:pop:)` instead of closure-based `bracket` (borrowing capture blocked)
 2. `_Tuple` must defer ALL children including leaves (mixed immediate/deferred breaks interleaving)
 3. `Thunk` name instead of `Witness` (avoids protocol witness confusion)
-4. "Store VIEW not BODY" approach: constraint is `Self: Copyable` not `RenderBody: Copyable`, enabling ~Copyable bodies through the iterative path
+4. "Store VIEW not BODY" approach: constraint is `Self: Copyable` not `Body: Copyable`, enabling ~Copyable bodies through the iterative path
 
 ## What Worked and What Didn't
 
@@ -54,7 +54,7 @@ Four deviations from the original plan emerged and were validated:
 
 **Pattern: "Immediate/deferred mixing is always wrong."** The `_Tuple` interleaving bug (leaves execute immediately, composites defer) is the same class of bug as the push/pop ordering issue (push is immediate, pop is deferred). The universal fix is the same: make everything deferred. This is the heap-vs-stack dichotomy — once you move to heap-deferred traversal, you must be all-in. Partial deferral creates ordering violations.
 
-**Pattern: "Constraint axis matters — Self vs Body."** The breakthrough was realizing the constraint could shift from `RenderBody: Copyable` to `Self: Copyable`. The body is the wrong thing to store — it's a computed property whose value is needed only transiently during dispatch. Storing the view and computing the body on demand preserves the `borrowing` flow that already works in production. This is a general principle: when ownership blocks you, ask what the minimal storable unit is.
+**Pattern: "Constraint axis matters — Self vs Body."** The breakthrough was realizing the constraint could shift from `Body: Copyable` to `Self: Copyable`. The body is the wrong thing to store — it's a computed property whose value is needed only transiently during dispatch. Storing the view and computing the body on demand preserves the `borrowing` flow that already works in production. This is a general principle: when ownership blocks you, ask what the minimal storable unit is.
 
 ## Action Items
 
