@@ -32,7 +32,7 @@ Session started from a SIGBUS crash in PDF rendering on Swift's cooperative thre
 
 **Phase 3 — Strategy B (iterative render machine)**: LIFO work stack with `Thunk` (dispatch + destroy closures) and `Work` enum (`.render` or `.action` for deferred pops). Three deviations from the original plan validated: `open(push:pop:)` replaces closure-based bracket, `_Tuple` must defer ALL children, and `Thunk` replaces `Witness` naming.
 
-**Phase 4 — ~Copyable body support**: The default `_render` initially required `RenderBody: Copyable` because `view.body` on `borrowing Self` yields a borrowed value for ~Copyable Body (protocol witness table dispatches through `_read` coroutine). Investigated `@_owned` (found in compiler source but not shipped in 6.2.4). Investigated `func body()` (works but prohibited — must keep `var body`). **Breakthrough**: store the VIEW (Self: Copyable) instead of the BODY. The body is computed transiently via `view.body` during dispatch and flows as a borrow into `Body._render`. Constraint shifts to `Self: Copyable`, enabling ~Copyable bodies. Validated in experiment (15 tests pass).
+**Phase 4 — ~Copyable body support**: The default `_render` initially required `Body: Copyable` because `view.body` on `borrowing Self` yields a borrowed value for ~Copyable Body (protocol witness table dispatches through `_read` coroutine). Investigated `@_owned` (found in compiler source but not shipped in 6.2.4). Investigated `func body()` (works but prohibited — must keep `var body`). **Breakthrough**: store the VIEW (Self: Copyable) instead of the BODY. The body is computed transiently via `view.body` during dispatch and flows as a borrow into `Body._render`. Constraint shifts to `Self: Copyable`, enabling ~Copyable bodies. Validated in experiment (15 tests pass).
 
 **Production implementation** completed by the other agent across L1 (rendering primitives), L2 (html-rendering), L3 (pdf-html-rendering). 102/102 tests pass.
 
@@ -50,7 +50,7 @@ Session started from a SIGBUS crash in PDF rendering on Swift's cooperative thre
 
 ## Patterns and Root Causes
 
-**Pattern: "Where you store it determines what you can store."** The entire ~Copyable body blocker dissolved by asking "what if we store the VIEW instead of the BODY?" The constraint shifted from `RenderBody: Copyable` (blocking) to `Self: Copyable` (trivially satisfied). This is the same pattern as OpenSwiftUI's attribute graph storing handles instead of values — the trick is storing enough to COMPUTE the answer later, not storing the answer itself.
+**Pattern: "Where you store it determines what you can store."** The entire ~Copyable body blocker dissolved by asking "what if we store the VIEW instead of the BODY?" The constraint shifted from `Body: Copyable` (blocking) to `Self: Copyable` (trivially satisfied). This is the same pattern as OpenSwiftUI's attribute graph storing handles instead of values — the trick is storing enough to COMPUTE the answer later, not storing the answer itself.
 
 **Pattern: "Protocol witness tables have accessor semantics you don't control."** `var body: Body { get }` goes through `_read` (borrowed) for ~Copyable Body, but function calls go through the function entry (owned). This is a fundamental Swift design choice documented in SE-0390 and implemented in `TypeCheckStorage.cpp`. Anyone building protocols with ~Copyable associated types needs to know this — properties yield borrows, functions return owned.
 

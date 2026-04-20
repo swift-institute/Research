@@ -1718,10 +1718,10 @@
     {
       "file": "rendering-view-associated-type-naming.md",
       "displayName": "rendering-view-associated-type-naming.md",
-      "topic": "Rendering.View associated type naming — Body→RenderBody rename to avoid SwiftUI.View.Body collision. 3 options: Content, RenderBody, wrapper. Decision: RenderBody (collision-proof, 27-file blast radius).",
-      "status": "DECISION",
-      "statusDetail": null,
-      "statusRaw": "DECISION",
+      "topic": "Rendering.View associated type naming — SwiftUI.View.Body collision investigation. v1 (2026-03-13) chose RenderBody rename; v2 (2026-04-20) supersedes with @_implements(Rendering.View, Body) at HTML.Document — keeps idiomatic Body at L1, concentrates bridge cost at the one type that actually bridges frameworks.",
+      "status": "SUPERSEDED",
+      "statusDetail": "v1 RenderBody rename superseded 2026-04-20 by @_implements fix",
+      "statusRaw": "SUPERSEDED",
       "tier": null,
       "scope": null
     },
