@@ -13,9 +13,8 @@ triage_outcomes:
     description: Documentation skill "check Resources/ before bespoke" note: low-priority nuance; existing [DOC-050] code-example-verification rule generalizes sufficiently
   - type: blog_idea
     description: "When JSON should replace a markdown table" — general pattern beyond swift-institute
-  - type: experiment_topic
-    target: swift-institute-Scripts
-    description: _index.json → _index.md regenerator (deferred; closes derived-markdown loop)
+  - type: no_action
+    description: JSON → MD regenerator experiment: downgraded. The 2026-04-18 "delete entirely, point to dashboards" pivot retired the derived-markdown loop — dashboards are canonical, _index.md is gone. A regenerator is no longer needed; if cross-GitHub renderability becomes a concern later, it is a Scripts TODO, not a research experiment.
 ---
 
 # Two Homepages — DocC-Merge Experiment, Mixed-Chrome Pivot, Dashboard Live

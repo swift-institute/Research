@@ -18,7 +18,7 @@ triage_outcomes:
     description: [HANDOFF-017] Terminal Consumer Migration for Multi-Finding Audit Cycles
   - type: research_topic
     target: ecosystem
-    description: Does L3 platform-policy tier exist for strings/paths/other unifiers beyond swift-posix? (deferred)
+    description: Does L3 platform-policy tier exist for strings/paths/other unifiers — stub landed at Research/l3-platform-policy-tier-generalization.md (Tier 2, IN_PROGRESS)
   - type: skill_update
     target: platform
     description: [PLAT-ARCH-008e] provenance updated to cite execution reflection + first-application commit SHAs

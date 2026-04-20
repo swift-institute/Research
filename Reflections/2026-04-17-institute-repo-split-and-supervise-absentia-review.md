@@ -20,9 +20,8 @@ triage_outcomes:
   - type: skill_update
     target: supervise
     description: [SUPER-006] user-authorization qualifier for signals #3/#6 (absentia-return case)
-  - type: research_topic
-    target: ecosystem
-    description: Org-as-directory vs flat layout decision rule (deferred as a future research stub)
+  - type: no_action
+    description: Org-as-directory vs flat layout: already captured as feedback_flat_disk_layout.md memory exception (swift-institute is the explicit exception case); the decision rule surfaced and its application is documented. Standalone research doc would duplicate the memory entry.
 ---
 
 # Institute Repo Split and Supervise-in-Absentia Review Cycle

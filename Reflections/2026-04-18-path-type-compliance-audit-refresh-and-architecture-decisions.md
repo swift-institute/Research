@@ -17,9 +17,8 @@ triage_outcomes:
   - type: package_insight
     target: swift-paths
     description: Phase 4b implementation plan (byte scanning on _storage.buffer) — executed in subsequent reflection 2026-04-18-path-ecosystem-correction-cycle
-  - type: research_topic
-    target: swift-paths
-    description: lastComponent semantics alignment (trailing-separator edge cases) — superseded by Wave 5 PR 12 deleting lastComponent entirely
+  - type: no_action
+    description: lastComponent semantics alignment: superseded by the 2026-04-18 path-ecosystem-correction-cycle — Wave 5 PR 12 deleted lastComponent entirely, migrating all callers to components.last. The trailing-separator edge cases are now dissolved by the Components BidirectionalCollection design.
 ---
 
 # Path Type Compliance Audit Refresh and Architecture Decisions

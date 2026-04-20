@@ -11,9 +11,8 @@ triage_outcomes:
   - type: skill_update
     target: experiment-process
     description: [EXP-007a] header anchor requirement; [EXP-002c] placement rule (merged with corpus-completion)
-  - type: research_topic
-    target: compiler
-    description: Upstream status of fix for #85743 CopyPropagation on ~Copyable enum switch consume (deferred to compiler-tracking)
+  - type: no_action
+    description: Upstream #85743 fix status: memory swift-6.3-fix-status.md is the canonical tracking surface; the question "did the upstream fix land or was it excluded from the cherry-pick?" is a compiler-tracking task, not a research topic. The memory already carries "still crashes on 6.3.1" — next compiler release triggers re-verification per natural revalidation cadence.
 ---
 
 # Swift 6.3.1 Experiment Re-Run — Memory Drift, Repo Splits, and the Experiment-Header Convention That Saved Time

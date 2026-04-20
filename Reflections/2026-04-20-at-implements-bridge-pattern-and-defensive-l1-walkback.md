@@ -13,9 +13,8 @@ triage_outcomes:
   - type: skill_update
     target: implementation
     description: [PATTERN-057] @_implements as baseline escape hatch, two-stamp pattern; defensive-naming-at-L1 anti-pattern
-  - type: experiment_topic
-    target: swift-institute
-    description: Characterize minimal trigger for single-stamp @_implements failure in scope-rich bridges (deferred; real HTML.Document fails, V12 does not)
+  - type: no_action
+    description: Characterize single-stamp @_implements failure in scope-rich bridges: deferred as an extension task on the existing V12_ImplementsBridge experiment rather than a new research topic. Revisit trigger: when a future session hits the single-stamp failure in another real package, add factors to V12 incrementally. Documented in Blog/Draft/associated-type-trap-final.md as an acknowledged characterization gap.
   - type: no_action
     description: Primitives skill layer-discipline note: absorbed into [PATTERN-057] rationale — defensive-naming guidance applies at implementation layer, not requiring a separate primitives rule
 ---
