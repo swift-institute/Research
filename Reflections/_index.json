@@ -1,10 +1,77 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-18",
+  "generatedAt": "2026-04-20",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-04-20-at-implements-bridge-pattern-and-defensive-l1-walkback.md",
+      "date": "2026-04-20",
+      "title": "Walking back defensive naming at L1: @_implements as the real bridge-site escape hatch",
+      "packages": [
+        "swift-rendering-primitives",
+        "swift-html-rendering",
+        "swift-cpu-primitives",
+        "swift-algebra-linear-primitives",
+        "swift-markdown-html-rendering"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-20-file-name-nul-fix-execution-and-path-char-adoption.md",
+      "date": "2026-04-20",
+      "title": "File.Name NUL fix execution and Path.Char adoption",
+      "packages": [
+        "swift-file-system",
+        "swift-kernel-primitives",
+        "swift-string-primitives",
+        "swift-path-primitives"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-20-swift-file-system-io-migration-and-l1-vocabulary-overreach.md",
+      "date": "2026-04-20",
+      "title": "swift-file-system IO migration and the L1-vocabulary overreach",
+      "packages": [
+        "swift-file-system",
+        "swift-io",
+        "swift-threads",
+        "swift-kernel-primitives",
+        "swift-kernel"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-18-path-ecosystem-correction-cycle-and-process-distillation.md",
+      "date": "2026-04-18",
+      "title": "Path Ecosystem Correction Cycle and Process Distillation",
+      "packages": [
+        "swift-paths",
+        "swift-path-primitives",
+        "swift-iso-9945",
+        "swift-kernel-primitives",
+        "swift-file-system"
+      ],
+      "status": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null,
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-04-18-ecosystem-index-migration-completion-and-batch-git-edges.md",
       "date": "2026-04-18",
