@@ -131,10 +131,10 @@ Avoids the protocol conflict entirely by not conforming `HTML.Document` to `Swif
 - SE-0491: Module Selectors — cannot disambiguate associated types
 - Investigation prompt: `swift-institute/Research/prompts/markdown-swiftui-pdf-investigation.md`
 
-## Blog potential
+## Blog Post
 
-This finding has been captured as a blog idea:
-- [BLOG-IDEA-031: The associated type trap](../Blog/_index.md) — [Draft](../Blog/Draft/associated-type-trap-final.md)
+This finding was published as:
+- [The associated type trap, and the escape hatch I missed](../Blog/Published/2026-04-20-associated-type-trap.md) (2026-04-20)
 
 ---
 
