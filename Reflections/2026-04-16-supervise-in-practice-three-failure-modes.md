@@ -5,7 +5,17 @@ packages:
   - swift-executors
   - swift-kernel
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: supervise
+    description: Strengthened [SUPER-009] with "read artifact not summary" discipline
+  - type: skill_update
+    target: supervise
+    description: Added [SUPER-002a] scope-lock-precedes-architecture-lock; operationalized [SUPER-015] compression trigger
+  - type: no_action
+    description: Class (c) escalation rule already captured in [SUPER-005]
 ---
 
 # Supervise-in-Practice — Three Failure Modes Across a Multi-Revision Dispatch

@@ -5,7 +5,16 @@ packages:
   - swift-institute
   - swift-primitives/swift-index-primitives
   - swift-primitives/swift-array-primitives
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: experiment-process
+    description: Canonized four-verdict vocabulary (PASSES/STILL PRESENT/STILL CRASHES/FIXED) in [EXP-006]; placement rule as [EXP-002c]
+  - type: blog_idea
+    description: "Bugs that fixed themselves" — FIXED verdict framing, 6.3.1 silent fixes, value of proactive crash reproducers
+  - type: no_action
+    description: Dir-name collision discovery procedure: covered operationally by "diff before deleting" rule; not a skill-level rule (session-level judgment)
 ---
 
 # Swift 6.3.1 Corpus Completion + Drift Relocation + FIXED Verdict

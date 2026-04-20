@@ -10,7 +10,16 @@ packages:
   - swift-css-standard
   - swift-html
   - swift-io
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: no_action
+    description: DOC-050 source-verification already aligned with feedback_verify_prior_findings memory — adding skill row would be duplication without changing behavior
+  - type: research_topic
+    target: ecosystem
+    description: Geometry ↔ CSS.Length bridge design — Tier 2, cross-package pattern (deferred: noted in reflection text, not yet routed to Research/)
+  - type: blog_idea
+    description: "Four imports, four layers" — pattern-documentation post for landing-page layers-necessity SHOW
 ---
 
 # DocC Landing Restructure and the Layers-Necessity SHOW

@@ -3,7 +3,14 @@ date: 2026-04-16
 session_objective: Promote parameter-ordering conventions (configuration placement + closure positioning) into code-surface as normative rules, via /research-process and /code-surface.
 packages:
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: skill-lifecycle
+    description: Pre-edit checkpoint mirrored into Phase 5 intro; domain-owner discoverability path
+  - type: no_action
+    description: CLAUDE.md edit deferred — mirroring into skill-lifecycle addresses the discoverability root cause; CLAUDE.md routing table already names the skill
 ---
 
 # Parameter Ordering Conventions — and a Skill-Lifecycle Routing Gap

@@ -8,7 +8,17 @@ packages:
   - swift-institute-Audits
   - swift-institute-Blog
   - swift-institute-Skills
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: research-process
+    description: Multi-phase migration transition-clause convention added to [RES-003c]
+  - type: blog_idea
+    description: "The over-built copy step" — architectural simplification narrative around raw.githubusercontent.com pivot
+  - type: research_topic
+    target: swift-institute.org
+    description: Scope-filter dashboard aggregation strategy (deferred; Tier 2)
 ---
 
 # JSON-Authoritative Migration Sweep + The Over-Built Copy Step

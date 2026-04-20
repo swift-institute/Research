@@ -3,7 +3,18 @@ date: 2026-04-16
 session_objective: Determine whether IO.Completion.Storage can be eliminated, restructured, or pushed to the kernel layer
 packages:
   - swift-io
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: Added [IMPL-093] Optional-capture reinitialization for ~Copyable async closure boundaries
+  - type: package_insight
+    target: swift-io
+    description: Stale README.md in Sources/IO Completions/ — references Storage, Unmanaged, old dispatch flow (noted for follow-up)
+  - type: experiment_topic
+    target: swift-io
+    description: Linux io_uring CQE dispatch verification (deferred — Linux-only testable)
 ---
 
 # IO.Completion.Storage Elimination — Dictionary as Sole Correlation and Lifetime Manager

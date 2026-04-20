@@ -7,7 +7,17 @@ packages:
   - swift-cpu-primitives
   - swift-algebra-linear-primitives
   - swift-markdown-html-rendering
-status: pending
+status: processed
+processed_date: 2026-04-20
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: [PATTERN-057] @_implements as baseline escape hatch, two-stamp pattern; defensive-naming-at-L1 anti-pattern
+  - type: experiment_topic
+    target: swift-institute
+    description: Characterize minimal trigger for single-stamp @_implements failure in scope-rich bridges (deferred; real HTML.Document fails, V12 does not)
+  - type: no_action
+    description: Primitives skill layer-discipline note: absorbed into [PATTERN-057] rationale — defensive-naming guidance applies at implementation layer, not requiring a separate primitives rule
 ---
 
 # Walking back defensive naming at L1: `@_implements` as the real bridge-site escape hatch
