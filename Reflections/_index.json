@@ -6,6 +6,20 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-21-danceui-noun-convention-rename-cascade.md",
+      "date": "2026-04-21",
+      "title": "DanceUI Analysis, Noun-Convention Ratification, and Rename Cascade Handoff",
+      "packages": [
+        "swift-user-interface",
+        "swift-user-interface-rendering",
+        "swift-rendering-primitives",
+        "swift-graph-primitives",
+        "swift-package"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-21-property-primitives-typealias-sweep-and-self-compliance-gap.md",
       "date": "2026-04-21",
       "title": "Property Primitives Typealias Sweep and Self-Compliance Gap During Rule Enforcement",
