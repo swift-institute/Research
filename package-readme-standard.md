@@ -2,9 +2,12 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-04-21
 status: RECOMMENDATION
+changelog:
+  - 2026-04-21 v1.1.0: Prior-art acknowledgment — added citation to `documentation-docc-alpha-launch.md` (DECISION, 2026-04-15), which established the Evaluator / Early adopter / Curious developer three-audience model at the swift-institute.org DocC root. The present research applies that audience framing to sub-package READMEs. Skill rule text ([README-023] Evaluator's Lens) unchanged; added converging-predecessor note in §5 and in References.
+  - 2026-04-21 v1.0.0: Initial research and prescriptive changes for /readme v2.0.0.
 tier: 2
 workflow: Discovery [RES-012] (convention evolution) + Investigation [RES-001] (maintainer critique on swift-property-primitives/README.md, 2026-04-21)
 trigger: Two signals — (1) maintainer concrete critiques on the first Swift Institute package preparing for 0.1.0 on SPI (swift-property-primitives); (2) ecosystem-wide pre-SPI-publication audit before README conventions propagate across 60+ sibling packages.
@@ -29,6 +32,18 @@ Two concurrent signals motivate a review before the skill's requirements get bak
 2. **Pre-publication timing**. `swift-property-primitives` is the first Institute package preparing to ship on Swift Package Index. Before that tag lands and downstream consumers pin it, the README conventions should be the version we are willing to see propagated across every sibling package.
 
 The prior research document `readme-skill-design.md` (SUPERSEDED 2026-03-10 by the shipped skill) established the skill's original scope by auditing **internal** READMEs (ecosystem inconsistency across 61+ packages). The present research tests that scope against **external** top-tier Swift OSS.
+
+### Prior art within the Swift Institute corpus
+
+One additional internal precedent informs this research and was not cited in the initial v1.0.0 draft:
+
+- `Research/documentation-docc-alpha-launch.md` (DECISION, 2026-04-15) established a three-audience model for the ecosystem's `Documentation.docc` root page — **Evaluator** ("What is this? Is it worth my attention?" / 30 seconds on root page), **Early adopter** ("How do I start using this?" / 5 minutes), **Curious developer** ("What's the philosophy here?" / 20+ minutes). That document's diagnosis — that the initial Documentation.docc draft *"accurately described the architecture but undersold the ecosystem's scope [by centering] the Five Layer Architecture … the documentation needs to communicate what the ecosystem IS and why it matters, not how it is organized internally"* — is the same shape of diagnosis the maintainer offered for `swift-property-primitives/README.md`, applied at a different scope (ecosystem DocC root vs sub-package README).
+
+The present research does not supersede that predecessor — the two operate at different scopes (Institute DocC root vs sub-package README). Rather, the Evaluator's Lens rule ([README-023] in §Decisions) and the Scope Boundary rule ([README-025] in §Decisions) codify the sub-package specialization of the predecessor's audience-driven diagnosis. The convergence between two independently authored research documents arriving at the same diagnosis at different ecosystem scopes strengthens the underlying principle.
+
+- `Research/documentation-skill-design.md` (SUPERSEDED 2026-03-10) is the parent decision that split `/documentation` from `/readme` as separate skills rather than one unified skill. That decision grounds this research's scope: README conventions are skill-level material handled by `/readme` alone.
+
+- `Research/skill-based-documentation-architecture.md` (SUPERSEDED) establishes the canonical three-artifact model (Skills = canonical WHAT, Research = authoritative WHY, Docs = non-normative HOW). The research-to-skill promotion path ([RES-006a]) is why the prescriptive changes in the Decisions section land as skill requirements rather than as ad-hoc edits.
 
 ## Question
 
@@ -202,6 +217,8 @@ This is not a rule about any specific section — it is a meta-principle that su
 3. **What is the shape of using it?** (quick start, API teaser, installation, platform support)
 
 Content that does **not** answer one of those three questions — author-oriented history, internal organization narrative, architectural-position diagrams (in sub-package READMEs), author's design reflections — degrades the evaluator's experience and belongs elsewhere (DocC articles, blog posts, research documents, `CONTRIBUTING.md`).
+
+**Converging predecessor**: `Research/documentation-docc-alpha-launch.md` (DECISION, 2026-04-15) established a parallel three-audience model for the ecosystem's DocC root page: Evaluator (30 s) / Early adopter (5 min) / Curious developer (20 min+). The three questions above ("what does this do?" / "why vs alternatives?" / "shape of using it?") track the same audience structure, specialised to the sub-package README scope. The predecessor already diagnosed ecosystem-hierarchy content as evaluator-hostile at the Institute DocC root; this rule extends the diagnosis to sub-package READMEs where the specific failure mode is five-layer-positioning content.
 
 **Diagnosis**: **New meta-rule**. Add as the first rule after the maturity-tier scaffolding.
 
@@ -620,7 +637,9 @@ This document is the input for Part B of `HANDOFF-readme-standard-research.md`. 
 ### Prior internal research
 
 - `swift-institute/Research/readme-skill-design.md` (SUPERSEDED 2026-03-10) — original skill design, audited *internal* ecosystem READMEs. The present research audits *external* first-class OSS and specifically addresses the gaps surfaced by `swift-property-primitives` 0.1.0 pre-release feedback.
-- `swift-institute/Research/documentation-skill-design.md` — separation decision between /readme and /documentation.
+- `swift-institute/Research/documentation-docc-alpha-launch.md` (DECISION, 2026-04-15) — **converging predecessor** at the ecosystem DocC root scope. Established the Evaluator / Early adopter / Curious developer three-audience model with time budgets (30 s / 5 min / 20 min+) and diagnosed ecosystem-hierarchy content as evaluator-hostile. The present research applies the same audience framing and diagnosis to sub-package READMEs — [README-023] Evaluator's Lens and [README-025] Scope Boundary are the sub-package specializations. Cited in Context §"Prior art within the Swift Institute corpus" and in Analysis §5.
+- `swift-institute/Research/documentation-skill-design.md` (SUPERSEDED 2026-03-10) — separation decision between `/readme` and `/documentation` as distinct skills. Grounds the scope of this research at the skill boundary.
+- `swift-institute/Research/skill-based-documentation-architecture.md` (SUPERSEDED) — canonical three-artifact model (Skills/Research/Docs) that structures how this research's prescriptive changes land as skill requirements per [RES-006a] research-to-documentation promotion.
 
 ### Handoffs
 
