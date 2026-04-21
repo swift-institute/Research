@@ -6,6 +6,30 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-21-property-primitives-typealias-sweep-and-self-compliance-gap.md",
+      "date": "2026-04-21",
+      "title": "Property Primitives Typealias Sweep and Self-Compliance Gap During Rule Enforcement",
+      "packages": [
+        "swift-property-primitives",
+        "swift-institute/Research",
+        "swift-institute/Skills/documentation",
+        "swift-institute/Skills/property-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-21-pure-language-ownership-feasibility-for-property.md",
+      "date": "2026-04-21",
+      "title": "Pure-Language Ownership Feasibility for the Property Type Family",
+      "packages": [
+        "swift-property-primitives",
+        "swift-institute/Skills/documentation"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-21-descriptor-a-audit-close-and-remediation-rhythm.md",
       "date": "2026-04-21",
       "title": "Descriptor A+audit close and remediation-rhythm establishment",
