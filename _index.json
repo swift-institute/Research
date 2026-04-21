@@ -2465,6 +2465,17 @@
       "statusRaw": "DECISION",
       "tier": 2,
       "scope": "ecosystem-wide"
+    },
+    {
+      "file": "multi-target-docc-catalog-survey-swiftlang-pointfreeco.md",
+      "displayName": "multi-target-docc-catalog-survey-swiftlang-pointfreeco.md",
+      "topic": "Empirical survey (10 packages) of DocC catalog distribution across multi-target Swift packages from swiftlang/apple/pointfreeco. Complements the Tier 2 DocC aggregation research by confirming Option F is novel in the surveyed ecosystem; explains why other packages don't hit the same problem (public import vs @_exported).",
+      "date": "2026-04-21",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": "ecosystem-wide"
     }
   ],
   "narrativeSections": [
