@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-04-21
 status: DECISION
 tier: 2
@@ -222,7 +222,10 @@ documentation concerns.
 
 *Added 2026-04-21 v1.1.0 after the swift-property-primitives 0.1.0 render
 spot-check surfaced that Options B–D all produce fragmented multi-catalog
-sidebars that have no UX payoff for the reader.*
+sidebars that have no UX payoff for the reader. Simplified 2026-04-21 v1.2.0
+after the `swift build` symbol-graph-extraction route replaced the
+`xcodebuild docbuild` route — variant `.docc/` directories dropped entirely,
+symbol-graph patching became a defensive no-op.*
 
 The insight that separates Option F from B–E: the research that
 justifies the multi-target split (see `swift-primitives/swift-property-
@@ -241,29 +244,41 @@ umbrella catalog:
   heading rewritten to `Property_Primitives/<SymbolPath>` (attaching
   the article as a documentation extension of the symbol as seen through
   the umbrella module).
-- Variant catalog directories retain a `.gitkeep` to satisfy `[DOC-020]`
-  literally; their content is empty.
-- CI runs a single `xcodebuild docbuild -scheme "Property Primitives"`.
-  Swift compiles every variant + Core as a dependency and emits each
-  module's symbol graph into DerivedData.
+- Variant targets carry NO `.docc/` directory — not even an empty one.
+  The umbrella owns the sole catalog (see v1.2.0 finding below about
+  the `swift build` pipeline which makes the `.gitkeep` placeholder
+  form unnecessary).
+- CI runs `swift build -c release -Xswiftc -emit-symbol-graph
+  -Xswiftc -emit-symbol-graph-dir <out>`. SwiftPM compiles every
+  variant + Core as a dependency and swiftc emits each module's
+  symbol graph to `<out>`.
 - A post-extraction script (`Scripts/patch-umbrella-symbol-graph.py` in
   the package) walks the non-umbrella graphs, builds a
   `precise-identifier → docComment` map, and injects matching comments
-  into the umbrella's graph. This closes the `@_exported` doc-stripping
-  gap documented in Option B's cost column.
+  into the umbrella's graph. With the `swift build` route this patches
+  zero symbols in practice — swift build's symbol-graph emission
+  preserves doc comments on `@_exported` re-exports, unlike
+  `xcodebuild docbuild` (see v1.2.0 finding below). Retained as a
+  defensive no-op in case a future Swift release regresses the
+  behaviour.
 - `xcrun docc convert` runs once on the umbrella catalog with
-  `--additional-symbol-graph-dir` pointing at the patched graph. A single
-  `.doccarchive` is produced.
+  `--additional-symbol-graph-dir` pointing at a directory containing
+  ONLY the patched umbrella graph — NOT the pool of all graphs. Passing
+  all graphs creates cross-module reference ambiguity because the same
+  precise-identifier appears under both its declaring module and the
+  umbrella; in-catalog `` `SymbolName` `` spans then fail to resolve.
+  A single `.doccarchive` is produced.
 
 | Aspect | Behavior |
 |--------|----------|
-| Doc comments preserved for every symbol | ✓ via symbol-graph patching |
+| Doc comments preserved for every symbol | ✓ swift build route preserves them natively; patch step is a defensive no-op |
 | Single archive (one sidebar, one `Property`) | ✓ |
-| Works with `xcodebuild docbuild` | ✓ (no SPM plugin, no `docc merge`) |
+| Works with stable CLI tools | ✓ `swift build` + `xcrun docc convert` (no SPM plugin, no `docc merge`, no `xcodebuild docbuild`) |
 | Narrow-import precision preserved | ✓ (source targets unchanged) |
 | Stability | Stable toolchain commands; patching script is ~30 lines of stdlib Python |
 | `docc merge` required | ✗ (single archive obviates merge) |
 | Package.swift dependency cost | Zero — preserves `[MOD-002]` |
+| Variant `.docc/` directories required | ✗ (v1.2.0) swift build emits no warnings for absent variant catalogs |
 | Works when `@_exported` is replaced by `public import` | No (`public import` doesn't transparently expose sibling symbols — see SE-0409); use only while `@_exported` is the umbrella pattern |
 
 **Cost-benefit**: Option F has the cheapest long-term maintenance in the
@@ -285,7 +300,74 @@ Options B–D.
 `78cd7a1` (Apr 2026). Pipeline: 1 docbuild + 1 patch + 1 convert. Output:
 1 archive, full per-symbol docs, tutorial preserved, articles preserved,
 visual identity preserved. Replaces the Option D pipeline that landed at
-commits `794449e` / `a45845c` / `79ae689`.
+commits `794449e` / `a45845c` / `79ae689`. **v1.2.0 update**: simplified
+at commit `d1cea57` to use `swift build` symbol-graph extraction instead
+of `xcodebuild docbuild`; variant `.docc/` directories removed entirely;
+patch step becomes a defensive no-op (see "v1.2.0 findings" below).
+
+#### Option F — v1.2.0 findings
+
+Two discoveries during the Apr 21 2026 post-adoption simplification pass
+change how Option F is implemented, without changing the decision itself:
+
+**Finding 1 — `swift build` vs `xcodebuild docbuild` for symbol-graph
+extraction.** The v1.1.0 pipeline used `xcodebuild docbuild -scheme
+"Property Primitives"` to drive symbol-graph extraction. That route has
+two properties v1.2.0 simplifies past:
+
+| Property | xcodebuild docbuild | swift build `-emit-symbol-graph` |
+|----------|--------------------|----------------------------------|
+| Doc comments on `@_exported` re-exports in the umbrella's graph | STRIPPED (the patch step is load-bearing) | PRESERVED (the patch step is a defensive no-op) |
+| Empty variant `.docc/` directories | Warns "No valid content was found in this file" — one warning per variant per architecture (ten on our five-variant package) | No warning; swift build never enters the docbuild code path |
+| Tool chain | Xcode-bundled | SwiftPM + swiftc, no Xcode-specific route |
+| Derived-data footprint | Full docbuild under `DerivedData/` | Just object files + symbol graphs under `.build/` |
+
+The `xcodebuild docbuild` doc-stripping behaviour is consistent with
+DocC's archive-per-module model (Option B's cost column). Crucially,
+swiftc's symbol-graph emitter does NOT apply that stripping —
+`-emit-symbol-graph` emits whatever the module's public API surface
+is, including re-exported symbols with their declaring-module doc
+comments intact.
+
+Mechanism: swiftc's `-emit-symbol-graph` walks the module's public
+API surface and serializes each symbol with the doc comment attached
+at the declaration site; `@_exported` re-exports inherit the
+declaring-module comment because the symbol graph records them with
+their ORIGINAL precise identifier (e.g., `s:24Property_Primitives_Core0A0V`
+for a Property declared in Core, even when emitted as part of the
+umbrella's graph). `xcodebuild docbuild` invokes a different symbol-graph
+extractor path that applies additional filtering, which is where the
+stripping happens.
+
+**Finding 2 — variant `.docc/` directories are unnecessary under Option
+F's swift-build route.** v1.1.0 recommended variant directories retain
+a `.gitkeep` to satisfy `[DOC-020]`'s literal rule AND to silence the
+`xcodebuild docbuild` warnings above. With swift build both reasons
+fall away: no warnings are emitted, and `[DOC-020]`'s "every module
+has a `.docc/`" rule is better handled by an explicit exception clause
+than by gitkeep-only placeholders. Removing the directories makes the
+umbrella-owns-everything invariant visible on disk.
+
+**Cost of the swift-build route**: in exchange for these simplifications,
+the CI job can no longer rely on Xcode's implicit symbol-graph
+emission during `docbuild`. The pipeline has to name the emit flags
+explicitly (`-Xswiftc -emit-symbol-graph -Xswiftc -emit-symbol-graph-dir
+<path>`), pool the graphs, and drive `xcrun docc convert` directly.
+The total CI-job size is comparable to v1.1.0 — what's lost in
+implicit wiring is gained back in not having to run the patch script
+for real.
+
+**Cross-module ambiguity gotcha**: `xcrun docc convert` must receive
+ONLY the patched umbrella graph via `--additional-symbol-graph-dir`,
+NOT the full pool of graphs. Passing the full pool causes DocC to see
+the same precise identifier (e.g., `s:24Property_Primitives_Core0A0V`
+for `Property`) under both its declaring module (Core) and the
+umbrella, and every in-catalog cross-reference to the symbol becomes
+ambiguous — DocC can't choose which module path to resolve under, and
+the cross-ref silently fails. Symptom: "Failed to resolve reference"
+warnings for `` `Property` ``, `` `Property.Typed` ``, etc. Fix:
+isolate the umbrella-graph file in a dedicated dir and pass only that
+dir.
 
 ### Comparison
 
@@ -396,7 +478,7 @@ cost onto every reader.
 | # | Recommendation | Priority | Rationale |
 |---|---------------|----------|-----------|
 | R1 | Swift Institute packages with a multi-target + umbrella + `@_exported` shape SHOULD adopt Option F for their distribution docs build | **Critical** | Produces the single-archive UX consumers want while preserving the source-level narrow-import benefit. No new dependencies, no experimental flags. |
-| R2 | Packages adopting Option F SHOULD consolidate per-symbol articles into the umbrella catalog with `#` headings rewritten to `<UmbrellaModule>/<SymbolPath>`. Variant `.docc/` directories retain a `.gitkeep` per literal `[DOC-020]` | **Critical** | The article-to-symbol attachment mechanism is catalog-scoped; articles must live where the symbol graph is consumed. |
+| R2 | Packages adopting Option F SHOULD consolidate per-symbol articles into the umbrella catalog with `#` headings rewritten to `<UmbrellaModule>/<SymbolPath>`. Variant targets have NO `.docc/` directory (v1.2.0: not even a `.gitkeep`-only one) — the umbrella owns the sole catalog | **Critical** | The article-to-symbol attachment mechanism is catalog-scoped; articles must live where the symbol graph is consumed. The swift-build symbol-graph route (v1.2.0) emits no warnings for absent variant catalogs, so the v1.1.0 `.gitkeep` workaround is unnecessary. |
 | R3 | Packages adopting Option F SHOULD carry a `Scripts/patch-umbrella-symbol-graph.py` (or equivalent) that walks non-umbrella symbol graphs and injects doc comments into the umbrella's graph | **Critical** | The patch is the load-bearing step that closes the `@_exported` doc-stripping gap. Without it Option F collapses back to Option B. Reference implementation ships in swift-property-primitives. |
 | R4 | Swift Institute skills — `modularization`, `documentation` — SHOULD reference this research when a package's multi-target + umbrella shape is being decided or audited | **High** | Documentation and compile-time dependency concerns are separable; skills should not conflate them. |
 | R5 | `[DOC-020]` ("Every module MUST have a `.docc` catalogue directory") SHOULD gain an explicit exception for variant targets whose docs are consolidated under an umbrella catalog | **High** | The literal rule is satisfied by a `.gitkeep`, but the rule's intent is "every module is documented." With Option F, variant modules are documented — through the umbrella. The exception should be named to prevent future audits from flagging Option F as a convention violation. |
@@ -420,18 +502,25 @@ cost onto every reader.
 
 ### Applicability to swift-property-primitives 0.1.0
 
-Option F **was adopted for 0.1.0** at commit `78cd7a1`. Pipeline runs
-clean: single `xcodebuild docbuild -scheme "Property Primitives"`,
-symbol-graph patching via `Scripts/patch-umbrella-symbol-graph.py`,
-single `xcrun docc convert` on the umbrella catalog. Output:
-`Property Primitives.doccarchive` with every per-symbol page rendering
-full docs, the purple-accent landing page, the tutorial, and five
-topical articles.
+Option F **was adopted for 0.1.0** at commit `78cd7a1`, then simplified
+at commit `d1cea57` (v1.2.0 pipeline). Current shape: `swift build -c
+release -Xswiftc -emit-symbol-graph -Xswiftc -emit-symbol-graph-dir <out>`
+emits per-module symbol graphs with full `@_exported` doc comments; the
+umbrella-only graph is piped through `xcrun docc convert` with
+`--additional-symbol-graph-dir` pointing at a directory containing only
+the umbrella graph. Output: `Property Primitives.doccarchive` with every
+per-symbol page rendering full docs, the purple-accent landing page, the
+tutorial, and five topical articles. No variant `.docc/` directories on
+disk.
 
 Superseded work from the same release cycle:
 - Commits `794449e` / `a45845c` / `79ae689` implemented Option D (per-scheme
   docbuild + `docc merge`). Superseded by `78cd7a1` once the six-catalog
   sidebar was observed to have no reader payoff.
+- Commit `60a1180` restored `.gitkeep`-only variant `.docc/` placeholders
+  under the v1.1.0 pipeline to silence `xcodebuild docbuild`'s
+  "No valid content" warnings. Superseded by `d1cea57` which switched to
+  the swift-build pipeline and removed the variant directories entirely.
 
 ### Follow-on items
 
