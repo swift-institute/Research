@@ -6,6 +6,42 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-21-property-consuming-sendable-audit-and-workaround-locus.md",
+      "date": "2026-04-21",
+      "title": "Sendable audit, Option C, and the workaround-locus dimension",
+      "packages": [
+        "swift-property-primitives",
+        "swift-primitives",
+        "swift-institute/Skills/handoff",
+        "swift-institute/Skills/experiment-process",
+        "swift-institute/Research/modern-concurrency-conventions"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-21-descriptor-migration-supervisor-flipping-and-v6-convergence.md",
+      "date": "2026-04-21",
+      "title": "Descriptor migration: supervisor flipping and v6 convergence",
+      "packages": [
+        "swift-kernel-primitives",
+        "swift-iso-9945",
+        "swift-windows-standard",
+        "swift-darwin-standard",
+        "swift-linux-standard",
+        "swift-kernel",
+        "swift-posix",
+        "swift-darwin",
+        "swift-linux",
+        "swift-windows",
+        "swift-paths",
+        "swift-strings",
+        "swift-file-system"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-21-swift-test-003-generic-hard-error.md",
       "date": "2026-04-21",
       "title": "[SWIFT-TEST-003] generic hard error — skill broadening + handoff-prescription reversal",
