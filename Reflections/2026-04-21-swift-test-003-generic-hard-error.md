@@ -52,7 +52,8 @@ The existing test files were already in `[SWIFT-TEST-003]` parallel-namespace sh
 - [ ] Consider reordering or adding a decision-tree preamble to the Suite Structure section of `testing-swiftlang/SKILL.md` that routes "generic type?" → `[SWIFT-TEST-003]` before `[SWIFT-TEST-002]`.
 - [ ] Grep the ecosystem for `@Suite struct Test` inside `extension SomeGeneric<...>` or `extension SomeGeneric` where the outer type is generic — potential silent-discovery failures or hard-compile-error landmines.
 - [ ] Document the `mutating _read` + `mutating _modify` dual-accessor recipe for `Property.View.Typed`-family types in the relevant DocC catalog (sibling documentation handoff scope).
-- [ ] `Performance` suite stubs landed across all 6 test files in `swift-property-primitives` but contain zero tests. Either populate with benchmark measurements (requires `[INST-TEST-*]` nested-package pattern for swift-testing's `.timed`) or drop the empty stubs.
+- [x] `Performance` suite stubs in `swift-property-primitives` main test targets: dropped across all 10 files (`b1a7766`). Kept empty `Edge Case` / `Integration` stubs since those categories remain valid in main test targets. Broader question is now a separate follow-up: `[TEST-005]` mandates four categories, but if Performance belongs in a nested `Tests/Package.swift` per `[INST-TEST-*]`, then `[TEST-005]` should be revised to three categories for main test targets + Performance in the nested package. Needs ecosystem-wide decision.
+- [ ] Review whether `[TEST-005]` should split: three mandatory categories in main test targets (Unit, Edge Case, Integration) + Performance (and Snapshot, once `#Tests` lands) in nested `Tests/Package.swift` per `[INST-TEST-*]`. Current `[TEST-005]` wording predates the nested-package split and leaves the Performance stub requirement ambiguous.
 
 ## Appendix: Commits
 
