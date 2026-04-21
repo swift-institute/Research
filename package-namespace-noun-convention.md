@@ -295,23 +295,27 @@ not *aesthetic*.
 | `swift-render-markup-primitives`      | `Render.Markup`       |
 | `swift-render-image-primitives`       | `Render.Image`        |
 
-**Foundations (Layer 3) — rename + L1 relocation** (if the foundation is
-purely a primitive vocabulary):
+**Foundations (Layer 3) — rename outcomes** (2026-04-21 execution):
 
-| Current                             | Relocate + rename                      |
-|-------------------------------------|-----------------------------------------|
-| `swift-html-rendering`               | `swift-render-html-primitives` (L1)     |
-| `swift-pdf-rendering`                | `swift-render-pdf-primitives` (L1)      |
-| `swift-svg-rendering`                | `swift-render-svg-primitives` (L1)      |
-| `swift-markdown-html-rendering`      | `swift-render-markdown-html-primitives` |
-| `swift-css-html-rendering`           | `swift-render-css-html-primitives`      |
-| `swift-pdf-html-rendering`           | `swift-render-pdf-html-primitives`      |
+Foundation-independence audit per `[PKG-NAME-004]` disqualified all six
+renderers from L1 relocation — each has either L2 standards deps, L3
+deps, or Foundation source imports. They all stayed at L3 with noun
+renames:
 
-Each relocation requires verifying L1 compatibility (no Foundation import,
--primitives suffix, downward-only dependencies). Packages that depend on
-L3-only concerns stay at L3 with a rename to noun form (e.g. a
-hypothetical `swift-render-html` at L3 if the HTML renderer depends on
-L3 networking).
+| Current                             | Renamed to (L3 in place)         | L1 blocker                                         |
+|-------------------------------------|-----------------------------------|-----------------------------------------------------|
+| `swift-html-rendering`               | `swift-html-render`               | L2 deps (html-standard, w3c-css, iso-9899)           |
+| `swift-pdf-rendering`                | `swift-pdf-render`                | L2 dep (pdf-standard) + L3 (copy-on-write)           |
+| `swift-svg-rendering`                | `swift-svg-render`                | L2 dep (svg-standard)                                |
+| `swift-markdown-html-rendering`      | `swift-markdown-html-render`      | Foundation source import + L3 deps                   |
+| `swift-css-html-rendering`           | `swift-css-html-render`           | L3 dep (html-render)                                 |
+| `swift-pdf-html-rendering`           | `swift-pdf-html-render`           | L3 deps (html-render, pdf-render)                    |
+
+Each rename is strictly at the package identity layer: package `name:`
+field and consumer `.package(path:)` / `package:` refs. Module /
+product / target names (`HTML Rendering`, `PDF Rendering`, etc.) and
+source directories are preserved. The namespace-level rename at L1
+(`Rendering` → `Render`) propagates transparently.
 
 **Foundations (Layer 3) — stub rename**:
 
@@ -341,9 +345,27 @@ When execution is authorized, the sequence is:
 
 ## Outcome
 
-**Status**: RECOMMENDATION.
+**Status**: EXECUTED 2026-04-21.
 
-**Decision** (pending skill ratification):
+**Migration log** (per sub-repo, chronological):
+
+- L1 primitives: `swift-rendering-primitives` → `swift-render-primitives`
+  (`ddb69f2`); `swift-positioning-primitives` → `swift-position-primitives`
+  (`c87ad22`); `swift-ordering-primitives` → `swift-order-primitives`
+  (`1292f1c`); `swift-formatting-primitives` → `swift-format-primitives`
+  (`d1ec621`).
+- L1 umbrella (swift-primitives): `bd05065` (render), `ef2bf08` (position),
+  `8d9b902` (order), `a0d8366` (format). `.gitmodules` section names and
+  `Package.swift` regenerated; remote URLs unchanged (GitHub redirects).
+- L3 renderers (6 renames at L3, no relocation): `3cb1621`
+  (swift-html-render), `f988b430` (pdf), `d0557ee` (svg), `985e5ed`
+  (css-html), `18bbc6a` (markdown-html), `ef8737d` (pdf-html).
+- L3 umbrella (swift-foundations): `89bbefe` (renderer submodule renames
+  + sibling foundation pointer bumps).
+- L3 stub: `1d0afa2` + `2283084` (swift-user-interface-rendering →
+  swift-user-interface-render).
+
+**Decision** (ratified in swift-package skill):
 
 1. **Noun rule**: packages and namespaces take the noun form. The shortest
    natural noun wins. Gerund forms are forbidden for packages and
