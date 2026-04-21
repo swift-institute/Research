@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "ci-centralization-strategy.md",
+      "displayName": "ci-centralization-strategy.md",
+      "topic": "CI/CD centralization strategy across ~280 repos in three orgs. Compares reusable workflows (current), repository rulesets (deprecation of required-workflows → rulesets successor; Team+ plan required), git subtree/submodule, and the sync-script model (established pattern — gitignore, community-health, dependabot). Recommendation: reusable workflows as foundational layer + sync-script for operational per-repo config. Empirical verification: swift-institute org on Free plan; rulesets gated; old repo names still on GitHub post local rename cascade. Tier 2, ecosystem-wide.",
+      "date": "2026-04-21",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Phase 0 + 0b artifacts delivered; pilot and rollout deferred",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "package-namespace-noun-convention.md",
       "displayName": "package-namespace-noun-convention.md",
       "topic": "Package and namespace names take noun form; the gerund is reserved as a top-level typealias onto Namespace.`Protocol` (the canonical capability protocol). Aligns swift-primitives with Apple/Rust/Haskell/Go naming bias. Inventories four primitive packages (formatting, ordering, positioning, rendering) plus six L3 renderer foundations for rename. Companion skill `swift-package` proposed to encode [PKG-NAME-*] rules.",
