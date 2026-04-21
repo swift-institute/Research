@@ -2487,6 +2487,17 @@
       "statusRaw": "DECISION",
       "tier": 1,
       "scope": "ecosystem-wide"
+    },
+    {
+      "file": "package-readme-standard.md",
+      "displayName": "package-readme-standard.md",
+      "topic": "Audit of the /readme skill (22 rules [README-001]–[README-022]) against 15 first-class Swift OSS READMEs (Apple + Point-Free + SSWG). Confirms ~70% alignment; prescribes three new meta-rules (Evaluator's Lens, Motivated Examples, Scope Boundary) addressing the maintainer's concrete critiques on swift-property-primitives/README.md, plus five MUST→SHOULD relaxations for over-prescriptive rules (fixed ordering, ASCII diagrams, bold-keyword Key Features, Platform Support table, Error Handling narrowing). Skill v2.0.0 breaking bump recommended. Input for Part B skill update; downstream package-README rewrite is a separate handoff.",
+      "date": "2026-04-21",
+      "status": "RECOMMENDATION",
+      "statusDetail": "pending skill ratification (/readme v2.0.0)",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
     }
   ],
   "narrativeSections": [
