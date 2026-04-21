@@ -6,6 +6,20 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-21-namespace-only-target-pattern-mod-017.md",
+      "date": "2026-04-21",
+      "title": "Namespace-only target pattern — kernel-primitives case study and [MOD-017] codification",
+      "packages": [
+        "swift-kernel-primitives",
+        "swift-primitives",
+        "swift-iso-9945",
+        "swift-linux-foundation/swift-linux-standard",
+        "swift-foundations/swift-kernel",
+        "swift-institute/Skills/modularization"
+      ],
+      "status": "processed"
+    },
+    {
       "file": "2026-04-21-handoff-author-scope-enumeration-and-supervise-first-deployment.md",
       "date": "2026-04-21",
       "title": "Handoff-author scope enumeration as attestation; /supervise first deployment",
