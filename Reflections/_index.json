@@ -1,10 +1,57 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-20",
+  "generatedAt": "2026-04-21",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-04-21-handoff-author-scope-enumeration-and-supervise-first-deployment.md",
+      "date": "2026-04-21",
+      "title": "Handoff-author scope enumeration as attestation; /supervise first deployment",
+      "packages": [
+        "swift-kernel",
+        "swift-iso-9945",
+        "swift-posix",
+        "swift-darwin",
+        "swift-linux",
+        "swift-file-system",
+        "swift-sockets",
+        "swift-institute/Skills/handoff",
+        "swift-institute/Skills/platform",
+        "swift-institute/Skills/supervise"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-21-property-primitives-release-polish-supervised.md",
+      "date": "2026-04-21",
+      "title": "swift-property-primitives release polish — supervisor + handoff composition",
+      "packages": [
+        "swift-property-primitives",
+        "swift-vector-primitives",
+        "swift-primitives",
+        "swift-institute/Skills/supervise",
+        "swift-institute/Skills/documentation"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-21-namespace-only-target-pattern-mod-017.md",
+      "date": "2026-04-21",
+      "title": "Namespace-only target pattern — kernel-primitives case study and [MOD-017] codification",
+      "packages": [
+        "swift-kernel-primitives",
+        "swift-primitives",
+        "swift-iso-9945",
+        "swift-linux-foundation/swift-linux-standard",
+        "swift-foundations/swift-kernel",
+        "swift-institute/Skills/modularization"
+      ],
+      "status": "processed"
+    },
     {
       "file": "2026-04-20-consumer-migration-pickup-l3-name-parity-collision.md",
       "date": "2026-04-20",
