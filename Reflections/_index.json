@@ -2069,6 +2069,18 @@
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "language_features_over_custom_types memory captures principle",
       "statusRaw": "processed (2026-04-13) IMPLEMENTED — language_features_over_custom_types memory captures principle"
+    },
+    {
+      "file": "2026-04-21-property-primitives-handoff-execution-and-docc-aggregation-research.md",
+      "date": "2026-04-21",
+      "title": "swift-property-primitives handoff execution and the DocC multi-target aggregation research",
+      "packages": [
+        "swift-property-primitives",
+        "swift-institute/Research",
+        "swift-institute/Skills/documentation"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
