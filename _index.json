@@ -2460,9 +2460,9 @@
       "displayName": "docc-multi-target-documentation-aggregation.md",
       "topic": "DocC behavior with @_exported umbrella re-exports and the idiomatic multi-target documentation pattern",
       "date": "2026-04-21",
-      "status": "RECOMMENDATION",
+      "status": "DECISION",
       "statusDetail": null,
-      "statusRaw": "RECOMMENDATION",
+      "statusRaw": "DECISION",
       "tier": 2,
       "scope": "ecosystem-wide"
     }

@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-04-21
-status: RECOMMENDATION
+status: DECISION
 tier: 2
 scope: ecosystem-wide
 applies_to: [swift-property-primitives, swift-primitives, swift-standards, swift-foundations, all multi-target packages]
@@ -218,15 +218,86 @@ For the Swift Institute ecosystem, this reshape would require a fresh
 the variant split was driven by consumer-dependency-graph concerns, not
 documentation concerns.
 
+### Option F — umbrella-only docs + symbol-graph patching (source shape unchanged)
+
+*Added 2026-04-21 v1.1.0 after the swift-property-primitives 0.1.0 render
+spot-check surfaced that Options B–D all produce fragmented multi-catalog
+sidebars that have no UX payoff for the reader.*
+
+The insight that separates Option F from B–E: the research that
+justifies the multi-target split (see `swift-primitives/swift-property-
+primitives/Research/variant-decomposition-rationale.md`) is **entirely
+source-level**. Narrow imports, dep-graph surface, consumer partitioning,
+Core-internal hygiene. Nothing in that research argues for *documentation*
+fragmentation. The documentation fragmentation was an incidental side-
+effect of the source split, and it has no payoff.
+
+Option F keeps the source shape (five library products, Core internal,
+umbrella re-exports) but consolidates all `.docc` content under the
+umbrella catalog:
+
+- Every per-symbol article (`Property.md`, `Property.Typed.md`,
+  `Property.View*.md`, …) lives in the umbrella catalog, with its `#`
+  heading rewritten to `Property_Primitives/<SymbolPath>` (attaching
+  the article as a documentation extension of the symbol as seen through
+  the umbrella module).
+- Variant catalog directories retain a `.gitkeep` to satisfy `[DOC-020]`
+  literally; their content is empty.
+- CI runs a single `xcodebuild docbuild -scheme "Property Primitives"`.
+  Swift compiles every variant + Core as a dependency and emits each
+  module's symbol graph into DerivedData.
+- A post-extraction script (`Scripts/patch-umbrella-symbol-graph.py` in
+  the package) walks the non-umbrella graphs, builds a
+  `precise-identifier → docComment` map, and injects matching comments
+  into the umbrella's graph. This closes the `@_exported` doc-stripping
+  gap documented in Option B's cost column.
+- `xcrun docc convert` runs once on the umbrella catalog with
+  `--additional-symbol-graph-dir` pointing at the patched graph. A single
+  `.doccarchive` is produced.
+
+| Aspect | Behavior |
+|--------|----------|
+| Doc comments preserved for every symbol | ✓ via symbol-graph patching |
+| Single archive (one sidebar, one `Property`) | ✓ |
+| Works with `xcodebuild docbuild` | ✓ (no SPM plugin, no `docc merge`) |
+| Narrow-import precision preserved | ✓ (source targets unchanged) |
+| Stability | Stable toolchain commands; patching script is ~30 lines of stdlib Python |
+| `docc merge` required | ✗ (single archive obviates merge) |
+| Package.swift dependency cost | Zero — preserves `[MOD-002]` |
+| Works when `@_exported` is replaced by `public import` | No (`public import` doesn't transparently expose sibling symbols — see SE-0409); use only while `@_exported` is the umbrella pattern |
+
+**Cost-benefit**: Option F has the cheapest long-term maintenance in the
+catalog. The patching step is a single post-docbuild command invoking a
+self-contained script; it replaces both the five per-scheme docbuilds of
+Options B/D and the `docc merge` step of Option D. The trade-off is a
+one-time migration: moving per-symbol articles into the umbrella and
+rewriting their `#` headings.
+
+**Applies when**: the package has (a) a multi-target source shape with
+(b) an umbrella target using `@_exported public import` to re-export
+variants, and (c) no consumer-facing requirement for per-variant
+docbuild artifacts. The swift-property-primitives case satisfies all
+three. Packages whose consumers genuinely need per-variant archives
+(e.g., distributing documentation separately per variant) should prefer
+Options B–D.
+
+**Verified empirically**: applied to swift-property-primitives at commit
+`78cd7a1` (Apr 2026). Pipeline: 1 docbuild + 1 patch + 1 convert. Output:
+1 archive, full per-symbol docs, tutorial preserved, articles preserved,
+visual identity preserved. Replaces the Option D pipeline that landed at
+commits `794449e` / `a45845c` / `79ae689`.
+
 ### Comparison
 
-| Criterion | B: @_exported status quo | C: SPM combined-docs | D: docc merge manual | E: single-target reshape |
-|-----------|:---:|:---:|:---:|:---:|
-| Doc comments preserved in unified view | ✗ | ✓ | ✓ | ✓ (single-archive) |
-| Works today with `xcodebuild docbuild` | ✓ | ✗ | partial | ✓ |
-| Experimental stability | stable | experimental | stable commands, hand-rolled | stable |
-| Narrow-import precision preserved | ✓ | ✓ | ✓ | ✗ |
-| Tooling complexity | lowest | low | high | lowest |
+| Criterion | B: @_exported status quo | C: SPM combined-docs | D: docc merge manual | E: single-target reshape | **F: umbrella-only + patch** |
+|-----------|:---:|:---:|:---:|:---:|:---:|
+| Doc comments preserved in unified view | ✗ | ✓ | ✓ | ✓ (single-archive) | **✓** |
+| Works today with `xcodebuild docbuild` | ✓ | ✗ | partial | ✓ | **✓** |
+| Experimental stability | stable | experimental | stable commands, hand-rolled | stable | **stable** |
+| Narrow-import precision preserved | ✓ | ✓ | ✓ | ✗ | **✓** |
+| Tooling complexity | lowest | low | high | lowest | **low (one script)** |
+| Single-archive distribution | ✗ | ✓ | ✓ | ✓ | **✓** |
+| Sidebar has one `Property` (not N) | ✗ (N catalogs side-by-side) | ✗ (still N, just combined) | ✗ (still N, just merged) | ✓ | **✓** |
 | Single-archive distribution | ✗ | ✓ | ✓ | ✓ |
 | Hosting story (GitHub Pages etc.) | awkward | clean | clean | clean |
 | Ecosystem precedent (other swift-* packages) | widespread | emerging | rare | rare for multi-variant primitives |
@@ -281,7 +352,7 @@ cost onto every reader.
 
 ## Outcome
 
-**Status**: RECOMMENDATION.
+**Status**: DECISION (v1.1.0 — Option F adopted as the ecosystem pattern).
 
 ### Key findings
 
@@ -290,72 +361,90 @@ cost onto every reader.
    the archive-per-module model, not a bug. Verified empirically across all
    member kinds and all re-exported targets in swift-property-primitives.
 
-2. **The idiomatic 2026 answer is `--enable-experimental-combined-documentation`**
-   in swift-docc-plugin (Option C). The feature is experimental but has been
-   in place since 1.4.0 (Aug 2023), received patches through 1.4.6 (Feb 2025),
-   and implements the multi-target-to-single-archive architecture the DocC
-   team has been converging on since issue #255 (May 2022). Works via the
-   SPM command plugin; does NOT work with `xcodebuild docbuild`.
+2. **The ecosystem-idiomatic pattern is Option F** — keep the source
+   multi-target split (for compile-time narrow imports), consolidate all
+   `.docc` content under the umbrella catalog, and patch the umbrella's
+   symbol graph with declaring-module doc comments before `docc convert`.
+   Single archive, single sidebar, one `Property`. Empirically validated at
+   commit `78cd7a1` in swift-property-primitives.
 
-3. **The ecosystem's current shape (Option B — multi-target + umbrella with
-   `@_exported`) is valid**, but with a known documentation limitation:
-   per-symbol pages accessed through the umbrella show signature-only. The
-   variant archives retain full docs and are reachable via Xcode's
-   Documentation Viewer sidebar.
+3. **The variant-decomposition research is source-level only.** Reading
+   that research's justifications carefully — narrow imports, dep-graph
+   surface, consumer use-case partitioning, Core-internal hygiene — every
+   claim concerns compile-time semantics. None argues for documentation
+   fragmentation. The docs fragmentation in Options B/C/D is an incidental
+   side-effect of the source split, not a desired property. Option F
+   decouples the two concerns cleanly.
 
-4. **The choice is between tooling commitment and documentation fidelity.**
-   Option B preserves the `xcodebuild docbuild` CI workflow and ships today;
-   Option C commits to `swift package generate-documentation` + an
-   experimental flag and produces a higher-fidelity archive. Option D is a
-   fallback for cases where Option C doesn't fit.
+4. **Options C and D are viable but strictly worse than Option F** for
+   packages matching the ecosystem's `@_exported` umbrella shape. Option C
+   costs a Package.swift dependency (swift-docc-plugin) and requires the
+   experimental flag; Option D requires per-scheme docbuilds plus
+   `docc merge`. Option F produces the same single-archive output from one
+   docbuild and one convert with no new tooling beyond a ~30-line stdlib
+   Python post-extraction script.
+
+5. **Option B (ship as-is with a README note) is discouraged** for
+   user-facing documentation. The multi-catalog sidebar has no payoff for
+   readers — the sidebar groupings reflect Package.swift target
+   boundaries, which consumers do not care about. Readers want "find the
+   Property type, see its members, read its docs." Option F delivers that;
+   Option B does not.
 
 ### Recommendations
 
 | # | Recommendation | Priority | Rationale |
 |---|---------------|----------|-----------|
-| R1 | Swift Institute packages SHOULD adopt Option C (`--enable-experimental-combined-documentation`) for public-facing distribution builds | **High** | Produces the archive consumers actually want — single navigation hierarchy with full per-symbol docs. The experimental flag has been stable through three patch releases. |
-| R2 | Packages using Option B (umbrella + `@_exported`) SHOULD document the limitation in their README | **High** | Readers of per-symbol docs through the umbrella find empty pages — document that the variant catalogs carry the per-symbol reference. Closes an otherwise-opaque UX gap. |
-| R3 | CI workflows SHOULD retain `xcodebuild docbuild` for regression checks (zero-warning invariant) AND add `swift package generate-documentation` for the distribution archive | **Medium** | `xcodebuild docbuild` catches ref-resolution warnings per-archive; combined-documentation produces the shippable artifact. Both are useful, neither subsumes the other. |
-| R4 | The combined-documentation build SHOULD use the toolchain-bundled DocC, not the Xcode-bundled version | **Medium** | Community report on Swift Forums confirms the Xcode-bundled DocC lacks the landing-page synthesis. Use `xcrun --toolchain swift-DEVELOPMENT-SNAPSHOT` or explicit toolchain selection. |
-| R5 | Swift Institute skills (`code-surface`, `documentation`, `modularization`) SHOULD reference this research when a package's multi-target shape is being decided | **Medium** | Documentation-fidelity trade-offs are part of the modularization decision, not just modularization in the abstract. Link this research from `[MOD-015]` consumer-import-precision discussions. |
-| R6 | This recommendation SHOULD be re-evaluated when swift-docc-plugin's combined-documentation feature exits experimental status | **Low** | Tooling maturity matters; re-verify assumptions when DocC team signals stability. |
+| R1 | Swift Institute packages with a multi-target + umbrella + `@_exported` shape SHOULD adopt Option F for their distribution docs build | **Critical** | Produces the single-archive UX consumers want while preserving the source-level narrow-import benefit. No new dependencies, no experimental flags. |
+| R2 | Packages adopting Option F SHOULD consolidate per-symbol articles into the umbrella catalog with `#` headings rewritten to `<UmbrellaModule>/<SymbolPath>`. Variant `.docc/` directories retain a `.gitkeep` per literal `[DOC-020]` | **Critical** | The article-to-symbol attachment mechanism is catalog-scoped; articles must live where the symbol graph is consumed. |
+| R3 | Packages adopting Option F SHOULD carry a `Scripts/patch-umbrella-symbol-graph.py` (or equivalent) that walks non-umbrella symbol graphs and injects doc comments into the umbrella's graph | **Critical** | The patch is the load-bearing step that closes the `@_exported` doc-stripping gap. Without it Option F collapses back to Option B. Reference implementation ships in swift-property-primitives. |
+| R4 | Swift Institute skills — `modularization`, `documentation` — SHOULD reference this research when a package's multi-target + umbrella shape is being decided or audited | **High** | Documentation and compile-time dependency concerns are separable; skills should not conflate them. |
+| R5 | `[DOC-020]` ("Every module MUST have a `.docc` catalogue directory") SHOULD gain an explicit exception for variant targets whose docs are consolidated under an umbrella catalog | **High** | The literal rule is satisfied by a `.gitkeep`, but the rule's intent is "every module is documented." With Option F, variant modules are documented — through the umbrella. The exception should be named to prevent future audits from flagging Option F as a convention violation. |
+| R6 | The ecosystem SHOULD publish one concrete case study of Option F (swift-property-primitives) as a blog post | **Medium** | Option F is not a DocC-team-blessed pattern; it's an ecosystem workaround for a DocC limitation. Documenting the pattern externally accelerates adoption elsewhere and gives the DocC team concrete feedback on the `@_exported` re-export gap. |
 
 ### What this does NOT recommend
 
-- **No reshape to single-target** (Option E). The variant decomposition was
-  driven by consumer-dependency-graph concerns that remain valid. Docs
-  shouldn't dictate package shape.
-- **No removal of `@_exported`** from umbrella exports.swift files. The
+- **No reshape to single-target** (Option E). The variant decomposition is
+  driven by compile-time dependency-graph concerns that remain valid. Docs
+  shouldn't dictate package shape; Option F preserves the source shape
+  while fixing the docs UX.
+- **No removal of `@_exported`** from umbrella `exports.swift` files. The
   umbrella remains the canonical consumer-facing import point; `@_exported`
-  is load-bearing for that.
+  is load-bearing for it.
 - **No migration to `public import`** as a replacement for `@_exported` in
-  umbrellas. `public import` declares a dependency; it does not transparently
-  expose sibling symbols. The umbrella pattern requires `@_exported`.
+  umbrellas. `public import` declares a dependency but does not transparently
+  expose sibling symbols; the umbrella pattern requires `@_exported`.
+- **No adoption of swift-docc-plugin** solely to get combined documentation
+  (Option C). Option F matches Option C's output without the Package.swift
+  dependency or experimental-flag exposure.
 
 ### Applicability to swift-property-primitives 0.1.0
 
-For the 0.1.0 release currently in flight:
+Option F **was adopted for 0.1.0** at commit `78cd7a1`. Pipeline runs
+clean: single `xcodebuild docbuild -scheme "Property Primitives"`,
+symbol-graph patching via `Scripts/patch-umbrella-symbol-graph.py`,
+single `xcrun docc convert` on the umbrella catalog. Output:
+`Property Primitives.doccarchive` with every per-symbol page rendering
+full docs, the purple-accent landing page, the tutorial, and five
+topical articles.
 
-- **Ship with Option B (current shape) + R2 README note.** The combined
-  documentation archive can land in 0.1.1 once CI is updated. Zero-warning
-  `xcodebuild docbuild` across all 6 product schemes has been achieved and
-  is the acceptance criterion; Option C's combined archive is additive.
-- **CI update for 0.1.1**: add a `swift package generate-documentation
-  --enable-experimental-combined-documentation` step in the docs workflow;
-  publish the combined archive to the hosting site alongside (or instead of)
-  the umbrella-only archive.
+Superseded work from the same release cycle:
+- Commits `794449e` / `a45845c` / `79ae689` implemented Option D (per-scheme
+  docbuild + `docc merge`). Superseded by `78cd7a1` once the six-catalog
+  sidebar was observed to have no reader payoff.
 
 ### Follow-on items
 
-- Swift-DocC blog post opportunity: "How the Swift Institute ecosystem
-  handles multi-target documentation across 20+ packages." Concrete,
-  production-scale case study for the combined-documentation feature — the
-  DocC team explicitly called for feedback on real-world usage.
-- Monitor `swift-docc-plugin` releases for the feature exiting experimental.
-- Consider authoring a `Scripts/build-combined-docs.sh` shim in the
-  swift-institute Scripts repo that wraps the SPM plugin invocation with
-  ecosystem-appropriate defaults (toolchain selection, hosting base path,
-  output path convention). Shared across all multi-target packages.
+- Update `[DOC-020]` in the `documentation` skill per R5 — explicit
+  exception for consolidated-under-umbrella variant targets.
+- Reference this research from `[MOD-015]` in the `modularization` skill:
+  consumer-import-precision + docs-consolidation are compatible, and this
+  research documents how.
+- Blog post per R6: "Multi-Target Swift Packages Without Multi-Catalog
+  Documentation." Grounded in the swift-property-primitives case study.
+- Monitor swift-docc-plugin's combined-documentation feature for parity
+  with Option F. If the plugin reaches the same UX with equal or better
+  ergonomics, re-evaluate.
 
 ## References
 
