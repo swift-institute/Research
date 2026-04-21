@@ -6,6 +6,27 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-21-descriptor-a-audit-close-and-remediation-rhythm.md",
+      "date": "2026-04-21",
+      "title": "Descriptor A+audit close and remediation-rhythm establishment",
+      "packages": [
+        "swift-kernel-primitives",
+        "swift-iso-9945",
+        "swift-windows-standard",
+        "swift-darwin-standard",
+        "swift-foundations/swift-kernel",
+        "swift-foundations/swift-posix",
+        "swift-foundations/swift-darwin",
+        "swift-foundations/swift-linux",
+        "swift-foundations/swift-windows",
+        "swift-institute/Audits",
+        "swift-institute/Skills/audit",
+        "swift-institute/Skills/supervise"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-21-property-consuming-sendable-audit-and-workaround-locus.md",
       "date": "2026-04-21",
       "title": "Sendable audit, Option C, and the workaround-locus dimension",
