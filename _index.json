@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "package-namespace-noun-convention.md",
+      "displayName": "package-namespace-noun-convention.md",
+      "topic": "Package and namespace names take noun form; the gerund is reserved as a top-level typealias onto Namespace.`Protocol` (the canonical capability protocol). Aligns swift-primitives with Apple/Rust/Haskell/Go naming bias. Inventories four primitive packages (formatting, ordering, positioning, rendering) plus six L3 renderer foundations for rename. Companion skill `swift-package` proposed to encode [PKG-NAME-*] rules.",
+      "date": "2026-04-21",
+      "status": "RECOMMENDATION",
+      "statusDetail": "pending skill ratification (swift-package)",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "parameter-ordering-conventions.md",
       "displayName": "parameter-ordering-conventions.md",
       "topic": "Parameter ordering conventions for init and function signatures: closure-last rule, SE-0279 multi-closure lifecycle order, configuration-first-or-last (never middle), struct-over-builder-closure. Four rules promoted to code-surface as [API-IMPL-012] – [API-IMPL-015]. Synthesises Apple API Design Guidelines, SE-0279/SE-0286/SE-0245, TSPL, community writing, stdlib precedents, and zero-violation ecosystem survey. Tier 2, ecosystem-wide.",
