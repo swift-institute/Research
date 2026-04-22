@@ -122,7 +122,7 @@ Five options, each named, shaped, and classified by layer-correctness, consumer 
 **Cons**:
 - File.Handle's method surface splits across two modules (iso-9945 for {read, write, close}; swift-posix for writeAll). Maintainers looking at iso-9945 alone see an incomplete surface; a Research-note pointer in iso-9945's File.Handle source would mitigate this.
 - Slight consumer coupling increase: a package that only imported `ISO_9945_Kernel_File` (not `POSIX_Kernel_File`) would lose `writeAll`. Mitigation: check via grep for any such narrow consumers; almost certainly none, since all existing callers import through the `Kernel` unifier.
-- `@inlinable` interaction: if the new L3 File.Handle extension is `@inlinable` (for the performance story), it cannot reference `@_spi` symbols — but we aren't introducing any SPI-gated symbols here, so this constraint is inert.
+- `@inlinable` interaction (revised per principal review): the naive claim that "we aren't introducing any SPI-gated symbols" understates the risk. The new L3 `File.Handle.writeAll` body will ultimately reach `descriptor._rawValue` (which IS `@_spi(Syscall)`) through its call chain to `POSIX.Kernel.IO.Write.write` or the raw POSIX write wrapper. If the new extension is marked `@inlinable` for cross-module specialization (matching the existing `Kernel.IO.Write.writeAll` unifier's `@inlinable` pattern), the same trap surfaced in `Research/Reflections/2026-04-20-file-system-typed-path-and-l2-l3-io-ambiguity.md` can fire: `@inlinable` bodies cannot reference `@_spi` symbols across module boundaries. Implementation mitigation: declare the method, compile, verify no "`@inlinable` cannot reference `@_spi`" errors BEFORE committing to the method signature. If the error appears, the fix is either (a) drop `@inlinable` on this specific method (accepting the per-call cost), (b) route through a non-SPI `Kernel.Descriptor` accessor if one exists, or (c) defer to the implementation cycle's design slot. This is an implementation-time pre-check, not a matrix-time blocker, but it is material enough to warrant a dedicated verification step in the implementation-cycle ground rules.
 
 **Consumer impact**: Zero for consumers importing through the `Kernel` or `POSIX_Kernel` umbrella; unknown minor impact for any narrow `ISO_9945_Kernel_File`-only importer (subject to a workspace grep).
 
@@ -135,8 +135,8 @@ $ grep -l writeAll swift-iso/swift-iso-9945/Research/
 (none found)
 
 $ grep -l writeAll swift-foundations/swift-posix/Research/
-post-modularization-design-notes.md
-l3-policy-design.md         ← highly relevant
+post-modularization-design-notes.md    ← checked, not materially relevant (writeAll appears only in a namespace-depth ergonomics discussion at line 27, unrelated to L2/L3 layer placement)
+l3-policy-design.md                    ← highly relevant
 
 $ grep -l "writeAll|File.Handle|IO.Write|partial-IO" swift-institute/Research/
 19 hits — 3 materially relevant:
@@ -216,3 +216,29 @@ Option 1 (delete both; consumers migrate to unifier) is a live alternative if th
 - Chose to include the `Kernel.File.Handle` L1-type discovery as a Constraint (rather than bury it in Evidence), because it materially reframes parent-handoff option (d) "relocate File.Handle to L3" — the type is already L1-compatible and only extensions move. This changes the option-space shape.
 - Chose not to grep-enumerate every `handle.writeAll(` call site in the workspace in this doc (documented as open question #6) because the options matrix does not require the exact call-site list to be decidable; it is load-bearing at implementation time, not at options-matrix time. Principal may redirect.
 - Chose not to investigate the `Either<Error, Kernel.Interrupt>` shape's design history for this doc; flagged as Open Question #2 because it is an API-design choice orthogonal to layer-correctness.
+
+## Principal Decisions (2026-04-22)
+
+Principal reviewed Doc 1 after `e871dbe` landed; decisions on the 6 escalated open questions recorded here as the durable artifact for a future implementation cycle. Decisions are binding on any implementation-cycle supervise block that carries forward this investigation.
+
+| # | Question | Decision | Rationale (principal's words, compressed) |
+|---|----------|----------|-------------------------------------------|
+| 1 | Option 5 vs Option 1 (primary decision) | **Option 5 — method-level layer split.** | Ergonomics preservation is genuine value; Option 1's mass migration across swift-file-system + test helpers is churn explicitly budgeted as "minimum-quality floor," not "migration cycle." Option 5 closes both findings at method granularity — the layer rule cleanly re-asserts. |
+| 2 | Error shape for the new L3 `File.Handle.writeAll` — `Either<Error, Kernel.Interrupt>` or plain `Kernel.IO.Write.Error` | **Keep `Either<Error, Kernel.Interrupt>`.** | Preserves the existing File.Handle method contract (consumers already rely on EINTR visibility at the method site). Asymmetry with the free-function `POSIX.Kernel.IO.Write.writeAll` is justified semantically: "method surfaces `Interrupt` for caller; free-function retries internally — pick your abstraction." Convergence to a plain error would be a separate ecosystem-wide API decision, not a P2.2 decision. |
+| 3 | Split-legibility aids | **Both.** Short DocC `See Also` cross-reference in iso-9945's `File.Handle.write.swift` pointing to the L3 sibling; one-paragraph Research note per package (swift-posix's existing `l3-policy-design.md` absorbs the update; iso-9945 gets a new short note). | Keeps future-reader friction low. |
+| 4 | Consumer-migration scope (Option 1-conditional) | **N/A.** | Option 5 was chosen; Option 5 has zero migration cost for umbrella-importing consumers. Question #4 is moot for the implementation cycle. |
+| 5 | Hard ground-rule: `swift build --build-tests` must be clean on both macOS AND Linux Docker (swift:6.3.1) before implementation commits land | **YES, hard ground-rule.** | Per the 2026-04-20 latent-ambiguity reflection: `swift build` clean on macOS alone is a false positive for the L2/L3 ambiguity class this change creates. Must be a named MUST entry in the implementation-cycle supervise block. |
+| 6 | Consumer call-site grep timing | **Prep-phase, before implementation-cycle supervise block locks.** | ~30 min task; its result verifies Option 5's "zero migration" claim. Almost certainly no narrow `ISO_9945_Kernel_File`-only importer exists, but verified vs assumed is different. Do not spend a mid-investigation slot on it. |
+
+### Additional risks principal flagged for the implementation cycle
+
+- **`@inlinable` cascade risk in Option 5**: the new L3 `File.Handle.writeAll`'s body will transitively reach `descriptor._rawValue` (which is `@_spi(Syscall)`). Implementation cycle's first act must be: declare the method, compile, verify no "`@inlinable` cannot reference `@_spi`" errors BEFORE committing to the method signature. If the error fires, drop `@inlinable` on this method or route through a non-SPI accessor. Captured in Option 5's revised cons above.
+- **Prior-research citation hygiene**: this doc's original Evidence section listed `post-modularization-design-notes.md` as a grep hit without marking it checked-and-not-relevant. Loop closed in the amended Evidence section — the single mention (line 27) is about namespace-depth ergonomics, unrelated to L2/L3 placement. Documentation pattern for future docs: explicitly annotate each grep hit as "materially relevant" OR "checked, not materially relevant (reason)" — silence is ambiguous.
+
+### Forward-looking guidance to Doc 2 and Doc 3
+
+Principal flagged three patterns from Doc 1 to carry into subsequent investigations:
+
+1. **L1-vs-L2 type-location check up-front.** Doc 1's whole pivot was the File.Handle-is-L1 discovery. Doc 2 must run the equivalent diagnostic for `Kernel.Socket.Message.Header` (`rg "public struct Header" swift-primitives/swift-kernel-primitives/`). Doc 3 same for whatever type hosts `siginfo_t`.
+2. **Grep consumer packages' own `Research/`.** For msghdr specifically, `swift-foundations/swift-sockets/Research/` is load-bearing because swift-sockets is the package currently consuming these raw-pointer fields via the hand-coded byte-offset hack (surfaced as the drive-by finding in the Session 3 P3.3 #10 work).
+3. **Don't stop at the handoff's implicit option count.** Doc 1's Option 5 emerged from pushing past the parent handoff's 4-option framing. Doc 2's handoff framing is implicitly 2-option ("wrap pointer+length in typed ecosystem types or leave alone") — the real space is almost certainly richer (method-level split, shadow-struct + View pattern, per-field typed setters). Push.
