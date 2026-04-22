@@ -1,10 +1,76 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-21",
+  "generatedAt": "2026-04-22",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-04-22-platform-audit-remediation-cycle-and-advisory-pivot.md",
+      "date": "2026-04-22",
+      "title": "Platform audit remediation cycle — 9 to 30/89 then advisory pivot to 38/89",
+      "packages": [
+        "swift-kernel",
+        "swift-posix",
+        "swift-darwin",
+        "swift-linux",
+        "swift-windows",
+        "swift-strings",
+        "swift-darwin-standard",
+        "swift-linux-standard",
+        "swift-windows-standard",
+        "swift-iso-9945",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-22-ci-centralization-rollout-and-ecosystem-hygiene.md",
+      "date": "2026-04-22",
+      "title": "CI centralization rollout + ecosystem hygiene",
+      "packages": [
+        "swift-institute/.github",
+        "swift-institute/Scripts",
+        "swift-institute/Research",
+        "swift-primitives/swift-property-primitives",
+        "swift-foundations/swift-console",
+        "swift-foundations/swift-compiler"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-22-property-primitives-launch-blog-drafting.md",
+      "date": "2026-04-22",
+      "title": "Property Primitives launch blog: drafting, framing iteration, and a walk-back",
+      "packages": [
+        "swift-property-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-21-noun-rename-cascade-execution.md",
+      "date": "2026-04-21",
+      "title": "Noun-Convention Rename Cascade: Execution, Misdiagnoses, and Mechanical-Regex Limits",
+      "packages": [
+        "swift-render-primitives",
+        "swift-format-primitives",
+        "swift-order-primitives",
+        "swift-position-primitives",
+        "swift-html-render",
+        "swift-pdf-render",
+        "swift-svg-render",
+        "swift-css-html-render",
+        "swift-markdown-html-render",
+        "swift-pdf-html-render",
+        "swift-user-interface-render",
+        "swift-package"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-04-21-danceui-noun-convention-rename-cascade.md",
       "date": "2026-04-21",
@@ -2173,6 +2239,20 @@
         "swift-property-primitives",
         "swift-institute/Research",
         "swift-institute/Skills/documentation"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-21-readme-v2-skill-cycle-and-gitignore-ordering-bug.md",
+      "date": "2026-04-21",
+      "title": "/readme skill v2.0.0 reference-implementation cycle and the canonical .gitignore ordering bug",
+      "packages": [
+        "swift-property-primitives",
+        "readme",
+        "audit",
+        "skill-lifecycle",
+        "sync-gitignore.sh"
       ],
       "status": "pending",
       "statusRaw": "pending"
