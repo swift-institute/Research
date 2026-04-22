@@ -1118,6 +1118,16 @@
       "scope": null
     },
     {
+      "file": "git-history-transfer-patterns.md",
+      "displayName": "git-history-transfer-patterns.md",
+      "topic": "Git history + GitHub org transfer patterns (Tier 2, v1.0) — transfer-vs-fork trade-offs (stars/redirects/PRs), post-tag history squash recipes (6 options, `reset --soft` recommended), transfer+squash composition for the ecosystem-finalization push wave. Addresses the coenttb/swift-html → swift-foundations heritage-preservation scenario.",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "git-subtree-publication-pattern.md",
       "displayName": "git-subtree-publication-pattern.md",
       "topic": "Git subtree (Apollo pattern) publication evaluation (Tier 2, v2.0) — Apollo iOS production analysis, splitsh-lite. **Not applicable**: repos are already separate (git submodules, not monorepo). Actual problem: path→URL manifest transformation + version coordination across 348 repos. CI manifest rewriting or release branch recommended.",
