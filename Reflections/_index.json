@@ -6,6 +6,17 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-22-iso9945-socket-message-header-cycle1-and-layer-correction.md",
+      "date": "2026-04-22",
+      "title": "ISO 9945 Cycle 1 — Socket.Message.Header typed pointer-field partial close + user-caught layering correction",
+      "packages": [
+        "swift-iso-9945",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-22-investigation-only-cycle-three-doc-pattern.md",
       "date": "2026-04-22",
       "title": "Investigation-only supervise cycle — three-doc pattern + principal-as-decider enforcement",
@@ -2267,6 +2278,33 @@
         "audit",
         "skill-lifecycle",
         "sync-gitignore.sh"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-22-precursor-publish-and-narrowness-cycle.md",
+      "date": "2026-04-22",
+      "title": "Precursor blog live on swift-institute.org; the four-pass narrowness cycle as release-process gap",
+      "packages": [
+        "swift-property-primitives",
+        "swift-institute/Blog",
+        "swift-institute/Experiments",
+        "swift-institute/swift-institute.org",
+        "documentation",
+        "blog-process"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-22-strict-modularization-and-case-relocation.md",
+      "date": "2026-04-22",
+      "title": "Strict per-type modularization experiment and case-formatting relocation",
+      "packages": [
+        "swift-standard-library-extensions",
+        "swift-format-primitives",
+        "swift-rfc-2045"
       ],
       "status": "pending",
       "statusRaw": "pending"
