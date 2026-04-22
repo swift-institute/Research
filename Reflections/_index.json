@@ -6,6 +6,59 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-22-tri-agent-ci-rollout-execution-and-standards-migration.md",
+      "date": "2026-04-22",
+      "title": "Tri-agent CI rollout execution + standards-org migration",
+      "packages": [
+        "swift-institute/Scripts",
+        "swift-institute/.github",
+        "swift-primitives",
+        "swift-standards",
+        "swift-foundations",
+        "swift-ietf",
+        "swift-iso",
+        "swift-w3c",
+        "swift-whatwg",
+        "swift-ecma",
+        "swift-ieee",
+        "swift-iec",
+        "swift-incits"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-22-standards-org-migration-phases-1-5-execution.md",
+      "date": "2026-04-22",
+      "title": "Standards org migration — Phases 1-5 execution with a Do-Not-Touch violation mid-session",
+      "packages": [
+        "swift-institute",
+        "swift-standards",
+        "swift-ietf",
+        "swift-iso",
+        "swift-w3c",
+        "swift-whatwg",
+        "swift-ecma",
+        "swift-incits",
+        "swift-ieee",
+        "swift-iec"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-22-map-init-blog-tagged-revisit-subagent-dispatch-failures.md",
+      "date": "2026-04-22",
+      "title": "`.map(Type.init)` blog, Tagged literal-conformance revisit, and two stuck subagent dispatches",
+      "packages": [
+        "swift-identity-primitives",
+        "swift-institute",
+        "swift-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-22-supervisor-arc-investigation-through-cycle-two-dispatch.md",
       "date": "2026-04-22",
       "title": "Supervisor arc — investigation through Cycle 2 dispatch",
