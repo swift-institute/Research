@@ -6,6 +6,21 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-22-supervisor-arc-investigation-through-cycle-two-dispatch.md",
+      "date": "2026-04-22",
+      "title": "Supervisor arc — investigation through Cycle 2 dispatch",
+      "packages": [
+        "swift-iso-9945",
+        "swift-foundations/swift-posix",
+        "swift-foundations/swift-linux",
+        "swift-foundations/swift-kernel",
+        "swift-foundations/swift-darwin",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-22-iso9945-socket-message-header-cycle1-and-layer-correction.md",
       "date": "2026-04-22",
       "title": "ISO 9945 Cycle 1 — Socket.Message.Header typed pointer-field partial close + user-caught layering correction",
@@ -2305,6 +2320,19 @@
         "swift-standard-library-extensions",
         "swift-format-primitives",
         "swift-rfc-2045"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-22-category-a-bulk-scaffold-and-spm-umbrella-fallback.md",
+      "date": "2026-04-22",
+      "title": "Category A DocC bulk scaffold + SPM umbrella-name fallback for Category D unblock",
+      "packages": [
+        "swift-primitives",
+        "swift-standards",
+        "swift-foundations",
+        "swift-institute/Scripts"
       ],
       "status": "pending",
       "statusRaw": "pending"
