@@ -6,6 +6,20 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-22-investigation-only-cycle-three-doc-pattern.md",
+      "date": "2026-04-22",
+      "title": "Investigation-only supervise cycle — three-doc pattern + principal-as-decider enforcement",
+      "packages": [
+        "swift-iso-9945",
+        "swift-posix",
+        "swift-kernel",
+        "swift-kernel-primitives",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-22-platform-audit-remediation-cycle-and-advisory-pivot.md",
       "date": "2026-04-22",
       "title": "Platform audit remediation cycle — 9 to 30/89 then advisory pivot to 38/89",
