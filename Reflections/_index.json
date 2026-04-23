@@ -1,10 +1,99 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-22",
+  "generatedAt": "2026-04-23",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-04-23-ci-permission-architecture-path-b-execution.md",
+      "date": "2026-04-23",
+      "title": "CI permission architecture — Path B investigation, 3-ground A-override, and 297-caller ecosystem rollout with private-repo billing-state discovery",
+      "packages": [
+        "swift-institute/.github",
+        "swift-institute/Scripts",
+        "swift-institute/Research",
+        "swift-primitives",
+        "swift-standards",
+        "swift-foundations",
+        "swift-ietf",
+        "swift-iso",
+        "swift-ieee",
+        "swift-iec",
+        "swift-w3c",
+        "swift-whatwg",
+        "swift-ecma",
+        "swift-incits"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-22-ci-centralization-push-wave-and-post-push-investigation.md",
+      "date": "2026-04-22",
+      "title": "CI centralization push wave, post-push three-way failure investigation, permission-architecture spin-off",
+      "packages": [
+        "swift-institute/Scripts",
+        "swift-institute/.github",
+        "swift-primitives",
+        "swift-standards",
+        "swift-foundations",
+        "swift-ietf",
+        "swift-iso",
+        "swift-ieee",
+        "swift-iec",
+        "swift-w3c",
+        "swift-whatwg",
+        "swift-ecma",
+        "swift-incits"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-22-body-org-tooling-extension-and-authorization-envelopes.md",
+      "date": "2026-04-22",
+      "title": "Body-org ORGS extension, authorization envelope discipline, and handoff summary drift",
+      "packages": [
+        "swift-institute/Scripts",
+        "swift-ietf",
+        "swift-iso",
+        "swift-incits",
+        "coenttb/swift-syndication"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-22-phase-i-completion-and-direction-reversals.md",
+      "date": "2026-04-22",
+      "title": "Phase I completion, three direction reversals, skill-scope vs intent gap",
+      "packages": [
+        "swift-institute/Scripts",
+        "swift-primitives",
+        "swift-standards",
+        "swift-foundations",
+        "swift-ietf",
+        "swift-iso",
+        "coenttb/swift-testing-performance",
+        "coenttb/swift-syndication",
+        "coenttb/swift-file-system"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-22-heritage-transfers-investigation-and-placeholder-verification-gap.md",
+      "date": "2026-04-22",
+      "title": "Heritage-transfers investigation and the placeholder-verification gap",
+      "packages": [
+        "swift-institute/Research",
+        "swift-foundations",
+        "coenttb"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-04-22-iso9945-signal-information-cycle2-beta-prime-revision.md",
       "date": "2026-04-22",
