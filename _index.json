@@ -8,10 +8,10 @@
     {
       "file": "ci-centralization-strategy.md",
       "displayName": "ci-centralization-strategy.md",
-      "topic": "CI/CD centralization strategy across ~280 repos in three orgs. Compares reusable workflows (current), repository rulesets (deprecation of required-workflows → rulesets successor; Team+ plan required), git subtree/submodule, and the sync-script model (established pattern — gitignore, community-health, dependabot). Recommendation: reusable workflows as foundational layer + sync-script for operational per-repo config. Empirical verification: swift-institute org on Free plan; rulesets gated; old repo names still on GitHub post local rename cascade. Tier 2, ecosystem-wide.",
-      "date": "2026-04-21",
+      "topic": "CI/CD centralization strategy across ~300 repos in 11 orgs. Compares reusable workflows (current), repository rulesets (deprecation of required-workflows → rulesets successor; Team+ plan required), git subtree/submodule, and the sync-script model (established pattern — gitignore, community-health, dependabot). Recommendation: reusable workflows as foundational layer + sync-script for operational per-repo config. v1.1.0 adds Permission scoping section: Path B (per-caller explicit permissions) over Path A (org-level write default), with ecosystem-wide rollout outcome (87/87 public verified green; 210 private billing-blocked across 3 layers) and a durable private-repo billing-state note to prevent mistaking pre-existing blockers for Path B regressions. Empirical verification: swift-institute org on Free plan; rulesets gated; reusable-workflow permission intersection rule confirmed in execution. Tier 2, ecosystem-wide.",
+      "date": "2026-04-22",
       "status": "RECOMMENDATION",
-      "statusDetail": "Phase 0 + 0b artifacts delivered; pilot and rollout deferred",
+      "statusDetail": "Phase 0/0b artifacts delivered; Phase II caller migration executed (297 callers, 11 orgs); Path B permission scoping rolled out 2026-04-22",
       "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": "ecosystem-wide"

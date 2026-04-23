@@ -2,11 +2,11 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-04-21
+version: 1.1.0
+last_updated: 2026-04-22
 status: RECOMMENDATION
 research_tier: 2
-applies_to: [institute, primitives, standards, foundations]
+applies_to: [institute, primitives, standards, foundations, body-orgs]
 normative: false
 ---
 -->
@@ -361,6 +361,151 @@ Phase-by-phase sequencing for acting on this recommendation:
 8. **Ongoing**: periodic `--dry-run` on each sync script to surface drift.
    Consider a weekly scheduled workflow in `swift-institute/.github` that
    runs all sync dry-runs and opens issues on drift.
+
+---
+
+## Permission scoping [added 2026-04-22]
+
+Orthogonal axis to the centralization mechanism analysed above: once
+reusable workflows (Option A) carry a `permissions:` declaration that
+requests `contents: write` (e.g., the swift-format auto-commit
+workflow), *where* should the matching grant be declared — at the
+caller job level, or via org-level `default_workflow_permissions`?
+
+### Mechanism
+
+Reusable-workflow permissions follow an intersection rule: the
+effective `GITHUB_TOKEN` scope for a job equals *intersection(caller's
+permissions, reusable's declared permissions)*. If the caller inherits
+the org default `read` and the reusable requests `write`, the
+intersection collapses to `read` and GitHub's pre-flight validator
+rejects the run with `startup_failure`
+(<https://docs.github.com/en/actions/how-tos/sharing-automations/reusing-workflows#access-and-permissions>).
+
+### Options
+
+- **Path A — Org-level write default**: set `default_workflow_permissions
+  = write` across the 11 orgs. Single point of maintenance; every
+  workflow in every repo gets `contents: write` by default. Matches
+  the pre-migration inline-workflow effective state.
+- **Path B — Per-caller granular**: keep orgs read-only; declare
+  `permissions: contents: write` at the caller job level of the
+  swift-format caller template. Explicit, self-documenting. Aligned
+  with GitHub's post-2023 default-read-plus-opt-in guidance.
+- **Path C candidates** (all rejected or absorbed):
+  - Per-repo `default_workflow_permissions`: strictly worse than A or B.
+  - Architectural removal of auto-commit (PR-based instead): overkill
+    for a format-on-push loop.
+  - Replace `GITHUB_TOKEN` with a PAT/App in the auto-commit step:
+    defer unless branch protection on `main` later blocks GITHUB_TOKEN.
+  - Hybrid (org-read + per-caller overrides): this *is* Path B.
+
+### Comparable-ecosystem survey (2026-04-22)
+
+| Org / repo | Pattern | Evidence |
+|---|---|---|
+| `swiftlang/github-workflows` | Top-of-file caller-level permissions | `pull_request.yml` line 3 |
+| `apple/swift-nio` | Top-of-file caller-level permissions; calls `swiftlang/github-workflows/.github/workflows/soundness.yml@0.0.10` (tag-pinned) | `pull_request.yml`, `main.yml` line 3 |
+| `pointfreeco/swift-composable-architecture` | Job-level caller permissions | `format.yml` line 14 |
+| `vapor/vapor` | Per-job permissions (read on test jobs, write on submit-dependencies) | `test.yml` |
+
+All four declare permissions at the caller level (workflow or job).
+None rely on org-level write defaults. apple/swift-nio's topology is
+the closest shape-match to Swift Institute's many-repos-shared-
+reusable pattern.
+
+### Recommendation: Path B
+
+Rationale (context-specific for Swift Institute, not generic best-practice appeal):
+
+1. **Migration asymmetry.** B→A later is ~15 minutes (delete template
+   block, flip 11 org defaults). A→B later scales with accumulated
+   workflow complexity — audit every workflow in every repo for hidden
+   `contents: write` reliance, retrofit per-caller declarations, then
+   tighten org defaults. Start-of-project is the cheapest moment to
+   pick B: callers are all template-generated from a single tool.
+2. **Ecosystem calibration.** Unanimous per-caller declaration across
+   the four surveyed Swift orgs is a signal about where long-lived
+   ecosystems converge. Supporting data, not decisive on its own.
+3. **Optionality.** B remains correct under all flip conditions below
+   (external contributors, compliance, GitHub policy changes); A
+   requires rework under any of them.
+
+The user's initial instinct was Path A on maintenance grounds. The
+single-admin / pinned-actions / no-compliance context legitimately
+weakens the canonical least-privilege argument. The instinct was
+overridden not on generic grounds but on the three specific points
+above — with the explicit note that reversibility (not security) is
+the load-bearing argument.
+
+### Rollout outcome (2026-04-22)
+
+Execution: edit `Scripts/ci-caller-templates/swift-format.yml.tmpl`
+(+2 lines at caller job level), regenerate 297 callers via
+`sync-ci-callers.sh`, push in phased waves (canary → 10 → 52 → 234).
+
+Across all 297 migrated callers:
+
+| Outcome | Count | Meaning |
+|---|---|---|
+| Success (verified green) | 87 | All public repos. Swift Format runs to completion; no more `startup_failure`. |
+| Failure — billing annotated | 82 | Private repos where a run is created then halted with *"recent account payments have failed or your spending limit needs to be increased"*. |
+| Private silent — no run | 59 | Private repos where the spending-limit block prevents run creation entirely; same root cause, different surface. |
+| Actions fully disabled | 69 | Private repos where Actions is turned off at repo or org level; no runs, no annotations. |
+| **Total** | **297** | |
+
+**Path B is verified on 100% of repos where Actions can run.** The
+permissions block is correctly encoded in every caller — the
+ecosystem is in the right state the moment billing resolves, no
+re-push needed.
+
+### Private-repo billing/Actions state (durable note)
+
+The 210 private repos split into three distinct layers of "blocked":
+
+1. **Annotated billing failure** (82 repos): GitHub creates the run,
+   then emits a billing annotation and fails it. Visible in the
+   Actions UI with the standard payment-failure text.
+2. **Silent billing halt** (59 repos): same root cause (spending
+   limit), but GitHub does not create the run at all. Empty
+   conclusion, no annotation. Distinguishable from (3) by
+   `gh api repos/X/actions/permissions --jq .enabled` returning `true`.
+3. **Actions fully disabled** (69 repos): Actions is off at the repo
+   or inherited org level. `gh api repos/X/actions/permissions --jq
+   .enabled` returns `false`. No runs ever attempt.
+
+These three states pre-existed Path B and apply equally to the CI
+(`swift-ci.yml`) and SwiftLint (`swiftlint.yml`) caller workflows —
+they just don't surface as visibly because those reusables declare
+`contents: read`, which works regardless of billing / Actions state
+until a runner is actually needed. Future investigators reading this
+section should NOT mistake these private-repo failures for Path B
+regressions; they are pre-existing ecosystem conditions exposed, not
+caused, by the rollout.
+
+### Conditions to revisit
+
+- External contributors with write access join the ecosystem →
+  reinforces B, no change.
+- Compliance / audit framework adoption → reinforces B, no change.
+- >5 workflows emerge requiring `contents: write` → slight pressure
+  to re-evaluate A; reusables already centralise logic, so only per-
+  caller declarations distribute.
+- Branch protection on `main` blocks `GITHUB_TOKEN` pushes →
+  revisit the PAT/App auto-commit path, not A-vs-B.
+- GitHub changes reusable-workflow permission semantics → revisit
+  both; no signal currently.
+- Billing resolves and private repos come online → verification
+  back-fills automatically; nothing to re-execute.
+
+Review cadence: annually, or on any flip condition above.
+
+### Provenance
+
+Investigation: `HANDOFF-ci-permission-architecture.md` (2026-04-22).
+Findings section of that handoff carries the full threat-model detail
+and decision log; this section consolidates the durable conclusion
+per [META-016].
 
 ---
 
