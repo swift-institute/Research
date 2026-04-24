@@ -6,6 +6,32 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-24-p29-cycle-4-option-a-unify-and-structural-correctness-framing.md",
+      "date": "2026-04-24",
+      "title": "P2.9 Cycle 4 Close — Option A Unify and Structurally-Correct vs Lowest-Risk Framing",
+      "packages": [
+        "swift-iso-9945",
+        "swift-linux-standard",
+        "swift-institute/Audits",
+        "swift-institute/Research"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-24-se-0527-outputspan-adoption-wave.md",
+      "date": "2026-04-24",
+      "title": "SE-0527 OutputSpan Adoption Wave",
+      "packages": [
+        "swift-array-primitives",
+        "swift-buffer-primitives",
+        "swift-cardinal-primitives",
+        "swift-ordinal-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-24-implementation-layer-cluster-audit-and-full-remediation.md",
       "date": "2026-04-24",
       "title": "Implementation-Layer Cluster Audit and Full Remediation",
