@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 1.2.0
-last_updated: 2026-04-21
+version: 1.2.1
+last_updated: 2026-04-24
 status: DECISION
 tier: 2
 scope: ecosystem-wide
@@ -579,3 +579,120 @@ Three layers of DocC archive aggregation exist in the ecosystem, each answered b
 | Search over aggregated content | Full-text across the merged site | Pagefind overlay or SPA with MiniSearch/Fuse.js | `docc-search-capabilities-and-merged-site-strategy.md` |
 
 Layer 1 and Layer 2 both use DocC's multi-archive story; they differ in whether the archives come from one package's targets (layer 1) or from independent repos (layer 2). Layer 3 addresses a separate concern (search limitations) that is orthogonal to aggregation.
+
+## Implementation
+
+Added 2026-04-24, three days after the v1.2.0 decision landed.
+
+### The R3 script
+
+R3 mandates a post-extraction `patch-umbrella-symbol-graph.py`. Earlier
+revisions of this research and `[DOC-019a]` cited
+`swift-property-primitives/Scripts/patch-umbrella-symbol-graph.py` as the
+reference implementation, but that file was never committed — neither
+commit `78cd7a1` (initial Option F) nor `d1cea57` (v1.2.0 swift-build
+pipeline) added it, and no `Scripts/` directory exists in
+swift-property-primitives at the v1.2.0 tip.
+
+The canonical implementation now lives at
+[`swift-institute/Scripts/patch-umbrella-symbol-graph.py`](../Scripts/patch-umbrella-symbol-graph.py)
+and is the single script every ecosystem caller should reference. Placing
+it in `swift-institute/Scripts/` matches the pattern already set by
+`scaffold-docc-catalog.sh`, `rename-docc-catalogs.sh`, and
+`sync-ci-callers.sh`: ecosystem-wide DocC tooling lives in one place, not
+scattered across per-package `Scripts/` directories.
+
+### Script responsibilities
+
+The script is stdlib-only (Python 3.8+) and does two things:
+
+1. **Doc-comment injection.** Walk every non-umbrella graph in the input
+   directory, build a `precise-identifier → docComment` map, and inject
+   any missing `docComment` fields into the umbrella graph. Under `swift
+   build -emit-symbol-graph`, this patches zero symbols in practice — the
+   extractor preserves `@_exported` re-export doc comments natively
+   (finding 1 in the v1.2.0 section). Retained as a **defensive no-op**
+   that guards against a future Swift regression.
+
+2. **Umbrella-graph isolation.** Write only the patched umbrella graph —
+   plus any `<Umbrella>@<OtherModule>.symbols.json` extension graphs that
+   belong to the umbrella — to the output directory. Isolation is the
+   load-bearing role. Without it, `docc convert` receives the full graph
+   pool and triggers the cross-module-ambiguity gotcha.
+
+### Empirical verification
+
+Verified against two packages with the multi-target + umbrella +
+`@_exported public import` shape. The "full-pool" scenario models what a
+caller does when it passes `--additional-symbol-graph-dir` at the pooled
+distribution directory (what the reusable workflow
+`swift-institute/.github/.github/workflows/swift-docs.yml@v1` does at the
+time this was written); "patched" models the R3-prescribed pipeline with
+the script's output directory as the input.
+
+| Package | full-pool warnings | umbrella-isolated warnings (= script output) | Symbols patched |
+|---------|---------------------|---------------------------------------------|----------------|
+| swift-ownership-primitives @ `4276fb5` | 100 | 17 | 0 |
+| swift-property-primitives @ `ad9c80d` | 108 | 28 | 0 |
+
+Method: clean `.build`, `swift build -c release -Xswiftc -emit-symbol-graph -Xswiftc -emit-symbol-graph-dir <raw>`, copy non-test-support graphs into a distribution pool, then (a) pass the pool directly to `xcrun docc convert` for "full-pool", or (b) run the patch script with `--umbrella-module` set to the package's umbrella and pass the script's output directory. Warning counts include all DocC diagnostics, not only symbol-resolution failures.
+
+Per-symbol pages in the isolated archives carry full abstracts and the
+full `['declarations', 'parameters', 'content']` section set in
+`data/documentation/<umbrella>/<Type>/<init>.json` — verified on
+`ownership_primitives/ownership/borrow/init(_:).json` and
+`property_primitives/property/init(_:).json`. The full-pool scenario
+ALSO carries full abstracts (the @_exported doc comments are preserved
+in the umbrella graph regardless of which graphs accompany it to
+`docc convert`); the difference is exclusively in cross-reference
+resolution inside articles.
+
+### Residual article-context warnings
+
+In the isolated scenario, residual `'<Namespace>' doesn't exist at
+'/<Bundle-Path>/<article>'`-class warnings remain: 3 in
+swift-ownership-primitives, 2 in swift-property-primitives. These are
+**not** downstream of `@_exported` doc-comment stripping — they are
+article-authorship issues, invisible to the patch script:
+
+| Class | Cause | Example |
+|-------|-------|---------|
+| Member-via-dot | DocC symbol paths use `/`; `.member` is not recognized | `` ``Ownership/Inout.value`` `` in `Borrow-vs-Inout.md` |
+| Wildcard | DocC does not accept `*` in symbol references | `` ``Ownership/Transfer/*`` `` in `Ownership-Transfer-Recipes.md`, `Slot-Move-vs-Store.md` |
+| Stale symbol path | Reference targets a member that has since moved to a different type | `Property/View-swift.struct/pointer(to:_:)` — the method is on `Property`, not on `Property/View` |
+
+Fix is per-article, not per-script: edit the reference to the correct
+syntactic form. These warnings occur under full-pool as well, alongside
+the cross-module-ambiguity-induced warnings that the patch script
+eliminates.
+
+### Pipeline in the shared CI workflow
+
+The shared workflow
+[`swift-institute/.github/.github/workflows/swift-docs.yml`](https://github.com/swift-institute/.github/blob/main/.github/workflows/swift-docs.yml)
+currently passes the pooled distribution directory straight to `docc
+convert`; it does not invoke the patch script and does not isolate the
+umbrella graph. Every caller that depends on this workflow therefore
+emits the full-pool warning set. Migrating the workflow to invoke
+`swift-institute/Scripts/patch-umbrella-symbol-graph.py` and pass its
+output directory is a separate, coordinated change across the shared
+`.github` repo and every caller's Dependabot-pinned tag; that change is
+out of scope here but is the natural sequel.
+
+### Verification packages as reference implementations
+
+Both packages now stand as reference implementations for the Option F
+pipeline's client side:
+
+- `swift-ownership-primitives` — 13 library targets (namespace + core +
+  10 variants + stdlib-integration + umbrella), dependent on
+  `swift-tagged-primitives`. Good stress test for the script's
+  `--exclude-module` behaviour (test-support exclusion is the only
+  exclusion needed) and for the umbrella's multi-graph emission
+  (`Ownership_Primitives.symbols.json` +
+  `Ownership_Primitives@Swift.symbols.json` +
+  `Ownership_Primitives@Tagged_Primitives.symbols.json`).
+- `swift-property-primitives` — 6 library targets (core + 4 variants +
+  umbrella). The v1.2.0 reference that drove the decision; its umbrella
+  emits `Property_Primitives.symbols.json` +
+  `Property_Primitives@Tagged_Primitives.symbols.json`.
