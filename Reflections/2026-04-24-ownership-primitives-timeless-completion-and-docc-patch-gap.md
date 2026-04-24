@@ -11,7 +11,9 @@ packages:
   - swift-institute/Skills/documentation
   - swift-institute/Skills/handoff
   - swift-institute/Skills/testing
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Ownership Primitives timeless 0.1.0 completion and the DocC umbrella-patch ecosystem gap

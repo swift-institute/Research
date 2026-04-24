@@ -15,7 +15,9 @@ packages:
   - swift-paths
   - swift-strings
   - swift-file-system
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Descriptor migration: supervisor flipping and v6 convergence

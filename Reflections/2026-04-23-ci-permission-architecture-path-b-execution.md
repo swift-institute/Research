@@ -5,7 +5,9 @@ packages:
   - swift-institute-.github
   - swift-institute-Scripts
   - swift-institute-Research
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # CI Permission Architecture — Path B Investigation and Ecosystem Rollout

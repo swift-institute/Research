@@ -4,7 +4,9 @@ session_objective: Cycle 2 implementation of Doc 3 (P2.3 #3 Signal.Action.Handle
 packages:
   - swift-iso-9945
   - swift-institute/Audits
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Cycle 2 — ISO 9945.Kernel.Signal.Information: β' revision after @convention(c) representability block

@@ -6,7 +6,9 @@ packages:
   - swift-standards
   - swift-foundations
   - swift-institute/Scripts
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Category A DocC bulk scaffold + SPM umbrella-name fallback for Category D unblock

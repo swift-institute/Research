@@ -4,7 +4,9 @@ session_objective: Execute Doc 2 Cycle 1 implementation (P2.4 #8 Socket.Message.
 packages:
   - swift-iso-9945
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # ISO 9945 Cycle 1 — Socket.Message.Header typed pointer-field partial close + user-caught layering correction

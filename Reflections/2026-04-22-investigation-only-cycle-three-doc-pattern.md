@@ -7,7 +7,9 @@ packages:
   - swift-kernel
   - swift-kernel-primitives
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Investigation-only supervise cycle — three-doc pattern + principal-as-decider enforcement

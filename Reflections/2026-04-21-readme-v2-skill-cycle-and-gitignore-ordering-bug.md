@@ -7,7 +7,9 @@ packages:
   - audit
   - skill-lifecycle
   - sync-gitignore.sh
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # /readme skill v2.0.0 reference-implementation cycle and the canonical .gitignore ordering bug

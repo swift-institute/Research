@@ -14,7 +14,9 @@ packages:
   - swift-institute/Audits
   - swift-institute/Skills/audit
   - swift-institute/Skills/supervise
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Descriptor A+audit close and remediation-rhythm establishment

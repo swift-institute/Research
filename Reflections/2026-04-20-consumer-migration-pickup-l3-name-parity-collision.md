@@ -8,7 +8,9 @@ packages:
   - swift-posix
   - swift-institute/Skills/platform
   - swift-institute/Skills/handoff
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Consumer migration pickup reveals L3 unifier name-parity collision on POSIX-literal syscalls

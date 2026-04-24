@@ -3,7 +3,9 @@ date: 2026-04-21
 session_objective: Investigate whether pure Swift 6.3 ownership vocabulary can replace the Property / Property.Typed / Property.Consuming / Property.View type families at equivalent ergonomics; write consolidated research + four experiments without touching production source.
 packages:
   - swift-property-primitives
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Pure-Language Ownership Feasibility for the Property Type Family
