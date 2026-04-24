@@ -3,7 +3,7 @@ date: 2026-04-24
 session_objective: Build /swift-forums-review skill from a statistical corpus of forums.swift.org review threads; validate end-to-end on two swift-primitives packages; iterate to v1.2 through a critical review by a sibling agent.
 packages:
   - swift-institute/Skills/swift-forums-review
-  - swift-institute/Research/swift-forums-review-corpus
+  - swift-institute/Engagement/swift-forums-review-corpus
   - swift-primitives/swift-carrier-primitives
   - swift-primitives/swift-async-primitives
 status: processed
