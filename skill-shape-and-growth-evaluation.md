@@ -2,13 +2,27 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-04-24
-status: RECOMMENDATION
+status: DECISION
 tier: 2
 scope: ecosystem-wide
 ---
 -->
+
+## Status Update — 2026-04-24
+
+**DECIDED**: all recommendations executed in the same session as the investigation. Concretely:
+
+1. `[SKILL-CREATE-005]` amended and `[SKILL-CREATE-005a]` added to `skill-lifecycle/SKILL.md` per the proposed text below.
+2. `memory-safety/` SPLIT executed per the thematic-section classification (8 siblings: `safety-isolation`, `ownership`, `linear`, `span`, `concurrency`, `advanced-ownership`, `references`, `lifetime`). The original ID-prefix-based proposal was refined during execution — narrative sections grouped semantically related rules better than prefix-only split would have (example: `MEM-LIFE-001` "Class stored property limitation" belongs with advanced-ownership rather than with the Lifetime.* type primitives in `lifetime.md`).
+3. `documentation/` SPLIT executed per the thematic-band classification (7 siblings: `inline`, `catalogue`, `topical`, `tutorial`, `landing`, `visual`, `style`). `DOC-100–102` (new IDs from Batch 6 duplicate-ID remediation) merged into `catalogue.md` since they concern DocC layering and architecture.
+
+All 31 cluster audit findings (`Audits/audit.md § Cluster: implementation-layer-skills-2026-04-24`) are RESOLVED. Execution commits in the Skills repo: `e0eae82` (Batches 1–4), `824922d` (Batches 5/6/7).
+
+Sibling-file sync verified: `.claude/skills/{memory-safety,documentation}/` symlinks resolve the whole directory including siblings. `Scripts/sync-skills.sh` did not require modification.
+
+---
 
 ## Context
 
