@@ -6,6 +6,23 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-24-noncopyable-inlinable-abi-fix-and-v11-overclaim-walkback.md",
+      "date": "2026-04-24",
+      "title": "~Copyable @inlinable ABI miscompile fix and V11 narrow-shape overclaim walk-back",
+      "packages": [
+        "swift-ownership-primitives",
+        "swift-property-primitives",
+        "swift-memory-primitives",
+        "swift-buffer-primitives",
+        "swift-async-primitives",
+        "swift-institute/Experiments",
+        "swift-institute/Audits",
+        "swift-institute/Blog"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-24-meta-process-cascade-reflections-to-handoff.md",
       "date": "2026-04-24",
       "title": "Meta-process cascade: reflections → skills → sweep → rule evolution → handoff",
