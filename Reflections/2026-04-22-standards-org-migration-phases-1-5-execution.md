@@ -12,7 +12,9 @@ packages:
   - swift-incits
   - swift-ieee
   - swift-iec
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Standards Org Migration — Phases 1-5 execution with a Do-Not-Touch violation mid-session

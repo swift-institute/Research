@@ -3,7 +3,9 @@ date: 2026-04-22
 session_objective: Execute Phase-2 drafting of the swift-property-primitives 0.1.0 launch blog post from the pre-staged Phase-1 design brief.
 packages:
   - swift-property-primitives
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Property Primitives launch blog: drafting, framing iteration, and a walk-back

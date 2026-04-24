@@ -5,7 +5,9 @@ packages:
   - swift-kernel
   - swift-iso-9945
   - swift-posix
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Same-signature L2/L3 extensions create latent ambiguity — Phase A was not optional

@@ -15,7 +15,9 @@ packages:
   - swift-ieee
   - swift-iec
   - swift-incits
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Tri-agent CI rollout execution + standards-org migration

@@ -8,7 +8,9 @@ packages:
   - swift-foundations/swift-kernel
   - swift-foundations/swift-darwin
   - swift-institute (audits + research + handoffs)
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Supervisor arc — investigation through Cycle 2 dispatch

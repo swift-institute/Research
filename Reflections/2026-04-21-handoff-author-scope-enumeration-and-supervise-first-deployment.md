@@ -9,7 +9,9 @@ packages:
   - swift-linux
   - swift-file-system
   - swift-sockets
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Handoff-author scope enumeration as attestation; /supervise first deployment

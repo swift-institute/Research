@@ -7,7 +7,9 @@ packages:
   - swift-rendering-primitives
   - swift-graph-primitives
   - swift-package
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # DanceUI Analysis, Noun-Convention Ratification, and Rename Cascade Handoff

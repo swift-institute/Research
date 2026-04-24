@@ -1,10 +1,98 @@
 {
   "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-21",
+  "generatedAt": "2026-04-24",
   "title": "Research Index",
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
+    {
+      "file": "optic-prism-namespace-cascade.md",
+      "displayName": "optic-prism-namespace-cascade.md",
+      "topic": "Tagged-derived Optic.Prism<Enum, Part> accessors collide with enum-case pattern matches at consumer sites that transitively public-import Tagged-bearing primitives. Inventory at-risk consumers; classify workaround patterns (wildcard, demoted internal import, fully-qualified case match, upstream rename); decide between naming-discipline, access-level change, macro-output adjustment, or accept-and-document.",
+      "date": "2026-04-24",
+      "status": "IN_PROGRESS",
+      "statusDetail": "consultation artifact stood up; inventory pending",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "audit-finding-triage-taxonomy.md",
+      "displayName": "audit-finding-triage-taxonomy.md",
+      "topic": "Pre-execution classifier separating mechanical-fix from design-cycle audit findings. Four axes (type-surface crossing, layer crossing, ownership-shape change, single-file scope); routes any axis-1-3 hit to design-cycle dispatch. Addresses the 2026-04-22 pattern where three of four 'mechanical' fixes surfaced as design cycles after starting remediation.",
+      "date": "2026-04-24",
+      "status": "IN_PROGRESS",
+      "statusDetail": "hypothesis axes sketched; prototype pending against remaining platform-audit cycle findings",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "submodule-alias-detection.md",
+      "displayName": "submodule-alias-detection.md",
+      "topic": "Read-only audit of sub-repo .git-file gitdir targets across the ecosystem. Detects stale or colliding gitdir references produced by superrepo dismantle or relocation. Protocol: enumerate every .git file, normalize its target, flag duplicates.",
+      "date": "2026-04-24",
+      "status": "OPEN",
+      "statusDetail": "protocol defined; inventory pending",
+      "statusRaw": "OPEN",
+      "tier": 1,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "docker-linux-parallel-build-race.md",
+      "displayName": "docker-linux-parallel-build-race.md",
+      "topic": "Cold-cache Docker Linux build race where default-parallelism swift test fails on kernel-primitives dependency ordering; swift test -j 4 or full .build wipe succeeds. ≥3 occurrences across recent cycles. Needs minimal reproducer and upstream-bug-vs-workaround determination.",
+      "date": "2026-04-24",
+      "status": "OPEN",
+      "statusDetail": "pattern characterized; reproducer pending",
+      "statusRaw": "OPEN",
+      "tier": 1,
+      "scope": "verification discipline"
+    },
+    {
+      "file": "placeholder-pre-delete-verification.md",
+      "displayName": "placeholder-pre-delete-verification.md",
+      "topic": "Four-check protocol for verifying GitHub placeholder repos before gh repo delete. Checks non-scaffold commit tokens, non-empty Sources/, tag enumeration, and issue/PR enumeration. Safe-to-delete requires all four to return 0; any non-zero signal routes to user decision with signal cited.",
+      "date": "2026-04-24",
+      "status": "IN_PROGRESS",
+      "statusDetail": "protocol defined; 9 pending repos queued for application",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "GitHub repo lifecycle"
+    },
+    {
+      "file": "superrepo-vs-flat-org-decision.md",
+      "displayName": "superrepo-vs-flat-org-decision.md",
+      "topic": "DECISION: dismantle superrepo submodule-aggregator pattern for swift-primitives/swift-foundations/swift-standards and adopt flat-org pattern uniformly. Captures trade-offs (version-lock vs mental-model simplicity, pointer-bump discipline vs per-package autonomy), historical rationale for why superrepos existed, and the ergonomic inversion at ecosystem scale that motivated the move.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": "flat-org adopted 2026-04-22; superrepo dismantle in progress per 2026-04-23",
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": "ecosystem organization"
+    },
+    {
+      "file": "cross-cutting-io-primitives-home.md",
+      "displayName": "cross-cutting-io-primitives-home.md",
+      "topic": "Kernel.IO.Vector.Segment placement decision: currently in ISO 9945 Kernel File target forcing Socket to re-export all of File to reach it. Candidates: new ISO 9945 Kernel IO sibling target, promotion to L1 swift-io-primitives, or accept-and-document widening. Scope constraints per [PLAT-ARCH-013] Shell+Values, [MOD-008] independent-consumer, [MOD-015] consumer-import precision.",
+      "date": "2026-04-24",
+      "status": "OPEN",
+      "statusDetail": "decision framework captured; pending ecosystem-wide review",
+      "statusRaw": "OPEN",
+      "tier": 2,
+      "scope": "ISO 9945 target layout"
+    },
+    {
+      "file": "spi-inlinable-incompatibility-survey.md",
+      "displayName": "spi-inlinable-incompatibility-survey.md",
+      "topic": "Ecosystem audit of @inlinable public functions whose bodies reference symbols from other modules that could plausibly be @_spi-gated. Determines whether @_spi(Syscall) is a usable tool for L2/L3 disambiguation ecosystem-wide or fundamentally limited to non-inlinable boundaries. Feeds [PLAT-ARCH-008e]/[PLAT-ARCH-008f] discipline.",
+      "date": "2026-04-24",
+      "status": "OPEN",
+      "statusDetail": "procedure defined; inventory pending",
+      "statusRaw": "OPEN",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
     {
       "file": "ci-centralization-strategy.md",
       "displayName": "ci-centralization-strategy.md",
@@ -2516,6 +2604,17 @@
       "date": "2026-04-21",
       "status": "RECOMMENDATION",
       "statusDetail": "pending skill ratification (/readme v2.0.0)",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "coenttb-ecosystem-heritage-transfer-plan.md",
+      "displayName": "coenttb-ecosystem-heritage-transfer-plan.md",
+      "topic": "Phase II.5 heritage-transfer plan for the 18-package coenttb/swift-html cluster. Three-stage framework (dep-visibility audit → disposition refinement → per-repo execution) gated by user constraint 2026-04-23 (\"do not make things public yet\"). Four dispositions per package: archive / transfer-simple / transfer-rename-and-reconcile / defer. Archive disposition uses deprecation-README + archive pattern (provenance: HANDOFF-swift-testing-successor-migration.md). Session 2026-04-23 landed 3 archives (types leaves superseded by body-org spec packages swift-whatwg-html, swift-w3c-css, swift-w3c-svg); 15 active of which 2 deferred (swift-renderable → swift-primitives TBD; swift-html-to-pdf needs refactor). Per-package status table + start-conditions checklist + Ground Rules 1–6 transcribed + swift-foundations sibling inventory (all 13 in-scope counterparts PRIVATE, 2 MISSING — universal dep-visibility gate applies) + verification stamp per [META-015]. Consolidates and supersedes HANDOFF-heritage-transfers-and-history-strategy.md per [META-016]. Cross-references git-history-transfer-patterns.md (recipes), github-organization-migration-swift-file-system.md (precedent), package-namespace-noun-convention.md (rename rationale), swift-translating-migration-plan.md (ecosystem-work invariants for Row 1 apply-on-top).",
+      "date": "2026-04-23",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.3.0: supervisor-review absorption. Apply-on-top recipe fixed — `git rm -rf . && git checkout ecosystem/main -- . && git add -A` (replacement semantics; ensures deletions propagate) replaces union-producing bare `git checkout ecosystem/main -- .`; plumbing `commit-tree` variant documented as footnote. Path-dep hazard resolved via new Phase 4 — URL-hygiene sweep (Phase-V analog per swift-file-system migration precedent), batched as single Rule-6 auth envelope covering two categories (path→URL rewrites + consumer URL-updates). 5-phase execution: Phase 1 ready (4 ABSENT W7 siblings), Phase 2 needs WIP disposition + audit, Phase 3 needs Stage-1 audit + sibling launches, Phase 4 post-Phase-3 URL-hygiene sweep, Phase 5 deferred swift-html-to-pdf. Stale force-push text deleted; Context cosmetic fix; branch-state note added.",
       "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": "ecosystem-wide"

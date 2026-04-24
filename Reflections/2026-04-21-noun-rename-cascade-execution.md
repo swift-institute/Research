@@ -14,7 +14,9 @@ packages:
   - swift-pdf-html-render
   - swift-user-interface-render
   - swift-package
-status: pending
+status: processed
+processed_date: 2026-04-24
+triage_outcomes: see reflections-processing run 2026-04-24
 ---
 
 # Noun-Convention Rename Cascade: Execution, Misdiagnoses, and Mechanical-Regex Limits
