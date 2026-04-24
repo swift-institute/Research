@@ -6,6 +6,17 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-24-carrier-precursor-publish-timing-and-paired-post-url-management.md",
+      "date": "2026-04-24",
+      "title": "Carrier precursor publish — 0-audience timing inversion, paired-post URL management, DocC deploy verification",
+      "packages": [
+        "swift-institute/Blog",
+        "swift-institute/swift-institute.org"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-24-carrier-primitives-blog-drafting-and-convergence.md",
       "date": "2026-04-24",
       "title": "Carrier-primitives blog drafting — paired-post reveal discipline, multi-round convergence, and receipt verification",
@@ -23,7 +34,7 @@
       "title": "swift-forums-review skill creation and v1.2 validation — corpus, archetype triage, sibling-agent review loop",
       "packages": [
         "swift-institute/Skills/swift-forums-review",
-        "swift-institute/Research/swift-forums-review-corpus",
+        "swift-institute/Engagement/swift-forums-review-corpus",
         "swift-primitives/swift-carrier-primitives",
         "swift-primitives/swift-async-primitives"
       ],
