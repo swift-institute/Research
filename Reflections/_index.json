@@ -6,6 +6,36 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-24-meta-process-cascade-reflections-to-handoff.md",
+      "date": "2026-04-24",
+      "title": "Meta-process cascade: reflections → skills → sweep → rule evolution → handoff",
+      "packages": [
+        "swift-institute/Skills",
+        "swift-institute/Research",
+        "swift-institute/Engagement",
+        "swift-foundations/swift-io",
+        "swift-foundations/swift-executors"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-24-narrow-shape-bug-extrapolation-and-in-package-verification.md",
+      "date": "2026-04-24",
+      "title": "Narrow-shape bug extrapolation and in-package verification — Finding #12 inversion from HIGH/HOLD to LOW/watchflag",
+      "packages": [
+        "swift-ownership-primitives",
+        "swift-property-primitives",
+        "swift-memory-primitives",
+        "swift-buffer-primitives",
+        "swift-async-primitives",
+        "swift-institute/Experiments",
+        "swift-institute/Audits"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-24-carrier-precursor-publish-timing-and-paired-post-url-management.md",
       "date": "2026-04-24",
       "title": "Carrier precursor publish — 0-audience timing inversion, paired-post URL management, DocC deploy verification",
