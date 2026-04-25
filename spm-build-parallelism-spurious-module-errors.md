@@ -12,6 +12,10 @@ trigger: D5 sweep + D3+D6 re-derivation cycles surfaced six concrete transient `
 ---
 -->
 
+## Provenance
+
+Supersedes [`docker-linux-parallel-build-race.md`](docker-linux-parallel-build-race.md) (OPEN stub from 2026-04-24, tier 1, "verification discipline"). The stub captured the question and ≥3 prior occurrences across reflections 2026-04-17 and 2026-04-22; this note provides the empirical evidence and verification protocol that answers stub questions (1) "is this a SwiftPM + Swift 6.3.1 ordering bug worth filing upstream?" (yes — minimal-reproducer extraction is the remaining open work for a `/issue-investigation` cycle) and (3) "does `-j 1` eliminate the race reliably?" (yes — six-for-six in the observed cohort). Stub question (2) "minimal reproducer" is unanswered here and remains open.
+
 ## Context
 
 Large-graph SPM `swift build --build-tests` invocations across the Swift Institute primitives + foundations + platform-stack ecosystem (typical scale: 1500–3300 compilation steps, 60+ transitive packages, ~13 monorepos under `~/Developer/`) intermittently emit `error: no such module '<X>'` or `error: missing required module '<X>'` diagnostics that **do not represent structural Package.swift target-dependency or product-export gaps**. The same package, on the same toolchain, with the same source tree, will succeed under `-j 1` (single-job sequential build) and may also succeed on a re-run with default `-j` if the build cache from a prior partial-success build supplies the missing module artifacts.
