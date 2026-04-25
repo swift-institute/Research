@@ -41,11 +41,11 @@
     {
       "file": "docker-linux-parallel-build-race.md",
       "displayName": "docker-linux-parallel-build-race.md",
-      "topic": "Cold-cache Docker Linux build race where default-parallelism swift test fails on kernel-primitives dependency ordering; swift test -j 4 or full .build wipe succeeds. \u22653 occurrences across recent cycles. Needs minimal reproducer and upstream-bug-vs-workaround determination.",
+      "topic": "Cold-cache Docker Linux build race where default-parallelism swift test fails on kernel-primitives dependency ordering; swift test -j 4 or full .build wipe succeeds. ≥3 occurrences across recent cycles. Needs minimal reproducer and upstream-bug-vs-workaround determination.",
       "date": "2026-04-24",
-      "status": "OPEN",
-      "statusDetail": "pattern characterized; reproducer pending",
-      "statusRaw": "OPEN",
+      "status": "SUPERSEDED",
+      "statusDetail": "Superseded 2026-04-25 by spm-build-parallelism-spurious-module-errors.md (provides empirical evidence + verification protocol; minimal reproducer remains open for /issue-investigation).",
+      "statusRaw": "SUPERSEDED",
       "tier": 1,
       "scope": "verification discipline"
     },
@@ -96,7 +96,7 @@
     {
       "file": "ci-centralization-strategy.md",
       "displayName": "ci-centralization-strategy.md",
-      "topic": "CI/CD centralization strategy across ~300 repos in 11 orgs. Compares reusable workflows (current), repository rulesets (deprecation of required-workflows \u2192 rulesets successor; Team+ plan required), git subtree/submodule, and the sync-script model (established pattern \u2014 gitignore, community-health, dependabot). Recommendation: reusable workflows as foundational layer + sync-script for operational per-repo config. v1.1.0 adds Permission scoping section: Path B (per-caller explicit permissions) over Path A (org-level write default), with ecosystem-wide rollout outcome (87/87 public verified green; 210 private billing-blocked across 3 layers) and a durable private-repo billing-state note to prevent mistaking pre-existing blockers for Path B regressions. Empirical verification: swift-institute org on Free plan; rulesets gated; reusable-workflow permission intersection rule confirmed in execution. Tier 2, ecosystem-wide.",
+      "topic": "CI/CD centralization strategy across ~300 repos in 11 orgs. Compares reusable workflows (current), repository rulesets (deprecation of required-workflows → rulesets successor; Team+ plan required), git subtree/submodule, and the sync-script model (established pattern — gitignore, community-health, dependabot). Recommendation: reusable workflows as foundational layer + sync-script for operational per-repo config. v1.1.0 adds Permission scoping section: Path B (per-caller explicit permissions) over Path A (org-level write default), with ecosystem-wide rollout outcome (87/87 public verified green; 210 private billing-blocked across 3 layers) and a durable private-repo billing-state note to prevent mistaking pre-existing blockers for Path B regressions. Empirical verification: swift-institute org on Free plan; rulesets gated; reusable-workflow permission intersection rule confirmed in execution. Tier 2, ecosystem-wide.",
       "date": "2026-04-22",
       "status": "RECOMMENDATION",
       "statusDetail": "Phase 0/0b artifacts delivered; Phase II caller migration executed (297 callers, 11 orgs); Path B permission scoping rolled out 2026-04-22",
@@ -118,7 +118,7 @@
     {
       "file": "parameter-ordering-conventions.md",
       "displayName": "parameter-ordering-conventions.md",
-      "topic": "Parameter ordering conventions for init and function signatures: closure-last rule, SE-0279 multi-closure lifecycle order, configuration-first-or-last (never middle), struct-over-builder-closure. Four rules promoted to code-surface as [API-IMPL-012] \u2013 [API-IMPL-015]. Synthesises Apple API Design Guidelines, SE-0279/SE-0286/SE-0245, TSPL, community writing, stdlib precedents, and zero-violation ecosystem survey. Tier 2, ecosystem-wide.",
+      "topic": "Parameter ordering conventions for init and function signatures: closure-last rule, SE-0279 multi-closure lifecycle order, configuration-first-or-last (never middle), struct-over-builder-closure. Four rules promoted to code-surface as [API-IMPL-012] – [API-IMPL-015]. Synthesises Apple API Design Guidelines, SE-0279/SE-0286/SE-0245, TSPL, community writing, stdlib precedents, and zero-violation ecosystem survey. Tier 2, ecosystem-wide.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -138,7 +138,7 @@
     {
       "file": "docc-search-capabilities-and-merged-site-strategy.md",
       "displayName": "docc-search-capabilities-and-merged-site-strategy.md",
-      "topic": "DocC renderer + CLI search capabilities on Xcode 26.4.1 toolchain, and Phase 2 merged-site strategy for swift-institute.org. Primary-source verified: sidebar \"Filter\" + QuickNavigation both title-only (`.exec(t.title)`); `IndexingRecord` full-text shape exists but only emitted by `--emit-digest`, and `docc merge` drops it (MergeAction.swift:52 TODO). Two live tracks: **Option 1** \u2014 stay in DocC with Pagefind overlay (1b) for full-text search (2\u20134h CI wiring); **Option 2** \u2014 swift-evolution-style SPA dashboard at /research/ + /experiments/ with MiniSearch/Fuse.js + facet filters (1\u20132d), DocC retained at /documentation/. Stakeholder feedback (\"search is minimum bar, not in DocC\") favors Option 2; chrome consistency favors 1b. Tier 2, ecosystem-wide. Cross-refs Experiments/docc-merge-multi-archive-hosting.",
+      "topic": "DocC renderer + CLI search capabilities on Xcode 26.4.1 toolchain, and Phase 2 merged-site strategy for swift-institute.org. Primary-source verified: sidebar \"Filter\" + QuickNavigation both title-only (`.exec(t.title)`); `IndexingRecord` full-text shape exists but only emitted by `--emit-digest`, and `docc merge` drops it (MergeAction.swift:52 TODO). Two live tracks: **Option 1** — stay in DocC with Pagefind overlay (1b) for full-text search (2–4h CI wiring); **Option 2** — swift-evolution-style SPA dashboard at /research/ + /experiments/ with MiniSearch/Fuse.js + facet filters (1–2d), DocC retained at /documentation/. Stakeholder feedback (\"search is minimum bar, not in DocC\") favors Option 2; chrome consistency favors 1b. Tier 2, ecosystem-wide. Cross-refs Experiments/docc-merge-multi-archive-hosting.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -168,7 +168,7 @@
     {
       "file": "github-organization-migration-swift-file-system.md",
       "displayName": "github-organization-migration-swift-file-system.md",
-      "topic": "GitHub org migration: 79 repos from swift-standards to 9 body-specific orgs. Local repos already have git history \u2014 transfer + remote update + push. 9-phase manifest-driven execution. Converged via Claude\u2013ChatGPT review (4 rounds). Tier 2, ecosystem-wide.",
+      "topic": "GitHub org migration: 79 repos from swift-standards to 9 body-specific orgs. Local repos already have git history — transfer + remote update + push. 9-phase manifest-driven execution. Converged via Claude–ChatGPT review (4 rounds). Tier 2, ecosystem-wide.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -298,7 +298,7 @@
     {
       "file": "noncopyable-ownership-transfer-patterns.md",
       "displayName": "noncopyable-ownership-transfer-patterns.md",
-      "topic": "Canonical ~Copyable ownership transfer: three patterns (always-consume, maybe-consume, borrow-only), layer model (Layer 0/1/2), action enum dispatch, future-proofing table. Codified as [MEM-OWN-010\u2013012] and [IMPL-070]. Audit: 0 violations across Bridge + Channel. Tier 2, ecosystem-wide.",
+      "topic": "Canonical ~Copyable ownership transfer: three patterns (always-consume, maybe-consume, borrow-only), layer model (Layer 0/1/2), action enum dispatch, future-proofing table. Codified as [MEM-OWN-010–012] and [IMPL-070]. Audit: 0 violations across Bridge + Channel. Tier 2, ecosystem-wide.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -348,7 +348,7 @@
     {
       "file": "swift-6.3-ecosystem-opportunities.md",
       "displayName": "swift-6.3-ecosystem-opportunities.md",
-      "topic": "Swift 6.3 ecosystem migration: 1,390 Package.swift audited. 209 ghost feature flags (`SuppressedAssociatedTypesWithDefaults`), 320 `@inline(__always)` \u2192 `@inline(always)`, 36 `_deinitWorkaround` sites pending #86652 verification, zero SE-0502/SE-0505 risk. 3-wave remediation plan. Tier 2, ecosystem-wide.",
+      "topic": "Swift 6.3 ecosystem migration: 1,390 Package.swift audited. 209 ghost feature flags (`SuppressedAssociatedTypesWithDefaults`), 320 `@inline(__always)` → `@inline(always)`, 36 `_deinitWorkaround` sites pending #86652 verification, zero SE-0502/SE-0505 risk. 3-wave remediation plan. Tier 2, ecosystem-wide.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -358,7 +358,7 @@
     {
       "file": "swift-6.3-revalidation-status.md",
       "displayName": "swift-6.3-revalidation-status.md",
-      "topic": "Swift 6.3 corpus revalidation status (Tier 2) \u2014 [META-006] toolchain revalidation sweep. 290 experiments inventoried. Known fixed in 6.3: #88022, #85743, SE-0452/SE-0446 baselines. Known still broken: #86652 rawlayout deinit, WMO+CopyToBorrow actor enum, try_apply borrow scope. 5 6.4-dev regressions catalogued. Implications for 5 blog pipeline items. Tier 2, ecosystem-wide.",
+      "topic": "Swift 6.3 corpus revalidation status (Tier 2) — [META-006] toolchain revalidation sweep. 290 experiments inventoried. Known fixed in 6.3: #88022, #85743, SE-0452/SE-0446 baselines. Known still broken: #86652 rawlayout deinit, WMO+CopyToBorrow actor enum, try_apply borrow scope. 5 6.4-dev regressions catalogued. Implications for 5 blog pipeline items. Tier 2, ecosystem-wide.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -378,7 +378,7 @@
     {
       "file": "audit.md",
       "displayName": "audit.md",
-      "topic": "Ecosystem-wide audit. **Conversions** (2026-03-24): bare `Cardinal`/`Ordinal` \u2192 phantom-tagged, 14 findings, 6-phase plan. **Memory Safety** (2026-03-25): SE-0458 compliance, 27 findings. **Path Type Compliance** (2026-03-31): `Swift.String` as path \u2014 58 findings (10 HIGH). Root cause: decomposition missing at L1. Fix: add to path-primitives, Paths.Path delegates, Kernel.File.Write uses L1 types. 6-phase plan.",
+      "topic": "Ecosystem-wide audit. **Conversions** (2026-03-24): bare `Cardinal`/`Ordinal` → phantom-tagged, 14 findings, 6-phase plan. **Memory Safety** (2026-03-25): SE-0458 compliance, 27 findings. **Path Type Compliance** (2026-03-31): `Swift.String` as path — 58 findings (10 HIGH). Root cause: decomposition missing at L1. Fix: add to path-primitives, Paths.Path delegates, Kernel.File.Write uses L1 types. 6-phase plan.",
       "status": "ACTIVE",
       "statusDetail": null,
       "statusRaw": "ACTIVE",
@@ -388,7 +388,7 @@
     {
       "file": "generalized-audit-skill-design.md",
       "displayName": "generalized-audit-skill-design.md",
-      "topic": "Generalized /audit skill design: single `audit.md` per scope, section-per-skill structure, update-in-place, 10 requirement IDs [AUDIT-001\u2013010]. Solves orphan files, version proliferation, naming chaos. Tier 2, ecosystem-wide.",
+      "topic": "Generalized /audit skill design: single `audit.md` per scope, section-per-skill structure, update-in-place, 10 requirement IDs [AUDIT-001–010]. Solves orphan files, version proliferation, naming chaos. Tier 2, ecosystem-wide.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -428,7 +428,7 @@
     {
       "file": "string-path-type-inventory-file-system.md",
       "displayName": "string-path-type-inventory-file-system.md",
-      "topic": "String/Path type audit across file system stack (301 symbols). Partially implemented: new domain types (Path.Component.Extension, Path.Component.Stem), subtractive String\u2192Path.Component replacement in swift-paths and swift-file-system, callback-based glob in swift-posix. 709 tests pass. Deferred: error wrapping, Kernel.Path in errors (Error requires Copyable). Tier 2, cross-package.",
+      "topic": "String/Path type audit across file system stack (301 symbols). Partially implemented: new domain types (Path.Component.Extension, Path.Component.Stem), subtractive String→Path.Component replacement in swift-paths and swift-file-system, callback-based glob in swift-posix. 709 tests pass. Deferred: error wrapping, Kernel.Path in errors (Error requires Copyable). Tier 2, cross-package.",
       "status": "DECISION",
       "statusDetail": "(partial)",
       "statusRaw": "DECISION (partial)",
@@ -438,7 +438,7 @@
     {
       "file": "defunctionalized-work-queue-extraction.md",
       "displayName": "defunctionalized-work-queue-extraction.md",
-      "topic": "Machine infrastructure extraction (v2.0). Section 1: value-layer (rendering vs machine) \u2014 DECISION: status quo, computational models diverge. Section 2: interpreter-layer (parser-machine vs binary-parser run-loop duplication) \u2014 RECOMMENDATION: add `Machine.Interpret` module with shared frame/node/failure action enums + `@inlinable` static functions. Full design, consumer shapes, implementation plan. Rendering and serializer NOT recommended for adoption. Deferred naming fixes documented. (Tier 2, cross-package)",
+      "topic": "Machine infrastructure extraction (v2.0). Section 1: value-layer (rendering vs machine) — DECISION: status quo, computational models diverge. Section 2: interpreter-layer (parser-machine vs binary-parser run-loop duplication) — RECOMMENDATION: add `Machine.Interpret` module with shared frame/node/failure action enums + `@inlinable` static functions. Full design, consumer shapes, implementation plan. Rendering and serializer NOT recommended for adoption. Deferred naming fixes documented. (Tier 2, cross-package)",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -448,7 +448,7 @@
     {
       "file": "knowledge-encoding-end-state-literature-review.md",
       "displayName": "knowledge-encoding-end-state-literature-review.md",
-      "topic": "Literature review: knowledge encoding as the end-state of software development \u2014 15 intellectual traditions (DDD, formal methods, type theory, ontological engineering, etc.) converging on comprehensive domain encoding vs. isolated problem-solving. Tier 2, ecosystem-wide.",
+      "topic": "Literature review: knowledge encoding as the end-state of software development — 15 intellectual traditions (DDD, formal methods, type theory, ontological engineering, etc.) converging on comprehensive domain encoding vs. isolated problem-solving. Tier 2, ecosystem-wide.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -478,7 +478,7 @@
     {
       "file": "adoption-implementation-review.md",
       "displayName": "adoption-implementation-review.md",
-      "topic": "Review of implementation work for the dependencies, witnesses, and parsers ecosystem adoption audits \u2014 compares research recommendations against actual commits across swift-primitives, swift-standards, and swift-foundations",
+      "topic": "Review of implementation work for the dependencies, witnesses, and parsers ecosystem adoption audits — compares research recommendations against actual commits across swift-primitives, swift-standards, and swift-foundations",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -488,7 +488,7 @@
     {
       "file": "affine-operator-unification-completeness.md",
       "displayName": "affine-operator-unification-completeness.md",
-      "topic": "Should remaining Tagged+Affine operators be unified via Domain? (Tier 1) \u2014 completeness check after Phase 2",
+      "topic": "Should remaining Tagged+Affine operators be unified via Domain? (Tier 1) — completeness check after Phase 2",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -498,7 +498,7 @@
     {
       "file": "agent-handoff-patterns.md",
       "displayName": "agent-handoff-patterns.md",
-      "topic": "Agent-to-agent handoff in Claude Code: failure mode analysis (handoff paradox \u2014 degraded agent writes the handoff), SBAR-derived template, progressive capture, file-based handoff at `HANDOFF.md`, token budget (500\u20131500), timing triggers, acceptance protocol. Prior art: medical SBAR, ATC handover, NASA MER, industrial shift ops, OpenAI Swarm, Continuous Claude v3, \"lost in the middle\" research. Recommends `/handoff` skill design. Tier 2, ecosystem-wide.",
+      "topic": "Agent-to-agent handoff in Claude Code: failure mode analysis (handoff paradox — degraded agent writes the handoff), SBAR-derived template, progressive capture, file-based handoff at `HANDOFF.md`, token budget (500–1500), timing triggers, acceptance protocol. Prior art: medical SBAR, ATC handover, NASA MER, industrial shift ops, OpenAI Swarm, Continuous Claude v3, \"lost in the middle\" research. Recommends `/handoff` skill design. Tier 2, ecosystem-wide.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -508,7 +508,7 @@
     {
       "file": "agent-supervision-patterns.md",
       "displayName": "agent-supervision-patterns.md",
-      "topic": "Agent-to-agent supervision in Claude Code: principal-supervises-subordinate posture distinct from `/handoff`. Prior art: Anthropic orchestrator-worker + multi-agent research, LangGraph supervisor, CrewAI hierarchical, AutoGen GroupChatManager, MetaGPT SOP, Semantic Kernel group chat, Magentic-One Task/Progress ledgers, OpenAI Swarm. Distills 7 axes (scope, strictness, Q/A, drift, intervention, termination, escalation), reverse-engineers swift-io HANDOFF.md \"Supervisor constraints #1\u2013#4\" as lived example, recommends 4\u20136 entry typed ground-rules block. Tier 2, ecosystem-wide. Recommends `/supervise` skill design with [SUPER-*] requirement IDs.",
+      "topic": "Agent-to-agent supervision in Claude Code: principal-supervises-subordinate posture distinct from `/handoff`. Prior art: Anthropic orchestrator-worker + multi-agent research, LangGraph supervisor, CrewAI hierarchical, AutoGen GroupChatManager, MetaGPT SOP, Semantic Kernel group chat, Magentic-One Task/Progress ledgers, OpenAI Swarm. Distills 7 axes (scope, strictness, Q/A, drift, intervention, termination, escalation), reverse-engineers swift-io HANDOFF.md \"Supervisor constraints #1–#4\" as lived example, recommends 4–6 entry typed ground-rules block. Tier 2, ecosystem-wide. Recommends `/supervise` skill design with [SUPER-*] requirement IDs.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -518,7 +518,7 @@
     {
       "file": "ai-context-reduction-via-type-system-tooling.md",
       "displayName": "ai-context-reduction-via-type-system-tooling.md",
-      "topic": "AI context reduction via type system tooling (Tier 2) \u2014 4 options (root Package.swift for CCLSP workspace indexing, symbol graph pipeline for batch API inventory, hybrid CCLSP for interactive composition, signature shape meta-analysis). Recommends phased: symbol graph pipeline first (proven, high-value), then scoped workspace Package.swift, then meta-analysis scripts, then hybrid workflow. Empirical validation: symbol graph extraction works, CCLSP workspace search blocked by missing root manifest.",
+      "topic": "AI context reduction via type system tooling (Tier 2) — 4 options (root Package.swift for CCLSP workspace indexing, symbol graph pipeline for batch API inventory, hybrid CCLSP for interactive composition, signature shape meta-analysis). Recommends phased: symbol graph pipeline first (proven, high-value), then scoped workspace Package.swift, then meta-analysis scripts, then hybrid workflow. Empirical validation: symbol graph extraction works, CCLSP workspace search blocked by missing root manifest.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -538,7 +538,7 @@
     {
       "file": "apple-http-middleware-chain-isolation.md",
       "displayName": "apple-http-middleware-chain-isolation.md",
-      "topic": "Apple HTTP middleware chain isolation (Tier 3) \u2014 ownership transfer (`consuming Input`) replaces shared mutable context as the synchronization mechanism for `~Copyable & ~Escapable` middleware values.",
+      "topic": "Apple HTTP middleware chain isolation (Tier 3) — ownership transfer (`consuming Input`) replaces shared mutable context as the synchronization mechanism for `~Copyable & ~Escapable` middleware values.",
       "status": "REFERENCE",
       "statusDetail": null,
       "statusRaw": "REFERENCE",
@@ -548,7 +548,7 @@
     {
       "file": "apple-http-outputspan-writer-pattern.md",
       "displayName": "apple-http-outputspan-writer-pattern.md",
-      "topic": "Apple HTTP AsyncWriter OutputSpan pattern (Tier 3) \u2014 writer hands out `inout OutputSpan<WriteElement>` for zero-copy append, replacing caller-allocates-then-writer-copies.",
+      "topic": "Apple HTTP AsyncWriter OutputSpan pattern (Tier 3) — writer hands out `inout OutputSpan<WriteElement>` for zero-copy append, replacing caller-allocates-then-writer-copies.",
       "status": "REFERENCE",
       "statusDetail": null,
       "statusRaw": "REFERENCE",
@@ -558,7 +558,7 @@
     {
       "file": "apple-http-withclient-scoped-pattern.md",
       "displayName": "apple-http-withclient-scoped-pattern.md",
-      "topic": "Apple HTTP `DefaultHTTPClient.withClient` scoped pattern (Tier 3) \u2014 combines typed throws, `~Copyable` return, and `borrowing` access for resources requiring cleanup.",
+      "topic": "Apple HTTP `DefaultHTTPClient.withClient` scoped pattern (Tier 3) — combines typed throws, `~Copyable` return, and `borrowing` access for resources requiring cleanup.",
       "status": "REFERENCE",
       "statusDetail": null,
       "statusRaw": "REFERENCE",
@@ -568,7 +568,7 @@
     {
       "file": "ascii-domain-ownership-audit.md",
       "displayName": "ascii-domain-ownership-audit.md",
-      "topic": "Comprehensive audit of ASCII domain ownership refactoring (Steps 0-5) and alignment with transformation domain architecture (Tier 2) \u2014 implementation correctness, research document accuracy, ecosystem consistency. Overall verdict: CLEAN. 10 stale documentation inaccuracies, 3 forward-looking design questions.",
+      "topic": "Comprehensive audit of ASCII domain ownership refactoring (Steps 0-5) and alignment with transformation domain architecture (Tier 2) — implementation correctness, research document accuracy, ecosystem consistency. Overall verdict: CLEAN. 10 stale documentation inaccuracies, 3 forward-looking design questions.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -578,7 +578,7 @@
     {
       "file": "ascii-parsing-adversarial-review.md",
       "displayName": "ascii-parsing-adversarial-review.md",
-      "topic": "Adversarial review of ascii-parsing-domain-ownership v4.0\u2192v4.1 (Tier 2, v2.0) \u2014 two review rounds. v1.0: 8 claims, 4 revisions recommended. v2.0: 6 verdicts upgraded QUALIFIED\u2192CONFIRMED after v4.1 revisions. Two remaining factual corrections: (1) LEB128 serialization EXISTS (`[UInt8](leb128:)` in binary-primitives) \u2014 \"one-directional\" characterization is wrong; (2) standards `.Parse`/`.Parser` convention split 22/25 \u2014 no dominant convention. New \"domains as namespaces\" principle QUALIFIED (sound but degenerate-case criterion needs refinement). Four-protocol design (Protocol, Serializer, Printer, ParserPrinter) confirmed. Overall: v4.1 holds with corrections.",
+      "topic": "Adversarial review of ascii-parsing-domain-ownership v4.0→v4.1 (Tier 2, v2.0) — two review rounds. v1.0: 8 claims, 4 revisions recommended. v2.0: 6 verdicts upgraded QUALIFIED→CONFIRMED after v4.1 revisions. Two remaining factual corrections: (1) LEB128 serialization EXISTS (`[UInt8](leb128:)` in binary-primitives) — \"one-directional\" characterization is wrong; (2) standards `.Parse`/`.Parser` convention split 22/25 — no dominant convention. New \"domains as namespaces\" principle QUALIFIED (sound but degenerate-case criterion needs refinement). Four-protocol design (Protocol, Serializer, Printer, ParserPrinter) confirmed. Overall: v4.1 holds with corrections.",
       "status": "ANALYSIS",
       "statusDetail": null,
       "statusRaw": "ANALYSIS",
@@ -588,7 +588,7 @@
     {
       "file": "ascii-parsing-domain-ownership.md",
       "displayName": "ascii-parsing-domain-ownership.md",
-      "topic": "ASCII parsing domain ownership (Tier 2, v4.2) \u2014 design principle: domains as namespaces, capabilities as nested types. `ASCII.Decimal.Parser<Input, T>` (LEB128 degenerate: simple serialization doesn't need namespace siblings). Four capability protocols (Protocol, Serializer, Printer, ParserPrinter). Standards convention split 22/25 Parse/Parser \u2014 `.Parser` adopted as design choice. New package: `swift-ascii-parser-primitives` (L1, Tier 18). L3 deferred. Machine IR in swift-ascii (namespace-corrected). `Binary.ASCII.Serializable` scoped out. 6-phase migration. Post-adversarial review v2.0.",
+      "topic": "ASCII parsing domain ownership (Tier 2, v4.2) — design principle: domains as namespaces, capabilities as nested types. `ASCII.Decimal.Parser<Input, T>` (LEB128 degenerate: simple serialization doesn't need namespace siblings). Four capability protocols (Protocol, Serializer, Printer, ParserPrinter). Standards convention split 22/25 Parse/Parser — `.Parser` adopted as design choice. New package: `swift-ascii-parser-primitives` (L1, Tier 18). L3 deferred. Machine IR in swift-ascii (namespace-corrected). `Binary.ASCII.Serializable` scoped out. 6-phase migration. Post-adversarial review v2.0.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -598,7 +598,7 @@
     {
       "file": "ascii-serialization-migration.md",
       "displayName": "ascii-serialization-migration.md",
-      "topic": "ASCII serialization migration (Tier 2) \u2014 full migration plan for ~83 `Binary.ASCII.Serializable` conformers across 16+ standards packages. No replacement domain protocol. Separate Parser + Serializer per type. Constrained convenience extensions on Parseable/Serializable. Per-type CustomStringConvertible opt-in. 8-phase rollout aligned with parser adoption. Zero external generic constraints \u2014 clean migration. Full cleanup: delete protocol, Wrapper, RawRepresentable.",
+      "topic": "ASCII serialization migration (Tier 2) — full migration plan for ~83 `Binary.ASCII.Serializable` conformers across 16+ standards packages. No replacement domain protocol. Separate Parser + Serializer per type. Constrained convenience extensions on Parseable/Serializable. Per-type CustomStringConvertible opt-in. 8-phase rollout aligned with parser adoption. Zero external generic constraints — clean migration. Full cleanup: delete protocol, Wrapper, RawRepresentable.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -608,7 +608,7 @@
     {
       "file": "async-stream-sendable-requirement.md",
       "displayName": "async-stream-sendable-requirement.md",
-      "topic": "Should Async.Stream require Element: Sendable? Tier 2 investigation. 4 options: status quo, non-Sendable Stream, two-tier concrete+erased, dual types. Preliminary: Option C (two-tier) strongest \u2014 concrete operators for isolation-preserving composition, Stream as explicit erasure/concurrency boundary. Synthesizes stream-isolation-preservation experiment, 3 prior research docs.",
+      "topic": "Should Async.Stream require Element: Sendable? Tier 2 investigation. 4 options: status quo, non-Sendable Stream, two-tier concrete+erased, dual types. Preliminary: Option C (two-tier) strongest — concrete operators for isolation-preserving composition, Stream as explicit erasure/concurrency boundary. Synthesizes stream-isolation-preservation experiment, 3 prior research docs.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -618,7 +618,7 @@
     {
       "file": "benchmark-implementation-conventions.md",
       "displayName": "benchmark-implementation-conventions.md",
-      "topic": "Benchmark implementation conventions (Tier 2) \u2014 7 patterns extracted from swift-io case study: suite hierarchy, tiered .timed() config, backtick naming with workload params, clean namespace enums, Test Support fixtures, byte-identical WorkSimulator for comparison, Benchmarks/ sub-package structure. Prepares ground for benchmark-implementation skill.",
+      "topic": "Benchmark implementation conventions (Tier 2) — 7 patterns extracted from swift-io case study: suite hierarchy, tiered .timed() config, backtick naming with workload params, clean namespace enums, Test Support fixtures, byte-identical WorkSimulator for comparison, Benchmarks/ sub-package structure. Prepares ground for benchmark-implementation skill.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -628,7 +628,7 @@
     {
       "file": "benchmark-inline-strategy.md",
       "displayName": "benchmark-inline-strategy.md",
-      "topic": "Benchmark inline strategy (Tier 2) \u2014 parameter ownership between `.timed()` and `#benchmark`/`measure {}`, and whether `#benchmark` should parallel `#snapshot`'s inline source rewriting. Recommends Option E: unified `#benchmark` macro with inline documentary results (not assertion). Key insight: benchmarks are non-deterministic, so inline values are documentation, not baselines.",
+      "topic": "Benchmark inline strategy (Tier 2) — parameter ownership between `.timed()` and `#benchmark`/`measure {}`, and whether `#benchmark` should parallel `#snapshot`'s inline source rewriting. Recommends Option E: unified `#benchmark` macro with inline documentary results (not assertion). Key insight: benchmarks are non-deterministic, so inline values are documentation, not baselines.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -638,7 +638,7 @@
     {
       "file": "benchmark-serial-execution.md",
       "displayName": "benchmark-serial-execution.md",
-      "topic": "Guaranteeing serial, deterministic benchmark execution across the ecosystem (Tier 2) \u2014 root cause: structural nil nodes in test tree dispatch all suites with `.automatic`. Two-track recommendation: (1) single `@Suite(.serialized)` root convention (already proven in 8 rendering targets), (2) deferred `Testing.main(concurrency:)` API. Affects 10+ performance test targets. Moved from swift-tests per [META-017].",
+      "topic": "Guaranteeing serial, deterministic benchmark execution across the ecosystem (Tier 2) — root cause: structural nil nodes in test tree dispatch all suites with `.automatic`. Two-track recommendation: (1) single `@Suite(.serialized)` root convention (already proven in 8 rendering targets), (2) deferred `Testing.main(concurrency:)` API. Affects 10+ performance test targets. Moved from swift-tests per [META-017].",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -668,7 +668,7 @@
     {
       "file": "benchmarking-strategy.md",
       "displayName": "benchmarking-strategy.md",
-      "topic": "Benchmarking strategy (Tier 2) \u2014 bridge `.timed()` with `Test.Benchmark.measure {}` via `Dependency.Scope` for setup isolation + full diagnostics. Single trait, progressive disclosure. Run history (JSONL) and AI export (run-level summary JSON) as phases 2\u20133.",
+      "topic": "Benchmarking strategy (Tier 2) — bridge `.timed()` with `Test.Benchmark.measure {}` via `Dependency.Scope` for setup isolation + full diagnostics. Single trait, progressive disclosure. Run history (JSONL) and AI export (run-level summary JSON) as phases 2–3.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -678,7 +678,7 @@
     {
       "file": "bit-vector-zeros-infrastructure.md",
       "displayName": "bit-vector-zeros-infrastructure.md",
-      "topic": "Zero-bit scanning infrastructure for Bit.Vector / Bit.Vector.Static (Tier 2) \u2014 mirrors .ones with .zeros, enables Storage.Pool.Inline.allocate() to replace raw loop",
+      "topic": "Zero-bit scanning infrastructure for Bit.Vector / Bit.Vector.Static (Tier 2) — mirrors .ones with .zeros, enables Storage.Pool.Inline.allocate() to replace raw loop",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -688,7 +688,7 @@
     {
       "file": "blog-pipeline-stall-check.md",
       "displayName": "blog-pipeline-stall-check.md",
-      "topic": "Blog pipeline stall check \u2014 32 items checked, 18 stalled >30 days. [META-019] Phase 9.",
+      "topic": "Blog pipeline stall check — 32 items checked, 18 stalled >30 days. [META-019] Phase 9.",
       "status": "INVENTORY",
       "statusDetail": null,
       "statusRaw": "INVENTORY",
@@ -698,7 +698,7 @@
     {
       "file": "callback-isolated-nonsending-design.md",
       "displayName": "callback-isolated-nonsending-design.md",
-      "topic": "`Async.Callback<Value>` nonsending replacement design (Tier 2, v3.1) \u2014 `await callback()` via `callAsFunction(isolation:)`, no `Sendable` constraint on Value, plain sync transforms. Issue #83812 workaround: `await self()` in map/flatMap. Replaces existing CPS Callback (Option E). **v3.1**: stdlib deprecated `isolation:` parameter pattern \u2014 future migration to `nonisolated(nonsending)` on method recommended.",
+      "topic": "`Async.Callback<Value>` nonsending replacement design (Tier 2, v3.1) — `await callback()` via `callAsFunction(isolation:)`, no `Sendable` constraint on Value, plain sync transforms. Issue #83812 workaround: `await self()` in map/flatMap. Replaces existing CPS Callback (Option E). **v3.1**: stdlib deprecated `isolation:` parameter pattern — future migration to `nonisolated(nonsending)` on method recommended.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -708,7 +708,7 @@
     {
       "file": "canonical-witness-capability-attachment.md",
       "displayName": "canonical-witness-capability-attachment.md",
-      "topic": "Canonical and witness capability attachment (Tier 2) \u2014 protocol for single canonical (`Parseable`, `Serializable`, `Codable`) + witness properties for alternatives. 4 options evaluated. Option C decided (canonical protocol + witness alternatives). Empirically validated (10/10 CONFIRMED). Three alternative patterns: parameterized factory, domain-owned types, descriptive properties. All questions resolved.",
+      "topic": "Canonical and witness capability attachment (Tier 2) — protocol for single canonical (`Parseable`, `Serializable`, `Codable`) + witness properties for alternatives. 4 options evaluated. Option C decided (canonical protocol + witness alternatives). Empirically validated (10/10 CONFIRMED). Three alternative patterns: parameterized factory, domain-owned types, descriptive properties. All questions resolved.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -718,7 +718,7 @@
     {
       "file": "claurst-analysis.md",
       "displayName": "claurst-analysis.md",
-      "topic": "Architecture analysis of the Kuberwastaken/claurst specification documents (Tier 3) \u2014 eight specification documents reverse-engineered from the Claude Code TypeScript source (~1,902 files, ~800K LOC) into a Rust port. Catalogues query loop, tools system, agents, services, hooks, and special subsystems.",
+      "topic": "Architecture analysis of the Kuberwastaken/claurst specification documents (Tier 3) — eight specification documents reverse-engineered from the Claude Code TypeScript source (~1,902 files, ~800K LOC) into a Rust port. Catalogues query loop, tools system, agents, services, hooks, and special subsystems.",
       "status": "ANALYSIS",
       "statusDetail": null,
       "statusRaw": "ANALYSIS",
@@ -728,7 +728,7 @@
     {
       "file": "claurst-rust-patterns.md",
       "displayName": "claurst-rust-patterns.md",
-      "topic": "Implementation pattern analysis of Claurst, a Rust port of Claude Code (Tier 3, source as of 2026-04-01) \u2014 11-crate Cargo workspace, decomposition patterns, dependency graph rooted at `cc-core`.",
+      "topic": "Implementation pattern analysis of Claurst, a Rust port of Claude Code (Tier 3, source as of 2026-04-01) — 11-crate Cargo workspace, decomposition patterns, dependency graph rooted at `cc-core`.",
       "status": "ANALYSIS",
       "statusDetail": null,
       "statusRaw": "ANALYSIS",
@@ -738,7 +738,7 @@
     {
       "file": "clock-dependency-key-placement.md",
       "displayName": "clock-dependency-key-placement.md",
-      "topic": "Clock Dependency.Key placement (Tier 2) \u2014 where to place `@Dependency(\\.clock)` integration providing type-erased clock with mode-aware defaults (ContinuousClock production, Clock.Immediate tests). Requires access to both swift-dependencies (L3) and swift-clock-primitives (L1).",
+      "topic": "Clock Dependency.Key placement (Tier 2) — where to place `@Dependency(\\.clock)` integration providing type-erased clock with mode-aware defaults (ContinuousClock production, Clock.Immediate tests). Requires access to both swift-dependencies (L3) and swift-clock-primitives (L1).",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -748,7 +748,7 @@
     {
       "file": "clock-static-now-convenience.md",
       "displayName": "clock-static-now-convenience.md",
-      "topic": "Clock.Continuous static now convenience and accuracy audit (Tier 2, v2.0) \u2014 16 files using stdlib ContinuousClock.now. Three findings: (1) CRITICAL: Darwin uses `CLOCK_MONOTONIC` (buggy, can jump backwards) instead of stdlib's `CLOCK_MONOTONIC_RAW`; (2) add `static var now: Instant` in platform packages; (3) optional `clock_gettime_nsec_np` optimization. Performance analysis confirms `Self().now` matches stdlib.",
+      "topic": "Clock.Continuous static now convenience and accuracy audit (Tier 2, v2.0) — 16 files using stdlib ContinuousClock.now. Three findings: (1) CRITICAL: Darwin uses `CLOCK_MONOTONIC` (buggy, can jump backwards) instead of stdlib's `CLOCK_MONOTONIC_RAW`; (2) add `static var now: Instant` in platform packages; (3) optional `clock_gettime_nsec_np` optimization. Performance analysis confirms `Self().now` matches stdlib.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -768,7 +768,7 @@
     {
       "file": "comparative-apple-swift-system-metrics.md",
       "displayName": "comparative-apple-swift-system-metrics.md",
-      "topic": "Comparative analysis: apple/swift-system-metrics vs Swift Institute ecosystem (Tier 1) \u2014 gap analysis, design pattern comparison, 4 priority recommendations: POSIX rusage/rlimit wrappers, Darwin proc_pidinfo, Linux procfs utilities, Swift 6 feature flag audit",
+      "topic": "Comparative analysis: apple/swift-system-metrics vs Swift Institute ecosystem (Tier 1) — gap analysis, design pattern comparison, 4 priority recommendations: POSIX rusage/rlimit wrappers, Darwin proc_pidinfo, Linux procfs utilities, Swift 6 feature flag audit",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -778,7 +778,7 @@
     {
       "file": "comparative-array-primitives.md",
       "displayName": "comparative-array-primitives.md",
-      "topic": "Comparative analysis: swift-array-primitives vs swift-io Array usage \u2014 L1 Primitives \u00d7 L3 Foundations scope, six modules re-exported through Array_Primitives",
+      "topic": "Comparative analysis: swift-array-primitives vs swift-io Array usage — L1 Primitives × L3 Foundations scope, six modules re-exported through Array_Primitives",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -788,7 +788,7 @@
     {
       "file": "comparative-bitset-bitvector-primitives.md",
       "displayName": "comparative-bitset-bitvector-primitives.md",
-      "topic": "Comparative analysis: Bitset/Bit-Vector primitives vs swift-io bit-level patterns \u2014 swift-bitset-primitives and swift-bit-vector-primitives inventory and cross-package usage",
+      "topic": "Comparative analysis: Bitset/Bit-Vector primitives vs swift-io bit-level patterns — swift-bitset-primitives and swift-bit-vector-primitives inventory and cross-package usage",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -798,7 +798,7 @@
     {
       "file": "comparative-buffer-primitives.md",
       "displayName": "comparative-buffer-primitives.md",
-      "topic": "Comparative analysis: swift-buffer-primitives vs swift-io buffer/pool patterns \u2014 L1 buffer type catalog and L3 consumption mapping",
+      "topic": "Comparative analysis: swift-buffer-primitives vs swift-io buffer/pool patterns — L1 buffer type catalog and L3 consumption mapping",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -808,7 +808,7 @@
     {
       "file": "comparative-dictionary-primitives.md",
       "displayName": "comparative-dictionary-primitives.md",
-      "topic": "Comparative analysis: swift-dictionary-primitives vs swift-io Dictionary usage \u2014 replacement-opportunity analysis for slab-backed Dictionary and Dictionary.Ordered",
+      "topic": "Comparative analysis: swift-dictionary-primitives vs swift-io Dictionary usage — replacement-opportunity analysis for slab-backed Dictionary and Dictionary.Ordered",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -818,7 +818,7 @@
     {
       "file": "comparative-hash-table-primitives.md",
       "displayName": "comparative-hash-table-primitives.md",
-      "topic": "Comparative analysis: Hash-Table-Primitives vs swift-io hash-based structures \u2014 hash-table-primitives catalog and cross-package utilization",
+      "topic": "Comparative analysis: Hash-Table-Primitives vs swift-io hash-based structures — hash-table-primitives catalog and cross-package utilization",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -828,7 +828,7 @@
     {
       "file": "comparative-heap-primitives.md",
       "displayName": "comparative-heap-primitives.md",
-      "topic": "Comparative analysis: swift-heap-primitives vs swift-io heap usage (Tier 2) \u2014 heap-primitives API surface mapped onto two deadline-scheduling subsystems in swift-io, friction point evaluation",
+      "topic": "Comparative analysis: swift-heap-primitives vs swift-io heap usage (Tier 2) — heap-primitives API surface mapped onto two deadline-scheduling subsystems in swift-io, friction point evaluation",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -838,7 +838,7 @@
     {
       "file": "comparative-list-stack-primitives.md",
       "displayName": "comparative-list-stack-primitives.md",
-      "topic": "Comparative analysis: List/Stack primitives vs swift-io patterns \u2014 dependency-utilization-audit of swift-list-primitives and swift-stack-primitives",
+      "topic": "Comparative analysis: List/Stack primitives vs swift-io patterns — dependency-utilization-audit of swift-list-primitives and swift-stack-primitives",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -848,7 +848,7 @@
     {
       "file": "comparative-queue-primitives.md",
       "displayName": "comparative-queue-primitives.md",
-      "topic": "Comparative analysis: swift-queue-primitives vs swift-io Queue usage \u2014 replacement-opportunity analysis for seven queue modules",
+      "topic": "Comparative analysis: swift-queue-primitives vs swift-io Queue usage — replacement-opportunity analysis for seven queue modules",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -858,7 +858,7 @@
     {
       "file": "comparative-set-primitives.md",
       "displayName": "comparative-set-primitives.md",
-      "topic": "Comparative analysis: swift-set-primitives vs swift-io Set usage \u2014 L3 consumption of L1 set primitives (Set.Ordered, Set.Ordered.Static, Set.Ordered.Bounded)",
+      "topic": "Comparative analysis: swift-set-primitives vs swift-io Set usage — L3 consumption of L1 set primitives (Set.Ordered, Set.Ordered.Static, Set.Ordered.Bounded)",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -868,7 +868,7 @@
     {
       "file": "comparative-slab-primitives.md",
       "displayName": "comparative-slab-primitives.md",
-      "topic": "Comparative analysis: swift-slab-primitives vs swift-io slab/pool usage \u2014 four-module slab primitives inventory and cross-package utilization",
+      "topic": "Comparative analysis: swift-slab-primitives vs swift-io slab/pool usage — four-module slab primitives inventory and cross-package utilization",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -878,7 +878,7 @@
     {
       "file": "comparative-swift-testing-frameworks.md",
       "displayName": "comparative-swift-testing-frameworks.md",
-      "topic": "Comparative analysis: Apple swift-testing vs Swift Institute swift-testing (Tier 3) \u2014 module architecture, macro system, type safety, trait system, runner design, capability gaps. 8-dimension comparison with formal semantics, Cognitive Dimensions validation. Novel contributions: layered decomposition, typed throws, ~Copyable registry. Key gaps: expression decomposition, parameterized tests.",
+      "topic": "Comparative analysis: Apple swift-testing vs Swift Institute swift-testing (Tier 3) — module architecture, macro system, type safety, trait system, runner design, capability gaps. 8-dimension comparison with formal semantics, Cognitive Dimensions validation. Novel contributions: layered decomposition, typed throws, ~Copyable registry. Key gaps: expression decomposition, parameterized tests.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -888,7 +888,7 @@
     {
       "file": "comparative-swift-testing-graph.md",
       "displayName": "comparative-swift-testing-graph.md",
-      "topic": "Keyed tree primitive design (Tier 3, v3.0) \u2014 SLR (34 sources: Fredkin, Hinze, Okasaki, Connelly-Morris, Bagwell, Prokopec), formal semantics, 5-option analysis. Existing tree types cannot be upgraded (child addressing baked into node layout). Literature: tries are maps, but swift-testing's Graph is a keyed tree (structural ops: subgraph, zip, recursivelyApply). `KeyedTree K V` subsumes `Trie K U` when `V = U?`. Recommends `Tree.Keyed<Key, Value>` in swift-tree-primitives.",
+      "topic": "Keyed tree primitive design (Tier 3, v3.0) — SLR (34 sources: Fredkin, Hinze, Okasaki, Connelly-Morris, Bagwell, Prokopec), formal semantics, 5-option analysis. Existing tree types cannot be upgraded (child addressing baked into node layout). Literature: tries are maps, but swift-testing's Graph is a keyed tree (structural ops: subgraph, zip, recursivelyApply). `KeyedTree K V` subsumes `Trie K U` when `V = U?`. Recommends `Tree.Keyed<Key, Value>` in swift-tree-primitives.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -898,7 +898,7 @@
     {
       "file": "comparative-tree-graph-primitives.md",
       "displayName": "comparative-tree-graph-primitives.md",
-      "topic": "Comparative analysis: Tree/Graph primitives vs swift-io patterns \u2014 minimal overlap, no replacement opportunities. Deadline scheduling and sharded registries already well-served by Heap and Dictionary.",
+      "topic": "Comparative analysis: Tree/Graph primitives vs swift-io patterns — minimal overlap, no replacement opportunities. Deadline scheduling and sharded registries already well-served by Heap and Dictionary.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -918,7 +918,7 @@
     {
       "file": "concurrent-expansion-audit.md",
       "displayName": "concurrent-expansion-audit.md",
-      "topic": "@concurrent expansion audit \u2014 with NonisolatedNonsendingByDefault enabled, audit of which nonisolated async functions genuinely execute on a different executor and need `@concurrent` across swift-io, swift-kernel, swift-async-primitives, swift-async",
+      "topic": "@concurrent expansion audit — with NonisolatedNonsendingByDefault enabled, audit of which nonisolated async functions genuinely execute on a different executor and need `@concurrent` across swift-io, swift-kernel, swift-async-primitives, swift-async",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -928,7 +928,7 @@
     {
       "file": "cross-package-integration-strategies.md",
       "displayName": "cross-package-integration-strategies.md",
-      "topic": "Cross-package integration strategies (Tier 3, v2.0) \u2014 taxonomizes intra-package isolation (Problem 1, Core extraction) vs cross-package optional integration (Problem 2). 5 strategies evaluated. **Decision: Strategy D (SE-0450 trait-gated targets)**. Validated with swift-dependencies clock integration. Trait gates dependency resolution; zero repo proliferation; explicit consumer opt-in. Rust cargo features model.",
+      "topic": "Cross-package integration strategies (Tier 3, v2.0) — taxonomizes intra-package isolation (Problem 1, Core extraction) vs cross-package optional integration (Problem 2). 5 strategies evaluated. **Decision: Strategy D (SE-0450 trait-gated targets)**. Validated with swift-dependencies clock integration. Trait gates dependency resolution; zero repo proliferation; explicit consumer opt-in. Rust cargo features model.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -938,7 +938,7 @@
     {
       "file": "css-scale-via-dimension-primitives-scale.md",
       "displayName": "css-scale-via-dimension-primitives-scale.md",
-      "topic": "Can W3C CSS Scale be expressed via Dimension Primitives Scale? (Tier 1) \u2014 domain mismatch analysis: CSS property value (serialization) vs mathematical transformation (computation). Variable arity, dependency cost, layer architecture all favor independence with optional conversion.",
+      "topic": "Can W3C CSS Scale be expressed via Dimension Primitives Scale? (Tier 1) — domain mismatch analysis: CSS property value (serialization) vs mathematical transformation (computation). Variable arity, dependency cost, layer architecture all favor independence with optional conversion.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -948,7 +948,7 @@
     {
       "file": "dependencies-ecosystem-adoption-audit.md",
       "displayName": "dependencies-ecosystem-adoption-audit.md",
-      "topic": "Dependencies ecosystem adoption audit (Tier 1) \u2014 identifies where across the ecosystem ad-hoc patterns can be replaced by swift-dependency-primitives (L1) and swift-dependencies (L3) formal dependency injection",
+      "topic": "Dependencies ecosystem adoption audit (Tier 1) — identifies where across the ecosystem ad-hoc patterns can be replaced by swift-dependency-primitives (L1) and swift-dependencies (L3) formal dependency injection",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -958,7 +958,7 @@
     {
       "file": "dependency-witness-store-coherence.md",
       "displayName": "dependency-witness-store-coherence.md",
-      "topic": "Dependency/witness store coherence (Tier 2, v2.1) \u2014 L1 `Dependency.Scope` and L3 `Witness.Context` maintain separate @TaskLocal stores; values invisible across boundary. Full investigation: dependency chain analysis, conformance census (18 L1 keys, 8+ L3 keys), 5 options evaluated. `SuppressedAssociatedTypes` unblocks Option D (protocol refinement). Recommends 3-phase: Phase 1 mode propagation (eliminates dual scope push, 2 files); Phase 2 protocol refinement (`Witness.Key: Dependency.Key`, resolves name shadowing, 3 files); Phase 3 L1 key bridge (full cross-store visibility, 4 files).",
+      "topic": "Dependency/witness store coherence (Tier 2, v2.1) — L1 `Dependency.Scope` and L3 `Witness.Context` maintain separate @TaskLocal stores; values invisible across boundary. Full investigation: dependency chain analysis, conformance census (18 L1 keys, 8+ L3 keys), 5 options evaluated. `SuppressedAssociatedTypes` unblocks Option D (protocol refinement). Recommends 3-phase: Phase 1 mode propagation (eliminates dual scope push, 2 files); Phase 2 protocol refinement (`Witness.Key: Dependency.Key`, resolves name shadowing, 3 files); Phase 3 L1 key bridge (full cross-store visibility, 4 files).",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -968,7 +968,7 @@
     {
       "file": "developer-tool-package-architecture.md",
       "displayName": "developer-tool-package-architecture.md",
-      "topic": "Developer tool package architecture (Tier 3) \u2014 where tools sit in five-layer architecture, manifest parsing strategy (dump-package JSON + Codable), formal dependency graph semantics, per-target classification algorithm (UNUSED/REDUNDANT/NEEDED), type architecture. Case study: redundant dependency detection. Prior art: 6 ecosystems surveyed (Rust, Node, Go, Swift, JVM, Python). REDUNDANT detection is novel \u2014 no existing tool in any ecosystem performs it.",
+      "topic": "Developer tool package architecture (Tier 3) — where tools sit in five-layer architecture, manifest parsing strategy (dump-package JSON + Codable), formal dependency graph semantics, per-target classification algorithm (UNUSED/REDUNDANT/NEEDED), type architecture. Case study: redundant dependency detection. Prior art: 6 ecosystems surveyed (Rust, Node, Go, Swift, JVM, Python). REDUNDANT detection is novel — no existing tool in any ecosystem performs it.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -988,7 +988,7 @@
     {
       "file": "documentation-research-experiments-integration.md",
       "displayName": "documentation-research-experiments-integration.md",
-      "topic": "Documentation-Research-Experiments integration (Tier 2) \u2014 connecting three currently disconnected skills (/documentation, /research-process, /experiment-process) and evaluating DocC-navigable research/experiment artifacts",
+      "topic": "Documentation-Research-Experiments integration (Tier 2) — connecting three currently disconnected skills (/documentation, /research-process, /experiment-process) and evaluating DocC-navigable research/experiment artifacts",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -998,7 +998,7 @@
     {
       "file": "documentation-skill-design.md",
       "displayName": "documentation-skill-design.md",
-      "topic": "Documentation skill design \u2014 inline DocC + .docc catalogue conventions for the /documentation skill. Separate from /readme skill.",
+      "topic": "Documentation skill design — inline DocC + .docc catalogue conventions for the /documentation skill. Separate from /readme skill.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1008,7 +1008,7 @@
     {
       "file": "domain-first-prior-art.md",
       "displayName": "domain-first-prior-art.md",
-      "topic": "Prior art survey supporting `domain-first-repository-organization.md` (Tier 3) \u2014 multi-language project repository conventions (gRPC, Kubernetes, Rust, etc.), package registry interactions with org identity, academic taxonomies for computational domains.",
+      "topic": "Prior art survey supporting `domain-first-repository-organization.md` (Tier 3) — multi-language project repository conventions (gRPC, Kubernetes, Rust, etc.), package registry interactions with org identity, academic taxonomies for computational domains.",
       "status": "DEFERRED",
       "statusDetail": null,
       "statusRaw": "DEFERRED",
@@ -1018,7 +1018,7 @@
     {
       "file": "domain-first-repository-organization.md",
       "displayName": "domain-first-repository-organization.md",
-      "topic": "Domain-first vs language-first repository organization (Tier 3) \u2014 9 multi-language projects surveyed, 5 organizational models evaluated, formal analysis, `reality-` prefix, converged via Claude\u2013ChatGPT collaborative review. Recommends Model D (Hybrid).",
+      "topic": "Domain-first vs language-first repository organization (Tier 3) — 9 multi-language projects surveyed, 5 organizational models evaluated, formal analysis, `reality-` prefix, converged via Claude–ChatGPT collaborative review. Recommends Model D (Hybrid).",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1028,7 +1028,7 @@
     {
       "file": "dual-defunctionalize-decomposition.md",
       "displayName": "dual-defunctionalize-decomposition.md",
-      "topic": "Converged plan: structural type primitives decomposition (Tier 2) \u2014 three independent macros (@Dual categorical duality, @Defunctionalize Reynolds 1972 call algebra, @Witness DI/test/observation) with shared enum infrastructure in a neutral support package. Contracts, invariants, and generated type names defined.",
+      "topic": "Converged plan: structural type primitives decomposition (Tier 2) — three independent macros (@Dual categorical duality, @Defunctionalize Reynolds 1972 call algebra, @Witness DI/test/observation) with shared enum infrastructure in a neutral support package. Contracts, invariants, and generated type names defined.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1038,7 +1038,7 @@
     {
       "file": "dual-defunctionalize-discussion-transcript.md",
       "displayName": "dual-defunctionalize-discussion-transcript.md",
-      "topic": "Collaborative discussion transcript: structural type primitives decomposition \u2014 Claude + ChatGPT. Option A (separate macros) converged. Duality vs defunctionalization preserve different invariants.",
+      "topic": "Collaborative discussion transcript: structural type primitives decomposition — Claude + ChatGPT. Option A (separate macros) converged. Duality vs defunctionalization preserve different invariants.",
       "status": "TRANSCRIPT",
       "statusDetail": null,
       "statusRaw": "TRANSCRIPT",
@@ -1048,7 +1048,7 @@
     {
       "file": "dual-mode-package-publication.md",
       "displayName": "dual-mode-package-publication.md",
-      "topic": "Dual-mode Package.swift for development + publication (Tier 2) \u2014 cross-ecosystem survey (Rust/pnpm/Go/Haskell), 4 SPM options evaluated. Recommends env-var conditional (`getenv`, Foundation-free, Apple-pattern `SWIFTCI_USE_LOCAL_DEPS`) + layer-level lockstep versioning.",
+      "topic": "Dual-mode Package.swift for development + publication (Tier 2) — cross-ecosystem survey (Rust/pnpm/Go/Haskell), 4 SPM options evaluated. Recommends env-var conditional (`getenv`, Foundation-free, Apple-pattern `SWIFTCI_USE_LOCAL_DEPS`) + layer-level lockstep versioning.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1058,7 +1058,7 @@
     {
       "file": "effects-ecosystem-adoption-audit.md",
       "displayName": "effects-ecosystem-adoption-audit.md",
-      "topic": "Effects ecosystem adoption audit (Tier 1) \u2014 identifies adoption opportunities for swift-effect-primitives (L1) and swift-effects (L3) algebraic effects across the ecosystem. Several packages already use Effect.Protocol; systematic audit for broader adoption.",
+      "topic": "Effects ecosystem adoption audit (Tier 1) — identifies adoption opportunities for swift-effect-primitives (L1) and swift-effects (L3) algebraic effects across the ecosystem. Several packages already use Effect.Protocol; systematic audit for broader adoption.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1068,7 +1068,7 @@
     {
       "file": "emailaddress-standard-case-study.md",
       "displayName": "emailaddress-standard-case-study.md",
-      "topic": "Case study: swift-emailaddress-standard (Tier 1, v2.0) \u2014 traces Domain\u2192EmailAddress\u2192Email chain. Shape B (standard-first, multi-spec): substantive convergence (11 files), 9+ direct consumers, strong encapsulation. Keep in swift-standards/. Canonical example of domain-concept sub-layer.",
+      "topic": "Case study: swift-emailaddress-standard (Tier 1, v2.0) — traces Domain→EmailAddress→Email chain. Shape B (standard-first, multi-spec): substantive convergence (11 files), 9+ direct consumers, strong encapsulation. Keep in swift-standards/. Canonical example of domain-concept sub-layer.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1078,7 +1078,7 @@
     {
       "file": "enum-infrastructure-primitives.md",
       "displayName": "enum-infrastructure-primitives.md",
-      "topic": "Enum infrastructure primitives (Tier 2) \u2014 shared enum codegen (prisms, discriminants, extraction) duplicated across @Dual, @Defunctionalize, @Witness macro implementation targets. Recommends extraction into a neutral support package.",
+      "topic": "Enum infrastructure primitives (Tier 2) — shared enum codegen (prisms, discriminants, extraction) duplicated across @Dual, @Defunctionalize, @Witness macro implementation targets. Recommends extraction into a neutral support package.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1088,7 +1088,7 @@
     {
       "file": "expectation-failure-bridge.md",
       "displayName": "expectation-failure-bridge.md",
-      "topic": "Test expectation failure reporting bridge (Tier 2) \u2014 two problems: (1) `record(failing:...)` silently drops failures under Apple's Swift Testing runner (`Collector.current` is nil), (2) inline snapshot rewriter never fires (depends on `Test.Runner.postRunActions`). 4 failure-reporting options + 3 rewriter-lifecycle options evaluated. Recommends Option A (`#if canImport(Testing)` fallback with nil-collector guard) + Option R1 (`atexit` handler, lazily registered on first `State.register()`, safely composable with `postRunActions` via destructive `drain()`). Full recording-mode lifecycle verified.",
+      "topic": "Test expectation failure reporting bridge (Tier 2) — two problems: (1) `record(failing:...)` silently drops failures under Apple's Swift Testing runner (`Collector.current` is nil), (2) inline snapshot rewriter never fires (depends on `Test.Runner.postRunActions`). 4 failure-reporting options + 3 rewriter-lifecycle options evaluated. Recommends Option A (`#if canImport(Testing)` fallback with nil-collector guard) + Option R1 (`atexit` handler, lazily registered on first `State.register()`, safely composable with `postRunActions` via destructive `drain()`). Full recording-mode lifecycle verified.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1098,7 +1098,7 @@
     {
       "file": "experiment-revalidation-inventory.md",
       "displayName": "experiment-revalidation-inventory.md",
-      "topic": "Experiment revalidation inventory \u2014 BUG REPRODUCED/REFUTED experiments for retesting on toolchain upgrade. [META-019] Phase 7.",
+      "topic": "Experiment revalidation inventory — BUG REPRODUCED/REFUTED experiments for retesting on toolchain upgrade. [META-019] Phase 7.",
       "status": "INVENTORY",
       "statusDetail": null,
       "statusRaw": "INVENTORY",
@@ -1108,7 +1108,7 @@
     {
       "file": "expression-decomposition-implementation.md",
       "displayName": "expression-decomposition-implementation.md",
-      "topic": "Expression decomposition for `#expect`/`#require` macros (Tier 2) \u2014 4 options (full Apple mirror, operator overloads, minimal macro decomposition, hybrid phased). Recommends Option D (hybrid): Phase 1 binary operator decomposition using existing `Test.Expression.Value`/`Test.Expectation.Failure` types (zero primitives changes, ~8 files); Phase 2 extends to function calls, property access, casts. Typed throws [API-ERR-001], no Mirror. Closes #1 usability gap from comparative analysis.",
+      "topic": "Expression decomposition for `#expect`/`#require` macros (Tier 2) — 4 options (full Apple mirror, operator overloads, minimal macro decomposition, hybrid phased). Recommends Option D (hybrid): Phase 1 binary operator decomposition using existing `Test.Expression.Value`/`Test.Expectation.Failure` types (zero primitives changes, ~8 files); Phase 2 extends to function calls, property access, casts. Typed throws [API-ERR-001], no Mirror. Closes #1 usability gap from comparative analysis.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1128,7 +1128,7 @@
     {
       "file": "feature-flags-assessment.md",
       "displayName": "feature-flags-assessment.md",
-      "topic": "Consolidated feature flags assessment \u2014 9 experimental Swift features (ownership, accessors, compile-time values). Compiler maturity + ecosystem impact. All WAIT except Reparenting (enable when stable) and UnderscoreOwned/BorrowInout (SKIP).",
+      "topic": "Consolidated feature flags assessment — 9 experimental Swift features (ownership, accessors, compile-time values). Compiler maturity + ecosystem impact. All WAIT except Reparenting (enable when stable) and UnderscoreOwned/BorrowInout (SKIP).",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1178,7 +1178,7 @@
     {
       "file": "file-path-type-unification-audit.md",
       "displayName": "file-path-type-unification-audit.md",
-      "topic": "File/Path type unification audit for swift-paths and swift-file-system \u2014 type surface inventory, ExpressibleByStringLiteral tension with throwing init. Tier 2.",
+      "topic": "File/Path type unification audit for swift-paths and swift-file-system — type surface inventory, ExpressibleByStringLiteral tension with throwing init. Tier 2.",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -1188,7 +1188,7 @@
     {
       "file": "foundation-free-time-and-locale-in-swift-translating.md",
       "displayName": "foundation-free-time-and-locale-in-swift-translating.md",
-      "topic": "Foundation-free time and locale in swift-translating (Tier 2) \u2014 eliminating Foundation from swift-translating's core modules using swift-primitives Foundation-free alternatives for Date, DateComponents, DateFormatter, Locale, and String.folding",
+      "topic": "Foundation-free time and locale in swift-translating (Tier 2) — eliminating Foundation from swift-translating's core modules using swift-primitives Foundation-free alternatives for Date, DateComponents, DateFormatter, Locale, and String.folding",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1198,7 +1198,7 @@
     {
       "file": "foundations-dependency-utilization-audit.md",
       "displayName": "foundations-dependency-utilization-audit.md",
-      "topic": "Dependency utilization audit of swift-io and swift-kernel (Tier 1) \u2014 cross-referenced against [IMPL-*] and [INFRA-*] skills. Kernel: clean. IO: 2 actionable improvements (Tagged Flag forwarding, reserveCapacity overload).",
+      "topic": "Dependency utilization audit of swift-io and swift-kernel (Tier 1) — cross-referenced against [IMPL-*] and [INFRA-*] skills. Kernel: clean. IO: 2 actionable improvements (Tagged Flag forwarding, reserveCapacity overload).",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1208,7 +1208,7 @@
     {
       "file": "git-history-transfer-patterns.md",
       "displayName": "git-history-transfer-patterns.md",
-      "topic": "Git history + GitHub org transfer patterns (Tier 2, v1.0) \u2014 transfer-vs-fork trade-offs (stars/redirects/PRs), post-tag history squash recipes (6 options, `reset --soft` recommended), transfer+squash composition for the ecosystem-finalization push wave. Addresses the coenttb/swift-html \u2192 swift-foundations heritage-preservation scenario.",
+      "topic": "Git history + GitHub org transfer patterns (Tier 2, v1.0) — transfer-vs-fork trade-offs (stars/redirects/PRs), post-tag history squash recipes (6 options, `reset --soft` recommended), transfer+squash composition for the ecosystem-finalization push wave. Addresses the coenttb/swift-html → swift-foundations heritage-preservation scenario.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1218,7 +1218,7 @@
     {
       "file": "git-subtree-publication-pattern.md",
       "displayName": "git-subtree-publication-pattern.md",
-      "topic": "Git subtree (Apollo pattern) publication evaluation (Tier 2, v2.0) \u2014 Apollo iOS production analysis, splitsh-lite. **Not applicable**: repos are already separate (git submodules, not monorepo). Actual problem: path\u2192URL manifest transformation + version coordination across 348 repos. CI manifest rewriting or release branch recommended.",
+      "topic": "Git subtree (Apollo pattern) publication evaluation (Tier 2, v2.0) — Apollo iOS production analysis, splitsh-lite. **Not applicable**: repos are already separate (git submodules, not monorepo). Actual problem: path→URL manifest transformation + version coordination across 348 repos. CI manifest rewriting or release branch recommended.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1228,7 +1228,7 @@
     {
       "file": "gitignore-sync-strategy.md",
       "displayName": "gitignore-sync-strategy.md",
-      "topic": "Gitignore sync strategy (Tier 2) \u2014 canonical/local-override .gitignore convention, drift remediation across ~370 repositories, sync reference pattern",
+      "topic": "Gitignore sync strategy (Tier 2) — canonical/local-override .gitignore convention, drift remediation across ~370 repositories, sync reference pattern",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1238,7 +1238,7 @@
     {
       "file": "handler-witness-conceptual-identity.md",
       "displayName": "handler-witness-conceptual-identity.md",
-      "topic": "Handler-witness conceptual identity (Tier 1) \u2014 are effect handlers and protocol witnesses the same concept? 3 options (identity, separation, unification). Decision: Option C \u2014 a witness is a degenerate handler (resumes exactly once, synchronously). Shared DNA: dictionary-passing, proof objects, `Dependency.Key` substrate. Operational difference (continuation) justifies separate types. No code changes.",
+      "topic": "Handler-witness conceptual identity (Tier 1) — are effect handlers and protocol witnesses the same concept? 3 options (identity, separation, unification). Decision: Option C — a witness is a degenerate handler (resumes exactly once, synchronously). Shared DNA: dictionary-passing, proof objects, `Dependency.Key` substrate. Operational difference (continuation) justifies separate types. No code changes.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1248,7 +1248,7 @@
     {
       "file": "handoff-ascii-domain-ownership-audit.md",
       "displayName": "handoff-ascii-domain-ownership-audit.md",
-      "topic": "Handoff prompt for ASCII domain ownership and transformation architecture audit (Tier 2) \u2014 session handoff documenting implementation steps and providing context for audit continuation",
+      "topic": "Handoff prompt for ASCII domain ownership and transformation architecture audit (Tier 2) — session handoff documenting implementation steps and providing context for audit continuation",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1258,7 +1258,7 @@
     {
       "file": "handoff-prior-art-notes.md",
       "displayName": "handoff-prior-art-notes.md",
-      "topic": "Agent handoff prior art notes \u2014 actionable patterns from medical SBAR, ATC handover-takeover, and other domain handoff protocols. Supporting material for agent-handoff-patterns.md.",
+      "topic": "Agent handoff prior art notes — actionable patterns from medical SBAR, ATC handover-takeover, and other domain handoff protocols. Supporting material for agent-handoff-patterns.md.",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -1268,7 +1268,7 @@
     {
       "file": "implementation-patterns-skill.md",
       "displayName": "implementation-patterns-skill.md",
-      "topic": "New implementation skill: expression patterns, typed arithmetic, boundary overloads (Tier 2) \u2014 supersedes anti-patterns",
+      "topic": "New implementation skill: expression patterns, typed arithmetic, boundary overloads (Tier 2) — supersedes anti-patterns",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1288,7 +1288,7 @@
     {
       "file": "io-prior-art-and-swift-io-design-audit.md",
       "displayName": "io-prior-art-and-swift-io-design-audit.md",
-      "topic": "IO prior art survey + swift-io design audit (Tier 2, Discovery) \u2014 15 IO systems surveyed (Rust, Go, Java, .NET, Zig, OCaml, Haskell, SwiftNIO, Swift System, epoll/kqueue/IOCP/io_uring, libuv), 4-tier concept necessity spectrum, then 72 swift-io concepts mapped against it. 78% Tier 1-2, 14% Tier 3, 7% Tier 4, 1 novel (IO.Executor.Slot). Verdict: correct and necessary, zero gratuitous abstractions.",
+      "topic": "IO prior art survey + swift-io design audit (Tier 2, Discovery) — 15 IO systems surveyed (Rust, Go, Java, .NET, Zig, OCaml, Haskell, SwiftNIO, Swift System, epoll/kqueue/IOCP/io_uring, libuv), 4-tier concept necessity spectrum, then 72 swift-io concepts mapped against it. 78% Tier 1-2, 14% Tier 3, 7% Tier 4, 1 novel (IO.Executor.Slot). Verdict: correct and necessary, zero gratuitous abstractions.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1298,7 +1298,7 @@
     {
       "file": "isolation-preserving-entry-point-api.md",
       "displayName": "isolation-preserving-entry-point-api.md",
-      "topic": "Entry point API for isolation-preserving AsyncSequence operators (Tier 2, v2.0) \u2014 sync-closure overloads `(Element) -> Output` win overload resolution over stdlib's `@Sendable (Element) async -> Output` without any wrapper or accessor. Transform enum (`.sync`/`.async` cases) + direct `next(isolation:)` defeats conformance trap. All 31 tests pass.",
+      "topic": "Entry point API for isolation-preserving AsyncSequence operators (Tier 2, v2.0) — sync-closure overloads `(Element) -> Output` win overload resolution over stdlib's `@Sendable (Element) async -> Output` without any wrapper or accessor. Transform enum (`.sync`/`.async` cases) + direct `next(isolation:)` defeats conformance trap. All 31 tests pass.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1308,7 +1308,7 @@
     {
       "file": "issue-investigation-best-practices.md",
       "displayName": "issue-investigation-best-practices.md",
-      "topic": "Issue investigation best practices: literature study and comparative analysis (Tier 2) \u2014 universal pipeline (minimize, bisect, dump IR, fix, regression test) across Rust, GCC, LLVM, Swift ecosystems. Evidence-based practices for the issue-investigation skill.",
+      "topic": "Issue investigation best practices: literature study and comparative analysis (Tier 2) — universal pipeline (minimize, bisect, dump IR, fix, regression test) across Rust, GCC, LLVM, Swift ecosystems. Evidence-based practices for the issue-investigation skill.",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -1318,7 +1318,7 @@
     {
       "file": "localization-architecture-analysis.md",
       "displayName": "localization-architecture-analysis.md",
-      "topic": "Localization architecture analysis (Tier 1, v2.0) \u2014 unified Foundation-free localization across the five-layer stack. Single `@Dependency(\\.locale)`, L2 CLDR-derived locale data, formatters with DI-reading inits, L2 Language wrapping ISO 639. Collaborative discussion converged.",
+      "topic": "Localization architecture analysis (Tier 1, v2.0) — unified Foundation-free localization across the five-layer stack. Single `@Dependency(\\.locale)`, L2 CLDR-derived locale data, formatters with DI-reading inits, L2 Language wrapping ISO 639. Collaborative discussion converged.",
       "status": "CONVERGED",
       "statusDetail": null,
       "statusRaw": "CONVERGED",
@@ -1328,7 +1328,7 @@
     {
       "file": "localization-architecture-discussion-transcript.md",
       "displayName": "localization-architecture-discussion-transcript.md",
-      "topic": "Collaborative discussion transcript: localization architecture for Swift Institute \u2014 Claude + ChatGPT. Single dependency, L2 locale data, formatter DI design.",
+      "topic": "Collaborative discussion transcript: localization architecture for Swift Institute — Claude + ChatGPT. Single dependency, L2 locale data, formatter DI design.",
       "status": "TRANSCRIPT",
       "statusDetail": null,
       "statusRaw": "TRANSCRIPT",
@@ -1338,7 +1338,7 @@
     {
       "file": "layout-stack-api-in-pdf-rendering.md",
       "displayName": "layout-stack-api-in-pdf-rendering.md",
-      "topic": "Layout.Stack adaptation in pdf-rendering (Tier 2) \u2014 VStack/HStack typealiases to same type cause footgun. First-principles analysis: axis is data, diagonals correctly unrepresentable, spatial names belong in layout-primitives. Decision: `PDF.Stack(.horizontal) { }` with `.horizontal`/`.vertical` on `Axis<2>` in layout-primitives, default `.vertical`, remove VStack/HStack typealiases.",
+      "topic": "Layout.Stack adaptation in pdf-rendering (Tier 2) — VStack/HStack typealiases to same type cause footgun. First-principles analysis: axis is data, diagonals correctly unrepresentable, spatial names belong in layout-primitives. Decision: `PDF.Stack(.horizontal) { }` with `.horizontal`/`.vertical` on `Axis<2>` in layout-primitives, default `.vertical`, remove VStack/HStack typealiases.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1348,7 +1348,7 @@
     {
       "file": "line-box-unification.md",
       "displayName": "line-box-unification.md",
-      "topic": "Line box geometry unification (Tier 2) \u2014 duplicated half-leading computation in `CSS.LineBox` (swift-pdf-html-rendering) and `Style.Resolved.Line` (swift-pdf-rendering). 4 options: layout-primitives, text-primitives, new typography-primitives, status quo. Recommends `Layout.Line.Box` in layout-primitives \u2014 zero dependency cost, clear namespace, raw-height init (no font-metric coupling). Half-leading is CSS-specific but the geometric operation is general. `belowBaseline` stored, `aboveBaseline` replaces ambiguous `baselineOffset`. Cap-height centering identified as secondary unification candidate.",
+      "topic": "Line box geometry unification (Tier 2) — duplicated half-leading computation in `CSS.LineBox` (swift-pdf-html-rendering) and `Style.Resolved.Line` (swift-pdf-rendering). 4 options: layout-primitives, text-primitives, new typography-primitives, status quo. Recommends `Layout.Line.Box` in layout-primitives — zero dependency cost, clear namespace, raw-height init (no font-metric coupling). Half-leading is CSS-specific but the geometric operation is general. `belowBaseline` stored, `aboveBaseline` replaces ambiguous `baselineOffset`. Cap-height centering identified as secondary unification candidate.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1358,7 +1358,7 @@
     {
       "file": "macro-composition-architecture.md",
       "displayName": "macro-composition-architecture.md",
-      "topic": "Macro composition architecture (Tier 2) \u2014 definitive architectural relationship between @Dual, @Defunctionalize, and @Witness. Five packages (swift-dual, swift-defunctionalize, swift-witnesses, swift-dependencies, swift-dependency-primitives), PointFree equivalents mapped, boundaries and composition rules established.",
+      "topic": "Macro composition architecture (Tier 2) — definitive architectural relationship between @Dual, @Defunctionalize, and @Witness. Five packages (swift-dual, swift-defunctionalize, swift-witnesses, swift-dependencies, swift-dependency-primitives), PointFree equivalents mapped, boundaries and composition rules established.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1368,7 +1368,7 @@
     {
       "file": "mark-dependence-copypropagation-bug-report.md",
       "displayName": "mark-dependence-copypropagation-bug-report.md",
-      "topic": "Swift bug report: `mark_dependence` CopyPropagation interaction (Tier 2) \u2014 `~Escapable` + `@_lifetime(borrow)` generates `mark_dependence` classified as `PointerEscape`, causing partial canonicalization bailout and double `end_lifetime` on `~Copyable ~Escapable` values across control flow joins. Standalone reproducer from copypropagation-nonescapable-mark-dependence experiment.",
+      "topic": "Swift bug report: `mark_dependence` CopyPropagation interaction (Tier 2) — `~Escapable` + `@_lifetime(borrow)` generates `mark_dependence` classified as `PointerEscape`, causing partial canonicalization bailout and double `end_lifetime` on `~Copyable ~Escapable` values across control flow joins. Standalone reproducer from copypropagation-nonescapable-mark-dependence experiment.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1388,7 +1388,7 @@
     {
       "file": "memory-domain-cross-package-inventory.md",
       "displayName": "memory-domain-cross-package-inventory.md",
-      "topic": "Memory domain cross-package inventory (Tier 2) \u2014 exhaustive audit of Memory and Kernel.Memory across swift-memory-primitives, swift-kernel-primitives, swift-iso-9945, swift-windows-primitives, swift-kernel, and swift-memory. Finding: no re-implementation detected. Kernel.Memory properly wraps Memory.Address and Memory.Alignment via phantom-tagged typealiases; all OS-specific types (Map, Lock, Shared, Page) are genuinely new. Dependency direction correct throughout.",
+      "topic": "Memory domain cross-package inventory (Tier 2) — exhaustive audit of Memory and Kernel.Memory across swift-memory-primitives, swift-kernel-primitives, swift-iso-9945, swift-windows-primitives, swift-kernel, and swift-memory. Finding: no re-implementation detected. Kernel.Memory properly wraps Memory.Address and Memory.Alignment via phantom-tagged typealiases; all OS-specific types (Map, Lock, Shared, Page) are genuinely new. Dependency direction correct throughout.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1408,7 +1408,7 @@
     {
       "file": "modularization-audit-ecosystem-summary.md",
       "displayName": "modularization-audit-ecosystem-summary.md",
-      "topic": "Modularization audit ecosystem-wide summary (Tier 2) \u2014 199 packages (132 primitives + 67 foundations), 117 FAIL, 34 REVIEW, 49 COMPLIANT. Top 10 findings.",
+      "topic": "Modularization audit ecosystem-wide summary (Tier 2) — 199 packages (132 primitives + 67 foundations), 117 FAIL, 34 REVIEW, 49 COMPLIANT. Top 10 findings.",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -1418,7 +1418,7 @@
     {
       "file": "modularization-audit-primitives-delta.md",
       "displayName": "modularization-audit-primitives-delta.md",
-      "topic": "Modularization audit swift-primitives delta report (Tier 2) \u2014 zero Package.swift changes since 2026-03-14 audit. Top 5 findings verified still open.",
+      "topic": "Modularization audit swift-primitives delta report (Tier 2) — zero Package.swift changes since 2026-03-14 audit. Top 5 findings verified still open.",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -1428,7 +1428,7 @@
     {
       "file": "mutex-inventory.md",
       "displayName": "mutex-inventory.md",
-      "topic": "Cross-repo Mutex inventory across swift-primitives and swift-foundations \u2014 Synchronization.Mutex, Async.Mutex, Kernel.Thread.Mutex usage in Sources/ directories.",
+      "topic": "Cross-repo Mutex inventory across swift-primitives and swift-foundations — Synchronization.Mutex, Async.Mutex, Kernel.Thread.Mutex usage in Sources/ directories.",
       "status": "INVENTORY",
       "statusDetail": null,
       "statusRaw": "INVENTORY",
@@ -1438,7 +1438,7 @@
     {
       "file": "nested-protocols-in-generic-types.md",
       "displayName": "nested-protocols-in-generic-types.md",
-      "topic": "Nesting protocols in generic types (Tier 3) \u2014 compiler source analysis, SE-0404 gap, no feature flag exists; `Buffer.Arena.Protocol` blocked by `isGenericContext()`",
+      "topic": "Nesting protocols in generic types (Tier 3) — compiler source analysis, SE-0404 gap, no feature flag exists; `Buffer.Arena.Protocol` blocked by `isGenericContext()`",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1448,7 +1448,7 @@
     {
       "file": "nested-protocols-literature-study.md",
       "displayName": "nested-protocols-literature-study.md",
-      "topic": "Cross-language literature study (Tier 3) \u2014 52 sources across Scala/Rust/OCaml/Haskell/C++/type theory; validates \"without capture\" as ideal design, not just minimum; three-tier recommendation",
+      "topic": "Cross-language literature study (Tier 3) — 52 sources across Scala/Rust/OCaml/Haskell/C++/type theory; validates \"without capture\" as ideal design, not just minimum; three-tier recommendation",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1458,7 +1458,7 @@
     {
       "file": "nested-testing-package-flattening.md",
       "displayName": "nested-testing-package-flattening.md",
-      "topic": "Nested testing package flattening (Tier 1) \u2014 reducing deeply nested test paths from `Tests/Testing/Tests/` stutter to flatter structure",
+      "topic": "Nested testing package flattening (Tier 1) — reducing deeply nested test paths from `Tests/Testing/Tests/` stutter to flatter structure",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1468,7 +1468,7 @@
     {
       "file": "nested-testing-package-structure.md",
       "displayName": "nested-testing-package-structure.md",
-      "topic": "Nested package structure for performance + snapshot testing with swift-testing (Tier 1) \u2014 4 options evaluated. Decision: Option A, single nested package at `Tests/Testing/` with multiple test targets. `#Tests` macro recommended default. Skill renamed `testing-performance` \u2192 `testing-institute` [INST-TEST-*].",
+      "topic": "Nested package structure for performance + snapshot testing with swift-testing (Tier 1) — 4 options evaluated. Decision: Option A, single nested package at `Tests/Testing/` with multiple test targets. `#Tests` macro recommended default. Skill renamed `testing-performance` → `testing-institute` [INST-TEST-*].",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1478,7 +1478,7 @@
     {
       "file": "next-steps-dependencies.md",
       "displayName": "next-steps-dependencies.md",
-      "topic": "Next steps: dependencies ecosystem adoption \u2014 status after first implementation pass. 12 done, 1 reverted then re-applied, 0 MEDIUM and 9 LOW remaining.",
+      "topic": "Next steps: dependencies ecosystem adoption — status after first implementation pass. 12 done, 1 reverted then re-applied, 0 MEDIUM and 9 LOW remaining.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1488,7 +1488,7 @@
     {
       "file": "next-steps-parsers.md",
       "displayName": "next-steps-parsers.md",
-      "topic": "Next steps: parsers ecosystem adoption \u2014 status after first implementation pass. Parser.ASCII.Integer infrastructure added, 18 packages with new parsers (PARTIAL), 1 fully done (RFC 6750), 57+ items not started.",
+      "topic": "Next steps: parsers ecosystem adoption — status after first implementation pass. Parser.ASCII.Integer infrastructure added, 18 packages with new parsers (PARTIAL), 1 fully done (RFC 6750), 57+ items not started.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1498,7 +1498,7 @@
     {
       "file": "next-steps-witnesses.md",
       "displayName": "next-steps-witnesses.md",
-      "topic": "Next steps: witnesses ecosystem adoption \u2014 all phases COMPLETE. 5 macro improvements, task-local unification, Witness.Key refined from Dependency.Key, all conformances and registrations verified in source.",
+      "topic": "Next steps: witnesses ecosystem adoption — all phases COMPLETE. 5 macro improvements, task-local unification, Witness.Key refined from Dependency.Key, all conformances and registrations verified in source.",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -1508,7 +1508,7 @@
     {
       "file": "non-sendable-strategy-isolation-design.md",
       "displayName": "non-sendable-strategy-isolation-design.md",
-      "topic": "Non-Sendable strategy with isolation-based thread safety (Tier 2) \u2014 successor to sendable-in-rendering-and-snapshot-infrastructure.md. Strategy no longer constrains Value: Sendable; now designing isolation-based thread safety for Strategy itself.",
+      "topic": "Non-Sendable strategy with isolation-based thread safety (Tier 2) — successor to sendable-in-rendering-and-snapshot-infrastructure.md. Strategy no longer constrains Value: Sendable; now designing isolation-based thread safety for Strategy itself.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1518,7 +1518,7 @@
     {
       "file": "noncopyable-value-generic-deinit-bug.md",
       "displayName": "noncopyable-value-generic-deinit-bug.md",
-      "topic": "~Copyable value-generic deinit bug (Tier 2) \u2014 Swift compiler (#86652 variant) fails to synthesize member destruction for ~Copyable structs with cross-package, value-generic, @_rawLayout stored properties. Two sub-bugs: (A) deinit body skipped without reference-typed property, (B) automatic member destruction not synthesized. Workaround: `AnyObject?` + manual `remove.all()` via mutable pointer. Applied to 21 types across 9 packages. Simplified reproduction does not trigger (requires @_rawLayout).",
+      "topic": "~Copyable value-generic deinit bug (Tier 2) — Swift compiler (#86652 variant) fails to synthesize member destruction for ~Copyable structs with cross-package, value-generic, @_rawLayout stored properties. Two sub-bugs: (A) deinit body skipped without reference-typed property, (B) automatic member destruction not synthesized. Workaround: `AnyObject?` + manual `remove.all()` via mutable pointer. Applied to 21 types across 9 packages. Simplified reproduction does not trigger (requires @_rawLayout).",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1538,7 +1538,7 @@
     {
       "file": "nonescapable-readiness-assessment.md",
       "displayName": "nonescapable-readiness-assessment.md",
-      "topic": "~Escapable readiness assessment for async ecosystem (Tier 2, v2.3.0) \u2014 8 candidates, 3 HIGH. Resumption ~Escapable attempted + **REVERTED** (downstream collections require Escapable). Entry/Queue blocked by UnsafeMutablePointer. Gap A/B closure blockers persist. **No async type currently ~Escapable.** Heap-backed container blocker cascades to all collection usage.",
+      "topic": "~Escapable readiness assessment for async ecosystem (Tier 2, v2.3.0) — 8 candidates, 3 HIGH. Resumption ~Escapable attempted + **REVERTED** (downstream collections require Escapable). Entry/Queue blocked by UnsafeMutablePointer. Gap A/B closure blockers persist. **No async type currently ~Escapable.** Heap-backed container blocker cascades to all collection usage.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1548,7 +1548,7 @@
     {
       "file": "nonescapable-storage-mechanisms.md",
       "displayName": "nonescapable-storage-mechanisms.md",
-      "topic": "~Escapable storage mechanisms (Tier 2, v1.2.0) \u2014 exhaustive investigation: 17 experiment variants (9 PASS, 11 BLOCKED). Enum-based variable-occupancy storage works (2-8 elements). @_rawLayout layout-vs-access gap. Pointer Escapable blocker confirmed (SE-0465 deferred). Resumption deployment **REVERTED** \u2014 demonstrates cascade consequences of blocker.",
+      "topic": "~Escapable storage mechanisms (Tier 2, v1.2.0) — exhaustive investigation: 17 experiment variants (9 PASS, 11 BLOCKED). Enum-based variable-occupancy storage works (2-8 elements). @_rawLayout layout-vs-access gap. Pointer Escapable blocker confirmed (SE-0465 deferred). Resumption deployment **REVERTED** — demonstrates cascade consequences of blocker.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1558,7 +1558,7 @@
     {
       "file": "nonsending-adoption-audit.md",
       "displayName": "nonsending-adoption-audit.md",
-      "topic": "Nonsending adoption audit of async ecosystem (Tier 2, v1.2.0) \u2014 52 `@Sendable` sites inventoried (14 primitives, 38 stream). Stream operators NOT viable (0 sites). `Async.Callback.Isolated` identified as primary opportunity (6 sites). 4 language blockers resolved by experiment.",
+      "topic": "Nonsending adoption audit of async ecosystem (Tier 2, v1.2.0) — 52 `@Sendable` sites inventoried (14 primitives, 38 stream). Stream operators NOT viable (0 sites). `Async.Callback.Isolated` identified as primary opportunity (6 sites). 4 language blockers resolved by experiment.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1568,7 +1568,7 @@
     {
       "file": "nonsending-compiler-patterns.md",
       "displayName": "nonsending-compiler-patterns.md",
-      "topic": "Nonsending compiler patterns (Tier 2, v1.0.0) \u2014 Discovery: how the Swift compiler/stdlib uses nonisolated(nonsending). Key finding: stdlib deprecated `isolation:` parameter in favor of `nonisolated(nonsending)` on functions. Our `Async.Callback.callAsFunction(isolation:)` uses the deprecated pattern. Also: `sending` return types, no `@concurrent` in stdlib, implicit actor parameter at SIL level, conformance trap evidence.",
+      "topic": "Nonsending compiler patterns (Tier 2, v1.0.0) — Discovery: how the Swift compiler/stdlib uses nonisolated(nonsending). Key finding: stdlib deprecated `isolation:` parameter in favor of `nonisolated(nonsending)` on functions. Our `Async.Callback.callAsFunction(isolation:)` uses the deprecated pattern. Also: `sending` return types, no `@concurrent` in stdlib, implicit actor parameter at SIL level, conformance trap evidence.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1578,7 +1578,7 @@
     {
       "file": "nonsending-callasfunction-inference-quirk.md",
       "displayName": "nonsending-callasfunction-inference-quirk.md",
-      "topic": "`nonisolated(nonsending)` `callAsFunction` inference quirk (Tier 1) \u2014 sugar syntax `await callback()` infers result as `() -> Value` (method reference) instead of `Value`. Explicit `.callAsFunction()` or type annotation resolves it. Runtime behavior correct.",
+      "topic": "`nonisolated(nonsending)` `callAsFunction` inference quirk (Tier 1) — sugar syntax `await callback()` infers result as `() -> Value` (method reference) instead of `Value`. Explicit `.callAsFunction()` or type annotation resolves it. Runtime behavior correct.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -1588,7 +1588,7 @@
     {
       "file": "nonsending-ecosystem-migration-audit.md",
       "displayName": "nonsending-ecosystem-migration-audit.md",
-      "topic": "Nonsending ecosystem migration audit (Tier 2, v1.0.0) \u2014 26 `isolation:` parameter occurrences across ecosystem. 10 are SE-0421 conformances (KEEP). 14 are deprecated convenience functions (MIGRATE). Double-nonsending pattern applies to 8 witness/dependency functions. All 252 packages have NonisolatedNonsendingByDefault. All 7 AsyncIteratorProtocol + 9 Clock conformances pre-protected.",
+      "topic": "Nonsending ecosystem migration audit (Tier 2, v1.0.0) — 26 `isolation:` parameter occurrences across ecosystem. 10 are SE-0421 conformances (KEEP). 14 are deprecated convenience functions (MIGRATE). Double-nonsending pattern applies to 8 witness/dependency functions. All 252 packages have NonisolatedNonsendingByDefault. All 7 AsyncIteratorProtocol + 9 Clock conformances pre-protected.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1598,7 +1598,7 @@
     {
       "file": "open-source-toolchain-compiler-crashes.md",
       "displayName": "open-source-toolchain-compiler-crashes.md",
-      "topic": "swift.org +assertions toolchain crashes with ~Escapable/~Copyable (Tier 3) \u2014 [#87029](https://github.com/swiftlang/swift/issues/87029), [#87030](https://github.com/swiftlang/swift/issues/87030)",
+      "topic": "swift.org +assertions toolchain crashes with ~Escapable/~Copyable (Tier 3) — [#87029](https://github.com/swiftlang/swift/issues/87029), [#87030](https://github.com/swiftlang/swift/issues/87030)",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1608,7 +1608,7 @@
     {
       "file": "owned-typed-memory-region-abstraction.md",
       "displayName": "owned-typed-memory-region-abstraction.md",
-      "topic": "Owned typed memory region abstraction (Tier 3, v2.0) \u2014 SLR (17 sources: Capability Calculus, Cyclone, Rust/C++, Resource Polymorphism), formal semantics. Gap: no self-owning typed contiguous region. Decision: `Memory.Contiguous<Element: BitwiseCopyable>` fills the gap in its natural namespace. String.Storage wraps `Memory.Contiguous<Char>` + null-termination. BitwiseCopyable is the formal boundary with Storage (per-element lifecycle).",
+      "topic": "Owned typed memory region abstraction (Tier 3, v2.0) — SLR (17 sources: Capability Calculus, Cyclone, Rust/C++, Resource Polymorphism), formal semantics. Gap: no self-owning typed contiguous region. Decision: `Memory.Contiguous<Element: BitwiseCopyable>` fills the gap in its natural namespace. String.Storage wraps `Memory.Contiguous<Char>` + null-termination. BitwiseCopyable is the formal boundary with Storage (per-element lifecycle).",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1628,7 +1628,7 @@
     {
       "file": "parser-bridge-architecture.md",
       "displayName": "parser-bridge-architecture.md",
-      "topic": "Parser bridge architecture (Tier 2) \u2014 bifurcated parsing in standards packages: composed parser combinators in Parse struct files vs ad-hoc byte-level parsing in public APIs. Zero public APIs delegate to parse structs. Investigation of bridge pattern to connect them.",
+      "topic": "Parser bridge architecture (Tier 2) — bifurcated parsing in standards packages: composed parser combinators in Parse struct files vs ad-hoc byte-level parsing in public APIs. Zero public APIs delegate to parse structs. Investigation of bridge pattern to connect them.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -1638,7 +1638,7 @@
     {
       "file": "parser-bridge-ergonomics-assessment.md",
       "displayName": "parser-bridge-ergonomics-assessment.md",
-      "topic": "Parser bridge ergonomics assessment (Tier 2) \u2014 MediaType exemplar validates parser bridge pattern. 6 friction points identified: ByteInput qualification noise (F-1), dual generic constraint `Collection.Slice.Protocol & Swift.Collection` (F-2, resolved by `Input.Slice: Swift.Collection` infrastructure fix), slice\u2192String conversion ceremony (F-3), missing grammar combinators for `_splitOnComma`/`_trimOWS` (F-4), parser name collision (F-5), dead `_quotedString` helper (F-6). 313 lines of inline parsing across 10 unmigrated domain types. ISO 8601 demonstrates target unified pattern. 5 recommendations: migrate remaining types, add `TokenOrQuotedString` combinator, consider UTF8String wrapper (deferred), delete helpers post-migration, document constraint guidance.",
+      "topic": "Parser bridge ergonomics assessment (Tier 2) — MediaType exemplar validates parser bridge pattern. 6 friction points identified: ByteInput qualification noise (F-1), dual generic constraint `Collection.Slice.Protocol & Swift.Collection` (F-2, resolved by `Input.Slice: Swift.Collection` infrastructure fix), slice→String conversion ceremony (F-3), missing grammar combinators for `_splitOnComma`/`_trimOWS` (F-4), parser name collision (F-5), dead `_quotedString` helper (F-6). 313 lines of inline parsing across 10 unmigrated domain types. ISO 8601 demonstrates target unified pattern. 5 recommendations: migrate remaining types, add `TokenOrQuotedString` combinator, consider UTF8String wrapper (deferred), delete helpers post-migration, document constraint guidance.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1648,7 +1648,7 @@
     {
       "file": "parser-combinator-algebraic-foundations.md",
       "displayName": "parser-combinator-algebraic-foundations.md",
-      "topic": "Parser combinator algebraic foundations (Tier 3) \u2014 SLR (19 sources, Chomsky\u2013Krishnaswami lineage), formal semantics, two-level algebra analysis (constructor-level vs value-level). Recommends Option D (doc + law tests) over explicit algebra dependency; identifies semiring-parameterized parsing as future work.",
+      "topic": "Parser combinator algebraic foundations (Tier 3) — SLR (19 sources, Chomsky–Krishnaswami lineage), formal semantics, two-level algebra analysis (constructor-level vs value-level). Recommends Option D (doc + law tests) over explicit algebra dependency; identifies semiring-parameterized parsing as future work.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1658,7 +1658,7 @@
     {
       "file": "parser-syntax-ergonomics-comparison.md",
       "displayName": "parser-syntax-ergonomics-comparison.md",
-      "topic": "Parser syntax and ergonomics comparison (Tier 2) \u2014 how Swift Institute parser composition syntax compares to pointfreeco/swift-parsing in ergonomics, readability, and boilerplate. Architecturally stronger (typed throws, ~Copyable, generic Input) but syntactically heavier. Gap largest in error handling, parser definition boilerplate, ad-hoc parsing.",
+      "topic": "Parser syntax and ergonomics comparison (Tier 2) — how Swift Institute parser composition syntax compares to pointfreeco/swift-parsing in ergonomics, readability, and boilerplate. Architecturally stronger (typed throws, ~Copyable, generic Input) but syntactically heavier. Gap largest in error handling, parser definition boilerplate, ad-hoc parsing.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1668,7 +1668,7 @@
     {
       "file": "parsers-adoption-implementation-plan.md",
       "displayName": "parsers-adoption-implementation-plan.md",
-      "topic": "Parser combinator adoption implementation plan (Tier 2) \u2014 8-phase leaf-first execution plan. Phase 0: Layer 1 ASCII integer parser (prerequisite). Phase 1: RFC 9110 shared HTTP parsers (8 reusable types). Phase 3: RFC 3986 URI sub-parsers. ~51 new files, ~67 rewritten files, ~123 parse functions affected. Foundation elimination for RFC 6750, W3C SVG, RFC 9111 CharacterSet leak. Phases 5\u20137 parallelizable.",
+      "topic": "Parser combinator adoption implementation plan (Tier 2) — 8-phase leaf-first execution plan. Phase 0: Layer 1 ASCII integer parser (prerequisite). Phase 1: RFC 9110 shared HTTP parsers (8 reusable types). Phase 3: RFC 3986 URI sub-parsers. ~51 new files, ~67 rewritten files, ~123 parse functions affected. Foundation elimination for RFC 6750, W3C SVG, RFC 9111 CharacterSet leak. Phases 5–7 parallelizable.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1678,7 +1678,7 @@
     {
       "file": "parsers-ecosystem-adoption-audit.md",
       "displayName": "parsers-ecosystem-adoption-audit.md",
-      "topic": "Parser combinator adoption audit (Tier 1) \u2014 95 adoption opportunities (52 HIGH) across ~30 standards packages. HTTP headers largest single opportunity (23 findings). ISO 8601 most impactful single rewrite (~400 lines). Foundation elimination possible for RFC 6750, W3C SVG, RFC 9111. Only 2 of ~100+ standards packages currently use parser-primitives.",
+      "topic": "Parser combinator adoption audit (Tier 1) — 95 adoption opportunities (52 HIGH) across ~30 standards packages. HTTP headers largest single opportunity (23 findings). ISO 8601 most impactful single rewrite (~400 lines). Foundation elimination possible for RFC 6750, W3C SVG, RFC 9111. Only 2 of ~100+ standards packages currently use parser-primitives.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1688,7 +1688,7 @@
     {
       "file": "parsing-serialization-capability-organization.md",
       "displayName": "parsing-serialization-capability-organization.md",
-      "topic": "Parsing and serialization capability organization from first principles (Tier 2, v1.3) \u2014 three fundamental capabilities (parsing, serialization, printing) plus one conjunction (coding/ParserPrinter). Three complementary implementation strategies: capability protocols, witness types, domain protocols. Domain namespace principle. Layer distribution. All tensions and open items resolved by transformation-domain-architecture (DECISION), canonical-witness-capability-attachment (DECISION), and ascii-serialization-migration (DECISION).",
+      "topic": "Parsing and serialization capability organization from first principles (Tier 2, v1.3) — three fundamental capabilities (parsing, serialization, printing) plus one conjunction (coding/ParserPrinter). Three complementary implementation strategies: capability protocols, witness types, domain protocols. Domain namespace principle. Layer distribution. All tensions and open items resolved by transformation-domain-architecture (DECISION), canonical-witness-capability-attachment (DECISION), and ascii-serialization-migration (DECISION).",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1698,7 +1698,7 @@
     {
       "file": "pdf-standard-case-study.md",
       "displayName": "pdf-standard-case-study.md",
-      "topic": "Case study: swift-pdf-standard (Tier 1, v2.0) \u2014 traces the full PDF stack from swift-iso-32000 through swift-pdf. Shape C (standard-first, single-spec): stability value justifies keeping. Leaky abstraction acceptable for single-spec shapes. Evaluate moving 3 rendering types (Configuration, Rectangle, Stroke) to swift-pdf-rendering.",
+      "topic": "Case study: swift-pdf-standard (Tier 1, v2.0) — traces the full PDF stack from swift-iso-32000 through swift-pdf. Shape C (standard-first, single-spec): stability value justifies keeping. Leaky abstraction acceptable for single-spec shapes. Evaluate moving 3 rendering types (Configuration, Rectangle, Stroke) to swift-pdf-rendering.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1708,7 +1708,7 @@
     {
       "file": "phantom-typed-value-wrappers-literature-study.md",
       "displayName": "phantom-typed-value-wrappers-literature-study.md",
-      "topic": "Phantom-typed value wrappers literature study and comparative analysis (Tier 3) \u2014 SLR (36 sources: Reynolds/Wadler parametricity, Leijen-Meijer/Fluet-Pucella/Cheney-Hinze phantom types, Breitner et al. Coercible, Tov-Pucella affine types), formal semantics, cross-language comparison (Haskell/Rust/OCaml/TypeScript), Cognitive Dimensions. Validates Tagged design; identifies Swift's noncopyable phantom types as novel contribution.",
+      "topic": "Phantom-typed value wrappers literature study and comparative analysis (Tier 3) — SLR (36 sources: Reynolds/Wadler parametricity, Leijen-Meijer/Fluet-Pucella/Cheney-Hinze phantom types, Breitner et al. Coercible, Tov-Pucella affine types), formal semantics, cross-language comparison (Haskell/Rust/OCaml/TypeScript), Cognitive Dimensions. Validates Tagged design; identifies Swift's noncopyable phantom types as novel contribution.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1718,7 +1718,7 @@
     {
       "file": "pr-submission-research.md",
       "displayName": "pr-submission-research.md",
-      "topic": "PR submission research for swiftlang/swift (Tier 2) \u2014 fork requirements, GitHub CLI workflow, contributor setup from the coenttb account.",
+      "topic": "PR submission research for swiftlang/swift (Tier 2) — fork requirements, GitHub CLI workflow, contributor setup from the coenttb account.",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -1728,7 +1728,7 @@
     {
       "file": "predictable-memopt-mark-dependence-lifetime-completion.md",
       "displayName": "predictable-memopt-mark-dependence-lifetime-completion.md",
-      "topic": "PredictableDeadAllocationElimination spurious destroy_value via lifetime completion (Tier 2) \u2014 root cause analysis for swiftlang/swift#88022. Prior hypothesis (InstructionDeleter.forceDelete) refuted; actual mechanism traced through `promoteMarkDepBase` and `fixLifetimes=false`.",
+      "topic": "PredictableDeadAllocationElimination spurious destroy_value via lifetime completion (Tier 2) — root cause analysis for swiftlang/swift#88022. Prior hypothesis (InstructionDeleter.forceDelete) refuted; actual mechanism traced through `promoteMarkDepBase` and `fixLifetimes=false`.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1738,7 +1738,7 @@
     {
       "file": "~~pool-bounded-storage-refactor.md~~",
       "displayName": "~~pool-bounded-storage-refactor.md~~",
-      "topic": "MOVED \u2192 swift-primitives/Research/pool-bounded-storage-refactor.md per [META-017]. Pool.Bounded storage refactor (Tier 1) \u2014 two parallel fixed-capacity arrays (slots + entries) subscripted by Slot.Index with .rawValue at 30+ call sites.",
+      "topic": "MOVED → swift-primitives/Research/pool-bounded-storage-refactor.md per [META-017]. Pool.Bounded storage refactor (Tier 1) — two parallel fixed-capacity arrays (slots + entries) subscripted by Slot.Index with .rawValue at 30+ call sites.",
       "status": "MOVED",
       "statusDetail": null,
       "statusRaw": "MOVED",
@@ -1758,7 +1758,7 @@
     {
       "file": "primitives-index-audit.md",
       "displayName": "primitives-index-audit.md",
-      "topic": "Primitives package-level _index.md audit \u2014 60 packages with Research/, 14 missing _index.md, 152 unlisted files. [META-019] Phase 8.",
+      "topic": "Primitives package-level _index.md audit — 60 packages with Research/, 14 missing _index.md, 152 unlisted files. [META-019] Phase 8.",
       "status": "INVENTORY",
       "statusDetail": null,
       "statusRaw": "INVENTORY",
@@ -1768,7 +1768,7 @@
     {
       "file": "primitives-public-api-graph-analysis.md",
       "displayName": "primitives-public-api-graph-analysis.md",
-      "topic": "Primitives public API graph analysis (Tier 1) \u2014 symbol graph extraction across 115/132 packages. 435 modules, 13,262 symbols, 19,022 relationships. Key findings: parser/serializer 10:1 asymmetry, 7 orphaned protocols, 22 isolated packages (Bitset/Predicate/Token richest), 337 empty modules. Advances ai-context-reduction-via-type-system-tooling Phase 1.",
+      "topic": "Primitives public API graph analysis (Tier 1) — symbol graph extraction across 115/132 packages. 435 modules, 13,262 symbols, 19,022 relationships. Key findings: parser/serializer 10:1 asymmetry, 7 orphaned protocols, 22 isolated packages (Bitset/Predicate/Token richest), 337 empty modules. Advances ai-context-reduction-via-type-system-tooling Phase 1.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1778,7 +1778,7 @@
     {
       "file": "property-view-for-cow-copyable-types.md",
       "displayName": "property-view-for-cow-copyable-types.md",
-      "topic": "Property for @CoW Copyable types (Tier 1, v2) \u2014 [IMPL-021] is correct as written. Property.View is compiler-rejected for Copyable types. @CoW `_read/_modify` accessors + standard Property `_modify` + defer pattern avoids deep copies without transfer placeholder.",
+      "topic": "Property for @CoW Copyable types (Tier 1, v2) — [IMPL-021] is correct as written. Property.View is compiler-rejected for Copyable types. @CoW `_read/_modify` accessors + standard Property `_modify` + defer pattern avoids deep copies without transfer placeholder.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1788,7 +1788,7 @@
     {
       "file": "protocol-abstraction-for-phantom-typed-wrappers.md",
       "displayName": "protocol-abstraction-for-phantom-typed-wrappers.md",
-      "topic": "Protocol abstraction for phantom-typed wrappers (Tier 3) \u2014 supersedes tagged-extension-duplication.md. Phase 2 complete via SuppressedAssociatedTypes.",
+      "topic": "Protocol abstraction for phantom-typed wrappers (Tier 3) — supersedes tagged-extension-duplication.md. Phase 2 complete via SuppressedAssociatedTypes.",
       "status": "IMPLEMENTED",
       "statusDetail": null,
       "statusRaw": "IMPLEMENTED",
@@ -1808,7 +1808,7 @@
     {
       "file": "release-roadmap-swift-file-system.md",
       "displayName": "release-roadmap-swift-file-system.md",
-      "topic": "Release roadmap for swift-file-system \u2014 repo migration map, release model (each package = GitHub repo), org structure across L1/L2/L3. Cycle fix decided, dependency graph ready.",
+      "topic": "Release roadmap for swift-file-system — repo migration map, release model (each package = GitHub repo), org structure across L1/L2/L3. Cycle fix decided, dependency graph ready.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -1818,7 +1818,7 @@
     {
       "file": "rendering-context-protocol-vs-witness.md",
       "displayName": "rendering-context-protocol-vs-witness.md",
-      "topic": "Rendering.Context protocol vs witness vs action dispatch (Tier 2) \u2014 empirical performance comparison. V2 Witness \u2248 V1 Protocol (0.99\u20131.04x release). Action 1.20\u20131.36x. AnyView 1.03\u20131.07x. Decision: hybrid (keep protocol, add Rendering.Action enum for deferred rendering).",
+      "topic": "Rendering.Context protocol vs witness vs action dispatch (Tier 2) — empirical performance comparison. V2 Witness ≈ V1 Protocol (0.99–1.04x release). Action 1.20–1.36x. AnyView 1.03–1.07x. Decision: hybrid (keep protocol, add Rendering.Action enum for deferred rendering).",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1828,7 +1828,7 @@
     {
       "file": "rendering-context-witness-migration-implications.md",
       "displayName": "rendering-context-witness-migration-implications.md",
-      "topic": "Rendering.Context witness migration implications (Tier 2) \u2014 full audit of 4 rendering packages. Blast radius: ~26 files modified, ~533 unaffected. Ownership.Mutable capture (no unsafe pointers). Context transformer pattern for PDF.HTML. Nested Action enum (Push/Pop). All blockers validated by experiment (24 tests).",
+      "topic": "Rendering.Context witness migration implications (Tier 2) — full audit of 4 rendering packages. Blast radius: ~26 files modified, ~533 unaffected. Ownership.Mutable capture (no unsafe pointers). Context transformer pattern for PDF.HTML. Nested Action enum (Push/Pop). All blockers validated by experiment (24 tests).",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1838,7 +1838,7 @@
     {
       "file": "rendering-view-associated-type-naming.md",
       "displayName": "rendering-view-associated-type-naming.md",
-      "topic": "Rendering.View associated type naming \u2014 SwiftUI.View.Body collision investigation. v1 (2026-03-13) chose RenderBody rename; v2 (2026-04-20) supersedes with @_implements(Rendering.View, Body) at HTML.Document \u2014 keeps idiomatic Body at L1, concentrates bridge cost at the one type that actually bridges frameworks.",
+      "topic": "Rendering.View associated type naming — SwiftUI.View.Body collision investigation. v1 (2026-03-13) chose RenderBody rename; v2 (2026-04-20) supersedes with @_implements(Rendering.View, Body) at HTML.Document — keeps idiomatic Body at L1, concentrates bridge cost at the one type that actually bridges frameworks.",
       "status": "SUPERSEDED",
       "statusDetail": "v1 RenderBody rename superseded 2026-04-20 by @_implements fix",
       "statusRaw": "SUPERSEDED",
@@ -1848,7 +1848,7 @@
     {
       "file": "rendering-witness-architecture-value-analysis.md",
       "displayName": "rendering-witness-architecture-value-analysis.md",
-      "topic": "Rendering.Context witness architecture value analysis (Tier 2) \u2014 protocol\u2192witness migration for Rendering.Context. Performance parity validated (0.99\u20131.04x). Ownership.Mutable capture, consuming transformers, nested Action enum. 4-phase migration.",
+      "topic": "Rendering.Context witness architecture value analysis (Tier 2) — protocol→witness migration for Rendering.Context. Performance parity validated (0.99–1.04x). Ownership.Mutable capture, consuming transformers, nested Action enum. 4-phase migration.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1868,7 +1868,7 @@
     {
       "file": "sending-expansion-audit.md",
       "displayName": "sending-expansion-audit.md",
-      "topic": "`sending` annotation expansion audit \u2014 audit of swift-async (foundations) and swift-async-primitives (primitives) for `sending` keyword adoption on parameters and return values that transfer ownership across isolation boundaries",
+      "topic": "`sending` annotation expansion audit — audit of swift-async (foundations) and swift-async-primitives (primitives) for `sending` keyword adoption on parameters and return values that transfer ownership across isolation boundaries",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1878,7 +1878,7 @@
     {
       "file": "sequence-operator-unification.md",
       "displayName": "sequence-operator-unification.md",
-      "topic": "Sync/async operator type unification (Tier 2, v2.1.1) \u2014 lazy-by-default removes Copyable constraint from Filter/Drop/Prefix. 20/20 experiment variants CONFIRMED across 3 experiments: dual conformance, ~Copyable chaining, ~Escapable composition with `@_lifetime(self: immortal)`, compiler inlining (lazy = hand-rolled in -O, 7x faster than eager). All experiments complete.",
+      "topic": "Sync/async operator type unification (Tier 2, v2.1.1) — lazy-by-default removes Copyable constraint from Filter/Drop/Prefix. 20/20 experiment variants CONFIRMED across 3 experiments: dual conformance, ~Copyable chaining, ~Escapable composition with `@_lifetime(self: immortal)`, compiler inlining (lazy = hand-rolled in -O, 7x faster than eager). All experiments complete.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -1888,7 +1888,7 @@
     {
       "file": "session-reflection-meta-process.md",
       "displayName": "session-reflection-meta-process.md",
-      "topic": "Two-phase session reflection and knowledge improvement pipeline (Tier 3) \u2014 103 sources, SLR, formal semantics, v1.1 latest advances addendum",
+      "topic": "Two-phase session reflection and knowledge improvement pipeline (Tier 3) — 103 sources, SLR, formal semantics, v1.1 latest advances addendum",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1898,7 +1898,7 @@
     {
       "file": "set-contains-performance-restoration.md",
       "displayName": "set-contains-performance-restoration.md",
-      "topic": "Set contains performance restoration (Tier 2) \u2014 SUPERSEDED, consolidated into set-protocol-requirements.md v4.0.0",
+      "topic": "Set contains performance restoration (Tier 2) — SUPERSEDED, consolidated into set-protocol-requirements.md v4.0.0",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1908,7 +1908,7 @@
     {
       "file": "set-insert-error-divergence.md",
       "displayName": "set-insert-error-divergence.md",
-      "topic": "Insert error divergence (C1) resolution analysis (Tier 2) \u2014 SUPERSEDED, consolidated into set-protocol-requirements.md v4.0.0",
+      "topic": "Insert error divergence (C1) resolution analysis (Tier 2) — SUPERSEDED, consolidated into set-protocol-requirements.md v4.0.0",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1918,7 +1918,7 @@
     {
       "file": "set-protocol-abstraction.md",
       "displayName": "set-protocol-abstraction.md",
-      "topic": "Set.Protocol design rationale (Tier 2) \u2014 SUPERSEDED, consolidated into set-protocol-requirements.md v4.0.0",
+      "topic": "Set.Protocol design rationale (Tier 2) — SUPERSEDED, consolidated into set-protocol-requirements.md v4.0.0",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -1928,7 +1928,7 @@
     {
       "file": "~~set-protocol-requirements.md~~",
       "displayName": "~~set-protocol-requirements.md~~",
-      "topic": "MOVED \u2192 swift-primitives/Research/set-protocol-requirements.md per [META-017]. Consolidated Set.Protocol design document (Tier 2, v4.0.0) \u2014 covers protocol design rationale, O(1) contains restoration for ~Copyable, minimal complete requirements (`contains` + `forEach` + `count` \u2192 10 defaults), insert error divergence analysis.",
+      "topic": "MOVED → swift-primitives/Research/set-protocol-requirements.md per [META-017]. Consolidated Set.Protocol design document (Tier 2, v4.0.0) — covers protocol design rationale, O(1) contains restoration for ~Copyable, minimal complete requirements (`contains` + `forEach` + `count` → 10 defaults), insert error divergence analysis.",
       "status": "MOVED",
       "statusDetail": null,
       "statusRaw": "MOVED",
@@ -1968,7 +1968,7 @@
     {
       "file": "snapshot-naming-patterns.md",
       "displayName": "snapshot-naming-patterns.md",
-      "topic": "Snapshot naming patterns: cross-ecosystem analysis \u2014 named vs unnamed snapshots, inline vs file-backed storage, API design across 8 frameworks (swift-snapshot-testing, Jest, Vitest, Insta, cargo-insta, Verify, ApprovalTests.NET, snapshot_testing Ruby). Key finding: no framework supporting both inline and file-backed uses auto-numbering for inline snapshots.",
+      "topic": "Snapshot naming patterns: cross-ecosystem analysis — named vs unnamed snapshots, inline vs file-backed storage, API design across 8 frameworks (swift-snapshot-testing, Jest, Vitest, Insta, cargo-insta, Verify, ApprovalTests.NET, snapshot_testing Ruby). Key finding: no framework supporting both inline and file-backed uses auto-numbering for inline snapshots.",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -1978,7 +1978,7 @@
     {
       "file": "snapshot-testing-literature-study.md",
       "displayName": "snapshot-testing-literature-study.md",
-      "topic": "Snapshot testing and inline snapshot testing literature study (Tier 3, v1.1) \u2014 SLR (45 sources: Barr oracle taxonomy, Rothermel regression theory, Feathers characterization tests, Myers diff). 14 ecosystems surveyed (Rust insta, OCaml ppx_expect, JS Jest/Vitest, Python inline-snapshot, JVM Selfie, Swift PointFree). Formal semantics (oracle, serializer canonicity, source rewrite, typing rules, soundness theorem). Cognitive Dimensions analysis (inline > file-based on 4 dimensions). Swift 6.2+ enablers (pre-built SwiftSyntax, ST-0009 Attachments, SE-0451 raw identifiers). Infrastructure mapping: optics-primitives (redaction composition algebra), tree-primitives (structural diff via Tree.Keyed), json/xml (canonical serialization), witnesses/dependencies (scoped configuration). 5 priority improvements with revised effort estimates.",
+      "topic": "Snapshot testing and inline snapshot testing literature study (Tier 3, v1.1) — SLR (45 sources: Barr oracle taxonomy, Rothermel regression theory, Feathers characterization tests, Myers diff). 14 ecosystems surveyed (Rust insta, OCaml ppx_expect, JS Jest/Vitest, Python inline-snapshot, JVM Selfie, Swift PointFree). Formal semantics (oracle, serializer canonicity, source rewrite, typing rules, soundness theorem). Cognitive Dimensions analysis (inline > file-based on 4 dimensions). Swift 6.2+ enablers (pre-built SwiftSyntax, ST-0009 Attachments, SE-0451 raw identifiers). Infrastructure mapping: optics-primitives (redaction composition algebra), tree-primitives (structural diff via Tree.Keyed), json/xml (canonical serialization), witnesses/dependencies (scoped configuration). 5 priority improvements with revised effort estimates.",
       "status": "DEFERRED",
       "statusDetail": null,
       "statusRaw": "DEFERRED",
@@ -1988,7 +1988,7 @@
     {
       "file": "source-location-unification.md",
       "displayName": "source-location-unification.md",
-      "topic": "Source location unification via primitive decomposition (Tier 2, v3.1) \u2014 factors `(line, column)` into `Text.Location`, renames `Source.Location` \u2192 `Source.Position` (compact) and `Source.Location.Resolved` \u2192 `Source.Location` (display). Fully implemented: eliminated `Test.Source.Location`, `Witness.Unimplemented.Location`, `Parser.Diagnostic.Location`, `JSON.LocatedError` \u2014 all use canonical primitives types directly. 7 packages committed.",
+      "topic": "Source location unification via primitive decomposition (Tier 2, v3.1) — factors `(line, column)` into `Text.Location`, renames `Source.Location` → `Source.Position` (compact) and `Source.Location.Resolved` → `Source.Location` (display). Fully implemented: eliminated `Test.Source.Location`, `Witness.Unimplemented.Location`, `Parser.Diagnostic.Location`, `JSON.LocatedError` — all use canonical primitives types directly. 7 packages committed.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -1998,7 +1998,7 @@
     {
       "file": "span-view-integration-strategy.md",
       "displayName": "span-view-integration-strategy.md",
-      "topic": "Span view integration strategy (Tier 3) \u2014 how Span should integrate with the Swift Institute sequence ecosystem for closure-free consumption. Span-to-String and Span-to-Array conversion paths. SE-0456/SE-0467/SE-0474 prior art.",
+      "topic": "Span view integration strategy (Tier 3) — how Span should integrate with the Swift Institute sequence ecosystem for closure-free consumption. Span-to-String and Span-to-Array conversion paths. SE-0456/SE-0467/SE-0474 prior art.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -2008,7 +2008,7 @@
     {
       "file": "spm-nested-package-publication.md",
       "displayName": "spm-nested-package-publication.md",
-      "topic": "SPM nested package publication feasibility (Tier 2) \u2014 empirical validation (12 test configurations), prior art survey (10 proposals/pitches, 8 major packages), Swift Forums confirmation. Nested Package.swift rejected (hard SPM limitation). Current three-repo layered model confirmed as only viable architecture. Git subtree evaluation deferred.",
+      "topic": "SPM nested package publication feasibility (Tier 2) — empirical validation (12 test configurations), prior art survey (10 proposals/pitches, 8 major packages), Swift Forums confirmation. Nested Package.swift rejected (hard SPM limitation). Current three-repo layered model confirmed as only viable architecture. Git subtree evaluation deferred.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -2018,7 +2018,7 @@
     {
       "file": "standard-facade-package-organization.md",
       "displayName": "standard-facade-package-organization.md",
-      "topic": "Architectural role of swift-*-standard packages after spec implementations split into standards-body orgs (Tier 2, v2.0) \u2014 domain shape taxonomy (primitive-first vs standard-first, single-spec vs multi-spec), two purposes (convergence + stability), three-layer model (body orgs \u2192 swift-standards \u2192 swift-foundations), stable-vs-volatile separation. Recommends keeping all 17 packages in swift-standards/. Withdraws v1.0 \"eliminate thin re-exports\" recommendation.",
+      "topic": "Architectural role of swift-*-standard packages after spec implementations split into standards-body orgs (Tier 2, v2.0) — domain shape taxonomy (primitive-first vs standard-first, single-spec vs multi-spec), two purposes (convergence + stability), three-layer model (body orgs → swift-standards → swift-foundations), stable-vs-volatile separation. Recommends keeping all 17 packages in swift-standards/. Withdraws v1.0 \"eliminate thin re-exports\" recommendation.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2028,7 +2028,7 @@
     {
       "file": "storage-buffer-abstraction-analysis.md",
       "displayName": "storage-buffer-abstraction-analysis.md",
-      "topic": "Storage and buffer variant abstraction analysis (Tier 3) \u2014 SLR (40 sources), container theory, substructural typing, comparative analysis of 5 candidate abstractions",
+      "topic": "Storage and buffer variant abstraction analysis (Tier 3) — SLR (40 sources), container theory, substructural typing, comparative analysis of 5 candidate abstractions",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2038,7 +2038,7 @@
     {
       "file": "stream-isolation-preserving-operators.md",
       "displayName": "stream-isolation-preserving-operators.md",
-      "topic": "Stream isolation-preserving operators via concrete types (Tier 2) \u2014 experiment confirms concrete `AsyncSequence` operator types with `NonisolatedNonsendingByDefault` preserve isolation for sync AND async closures. Recommends ~20 concrete linear operators + existing type-erased concurrent operators.",
+      "topic": "Stream isolation-preserving operators via concrete types (Tier 2) — experiment confirms concrete `AsyncSequence` operator types with `NonisolatedNonsendingByDefault` preserve isolation for sync AND async closures. Recommends ~20 concrete linear operators + existing type-erased concurrent operators.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2048,7 +2048,7 @@
     {
       "file": "stream-isolation-propagation.md",
       "displayName": "stream-isolation-propagation.md",
-      "topic": "Stream isolation propagation analysis (Tier 2) \u2014 every operator breaks isolation (100% breakage). Root causes: `@Sendable` `_next`, sync closures cannot be nonsending, actor state, unstructured Tasks. Option D: accept stream as concurrency boundary.",
+      "topic": "Stream isolation propagation analysis (Tier 2) — every operator breaks isolation (100% breakage). Root causes: `@Sendable` `_next`, sync closures cannot be nonsending, actor state, unstructured Tasks. Option D: accept stream as concurrency boundary.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -2058,7 +2058,7 @@
     {
       "file": "string-path-type-unification.md",
       "displayName": "string-path-type-unification.md",
-      "topic": "String and path type unification across ecosystem (Tier 3, v2.0) \u2014 SLR (16 sources), formal semantics, prior art (Rust/C++/Go/Zig/Python/Swift). 5 types across 3 layers. Experiment `phantom-tagged-string-unification` (9 variants, ALL CONFIRMED) **refuted** C2 blocker \u2014 Option D is feasible today. Two viable paths: Option E (refine, conservative) or Option D (phantom-tag, progressive). Decision deferred to design judgment.",
+      "topic": "String and path type unification across ecosystem (Tier 3, v2.0) — SLR (16 sources), formal semantics, prior art (Rust/C++/Go/Zig/Python/Swift). 5 types across 3 layers. Experiment `phantom-tagged-string-unification` (9 variants, ALL CONFIRMED) **refuted** C2 blocker — Option D is feasible today. Two viable paths: Option E (refine, conservative) or Option D (phantom-tag, progressive). Decision deferred to design judgment.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2068,7 +2068,7 @@
     {
       "file": "string-primitives-shadowing.md",
       "displayName": "string-primitives-shadowing.md",
-      "topic": "String_Primitives.String shadowing Swift.String (Tier 2) \u2014 @_exported chain propagates bare `String` type through Kernel to IO/File/Async, breaking withTaskGroup type inference. Type and name are legitimate (ecosystem pattern: Array, Dictionary, Set also shadow). Problem is structural: Kernel_Primitives_Core @_exports String_Primitives despite not using it. Recommends removing @_exported from Core + demoting Kernel_String_Primitives from umbrella (~6 file changes). Follow-up: audit all @_exported chains for same pattern.",
+      "topic": "String_Primitives.String shadowing Swift.String (Tier 2) — @_exported chain propagates bare `String` type through Kernel to IO/File/Async, breaking withTaskGroup type inference. Type and name are legitimate (ecosystem pattern: Array, Dictionary, Set also shadow). Problem is structural: Kernel_Primitives_Core @_exports String_Primitives despite not using it. Recommends removing @_exported from Core + demoting Kernel_String_Primitives from umbrella (~6 file changes). Follow-up: audit all @_exported chains for same pattern.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2078,7 +2078,7 @@
     {
       "file": "string-primitives-tagged-tag-selection.md",
       "displayName": "string-primitives-tagged-tag-selection.md",
-      "topic": "What Tag for String_Primitives.String under D' migration (Tier 2) \u2014 consumer inventory across 3 layers. Resolved: Tag is always the consumer's domain (Kernel, Loader), concrete PlatformString is the RawValue",
+      "topic": "What Tag for String_Primitives.String under D' migration (Tier 2) — consumer inventory across 3 layers. Resolved: Tag is always the consumer's domain (Kernel, Loader), concrete PlatformString is the RawValue",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -2088,7 +2088,7 @@
     {
       "file": "swift-64-dev-compatibility-catalog.md",
       "displayName": "swift-64-dev-compatibility-catalog.md",
-      "topic": "Swift 6.4-dev compatibility catalog (Tier 2) \u2014 systematic catalogue of 6.4-dev compatibility issues in swift-primitives: `@_lifetime` on Escapable rejected, static property resolution changes, identity closure IRGen crashes, `@_lifetime` version skew for ~Escapable self methods, DeinitDevirtualizer SIL assertion. Categorize by fix type and dual-compiler requirements.",
+      "topic": "Swift 6.4-dev compatibility catalog (Tier 2) — systematic catalogue of 6.4-dev compatibility issues in swift-primitives: `@_lifetime` on Escapable rejected, static property resolution changes, identity closure IRGen crashes, `@_lifetime` version skew for ~Escapable self methods, DeinitDevirtualizer SIL assertion. Categorize by fix type and dual-compiler requirements.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -2118,7 +2118,7 @@
     {
       "file": "swift-testing-data-maximization.md",
       "displayName": "swift-testing-data-maximization.md",
-      "topic": "Swift Testing data maximization (Tier 2) \u2014 unified schema for test artifacts, structured performance/functional output, LLM-actionable test diagnostics",
+      "topic": "Swift Testing data maximization (Tier 2) — unified schema for test artifacts, structured performance/functional output, LLM-actionable test diagnostics",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -2128,7 +2128,7 @@
     {
       "file": "swift-testing-performance-infrastructure-gaps.md",
       "displayName": "swift-testing-performance-infrastructure-gaps.md",
-      "topic": "Performance testing infrastructure gaps and fixes (Tier 2) \u2014 4 issues blocking reliable performance testing: compiler crash in release (P0), unattributable diagnostics (P1), cross-suite concurrency interference (P2), missing tabular comparison (P3). All resolved.",
+      "topic": "Performance testing infrastructure gaps and fixes (Tier 2) — 4 issues blocking reliable performance testing: compiler crash in release (P0), unattributable diagnostics (P1), cross-suite concurrency interference (P2), missing tabular comparison (P3). All resolved.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -2138,7 +2138,7 @@
     {
       "file": "swift-translating-migration-plan.md",
       "displayName": "swift-translating-migration-plan.md",
-      "topic": "Converged plan for swift-translating migration \u2014 replace Language enum with BCP47.LanguageTag typealias, split Foundation-dependent code into Translating Platform module, strict one-way dependency graph",
+      "topic": "Converged plan for swift-translating migration — replace Language enum with BCP47.LanguageTag typealias, split Foundation-dependent code into Translating Platform module, strict one-way dependency graph",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -2148,7 +2148,7 @@
     {
       "file": "swiftpm-build-plugins-for-xfrontend-flags.md",
       "displayName": "swiftpm-build-plugins-for-xfrontend-flags.md",
-      "topic": "SwiftPM build plugins for `-Xfrontend` flags (Tier 2) \u2014 can build plugins inject `-Xfrontend -enable-experimental-feature` flags without `.unsafeFlags()`? Currently `.unsafeFlags()` disables SPM dependency resolution for downstream consumers, blocking adoption of packages using experimental features (Lifetimes, RawLayout).",
+      "topic": "SwiftPM build plugins for `-Xfrontend` flags (Tier 2) — can build plugins inject `-Xfrontend -enable-experimental-feature` flags without `.unsafeFlags()`? Currently `.unsafeFlags()` disables SPM dependency resolution for downstream consumers, blocking adoption of packages using experimental features (Lifetimes, RawLayout).",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -2158,7 +2158,7 @@
     {
       "file": "system-kernel-system-boundary.md",
       "displayName": "system-kernel-system-boundary.md",
-      "topic": "System vs Kernel.System namespace boundary (Tier 2) \u2014 prior art survey (BSD sysctl CTL_HW/CTL_KERN, Linux sysfs /sys/devices/system/ vs /sys/kernel/, Go, Rust, Apple swift-system). Finding: hardware facts (CPU count, RAM, page size) universally separated from kernel operations; no precedent puts them under \"kernel\". Recommends Option D: System as complete typed hardware namespace (System.Processor.Count, System.Memory.Capacity, System.Page.Size), Kernel.System retains only OS-operational queries (Name, Path.Length, sleep).",
+      "topic": "System vs Kernel.System namespace boundary (Tier 2) — prior art survey (BSD sysctl CTL_HW/CTL_KERN, Linux sysfs /sys/devices/system/ vs /sys/kernel/, Go, Rust, Apple swift-system). Finding: hardware facts (CPU count, RAM, page size) universally separated from kernel operations; no precedent puts them under \"kernel\". Recommends Option D: System as complete typed hardware namespace (System.Processor.Count, System.Memory.Capacity, System.Page.Size), Kernel.System retains only OS-operational queries (Name, Path.Length, sleep).",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2178,7 +2178,7 @@
     {
       "file": "tagged-path-string-identity-resolution.md",
       "displayName": "tagged-path-string-identity-resolution.md",
-      "topic": "How to resolve Kernel.Path/String identity when both wrap Memory.Contiguous\\<Char\\> (Tier 2) \u2014 7 options (A\u2013G). Decision: Option G \u2014 concrete types as RawValue, domain as Tag. Kind \u00d7 Domain = two orthogonal axes. Validated by tagged-two-level-lifetime (6/6 CONFIRMED)",
+      "topic": "How to resolve Kernel.Path/String identity when both wrap Memory.Contiguous\\<Char\\> (Tier 2) — 7 options (A–G). Decision: Option G — concrete types as RawValue, domain as Tag. Kind × Domain = two orthogonal axes. Validated by tagged-two-level-lifetime (6/6 CONFIRMED)",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -2188,7 +2188,7 @@
     {
       "file": "tagged-structural-sendable.md",
       "displayName": "tagged-structural-sendable.md",
-      "topic": "Can Tagged<Element, Cardinal> prove structural Sendable when Element: Sendable? (Tier 1) \u2014 could remove @unchecked from phantom-typed containers",
+      "topic": "Can Tagged<Element, Cardinal> prove structural Sendable when Element: Sendable? (Tier 1) — could remove @unchecked from phantom-typed containers",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -2198,7 +2198,7 @@
     {
       "file": "task-local-stack-unification.md",
       "displayName": "task-local-stack-unification.md",
-      "topic": "Task-local stack unification (Tier 2, v3.0) \u2014 structural unification of L1 Dependency.Scope and L3 Witness.Context @TaskLocal stacks. Triggered by architectural dissatisfaction with closure-chain bridging mechanism during Phase 3 L1 Key Bridge implementation.",
+      "topic": "Task-local stack unification (Tier 2, v3.0) — structural unification of L1 Dependency.Scope and L3 Witness.Context @TaskLocal stacks. Triggered by architectural dissatisfaction with closure-chain bridging mechanism during Phase 3 L1 Key Bridge implementation.",
       "status": "IMPLEMENTED",
       "statusDetail": null,
       "statusRaw": "IMPLEMENTED",
@@ -2208,7 +2208,7 @@
     {
       "file": "temporal-operator-determinism.md",
       "displayName": "temporal-operator-determinism.md",
-      "topic": "Temporal operator determinism (Tier 2) \u2014 NonsendingClock and deterministic temporal testing, triggered by Pointfree Episode #355. ImmediateClock with nonisolated(nonsending) sleep achieves 100% deterministic testing (10,000 runs, 0 failures).",
+      "topic": "Temporal operator determinism (Tier 2) — NonsendingClock and deterministic temporal testing, triggered by Pointfree Episode #355. ImmediateClock with nonisolated(nonsending) sleep achieves 100% deterministic testing (10,000 runs, 0 failures).",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -2218,7 +2218,7 @@
     {
       "file": "test-console-output-elegance.md",
       "displayName": "test-console-output-elegance.md",
-      "topic": "Test console output: from functional to elegant (Tier 2) \u2014 comprehensive analysis of console output across unit tests, performance benchmarks, and snapshot tests. Current state: flat streaming with no hierarchy, no suite aggregation, mixed formatting vocabularies. Apple: experimental AdvancedConsoleOutputRecorder with deferred tree rendering. Prior art: Jest, criterion.rs, hyperfine. Theoretical ideal: 6-phase plan \u2014 suite-level aggregation + tree summary (Phase 1), right-aligned durations + terminal width (Phase 2), box-drawn performance tables (Phase 3), real-time suite progress (Phase 4), side-by-side benchmark comparison (Phase 5), comparison CLI (Phase 6). Hybrid reporter architecture (Option C) recommended.",
+      "topic": "Test console output: from functional to elegant (Tier 2) — comprehensive analysis of console output across unit tests, performance benchmarks, and snapshot tests. Current state: flat streaming with no hierarchy, no suite aggregation, mixed formatting vocabularies. Apple: experimental AdvancedConsoleOutputRecorder with deferred tree rendering. Prior art: Jest, criterion.rs, hyperfine. Theoretical ideal: 6-phase plan — suite-level aggregation + tree summary (Phase 1), right-aligned durations + terminal width (Phase 2), box-drawn performance tables (Phase 3), real-time suite progress (Phase 4), side-by-side benchmark comparison (Phase 5), comparison CLI (Phase 6). Hybrid reporter architecture (Option C) recommended.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -2228,7 +2228,7 @@
     {
       "file": "test-output-quality-parity.md",
       "displayName": "test-output-quality-parity.md",
-      "topic": "Test output quality: parity with Apple and beyond (Tier 2) \u2014 7 improvements identified. Root cause: ConsoleSink discards all Test.Text styling, ignores Failure.expected/actual/difference/comment, omits source location. All data already captured in primitives types. Phase 1: ANSI color + source location + structured fields in reporter (~60 lines, 1 file). Phase 2: pass DiffResult as Failure.difference instead of string-embedding. Phase 3: type-aware sourceCode. After Phase 1-3: parity on all Apple features, exceeding on structural diffs, semantic styling, extensibility.",
+      "topic": "Test output quality: parity with Apple and beyond (Tier 2) — 7 improvements identified. Root cause: ConsoleSink discards all Test.Text styling, ignores Failure.expected/actual/difference/comment, omits source location. All data already captured in primitives types. Phase 1: ANSI color + source location + structured fields in reporter (~60 lines, 1 file). Phase 2: pass DiffResult as Failure.difference instead of string-embedding. Phase 3: type-aware sourceCode. After Phase 1-3: parity on all Apple features, exceeding on structural diffs, semantic styling, extensibility.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -2238,7 +2238,7 @@
     {
       "file": "test-support-snapshot-strategy-sharing.md",
       "displayName": "test-support-snapshot-strategy-sharing.md",
-      "topic": "Test support snapshot strategy sharing (Tier 2) \u2014 cross-package sharing of swift-testing-dependent Test.Snapshot.Strategy extensions between parent and nested test support layers",
+      "topic": "Test support snapshot strategy sharing (Tier 2) — cross-package sharing of swift-testing-dependent Test.Snapshot.Strategy extensions between parent and nested test support layers",
       "status": "DEFERRED",
       "statusDetail": null,
       "statusRaw": "DEFERRED",
@@ -2258,7 +2258,7 @@
     {
       "file": "testing-discovery-revalidation-2026-03.md",
       "displayName": "testing-discovery-revalidation-2026-03.md",
-      "topic": "Testing discovery revalidation (Swift 6.2.4) \u2014 backticked names, nested suites, deep nesting all work. Generic type extension nesting still broken (#1508). ~653 compound test suite names across ecosystem need renaming. No skill updates required.",
+      "topic": "Testing discovery revalidation (Swift 6.2.4) — backticked names, nested suites, deep nesting all work. Generic type extension nesting still broken (#1508). ~653 compound test suite names across ecosystem need renaming. No skill updates required.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -2268,7 +2268,7 @@
     {
       "file": "time-api-naming-literature-review.md",
       "displayName": "time-api-naming-literature-review.md",
-      "topic": "Time API naming literature review (Tier 2) \u2014 Bloch, Fowler, Muratori, Schankin et al. (ICPC 2018), SE-0329 review threads. Nested accessor vs compound identifier analysis. Empirical gap: no study compares `x.in.seconds` vs `x.inSeconds`",
+      "topic": "Time API naming literature review (Tier 2) — Bloch, Fowler, Muratori, Schankin et al. (ICPC 2018), SE-0329 review threads. Nested accessor vs compound identifier analysis. Empirical gap: no study compares `x.in.seconds` vs `x.inSeconds`",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -2278,7 +2278,7 @@
     {
       "file": "time-primitives-api-prior-art.md",
       "displayName": "time-primitives-api-prior-art.md",
-      "topic": "Cross-language time/duration API survey (Tier 2) \u2014 7 languages (Rust, Java, C++, Haskell, Go, Python, Swift stdlib), exact method signatures, prefix taxonomy (`as_`/`to`/`in`/`total`/bare), total-vs-component ambiguity analysis",
+      "topic": "Cross-language time/duration API survey (Tier 2) — 7 languages (Rust, Java, C++, Haskell, Go, Python, Swift stdlib), exact method signatures, prefix taxonomy (`as_`/`to`/`in`/`total`/bare), total-vs-component ambiguity analysis",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -2288,7 +2288,7 @@
     {
       "file": "transformation-domain-architecture.md",
       "displayName": "transformation-domain-architecture.md",
-      "topic": "Transformation domain architecture (Tier 2, v3.2) \u2014 three top-level namespaces: Parser, Serializer, Coder. Principled correctness framing. Three packages: swift-parser-primitives (existing), swift-serializer-primitives (renamed from swift-serialization-primitives, + Serializer.Protocol + Builder), swift-coder-primitives (new). Coder.Protocol independent with separate DecodeFailure/EncodeFailure. `decode`/`encode` naming. Witness.Protocol + Dependency.Key orthogonal. Shadow stdlib Codable. Canonical-witness attachment validated (10/10 CONFIRMED). All questions resolved.",
+      "topic": "Transformation domain architecture (Tier 2, v3.2) — three top-level namespaces: Parser, Serializer, Coder. Principled correctness framing. Three packages: swift-parser-primitives (existing), swift-serializer-primitives (renamed from swift-serialization-primitives, + Serializer.Protocol + Builder), swift-coder-primitives (new). Coder.Protocol independent with separate DecodeFailure/EncodeFailure. `decode`/`encode` naming. Witness.Protocol + Dependency.Key orthogonal. Shadow stdlib Codable. Canonical-witness attachment validated (10/10 CONFIRMED). All questions resolved.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -2298,7 +2298,7 @@
     {
       "file": "tree-type-family-organization-across-libraries.md",
       "displayName": "tree-type-family-organization-across-libraries.md",
-      "topic": "Tree type family organization across 7 ecosystems \u2014 tree variants never share common Tree protocol. \"Tree\" always the adjective (TreeMap = Map). GNU PBDS `basic_branch_tag` is sole partial exception. Structural trees vs map-backing trees are separate concerns.",
+      "topic": "Tree type family organization across 7 ecosystems — tree variants never share common Tree protocol. \"Tree\" always the adjective (TreeMap = Map). GNU PBDS `basic_branch_tag` is sole partial exception. Structural trees vs map-backing trees are separate concerns.",
       "status": "ANALYSIS",
       "statusDetail": null,
       "statusRaw": "ANALYSIS",
@@ -2308,7 +2308,7 @@
     {
       "file": "trie-keyed-tree-literature-review.md",
       "displayName": "trie-keyed-tree-literature-review.md",
-      "topic": "Trie and keyed-tree SLR (Tier 3) \u2014 Kitchenham methodology, 34 sources across 7 languages. RQ1: canonical signature `Trie<K,V>` where key = `[K]`. RQ2: tries classified as maps, never trees. RQ3: Hinze exponent-law derivation. RQ4: keyed trees extremely rare (Boost.PropertyTree only). Child representation taxonomy (7 strategies).",
+      "topic": "Trie and keyed-tree SLR (Tier 3) — Kitchenham methodology, 34 sources across 7 languages. RQ1: canonical signature `Trie<K,V>` where key = `[K]`. RQ2: tries classified as maps, never trees. RQ3: Hinze exponent-law derivation. RQ4: keyed trees extremely rare (Boost.PropertyTree only). Child representation taxonomy (7 strategies).",
       "status": "ANALYSIS",
       "statusDetail": null,
       "statusRaw": "ANALYSIS",
@@ -2318,7 +2318,7 @@
     {
       "file": "typed-infrastructure-catalog.md",
       "displayName": "typed-infrastructure-catalog.md",
-      "topic": "Complete typed infrastructure inventory, tiers 0\u201315 (Tier 3) \u2014 systematic catalog for existing-infrastructure skill rebuild",
+      "topic": "Complete typed infrastructure inventory, tiers 0–15 (Tier 3) — systematic catalog for existing-infrastructure skill rebuild",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -2328,7 +2328,7 @@
     {
       "file": "typed-throws-mixed-error-domains.md",
       "displayName": "typed-throws-mixed-error-domains.md",
-      "topic": "Typed throws mixed error domains (Tier 1) \u2014 4 options for aggregate functions composing multiple typed-throws sub-operations: unified error enum (A), Either/sum type (B), phase-tagged wrapping (C), foreign re-throw (D). 3 concrete sites: rfc-9112 Request/Response deserializers (6 error types each), iso-8601 DateTime (1 foreign Time.Error). Recommends Option A (unified error enum) for all sites \u2014 wrapping sub-phase errors as associated values preserves full type safety, readability, layer isolation.",
+      "topic": "Typed throws mixed error domains (Tier 1) — 4 options for aggregate functions composing multiple typed-throws sub-operations: unified error enum (A), Either/sum type (B), phase-tagged wrapping (C), foreign re-throw (D). 3 concrete sites: rfc-9112 Request/Response deserializers (6 error types each), iso-8601 DateTime (1 foreign Time.Error). Recommends Option A (unified error enum) for all sites — wrapping sub-phase errors as associated values preserves full type safety, readability, layer isolation.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2338,7 +2338,7 @@
     {
       "file": "typed-throws-standards-inventory.md",
       "displayName": "typed-throws-standards-inventory.md",
-      "topic": "Typed throws standards inventory \u2014 exhaustive grep of all 2316 source files across 94 packages. 124 untyped throws: 122 Codable protocol-mandated (not worth converting), 2 Clock conformances (converted). 70 packages with zero untyped throws.",
+      "topic": "Typed throws standards inventory — exhaustive grep of all 2316 source files across 94 packages. 124 untyped throws: 122 Codable protocol-mandated (not worth converting), 2 Clock conformances (converted). 70 packages with zero untyped throws.",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -2348,7 +2348,7 @@
     {
       "file": "unified-geometry-types.md",
       "displayName": "unified-geometry-types.md",
-      "topic": "Unified geometry types \u2014 ecosystem-wide design spanning standards, primitives, and foundations",
+      "topic": "Unified geometry types — ecosystem-wide design spanning standards, primitives, and foundations",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2388,7 +2388,7 @@
     {
       "file": "variant-naming-audit.md",
       "displayName": "variant-naming-audit.md",
-      "topic": "Variant naming audit (Tier 3) \u2014 variant naming conventions for data structure types across swift-primitives ecosystem. Academic foundations, variant system definition, layer naming, composition architecture, complete type inventory, copyability/sendability rules, compiler limitations, naming corrections.",
+      "topic": "Variant naming audit (Tier 3) — variant naming conventions for data structure types across swift-primitives ecosystem. Academic foundations, variant system definition, layer naming, composition architecture, complete type inventory, copyability/sendability rules, compiler limitations, naming corrections.",
       "status": "DRAFT",
       "statusDetail": null,
       "statusRaw": "DRAFT",
@@ -2398,7 +2398,7 @@
     {
       "file": "witness-enum-direction-and-dual.md",
       "displayName": "witness-enum-direction-and-dual.md",
-      "topic": "Witness enum direction and dual (Tier 1) \u2014 should @Witness accept enums now that @Dual generates a strict superset of @Witness enum infrastructure (Scott encoding + prisms + discriminants + extraction)? Macro input domain overlap analysis.",
+      "topic": "Witness enum direction and dual (Tier 1) — should @Witness accept enums now that @Dual generates a strict superset of @Witness enum infrastructure (Scott encoding + prisms + discriminants + extraction)? Macro input domain overlap analysis.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2408,7 +2408,7 @@
     {
       "file": "witness-macro-algebra-types-assessment.md",
       "displayName": "witness-macro-algebra-types-assessment.md",
-      "topic": "@Witness macro adoption for algebra types (Tier 1) \u2014 source-level audit of 14 @frozen witness types across swift-primitives. Evaluates five macro improvements (let closures, _ prefix stripping, firstName labels, skip-init, non-closure properties) against existing manual witness types.",
+      "topic": "@Witness macro adoption for algebra types (Tier 1) — source-level audit of 14 @frozen witness types across swift-primitives. Evaluates five macro improvements (let closures, _ prefix stripping, firstName labels, skip-init, non-closure properties) against existing manual witness types.",
       "status": "DECISION",
       "statusDetail": null,
       "statusRaw": "DECISION",
@@ -2418,7 +2418,7 @@
     {
       "file": "witness-macro-io-drivers-assessment.md",
       "displayName": "witness-macro-io-drivers-assessment.md",
-      "topic": "@Witness macro adoption for IO drivers (Tier 1) \u2014 investigates whether IO.Event.Driver and IO.Completion.Driver should use @Witness macro. Both already conform to Witness.Protocol and Witness.Key. Assessment: incremental value only.",
+      "topic": "@Witness macro adoption for IO drivers (Tier 1) — investigates whether IO.Event.Driver and IO.Completion.Driver should use @Witness macro. Both already conform to Witness.Protocol and Witness.Key. Assessment: incremental value only.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -2428,7 +2428,7 @@
     {
       "file": "witness-macro-noncopyable-support-design.md",
       "displayName": "witness-macro-noncopyable-support-design.md",
-      "topic": "@Witness macro support for ~Copyable witnesses (Tier 2, v2.0) \u2014 13 experiment variants. Supersedes witness-macro-io-drivers-assessment.md (revises DEFERRED to VIABLE). Three blockers investigated: ~Copyable enum associated values, borrowing/consuming parameter forwarding, feature value proposition.",
+      "topic": "@Witness macro support for ~Copyable witnesses (Tier 2, v2.0) — 13 experiment variants. Supersedes witness-macro-io-drivers-assessment.md (revises DEFERRED to VIABLE). Three blockers investigated: ~Copyable enum associated values, borrowing/consuming parameter forwarding, feature value proposition.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -2438,7 +2438,7 @@
     {
       "file": "witness-noncopyable-nonescapable-support.md",
       "displayName": "witness-noncopyable-nonescapable-support.md",
-      "topic": "Should swift-witnesses support ~Copyable/~Escapable witness values? (Tier 3, v2.0) \u2014 SLR (31 sources: Rust/Haskell/OCaml DI, substructural type theory, capability-passing). ~Copyable values feasible (Ownership.Shared, SuppressedAssociatedTypes, TaskLocal not a blocker) but not yet justified \u2014 no concrete use case for ~Copyable witness values. Additive closure-based API (Option E) ready when needed. Monitor ~Escapable scoped access.",
+      "topic": "Should swift-witnesses support ~Copyable/~Escapable witness values? (Tier 3, v2.0) — SLR (31 sources: Rust/Haskell/OCaml DI, substructural type theory, capability-passing). ~Copyable values feasible (Ownership.Shared, SuppressedAssociatedTypes, TaskLocal not a blocker) but not yet justified — no concrete use case for ~Copyable witness values. Additive closure-based API (Option E) ready when needed. Monitor ~Escapable scoped access.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -2458,7 +2458,7 @@
     {
       "file": "witness-protocol-sendable-requirement.md",
       "displayName": "witness-protocol-sendable-requirement.md",
-      "topic": "Should Witness.Protocol require Sendable? (Tier 1) \u2014 Remove. Sendable is orthogonal to the witness pattern marker. All existing conformances already declare Sendable explicitly. Witness.Key has independent Sendable constraint. Enables Parser.Machine.Compile.Witness conformance.",
+      "topic": "Should Witness.Protocol require Sendable? (Tier 1) — Remove. Sendable is orthogonal to the witness pattern marker. All existing conformances already declare Sendable explicitly. Witness.Key has independent Sendable constraint. Enables Parser.Machine.Compile.Witness conformance.",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -2468,7 +2468,7 @@
     {
       "file": "witness-result-outcome-unification.md",
       "displayName": "witness-result-outcome-unification.md",
-      "topic": "Witness Result/Outcome unification (Tier 1) \u2014 analysis of @Witness-generated Calls, Result (~Copyable), and Outcome types. Sibling vs nested placement, naming collisions with Standard_Library_Extensions.Result, type structure for DI after-observers.",
+      "topic": "Witness Result/Outcome unification (Tier 1) — analysis of @Witness-generated Calls, Result (~Copyable), and Outcome types. Sibling vs nested placement, naming collisions with Standard_Library_Extensions.Result, type structure for DI after-observers.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2478,7 +2478,7 @@
     {
       "file": "witnesses-ecosystem-adoption-audit.md",
       "displayName": "witnesses-ecosystem-adoption-audit.md",
-      "topic": "Witnesses ecosystem adoption audit (Tier 1, v3.0) \u2014 identifies every opportunity to adopt Witness.Protocol conformance, @Witness macro usage, and Witness.Key registration across the entire ecosystem. Currently limited to algebra packages and Sample.Averaging; IO drivers use pattern but don't conform.",
+      "topic": "Witnesses ecosystem adoption audit (Tier 1, v3.0) — identifies every opportunity to adopt Witness.Protocol conformance, @Witness macro usage, and Witness.Key registration across the entire ecosystem. Currently limited to algebra packages and Sample.Averaging; IO drivers use pattern but don't conform.",
       "status": "COMPLETE",
       "statusDetail": null,
       "statusRaw": "COMPLETE",
@@ -2488,7 +2488,7 @@
     {
       "file": "worklist-rendering-dispatch.md",
       "displayName": "worklist-rendering-dispatch.md",
-      "topic": "Worklist rendering dispatch for PDF HTML pipeline (Tier 2) \u2014 replaces mutual recursion (`renderHTMLView \u2194 renderInnerContent`, 18 frames) with single `Stack<Dispatch>` worklist loop (5 frames), composing from `swift-stack-primitives` and `swift-tree-primitives` patterns. Machine primitives evaluated and rejected. 8 ad-hoc functions absorbed into 1 loop. Supersedes `swift-foundations/swift-pdf-html-rendering/Research/iterative-tuple-rendering.md` solution (retains its tuple/cause analysis).",
+      "topic": "Worklist rendering dispatch for PDF HTML pipeline (Tier 2) — replaces mutual recursion (`renderHTMLView ↔ renderInnerContent`, 18 frames) with single `Stack<Dispatch>` worklist loop (5 frames), composing from `swift-stack-primitives` and `swift-tree-primitives` patterns. Machine primitives evaluated and rejected. 8 ad-hoc functions absorbed into 1 loop. Supersedes `swift-foundations/swift-pdf-html-rendering/Research/iterative-tuple-rendering.md` solution (retains its tuple/cause analysis).",
       "status": "SUPERSEDED",
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
@@ -2498,7 +2498,7 @@
     {
       "file": "workspace-wide-symbol-search-for-cclsp.md",
       "displayName": "workspace-wide-symbol-search-for-cclsp.md",
-      "topic": "Workspace-wide symbol search for CCLSP (Tier 2) \u2014 6 options evaluated. Key findings: `rootMarkers` in cclsp.json is silently ignored (not in schema), CCLSP sends exactly one workspace folder, `.xcworkspace` not supported by SourceKit-LSP. Recommends Phase 1: set `rootDir` (trivial, enables implicit workspace discovery), Phase 2: contribute `workspaceFolders` support to ktnyt/cclsp, Phase 3: lightweight root Package.swift if progressive discovery insufficient.",
+      "topic": "Workspace-wide symbol search for CCLSP (Tier 2) — 6 options evaluated. Key findings: `rootMarkers` in cclsp.json is silently ignored (not in schema), CCLSP sends exactly one workspace folder, `.xcworkspace` not supported by SourceKit-LSP. Recommends Phase 1: set `rootDir` (trivial, enables implicit workspace discovery), Phase 2: contribute `workspaceFolders` support to ktnyt/cclsp, Phase 3: lightweight root Package.swift if progressive discovery insufficient.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2508,7 +2508,7 @@
     {
       "file": "zero-copy-event-pipeline.md",
       "displayName": "zero-copy-event-pipeline.md",
-      "topic": "Zero-copy event pipeline design using Memory.Pool (Tier 2) \u2014 eliminates per-poll Array allocation in IO.Event.Poll.Loop via pooled buffer slots. Phased: Phase 1 (pool + memcpy), Phase 2 (direct-to-pool polling).",
+      "topic": "Zero-copy event pipeline design using Memory.Pool (Tier 2) — eliminates per-poll Array allocation in IO.Event.Poll.Loop via pooled buffer slots. Phased: Phase 1 (pool + memcpy), Phase 2 (direct-to-pool polling).",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2528,7 +2528,7 @@
     {
       "file": "l3-platform-policy-tier-generalization.md",
       "displayName": "l3-platform-policy-tier-generalization.md",
-      "topic": "Does the L3 platform-policy tier exist for swift-strings, swift-paths, and other L3 unifiers beyond swift-kernel \u2014 or is swift-posix structurally unique? Follow-up investigation after [PLAT-ARCH-008e] codification; audits non-kernel L3 unifiers for the same shadow-layering pattern.",
+      "topic": "Does the L3 platform-policy tier exist for swift-strings, swift-paths, and other L3 unifiers beyond swift-kernel — or is swift-posix structurally unique? Follow-up investigation after [PLAT-ARCH-008e] codification; audits non-kernel L3 unifiers for the same shadow-layering pattern.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -2538,7 +2538,7 @@
     {
       "file": "multi-repo-automation-design-patterns.md",
       "displayName": "multi-repo-automation-design-patterns.md",
-      "topic": "Reusable design for multi-repo batch automation handling the full state-axis enumeration \u2014 branch state, remote state, working-tree state, gitignore interactions, divergence \u2014 without silent failures. Motivated by the 2026-04-18 _index.md \u2192 _index.json migration that hit three silent git add failures across 70+ repos.",
+      "topic": "Reusable design for multi-repo batch automation handling the full state-axis enumeration — branch state, remote state, working-tree state, gitignore interactions, divergence — without silent failures. Motivated by the 2026-04-18 _index.md → _index.json migration that hit three silent git add failures across 70+ repos.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -2558,7 +2558,7 @@
     {
       "file": "primitive-to-spec-length-bridge-design.md",
       "displayName": "primitive-to-spec-length-bridge-design.md",
-      "topic": "Canonical shape for bridging typed primitives (L1) into specification types (L2) across the ecosystem. Motivating case: Geometry \u2192 CSS.Length bridge friction in the landing-page progressive example. Four candidate shapes (conformance, overloads, explicit, bridge package) weighted against layering rules.",
+      "topic": "Canonical shape for bridging typed primitives (L1) into specification types (L2) across the ecosystem. Motivating case: Geometry → CSS.Length bridge friction in the landing-page progressive example. Four candidate shapes (conformance, overloads, explicit, bridge package) weighted against layering rules.",
       "status": "IN_PROGRESS",
       "statusDetail": null,
       "statusRaw": "IN_PROGRESS",
@@ -2568,7 +2568,7 @@
     {
       "file": "ip-address-value-type-memory-layout.md",
       "displayName": "ip-address-value-type-memory-layout.md",
-      "topic": "Whether RFC_791.IPv4.Address / RFC_4291.IPv6.Address should change internal storage to match POSIX in_addr / in6_addr for zero-copy unification with sockaddr wrappers. Empirical experiment (swift-rfc-4291/Experiments/ipv6-address-alignment) measured current layouts; prior-art survey (Rust, Go, .NET, Python) shows universal rejection of layout compatibility \u2014 Rust explicitly abandoned C sockaddr layout in PR #78802. Recommendation: keep host-order storage, fix inaccurate docstrings, compose at API boundary (iso-9945 / windows-standard accept RFC values, marshal into native sockaddr). Motivated by swift-kernel Finding #17 Windows gap.",
+      "topic": "Whether RFC_791.IPv4.Address / RFC_4291.IPv6.Address should change internal storage to match POSIX in_addr / in6_addr for zero-copy unification with sockaddr wrappers. Empirical experiment (swift-rfc-4291/Experiments/ipv6-address-alignment) measured current layouts; prior-art survey (Rust, Go, .NET, Python) shows universal rejection of layout compatibility — Rust explicitly abandoned C sockaddr layout in PR #78802. Recommendation: keep host-order storage, fix inaccurate docstrings, compose at API boundary (iso-9945 / windows-standard accept RFC values, marshal into native sockaddr). Motivated by swift-kernel Finding #17 Windows gap.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
@@ -2600,7 +2600,7 @@
     {
       "file": "package-readme-standard.md",
       "displayName": "package-readme-standard.md",
-      "topic": "Audit of the /readme skill (22 rules [README-001]\u2013[README-022]) against 15 first-class Swift OSS READMEs (Apple + Point-Free + SSWG). Confirms ~70% alignment; prescribes three new meta-rules (Evaluator's Lens, Motivated Examples, Scope Boundary) addressing the maintainer's concrete critiques on swift-property-primitives/README.md, plus five MUST\u2192SHOULD relaxations for over-prescriptive rules (fixed ordering, ASCII diagrams, bold-keyword Key Features, Platform Support table, Error Handling narrowing). Skill v2.0.0 breaking bump recommended. Input for Part B skill update; downstream package-README rewrite is a separate handoff.",
+      "topic": "Audit of the /readme skill (22 rules [README-001]–[README-022]) against 15 first-class Swift OSS READMEs (Apple + Point-Free + SSWG). Confirms ~70% alignment; prescribes three new meta-rules (Evaluator's Lens, Motivated Examples, Scope Boundary) addressing the maintainer's concrete critiques on swift-property-primitives/README.md, plus five MUST→SHOULD relaxations for over-prescriptive rules (fixed ordering, ASCII diagrams, bold-keyword Key Features, Platform Support table, Error Handling narrowing). Skill v2.0.0 breaking bump recommended. Input for Part B skill update; downstream package-README rewrite is a separate handoff.",
       "date": "2026-04-21",
       "status": "RECOMMENDATION",
       "statusDetail": "pending skill ratification (/readme v2.0.0)",
@@ -2611,10 +2611,10 @@
     {
       "file": "coenttb-ecosystem-heritage-transfer-plan.md",
       "displayName": "coenttb-ecosystem-heritage-transfer-plan.md",
-      "topic": "Phase II.5 heritage-transfer plan for the 18-package coenttb/swift-html cluster. Three-stage framework (dep-visibility audit \u2192 disposition refinement \u2192 per-repo execution) gated by user constraint 2026-04-23 (\"do not make things public yet\"). Four dispositions per package: archive / transfer-simple / transfer-rename-and-reconcile / defer. Archive disposition uses deprecation-README + archive pattern (provenance: HANDOFF-swift-testing-successor-migration.md). Session 2026-04-23 landed 3 archives (types leaves superseded by body-org spec packages swift-whatwg-html, swift-w3c-css, swift-w3c-svg); 15 active of which 2 deferred (swift-renderable \u2192 swift-primitives TBD; swift-html-to-pdf needs refactor). Per-package status table + start-conditions checklist + Ground Rules 1\u20136 transcribed + swift-foundations sibling inventory (all 13 in-scope counterparts PRIVATE, 2 MISSING \u2014 universal dep-visibility gate applies) + verification stamp per [META-015]. Consolidates and supersedes HANDOFF-heritage-transfers-and-history-strategy.md per [META-016]. Cross-references git-history-transfer-patterns.md (recipes), github-organization-migration-swift-file-system.md (precedent), package-namespace-noun-convention.md (rename rationale), swift-translating-migration-plan.md (ecosystem-work invariants for Row 1 apply-on-top).",
+      "topic": "Phase II.5 heritage-transfer plan for the 18-package coenttb/swift-html cluster. Three-stage framework (dep-visibility audit → disposition refinement → per-repo execution) gated by user constraint 2026-04-23 (\"do not make things public yet\"). Four dispositions per package: archive / transfer-simple / transfer-rename-and-reconcile / defer. Archive disposition uses deprecation-README + archive pattern (provenance: HANDOFF-swift-testing-successor-migration.md). Session 2026-04-23 landed 3 archives (types leaves superseded by body-org spec packages swift-whatwg-html, swift-w3c-css, swift-w3c-svg); 15 active of which 2 deferred (swift-renderable → swift-primitives TBD; swift-html-to-pdf needs refactor). Per-package status table + start-conditions checklist + Ground Rules 1–6 transcribed + swift-foundations sibling inventory (all 13 in-scope counterparts PRIVATE, 2 MISSING — universal dep-visibility gate applies) + verification stamp per [META-015]. Consolidates and supersedes HANDOFF-heritage-transfers-and-history-strategy.md per [META-016]. Cross-references git-history-transfer-patterns.md (recipes), github-organization-migration-swift-file-system.md (precedent), package-namespace-noun-convention.md (rename rationale), swift-translating-migration-plan.md (ecosystem-work invariants for Row 1 apply-on-top).",
       "date": "2026-04-23",
       "status": "RECOMMENDATION",
-      "statusDetail": "v1.3.0: supervisor-review absorption. Apply-on-top recipe fixed \u2014 `git rm -rf . && git checkout ecosystem/main -- . && git add -A` (replacement semantics; ensures deletions propagate) replaces union-producing bare `git checkout ecosystem/main -- .`; plumbing `commit-tree` variant documented as footnote. Path-dep hazard resolved via new Phase 4 \u2014 URL-hygiene sweep (Phase-V analog per swift-file-system migration precedent), batched as single Rule-6 auth envelope covering two categories (path\u2192URL rewrites + consumer URL-updates). 5-phase execution: Phase 1 ready (4 ABSENT W7 siblings), Phase 2 needs WIP disposition + audit, Phase 3 needs Stage-1 audit + sibling launches, Phase 4 post-Phase-3 URL-hygiene sweep, Phase 5 deferred swift-html-to-pdf. Stale force-push text deleted; Context cosmetic fix; branch-state note added.",
+      "statusDetail": "v1.3.0: supervisor-review absorption. Apply-on-top recipe fixed — `git rm -rf . && git checkout ecosystem/main -- . && git add -A` (replacement semantics; ensures deletions propagate) replaces union-producing bare `git checkout ecosystem/main -- .`; plumbing `commit-tree` variant documented as footnote. Path-dep hazard resolved via new Phase 4 — URL-hygiene sweep (Phase-V analog per swift-file-system migration precedent), batched as single Rule-6 auth envelope covering two categories (path→URL rewrites + consumer URL-updates). 5-phase execution: Phase 1 ready (4 ABSENT W7 siblings), Phase 2 needs WIP disposition + audit, Phase 3 needs Stage-1 audit + sibling launches, Phase 4 post-Phase-3 URL-hygiene sweep, Phase 5 deferred swift-html-to-pdf. Stale force-push text deleted; Context cosmetic fix; branch-state note added.",
       "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": "ecosystem-wide"
@@ -2622,7 +2622,7 @@
     {
       "file": "spm-build-parallelism-spurious-module-errors.md",
       "displayName": "spm-build-parallelism-spurious-module-errors.md",
-      "topic": "Reference note documenting the SPM `swift build --build-tests` parallelism artifact class \u2014 `error: no such module '<X>'` / `error: missing required module '<X>'` diagnostics that do NOT represent structural Package.swift gaps and evaporate under clean `.build` + `-j 1`. Six concrete observations across five upstream packages (Standard_Library_Extensions, Witness_Primitives, System_Primitives, Tagged_Primitives, Terminal_Input_Primitives, Index_Primitives_Core, Kernel_Primitives_Core) collected during the D5 sweep + D3+D6 re-derivation cycles 2026-04-24 \u2192 2026-04-25. Provides verification protocol (clean `.build` + `-j 1` before promoting to D-series row) and implications for /audit, /platform, /handoff workflows. Tier 2, ecosystem-wide.",
+      "topic": "Reference note documenting the SPM `swift build --build-tests` parallelism artifact class — `error: no such module '<X>'` / `error: missing required module '<X>'` diagnostics that do NOT represent structural Package.swift gaps and evaporate under clean `.build` + `-j 1`. Six concrete observations across five upstream packages (Standard_Library_Extensions, Witness_Primitives, System_Primitives, Tagged_Primitives, Terminal_Input_Primitives + Index_Primitives_Core + Kernel_Primitives_Core) collected during the D5 sweep + D3+D6 re-derivation cycles 2026-04-24 → 2026-04-25. Provides verification protocol (clean `.build` + `-j 1` before promoting to D-series row) and implications for /audit, /platform, /handoff workflows. Supersedes docker-linux-parallel-build-race.md (OPEN stub) and answers its questions (1) and (3); question (2) minimal-reproducer remains open for /issue-investigation. Tier 2, ecosystem-wide.",
       "date": "2026-04-25",
       "status": "REFERENCE",
       "statusDetail": "Six concrete transient observations collected and triaged; verification protocol prescribed; D6 cited as canonical anti-example.",
@@ -2638,7 +2638,7 @@
     },
     {
       "heading": "Moved to swift-memory-primitives/Research/",
-      "body": "The following memory/pointer research has been consolidated into `swift-primitives/swift-memory-primitives/Research/`:\n\n- `ordinal-cardinal-foundations.md` \u2014 Mathematical foundations for ordinal/cardinal separation\n- `affine-scaling-operations.md` \u2014 Tier 3 research on scaling operations in affine spaces\n- `pointer-architecture-comparison.md` \u2014 Swift stdlib pointer vs memory/pointer primitives\n- `lifetime-dependent-borrowed-cursors.md` \u2014 Lifetime-dependent borrowed cursor patterns"
+      "body": "The following memory/pointer research has been consolidated into `swift-primitives/swift-memory-primitives/Research/`:\n\n- `ordinal-cardinal-foundations.md` — Mathematical foundations for ordinal/cardinal separation\n- `affine-scaling-operations.md` — Tier 3 research on scaling operations in affine spaces\n- `pointer-architecture-comparison.md` — Swift stdlib pointer vs memory/pointer primitives\n- `lifetime-dependent-borrowed-cursors.md` — Lifetime-dependent borrowed cursor patterns"
     },
     {
       "heading": "Workflow",
@@ -2646,7 +2646,7 @@
     },
     {
       "heading": "See Also",
-      "body": "- [Experiments/](../Experiments/) \u2014 Code verification experiments\n- [Documentation.docc/](../Documentation.docc/) \u2014 Explanatory documentation"
+      "body": "- [Experiments/](../Experiments/) — Code verification experiments\n- [Documentation.docc/](../Documentation.docc/) — Explanatory documentation"
     }
   ]
 }

@@ -4,8 +4,17 @@
 |-------|-------|
 | Tier | 1 |
 | Scope | Verification discipline across Linux Docker cycles |
-| Status | OPEN |
+| Status | **SUPERSEDED 2026-04-25** by [`spm-build-parallelism-spurious-module-errors.md`](spm-build-parallelism-spurious-module-errors.md) |
 | Provenance | 2026-04-22-iso9945-socket-message-header-cycle1-and-layer-correction.md; 2026-04-17-kernel-completion-opcode-enum-reshape-implementation.md |
+
+> **Superseded.** This stub captured the question; the successor note provides
+> empirical evidence (six concrete transient observations across five upstream
+> packages collected 2026-04-24 → 2026-04-25 during the D5 sweep + D3+D6
+> re-derivation cycles), a 5-step verification protocol, and implications for
+> /audit, /platform, and /handoff workflows. Open questions (1)/(3) below are
+> answered by the successor; question (2) — minimal reproducer for upstream
+> bug filing — remains open and is appropriate for a `/issue-investigation`
+> follow-up. The stub is preserved for provenance.
 
 ## Context
 
