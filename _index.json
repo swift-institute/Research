@@ -6,6 +6,39 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "rule-dependency-tracking.md",
+      "displayName": "rule-dependency-tracking.md",
+      "topic": "Rule dependency tracking \u2014 skill rules and implicit assumptions",
+      "date": "2026-04-26",
+      "status": "IN_PROGRESS",
+      "statusDetail": "failure-mode evidence collected; mechanism proposal pending design review",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "value-generic-parameter-naming-convention.md",
+      "displayName": "value-generic-parameter-naming-convention.md",
+      "topic": "Value-generic parameter naming convention (capacity vs N)",
+      "date": "2026-04-26",
+      "status": "IN_PROGRESS",
+      "statusDetail": "inconsistency documented; convention selection pending principal review",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "stdlib-naming-beats-ecosystem-naming.md",
+      "displayName": "stdlib-naming-beats-ecosystem-naming.md",
+      "topic": "When stdlib naming beats ecosystem naming (and when it doesnt)",
+      "date": "2026-04-26",
+      "status": "IN_PROGRESS",
+      "statusDetail": "survey scope defined; principle-extraction pending case-study sweep",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "asymmetric-quadrant-ergonomics-as-rejection-criterion.md",
       "displayName": "asymmetric-quadrant-ergonomics-as-rejection-criterion.md",
       "topic": "Asymmetric-Quadrant Ergonomics as Rejection Criterion for Capability-Protocol Affordances",
