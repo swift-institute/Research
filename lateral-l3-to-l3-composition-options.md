@@ -3,7 +3,9 @@
 Date: 2026-04-25
 Scope: ecosystem-wide (the 13 platform-stack audit packages + 5 peer L3 packages they import — swift-systems, swift-io, swift-threads, swift-environment, swift-ascii)
 Audit findings: P2.11 (swift-darwin/linux → swift-posix lateral), P2.12 (swift-file-system → swift-io/threads/environment/ascii lateral), promoted from META M-01/M-02 in `swift-institute/Audits/platform-compliance-2026-04-21.md` per dispatch principal review 2026-04-25
-Status: **OPTIONS MATRIX — decision escalates to principal**
+Status: **STAMPED 2026-04-26 — Hybrid B+C with explicit 3-sub-tier enumeration; swift-posix stays L3-policy; swift-systems re-classified as L3-unifier; Pattern 3 (swift-windows → swift-systems) flagged as violation requiring refactor**
+
+Decision section appended at end of doc (`§ Stamped Decision`); options matrix retained above as the deliberation record.
 
 This document surveys options for resolving the lateral L3 → L3 composition gap that produced two audit findings (P2.11 + P2.12) and surfaced a third un-flagged pattern during empirical census. The framing is unified: P2.11 and P2.12 are presented as evidence-instances of a single deeper question — **within-L3 sub-tiering is implicit, and inter-tier composition rules are codified for one direction only**. Each option below names the principal-stamp moment.
 
@@ -216,3 +218,76 @@ This Doc presents the four options without committing. The principal-stamp momen
 - **Same-class research**: `file-handle-writeall-l2-l3-layering.md` (2026-04-22, decision-ready options matrix; principal-stamped Option 5). Shape precedent for this Doc.
 - **Structural-preference memory**: `feedback_structural_fix_preference.md` — type-system enforcement preferred over conventions; informs Discipline Considerations.
 - **Reflection**: `2026-04-25-platform-audit-dispatch-and-same-day-hygiene-arc.md` (this session's reflection captures the deflection-via-META anti-pattern that produced P2.11/P2.12 promotions; this Doc is the resulting design discussion).
+
+---
+
+## Stamped Decision (2026-04-26)
+
+**Selected**: Hybrid B+C — explicit 3-sub-tier enumeration within L3 + per-package classification (no L2.5 introduction; swift-posix stays L3-policy).
+
+**Principal direction (verbatim, paraphrased for record)**: "swift-posix is to iso-9945 what swift-linux is to swift-linux-standard, swift-darwin is to swift-darwin-standard, and swift-windows is to swift-windows-standard. L2 is raw encoding, and the L3 adds policy. Other L3 packages, like swift-kernel, provide unified API across platforms. And further L3 packages should use the unified API. swift-darwin/swift-linux should depend on swift-posix. swift-ascii is the L3 for the L2 INCITS and L1 ASCII primitives. swift-windows for Windows-NUMA implementation."
+
+### Stamped sub-tier enumeration
+
+Three explicit sub-tiers within L3-Foundations:
+
+| Sub-tier | Role | Members |
+|----------|------|---------|
+| **L3-policy** | Per-spec policy wrappers. Each L3-policy package wraps an L2-spec sibling and adds policy (EINTR retry, partial-IO loop, error normalization, etc.). | swift-posix (wraps iso-9945), swift-darwin (wraps darwin-standard), swift-linux (wraps linux-standard), swift-windows (wraps windows-standard) |
+| **L3-unifier** | Cross-platform unification. Provides unified API across platforms; composes L3-policy packages downward per [PLAT-ARCH-008e]. May internally layer (some unifiers compose other unifiers). | swift-kernel (kernel-level base unifier), swift-strings (string handling), swift-paths (path handling), swift-ascii (ASCII spec facade), swift-systems (system info), swift-io (IO event scheduling on top of swift-kernel), swift-threads (thread synchronization on top of swift-kernel), swift-environment (env access on top of swift-kernel) |
+| **L3-domain** | Domain-specific composition. Composes L3-unifier downward; SHOULD NOT compose L3-policy directly (must go through unifier). | swift-file-system + future domain packages |
+
+**Empirical anchor**: swift-systems' classification was the principal's "I'm not sure this applies correctly for all these" caveat. Source-level Package.swift inspection confirmed swift-systems composes swift-darwin/swift-linux/swift-windows DIRECTLY (no swift-kernel dep), structurally identical to swift-kernel's [PLAT-ARCH-008e] composition pattern. swift-systems is therefore L3-unifier (peer to swift-kernel, providing system-info unification), NOT L3-domain. swift-io / swift-threads / swift-environment do depend on swift-kernel and provide higher-level cross-platform APIs ON TOP of swift-kernel — they are L3-unifier-feature (a internal sub-layer within L3-unifier).
+
+### Stamped composition matrix
+
+3×3 directional pairs, with status under the stamped decision:
+
+|                                   | → L3-unifier | → L3-policy | → L3-domain |
+|-----------------------------------|:------------:|:-----------:|:-----------:|
+| **FROM L3-unifier**               | ✓ peer composition allowed (e.g., swift-io composes swift-kernel) | ✓ codified [PLAT-ARCH-008e] | ✗ forbidden (unifiers don't depend on domain) |
+| **FROM L3-policy**                | ✗ forbidden (Pattern 3 violation) | ~ ALLOWED for POSIX-shared base extension only ([PLAT-ARCH-008g]) | ✗ forbidden (policy doesn't depend on domain) |
+| **FROM L3-domain**                | ✓ canonical (the "use the unified API" rule) | ✗ forbidden (must go through unifier) | (peer composition: TBD if needed; no current instance) |
+
+### Codification candidates (skill amendments)
+
+Two new `[PLAT-ARCH-*]` rules to add to `swift-foundations/.claude/skills/platform/SKILL.md`:
+
+**[PLAT-ARCH-008f] Within-L3 sub-tiering (new ID; or extend [PLAT-ARCH-001])**:
+> L3-Foundations is internally sub-tiered into three roles: L3-policy (per-spec policy wrappers), L3-unifier (cross-platform unifiers), L3-domain (domain composition). Composition flows downward from L3-domain through L3-unifier to L3-policy and below. L3-domain MUST compose L3-unifier (not L3-policy directly). L3-unifier MAY compose peer L3-unifier where layering supports it (e.g., swift-io builds on swift-kernel). [PLAT-ARCH-008e] codifies the L3-unifier → L3-policy direction.
+
+**[PLAT-ARCH-008g] L3-policy peer composition for POSIX-shared base (new ID)**:
+> swift-posix is the POSIX-shared L3-policy base. swift-darwin and swift-linux MAY compose swift-posix as their POSIX subset's policy provider; this is the only sanctioned L3-policy peer composition pattern. swift-windows is non-POSIX and MUST NOT compose swift-posix. Other L3-policy peer compositions (e.g., swift-darwin → swift-linux) remain FORBIDDEN.
+
+### Per-finding resolutions
+
+**P2.11** (swift-darwin/linux → swift-posix lateral) → **RESOLVED-via-codification**:
+- The principal direction "swift-darwin/swift-linux should depend on swift-posix" explicitly authorizes this composition.
+- Codify as `[PLAT-ARCH-008g]` (or principal-chosen ID) in the platform skill.
+- Status update: P2.11 marked RESOLVED in synthesis tracker once the rule lands.
+- No code change; per-package audit.md row text updates locally.
+
+**P2.12** (swift-file-system → swift-io/threads/environment/ascii) → **RESOLVED-via-classification**:
+- swift-io / swift-threads / swift-environment / swift-ascii are all L3-unifier (cross-platform unification surfaces), NOT L3-domain peers.
+- swift-file-system → L3-unifier is canonical L3-domain composition (covered by [PLAT-ARCH-008f]'s "L3-domain MUST compose L3-unifier" clause).
+- Status update: P2.12 marked RESOLVED in synthesis tracker once [PLAT-ARCH-008f] lands.
+- No code change; classification is via skill text + DocC catalog updates.
+
+**Pattern 3** (swift-windows → swift-systems via `Windows.Thread.Affinity.swift:16`) → **NEW FINDING — refactor required**:
+- swift-windows is L3-policy; swift-systems is L3-unifier; FROM L3-policy → TO L3-unifier is UPWARD = forbidden under [PLAT-ARCH-008f].
+- Refactor: remove `import Systems` from `swift-windows/Sources/Windows Kernel/Windows.Thread.Affinity.swift`. The `applyCores` method takes a list of CPU cores; the caller (in swift-systems' Windows-NUMA implementation, or in user code) resolves topology via swift-systems and passes cores. swift-windows applies the mask without needing topology resolution.
+- This makes the dependency direction structurally correct: swift-systems → swift-windows for Windows-NUMA implementation (canonical L3-unifier → L3-policy per [PLAT-ARCH-008e]).
+- New finding ID: **P3.5** (or principal-chosen). Severity: MEDIUM (single-file refactor; behavior preserved when caller threads topology through). Effort: S–M.
+
+### Out-of-scope confirmations
+
+- swift-paths Test target composing swift-kernel: TEST-SCOPE LAXER. Test target dep doesn't enter the L3-domain → L3-unifier rule. Confirmed not a finding.
+- L3-unifier internal layering (swift-io builds on swift-kernel; swift-threads builds on swift-kernel; etc.): permitted under "[PLAT-ARCH-008f]'s L3-unifier MAY compose peer L3-unifier where layering supports it" sub-clause. Documented in the rule's sub-clause; no per-package finding.
+
+### Remediation cycle dispatch order
+
+1. **Skill amendment cycle** (~1 session): land [PLAT-ARCH-008f] + [PLAT-ARCH-008g] in `swift-foundations/.claude/skills/platform/SKILL.md`. Closes P2.11 + P2.12 in synthesis tracker.
+2. **Pattern 3 refactor cycle** (~1 session): swift-windows.Thread.Affinity refactor + caller-thread-topology. Adds P3.5 finding to tracker; immediately resolves it via the same dispatch.
+3. **Per-package audit.md hygiene sweep** (~1 session): walk all 13 audit packages; update per-package audit.md row text to reflect the stamped sub-tier classification + flagged composition rules. Anchor case (swift-kernel L3 Composition #1/#2 stale-RESOLVED) addressed in this sweep.
+
+Three cycles total to close out P2.11 + P2.12 + Pattern 3 + per-package staleness hygiene. None require Windows CI (refactor in #2 is macOS-syntax-verifiable since the file is `#if os(Windows)`-guarded).
