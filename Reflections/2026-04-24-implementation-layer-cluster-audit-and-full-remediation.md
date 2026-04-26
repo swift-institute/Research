@@ -5,7 +5,18 @@ packages:
   - swift-institute/Skills
   - swift-institute/Research
   - swift-institute/Audits
-status: pending
+status: processed
+processed_date: 2026-04-26
+triage_outcomes:
+  - type: skill_update
+    target: reflections-processing
+    description: "[REFL-PROC-016] Pre-Commit ID-Uniqueness Scan — runs `grep | sort | uniq -d` across the full skill file set before each commit"
+  - type: skill_update
+    target: audit
+    description: "[AUDIT-028] Ghost-Reference Detection — Notation-Variant Coverage. Extends [AUDIT-006] step 5 to handle (a) em-dash ranges, (b) level-2 ## headings, (c) sub-labels in rule bodies"
+  - type: skill_update
+    target: skill-lifecycle
+    description: "[SKILL-CREATE-005b] SPLIT File Boundary Selection — thematic narrative-cluster choice over pure ID-prefix partition; rules within a prefix can belong to different clusters"
 ---
 
 # Implementation-Layer Cluster Audit and Full Remediation

@@ -7,7 +7,18 @@ packages:
   - swift-institute/Engagement
   - swift-foundations/swift-io
   - swift-foundations/swift-executors
-status: pending
+status: processed
+processed_date: 2026-04-26
+triage_outcomes:
+  - type: skill_update
+    target: skill-lifecycle
+    description: "[SKILL-CREATE-012] ID-Uniqueness Grep Across All Skill Files Before ID Assignment — multi-file skills require full-directory grep, not just SKILL.md"
+  - type: research_topic
+    target: rule-dependency-tracking.md
+    description: "IN_PROGRESS Tier 2 — rule-to-assumption dependency tracking; mechanism proposal (frontmatter / per-rule / Scripts / formal graph) pending design review"
+  - type: skill_update
+    target: skill-lifecycle
+    description: "[SKILL-LIFE-005] Mechanical last_reviewed Drift Check — pre-commit hook or CI script complementing [SKILL-LIFE-004]'s discipline rule"
 ---
 
 # Meta-process cascade: reflections → skills → sweep → rule evolution → handoff

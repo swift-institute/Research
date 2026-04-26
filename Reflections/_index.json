@@ -45,8 +45,26 @@
         "swift-array-primitives",
         "swift-buffer-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-26",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "code-surface",
+          "description": "[API-NAME-007] Convention-Known-Convention-Unapplied Heuristic for Method/Property Names"
+        },
+        {
+          "type": "skill_update",
+          "target": "code-surface",
+          "description": "[API-NAME-008] Property.View vs Labeled Method Decision Rule"
+        },
+        {
+          "type": "research_topic",
+          "target": "stdlib-naming-beats-ecosystem-naming.md",
+          "description": "IN_PROGRESS Tier 2 \u2014 when stdlib naming beats ecosystem naming and when it does not; case-study sweep pending"
+        }
+      ]
     },
     {
       "file": "2026-04-24-p29-cycle-4-option-a-unify-and-structural-correctness-framing.md",
@@ -89,8 +107,26 @@
         "swift-cardinal-primitives",
         "swift-ordinal-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-26",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "research-process",
+          "description": "[RES-023] Empirical-Claim Verification for Dependent-Package State (extends [RES-013a] beyond synthesis)"
+        },
+        {
+          "type": "research_topic",
+          "target": "value-generic-parameter-naming-convention.md",
+          "description": "IN_PROGRESS Tier 2 \u2014 convention selection (Option A single-letter N / Option B semantic / Option C scope-disambiguated / Option D mixed)"
+        },
+        {
+          "type": "package_insight",
+          "target": "swift-array-primitives/Research/_Package-Insights.md",
+          "description": "Added \"Value-Generic Parameter Name Shadows Runtime Properties\" section; documents Array.Static.freeCapacity workaround pattern"
+        }
+      ]
     },
     {
       "file": "2026-04-24-implementation-layer-cluster-audit-and-full-remediation.md",
@@ -101,8 +137,26 @@
         "swift-institute/Research",
         "swift-institute/Audits"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-26",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "reflections-processing",
+          "description": "[REFL-PROC-016] Pre-Commit ID-Uniqueness Scan"
+        },
+        {
+          "type": "skill_update",
+          "target": "audit",
+          "description": "[AUDIT-028] Ghost-Reference Detection \u2014 Notation-Variant Coverage (em-dash ranges + level-2 headings + sub-labels)"
+        },
+        {
+          "type": "skill_update",
+          "target": "skill-lifecycle",
+          "description": "[SKILL-CREATE-005b] SPLIT File Boundary Selection (thematic narrative-cluster over pure ID-prefix)"
+        }
+      ]
     },
     {
       "file": "2026-04-24-noncopyable-inlinable-abi-fix-and-v11-overclaim-walkback.md",
@@ -149,8 +203,26 @@
         "swift-foundations/swift-io",
         "swift-foundations/swift-executors"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-26",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "skill-lifecycle",
+          "description": "[SKILL-CREATE-012] ID-Uniqueness Grep Across All Skill Files Before ID Assignment"
+        },
+        {
+          "type": "research_topic",
+          "target": "rule-dependency-tracking.md",
+          "description": "IN_PROGRESS Tier 2 \u2014 rule-to-assumption dependency tracking; mechanism proposal (frontmatter / per-rule / Scripts / formal graph)"
+        },
+        {
+          "type": "skill_update",
+          "target": "skill-lifecycle",
+          "description": "[SKILL-LIFE-005] Mechanical last_reviewed Drift Check (pre-commit hook or CI script)"
+        }
+      ]
     },
     {
       "file": "2026-04-24-narrow-shape-bug-extrapolation-and-in-package-verification.md",
