@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "lateral-l3-to-l3-composition-options.md",
+      "displayName": "lateral-l3-to-l3-composition-options.md",
+      "topic": "Within-L3 sub-tiering — empirical census surfaces 6 within-L3 composition patterns (only 1 codified by [PLAT-ARCH-008e]); 4-option matrix (codify carve-out via [PLAT-ARCH-008h]; explicit sub-tiering L3.1/L3.2/L3.3; re-tier consumed packages downward; restructure) × per-finding cells for P2.11 + P2.12 + un-flagged Pattern 3 (swift-windows → swift-systems). OPTIONS MATRIX — decision escalates to principal.",
+      "date": "2026-04-25",
+      "status": "OPTIONS_MATRIX",
+      "statusDetail": "decision-ready; principal stamp pending; gates P2.11 + P2.12 remediation cycle dispatch",
+      "statusRaw": "OPTIONS_MATRIX",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "optic-prism-namespace-cascade.md",
       "displayName": "optic-prism-namespace-cascade.md",
       "topic": "Tagged-derived Optic.Prism<Enum, Part> accessors collide with enum-case pattern matches at consumer sites that transitively public-import Tagged-bearing primitives. Inventory at-risk consumers; classify workaround patterns (wildcard, demoted internal import, fully-qualified case match, upstream rename); decide between naming-discipline, access-level change, macro-output adjustment, or accept-and-document.",
@@ -2626,6 +2637,72 @@
       "date": "2026-04-25",
       "status": "REFERENCE",
       "statusDetail": "Six concrete transient observations collected and triaged; verification protocol prescribed; D6 cited as canonical anti-example.",
+      "statusRaw": "REFERENCE",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "mutator-type-hasher-pattern-exploration.md",
+      "displayName": "Mutator type — Hasher-pattern design-space exploration",
+      "topic": "Investigate whether a Hasher-pattern witness type for mutation (a Mutable trait protocol exposing a Mutator<Subject> witness) would unlock anything not already covered by swift-optic-primitives + swift-algebra-* + Swift's ~Copyable/~Escapable language features. Six candidate roles enumerated (Transactional, Journaling, Observation, Validation, Functional-update, Structural-edit). Outcome: investigation completed; the two well-shaped gaps (Setter optic, Semilattice algebra) are extensions to existing primitives, not a separate package.",
+      "date": "2026-04-25",
+      "status": "DEFERRED",
+      "statusDetail": "Investigation completed 2026-04-25; recommendation: do NOT ship swift-mutator-primitives. The compositional machinery is already in swift-optic-primitives + swift-algebra-*; the genuine academic gap (handlers for linear/borrowed state with lifetime-bounded witness) is publishable theory but lacks a credible second consumer per [RES-018]. The well-shaped gaps to address: extend swift-optic-primitives with Optic.Setter; consider Algebra.Semilattice for CRDT-merge if/when needed.",
+      "statusRaw": "DEFERRED",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "mutator-academic-prior-art-survey.md",
+      "displayName": "Academic prior-art survey for the Mutator-type investigation",
+      "topic": "Tier-2+ prior-art survey per [RES-021] covering lens/optics (Foster, van Laarhoven, Pickering-Gibbons-Wu, Riley, Linear Haskell), algebraic effects + handlers (Plotkin-Power, Plotkin-Pretnar, Bauer-Pretnar, Koka), linear/affine + capabilities (Wadler 1990, Walker 2005, Mezzo, Cyclone, Tofte-Talpin, BoCa 2025, RustBelt), CRDTs (Shapiro 2011, Burckhardt 2014), FRP (Elliott-Hudak, Yampa, Flapjax), and type-class dictionary witnesses (Wadler-Blott, SE-0185, SE-0206). 31 citations: 26 [Verified: 2026-04-25] against primary sources.",
+      "date": "2026-04-25",
+      "status": "REFERENCE",
+      "statusDetail": "Companion to mutator-type-hasher-pattern-exploration.md. Ecosystem-grounded: each academic anchor mapped against existing swift-optic-primitives, swift-algebra-*, and Swift language-level ~Copyable/~Escapable. Key finding: the academic gap (handlers for linear/borrowed state, lifetime-bounded witness) exactly maps the Mutator design space; existing ecosystem primitives cover the compositional machinery; the missing piece would be a single-shot lifetime-bounded handler witness — but [RES-018] not cleared.",
+      "statusRaw": "REFERENCE",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "mutator-naming-protocol-and-typealias.md",
+      "displayName": "Naming: Mutator namespace + Mutable adjective typealias",
+      "topic": "Naming convention investigation: rename strawman Mutatable to Mutable (proper -able adjective of mutate); apply [PKG-NAME-002] Mutator.Protocol pattern; assess no-clash with Ownership.Mutable type. Result preserved as ecosystem reference even though the swift-mutator-primitives package was retired — the naming spine applies to any future ecosystem package occupying mutation-capability territory.",
+      "date": "2026-04-25",
+      "status": "REFERENCE",
+      "statusDetail": "Origin: swift-mutator-primitives/Research/. Relocated to swift-institute/Research/ on 2026-04-25 when the package was retired. Naming spine remains valid: noun-form Mutator namespace + Mutable adjective typealias is the canonical shape if a future package emerges.",
+      "statusRaw": "REFERENCE",
+      "tier": 1,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "mutator-orthogonal-vs-refinement-stance.md",
+      "displayName": "Mutator vs Carrier: orthogonal-not-refinement stance",
+      "topic": "Why a Mutator capability protocol would be a sibling of Carrier rather than a refinement. Phantom-typed Carrier conformers (User.ID, Cardinal, Ordinal) actively reject mutation; Mutable-only types (Ownership.Inout, Atomic) reject Carrier's construction story. Empirical evidence from dual-conformance experiment.",
+      "date": "2026-04-25",
+      "status": "REFERENCE",
+      "statusDetail": "Origin: swift-mutator-primitives/Research/. Relocated to swift-institute/Research/ on 2026-04-25. The orthogonal-vs-refinement reasoning applies to any future Mutator-shape proposal regardless of whether the package emerges. Companion experiment: swift-institute/Experiments/mutator-dual-conformance-carrier-mutable/.",
+      "statusRaw": "REFERENCE",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "mutator-modify-across-quadrants.md",
+      "displayName": "_modify across the four Copyable × Escapable quadrants (alternative-shape evidence)",
+      "topic": "Empirical Swift-language findings: (1) `mutating _modify` is NOT a valid protocol property requirement — Swift accepts only get/set; (2) `@_lifetime(&self)` (not `borrow self`) on `_modify` for ~Escapable Self. Findings remain authoritative for any future ecosystem package considering a full-capability mutation protocol.",
+      "date": "2026-04-25",
+      "status": "REFERENCE",
+      "statusDetail": "Origin: swift-mutator-primitives/Research/. Relocated 2026-04-25. The empirical Swift findings inform any ecosystem package considering protocol-requirement-shape mutation surfaces. Companion experiment: swift-institute/Experiments/mutator-modify-across-quadrants/ (cross-module + release per [EXP-017]).",
+      "statusRaw": "REFERENCE",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "mutator-writable-keypath-interaction.md",
+      "displayName": "WritableKeyPath and @dynamicMemberLookup interaction (Q1-only constraint)",
+      "topic": "Empirical finding: `WritableKeyPath<Root, Value>` carries the same implicit `Root: Copyable & Escapable` constraint as `KeyPath`. The dynamic-member subscript on a protocol extension materializes only for Q1 conformers; ~Copyable/~Escapable Self or Value REFUTES at compile time. Mirrors the prior Carrier finding for the read-only KeyPath case.",
+      "date": "2026-04-25",
+      "status": "REFERENCE",
+      "statusDetail": "Origin: swift-mutator-primitives/Research/. Relocated 2026-04-25. Confirms the Carrier dynamic-member-lookup-decision finding generalizes to WritableKeyPath in Swift 6.3.1. Applies to any future Mutator-shape exposing keypath-based mutation. Companion experiment: swift-institute/Experiments/mutator-generic-dispatch-and-keypath/.",
       "statusRaw": "REFERENCE",
       "tier": 2,
       "scope": "ecosystem-wide"
