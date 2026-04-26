@@ -118,8 +118,25 @@
         "swift-institute/Audits",
         "swift-institute/Blog"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-26",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "experiment-process",
+          "description": "[EXP-018] Claim Validation Trap \u2014 Synthetic-to-Production Extrapolation (extends [EXP-011] Workaround validation trap with the dual)"
+        },
+        {
+          "type": "no_action",
+          "description": ".docc-build/ pattern in Scripts/sync-gitignore.sh \u2014 already complete via commit a7ab681 (2026-04-24, before reflection authored)"
+        },
+        {
+          "type": "research_topic",
+          "target": "withUnsafe-borrowing-noncopyable-pattern-reach-survey.md",
+          "description": "IN_PROGRESS \u2014 scoped pattern-reach survey for stdlib withUnsafe* family; empirical work deferred until A2 authorized"
+        }
+      ]
     },
     {
       "file": "2026-04-24-meta-process-cascade-reflections-to-handoff.md",
@@ -148,8 +165,25 @@
         "swift-institute/Experiments",
         "swift-institute/Audits"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-26",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "issue-investigation",
+          "description": "[ISSUE-025] In-Package Verification of Synthetic-Reproducer Claims"
+        },
+        {
+          "type": "skill_update",
+          "target": "audit",
+          "description": "[AUDIT-027] Shipping HOLD Evidence Bar"
+        },
+        {
+          "type": "no_action",
+          "description": "V13 deferred experiment paired with audit action A2 (upstream compiler-issue filing); A2 authorization gates V13 execution"
+        }
+      ]
     },
     {
       "file": "2026-04-24-carrier-precursor-publish-timing-and-paired-post-url-management.md",

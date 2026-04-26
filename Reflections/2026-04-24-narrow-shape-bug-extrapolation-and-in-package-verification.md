@@ -9,7 +9,17 @@ packages:
   - swift-async-primitives
   - swift-institute/Experiments
   - swift-institute/Audits
-status: pending
+status: processed
+processed_date: 2026-04-26
+triage_outcomes:
+  - type: skill_update
+    target: issue-investigation
+    description: "[ISSUE-025] In-Package Verification of Synthetic-Reproducer Claims — extends [ISSUE-013] variable-isolation discipline through to production-shape verification"
+  - type: skill_update
+    target: audit
+    description: "[AUDIT-027] Shipping HOLD Evidence Bar — severity-graded evidence requirement; CRITICAL/HIGH HOLD on production code requires in-package failing release-mode test, not just synthetic reproducer"
+  - type: no_action
+    description: V13 deferred experiment paired with audit action A2 (upstream compiler-issue filing). A2 authorization gates V13 execution; the deferral is documented in the parent audit (borrow-pointer-storage-release-miscompile.md) and informs the new research doc (withUnsafe-borrowing-noncopyable-pattern-reach-survey.md).
 ---
 
 # Narrow-shape bug extrapolation and in-package verification

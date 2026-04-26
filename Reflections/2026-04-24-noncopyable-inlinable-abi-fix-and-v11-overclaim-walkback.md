@@ -10,7 +10,17 @@ packages:
   - swift-institute/Experiments
   - swift-institute/Audits
   - swift-institute/Blog
-status: pending
+status: processed
+processed_date: 2026-04-26
+triage_outcomes:
+  - type: skill_update
+    target: experiment-process
+    description: "[EXP-018] Claim Validation Trap — Synthetic-to-Production Extrapolation. Dual to [EXP-011]'s Workaround validation trap; minimal reproductions cannot validate claims at scale either. Per-target package-level regression tests required before extrapolating production-impact claims."
+  - type: no_action
+    description: ".docc-build/ pattern in Scripts/sync-gitignore.sh canonical block — already RESOLVED 2026-04-24 via commit a7ab681 (before this reflection was authored)."
+  - type: research_topic
+    target: withUnsafe-borrowing-noncopyable-pattern-reach-survey.md
+    description: "IN_PROGRESS Tier 2 research doc surveying stdlib withUnsafe* APIs accepting borrowing parameters; empirical work (V13 + per-API reproducers + per-consumer regression guards) deferred until audit action A2 (upstream compiler-issue filing) is authorized."
 ---
 
 # ~Copyable `@inlinable` ABI miscompile fix and V11 narrow-shape overclaim walk-back

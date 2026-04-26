@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "withUnsafe-borrowing-noncopyable-pattern-reach-survey.md",
+      "displayName": "withUnsafe-borrowing-noncopyable-pattern-reach-survey.md",
+      "topic": "Pattern-reach survey for withUnsafe* + borrowing + ~Copyable + @inlinable miscompile",
+      "date": "2026-04-26",
+      "status": "IN_PROGRESS",
+      "statusDetail": "survey scope defined; empirical work deferred until A2 upstream filing authorized",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "doc-audit-module-import-visibility-preflight.md",
       "displayName": "doc-audit-module-import-visibility-preflight.md",
       "topic": "Doc-Class Audit Module-Import-Visibility Pre-Flight",
