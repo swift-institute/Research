@@ -15,7 +15,18 @@ packages:
   - swift-microsoft/swift-windows-standard
   - swift-standards/swift-darwin-standard
   - swift-primitives/swift-kernel-primitives
-status: pending
+status: processed
+processed_date: 2026-04-26
+triage_outcomes:
+  - type: skill_update
+    target: audit
+    description: Add [AUDIT-024] Deflection-via-META Anti-Pattern (P-series log required regardless of rule-text ambiguity; META observations supplement findings, not substitute)
+  - type: skill_update
+    target: audit
+    description: Add [AUDIT-025] PREMISE-STALE Status Code (distinct from RESOLVED/FALSE_POSITIVE — finding was real at audit-write time but premise rendered moot by subsequent state changes); extend [AUDIT-004] status table with the new value
+  - type: research_complete
+    target: swift-institute/Research/lateral-l3-to-l3-composition-options.md
+    description: Stamped 2026-04-26 with Hybrid B+C decision; codified as [PLAT-ARCH-008h] + [PLAT-ARCH-008i] in platform skill (commit 8ccd1e9). P2.11/P2.12 RESOLVED via codification.
 ---
 
 # Platform audit dispatch + same-day hygiene arc — 2026-04-25
