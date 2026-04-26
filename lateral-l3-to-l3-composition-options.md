@@ -246,35 +246,35 @@ Three explicit sub-tiers within L3-Foundations:
 |                                   | → L3-unifier | → L3-policy | → L3-domain |
 |-----------------------------------|:------------:|:-----------:|:-----------:|
 | **FROM L3-unifier**               | ✓ peer composition allowed (e.g., swift-io composes swift-kernel) | ✓ codified [PLAT-ARCH-008e] | ✗ forbidden (unifiers don't depend on domain) |
-| **FROM L3-policy**                | ✗ forbidden (Pattern 3 violation) | ~ ALLOWED for POSIX-shared base extension only ([PLAT-ARCH-008g]) | ✗ forbidden (policy doesn't depend on domain) |
+| **FROM L3-policy**                | ✗ forbidden (Pattern 3 violation) | ~ ALLOWED for POSIX-shared base extension only ([PLAT-ARCH-008i]) | ✗ forbidden (policy doesn't depend on domain) |
 | **FROM L3-domain**                | ✓ canonical (the "use the unified API" rule) | ✗ forbidden (must go through unifier) | (peer composition: TBD if needed; no current instance) |
 
 ### Codification candidates (skill amendments)
 
 Two new `[PLAT-ARCH-*]` rules to add to `swift-foundations/.claude/skills/platform/SKILL.md`:
 
-**[PLAT-ARCH-008f] Within-L3 sub-tiering (new ID; or extend [PLAT-ARCH-001])**:
+**[PLAT-ARCH-008h] Within-L3 sub-tiering (new ID; or extend [PLAT-ARCH-001])**:
 > L3-Foundations is internally sub-tiered into three roles: L3-policy (per-spec policy wrappers), L3-unifier (cross-platform unifiers), L3-domain (domain composition). Composition flows downward from L3-domain through L3-unifier to L3-policy and below. L3-domain MUST compose L3-unifier (not L3-policy directly). L3-unifier MAY compose peer L3-unifier where layering supports it (e.g., swift-io builds on swift-kernel). [PLAT-ARCH-008e] codifies the L3-unifier → L3-policy direction.
 
-**[PLAT-ARCH-008g] L3-policy peer composition for POSIX-shared base (new ID)**:
+**[PLAT-ARCH-008i] L3-policy peer composition for POSIX-shared base (new ID)**:
 > swift-posix is the POSIX-shared L3-policy base. swift-darwin and swift-linux MAY compose swift-posix as their POSIX subset's policy provider; this is the only sanctioned L3-policy peer composition pattern. swift-windows is non-POSIX and MUST NOT compose swift-posix. Other L3-policy peer compositions (e.g., swift-darwin → swift-linux) remain FORBIDDEN.
 
 ### Per-finding resolutions
 
 **P2.11** (swift-darwin/linux → swift-posix lateral) → **RESOLVED-via-codification**:
 - The principal direction "swift-darwin/swift-linux should depend on swift-posix" explicitly authorizes this composition.
-- Codify as `[PLAT-ARCH-008g]` (or principal-chosen ID) in the platform skill.
+- Codify as `[PLAT-ARCH-008i]` (or principal-chosen ID) in the platform skill.
 - Status update: P2.11 marked RESOLVED in synthesis tracker once the rule lands.
 - No code change; per-package audit.md row text updates locally.
 
 **P2.12** (swift-file-system → swift-io/threads/environment/ascii) → **RESOLVED-via-classification**:
 - swift-io / swift-threads / swift-environment / swift-ascii are all L3-unifier (cross-platform unification surfaces), NOT L3-domain peers.
-- swift-file-system → L3-unifier is canonical L3-domain composition (covered by [PLAT-ARCH-008f]'s "L3-domain MUST compose L3-unifier" clause).
-- Status update: P2.12 marked RESOLVED in synthesis tracker once [PLAT-ARCH-008f] lands.
+- swift-file-system → L3-unifier is canonical L3-domain composition (covered by [PLAT-ARCH-008h]'s "L3-domain MUST compose L3-unifier" clause).
+- Status update: P2.12 marked RESOLVED in synthesis tracker once [PLAT-ARCH-008h] lands.
 - No code change; classification is via skill text + DocC catalog updates.
 
 **Pattern 3** (swift-windows → swift-systems via `Windows.Thread.Affinity.swift:16`) → **NEW FINDING — refactor required**:
-- swift-windows is L3-policy; swift-systems is L3-unifier; FROM L3-policy → TO L3-unifier is UPWARD = forbidden under [PLAT-ARCH-008f].
+- swift-windows is L3-policy; swift-systems is L3-unifier; FROM L3-policy → TO L3-unifier is UPWARD = forbidden under [PLAT-ARCH-008h].
 - Refactor: remove `import Systems` from `swift-windows/Sources/Windows Kernel/Windows.Thread.Affinity.swift`. The `applyCores` method takes a list of CPU cores; the caller (in swift-systems' Windows-NUMA implementation, or in user code) resolves topology via swift-systems and passes cores. swift-windows applies the mask without needing topology resolution.
 - This makes the dependency direction structurally correct: swift-systems → swift-windows for Windows-NUMA implementation (canonical L3-unifier → L3-policy per [PLAT-ARCH-008e]).
 - New finding ID: **P3.5** (or principal-chosen). Severity: MEDIUM (single-file refactor; behavior preserved when caller threads topology through). Effort: S–M.
@@ -282,11 +282,11 @@ Two new `[PLAT-ARCH-*]` rules to add to `swift-foundations/.claude/skills/platfo
 ### Out-of-scope confirmations
 
 - swift-paths Test target composing swift-kernel: TEST-SCOPE LAXER. Test target dep doesn't enter the L3-domain → L3-unifier rule. Confirmed not a finding.
-- L3-unifier internal layering (swift-io builds on swift-kernel; swift-threads builds on swift-kernel; etc.): permitted under "[PLAT-ARCH-008f]'s L3-unifier MAY compose peer L3-unifier where layering supports it" sub-clause. Documented in the rule's sub-clause; no per-package finding.
+- L3-unifier internal layering (swift-io builds on swift-kernel; swift-threads builds on swift-kernel; etc.): permitted under "[PLAT-ARCH-008h]'s L3-unifier MAY compose peer L3-unifier where layering supports it" sub-clause. Documented in the rule's sub-clause; no per-package finding.
 
 ### Remediation cycle dispatch order
 
-1. **Skill amendment cycle** (~1 session): land [PLAT-ARCH-008f] + [PLAT-ARCH-008g] in `swift-foundations/.claude/skills/platform/SKILL.md`. Closes P2.11 + P2.12 in synthesis tracker.
+1. **Skill amendment cycle** (~1 session): land [PLAT-ARCH-008h] + [PLAT-ARCH-008i] in `swift-foundations/.claude/skills/platform/SKILL.md`. Closes P2.11 + P2.12 in synthesis tracker.
 2. **Pattern 3 refactor cycle** (~1 session): swift-windows.Thread.Affinity refactor + caller-thread-topology. Adds P3.5 finding to tracker; immediately resolves it via the same dispatch.
 3. **Per-package audit.md hygiene sweep** (~1 session): walk all 13 audit packages; update per-package audit.md row text to reflect the stamped sub-tier classification + flagged composition rules. Anchor case (swift-kernel L3 Composition #1/#2 stale-RESOLVED) addressed in this sweep.
 
