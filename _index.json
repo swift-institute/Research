@@ -2805,6 +2805,17 @@
       "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": "cross-package"
+    },
+    {
+      "file": "lifetime-primitives-deletion-rationale.md",
+      "displayName": "lifetime-primitives-deletion-rationale",
+      "topic": "Decision rationale for deleting `swift-lifetime-primitives` from the workspace. Proposes the three-criteria primitive-rent test (capability beyond language + existing primitives, real consumer, theoretical content per [MOD-DOMAIN]). Per-type analysis: `Lifetime.Lease` redundant with `Ownership.Unique` (weaker semantics, runtime trap vs compile-time linear); `Lifetime.Disposable` symbolic protocol with no conformers; `Lifetime.Scoped` is `defer` in struct form. Documents the mechanical deletion (workspace files, 5 packages with commented-out scaffolding deps stripped). Cross-references the second-arc reflection.",
+      "date": "2026-04-26",
+      "status": "DECIDED",
+      "statusDetail": "swift-lifetime-primitives deleted from workspace. GitHub remote preserved. Future re-introduction blocked behind the same three-criteria test that triggered the deletion.",
+      "statusRaw": "DECIDED",
+      "tier": 2,
+      "scope": "cross-package"
     }
   ],
   "narrativeSections": [
