@@ -1,10 +1,36 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-24",
+  "generatedAt": "2026-04-25",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-04-24-post-cycle-3-audit-and-p2-9-unify-cycle-4.md",
+      "date": "2026-04-24",
+      "title": "Post-Cycle-3 /audit + P2.9 Cycle 4: Kernel.Signal.Information unify + toolchain-divergence diagnosis",
+      "packages": [
+        "swift-iso-9945",
+        "swift-linux-standard",
+        "swift-institute/Audits",
+        "swift-institute/Research",
+        "swift-foundations/swift-linux",
+        "swift-primitives/swift-buffer-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-24-post-hoc-api-name-compliance-swap-rename.md",
+      "date": "2026-04-24",
+      "title": "Post-hoc [API-NAME-002] compliance: swapAt → swap(at:with:)",
+      "packages": [
+        "swift-array-primitives",
+        "swift-buffer-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-04-24-p29-cycle-4-option-a-unify-and-structural-correctness-framing.md",
       "date": "2026-04-24",
@@ -2689,6 +2715,27 @@
       "status": "processed",
       "statusRaw": "pending",
       "processedDate": "2026-04-24"
+    },
+    {
+      "file": "2026-04-25-platform-audit-dispatch-and-same-day-hygiene-arc.md",
+      "date": "2026-04-25",
+      "title": "Platform audit dispatch + same-day hygiene arc",
+      "packages": [
+        "swift-institute/Audits",
+        "swift-iso/swift-iso-9945",
+        "swift-foundations/swift-windows",
+        "swift-foundations/swift-strings",
+        "swift-foundations/swift-file-system",
+        "swift-foundations/swift-posix",
+        "swift-foundations/swift-darwin",
+        "swift-foundations/swift-linux",
+        "swift-foundations/swift-kernel",
+        "swift-linux-foundation/swift-linux-standard",
+        "swift-microsoft/swift-windows-standard",
+        "swift-standards/swift-darwin-standard",
+        "swift-primitives/swift-kernel-primitives"
+      ],
+      "status": "pending"
     }
   ]
 }
