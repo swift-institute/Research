@@ -1,7 +1,7 @@
 {
   "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-25",
+  "generatedAt": "2026-04-26",
   "title": "Research Index",
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
@@ -2706,6 +2706,28 @@
       "statusRaw": "REFERENCE",
       "tier": 2,
       "scope": "ecosystem-wide"
+    },
+    {
+      "file": "carrier-ecosystem-application-inventory.md",
+      "displayName": "carrier-ecosystem-application-inventory",
+      "topic": "Two-phase ecosystem inventory + triage for Carrier conformance, Tagged refactor, and `.Protocol` capability-lift adoption across swift-primitives (134) + swift-standards (21) + swift-foundations (137). Phase 1 inventory: 26 hoisted-protocol declarations classified into Carrier-shaped (4: Cardinal, Ordinal, Hash.Value, Affine.Discrete.Vector — last is NEW finding not in capability-lift-pattern.md ecosystem instances), witness-style (13, out per recommendation #6), abstraction-style (7, wrong shape), self-projection-default (1: Ownership.Borrow), pure marker (1: Witness); ~80 Tagged-aliased value carriers; ~7 standalone single-field wrappers; 1 strong ~Copyable Carrier candidate (Property<Tag, Base>). Phase 2 triage: CAN/SHOULD per candidate biased toward apply. Top-5 ranked: Decimal Tagged refactor / Clock.Offset+Nanoseconds .Protocol companions / Property Q2 Carrier conformance / Algebra.Modular.Modulus .Protocol / Ordinal.Finite refinement. Each becomes future per-package handoff dispatch.",
+      "date": "2026-04-26",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.1.0: Phase 1 (Tagged: Carrier) + Phase 2a/2b (Cardinal/Affine migrated; Ordinal.Protocol retained as sibling per Option G) + Phase 3 partial (Clock, Property: Carrier landed; Algebra.Modular.Modulus reclassified as RawRepresentable) + Phase 5 (Index.Bounded cascade ALREADY-MET) implementation log added. Phase 4 (Decimal Tagged refactor) pending.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "operator-ergonomics-and-carrier-migration.md",
+      "displayName": "operator-ergonomics-and-carrier-migration",
+      "topic": "Resolves the Phase 2b migration question of whether to phase out per-type capability protocols (Cardinal.`Protocol`, Ordinal.`Protocol`, Affine.Discrete.Vector.`Protocol`) in favor of `Carrier<Underlying>`. Identifies an asymmetry: Cardinal and Affine.Discrete.Vector's operators are Self+Self-shaped (clean Carrier migration); Ordinal.`Protocol`'s typed-advance is Self+Self.Count where Count is per-conformer (Cardinal for bare Ordinal, Tagged<Tag, Cardinal> for Tagged) — Carrier has no Count associatedtype to replicate this. Enumerates seven options (Self.Domain-derived typealias, Carrier refinement, per-type extension, call-site migration, operator overloads, full retention, selective retention). Recommends Option G — Selective Retention: migrate Cardinal and Affine.Discrete.Vector to Carrier extensions (clean), retain Ordinal.`Protocol` as a SIBLING to Carrier (not a refinement, no V2 cost) for typed-advance ergonomics. Cites Recommendation #6 sibling precedent (Hash/Equation/Comparison coexist with Carrier). Articulates a third role beyond capability-lift and witness: `operator-ergonomics protocols` whose role is associatedtype-driven operator dispatch that Carrier's parameterized form cannot replicate. Cross-language prior art: Rust std::ops::Add, Haskell TypeFamilies, Scala dependent types — universal per-impl associated-type pattern.",
+      "date": "2026-04-26",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Implemented 2026-04-26. Cardinal/Affine.Discrete.Vector migrated to Carrier (clean); Ordinal.`Protocol` restored as sibling. Build + 35 ordinal tests + downstream packages green. Recommendation codified as Recommendation #7 in capability-lift-pattern.md v1.2.0.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
     }
   ],
   "narrativeSections": [
