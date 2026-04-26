@@ -8,11 +8,11 @@
     {
       "file": "lateral-l3-to-l3-composition-options.md",
       "displayName": "lateral-l3-to-l3-composition-options.md",
-      "topic": "Within-L3 sub-tiering — empirical census surfaces 6 within-L3 composition patterns (only 1 codified by [PLAT-ARCH-008e]); 4-option matrix (codify carve-out via [PLAT-ARCH-008h]; explicit sub-tiering L3.1/L3.2/L3.3; re-tier consumed packages downward; restructure) × per-finding cells for P2.11 + P2.12 + un-flagged Pattern 3 (swift-windows → swift-systems). OPTIONS MATRIX — decision escalates to principal.",
-      "date": "2026-04-25",
-      "status": "OPTIONS_MATRIX",
-      "statusDetail": "decision-ready; principal stamp pending; gates P2.11 + P2.12 remediation cycle dispatch",
-      "statusRaw": "OPTIONS_MATRIX",
+      "topic": "Within-L3 sub-tiering — empirical census surfaces 6 within-L3 composition patterns; principal-stamped Hybrid B+C (2026-04-26) with explicit 3-sub-tier enumeration (L3-policy / L3-unifier / L3-domain). swift-posix stays L3-policy; swift-darwin/linux compose swift-posix as POSIX-shared base ([PLAT-ARCH-008g]); swift-systems re-classified L3-unifier (peer to swift-kernel); Pattern 3 (swift-windows → swift-systems) flagged as L3-policy → L3-unifier upward violation requiring refactor (new finding P3.5). Two new [PLAT-ARCH-*] rules + one refactor cycle close out P2.11 + P2.12 + Pattern 3.",
+      "date": "2026-04-26",
+      "status": "STAMPED",
+      "statusDetail": "principal-stamped 2026-04-26; 3 dispatch cycles queued (skill amendment + Pattern 3 refactor + per-package audit.md hygiene sweep)",
+      "statusRaw": "STAMPED",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
