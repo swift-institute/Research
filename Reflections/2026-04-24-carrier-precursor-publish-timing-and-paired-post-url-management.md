@@ -4,7 +4,18 @@ session_objective: Publish BLOG-IDEA-064 carrier precursor to swift-institute.or
 packages:
   - swift-institute/Blog
   - swift-institute/swift-institute.org
-status: pending
+status: processed
+processed_date: 2026-04-26
+triage_outcomes:
+  - type: skill_update
+    target: blog-process
+    description: "[BLOG-020] Audience-Magnitude Check Before Timing Advice — engagement-timing heuristics invert at effectively-0 audience"
+  - type: skill_update
+    target: blog-process
+    description: "[BLOG-021] Paired-Post URL Dependency Handling — 3 canonical handling shapes (resolve-and-accept-404 / strip-and-restore-on-launch-day / same-day-publish-both) + Tuesday-restore checklist"
+  - type: skill_update
+    target: blog-process
+    description: "[BLOG-022] DocC Deploy Verification Path — 3-layer verification (HTTP availability + build status + rendered content); WebFetch hydration pitfall + trailing-slash 301 normalization"
 ---
 
 # Carrier precursor publish — 0-audience timing inversion, paired-post URL management, DocC deploy verification
