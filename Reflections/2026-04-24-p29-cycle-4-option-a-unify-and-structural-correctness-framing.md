@@ -6,7 +6,18 @@ packages:
   - swift-linux-standard
   - swift-institute/Audits
   - swift-institute/Research
-status: pending
+status: processed
+processed_date: 2026-04-26
+triage_outcomes:
+  - type: skill_update
+    target: supervise
+    description: "[SUPER-026] Delete-Public-Type Disposition Verification — principal-side rule requiring import-graph verification at each consumer site before authorizing drop-all"
+  - type: skill_update
+    target: research-process
+    description: "[RES-022] Recommendation-Section Framing Heuristic — structural correctness as default heuristic over minimum-diff lowest-risk; documented exceptions enumerate when secondary axes legitimately dominate"
+  - type: skill_update
+    target: audit
+    description: "[AUDIT-026] Substantive Canary Gate Substitution — three conditions for accepting a tighter in-scope gate when the terminal gate is blocked by orthogonal drift"
 ---
 
 # P2.9 Cycle 4 Close — Option A Unify and "Structurally Correct vs Lowest-Risk" Framing
