@@ -2,12 +2,25 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-04-26
 status: RECOMMENDATION
 tier: 2
 scope: ecosystem-wide
 changelog:
+  - v1.2.0 (2026-04-26): Phase 4 (Decimal Tagged refactor) **CANCELLED** per
+    `swift-institute/Research/decimal-carrier-integration.md` (RECOMMENDATION,
+    2026-04-26). Decimal.Exponent / Precision / Payload remain standalone
+    struct types. The v1.0.0 inventory's CAN-yes verdict on Decimal was
+    ungrounded — it did not surface the naming-convention obstacle (no
+    domain-typed phantom Tag), the gated literal-conformance state per
+    tagged-literal-conformances-fresh-perspective.md, the [IMPL-001]
+    domain-erasure problem of Carrier<Int> conformance, or the [RES-018]
+    second-consumer hurdle (zero `Tagged<_, Decimal.*>` and zero
+    `Carrier<Decimal.*>` usage). Decimal types populate a third role-class
+    beyond Section A capability-lift adopters and Section H multi-field
+    types: domain-specific value types whose arithmetic identity is the
+    type's primary purpose and whose phantom-typed variants don't exist.
   - v1.1.0 (2026-04-26): Phase 1 + 2a + 2b + 3 + 5 implementation log added.
     Phase 2b resolved via Option G (selective retention) per
     `swift-institute/Research/operator-ergonomics-and-carrier-migration.md` —
@@ -395,9 +408,35 @@ Resolution: `swift-institute/Research/operator-ergonomics-and-carrier-migration.
 - `swift-property-primitives` — Property: Carrier where Base: ~Copyable shipped. Q1+Q2 conformance (Property's generic shape doesn't admit ~Escapable Base; Q3/Q4 deferred until concrete demand surfaces per [RES-018]). 48 tests pass; downstream stack/queue/list/heap consumers build clean.
 - `swift-algebra-modular-primitives` — Algebra.Modular.Modulus **reclassified as RawRepresentable-shaped** (has `init(_ cardinal: Cardinal) throws(Error)` validating init). Per `carrier-vs-rawrepresentable-comparative-analysis.md`, validating wrappers belong in RawRepresentable space. **Inventory v1.0.0's CAN-yes verdict was incorrect; corrected to CAN-no.**
 
-### Phase 4 — Decimal Tagged refactor (PENDING)
+### Phase 4 — Decimal Tagged refactor (CANCELLED)
 
-Not attempted in this implementation session. Multi-day breaking-change work; queued for a future session.
+Resolution: `swift-institute/Research/decimal-carrier-integration.md`
+(RECOMMENDATION, 2026-04-26).
+
+The v1.0.0 inventory's CAN-yes / SHOULD-positive verdict was ungrounded.
+On investigation:
+
+- **No second-consumer demand** [RES-018]: zero `Tagged<_, Decimal.*>`
+  and zero `Carrier<Decimal.*>` usage across the ecosystem.
+- **Tagged refactor structurally blocked**: naming convention has no
+  natural fit (the role-axes Exponent / Precision / Payload within
+  Decimal don't have domain-typed phantom Tags; synthesized `*Tag`
+  suffixes violate [API-NAME-*]); Tagged production literal conformance
+  is gated per tagged-literal-conformances-fresh-perspective.md.
+- **Carrier<Int> conformance erases domain** per [IMPL-001]: treating
+  power-of-10 exponent arithmetic as generic Int operations violates
+  the type's domain identity.
+- **Trivial-self-Carrier conformance is premature**: no second consumer.
+
+Decimal.Exponent / Precision / Payload remain standalone struct types.
+They populate a **third role-class** beyond Section A (capability-lift
+adopters) and Section H (multi-field types): **domain-specific value
+types**. This class includes Time refinement types (Time.Second,
+Time.Minute, Time.Year — already classified as Section G validating
+wrappers) and likely future RFC-spec'd magnitude types.
+
+Codification queued: `capability-lift-pattern.md` v1.3.0 Recommendation #8
+(per [RES-006a]).
 
 ### Phase 5 — Ordinal.Finite refinement (ALREADY-MET)
 
