@@ -2728,6 +2728,17 @@
       "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": "cross-package"
+    },
+    {
+      "file": "decimal-carrier-integration.md",
+      "displayName": "decimal-carrier-integration",
+      "topic": "Investigation of whether Decimal.Exponent / Precision / Payload should integrate with the Carrier ecosystem (Tagged refactor, Carrier conformance, or remain standalone). Empirical baseline: zero `Tagged<_, Decimal.*>` and zero `Carrier<Decimal.*>` usage across the ecosystem [RES-018]. Tagged refactor structurally blocked by: (a) naming convention — no domain-typed phantom Tag (the role-axes within Decimal don't have natural domain names; synthesized `*Tag` suffixes violate API-NAME conventions), (b) literal-conformance gating per tagged-literal-conformances-fresh-perspective.md (Strideable interaction reactivates the cross-domain footgun). Carrier<Int> conformance erases domain identity per [IMPL-001] (treating power-of-10 exponent arithmetic as generic Int erases the domain that motivates the type). Trivial-self-Carrier conformance is premature without second consumer. Recommendation: Decimal types remain standalone struct types — populate a third role-class (domain-specific value types) alongside witness protocols (Rec #6) and operator-ergonomics protocols (Rec #7). Proposes Recommendation #8 for capability-lift-pattern.md codifying this third class. Supersedes inventory v1.0.0's Phase 4 CAN-yes verdict.",
+      "date": "2026-04-26",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Resolves Phase 4 of the carrier-ecosystem migration. Decimal Tagged refactor cancelled; types remain standalone. Inventory v1.1.0 Phase 4 entry deferred-then-cancelled per this analysis. Codification queued: Recommendation #8 in capability-lift-pattern.md v1.3.0.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
     }
   ],
   "narrativeSections": [
