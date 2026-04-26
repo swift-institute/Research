@@ -2966,6 +2966,33 @@
         "swift-primitives/swift-bit-primitives"
       ],
       "status": "pending"
+    },
+    {
+      "file": "2026-04-26-cross-carrier-utilities-research-defer.md",
+      "date": "2026-04-26",
+      "title": "Cross-Carrier Utilities Research — defer-all + the [RES-018] precedent stack",
+      "packages": [
+        "swift-carrier-primitives",
+        "swift-institute/Research"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-26-ecosystem-audit-and-typed-tls-promotion.md",
+      "date": "2026-04-26",
+      "title": "Ecosystem audit, lifetime-primitives deletion, and typed Kernel.Thread.Local promotion",
+      "packages": [
+        "swift-foundations/swift-observations",
+        "swift-primitives/swift-observation-primitives",
+        "swift-primitives/swift-ownership-primitives",
+        "swift-primitives/swift-lifetime-primitives",
+        "swift-iso/swift-iso-9945",
+        "swift-microsoft/swift-windows-standard",
+        "swift-foundations/swift-kernel",
+        "swift-primitives/swift-kernel-primitives"
+      ],
+      "status": "pending"
     }
   ]
 }
