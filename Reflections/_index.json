@@ -17,8 +17,25 @@
         "swift-foundations/swift-linux",
         "swift-primitives/swift-buffer-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-26",
+      "triage_outcomes": [
+        {
+          "type": "research_topic",
+          "target": "doc-audit-module-import-visibility-preflight.md",
+          "description": "IN_PROGRESS \u2014 methodology survey"
+        },
+        {
+          "type": "skill_update",
+          "target": "handoff",
+          "description": "[HANDOFF-013b] Build-Level Visibility Pre-Flight for Deletion-Without-Adoption"
+        },
+        {
+          "type": "no_action",
+          "description": "D5 swift-linux Random module-import \u2014 already RESOLVED 2026-04-24 via 61e52c4"
+        }
+      ]
     },
     {
       "file": "2026-04-24-post-hoc-api-name-compliance-swap-rename.md",
@@ -41,8 +58,26 @@
         "swift-institute/Audits",
         "swift-institute/Research"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-26",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "supervise",
+          "description": "[SUPER-026] Delete-Public-Type Disposition Verification"
+        },
+        {
+          "type": "skill_update",
+          "target": "research-process",
+          "description": "[RES-022] Recommendation-Section Framing Heuristic"
+        },
+        {
+          "type": "skill_update",
+          "target": "audit",
+          "description": "[AUDIT-026] Substantive Canary Gate Substitution"
+        }
+      ]
     },
     {
       "file": "2026-04-24-se-0527-outputspan-adoption-wave.md",
@@ -2776,6 +2811,16 @@
         "swift-institute/Audits",
         "swift-institute/Skills",
         "swift-foundations/swift-windows"
+      ],
+      "status": "pending"
+    },
+    {
+      "file": "2026-04-26-observable-macro-twin-design-and-validation-gap.md",
+      "date": "2026-04-26",
+      "title": "@Observable macro: twin-macro design forced by Swift's per-site validation, plus the assertMacroExpansion gap",
+      "packages": [
+        "swift-foundations/swift-observations",
+        "swift-primitives/swift-bit-primitives"
       ],
       "status": "pending"
     }
