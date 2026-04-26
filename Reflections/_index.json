@@ -2993,6 +2993,16 @@
         "swift-primitives/swift-kernel-primitives"
       ],
       "status": "pending"
+    },
+    {
+      "file": "2026-04-26-typealias-probe-matrix-disambiguation.md",
+      "date": "2026-04-26",
+      "title": "Typealias-via-#if probe — matrix disambiguation under supervisor pushback",
+      "packages": [
+        "swift-primitives/swift-kernel-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
