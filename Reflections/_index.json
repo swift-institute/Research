@@ -193,8 +193,26 @@
         "swift-institute/Blog",
         "swift-institute/swift-institute.org"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-26",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "blog-process",
+          "description": "[BLOG-020] Audience-Magnitude Check Before Timing Advice"
+        },
+        {
+          "type": "skill_update",
+          "target": "blog-process",
+          "description": "[BLOG-021] Paired-Post URL Dependency Handling (3 canonical handling shapes + Tuesday-restore checklist)"
+        },
+        {
+          "type": "skill_update",
+          "target": "blog-process",
+          "description": "[BLOG-022] DocC Deploy Verification Path (3-layer: HTTP availability + build status + rendered content)"
+        }
+      ]
     },
     {
       "file": "2026-04-24-carrier-primitives-blog-drafting-and-convergence.md",
@@ -2834,7 +2852,26 @@
         "swift-primitives/swift-mutator-primitives",
         "swift-institute/Research"
       ],
-      "status": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-26",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "swift-package",
+          "description": "[PKG-NAME-009] Capability-Protocol vs Noun-Type Distinction"
+        },
+        {
+          "type": "research_topic",
+          "target": "asymmetric-quadrant-ergonomics-as-rejection-criterion.md",
+          "description": "RECOMMENDATION Tier 2 \u2014 codifies decision-test procedure for capability-protocol affordance proposals"
+        },
+        {
+          "type": "package_insight",
+          "target": "swift-carrier-primitives/Research/capability-lift-pattern.md",
+          "description": "Amended Existing ecosystem instances table to include Affine.Discrete.Vector (4th adopter)"
+        }
+      ]
     },
     {
       "file": "2026-04-26-lateral-l3-doc-stamp-and-platform-skill-amendment.md",

@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "asymmetric-quadrant-ergonomics-as-rejection-criterion.md",
+      "displayName": "asymmetric-quadrant-ergonomics-as-rejection-criterion.md",
+      "topic": "Asymmetric-Quadrant Ergonomics as Rejection Criterion for Capability-Protocol Affordances",
+      "date": "2026-04-26",
+      "status": "RECOMMENDATION",
+      "statusDetail": "pattern empirically validated across multiple 2026-04-26 decisions; decision-test procedure for future capability-protocol affordance proposals",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "withUnsafe-borrowing-noncopyable-pattern-reach-survey.md",
       "displayName": "withUnsafe-borrowing-noncopyable-pattern-reach-survey.md",
       "topic": "Pattern-reach survey for withUnsafe* + borrowing + ~Copyable + @inlinable miscompile",
