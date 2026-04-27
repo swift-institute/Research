@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "path-x-prerequisite-stabilization.md",
+      "displayName": "path-x-prerequisite-stabilization.md",
+      "topic": "Path X prerequisite stabilization — Phase 1 (iso-9945 + swift-posix + linux-standard + darwin-standard L2 self-sufficiency, ~90 file changes) + Phase 2 (windows-standard + swift-windows mirror, ~26 file changes); coordinated stabilization that gates Path X Cycles 1-23 dispatch from a clean baseline. Sub-task A (L1 transit cleanup) absorbed into per-cycle hygiene; Cycle 0 da8fc77 was the prototype.",
+      "date": "2026-04-27",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-layer"
+    },
+    {
       "file": "rule-dependency-tracking.md",
       "displayName": "rule-dependency-tracking.md",
       "topic": "Rule dependency tracking \u2014 skill rules and implicit assumptions",
