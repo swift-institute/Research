@@ -32,6 +32,17 @@ The chosen interpretation: **revert the type relocation entirely**. POSIX.Kernel
 
 The retained value of Phase 1.5 post-correction: typed L1-Kernel.Descriptor forms now coexist with raw `@_spi(Syscall) fd: Int32` SPI forms at the Phase-1-stripped sites (no Pattern-A-only sites remaining); § 5.6 handle-returning bifurcation precedent established on POSIX shared memory and Linux pipe; Algebra.Pair pattern established for ~Copyable pair returns. The reverted value: the type relocation itself, now re-deferred to post-Cycle-19/23.
 
+**HANDOFF scan (per [REFL-009])**: 29 HANDOFF-*.md files at workspace root; 1 deleted, 0 annotated, 28 out-of-session-scope.
+
+| File | Triage | Outcome |
+|---|---|---|
+| HANDOFF.md | IN authority — Phase 1.5 dispatch this session executed | DELETED — all Next Steps complete (Waves 0 / 0-follow-up / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 7-follow-up / N+3 landed; Waves N+1 deferred per Open Question 2; N+2 collapsed into Wave 0; namespace correction reverted Wave 0 + Wave N+3 + retyped Waves 1-7); supervisor ground-rules #1–#9 verified clean per [SUPER-011]; namespace correction was principal-directed post-supervision (outside original supervisor block scope); no pending escalation. Per [REFL-009] standard rule. Durable record preserved in `HANDOFF-path-x-phase-1.md` § "Phase 1.5 close" + § "Phase 1.5 namespace correction." |
+| HANDOFF-path-x-phase-1.md | IN authority — branching investigation handoff for Phase 1; this session appended Phase 1.5 close + namespace correction sections | LEFT — sub-cycle 1.1 (File, 17 files) is still UNGATED per the close report; Phase 1 investigation continues across more sub-cycles |
+| HANDOFF-posix-descriptor-l2-vs-l3policy.md | Out-of-authority (prior session's investigation handoff); v1.0.0 RECOMMENDATION at commit 1bddfe6 was consumed by this session's Phase 1.5 dispatch | LEFT — conservative: prior-session-owned, not this session's authored or actively-worked artifact in the [REFL-009] sense |
+| HANDOFF-cascade-cycle-a-execution.md, HANDOFF-ci-centralization.md, HANDOFF-ci-rollout.md, HANDOFF-docc-umbrella-patch-pipeline.md, HANDOFF-executor-main-platform-runloop.md, HANDOFF-heritage-transfers-and-history-strategy.md, HANDOFF-io-completion-migration.md, HANDOFF-kernel-primitives-phase-3.md, HANDOFF-l1-exception-removal-execution.md, HANDOFF-l1-kernel-primitives-removal-plan.md, HANDOFF-l1-types-only-no-exceptions.md, HANDOFF-l2-cascade-recommendation.md, HANDOFF-migration-audit.md, HANDOFF-old-pre-path-x-phase-1.md, HANDOFF-ownership-borrow-release-miscompile.md, HANDOFF-ownership-primitives-precursor-blog.md, HANDOFF-package-refactor.md, HANDOFF-path-decomposition.md, HANDOFF-path-x-phase-1-pre-pivot.md, HANDOFF-primitive-protocol-audit.md, HANDOFF-self-projection-default-pattern.md, HANDOFF-standards-org-migration.md, HANDOFF-swift-error-primitives-placement.md, HANDOFF-swift-testing-successor-migration.md, HANDOFF-tagged-primitives-rename.md, HANDOFF-worker-id-typed-retype.md | Parent-session artifacts (25 files); per dispatch's Constraints / "14+ prior HANDOFF-*.md files... reference only, do not modify" + [REFL-009] bounded cleanup authority | LEFT untouched — out of this session's authority |
+
+No audit was run in this session, so [REFL-010] does not apply.
+
 ## What Worked and What Didn't
 
 **Worked**:
