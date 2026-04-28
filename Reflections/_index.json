@@ -3013,6 +3013,20 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-28-phase-1-5-l2-pivot-attempt-and-namespace-correction.md",
+      "date": "2026-04-28",
+      "title": "Phase 1.5 L2 pivot attempt and namespace-ownership correction",
+      "packages": [
+        "swift-iso/swift-iso-9945",
+        "swift-foundations/swift-posix",
+        "swift-standards/swift-darwin-standard",
+        "swift-linux-foundation/swift-linux-standard",
+        "swift-institute/Skills"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
