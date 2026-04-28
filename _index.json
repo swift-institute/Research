@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "posix-descriptor-l2-vs-l3policy.md",
+      "displayName": "posix-descriptor-l2-vs-l3policy.md",
+      "topic": "POSIX.Kernel.Descriptor L2 (iso-9945) vs L3-policy (swift-posix) — re-evaluates the cascade investigation v2.0.2 § 5 / l1-types-only-no-exceptions § 5 Branch (i) choice. Classifies the four cited arguments as load-bearing vs pattern-inherited; surfaces the type-level vs function-level policy distinction the symmetry argument elided. Stamps L2 (iso-9945) as the structural destination; recommends status-quo timing (defer L2 retroactive re-typing to post-Cycle-23 cleanup per HANDOFF.md Open Question 3). Per-L2 Linux/Darwin descriptor split explicitly rejected (POSIX is one spec; descriptors are semantically identical on Darwin and Linux glibc).",
+      "date": "2026-04-28",
+      "status": "RECOMMENDATION",
+      "statusDetail": "destination stamped (L2); pivot timing deferred to post-Cycle-23 cleanup per principal preference",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
       "file": "path-x-prerequisite-stabilization.md",
       "displayName": "path-x-prerequisite-stabilization.md",
       "topic": "Path X prerequisite stabilization — Phase 1 (iso-9945 + swift-posix + linux-standard + darwin-standard L2 self-sufficiency, ~90 file changes) + Phase 2 (windows-standard + swift-windows mirror, ~26 file changes); coordinated stabilization that gates Path X Cycles 1-23 dispatch from a clean baseline. Sub-task A (L1 transit cleanup) absorbed into per-cycle hygiene; Cycle 0 da8fc77 was the prototype.",
