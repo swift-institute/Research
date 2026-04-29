@@ -3027,6 +3027,20 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-28-sub-cycle-1-1-inverted-pattern-a.md",
+      "date": "2026-04-28",
+      "title": "Sub-cycle 1.1 — File family INVERTED Pattern A landing",
+      "packages": [
+        "swift-iso/swift-iso-9945",
+        "swift-foundations/swift-kernel",
+        "swift-foundations/swift-posix",
+        "swift-foundations/swift-memory",
+        "swift-foundations/swift-darwin"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
