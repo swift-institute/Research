@@ -60,6 +60,8 @@ own backlogs.
 | 1.4 | `documentation` skill | Revise `[DOC-028]` and `[DOC-029]` to encode the **consumer/contributor boundary**: per-symbol and topical articles MUST NOT carry `## Research` / `## Experiments` sections, `Status: DECISION` tags, or `<doc:>` cross-references into `Research/` / `Experiments/`. The landing page (or the README's `## Further reading` section) SHOULD carry one consolidated gateway. Decision records with supersession get a `### Resolution` subsection in the Research doc — not a historical note in DocC. Cite swift-property-primitives (precedent) and swift-carrier-primitives (case study) as reference implementations. | `Reflections/2026-04-22-precursor-publish-and-narrowness-cycle.md:116` | OPEN |
 | 1.5 | `implementation` skill | Document `@_disfavoredOverload` patterns for protocol-conformance disambiguation. Used in this session to resolve the Tagged-cascade ambiguity (`Tagged: Carrier` cascading vs `Tagged: Ordinal.\`Protocol\`` sibling). The pattern is not documented elsewhere in the skill canon. | `Reflections/2026-04-26-carrier-integration-retrospective.md:153` | OPEN |
 | 1.6 | `implementation` or `code-surface` skill | Promote the **Self+Self vs Self+Self.Count** test to a general migration-triage discriminator. `capability-lift-pattern.md` v1.2.0 Recommendation #7 captures it for Carrier specifically; the operator-shape discriminator generalises. Add a sub-rule under `[IMPL-*]` or `[API-LAYER-*]`. | `Reflections/2026-04-26-carrier-integration-retrospective.md:151` | OPEN |
+| 1.7 | `code-surface` skill | Amend `[API-IMPL-007]` (extension filename `+` suffix pattern) to admit the **where-clause filename shape** as the canonical form for conditional protocol extensions whose discriminator is a constraint, not a conformance. Examples from carrier-primitives: `Carrier where Underlying == Self.swift`, `Carrier where Underlying == Self, Self ~Copyable.swift`, …. Principal direction (2026-04-29): the where-language form is preferred over `+` suffix mnemonics like `+Q1`/`+Q4` because it is self-documenting at the file level. The `+` suffix remains canonical for conformance-adding extensions (e.g., `Array.Dynamic+Sequence.swift`). | `swift-carrier-primitives/Audits/audit.md` Code Surface #1 (2026-04-29 principal direction) | OPEN |
+| 1.8 | (cross-package corrective action, not a skill amendment) | Property / ownership / tagged-primitives place their Test Support targets under `Sources/...Test Support/` rather than the `[TEST-019]`-mandated `Tests/Support/`. Cross-package fix required before any of those packages tag. Carrier follows `[TEST-019]` correctly; the audit's earlier OPEN classification was inverted. | `swift-carrier-primitives/Audits/audit.md` Testing #6 (2026-04-29 reversal) | OPEN |
 
 ## Tier 2 — Process improvements (blog-process, collaborative-discussion, handoff)
 
@@ -139,17 +141,22 @@ the un-amended skill rule.
 
 ## Net assessment
 
-The Tier 1 list is small (6 items) and mechanical. None requires
-new research; all have specific reflection citations and proposed
-rule text. Landing all six before the ownership audit's Phase 2
-should take a focused half-day. Tier 2/3/4 items expand the
-backlog but do NOT gate the cohort.
+The Tier 1 list is now 7 skill amendments (#1.1–#1.7) plus 1
+cross-package corrective action (#1.8). All have specific provenance
+and proposed rule text or fix description. Landing the skill
+amendments before the ownership audit's Phase 2 should still take a
+focused half-day. Tier 2/3/4 items expand the backlog but do NOT
+gate the cohort.
 
-The biggest leverage is Tier 1 #1.4 (DocC consumer/contributor
-boundary) — it changes how property and ownership audits will run,
-since both packages have decision-record leakage in their
-catalogues that the current `[DOC-028]`/`[DOC-029]` text doesn't
-clearly forbid.
+The biggest leverage items remain:
+- **#1.4** (DocC consumer/contributor boundary) — changes how
+  property and ownership audits will run, since both packages have
+  decision-record leakage in their catalogues that current
+  `[DOC-028]`/`[DOC-029]` text doesn't clearly forbid.
+- **#1.8** (Test Support layout corrective action) — three packages
+  need to relocate Test Support from `Sources/...Test Support/` to
+  `Tests/Support/` per `[TEST-019]`. Surfaced by inverting the
+  carrier audit finding.
 
 ## References
 
