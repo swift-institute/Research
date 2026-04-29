@@ -898,6 +898,26 @@ Strict-curated creates bureaucratic friction for an inherently-extensible vocabu
 
 **Compensating mechanism**: rather than reduce the per-package input by erasing the YAML, reduce it by tightening the **template** so the YAML is fill-in-the-blank rather than a writing exercise. § 3.1 has been revised with strict per-class templates and a spec-title lookup table (`swift-institute/.github/spec-titles.yaml`); the `generate-metadata.yml` workflow renders ~70 % of the public surface's descriptions automatically from name-pattern + lookup. The maintainer's input on the description field is reduced to one slot value (a tagline or capability phrase) and only for the L1 / L3 cases where the slot can't be mechanically derived.
 
+### Q10. Sidebar visibility for Releases / Packages / Deployments — RESOLVED 2026-04-29 (with API-gap caveat)
+
+**Resolution.** Disable the gear-icon "About" sidebar checkboxes for **Releases**, **Packages**, and **Deployments** on every public repo unless the package actually publishes those artifacts. Empirical observation 2026-04-29 on `swift-primitives/swift-carrier-primitives`'s post-merge state: the sidebar showed "No releases published / Create a new release" and "No packages published / Publish your first package" — both directing visitors at nonexistent functionality and cluttering the discovery surface.
+
+**API gap**. GitHub does NOT expose these toggles via REST or GraphQL:
+
+- `gh repo edit` has no `--enable-releases` / `--enable-packages` / `--enable-deployments` flag (only the documented features: issues, wiki, discussions, projects).
+- GraphQL's `UpdateRepositoryInput` exposes `hasIssuesEnabled` / `hasWikiEnabled` / `hasDiscussionsEnabled` / `hasProjectsEnabled` / `hasSponsorshipsEnabled` / `hasPullRequestsEnabled` — but not `hasReleasesEnabled` / `hasPackagesEnabled` / `hasDeploymentsEnabled`.
+- Probing 8 plausible undocumented field names (`show_releases`, `hide_releases`, `display_releases`, `has_releases`, etc.) against `PATCH /repos/{owner}/{repo}` returned no errors, but state did not change — the fields are silently ignored.
+
+The web UI's gear-icon panel uses an internal-only endpoint that is not part of the public API. This is a long-standing community-requested gap.
+
+**Encoding strategy**:
+
+1. **The skill encodes the rule** ([GH-REPO-054] new in v1, 2026-04-29). The standard is "Releases / Packages / Deployments hidden unless publishing" regardless of API availability.
+2. **The YAML schema records intent**. `.github/metadata.yaml` gains an optional `sidebar:` block with `showReleases` / `showPackages` / `showDeployments` (all defaulting to `false`). Today the workflow does not enforce this — it's an audit-only field. When GitHub exposes the toggle (or when an undocumented endpoint is reverse-engineered), one workflow change activates enforcement; the YAML data is already in place.
+3. **Manual click-through at public-flip time**. Until enforcement is possible, the maintainer clicks the gear icon on each repo's main page once and unchecks the three boxes. ~10 seconds per repo. Documented in the `/github-repository` skill's [GH-REPO-054].
+
+This is the rare case where the standard documents an intent that the autopilot cannot yet satisfy. The trade-off is acceptable because: (a) the manual click is bounded (~10s × ~100 public repos = ~17 minutes one-time cost, paid once per repo at flip-time); (b) the YAML records the intent for future audit; (c) when GitHub closes the API gap, the skill flips from "manual" to "auto" with no other change.
+
 ### Q9. GitHub App vs fine-grained PAT for cross-org auth — RESOLVED 2026-04-29
 
 **Resolution.** GitHub App, **named `swift-institute-bot`**, with one App per *install scope* rather than one App per *concern*:
