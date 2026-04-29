@@ -1,10 +1,24 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-26",
+  "generatedAt": "2026-04-29",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-04-29-carrier-launch-arc-and-centralized-workflow-trim.md",
+      "date": "2026-04-29",
+      "title": "Carrier Launch Arc and Centralized Workflow Trim",
+      "packages": [
+        "swift-carrier-primitives",
+        "swift-institute",
+        "swift-primitives",
+        "swift-foundations",
+        "swift-standards"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-04-24-post-cycle-3-audit-and-p2-9-unify-cycle-4.md",
       "date": "2026-04-24",
@@ -3031,7 +3045,7 @@
     {
       "file": "2026-04-28-sub-cycle-1-1-inverted-pattern-a.md",
       "date": "2026-04-28",
-      "title": "Sub-cycle 1.1 — File family INVERTED Pattern A landing",
+      "title": "Sub-cycle 1.1 \u2014 File family INVERTED Pattern A landing",
       "packages": [
         "swift-iso/swift-iso-9945",
         "swift-foundations/swift-kernel",
@@ -3045,7 +3059,7 @@
     {
       "file": "2026-04-29-path-x-phase-2-windows-mirror-execution.md",
       "date": "2026-04-29",
-      "title": "Path X Phase 2 — windows-standard mirror execution (in absentia, INVERTED Pattern A)",
+      "title": "Path X Phase 2 \u2014 windows-standard mirror execution (in absentia, INVERTED Pattern A)",
       "packages": [
         "swift-microsoft/swift-windows-standard",
         "swift-institute"
