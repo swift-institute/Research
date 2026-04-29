@@ -3041,6 +3041,17 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-29-path-x-phase-2-windows-mirror-execution.md",
+      "date": "2026-04-29",
+      "title": "Path X Phase 2 — windows-standard mirror execution (in absentia, INVERTED Pattern A)",
+      "packages": [
+        "swift-microsoft/swift-windows-standard",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
