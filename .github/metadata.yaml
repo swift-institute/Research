@@ -1,0 +1,9 @@
+# .github/metadata.yaml
+# Triaged by AI-assisted bulk pass (2026-04-29).
+description: "Design rationale and trade-off analysis for the Swift Institute ecosystem (non-normative)."
+topics:
+  - swift-institute
+  - research
+  - design
+  - documentation
+homepage: "https://swift-institute.org"
