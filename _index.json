@@ -1,10 +1,21 @@
 {
   "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-26",
+  "generatedAt": "2026-04-29",
   "title": "Research Index",
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
+    {
+      "file": "carrier-launch-skill-incorporation-backlog.md",
+      "displayName": "carrier-launch-skill-incorporation-backlog.md",
+      "topic": "Inventory of skill / convention / research follow-ups whose provenance is the swift-carrier-primitives launch arc (cross-carrier integration, code-surface pass, four-layer doc split, blog drafting, precursor publish, forums-review pre-mortem, capability-vs-noun-type discussion). Tier 1 (6 items) gates the next package's audit; Tier 2 (11 items) covers process improvements; Tier 3 (10 items) opens research; Tier 4 (4 items) is consolidation. Carrier audit Phase 4 references this as the canonical source.",
+      "date": "2026-04-29",
+      "status": "PLAN",
+      "statusDetail": "Tier 1 items are blocking ownership/tagged/property audits' tag procession; Tier 2-4 are non-gating",
+      "statusRaw": "PLAN",
+      "tier": 2,
+      "scope": "cross-package"
+    },
     {
       "file": "posix-descriptor-l2-vs-l3policy.md",
       "displayName": "posix-descriptor-l2-vs-l3policy.md",
