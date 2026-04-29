@@ -900,7 +900,15 @@ Strict-curated creates bureaucratic friction for an inherently-extensible vocabu
 
 ### Q10. Sidebar visibility for Releases / Packages / Deployments — RESOLVED 2026-04-29 (with API-gap caveat)
 
-**Resolution.** Disable the gear-icon "About" sidebar checkboxes for **Releases**, **Packages**, and **Deployments** on every public repo unless the package actually publishes those artifacts. Empirical observation 2026-04-29 on `swift-primitives/swift-carrier-primitives`'s post-merge state: the sidebar showed "No releases published / Create a new release" and "No packages published / Publish your first package" — both directing visitors at nonexistent functionality and cluttering the discovery surface.
+**Resolution.** Configure the gear-icon "About" sidebar checkboxes per package class:
+
+- **Releases: ON by default.** Every Swift package publishes tagged releases (Git tag → SPI). The Releases sidebar entry directs visitors to find them. Originally proposed off-by-default 2026-04-29 (with an over-broad reading of "the empty section is noise"); corrected by principal same day — empty-now is fine because the package will publish releases imminently.
+- **Packages: OFF by default.** Institute packages distribute via Swift Package Manager (Git tags consumed by SPI), not via GitHub Packages registry. The empty "Publish your first package" link directs visitors at nonexistent functionality.
+- **Deployments: OFF by default.** Institute packages do not run GitHub Actions deployments. The empty section is noise.
+
+Override via `.github/metadata.yaml`'s `sidebar:` block per [GH-REPO-060] when a specific package genuinely publishes Packages or Deployments.
+
+Empirical observation 2026-04-29 on `swift-primitives/swift-carrier-primitives`'s post-merge state: the sidebar showed Packages directing at nonexistent registry functionality. Releases also showed but is the right shape pending the package's first tag.
 
 **API gap**. GitHub does NOT expose these toggles via REST or GraphQL:
 
