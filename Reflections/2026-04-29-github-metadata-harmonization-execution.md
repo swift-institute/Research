@@ -6,6 +6,11 @@ packages:
   - swift-primitives
   - swift-foundations
   - swift-standards
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: no_action
+    description: "All 5 'Skill / process implications' items describe work already shipped: [GH-REPO-011] description template revised mid-flight; [GH-REPO-014] spec-titles.yaml seeded with 76 entries; [GH-REPO-070] centralised-only architecture shipped; [GH-REPO-073] App auth shipped; generator script shipped with BCP + ISO/IEC fallbacks. The reflection serves as a documentation artifact for future similar 'investigation → standard → skill → tooling → rollout' efforts; no new SkillUpdate beyond the work already shipped."
   - swift-ietf
   - swift-iso
   - swift-ieee
