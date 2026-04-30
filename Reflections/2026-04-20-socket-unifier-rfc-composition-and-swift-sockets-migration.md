@@ -8,7 +8,17 @@ packages:
   - swift-rfc-791
   - swift-rfc-4291
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: platform
+    description: "[PLAT-ARCH-021] Domain-Specific Cross-Platform Unification Lives in Domain L3 Packages — codifies the swift-sockets migration; swift-kernel stays domain-neutral, RFC/ISO/vendor spec deps belong in domain L3 packages."
+  - type: no_action
+    description: "Action item 2 ([experiment] ecosystem-wide network-byte-order docstring drift sweep) deferred — concrete experiment creation overhead exceeds value at present. Trigger to dispatch: when a third docstring-vs-reality drift surfaces or a docstring-accuracy audit is initiated. Template available: ipv6-address-alignment experiment (commit 44b326f)."
+  - type: research_topic
+    target: l3-domain-unifier-vs-kernel-consumption.md
+    description: "Tier 2 IN_PROGRESS — when does an L3 domain package need its own cross-platform unifier surface? Holds operational rule (three triggers); pending empirical survey of existing domain packages."
 ---
 
 # Socket Unifier: RFC Composition and swift-sockets Migration

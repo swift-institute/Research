@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "l3-domain-unifier-vs-kernel-consumption.md",
+      "displayName": "l3-domain-unifier-vs-kernel-consumption.md",
+      "topic": "When does an L3 domain package need its own cross-platform unifier surface (e.g., swift-sockets, swift-io) vs consuming swift-kernel directly (e.g., swift-file-system, swift-paths)? Origin: 2026-04-20 socket-unifier migration crystallized [PLAT-ARCH-021]. Operational rule: domain L3 needs own unifier when introducing public types distinct from kernel primitives, public operations composing kernel + domain policy, or spec deps belonging outside swift-kernel. Pending: empirical survey of existing domain packages.",
+      "date": "2026-04-30",
+      "status": "IN_PROGRESS",
+      "statusDetail": "Operational rule sufficient ([PLAT-ARCH-021] codified); empirical threshold analysis deferred",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
       "file": "stdlib-protocol-sdk-availability.md",
       "displayName": "stdlib-protocol-sdk-availability.md",
       "topic": "When do new stdlib protocols (introduced in Swift 6.x) become available in SDK .swiftinterface? Origin: 2026-04-16 cooperative-donation session discovered RunLoopExecutor + SchedulingExecutor + MainExecutor are public in swiftlang/swift source but absent from macOS 26.4 SDK. Two-mechanism model (SPI stripping + SDK-availability lag) produces the same compile-time failure. Held operational rule: grep target SDK .swiftinterface before authoring conformance. Pending: multi-SDK spike + source archaeology + Apple roadmap search.",
