@@ -61,7 +61,7 @@ own backlogs.
 | 1.5 | `implementation` skill | Document `@_disfavoredOverload` patterns for protocol-conformance disambiguation. Used in this session to resolve the Tagged-cascade ambiguity (`Tagged: Carrier` cascading vs `Tagged: Ordinal.\`Protocol\`` sibling). The pattern is not documented elsewhere in the skill canon. | `Reflections/2026-04-26-carrier-integration-retrospective.md:153` | LANDED 35dce3e 2026-04-30 (`[PATTERN-029]` in implementation/patterns.md) |
 | 1.6 | `implementation` or `code-surface` skill | Promote the **Self+Self vs Self+Self.Count** test to a general migration-triage discriminator. `capability-lift-pattern.md` v1.2.0 Recommendation #7 captures it for Carrier specifically; the operator-shape discriminator generalises. Add a sub-rule under `[IMPL-*]` or `[API-LAYER-*]`. | `Reflections/2026-04-26-carrier-integration-retrospective.md:151` | LANDED 35dce3e 2026-04-30 (`[API-LAYER-002]` in implementation/patterns.md) |
 | 1.7 | `code-surface` skill | Amend `[API-IMPL-007]` (extension filename `+` suffix pattern) to admit the **where-clause filename shape** as the canonical form for conditional protocol extensions whose discriminator is a constraint, not a conformance. Examples from carrier-primitives: `Carrier where Underlying == Self.swift`, `Carrier where Underlying == Self, Self ~Copyable.swift`, …. Principal direction (2026-04-29): the where-language form is preferred over `+` suffix mnemonics like `+Q1`/`+Q4` because it is self-documenting at the file level. The `+` suffix remains canonical for conformance-adding extensions (e.g., `Array.Dynamic+Sequence.swift`). | `swift-carrier-primitives/Audits/audit.md` Code Surface #1 (2026-04-29 principal direction) | LANDED 35dce3e 2026-04-30 — scope: limited to suppressed-protocol-constraint discriminators (`Self ~Copyable`, `Self ~Escapable`, or both); the unconditional base file in such a family (`Carrier where Underlying == Self.swift`) is admitted as part of the same convention per principal direction 2026-04-30. |
-| 1.8 | (cross-package corrective action, not a skill amendment) | Property / ownership / tagged-primitives place their Test Support targets under `Sources/...Test Support/` rather than the `[TEST-019]`-mandated `Tests/Support/`. Cross-package fix required before any of those packages tag. Carrier follows `[TEST-019]` correctly; the audit's earlier OPEN classification was inverted. | `swift-carrier-primitives/Audits/audit.md` Testing #6 (2026-04-29 reversal) | OPEN |
+| 1.8 | (cross-package corrective action, not a skill amendment) | Property / ownership / tagged-primitives place their Test Support targets under `Sources/...Test Support/` rather than the `[TEST-019]`-mandated `Tests/Support/`. Cross-package fix required before any of those packages tag. Carrier follows `[TEST-019]` correctly; the audit's earlier OPEN classification was inverted. | `swift-carrier-primitives/Audits/audit.md` Testing #6 (2026-04-29 reversal) | RESOLVED 2026-04-30 — verified during ownership-primitives 0.1.0 final pre-release scan (`swift-ownership-primitives/Audits/audit.md` Phase 6): all three packages (property, ownership, tagged) place Test Support correctly at `Tests/Support/`. Each `Package.swift` declares `path: "Tests/Support"`; each ships `Tests/Support/exports.swift`. The row text was a stale snapshot pre-dating the underlying remediation; no relocation work needed. |
 | 1.9 | (workspace tooling, not a skill amendment) | Centralize the local DocC preview helper. Currently bare `swift package preview-documentation` fails on multi-target umbrella packages because the SLI's `@_exported public import` shadows the umbrella's `Carrier` symbol. Per-package `Scripts/preview-docs.sh` would duplicate centralized CI work and accumulate drift. Options: (a) ship one parameterized `swift-institute/Scripts/preview-docs.sh` callable from any umbrella package; (b) upstream the `--exclude-module` flag to `swift package preview-documentation`; (c) skip — leave local preview as "rebuild via CI." Provenance: principal direction 2026-04-29 declined the per-package script in carrier-primitives and asked why centralized CI doesn't already cover this. | swift-carrier-primitives README Contributing decision (2026-04-29) | OPEN |
 | 1.10 | `swift-forums-review` skill | Relocate output destination from `<package>/Research/` to `<package>/Audits/forums-review/`. Forums-review artifacts are pre-launch synthetic-critique exercises with bad public optics in `Research/`; `Audits/` is gitignored ecosystem-wide per `[AUDIT-002]` and semantically captures internal verification artifacts. **LANDED 2026-04-29** — skill commit `27ef561`; carrier (5 files), ownership (5 files), async (11 files) artifacts relocated and pushed (`69013ba`, `9383063`, `51f14eb`). Note: prior commits still contain the files in git history; full history-scrub via `git filter-repo` + force-push deferred. | swift-forums-review skill output paths (2026-04-29 principal direction) | LANDED 2026-04-29 |
 | 1.11 | `readme` skill | Add explicit rule **forbidding internal rule-ID citations** (`[MOD-015]`, `[PRIM-FOUND-001]`, etc.) in README prose. Rule IDs are author-oriented; consumers don't know what they mean. Reference impl (`swift-property-primitives/README.md`) has zero rule-ID citations but the skill never explicitly forbids them — relies on `[README-023]` evaluator's lens by inference. **Provenance**: 2026-04-29 carrier README review caught 2 rule-ID citations (`[MOD-015]`, `[PRIM-FOUND-001]`) that the prescribed shape would have caught with imitation but not via explicit rule. Proposed: new `[README-026]` "No internal rule-ID citations in README content. Implementation rationale belongs in `Research/`; consumer-facing prose names the behaviour, not the rule." | swift-carrier-primitives README cleanup (2026-04-29) | LANDED 35dce3e 2026-04-30 (`[README-026]` in readme/SKILL.md) |
@@ -156,9 +156,14 @@ The Tier 1 list contains 12 items. As of 2026-04-30 (Pass-Out):
   workspace-level git decision.)
 - **1 item previously LANDED**: #1.10 (forums-review output destination,
   skill commit `27ef561` 2026-04-29).
-- **2 items remain OPEN**: #1.8 (cross-package Test Support layout
-  corrective action — three packages need relocation), #1.9 (workspace
-  tooling decision for DocC preview centralization).
+- **1 item RESOLVED 2026-04-30 (premise stale)**: #1.8 (cross-package
+  Test Support layout) — verified during ownership-primitives 0.1.0
+  final pre-release scan that all three packages already place Test
+  Support at `Tests/Support/`. The OPEN classification was a row-text
+  snapshot from before the underlying state had been corrected; no
+  relocation work needed.
+- **1 item remains OPEN**: #1.9 (workspace tooling decision for DocC
+  preview centralization).
 
 Pass 2 supplemental promotions landed alongside the Tier 1 amendments:
 - New skill: `release-readiness` ([RELEASE-001]–[RELEASE-006]) seeded
@@ -179,13 +184,17 @@ Pass 3 supplemental refinements landed alongside:
 The ownership audit's Phase 2 may now proceed against the updated rule
 set. Tier 2/3/4 items expand the backlog but do NOT gate the cohort.
 
-Outstanding Tier 1 items (do NOT block carrier's tag, but DO block
-ownership/tagged/property's audits unless explicitly deferred):
+Outstanding Tier 1 items (do NOT block carrier's tag; #1.8 RESOLVED on
+2026-04-30 with no work needed):
 
-- **#1.8** (Test Support layout corrective action) — three packages need
+- ~~**#1.8** (Test Support layout corrective action) — three packages need
   to relocate Test Support from `Sources/...Test Support/` to
   `Tests/Support/` per `[TEST-019]`. Surfaced by inverting the carrier
-  audit finding. Cross-package code change, NOT a skill change.
+  audit finding. Cross-package code change, NOT a skill change.~~
+  **RESOLVED 2026-04-30** — verified during ownership-primitives 0.1.0
+  final pre-release scan. All three packages were already at `Tests/Support/`
+  at the time the row was written; the OPEN classification was a stale
+  snapshot. See `swift-ownership-primitives/Audits/audit.md` Phase 6.
 - **#1.9** (DocC preview centralization) — workspace tooling decision;
   options A (parameterized `swift-institute/Scripts/preview-docs.sh`),
   B (upstream `--exclude-module` to `swift package preview-documentation`),
