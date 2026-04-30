@@ -10,7 +10,18 @@ packages:
   - swift-microsoft/swift-windows-standard
   - swift-foundations/swift-kernel
   - swift-primitives/swift-kernel-primitives
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: modularization
+    description: "[MOD-RENT] Three-Criteria Primitive-Package Rent Test — capability + consumer + theoretical-content gate; codifies the swift-lifetime-primitives deletion as worked example. Anti-pattern: defending packages on conceptual-purity grounds."
+  - type: skill_update
+    target: platform
+    description: "[PLAT-ARCH-008f] worked example added — Local → Key / Index L2 spec-literal rename (solution (a)) at swift-iso-9945 and swift-windows-standard freeing L3 namespace for generic Kernel.Thread.Local<Payload>. Second application of the rule."
+  - type: package_insight
+    target: swift-windows-standard/Research/_Package-Insights.md
+    description: "Created insights doc documenting that Kernel.Thread.Local<Payload> lacks per-thread cleanup on Windows because TlsAlloc has no destructor mechanism. Future work: FlsAlloc / FlsSetCallback wiring for symmetric per-thread cleanup."
 ---
 
 # Ecosystem audit, lifetime-primitives deletion, and typed Kernel.Thread.Local promotion
