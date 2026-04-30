@@ -1922,8 +1922,26 @@
         "swift-executors",
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "handoff",
+          "description": "[HANDOFF-033] L1-API-Change Cascade Disclosure"
+        },
+        {
+          "type": "skill_update",
+          "target": "memory-safety",
+          "description": "[MEM-SEND-005] Non-Mutating Concurrent Access for ~Copyable Wrappers"
+        },
+        {
+          "type": "package_research",
+          "target": "swift-foundations/swift-executors/Research/work-stealing-scheduler-design.md",
+          "description": "Added v1 Optimization Items section"
+        }
+      ]
     },
     {
       "file": "2026-04-16-docc-landing-restructure-and-layers-show.md",
