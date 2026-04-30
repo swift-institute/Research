@@ -3033,7 +3033,25 @@
         "swift-foundations/swift-observations",
         "swift-primitives/swift-bit-primitives"
       ],
-      "status": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "testing-swiftlang",
+          "description": "[SWIFT-TEST-016] Macro Test Framework — Generic Helper, No XCTest, No Foundation; SwiftSyntaxMacrosGenericTestSupport + Swift Testing failureHandler; documents form-vs-site validation gap"
+        },
+        {
+          "type": "skill_update",
+          "target": "modularization",
+          "description": "[MOD-023] #externalMacro Module Name Normalization — string literal must match SwiftPM-normalized module identifier (spaces → underscores)"
+        },
+        {
+          "type": "no_action",
+          "description": "Apple-shadow framing of runtime-test Box swap superseded by absolute Foundation ban in /implementation; shadow is a side benefit, Foundation rule already covers this"
+        }
+      ]
     },
     {
       "file": "2026-04-26-cross-carrier-utilities-research-defer.md",
