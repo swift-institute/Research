@@ -6,6 +6,28 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "cross-platform-sibling-as-refactor-template.md",
+      "displayName": "cross-platform-sibling-as-refactor-template.md",
+      "topic": "When fixing a layering or structural violation in one per-platform package, sibling per-platform packages' working analogs are often the fastest refactor template. Origin instance: swift-windows.Thread.Affinity (2026-04-26 P3.5 refactor) used swift-linux.Thread.Affinity as structural template (NUMA discovery via same-package call + downward System_Primitives import). Doc scopes when the heuristic applies (cross-platform-shared concerns with shared conceptual model) vs when it does not (genuinely platform-divergent subsystems like Mach ports / io_uring / Job Objects, all-siblings-violate cases, platform-conditional rules). Open: ecosystem-wide census, failure modes, skill-level codification candidacy.",
+      "date": "2026-04-30",
+      "status": "IN_PROGRESS",
+      "statusDetail": "Origin observation captured from one instance; ecosystem-wide census of cross-platform-shared subsystems pending before recommendation graduates",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "skill-corpus-holistic-review.md",
+      "displayName": "skill-corpus-holistic-review.md",
+      "topic": "Holistic review of the 37-skill corpus across 4 layers (1 meta, 3 architecture, 14 implementation, 19 process). Methodology: 8 parallel Explore subagents covering all clusters + mechanical cross-skill scan for ID collisions and last_reviewed staleness. Categorized findings: 5 Tier-1 critical defects (broken cross-references, ghost rules, dangling skill dependencies); 10 Tier-2 substantive items (platform skill split candidate at 1574 lines; persistent heading-spelling defect from 2026-04-15 audit; release-readiness skill gaps; missing changelog/release-notes skill; testing cluster cluster-review candidate); 14 Tier-3 polish items. Cross-cluster patterns identified: (1) ghost references — 5 distinct defects slipping past [AUDIT-028] notation-variant scan; (2) stale-skill verdicts mixed (4 stable bumps, 4 content updates needed); (3) workflow-pipeline cross-reference asymmetry across audit/research/experiment/forums/evolution. Verifies 7 prior findings from 2026-04-15 cluster audit (4 fixed, 1 mitigated, 1 partial, 1 still open). Aggregate effort estimate: ~30-36 hours of skill-maintenance work indicated.",
+      "date": "2026-04-30",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Tier 1 (5 items, ~80 min) executable immediately; Tier 2 (10 items, ~17-22 hours) coordinated multi-session work including platform skill split; Tier 3 (14 items, ~12 hours) opportunistic polish. Recommends [SKILL-LIFE-031] cluster-review on testing/testing-swiftlang/testing-institute/benchmark.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "github-metadata-harmonization.md",
       "displayName": "github-metadata-harmonization.md",
       "topic": "GitHub metadata harmonization across primitives / standards / foundations — empirical inventory of 439 repos across 17 orgs (102 public; description coverage 86%, topic coverage 13%, homepage coverage 46% with 47/47 populated values pointing at maintainer's personal homepage on Institute repos); proposed unified standard (layer-typed description format with specification-mirroring for L2; fixed topic taxonomy with curated domain registry; per-package SPI documentation URL or swift-institute.org homepage; Apache 2.0 + auto-detected LICENSE.md; explicit hasWiki=false / hasDiscussions=false ecosystem-wide); per-package .github-metadata.yaml + Scripts/sync-github-metadata.sh as the canonical-source-and-propagation pair (analogous to sync-community-health.sh); 6-phase rollout with HANDOFF-023 / no-public-without-explicit-yes authorization gates; skill-system encoding decided 6b — recommends new /github-repository skill (skeleton authored at Skills/github-repository/SKILL.md, status PROPOSAL, ~24 [GH-REPO-*] rules in 7 sections).",

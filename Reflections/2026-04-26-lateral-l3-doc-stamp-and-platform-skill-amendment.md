@@ -6,7 +6,18 @@ packages:
   - swift-institute/Audits
   - swift-institute/Skills
   - swift-foundations/swift-windows
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: audit
+    description: "[AUDIT-029] Empirical Census Before Options Matrix — when codifying a layering/composition/classification rule from audit findings, an empirical census across the rule's scope MUST precede the options matrix. Findings are samples; the census is the population."
+  - type: skill_update
+    target: audit
+    description: "[AUDIT-030] Real-Time Per-Package audit.md Row-Text Updates — distinct from [AUDIT-005] re-audit cycle; remediation sessions MUST update the per-package audit.md row text in-session alongside the source change, not deferred to a hygiene-sweep dispatch."
+  - type: research_topic
+    target: cross-platform-sibling-as-refactor-template.md
+    description: "Tier 2 IN_PROGRESS Research Doc scoping when sibling per-platform packages' working analogs are valid refactor templates (cross-platform-shared concerns) vs when they are not (genuinely platform-divergent subsystems). Origin: 2026-04-26 swift-windows.Thread.Affinity refactor mirrored swift-linux.Thread.Affinity."
 ---
 
 # Lateral-L3 Doc stamp + platform skill amendment + P3.5 refactor — 2026-04-26
