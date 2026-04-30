@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-03-30
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-04-30
+status: DEFERRED
 tier: 2
 workflow: Investigation [RES-001]
 trigger: Dropping Sendable from Channel<Element> (cbea779) exposed the question — which Sendable constraints in the async layer are essential vs inherited?
@@ -181,6 +181,22 @@ The evidence points toward **Option C (Two-Tier Architecture)** as the strongest
 1. **Naming**: Should concrete operators live on `AsyncSequence` (stdlib-style) or as `Async.Stream.Concrete.*` (namespaced)?
 2. **Module placement**: Concrete operators in swift-async (L3) or a new package?
 3. **Priority**: Is the concrete operator layer worth building now, or should we wait for Swift Evolution to address `sending` in closure types?
+
+### Status — DEFERRED (2026-04-30)
+
+**Disposition**: The preliminary recommendation (Option C, two-tier architecture) is sound and the structural conclusions (`Async.Stream<Element: Sendable>` keeps its requirement; bridge extensions narrow availability via `where Element: Sendable`; channel receivers remain usable without Sendable via `.elements`) are immediately actionable.
+
+**Blocker**: Implementation of the concrete operator layer requires a strategic decision on the three open questions above — naming, module placement, and priority. Two of those decisions are sensitive to upstream Swift Evolution work on `sending` in closure types; committing to a layout now risks rework if the language gains a structural fix.
+
+**Resumption trigger** (any of):
+- Swift Evolution review/acceptance of `sending` in closure types lands (closes Open Question 3)
+- A second consumer surfaces with a concrete need for non-Sendable element processing in the async layer (forces the priority decision)
+- Ecosystem priority cycle reaches the async layer cleanup work (covers the strategic-prioritization channel)
+
+**Held immediately-actionable findings** (apply regardless of deferral):
+- `Async.Stream<Element: Sendable>` Sendable requirement is preserved as structurally necessary
+- Bridge extensions use `where Element: Sendable` (correctly narrows availability)
+- Channel receivers remain usable without Sendable via their `.elements` AsyncSequence path
 4. **Scope**: Which operators need concrete versions? The recommendation identifies ~20 linear operators vs ~20 concurrent operators that inherently need type erasure.
 
 ### Immediate Decision (for the current migration)

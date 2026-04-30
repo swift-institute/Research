@@ -3,10 +3,10 @@
 <!--
 ---
 tier: 2
-version: 1.0.0
-status: IN_PROGRESS
+version: 1.1.0
+status: RECOMMENDATION
 created: 2026-03-27
-last_updated: 2026-03-27
+last_updated: 2026-04-30
 packages: [swift-tests, swift-testing, swift-console, swift-test-primitives]
 skills: [testing, testing-institute, design]
 related: [test-output-quality-parity.md, benchmark-implementation-conventions.md]

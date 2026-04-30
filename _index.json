@@ -1,7 +1,7 @@
 {
   "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-04-29",
+  "generatedAt": "2026-04-30",
   "title": "Research Index",
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
@@ -374,11 +374,12 @@
       "file": "claude-code-swift-rewrite-feasibility.md",
       "displayName": "claude-code-swift-rewrite-feasibility.md",
       "topic": "Can the Claude Code agent architecture be reimplemented using the Swift Institute ecosystem? Subsystem mapping, gap analysis, new package proposals. Tier 2, ecosystem-wide.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "DEFERRED",
+      "statusDetail": "Feasibility analysis complete; ecosystem covers ~40-50% of required infrastructure; 6 L2 + 2 L3 + 1 L4 new packages identified. Deferred pending strategic decision on TLS approach (platform-wrap vs pure-Swift). Independent work (prototype, HTTP spike, tool protocol) can begin without prejudicing the strategic call.",
+      "statusRaw": "DEFERRED",
       "tier": 2,
-      "scope": "ecosystem-wide"
+      "scope": "ecosystem-wide",
+      "date": "2026-04-30"
     },
     {
       "file": "transfer-cell-cancellation-propagation.md",
@@ -394,31 +395,34 @@
       "file": "treereduce-swift-feasibility.md",
       "displayName": "treereduce-swift-feasibility.md",
       "topic": "Feasibility of treereduce-swift using tree-sitter-swift grammar for automated test case reduction. Tier 2, ecosystem-wide.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "DEFERRED",
+      "statusDetail": "Tooling-gap analysis sketched (Swift uniquely lacks source-level + IR-level automated test-case reduction). Deferred — no specific compiler-bug investigation blocked on reduction effort. Resumes when a specific bug forces the issue or an ecosystem-wide audit produces a reduction-bottleneck finding.",
+      "statusRaw": "DEFERRED",
       "tier": 2,
-      "scope": "ecosystem-wide"
+      "scope": "ecosystem-wide",
+      "date": "2026-04-30"
     },
     {
       "file": "path-decomposition-delegation-strategy.md",
       "displayName": "path-decomposition-delegation-strategy.md",
       "topic": "Should Paths.Path delegate decomposition to L1 via Span<Char> or raw offset? Tier 2, cross-package.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "DEFERRED",
+      "statusDetail": "Three-option enumeration documented; backing experiments path-primitives-decomposition + path-parent-span-return both CONFIRMED. Deferred — no consumer forcing the L3-over-L1 unification; held finding is Option C (Hybrid: parentBytes + parentLength). Resumes when L3 Paths.Path performance/duplication becomes blocking.",
+      "statusRaw": "DEFERRED",
       "tier": 2,
-      "scope": "cross-package"
+      "scope": "cross-package",
+      "date": "2026-04-30"
     },
     {
       "file": "handle-vs-arena-position-unification.md",
       "displayName": "handle-vs-arena-position-unification.md",
       "topic": "Could Handle<_Entry> be replaced by Buffer.Arena.Position for Timer.Wheel.ID? Tier 1, cross-package.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "DEFERRED",
+      "statusDetail": "Trade-off table sketched; investigation never advanced past it. Deferred — no urgent driver in ecosystem; Timer.Wheel currently uses arena storage and the boundary bridge is cheap. Resumes when storage strategy reconsidered, handle-primitives audited, or a second consumer surfaces the pattern.",
+      "statusRaw": "DEFERRED",
       "tier": 1,
-      "scope": "cross-package"
+      "scope": "cross-package",
+      "date": "2026-04-30"
     },
     {
       "file": "concrete-async-operator-types.md",
@@ -564,11 +568,12 @@
       "file": "skill-as-input-composition-pattern.md",
       "displayName": "skill-as-input-composition-pattern.md",
       "topic": "Should the \"regarding\" composition pattern (skill-as-input, e.g. `/audit regarding /implementation`) be generalized to other process skills? Tier 2, ecosystem-wide.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "DEFERRED",
+      "statusDetail": "Three-considerations stub; no second consumer of skill-as-input pattern. Deferred per [RES-018] premature-primitive heuristic — generalizing a one-instance pattern is exactly the anti-pattern. Resumes when a second process skill surfaces concrete demand or skill-lifecycle gains typed-input metadata.",
+      "statusRaw": "DEFERRED",
       "tier": 2,
-      "scope": "ecosystem-wide"
+      "scope": "ecosystem-wide",
+      "date": "2026-04-30"
     },
     {
       "file": "noncopyable-synchronization-ecosystem-audit.md",
@@ -774,11 +779,12 @@
       "file": "async-stream-sendable-requirement.md",
       "displayName": "async-stream-sendable-requirement.md",
       "topic": "Should Async.Stream require Element: Sendable? Tier 2 investigation. 4 options: status quo, non-Sendable Stream, two-tier concrete+erased, dual types. Preliminary: Option C (two-tier) strongest — concrete operators for isolation-preserving composition, Stream as explicit erasure/concurrency boundary. Synthesizes stream-isolation-preservation experiment, 3 prior research docs.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "DEFERRED",
+      "statusDetail": "Preliminary recommendation Option C (two-tier architecture) sound; Async.Stream<Element: Sendable> requirement preserved as structurally necessary. Deferred pending strategic decision on three open questions (naming, module placement, priority) sensitive to Swift Evolution sending-in-closures work.",
+      "statusRaw": "DEFERRED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "date": "2026-04-30"
     },
     {
       "file": "benchmark-implementation-conventions.md",
@@ -2384,11 +2390,12 @@
       "file": "test-console-output-elegance.md",
       "displayName": "test-console-output-elegance.md",
       "topic": "Test console output: from functional to elegant (Tier 2) — comprehensive analysis of console output across unit tests, performance benchmarks, and snapshot tests. Current state: flat streaming with no hierarchy, no suite aggregation, mixed formatting vocabularies. Apple: experimental AdvancedConsoleOutputRecorder with deferred tree rendering. Prior art: Jest, criterion.rs, hyperfine. Theoretical ideal: 6-phase plan — suite-level aggregation + tree summary (Phase 1), right-aligned durations + terminal width (Phase 2), box-drawn performance tables (Phase 3), real-time suite progress (Phase 4), side-by-side benchmark comparison (Phase 5), comparison CLI (Phase 6). Hybrid reporter architecture (Option C) recommended.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Analysis complete; Option C (Hybrid reporter architecture) recommended with 6 implementation phases identified. Phases 1–3 deliver the most value. Awaiting principal authorization to begin implementation.",
+      "statusRaw": "RECOMMENDATION",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "date": "2026-04-30"
     },
     {
       "file": "test-output-quality-parity.md",
