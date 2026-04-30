@@ -13,7 +13,26 @@
         "swift-ownership-primitives",
         "swift-institute"
       ],
-      "status": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "release-readiness",
+          "description": "[RELEASE-002] Phase 6 amended — backlog row status verification MUST re-derive from current source"
+        },
+        {
+          "type": "skill_update",
+          "target": "swift-forums-review",
+          "description": "[FREVIEW-020] Delta Re-Simulation Mode for Low-Change Windows"
+        },
+        {
+          "type": "package_action",
+          "target": "swift-ownership-primitives",
+          "description": "File upstream swiftlang/swift issue for @inlinable miscompile (package-owner action)"
+        }
+      ]
     },
     {
       "file": "2026-04-29-path-x-phase-2-windows-mirror-execution.md",

@@ -4,7 +4,18 @@ session_objective: Apply the release-readiness skill to swift-ownership-primitiv
 packages:
   - swift-ownership-primitives
   - swift-institute (Research/carrier-launch-skill-incorporation-backlog.md as backlog reference; Skills/release-readiness as canonical workflow)
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: release-readiness
+    description: "[RELEASE-002] Phase 6 amended — backlog row status verification MUST re-derive each row's claim from current source, not just read row text. Cross-references [HANDOFF-021] + [AUDIT-029]."
+  - type: skill_update
+    target: swift-forums-review
+    description: "[FREVIEW-020] Delta Re-Simulation Mode for Low-Change Windows — ~10% cost of full [FREVIEW-019] when (a) prior sim exists, (b) <10 commits, (c) <10% LOC delta."
+  - type: package_action
+    target: swift-ownership-primitives
+    description: "AI 3 — file upstream swiftlang/swift issue for @inlinable + withUnsafePointer + ~Copyable Value release-mode miscompile. Captured here as triage outcome; actual filing is package-owner action, not /reflections-processing scope."
 ---
 
 # Ownership-Primitives Launch and Release-Readiness Skill Validation
