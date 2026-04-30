@@ -6,6 +6,17 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-30-handoff-lifecycle-execution.md",
+      "date": "2026-04-30",
+      "title": "HANDOFF Lifecycle and Retention — Execution",
+      "packages": [
+        "swift-institute/Skills",
+        "swift-institute/Research"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-30-phase-1b-stale-triage-and-deferred-fixed-codification.md",
       "date": "2026-04-30",
       "title": "Phase 1b Stale-Experiment Triage and the DEFERRED-to-FIXED Codification",
