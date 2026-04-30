@@ -3192,8 +3192,26 @@
         "swift-foundations/swift-memory",
         "swift-foundations/swift-darwin"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "platform",
+          "description": "[PLAT-ARCH-019] INVERTED Pattern A — Additive Raw-Alongside-Typed at L2; third compositional shape alongside Pattern A and Phase 1.5 retroactive re-typing"
+        },
+        {
+          "type": "skill_update",
+          "target": "platform",
+          "description": "[PLAT-ARCH-020] L3-Unifier Shadow Pre-Flight Check — before modifying L2 typed forms, grep L3-unifier sources for parallel extensions; if found, need @_disfavoredOverload"
+        },
+        {
+          "type": "skill_update",
+          "target": "handoff",
+          "description": "[HANDOFF-024a] Linux Baseline Pre-Flight — Mandatory-to-Run, Conditional-on-Fix; clean pre-flight proceeds directly without prereq commit"
+        }
+      ]
     },
     {
       "file": "2026-04-29-path-x-phase-2-windows-mirror-execution.md",
