@@ -149,7 +149,7 @@ Findings are categorized by severity. Severity definitions:
 | # | Skill | Severity | Finding | Citation |
 |---|---|---|---|---|
 | G1 | handoff | **CRITICAL** | `[HANDOFF-028]` slot is **orphaned**. Sequence runs `[HANDOFF-021]–[HANDOFF-030]` with `[HANDOFF-028]` missing. Either an ID should exist or numbering needs explanation. | `handoff/SKILL.md` |
-| G2 | handoff + supervise + reflect-session | HIGH | **PERSISTENT from 2026-04-15 audit B.1**: heading spelling drift. `[HANDOFF-004]` template literal: `### Supervisor Ground Rules` (no hyphen). Prose throughout three skills: `"supervisor ground-rules block"` (hyphenated). `[REFL-009]` cleanup scans for the literal heading; mismatch allows silent bypass. **NOT FIXED since 2026-04-15.** | `handoff/SKILL.md:119`, `reflect-session/SKILL.md:274`, `supervise/SKILL.md:81` |
+| G2 | handoff + supervise + reflect-session | **WITHDRAWN** | ~~PERSISTENT from 2026-04-15 audit B.1: heading spelling drift...~~ **WITHDRAWN 2026-04-30**: the heading-vs-prose distinction is **intentional and documented** at `handoff/SKILL.md:126–131`. The literal markdown heading IS `### Supervisor Ground Rules` (Title Case, no hyphen, matching template style); prose form IS `"supervisor ground-rules block"` (hyphenated compound modifier); `[REFL-009]` MUST match the literal heading exactly when scanning. Cluster G agent's finding superseded by skill-self-documented convention. The 2026-04-15 B.1 finding was resolved by documenting the convention rather than canonicalizing it. | `handoff/SKILL.md:126–131` (convention); `reflect-session/SKILL.md` (REFL-009 matches literal) |
 | G3 | skill-lifecycle | MEDIUM | `[SKILL-LIFE-026]` and `[SKILL-LIFE-027]` exist but use 026/027 numbering — does not align with the stated convention "020–029 reserved for deprecation, 030–031 for cluster review." Numbering convention drift. | `skill-lifecycle/SKILL.md:454, 731–766` |
 | G4 | reflections-processing | — | Recent (2026-04-30) carrier-exception note properly bounded. `[REFL-PROC-016]` ID-uniqueness scan (2026-04-24) sound. | — |
 | G5 | reflect-session | — | 30-day age. Stable since prior cluster audit. | — |
@@ -234,7 +234,7 @@ Per `[RES-013a]` Synthesis Verification, every prior finding was checked:
 
 | Finding | Status | Notes |
 |---|---|---|
-| B.1 — Heading spelling: `Supervisor Ground Rules` vs `supervisor ground-rules block` | **STILL OPEN** (G2 above) | `[REFL-009]` cleanup scans literal heading; mismatch allows silent bypass |
+| B.1 — Heading spelling: `Supervisor Ground Rules` vs `supervisor ground-rules block` | **RESOLVED-BY-DESIGN** (verified 2026-04-30) | Convention now explicitly documented at `handoff/SKILL.md:126–131` — heading-vs-prose distinction is intentional. `[REFL-009]` matches literal heading; consistent with documented convention. |
 | B.5 — Supervisor in absentia concept coined in handoff | **PARTIALLY ADDRESSED** | `[SUPER-014a]` added; `[HANDOFF-012]` role-wording also fixed |
 | C.1 — Escalation lacks persistence requirement | **MIXED** | `[SUPER-012]` Persistence Requirement table added; `[SUPER-016]` Step 4 still doesn't list escalation in termination bullet |
 | C.4 — `[SUPER-016]` Step 4 skips `/handoff` invocation | **FIXED** | Step 4 now correctly invokes `/handoff` per `[SUPER-010]` |
@@ -242,7 +242,7 @@ Per `[RES-013a]` Synthesis Verification, every prior finding was checked:
 | E.1 — Success-termination subordinate verification line | **FIXED** | `[HANDOFF-010]` step 5 explicit on all three termination paths |
 | E.2 — `[HANDOFF-012]` "plays the supervisor role" claim | **FIXED** | Now reads "plays the ground-rules role" |
 
-**Verdict**: 4 fixed, 1 mitigated, 1 partial, 1 still open (G2 / B.1). The cluster has substantially improved since 2026-04-15. The persistent G2 defect is the only critical inheritance.
+**Verdict (revised 2026-04-30)**: 4 fixed, 1 resolved-by-design, 1 mitigated, 1 partial. **The cluster is in better shape than the 2026-04-30 cluster-G agent's report indicated.** Two of the agent's findings (T1.4 [MEM-LIFE-001] and G2 / B.1 heading spelling) were superseded by intentional designs documented in the skills themselves; the agent's grep didn't reach the convention documentation. Methodological lesson: holistic-review agents should explicitly grep for "convention", "Heading-vs-prose", "intentional placement" near suspected defects before classifying.
 
 ## Outcome
 
@@ -269,7 +269,7 @@ The corpus is in **good health** overall: 37 skills, zero duplicate IDs, no skil
 | # | Action | Effort | Skill |
 |---|---|---|---|
 | T2.1 | **Split `platform` skill** into `platform-architecture` (PLAT-ARCH-*) + `platform-compilation` (PATTERN + Swift-6 + build infra) per `[SKILL-CREATE-005a]` | 4–6 hours | platform → 2 new skills |
-| T2.2 | Persistent G2 defect (heading spelling): canonicalize `### Supervisor Ground Rules` (literal) and update prose to match OR vice versa | 1 hour | handoff + supervise + reflect-session |
+| ~~T2.2~~ | ~~Persistent G2 defect (heading spelling)~~ — **WITHDRAWN 2026-04-30**: convention is intentional and documented at `handoff/SKILL.md:126–131`. See cluster-G findings table for details. | 0 | — |
 | T2.3 | `swift-institute` skill (architecture, 91 lines): expand with codified layer-classification rules, license-per-layer rules, layer-boundary cases | 2 hours | swift-institute |
 | T2.4 | `testing-swiftlang`: add missing `.snapshot` trait pattern, `.buildWithoutRunning` trait; update `#1508` provenance | 1 hour | testing-swiftlang |
 | T2.5 | `release-readiness` gaps: add `[RELEASE-007]` changelog/release-notes, `[RELEASE-008]` doc-drift handling, `[RELEASE-006a]` rollback procedures | 2 hours | release-readiness |
@@ -279,7 +279,7 @@ The corpus is in **good health** overall: 37 skills, zero duplicate IDs, no skil
 | T2.9 | `ecosystem-data-structures`: add Carrier entry; verify Storage variants; bump | 30 min | ecosystem-data-structures |
 | T2.10 | Add new `changelog` / `release-notes` skill — TBD scope (governs GitHub Releases content) | 3–4 hours | new skill |
 
-**T2 total**: ~17–22 hours of focused work. Items can be parallelized; T2.1 (platform split) is the largest singleton.
+**T2 total** (revised 2026-04-30 after G2 withdrawal): 9 actionable items, ~16–21 hours of focused work. Items can be parallelized; T2.1 (platform split) is the largest singleton.
 
 ### Tier 3 — Polish (when convenient)
 
