@@ -1533,8 +1533,25 @@
         "swift-rfc-4291",
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "platform",
+          "description": "[PLAT-ARCH-021] Domain-Specific Cross-Platform Unification Lives in Domain L3 Packages"
+        },
+        {
+          "type": "no_action",
+          "description": "Network-byte-order docstring sweep deferred — experiment overhead exceeds value; trigger pending"
+        },
+        {
+          "type": "research_topic",
+          "target": "l3-domain-unifier-vs-kernel-consumption.md",
+          "description": "Tier 2 IN_PROGRESS — when does L3 domain need own unifier surface"
+        }
+      ]
     },
     {
       "file": "2026-04-20-l3-unifier-composition-discipline.md",
