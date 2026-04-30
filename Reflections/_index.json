@@ -973,8 +973,26 @@
         "swift-linux-standard",
         "swift-iso-9899"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "implementation",
+          "description": "[IMPL-101] YAGNI at the API Surface, Not Behind the Type Boundary"
+        },
+        {
+          "type": "skill_update",
+          "target": "handoff",
+          "description": "[HANDOFF-035] Cascade-Migration Termination Criteria"
+        },
+        {
+          "type": "feedback_memory",
+          "target": "feedback_user_intent_over_principal_tangents.md",
+          "description": "User intent stays primary when principal-directed tangents stall"
+        }
+      ]
     },
     {
       "file": "2026-04-22-tri-agent-ci-rollout-execution-and-standards-migration.md",
