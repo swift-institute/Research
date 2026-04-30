@@ -1566,8 +1566,25 @@
         "swift-iso-9945",
         "swift-file-system"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "audit",
+          "description": "[AUDIT-031] Shadow-Elimination FALSE_POSITIVE Rule"
+        },
+        {
+          "type": "skill_update",
+          "target": "handoff",
+          "description": "[HANDOFF-034] Consumer Migration Bundling Anti-Pattern"
+        },
+        {
+          "type": "no_action",
+          "description": "AI3 doc update conditional on Phase C; tracked in Flush handoff workflow per [REFL-010]"
+        }
+      ]
     },
     {
       "file": "2026-04-20-l2-l3-same-signature-latent-ambiguity.md",
