@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "research-doc-recommendation-vs-dispatch-override.md",
+      "displayName": "research-doc-recommendation-vs-dispatch-override.md",
+      "topic": "When a Research doc recommends approach X and the dispatching principal overrides to approach Y, the divergence is permitted but currently invisible during execution; the supervisor block typically does not carry a fact: entry naming the doc's preferred approach, so the override is not visible to the subordinate or any later reviewer. Origin: 2026-04-28 Phase 1.5 case where Research doc recommended status-quo timing, dispatch overrode to pivot-now, downside materialized exactly as predicted; 30+ commits of churn paid in full. Doc enumerates three options (mandatory fact: entry / SHOULD fact: entry plus pre-dispatch grep / absorb into [SUPER-002a]); preliminary recommendation is Option B since [SUPER-027] was extended with a Research-doc dimension during this Doc's drafting.",
+      "date": "2026-04-30",
+      "status": "IN_PROGRESS",
+      "statusDetail": "Three-option analysis with preliminary recommendation; open questions on threshold for fact: entry, composition with [HANDOFF-018], and writer-side counterpart",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "cross-platform-sibling-as-refactor-template.md",
       "displayName": "cross-platform-sibling-as-refactor-template.md",
       "topic": "When fixing a layering or structural violation in one per-platform package, sibling per-platform packages' working analogs are often the fastest refactor template. Origin instance: swift-windows.Thread.Affinity (2026-04-26 P3.5 refactor) used swift-linux.Thread.Affinity as structural template (NUMA discovery via same-package call + downward System_Primitives import). Doc scopes when the heuristic applies (cross-platform-shared concerns with shared conceptual model) vs when it does not (genuinely platform-divergent subsystems like Mach ports / io_uring / Job Objects, all-siblings-violate cases, platform-conditional rules). Open: ecosystem-wide census, failure modes, skill-level codification candidacy.",

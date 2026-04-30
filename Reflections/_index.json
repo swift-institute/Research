@@ -3160,8 +3160,26 @@
         "swift-linux-foundation/swift-linux-standard",
         "swift-institute/Skills"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "supervise",
+          "description": "[SUPER-027] Pre-Dispatch Ecosystem-Constraint Scan — at dispatch authorization time, principal MUST run mechanical check against risk-surface dimensions including namespace ownership, layer-direction, dep graph, ground-rule conflicts in feedback memory, Research-doc recommendation"
+        },
+        {
+          "type": "skill_update",
+          "target": "platform",
+          "description": "[PLAT-ARCH-018] Typealiased Namespace-Path Conflict Rule — codifies the conflict mode of A.X = ForeignModule.X typealias chains; new declarations at A.X.Z silently add to ForeignModule.X.Z"
+        },
+        {
+          "type": "research_topic",
+          "target": "research-doc-recommendation-vs-dispatch-override.md",
+          "description": "Tier 2 IN_PROGRESS Research Doc scoping whether dispatch overriding Research-doc recommendation warrants mandatory fact: entry in supervisor block"
+        }
+      ]
     },
     {
       "file": "2026-04-28-sub-cycle-1-1-inverted-pattern-a.md",
