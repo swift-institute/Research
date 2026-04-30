@@ -825,8 +825,25 @@
         "swift-buffer-primitives",
         "swift-queue-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "description": "[EXP-021] One-Factor-At-A-Time at Reduction-to-Trigger-Narrowing Boundary",
+          "target": "experiment-process"
+        },
+        {
+          "type": "skill_update",
+          "description": "[HANDOFF-037] Probe-List vs Do-Not-Touch Internal Contradiction",
+          "target": "handoff"
+        },
+        {
+          "type": "no_action",
+          "description": "AI 3 swift-primitives _Package-Insights.md stale-cache note deferred"
+        }
+      ]
     },
     {
       "file": "2026-04-23-superrepo-dismantle-and-phase-0-5-remediation.md",
@@ -841,8 +858,24 @@
         "handoff",
         "supervise"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "description": "[HANDOFF-036] Recipe-and-Path-Math Empirical Verification",
+          "target": "handoff"
+        },
+        {
+          "type": "no_action",
+          "description": "AI 2 multi-repo-dismantle-recipes canonical home deferred; recipe embedded in [HANDOFF-036]+[RES-024]"
+        },
+        {
+          "type": "no_action",
+          "description": "AI 3 _index.json updates partially addressed by 2026-04-30 corpus sweep"
+        }
+      ]
     },
     {
       "file": "2026-04-23-property-view-tagged-refactor-and-lifetime-chain-investigation.md",
@@ -857,8 +890,24 @@
         "swift-buffer-primitives",
         "swift-primitives/Experiments"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "no_action",
+          "description": "AI 1 V12 pattern documented in [IMPL-100]; package-insights addition deferred"
+        },
+        {
+          "type": "no_action",
+          "description": "AI 2 V2.5/V2.6 narrowing addressed by [EXP-021]"
+        },
+        {
+          "type": "skill_update",
+          "description": "[HANDOFF-037] Probe-List vs Do-Not-Touch Internal Contradiction",
+          "target": "handoff"
+        }
+      ]
     },
     {
       "file": "2026-04-23-phase-ii-5-premise-break-and-plan-review.md",
@@ -874,8 +923,23 @@
         "supervise",
         "handoff"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "no_action",
+          "description": "AI 1 path-dep-ecosystem-lifecycle research deferred; mitigated by [HANDOFF-036]"
+        },
+        {
+          "type": "no_action",
+          "description": "AI 2 git-history-transfer-patterns recipe correction superseded by [RES-024]"
+        },
+        {
+          "type": "no_action",
+          "description": "AI 3 [SUPER-015] provenance note added inline"
+        }
+      ]
     },
     {
       "file": "2026-04-23-phase-1-heritage-transfers-and-supervisor-review-cycles.md",

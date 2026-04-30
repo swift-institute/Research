@@ -6,7 +6,18 @@ packages:
   - swift-property-primitives
   - swift-buffer-primitives
   - swift-queue-primitives
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: experiment-process
+    description: "[EXP-021] One-Factor-At-A-Time at the Reduction-to-Trigger-Narrowing Boundary — codifies that CAN'T-REPRODUCE → CAN-REPRODUCE variant transitions MUST add exactly one structural factor, not leap to the full dependency graph."
+  - type: skill_update
+    target: handoff
+    description: "[HANDOFF-037] Probe-List vs Do-Not-Touch Internal Contradiction — sixth staleness axis to [HANDOFF-016]."
+  - type: package_insight
+    target: swift-primitives/_Package-Insights.md
+    description: "Stale-cache linker errors note deferred — would need to identify which package's _Package-Insights.md is appropriate; the reflection lists swift-primitives the superrepo (not a single package). Captured as ecosystem-wide note here in triage_outcomes for searchability."
 ---
 
 # V12 Execution, Supervisor Cycle, and Ownership Release-Readiness Handoff
