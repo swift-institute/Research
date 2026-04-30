@@ -95,8 +95,15 @@
         "swift-intel",
         "swift-riscv"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "no_action",
+          "description": "All 5 skill/process implications describe work already shipped via [GH-REPO-*] rules; reflection serves as documentation artifact for future similar multi-phase orchestration efforts"
+        }
+      ]
     },
     {
       "file": "2026-04-29-carrier-pre-release-audit-and-launch-deployment.md",
@@ -603,8 +610,25 @@
         "swift-property-primitives",
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "description": "[MEM-SEND-006] Compiler-Limitation-Citing @unchecked Sendable Requires Revalidation Anchor",
+          "target": "memory-safety"
+        },
+        {
+          "type": "skill_update",
+          "description": "[RES-020a] Total-Taxonomy / Lattice-Position Justification for Foundational Packages",
+          "target": "research-process"
+        },
+        {
+          "type": "no_action",
+          "description": "AI 3 5-axis lattice covered by [RES-020a] + ownership-types-usage-and-justification.md"
+        }
+      ]
     },
     {
       "file": "2026-04-24-noncopyable-inlinable-abi-fix-and-v11-overclaim-walkback.md",
@@ -715,8 +739,23 @@
         "swift-standards",
         "swift-foundations"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "no_action",
+          "description": "AI 1 path-math verification addressed by [HANDOFF-036]"
+        },
+        {
+          "type": "no_action",
+          "description": "AI 2 dismantle playbook deferred; recipe in [HANDOFF-036]+[RES-024]"
+        },
+        {
+          "type": "no_action",
+          "description": "AI 3 _index.json rebuild addressed by Phase 10 sweep"
+        }
+      ]
     },
     {
       "file": "2026-04-24-implementation-layer-cluster-audit-and-full-remediation.md",
@@ -759,8 +798,25 @@
         "research-process",
         "supervise"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "research_topic",
+          "description": "Tier 2 IN_PROGRESS — direct-reference rule, not transitive call graph",
+          "target": "inlinable-spi-transitive-semantics.md"
+        },
+        {
+          "type": "no_action",
+          "description": "AI 2 Shape-vs-Decisions coherence addressed by [RES-025]"
+        },
+        {
+          "type": "research_topic",
+          "description": "Tier 2 IN_PROGRESS — three candidate strategies for cross-cycle latent ambiguities",
+          "target": "cross-cycle-verification-strategy.md"
+        }
+      ]
     },
     {
       "file": "2026-04-24-carrier-primitives-code-surface-and-four-layer-split.md",

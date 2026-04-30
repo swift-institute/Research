@@ -5,7 +5,17 @@ packages:
   - swift-ownership-primitives
   - swift-property-primitives
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: memory-safety
+    description: "[MEM-SEND-006] Compiler-Limitation-Citing @unchecked Sendable Requires Revalidation Anchor."
+  - type: skill_update
+    target: research-process
+    description: "[RES-020a] Total-Taxonomy / Lattice-Position Justification for Foundational Packages — merit framing MUST drive add/remove decisions for total-taxonomy packages, NOT adoption count."
+  - type: no_action
+    description: "AI 3 (5-axis lattice in Research doc) — operational framing already codified in [RES-020a]; lattice docs in Research/ownership-types-usage-and-justification.md per reflection pointer."
 ---
 
 # Ownership-primitives pre-0.1.0 audit + workaround revalidation

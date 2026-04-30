@@ -6,6 +6,28 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "inlinable-spi-transitive-semantics.md",
+      "displayName": "inlinable-spi-transitive-semantics.md",
+      "topic": "Swift's @_spi-in-@inlinable rule is a direct-reference rule, not a transitive-call-graph rule. Composing @inlinable through a public non-@inlinable boundary severs the cascade. Earlier (2026-04-20) inferential extension that treated propagation as transitive is corrected by this finding. Implications for cross-package consumer migration patterns, error-conversion layering, and overall API-layer design. Pending: empirical multi-Swift-version sweep, boundary-pattern-shape investigation.",
+      "date": "2026-04-30",
+      "status": "IN_PROGRESS",
+      "statusDetail": "Held finding (direct-reference rule); empirical multi-version pin pending before promotion to RECOMMENDATION",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "cross-cycle-verification-strategy.md",
+      "displayName": "cross-cycle-verification-strategy.md",
+      "topic": "When multi-cycle audit-remediation arcs land ecosystem-wide changes with parallel/sibling cycles active, what verification gate strategy minimizes latent cross-cycle ambiguities? Three candidates: (A) per-cycle paranoid wider gates; (B) arc-close full-ecosystem sweep; (C) post-arc /audit pass. Origin: 2026-04-24 cycle-3-close where Cycle 2 introduced Kernel.Signal.Information ambiguity invisible until Cycle 3 broader gate exposed it. Held finding: combine (B) + targeted (A) widening when sibling cycles touch overlapping packages.",
+      "date": "2026-04-30",
+      "status": "IN_PROGRESS",
+      "statusDetail": "Held operational finding (B+A hybrid); empirical comparison pending across next multi-cycle arcs",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
       "file": "l3-domain-unifier-vs-kernel-consumption.md",
       "displayName": "l3-domain-unifier-vs-kernel-consumption.md",
       "topic": "When does an L3 domain package need its own cross-platform unifier surface (e.g., swift-sockets, swift-io) vs consuming swift-kernel directly (e.g., swift-file-system, swift-paths)? Origin: 2026-04-20 socket-unifier migration crystallized [PLAT-ARCH-021]. Operational rule: domain L3 needs own unifier when introducing public types distinct from kernel primitives, public operations composing kernel + domain policy, or spec deps belonging outside swift-kernel. Pending: empirical survey of existing domain packages.",

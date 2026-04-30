@@ -6,6 +6,17 @@ packages:
   - swift-foundations
   - swift-institute
   - research-process
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: research_topic
+    target: inlinable-spi-transitive-semantics.md
+    description: "Tier 2 IN_PROGRESS — Swift's @_spi-in-@inlinable rule is direct-reference, not transitive-call-graph. Held finding amends earlier (2026-04-20) inferential extension."
+  - type: no_action
+    description: "AI 2 (research-process Shape-vs-Decisions coherence) addressed by [RES-025] added 2026-04-30."
+  - type: research_topic
+    target: cross-cycle-verification-strategy.md
+    description: "Tier 2 IN_PROGRESS — three candidate strategies for preventing cross-cycle latent ambiguities in multi-cycle arcs."
   - supervise
 status: pending
 ---
