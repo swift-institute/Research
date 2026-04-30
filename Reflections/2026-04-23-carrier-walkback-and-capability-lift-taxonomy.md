@@ -7,7 +7,17 @@ packages:
   - swift-identity-primitives
   - swift-cardinal-primitives
   - swift-ordinal-primitives
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: "[IMPL-102] Verify Conformance Expressibility Before Recommending Cross-Type Schemes — proposals requiring overlapping conditional conformances MUST document the Swift limitation before reaching RECOMMENDATION."
+  - type: skill_update
+    target: reflect-session
+    description: "[REFL-013] Verify Untracked Session Writes Persist at Phase Boundaries — `ls`-check files between phases to catch mid-session disturbances."
+  - type: blog_idea
+    description: "Two kinds of phantom types: domain-identity vs verb-namespace — already flagged in property-tagged-semantic-roles.md R6 (Medium priority)."
 ---
 
 # Carrier walk-back and capability-lift taxonomy convergence
