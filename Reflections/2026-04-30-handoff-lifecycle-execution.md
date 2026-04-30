@@ -3,7 +3,18 @@ date: 2026-04-30
 session_objective: Execute handoff-lifecycle-and-retention RECOMMENDATION — three skill amendments diagnosing why [REFL-009] does not prevent HANDOFF-*.md accumulation, plus retroactive triage of the 26-file workspace-root backlog.
 packages:
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: research-process
+    description: "[RES-023] extended with plan-time-prediction table row + procedure step 5 (Q4/Execution Plan/Next Steps sections subject to empirical verification); cross-references [HANDOFF-021]/[HANDOFF-029]. Provenance: action item #1."
+  - type: skill_update
+    target: reflect-session
+    description: "[REFL-008] extended with Execution-session-analysis-output row in artifact-type table; threshold ~50 lines / 10 dispositions for reflection-vs-separate-artifact decision. Provenance: action item #2."
+  - type: research_update
+    target: recurring-handoff-triage-skill-candidate
+    description: Outcome section appended with 2026-04-30 update noting prevention-side complement landed; codification priority lowered. Provenance: action item #3.
 ---
 
 # HANDOFF Lifecycle and Retention — Execution
