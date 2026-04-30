@@ -4,7 +4,18 @@ session_objective: Execute Path X Phase 2 — mirror INVERTED Pattern A across t
 packages:
   - swift-microsoft/swift-windows-standard
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: supervise
+    description: "[SUPER-028] In-Absentia Decision Matrix — Class-(a) Inaction Before Class-(b) Escalation. Composes [SUPER-014a] (escalation route) with [SUPER-024] (in-action route) into a two-axis decision procedure: in-absentia subordinate checks compliance-form (axis B) before invoking escalation (axis A). Worked-example pair: Pipe.swift no-Pattern-A-sites in-action vs @_disfavoredOverload empirical-premise escalation."
+  - type: skill_update
+    target: supervise
+    description: "[SUPER-009a] Verification Scope Sub-Rule for Acceptance Criteria. Extends [SUPER-009]: when verification mechanism doesn't fully exercise target (e.g., macOS swift build of #if os(Windows)-guarded sources verifies parsing only), criterion MUST explicitly state what mechanism DOES and DOES NOT verify."
+  - type: skill_update
+    target: handoff
+    description: "[HANDOFF-031] Syntactic-vs-Semantic Disclaimer for Regex Enumerations. When grep regex match-set can plausibly exceed semantic scope (e.g., ': Type\\b' matches both function parameters and struct fields), writer MUST narrow the regex or document false-positive shapes. Worked example: Pipe.swift false-positive in [HANDOFF-029] 22-file grep."
 ---
 
 # Path X Phase 2 — Windows-Standard Mirror Execution (in absentia, INVERTED Pattern A)
