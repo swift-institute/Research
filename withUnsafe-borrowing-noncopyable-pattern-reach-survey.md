@@ -38,12 +38,12 @@ Candidate APIs to enumerate:
 
 ## Empirical Census Plan (deferred until A2 authorized)
 
-Per [EXP-018] / [ISSUE-025] the cascade claim for each candidate API requires per-consumer in-package release-mode tests. The plan:
+Per [EXP-020] / [ISSUE-025] the cascade claim for each candidate API requires per-consumer in-package release-mode tests. The plan:
 
 1. **Enumerate stdlib `withUnsafe*` overloads accepting `borrowing` parameters** via Swift documentation + standard library source. Output: a per-API table.
 2. **Construct minimal reproducers** in `swift-institute/Experiments/borrow-pointer-storage-release-miscompile/` per API. Each reproducer mirrors V1/V7 shape but swaps the `withUnsafe*` call. Track per-reproducer outcome in the experiment's findings.
 3. **Cross-package consumer grep** across swift-primitives, swift-standards, swift-foundations for each `withUnsafe*` call paired with `borrowing` `~Copyable` parameter shape. Output: a per-consumer table indicating which production sites each API touches.
-4. **Per-consumer in-package release-mode regression guards** per [EXP-018]. For each cited consumer, write a release-mode test exercising the consumer's production shape under the failure trigger. Initial guards as `withKnownIssue`; convert to positive assertion if the test passes (production evades) or remove the wrapper if it fails (production affected).
+4. **Per-consumer in-package release-mode regression guards** per [EXP-020]. For each cited consumer, write a release-mode test exercising the consumer's production shape under the failure trigger. Initial guards as `withKnownIssue`; convert to positive assertion if the test passes (production evades) or remove the wrapper if it fails (production affected).
 
 **A3 V13 experiment** from the source reflection sits inside step 2 — V13 isolates which of `@_rawLayout` / generic-Element / stride-advance-arithmetic is the structural discriminator that protected `Memory.Inline.pointer(at:)` from V11. V13's output makes the upstream bug report shape-precise.
 
@@ -68,4 +68,4 @@ This Doc's primary purpose at IN_PROGRESS is to scope the survey before V13 + A2
 - Reflection: `2026-04-24-narrow-shape-bug-extrapolation-and-in-package-verification.md` (parallel record + V11 inversion methodology)
 - Audit: `swift-institute/Audits/borrow-pointer-storage-release-miscompile.md` (the parent audit — action A2 upstream filing gates this Doc's empirical work)
 - Experiment: `swift-institute/Experiments/borrow-pointer-storage-release-miscompile/` (V1–V12 already landed; V13 deferred per source reflection action A3)
-- Skill rules: [EXP-018] Claim Validation Trap, [ISSUE-025] In-Package Verification of Synthetic-Reproducer Claims, [AUDIT-027] Shipping HOLD Evidence Bar
+- Skill rules: [EXP-020] Claim Validation Trap, [ISSUE-025] In-Package Verification of Synthetic-Reproducer Claims, [AUDIT-027] Shipping HOLD Evidence Bar
