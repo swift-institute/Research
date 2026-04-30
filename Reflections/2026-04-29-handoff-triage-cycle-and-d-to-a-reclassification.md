@@ -3,7 +3,18 @@ date: 2026-04-29
 session_objective: Execute a focused six-phase triage of 32 in-scope HANDOFF-*.md files at /Users/coen/Developer/ per a dispatched investigation brief; produce a durable triage table, extract preserve-worthy material to canonical destinations, stage deletions for explicit principal authorization, annotate preserved files, and self-delete the brief.
 packages:
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: reflect-session
+    description: "[REFL-009a] In-Flight-File Conservativism for Bulk Triage — when a special-case override directs annotation but the file is in-flight (Q4=yes), no-touch wins. Codifies the override-vs-matrix priority ambiguity that surfaced on the path-x-bucket-b/c/completion + posix-descriptor + l2-cascade-recommendation files. Generalizes [HANDOFF-018] to override clauses."
+  - type: skill_update
+    target: handoff
+    description: "[HANDOFF-032] Extraction-Time Material Check — generalizes [HANDOFF-013a] writer-side prior-research grep to extraction-time material checks. Phase 4 of any extract-then-delete framework SHOULD grep canonical destinations; if material is already captured, downgrade source handoff to delete. Worked example: D→A reclassification of HANDOFF-primitive-protocol-audit.md."
+  - type: research_topic
+    target: recurring-handoff-triage-skill-candidate.md
+    description: "Tier 2 IN_PROGRESS Research Doc scoping whether the six-phase bulk-triage framework should be codified as a skill. Three options enumerated (absorb into handoff, extend reflect-session, new skill). Preliminary recommendation: defer codification until a second cycle is observed; preliminary preference is Option C (new skill) because framework crosses [REFL-*], [HANDOFF-*], [AUDIT-*]."
 ---
 
 # HANDOFF Triage Cycle and D→A Reclassification at Extraction Time

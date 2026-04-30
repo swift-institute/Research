@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "recurring-handoff-triage-skill-candidate.md",
+      "displayName": "recurring-handoff-triage-skill-candidate.md",
+      "topic": "Should the six-phase bulk-triage framework executed on 2026-04-29 against 32 HANDOFF-*.md files be codified as a skill? Three options: (A) absorb into handoff skill as [HANDOFF-bulk-triage-*]; (B) extend reflect-session with a bulk-triage variant; (C) author new bulk-handoff-triage skill. Framework exercises [HANDOFF-021]/[HANDOFF-016]/[HANDOFF-029]/[REFL-009]/[REFL-012]/[AUDIT-005]/[AUDIT-009]/[AUDIT-002] — composes existing skills cleanly. Preliminary recommendation: defer codification until a second cycle is observed; preliminary preference is Option C because framework crosses [REFL-*], [HANDOFF-*], [AUDIT-*] without naturally fitting any single existing skill's surface.",
+      "date": "2026-04-30",
+      "status": "IN_PROGRESS",
+      "statusDetail": "Single-cycle observation pending second iteration; codification deferred per [RES-018] premature-primitive heuristic. Action items [REFL-009a] + [HANDOFF-032] codified now; framework-as-a-whole waits for second iteration",
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "research-doc-recommendation-vs-dispatch-override.md",
       "displayName": "research-doc-recommendation-vs-dispatch-override.md",
       "topic": "When a Research doc recommends approach X and the dispatching principal overrides to approach Y, the divergence is permitted but currently invisible during execution; the supervisor block typically does not carry a fact: entry naming the doc's preferred approach, so the override is not visible to the subordinate or any later reviewer. Origin: 2026-04-28 Phase 1.5 case where Research doc recommended status-quo timing, dispatch overrode to pivot-now, downside materialized exactly as predicted; 30+ commits of churn paid in full. Doc enumerates three options (mandatory fact: entry / SHOULD fact: entry plus pre-dispatch grep / absorb into [SUPER-002a]); preliminary recommendation is Option B since [SUPER-027] was extended with a Research-doc dimension during this Doc's drafting.",

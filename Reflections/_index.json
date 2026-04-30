@@ -30,8 +30,26 @@
       "packages": [
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "reflect-session",
+          "description": "[REFL-009a] In-Flight-File Conservativism for Bulk Triage — codifies the override-vs-matrix priority ambiguity; in-flight Q4=yes wins over annotation override"
+        },
+        {
+          "type": "skill_update",
+          "target": "handoff",
+          "description": "[HANDOFF-032] Extraction-Time Material Check — generalizes [HANDOFF-013a] to extraction-time material checks; downgrade to delete if already captured"
+        },
+        {
+          "type": "research_topic",
+          "target": "recurring-handoff-triage-skill-candidate.md",
+          "description": "Tier 2 IN_PROGRESS Research Doc scoping whether the six-phase bulk-triage framework should be codified; defer until second cycle observed, preliminary preference is Option C (new skill)"
+        }
+      ]
     },
     {
       "file": "2026-04-29-carrier-launch-arc-and-centralized-workflow-trim.md",
