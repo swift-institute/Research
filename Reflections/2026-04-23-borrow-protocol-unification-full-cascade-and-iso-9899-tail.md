@@ -18,7 +18,18 @@ packages:
   - swift-file-system
   - swift-linux-standard
   - swift-iso-9899
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: implementation
+    description: "[IMPL-101] YAGNI at the API Surface, Not Behind the Type Boundary — codifies that internal-to-type complexity (~Copyable storage, unsafe machinery, constrained extensions) MUST NOT dominate YAGNI decisions; user-facing surface is the load-bearing axis."
+  - type: skill_update
+    target: handoff
+    description: "[HANDOFF-035] Cascade-Migration Termination Criteria — multi-package cascades MUST gate completion on workspace-wide grep + ecosystem-wide swift build --build-tests, not per-sub-repo isolated builds. Codifies the v1.2.0→v1.3.0 attestation defect's recovery."
+  - type: feedback_memory
+    target: feedback_user_intent_over_principal_tangents.md
+    description: "User intent stays primary when principal-directed tangents stall. Memory entry written + indexed in MEMORY.md."
 ---
 
 # Ownership.Borrow.`Protocol` Cascade — Full Execution + ISO 9899 Tail
