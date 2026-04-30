@@ -7,7 +7,18 @@ packages:
   - swift-standards/swift-darwin-standard
   - swift-linux-foundation/swift-linux-standard
   - swift-institute/Skills
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: supervise
+    description: "[SUPER-027] Pre-Dispatch Ecosystem-Constraint Scan — at dispatch authorization time, principal MUST run mechanical check against risk-surface dimensions (namespace ownership, layer-direction, dep graph, ground-rule conflicts in feedback memory, Research-doc recommendation). Specifically for 'introduce type X at namespace path Y' dispatches: grep current declarer of Y, verify dispatching package has authority."
+  - type: skill_update
+    target: platform
+    description: "[PLAT-ARCH-018] Typealiased Namespace-Path Conflict Rule — when A.X = ForeignModule.X via typealias, declaring extension A.X.Z silently adds Z to ForeignModule's namespace; conflicts with existing ForeignModule.X.Z surface only at compiler resolution time. Codifies the conflict mode of the typealias mechanism documented at [PLAT-ARCH-005]."
+  - type: research_topic
+    target: research-doc-recommendation-vs-dispatch-override.md
+    description: "Tier 2 IN_PROGRESS Research Doc scoping whether a dispatch overriding a Research-doc recommendation warrants a mandatory fact: entry in the supervisor block. Origin: 2026-04-28 Phase 1.5 case where Research doc recommended status-quo timing, dispatch overrode to pivot-now, downside materialized exactly as predicted; 30+ commits of churn paid in full."
 ---
 
 # Phase 1.5 L2 pivot attempt and namespace-ownership correction
