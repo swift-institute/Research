@@ -3221,8 +3221,26 @@
         "swift-microsoft/swift-windows-standard",
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "supervise",
+          "description": "[SUPER-028] In-Absentia Decision Matrix — Class-(a) Inaction Before Class-(b) Escalation; composes [SUPER-014a] + [SUPER-024] into two-axis decision procedure"
+        },
+        {
+          "type": "skill_update",
+          "target": "supervise",
+          "description": "[SUPER-009a] Verification Scope Sub-Rule — when verification mechanism doesn't fully exercise target, criterion MUST explicitly state what DOES/DOES NOT verify"
+        },
+        {
+          "type": "skill_update",
+          "target": "handoff",
+          "description": "[HANDOFF-031] Syntactic-vs-Semantic Disclaimer for Regex Enumerations — narrow regex or document false-positive shapes when match-set exceeds semantic scope"
+        }
+      ]
     }
   ]
 }
