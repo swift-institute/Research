@@ -3067,7 +3067,26 @@
         "swift-foundations/swift-kernel",
         "swift-primitives/swift-kernel-primitives"
       ],
-      "status": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "modularization",
+          "description": "[MOD-RENT] Three-Criteria Primitive-Package Rent Test — capability + consumer + theoretical-content gate; codifies swift-lifetime-primitives deletion as worked example"
+        },
+        {
+          "type": "skill_update",
+          "target": "platform",
+          "description": "[PLAT-ARCH-008f] worked example added — Local → Key / Index L2 spec-literal rename (solution (a)) at swift-iso-9945 and swift-windows-standard"
+        },
+        {
+          "type": "package_insight",
+          "target": "swift-windows-standard/Research/_Package-Insights.md",
+          "description": "Created insights doc documenting Kernel.Thread.Local lacks per-thread cleanup on Windows (TlsAlloc has no destructor); FlsAlloc/FlsSetCallback as future work"
+        }
+      ]
     },
     {
       "file": "2026-04-26-typealias-probe-matrix-disambiguation.md",
