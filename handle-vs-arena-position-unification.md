@@ -1,9 +1,9 @@
 <!--
 ---
 title: Handle vs Arena.Position Unification
-version: 1.0.0
-last_updated: 2026-04-01
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-04-30
+status: DEFERRED
 tier: 1
 scope: cross-package
 applies_to: [swift-handle-primitives, swift-buffer-primitives, swift-async-primitives]
@@ -46,7 +46,16 @@ is simpler.
 
 ## Outcome
 
-(Pending investigation)
+**Status**: DEFERRED (2026-04-30)
+
+**Disposition**: Investigation never started past the trade-off table; no urgent driver in the ecosystem today. The trade-offs sketched are sound enough to inform the decision when the question becomes live, but no consumer is currently blocked.
+
+**Blocker**: The decision turns on a question Timer.Wheel hasn't faced yet — *will the storage strategy ever change away from arena*? Today Timer.Wheel uses arena storage and the boundary bridge is cheap; the unification question only matters if (a) Timer.Wheel migrates to a different storage strategy, OR (b) handle-primitives is being cleaned up and the dep-elimination becomes the goal, OR (c) a second package surfaces the same Handle-vs-Position pattern.
+
+**Resumption trigger** (any of):
+- Timer.Wheel storage strategy is being reconsidered (e.g., for hash-map backing or for ~Copyable adoption)
+- handle-primitives is being audited for [MOD-RENT] / consolidation per the post-2026-04-26 ecosystem-rent test
+- A second consumer surfaces the same pattern (a `Handle<T>`-shaped type backed by arena storage in a different package)
 
 ## Provenance
 

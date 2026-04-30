@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-04-01
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-04-30
+status: DEFERRED
 ---
 -->
 
@@ -489,6 +489,19 @@ The 8-10x reduction from TypeScript is due to: no React reconciler, no flexbox e
 2. **Prototype**: Build the agent query loop using existing `Async_Stream` + `Async.Channel` to validate the concurrency model
 3. **HTTP spike**: Evaluate whether `swift-io`'s event loop + `Sockets_Standard` can support HTTP/1.1 with streaming SSE
 4. **Tool protocol design**: Formalize the `Tool` protocol with associated types and typed throws — this is the most architecturally significant design decision
+
+### Status — DEFERRED (2026-04-30)
+
+**Disposition**: Feasibility analysis is complete. The ecosystem covers ~40–50% of required infrastructure; the architectural improvements (typed errors, actor-isolated global state, protocol-based tool dispatch with compile-time schema validation) are real and motivated.
+
+**Blocker**: The strategic decision on TLS approach (platform wrapping vs. pure Swift implementation) determines the entire Phase 1 timeline (weeks vs. months) and affects every downstream architectural choice. The decision is not technical — it is strategic about how much of the cryptographic surface the Swift Institute ecosystem wants to own.
+
+**Resumption trigger** (any of):
+- TLS strategy decision is authorized (the principal commits to platform-wrap or pure-Swift TLS)
+- A non-claude-code consumer in the ecosystem demands HTTPS support, forcing the same decision
+- A separate ecosystem-wide HTTP/TLS investigation produces a TLS recommendation independent of this Doc
+
+**Independent recommendation (carries forward)**: regardless of the strategic call, the four "Recommended next steps" above remain valid — items 2–4 (prototype, HTTP spike, tool protocol design) can begin in parallel with TLS strategy work without prejudicing it.
 
 ## References
 

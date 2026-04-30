@@ -1,9 +1,9 @@
 <!--
 ---
 title: treereduce-swift Feasibility
-version: 1.0.0
-last_updated: 2026-03-31
-status: IN_PROGRESS
+version: 1.1.0
+last_updated: 2026-04-30
+status: DEFERRED
 tier: 2
 scope: ecosystem-wide
 applies_to: [swift-institute, issue-investigation]
@@ -48,7 +48,20 @@ and would it meaningfully improve the [ISSUE-003] reduction workflow?
 
 ## Outcome
 
-(Pending investigation)
+**Status**: DEFERRED (2026-04-30)
+
+**Disposition**: Investigation didn't advance past the four-sub-questions stub. The tooling gap is real — Swift uniquely lacks both source-level and IR-level automated test-case reduction — but the infrastructure cost of building `treereduce-swift` is non-trivial (grammar audit, treereduce integration, Swift-specific reduction strategies), and no current Swift compiler bug investigation has been blocked sufficiently to motivate the build.
+
+**Blocker**: Tool-building investments need a forcing function. Until a specific compiler-bug investigation is blocked on inability to reduce a test case efficiently, the cost-benefit doesn't tilt. The 25× C-Reduce-vs-delta-debugging multiplier is real but hypothetical for the ecosystem until validated against actual Swift bugs.
+
+**Resumption trigger** (any of):
+- A specific compiler-bug investigation gets blocked on test-case reduction effort (sub-question 3 — effectiveness — answered empirically)
+- `tree-sitter-swift` adds Swift 6.x coverage demonstrably (sub-question 1 answered)
+- An ecosystem-wide compiler-bug audit produces a reduction-bottleneck finding (sub-question 4 — would SIL-level be more effective — answered with data)
+
+**Held findings**:
+- The grammar exists; the integration question (treereduce plug-and-play vs custom strategies) is the load-bearing technical unknown
+- A SIL-level reducer extending `bug_reducer.py` may be a stronger investment given that most ecosystem bugs are optimizer bugs (sub-question 4) — but that's a separate Doc
 
 ## Provenance
 
