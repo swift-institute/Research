@@ -6,6 +6,41 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-30-path-x-multi-cycle-kernel-primitives-removal.md",
+      "date": "2026-04-30",
+      "title": "Path X Completion: Multi-Cycle swift-kernel-primitives Removal (Supervisor View)",
+      "packages": [
+        "swift-kernel-primitives",
+        "swift-iso-9945",
+        "swift-windows-standard",
+        "swift-foundations/swift-kernel",
+        "swift-foundations/swift-darwin",
+        "swift-foundations/swift-linux",
+        "swift-foundations/swift-windows",
+        "swift-foundations/swift-posix",
+        "swift-darwin-standard",
+        "swift-linux-standard",
+        "swift-terminal-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-04-30-path-x-completion-cycles-19-23-and-g6.md",
+      "date": "2026-04-30",
+      "title": "Path X Completion: Cycles 19-23 + G6 (swift-kernel-primitives Package Deletion)",
+      "packages": [
+        "swift-iso-9945",
+        "swift-foundations/swift-kernel",
+        "swift-primitives/swift-kernel-primitives",
+        "swift-microsoft/swift-windows-standard",
+        "swift-linux-foundation/swift-linux-standard",
+        "swift-standards/swift-darwin-standard"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-30-handoff-lifecycle-execution.md",
       "date": "2026-04-30",
       "title": "HANDOFF Lifecycle and Retention — Execution",
@@ -13,8 +48,11 @@
         "swift-institute/Skills",
         "swift-institute/Research"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-04-30",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "Three action items applied in-session per workflow-skill self-reference exception: [RES-023] extended in research-process; [REFL-008] extended in reflect-session; recurring-handoff-triage-skill-candidate.md Outcome updated."
     },
     {
       "file": "2026-04-30-phase-1b-stale-triage-and-deferred-fixed-codification.md",
