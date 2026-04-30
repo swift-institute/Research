@@ -5,7 +5,18 @@ packages:
   - swift-executor-primitives
   - swift-executors
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: handoff
+    description: "[HANDOFF-033] L1-API-Change Cascade Disclosure — handoffs dispatching L1 API changes MUST enumerate cascading L2/L3 consumer migrations explicitly (Changed Files or new ## Cascading Migrations section), not leave them to implementer discovery."
+  - type: skill_update
+    target: memory-safety
+    description: "[MEM-SEND-005] Non-Mutating Concurrent Access for ~Copyable Wrappers — codifies the Chase-Lev pattern where ~Copyable structs wrapping Atomic + UnsafeMutablePointer support concurrent borrowing because operations don't mutate stored properties."
+  - type: package_research
+    target: swift-foundations/swift-executors/Research/work-stealing-scheduler-design.md
+    description: "Added v1 Optimization Items section flagging Worker.swift lock-wrapping removal as DEFERRED for Stealing-executor design cycle."
 ---
 
 # Executor Deque: Peer Review to Production via Supervised Implementation
