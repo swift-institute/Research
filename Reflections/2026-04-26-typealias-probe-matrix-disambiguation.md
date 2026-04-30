@@ -3,7 +3,12 @@ date: 2026-04-26
 session_objective: Run a compiler-verify probe gating the L1-types-only-no-exceptions migration in swift-kernel-primitives; report green/red with empirical evidence, append a §6.2 probe-result subsection, commit.
 packages:
   - swift-primitives/swift-kernel-primitives
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: experiment-process
+    description: "[EXP-017a] Matrix Disambiguation for #if-Gated Probes — generalizes leg-axis enumeration as third matrix dimension. Provenance-only ID-uniqueness work also resolved pre-existing duplicate [EXP-017]/[EXP-018] in same skill (older Improvement Discovery → [EXP-019]; newer Claim Validation Trap → [EXP-020]) per [REFL-PROC-016]."
 ---
 
 # Typealias-via-#if probe — matrix disambiguation under supervisor pushback

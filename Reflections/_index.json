@@ -228,7 +228,7 @@
         {
           "type": "skill_update",
           "target": "experiment-process",
-          "description": "[EXP-018] Claim Validation Trap — Synthetic-to-Production Extrapolation (extends [EXP-011] Workaround validation trap with the dual)"
+          "description": "[EXP-020] Claim Validation Trap — Synthetic-to-Production Extrapolation (extends [EXP-011] Workaround validation trap with the dual; renumbered from [EXP-018] on 2026-04-30 per [REFL-PROC-016] duplicate-ID resolution)"
         },
         {
           "type": "no_action",
@@ -3057,8 +3057,16 @@
       "packages": [
         "swift-primitives/swift-kernel-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "target": "experiment-process",
+          "description": "[EXP-017a] Matrix Disambiguation for #if-Gated Probes — generalizes leg-axis enumeration as third matrix dimension alongside build-mode and module-shape. Provenance-only ID-uniqueness work also resolved pre-existing duplicate [EXP-017]/[EXP-018] in same skill (older Improvement Discovery → [EXP-019]; newer Claim Validation Trap → [EXP-020]) per [REFL-PROC-016]."
+        }
+      ]
     },
     {
       "file": "2026-04-26-l1-exception-removal-skill-cycle.md",
