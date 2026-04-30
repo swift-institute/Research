@@ -54,18 +54,18 @@ own backlogs.
 
 | # | Target | Statement | Provenance | Status |
 |---|--------|-----------|------------|--------|
-| 1.1 | `primitives` skill | Amend `[PRIM-ARCH-001]` Tier 0 list: remove `swift-tagged-primitives` (moved Tier 0 → Tier 1 by carrier-driven dependency reassignment); add a note about the carrier-primitives-driven reassignment. | `Reflections/2026-04-26-carrier-integration-retrospective.md:149` | OPEN |
-| 1.2 | `swift-package` skill | Add a "When NOT to apply" section to the `Type.\`Protocol\`` namespace convention distinguishing **capability protocols** from **noun-type protocols**. Pure capability protocols without noun-type backing should remain top-level rather than be forced into a `Namespace.\`Protocol\`` shell. Cite the `Carrier.Mutable` discussion and witness-style classification work. | `Reflections/2026-04-26-carrier-decisions-and-capability-vs-noun-type.md:90` | OPEN |
-| 1.3 | `documentation` skill | Extend `[DOC-019a]` "Cross-module ambiguity gotcha": the prescription currently covers `docc convert`; the same failure mode bites `docc preview` and the same patch-script fix applies. Add a paragraph (or extend the existing one) explicitly covering local preview of multi-target umbrella catalogs, citing the patch-script's `--exclude-module` flag and the `--additional-symbol-graph-dir` isolation requirement. | `Reflections/2026-04-24-carrier-primitives-code-surface-and-four-layer-split.md:53` | OPEN |
-| 1.4 | `documentation` skill | Revise `[DOC-028]` and `[DOC-029]` to encode the **consumer/contributor boundary**: per-symbol and topical articles MUST NOT carry `## Research` / `## Experiments` sections, `Status: DECISION` tags, or `<doc:>` cross-references into `Research/` / `Experiments/`. The landing page (or the README's `## Further reading` section) SHOULD carry one consolidated gateway. Decision records with supersession get a `### Resolution` subsection in the Research doc — not a historical note in DocC. Cite swift-property-primitives (precedent) and swift-carrier-primitives (case study) as reference implementations. | `Reflections/2026-04-22-precursor-publish-and-narrowness-cycle.md:116` | OPEN |
-| 1.5 | `implementation` skill | Document `@_disfavoredOverload` patterns for protocol-conformance disambiguation. Used in this session to resolve the Tagged-cascade ambiguity (`Tagged: Carrier` cascading vs `Tagged: Ordinal.\`Protocol\`` sibling). The pattern is not documented elsewhere in the skill canon. | `Reflections/2026-04-26-carrier-integration-retrospective.md:153` | OPEN |
-| 1.6 | `implementation` or `code-surface` skill | Promote the **Self+Self vs Self+Self.Count** test to a general migration-triage discriminator. `capability-lift-pattern.md` v1.2.0 Recommendation #7 captures it for Carrier specifically; the operator-shape discriminator generalises. Add a sub-rule under `[IMPL-*]` or `[API-LAYER-*]`. | `Reflections/2026-04-26-carrier-integration-retrospective.md:151` | OPEN |
-| 1.7 | `code-surface` skill | Amend `[API-IMPL-007]` (extension filename `+` suffix pattern) to admit the **where-clause filename shape** as the canonical form for conditional protocol extensions whose discriminator is a constraint, not a conformance. Examples from carrier-primitives: `Carrier where Underlying == Self.swift`, `Carrier where Underlying == Self, Self ~Copyable.swift`, …. Principal direction (2026-04-29): the where-language form is preferred over `+` suffix mnemonics like `+Q1`/`+Q4` because it is self-documenting at the file level. The `+` suffix remains canonical for conformance-adding extensions (e.g., `Array.Dynamic+Sequence.swift`). | `swift-carrier-primitives/Audits/audit.md` Code Surface #1 (2026-04-29 principal direction) | OPEN |
+| 1.1 | `primitives` skill | Amend `[PRIM-ARCH-001]` Tier 0 list: remove `swift-tagged-primitives` (moved Tier 0 → Tier 1 by carrier-driven dependency reassignment); add a note about the carrier-primitives-driven reassignment. | `Reflections/2026-04-26-carrier-integration-retrospective.md:149` | LANDED 2026-04-30 (workspace-level edit; swift-primitives/Skills/primitives/SKILL.md is currently unversioned at the swift-primitives superrepo top level — file edited live, also added swift-carrier-primitives to Tier 0 list) |
+| 1.2 | `swift-package` skill | Add a "When NOT to apply" section to the `Type.\`Protocol\`` namespace convention distinguishing **capability protocols** from **noun-type protocols**. Pure capability protocols without noun-type backing should remain top-level rather than be forced into a `Namespace.\`Protocol\`` shell. Cite the `Carrier.Mutable` discussion and witness-style classification work. | `Reflections/2026-04-26-carrier-decisions-and-capability-vs-noun-type.md:90` | LANDED (pre-existing as `[PKG-NAME-009]` Capability-Protocol vs Noun-Type Distinction) — verified 2026-04-30 during Pass 1b |
+| 1.3 | `documentation` skill | Extend `[DOC-019a]` "Cross-module ambiguity gotcha": the prescription currently covers `docc convert`; the same failure mode bites `docc preview` and the same patch-script fix applies. Add a paragraph (or extend the existing one) explicitly covering local preview of multi-target umbrella catalogs, citing the patch-script's `--exclude-module` flag and the `--additional-symbol-graph-dir` isolation requirement. | `Reflections/2026-04-24-carrier-primitives-code-surface-and-four-layer-split.md:53` | LANDED (pre-existing as `[DOC-102]` Preview-and-Convert Parity in DocC Tooling Guidance) — verified 2026-04-30 during Pass 1b |
+| 1.4 | `documentation` skill | Revise `[DOC-028]` and `[DOC-029]` to encode the **consumer/contributor boundary**: per-symbol and topical articles MUST NOT carry `## Research` / `## Experiments` sections, `Status: DECISION` tags, or `<doc:>` cross-references into `Research/` / `Experiments/`. The landing page (or the README's `## Further reading` section) SHOULD carry one consolidated gateway. Decision records with supersession get a `### Resolution` subsection in the Research doc — not a historical note in DocC. Cite swift-property-primitives (precedent) and swift-carrier-primitives (case study) as reference implementations. | `Reflections/2026-04-22-precursor-publish-and-narrowness-cycle.md:116` | LANDED 35dce3e 2026-04-30 — `[DOC-101]` (consumer/contributor boundary, sibling rule) was already in place; this commit revises `[DOC-028]`/`[DOC-029]` to narrow scope to landing pages, removing the contradiction between SHOULD-include (old text) and per-symbol/topical MUST-NOT (`[DOC-101]`). Reference-implementation citation skipped as decorative. |
+| 1.5 | `implementation` skill | Document `@_disfavoredOverload` patterns for protocol-conformance disambiguation. Used in this session to resolve the Tagged-cascade ambiguity (`Tagged: Carrier` cascading vs `Tagged: Ordinal.\`Protocol\`` sibling). The pattern is not documented elsewhere in the skill canon. | `Reflections/2026-04-26-carrier-integration-retrospective.md:153` | LANDED 35dce3e 2026-04-30 (`[PATTERN-029]` in implementation/patterns.md) |
+| 1.6 | `implementation` or `code-surface` skill | Promote the **Self+Self vs Self+Self.Count** test to a general migration-triage discriminator. `capability-lift-pattern.md` v1.2.0 Recommendation #7 captures it for Carrier specifically; the operator-shape discriminator generalises. Add a sub-rule under `[IMPL-*]` or `[API-LAYER-*]`. | `Reflections/2026-04-26-carrier-integration-retrospective.md:151` | LANDED 35dce3e 2026-04-30 (`[API-LAYER-002]` in implementation/patterns.md) |
+| 1.7 | `code-surface` skill | Amend `[API-IMPL-007]` (extension filename `+` suffix pattern) to admit the **where-clause filename shape** as the canonical form for conditional protocol extensions whose discriminator is a constraint, not a conformance. Examples from carrier-primitives: `Carrier where Underlying == Self.swift`, `Carrier where Underlying == Self, Self ~Copyable.swift`, …. Principal direction (2026-04-29): the where-language form is preferred over `+` suffix mnemonics like `+Q1`/`+Q4` because it is self-documenting at the file level. The `+` suffix remains canonical for conformance-adding extensions (e.g., `Array.Dynamic+Sequence.swift`). | `swift-carrier-primitives/Audits/audit.md` Code Surface #1 (2026-04-29 principal direction) | LANDED 35dce3e 2026-04-30 — scope: limited to suppressed-protocol-constraint discriminators (`Self ~Copyable`, `Self ~Escapable`, or both); the unconditional base file in such a family (`Carrier where Underlying == Self.swift`) is admitted as part of the same convention per principal direction 2026-04-30. |
 | 1.8 | (cross-package corrective action, not a skill amendment) | Property / ownership / tagged-primitives place their Test Support targets under `Sources/...Test Support/` rather than the `[TEST-019]`-mandated `Tests/Support/`. Cross-package fix required before any of those packages tag. Carrier follows `[TEST-019]` correctly; the audit's earlier OPEN classification was inverted. | `swift-carrier-primitives/Audits/audit.md` Testing #6 (2026-04-29 reversal) | OPEN |
 | 1.9 | (workspace tooling, not a skill amendment) | Centralize the local DocC preview helper. Currently bare `swift package preview-documentation` fails on multi-target umbrella packages because the SLI's `@_exported public import` shadows the umbrella's `Carrier` symbol. Per-package `Scripts/preview-docs.sh` would duplicate centralized CI work and accumulate drift. Options: (a) ship one parameterized `swift-institute/Scripts/preview-docs.sh` callable from any umbrella package; (b) upstream the `--exclude-module` flag to `swift package preview-documentation`; (c) skip — leave local preview as "rebuild via CI." Provenance: principal direction 2026-04-29 declined the per-package script in carrier-primitives and asked why centralized CI doesn't already cover this. | swift-carrier-primitives README Contributing decision (2026-04-29) | OPEN |
 | 1.10 | `swift-forums-review` skill | Relocate output destination from `<package>/Research/` to `<package>/Audits/forums-review/`. Forums-review artifacts are pre-launch synthetic-critique exercises with bad public optics in `Research/`; `Audits/` is gitignored ecosystem-wide per `[AUDIT-002]` and semantically captures internal verification artifacts. **LANDED 2026-04-29** — skill commit `27ef561`; carrier (5 files), ownership (5 files), async (11 files) artifacts relocated and pushed (`69013ba`, `9383063`, `51f14eb`). Note: prior commits still contain the files in git history; full history-scrub via `git filter-repo` + force-push deferred. | swift-forums-review skill output paths (2026-04-29 principal direction) | LANDED 2026-04-29 |
-| 1.11 | `readme` skill | Add explicit rule **forbidding internal rule-ID citations** (`[MOD-015]`, `[PRIM-FOUND-001]`, etc.) in README prose. Rule IDs are author-oriented; consumers don't know what they mean. Reference impl (`swift-property-primitives/README.md`) has zero rule-ID citations but the skill never explicitly forbids them — relies on `[README-023]` evaluator's lens by inference. **Provenance**: 2026-04-29 carrier README review caught 2 rule-ID citations (`[MOD-015]`, `[PRIM-FOUND-001]`) that the prescribed shape would have caught with imitation but not via explicit rule. Proposed: new `[README-026]` "No internal rule-ID citations in README content. Implementation rationale belongs in `Research/`; consumer-facing prose names the behaviour, not the rule." | swift-carrier-primitives README cleanup (2026-04-29) | OPEN |
-| 1.12 | `readme` skill | Add explicit rule **constraining Related Packages to public/released repos**. Linking private repos as ecosystem siblings produces 404s for external readers and advertises packages that don't exist yet. Reference impl behaviour is to link only released siblings. **Provenance**: 2026-04-29 carrier README review caught 4 private-repo links in Related Packages (swift-tagged-primitives, swift-cardinal-primitives, swift-ordinal-primitives, swift-hash-primitives) — all unreleased. Proposed: extend `[README-014]` Related Packages with "MUST link only to repos that are public AND have a shipped tag (or explicitly mark unreleased siblings as `(private, unreleased)` rather than as live links)." Plus `[README-016]` addition: prose rationale within Related Packages (e.g., "conformances of a foreign protocol live in the conformer's home package") is contributor-shaped — belongs in `Research/`, not the README's Related Packages section. | swift-carrier-primitives README cleanup (2026-04-29) | OPEN |
+| 1.11 | `readme` skill | Add explicit rule **forbidding internal rule-ID citations** (`[MOD-015]`, `[PRIM-FOUND-001]`, etc.) in README prose. Rule IDs are author-oriented; consumers don't know what they mean. Reference impl (`swift-property-primitives/README.md`) has zero rule-ID citations but the skill never explicitly forbids them — relies on `[README-023]` evaluator's lens by inference. **Provenance**: 2026-04-29 carrier README review caught 2 rule-ID citations (`[MOD-015]`, `[PRIM-FOUND-001]`) that the prescribed shape would have caught with imitation but not via explicit rule. Proposed: new `[README-026]` "No internal rule-ID citations in README content. Implementation rationale belongs in `Research/`; consumer-facing prose names the behaviour, not the rule." | swift-carrier-primitives README cleanup (2026-04-29) | LANDED 35dce3e 2026-04-30 (`[README-026]` in readme/SKILL.md) |
+| 1.12 | `readme` skill | Add explicit rule **constraining Related Packages to public/released repos**. Linking private repos as ecosystem siblings produces 404s for external readers and advertises packages that don't exist yet. Reference impl behaviour is to link only released siblings. **Provenance**: 2026-04-29 carrier README review caught 4 private-repo links in Related Packages (swift-tagged-primitives, swift-cardinal-primitives, swift-ordinal-primitives, swift-hash-primitives) — all unreleased. Proposed: extend `[README-014]` Related Packages with "MUST link only to repos that are public AND have a shipped tag (or explicitly mark unreleased siblings as `(private, unreleased)` rather than as live links)." Plus `[README-016]` addition: prose rationale within Related Packages (e.g., "conformances of a foreign protocol live in the conformer's home package") is contributor-shaped — belongs in `Research/`, not the README's Related Packages section. | swift-carrier-primitives README cleanup (2026-04-29) | LANDED 35dce3e 2026-04-30 (`[README-014]` extended in readme/SKILL.md with public+tagged constraint and prose-rationale exclusion) |
 
 ## Tier 2 — Process improvements (blog-process, collaborative-discussion, handoff)
 
@@ -145,22 +145,51 @@ the un-amended skill rule.
 
 ## Net assessment
 
-The Tier 1 list is now 7 skill amendments (#1.1–#1.7) plus 1
-cross-package corrective action (#1.8). All have specific provenance
-and proposed rule text or fix description. Landing the skill
-amendments before the ownership audit's Phase 2 should still take a
-focused half-day. Tier 2/3/4 items expand the backlog but do NOT
-gate the cohort.
+The Tier 1 list contains 12 items. As of 2026-04-30 (Pass-Out):
 
-The biggest leverage items remain:
-- **#1.4** (DocC consumer/contributor boundary) — changes how
-  property and ownership audits will run, since both packages have
-  decision-record leakage in their catalogues that current
-  `[DOC-028]`/`[DOC-029]` text doesn't clearly forbid.
-- **#1.8** (Test Support layout corrective action) — three packages
-  need to relocate Test Support from `Sources/...Test Support/` to
-  `Tests/Support/` per `[TEST-019]`. Surfaced by inverting the
-  carrier audit finding.
+- **9 items LANDED 2026-04-30**: #1.1, #1.2, #1.3, #1.4, #1.5, #1.6, #1.7,
+  #1.11, #1.12. Skill commit `35dce3e` in `swift-institute/Skills`. (#1.2,
+  #1.3 were pre-existing as `[PKG-NAME-009]` / `[DOC-102]` and re-verified
+  during Pass 1b; #1.1 is a workspace-level edit at
+  `swift-primitives/Skills/primitives/SKILL.md`, which sits outside any
+  git repo at the swift-primitives superrepo top level — flagged for
+  workspace-level git decision.)
+- **1 item previously LANDED**: #1.10 (forums-review output destination,
+  skill commit `27ef561` 2026-04-29).
+- **2 items remain OPEN**: #1.8 (cross-package Test Support layout
+  corrective action — three packages need relocation), #1.9 (workspace
+  tooling decision for DocC preview centralization).
+
+Pass 2 supplemental promotions landed alongside the Tier 1 amendments:
+- New skill: `release-readiness` ([RELEASE-001]–[RELEASE-006]) seeded
+  from carrier `AUDIT-0.1.0-{release-readiness, final-pre-release-scan}.md`.
+- New rule: `[FREVIEW-019]` re-simulation cadence after substantial recent
+  changes.
+- Cross-link: `audit` skill → release-readiness, swift-forums-review,
+  skill-lifecycle.
+- Skill index update: `swift-institute-core` adds release-readiness to
+  Skill Index + Loading Order (position 19).
+
+Pass 3 supplemental refinements landed alongside:
+- New rule: `[BENCH-010]` Tier-0 deferral.
+- New rule: `[GH-REPO-074]` per-package thin-caller workflow files.
+- Note: `reflections-processing` acknowledges the carrier ad-hoc
+  consolidation as a one-time exception.
+
+The ownership audit's Phase 2 may now proceed against the updated rule
+set. Tier 2/3/4 items expand the backlog but do NOT gate the cohort.
+
+Outstanding Tier 1 items (do NOT block carrier's tag, but DO block
+ownership/tagged/property's audits unless explicitly deferred):
+
+- **#1.8** (Test Support layout corrective action) — three packages need
+  to relocate Test Support from `Sources/...Test Support/` to
+  `Tests/Support/` per `[TEST-019]`. Surfaced by inverting the carrier
+  audit finding. Cross-package code change, NOT a skill change.
+- **#1.9** (DocC preview centralization) — workspace tooling decision;
+  options A (parameterized `swift-institute/Scripts/preview-docs.sh`),
+  B (upstream `--exclude-module` to `swift package preview-documentation`),
+  or C (skip).
 
 ## References
 
