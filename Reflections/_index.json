@@ -6,6 +6,34 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-29-carrier-pre-release-audit-and-launch-deployment.md",
+      "date": "2026-04-29",
+      "title": "Carrier-primitives pre-release audit, remediation, cohort-squash, and launch deployment",
+      "packages": [
+        "swift-carrier-primitives",
+        "swift-institute"
+      ],
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "no_action",
+          "description": "Carrier ad-hoc consolidation exception (one-time, principal-directed) — action items already landed via Skills/35dce3e and Research/2cc36be per Pass-Out 2026-04-30 against carrier-launch-skill-incorporation-backlog.md"
+        }
+      ]
+    },
+    {
+      "file": "2026-04-29-handoff-triage-cycle-and-d-to-a-reclassification.md",
+      "date": "2026-04-29",
+      "title": "HANDOFF Triage Cycle and D→A Reclassification at Extraction Time",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-29-carrier-launch-arc-and-centralized-workflow-trim.md",
       "date": "2026-04-29",
       "title": "Carrier Launch Arc and Centralized Workflow Trim",
@@ -16,8 +44,15 @@
         "swift-foundations",
         "swift-standards"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "no_action",
+          "description": "Carrier ad-hoc consolidation exception (one-time, principal-directed) — action items already landed via Skills/35dce3e and Research/2cc36be per Pass-Out 2026-04-30 against carrier-launch-skill-incorporation-backlog.md"
+        }
+      ]
     },
     {
       "file": "2026-04-24-post-cycle-3-audit-and-p2-9-unify-cycle-4.md",
@@ -38,7 +73,7 @@
         {
           "type": "research_topic",
           "target": "doc-audit-module-import-visibility-preflight.md",
-          "description": "IN_PROGRESS \u2014 methodology survey"
+          "description": "IN_PROGRESS — methodology survey"
         },
         {
           "type": "skill_update",
@@ -47,14 +82,14 @@
         },
         {
           "type": "no_action",
-          "description": "D5 swift-linux Random module-import \u2014 already RESOLVED 2026-04-24 via 61e52c4"
+          "description": "D5 swift-linux Random module-import — already RESOLVED 2026-04-24 via 61e52c4"
         }
       ]
     },
     {
       "file": "2026-04-24-post-hoc-api-name-compliance-swap-rename.md",
       "date": "2026-04-24",
-      "title": "Post-hoc [API-NAME-002] compliance: swapAt \u2192 swap(at:with:)",
+      "title": "Post-hoc [API-NAME-002] compliance: swapAt → swap(at:with:)",
       "packages": [
         "swift-array-primitives",
         "swift-buffer-primitives"
@@ -76,14 +111,14 @@
         {
           "type": "research_topic",
           "target": "stdlib-naming-beats-ecosystem-naming.md",
-          "description": "IN_PROGRESS Tier 2 \u2014 when stdlib naming beats ecosystem naming and when it does not; case-study sweep pending"
+          "description": "IN_PROGRESS Tier 2 — when stdlib naming beats ecosystem naming and when it does not; case-study sweep pending"
         }
       ]
     },
     {
       "file": "2026-04-24-p29-cycle-4-option-a-unify-and-structural-correctness-framing.md",
       "date": "2026-04-24",
-      "title": "P2.9 Cycle 4 Close \u2014 Option A Unify and Structurally-Correct vs Lowest-Risk Framing",
+      "title": "P2.9 Cycle 4 Close — Option A Unify and Structurally-Correct vs Lowest-Risk Framing",
       "packages": [
         "swift-iso-9945",
         "swift-linux-standard",
@@ -133,7 +168,7 @@
         {
           "type": "research_topic",
           "target": "value-generic-parameter-naming-convention.md",
-          "description": "IN_PROGRESS Tier 2 \u2014 convention selection (Option A single-letter N / Option B semantic / Option C scope-disambiguated / Option D mixed)"
+          "description": "IN_PROGRESS Tier 2 — convention selection (Option A single-letter N / Option B semantic / Option C scope-disambiguated / Option D mixed)"
         },
         {
           "type": "package_insight",
@@ -163,7 +198,7 @@
         {
           "type": "skill_update",
           "target": "audit",
-          "description": "[AUDIT-028] Ghost-Reference Detection \u2014 Notation-Variant Coverage (em-dash ranges + level-2 headings + sub-labels)"
+          "description": "[AUDIT-028] Ghost-Reference Detection — Notation-Variant Coverage (em-dash ranges + level-2 headings + sub-labels)"
         },
         {
           "type": "skill_update",
@@ -193,23 +228,23 @@
         {
           "type": "skill_update",
           "target": "experiment-process",
-          "description": "[EXP-018] Claim Validation Trap \u2014 Synthetic-to-Production Extrapolation (extends [EXP-011] Workaround validation trap with the dual)"
+          "description": "[EXP-018] Claim Validation Trap — Synthetic-to-Production Extrapolation (extends [EXP-011] Workaround validation trap with the dual)"
         },
         {
           "type": "no_action",
-          "description": ".docc-build/ pattern in Scripts/sync-gitignore.sh \u2014 already complete via commit a7ab681 (2026-04-24, before reflection authored)"
+          "description": ".docc-build/ pattern in Scripts/sync-gitignore.sh — already complete via commit a7ab681 (2026-04-24, before reflection authored)"
         },
         {
           "type": "research_topic",
           "target": "withUnsafe-borrowing-noncopyable-pattern-reach-survey.md",
-          "description": "IN_PROGRESS \u2014 scoped pattern-reach survey for stdlib withUnsafe* family; empirical work deferred until A2 authorized"
+          "description": "IN_PROGRESS — scoped pattern-reach survey for stdlib withUnsafe* family; empirical work deferred until A2 authorized"
         }
       ]
     },
     {
       "file": "2026-04-24-meta-process-cascade-reflections-to-handoff.md",
       "date": "2026-04-24",
-      "title": "Meta-process cascade: reflections \u2192 skills \u2192 sweep \u2192 rule evolution \u2192 handoff",
+      "title": "Meta-process cascade: reflections → skills → sweep → rule evolution → handoff",
       "packages": [
         "swift-institute/Skills",
         "swift-institute/Research",
@@ -229,7 +264,7 @@
         {
           "type": "research_topic",
           "target": "rule-dependency-tracking.md",
-          "description": "IN_PROGRESS Tier 2 \u2014 rule-to-assumption dependency tracking; mechanism proposal (frontmatter / per-rule / Scripts / formal graph)"
+          "description": "IN_PROGRESS Tier 2 — rule-to-assumption dependency tracking; mechanism proposal (frontmatter / per-rule / Scripts / formal graph)"
         },
         {
           "type": "skill_update",
@@ -241,7 +276,7 @@
     {
       "file": "2026-04-24-narrow-shape-bug-extrapolation-and-in-package-verification.md",
       "date": "2026-04-24",
-      "title": "Narrow-shape bug extrapolation and in-package verification \u2014 Finding #12 inversion from HIGH/HOLD to LOW/watchflag",
+      "title": "Narrow-shape bug extrapolation and in-package verification — Finding #12 inversion from HIGH/HOLD to LOW/watchflag",
       "packages": [
         "swift-ownership-primitives",
         "swift-property-primitives",
@@ -274,7 +309,7 @@
     {
       "file": "2026-04-24-carrier-precursor-publish-timing-and-paired-post-url-management.md",
       "date": "2026-04-24",
-      "title": "Carrier precursor publish \u2014 0-audience timing inversion, paired-post URL management, DocC deploy verification",
+      "title": "Carrier precursor publish — 0-audience timing inversion, paired-post URL management, DocC deploy verification",
       "packages": [
         "swift-institute/Blog",
         "swift-institute/swift-institute.org"
@@ -303,7 +338,7 @@
     {
       "file": "2026-04-24-carrier-primitives-blog-drafting-and-convergence.md",
       "date": "2026-04-24",
-      "title": "Carrier-primitives blog drafting \u2014 paired-post reveal discipline, multi-round convergence, and receipt verification",
+      "title": "Carrier-primitives blog drafting — paired-post reveal discipline, multi-round convergence, and receipt verification",
       "packages": [
         "swift-institute/Blog",
         "swift-primitives/swift-carrier-primitives"
@@ -315,7 +350,7 @@
     {
       "file": "2026-04-24-swift-forums-review-skill-creation-validation-v1.2.md",
       "date": "2026-04-24",
-      "title": "swift-forums-review skill creation and v1.2 validation \u2014 corpus, archetype triage, sibling-agent review loop",
+      "title": "swift-forums-review skill creation and v1.2 validation — corpus, archetype triage, sibling-agent review loop",
       "packages": [
         "swift-institute/Skills/swift-forums-review",
         "swift-institute/Engagement/swift-forums-review-corpus",
@@ -329,7 +364,7 @@
     {
       "file": "2026-04-23-ci-permission-architecture-path-b-execution.md",
       "date": "2026-04-23",
-      "title": "CI permission architecture \u2014 Path B investigation, 3-ground A-override, and 297-caller ecosystem rollout with private-repo billing-state discovery",
+      "title": "CI permission architecture — Path B investigation, 3-ground A-override, and 297-caller ecosystem rollout with private-repo billing-state discovery",
       "packages": [
         "swift-institute/.github",
         "swift-institute/Scripts",
@@ -423,7 +458,7 @@
     {
       "file": "2026-04-22-iso9945-signal-information-cycle2-beta-prime-revision.md",
       "date": "2026-04-22",
-      "title": "Cycle 2 \u2014 ISO 9945.Kernel.Signal.Information: \u03b2' revision after @convention(c) representability block",
+      "title": "Cycle 2 — ISO 9945.Kernel.Signal.Information: β' revision after @convention(c) representability block",
       "packages": [
         "swift-iso-9945",
         "swift-institute/Audits"
@@ -458,7 +493,7 @@
     {
       "file": "2026-04-22-standards-org-migration-phases-1-5-execution.md",
       "date": "2026-04-22",
-      "title": "Standards org migration \u2014 Phases 1-5 execution with a Do-Not-Touch violation mid-session",
+      "title": "Standards org migration — Phases 1-5 execution with a Do-Not-Touch violation mid-session",
       "packages": [
         "swift-institute",
         "swift-standards",
@@ -491,7 +526,7 @@
     {
       "file": "2026-04-22-supervisor-arc-investigation-through-cycle-two-dispatch.md",
       "date": "2026-04-22",
-      "title": "Supervisor arc \u2014 investigation through Cycle 2 dispatch",
+      "title": "Supervisor arc — investigation through Cycle 2 dispatch",
       "packages": [
         "swift-iso-9945",
         "swift-foundations/swift-posix",
@@ -507,7 +542,7 @@
     {
       "file": "2026-04-22-cycle-2-close-beta-prime-and-c-representability.md",
       "date": "2026-04-22",
-      "title": "Cycle 2 close \u2014 \u03b2' mid-cycle Decision revision and @convention(c) representability gap",
+      "title": "Cycle 2 close — β' mid-cycle Decision revision and @convention(c) representability gap",
       "packages": [
         "swift-iso-9945",
         "swift-institute/Audits",
@@ -520,7 +555,7 @@
     {
       "file": "2026-04-22-iso9945-socket-message-header-cycle1-and-layer-correction.md",
       "date": "2026-04-22",
-      "title": "ISO 9945 Cycle 1 \u2014 Socket.Message.Header typed pointer-field partial close + user-caught layering correction",
+      "title": "ISO 9945 Cycle 1 — Socket.Message.Header typed pointer-field partial close + user-caught layering correction",
       "packages": [
         "swift-iso-9945",
         "swift-institute"
@@ -532,7 +567,7 @@
     {
       "file": "2026-04-22-investigation-only-cycle-three-doc-pattern.md",
       "date": "2026-04-22",
-      "title": "Investigation-only supervise cycle \u2014 three-doc pattern + principal-as-decider enforcement",
+      "title": "Investigation-only supervise cycle — three-doc pattern + principal-as-decider enforcement",
       "packages": [
         "swift-iso-9945",
         "swift-posix",
@@ -547,7 +582,7 @@
     {
       "file": "2026-04-22-platform-audit-remediation-cycle-and-advisory-pivot.md",
       "date": "2026-04-22",
-      "title": "Platform audit remediation cycle \u2014 9 to 30/89 then advisory pivot to 38/89",
+      "title": "Platform audit remediation cycle — 9 to 30/89 then advisory pivot to 38/89",
       "packages": [
         "swift-kernel",
         "swift-posix",
@@ -718,7 +753,7 @@
     {
       "file": "2026-04-21-swift-test-003-generic-hard-error.md",
       "date": "2026-04-21",
-      "title": "[SWIFT-TEST-003] generic hard error \u2014 skill broadening + handoff-prescription reversal",
+      "title": "[SWIFT-TEST-003] generic hard error — skill broadening + handoff-prescription reversal",
       "packages": [
         "swift-property-primitives",
         "swift-institute/Skills/testing-swiftlang"
@@ -747,7 +782,7 @@
     {
       "file": "2026-04-21-namespace-only-target-pattern-mod-017.md",
       "date": "2026-04-21",
-      "title": "Namespace-only target pattern \u2014 kernel-primitives case study and [MOD-017] codification",
+      "title": "Namespace-only target pattern — kernel-primitives case study and [MOD-017] codification",
       "packages": [
         "swift-kernel-primitives",
         "swift-primitives",
@@ -781,7 +816,7 @@
     {
       "file": "2026-04-21-property-primitives-release-polish-supervised.md",
       "date": "2026-04-21",
-      "title": "swift-property-primitives release polish \u2014 supervisor + handoff composition",
+      "title": "swift-property-primitives release polish — supervisor + handoff composition",
       "packages": [
         "swift-property-primitives",
         "swift-vector-primitives",
@@ -796,7 +831,7 @@
     {
       "file": "2026-04-21-namespace-only-target-pattern-mod-017.md",
       "date": "2026-04-21",
-      "title": "Namespace-only target pattern \u2014 kernel-primitives case study and [MOD-017] codification",
+      "title": "Namespace-only target pattern — kernel-primitives case study and [MOD-017] codification",
       "packages": [
         "swift-kernel-primitives",
         "swift-primitives",
@@ -840,7 +875,7 @@
     {
       "file": "2026-04-20-l2-l3-same-signature-latent-ambiguity.md",
       "date": "2026-04-20",
-      "title": "Same-signature L2/L3 extensions create latent ambiguity \u2014 Phase A was not optional",
+      "title": "Same-signature L2/L3 extensions create latent ambiguity — Phase A was not optional",
       "packages": [
         "swift-kernel",
         "swift-iso-9945",
@@ -864,7 +899,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:platform] [skill:handoff] [package:swift-windows]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:platform] [skill:handoff] [package:swift-windows]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:platform] [skill:handoff] [package:swift-windows]"
     },
     {
       "file": "2026-04-20-l3-unifier-composition-discipline.md",
@@ -884,12 +919,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [research:ecosystem] [skill:platform]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [research:ecosystem] [skill:platform]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [research:ecosystem] [skill:platform]"
     },
     {
       "file": "2026-04-20-kernel-error-code-predicates-handoff-premise-audit.md",
       "date": "2026-04-20",
-      "title": "Kernel.Error.Code predicates \u2014 handoff premise audit and the test opt-out reading",
+      "title": "Kernel.Error.Code predicates — handoff premise audit and the test opt-out reading",
       "packages": [
         "swift-iso-9945",
         "swift-windows-standard",
@@ -901,7 +936,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [skill:handoff] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [skill:handoff] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:handoff] [no-action]"
     },
     {
       "file": "2026-04-20-at-implements-bridge-pattern-and-defensive-l1-walkback.md",
@@ -918,7 +953,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:implementation] [experiment:swift-institute] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:implementation] [experiment:swift-institute] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [experiment:swift-institute] [no-action]"
     },
     {
       "file": "2026-04-20-file-name-nul-fix-execution-and-path-char-adoption.md",
@@ -934,7 +969,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [skill:implementation] [skill:reflect-session]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [skill:implementation] [skill:reflect-session]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:implementation] [skill:reflect-session]"
     },
     {
       "file": "2026-04-20-swift-file-system-io-migration-and-l1-vocabulary-overreach.md",
@@ -951,7 +986,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [no-action] [package:swift-file-system]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [no-action] [package:swift-file-system]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [no-action] [package:swift-file-system]"
     },
     {
       "file": "2026-04-18-path-ecosystem-correction-cycle-and-process-distillation.md",
@@ -968,7 +1003,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [skill:implementation] [research:ecosystem]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [skill:implementation] [research:ecosystem]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:implementation] [research:ecosystem]"
     },
     {
       "file": "2026-04-18-ecosystem-index-migration-completion-and-batch-git-edges.md",
@@ -984,7 +1019,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:reflect-session] [research:ecosystem] [package:swift-institute-Scripts]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:reflect-session] [research:ecosystem] [package:swift-institute-Scripts]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:reflect-session] [research:ecosystem] [package:swift-institute-Scripts]"
     },
     {
       "file": "2026-04-18-path-type-compliance-audit-refresh-and-architecture-decisions.md",
@@ -1002,7 +1037,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:implementation] [package:swift-paths] [research:swift-paths]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:implementation] [package:swift-paths] [research:swift-paths]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [package:swift-paths] [research:swift-paths]"
     },
     {
       "file": "2026-04-18-json-authoritative-migration-sweep.md",
@@ -1020,12 +1055,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:research-process] [blog] [research:swift-institute.org]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:research-process] [blog] [research:swift-institute.org]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:research-process] [blog] [research:swift-institute.org]"
     },
     {
       "file": "2026-04-18-two-homepages-mixed-chrome-dashboard.md",
       "date": "2026-04-18",
-      "title": "Two Homepages \u2014 DocC-Merge Experiment, Mixed-Chrome Pivot, Dashboard Live",
+      "title": "Two Homepages — DocC-Merge Experiment, Mixed-Chrome Pivot, Dashboard Live",
       "packages": [
         "swift-institute.org",
         "swift-institute-Research",
@@ -1036,7 +1071,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "RESEARCH",
       "outcomeDescription": "[no-action] [blog] [experiment:swift-institute-Scripts]",
-      "statusRaw": "processed (2026-04-20) RESEARCH \u2014 [no-action] [blog] [experiment:swift-institute-Scripts]"
+      "statusRaw": "processed (2026-04-20) RESEARCH — [no-action] [blog] [experiment:swift-institute-Scripts]"
     },
     {
       "file": "2026-04-17-institute-repo-split-and-supervise-absentia-review.md",
@@ -1057,7 +1092,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [skill:supervise] [research:ecosystem]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [skill:supervise] [research:ecosystem]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:supervise] [research:ecosystem]"
     },
     {
       "file": "2026-04-17-swift-6-3-1-corpus-completion-and-drift-relocation.md",
@@ -1072,12 +1107,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:experiment-process] [blog] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:experiment-process] [blog] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:experiment-process] [blog] [no-action]"
     },
     {
       "file": "2026-04-17-effect-primitives-ncopyable-widening-silgen-workaround.md",
       "date": "2026-04-17",
-      "title": "Effect-Primitives `~Copyable` Widening \u2014 Two-Callback Workaround for a Swift 6.3.1 SILGen Bug",
+      "title": "Effect-Primitives `~Copyable` Widening — Two-Callback Workaround for a Swift 6.3.1 SILGen Bug",
       "packages": [
         "swift-effect-primitives",
         "swift-equation-primitives",
@@ -1087,12 +1122,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:implementation] [experiment:swift-effect-primitives] [research:ecosystem]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:implementation] [experiment:swift-effect-primitives] [research:ecosystem]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [experiment:swift-effect-primitives] [research:ecosystem]"
     },
     {
       "file": "2026-04-17-swift-6-3-1-experiment-revalidation.md",
       "date": "2026-04-17",
-      "title": "Swift 6.3.1 Experiment Re-Run \u2014 Memory Drift, Repo Splits, and the Experiment-Header Convention That Saved Time",
+      "title": "Swift 6.3.1 Experiment Re-Run — Memory Drift, Repo Splits, and the Experiment-Header Convention That Saved Time",
       "packages": [
         "swift-institute",
         "swift-parser-primitives",
@@ -1102,12 +1137,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:experiment-process] [research:compiler]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:experiment-process] [research:compiler]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:experiment-process] [research:compiler]"
     },
     {
       "file": "2026-04-16-chase-lev-deque-production-implementation.md",
       "date": "2026-04-16",
-      "title": "Chase-Lev Deque \u2014 From Spike to Production L1 Primitive",
+      "title": "Chase-Lev Deque — From Spike to Production L1 Primitive",
       "packages": [
         "swift-executor-primitives",
         "swift-executors"
@@ -1116,12 +1151,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:testing-swiftlang] [skill:testing] [package:swift-executors]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:testing-swiftlang] [skill:testing] [package:swift-executors]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:testing-swiftlang] [skill:testing] [package:swift-executors]"
     },
     {
       "file": "2026-04-16-io-completion-storage-elimination.md",
       "date": "2026-04-16",
-      "title": "IO.Completion.Storage Elimination \u2014 Dictionary as Sole Correlation and Lifetime Manager",
+      "title": "IO.Completion.Storage Elimination — Dictionary as Sole Correlation and Lifetime Manager",
       "packages": [
         "swift-io"
       ],
@@ -1129,12 +1164,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:implementation] [package:swift-io] [experiment:swift-io]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:implementation] [package:swift-io] [experiment:swift-io]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [package:swift-io] [experiment:swift-io]"
     },
     {
       "file": "2026-04-16-supervise-in-practice-three-failure-modes.md",
       "date": "2026-04-16",
-      "title": "Supervise-in-Practice \u2014 Three Failure Modes Across a Multi-Revision Dispatch",
+      "title": "Supervise-in-Practice — Three Failure Modes Across a Multi-Revision Dispatch",
       "packages": [
         "swift-executors",
         "swift-kernel",
@@ -1144,12 +1179,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:supervise] [skill:supervise] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:supervise] [skill:supervise] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:supervise] [skill:supervise] [no-action]"
     },
     {
       "file": "2026-04-16-reflect-session-cleanup-completeness.md",
       "date": "2026-04-16",
-      "title": "/reflect-session Cleanup Completeness \u2014 \"Done\" Without Running the Protocol",
+      "title": "/reflect-session Cleanup Completeness — \"Done\" Without Running the Protocol",
       "packages": [
         "swift-institute"
       ],
@@ -1157,12 +1192,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:reflect-session] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:reflect-session] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:reflect-session] [no-action]"
     },
     {
       "file": "2026-04-16-parameter-ordering-skill-lifecycle-routing-gap.md",
       "date": "2026-04-16",
-      "title": "Parameter Ordering Conventions \u2014 and a Skill-Lifecycle Routing Gap",
+      "title": "Parameter Ordering Conventions — and a Skill-Lifecycle Routing Gap",
       "packages": [
         "swift-institute"
       ],
@@ -1170,12 +1205,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:skill-lifecycle] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:skill-lifecycle] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:skill-lifecycle] [no-action]"
     },
     {
       "file": "2026-04-16-executor-main-witness-pattern-four-revision-journey.md",
       "date": "2026-04-16",
-      "title": "Executor.Main Witness Pattern \u2014 A Four-Revision Architectural Journey",
+      "title": "Executor.Main Witness Pattern — A Four-Revision Architectural Journey",
       "packages": [
         "swift-executors",
         "swift-kernel",
@@ -1187,7 +1222,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:supervise] [skill:supervise] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:supervise] [skill:supervise] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:supervise] [skill:supervise] [no-action]"
     },
     {
       "file": "2026-04-16-docc-landing-restructure-and-layers-show.md",
@@ -1207,12 +1242,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "RESEARCH",
       "outcomeDescription": "[no-action] [research:ecosystem] [blog]",
-      "statusRaw": "processed (2026-04-20) RESEARCH \u2014 [no-action] [research:ecosystem] [blog]"
+      "statusRaw": "processed (2026-04-20) RESEARCH — [no-action] [research:ecosystem] [blog]"
     },
     {
       "file": "2026-04-16-swift-institute-alpha-launch.md",
       "date": "2026-04-16",
-      "title": "Swift Institute Alpha Launch \u2014 Claim Triage, HTTPS Kick, Landing-Page Constraints",
+      "title": "Swift Institute Alpha Launch — Claim Triage, HTTPS Kick, Landing-Page Constraints",
       "packages": [
         "swift-institute"
       ],
@@ -1220,7 +1255,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "INFORMATIONAL",
       "outcomeDescription": "[no-action] [blog]",
-      "statusRaw": "processed (2026-04-20) INFORMATIONAL \u2014 [no-action] [blog]"
+      "statusRaw": "processed (2026-04-20) INFORMATIONAL — [no-action] [blog]"
     },
     {
       "file": "2026-02-12-bit-vector-zeros-sequence-first-disambiguation.md",
@@ -1240,7 +1275,7 @@
     {
       "file": "2026-02-12-storage-primitives-audit-completion.md",
       "date": "2026-02-12",
-      "title": "Storage Primitives Audit Completion \u2014 Infrastructure Discovery as Force Multiplier",
+      "title": "Storage Primitives Audit Completion — Infrastructure Discovery as Force Multiplier",
       "packages": [
         "swift-storage-primitives",
         "swift-bit-vector-primitives",
@@ -1255,7 +1290,7 @@
     {
       "file": "2026-02-12-data-structures-plan-completion.md",
       "date": "2026-02-12",
-      "title": "Data Structures Plan Completion \u2014 Audit Staleness and Verification Depth",
+      "title": "Data Structures Plan Completion — Audit Staleness and Verification Depth",
       "packages": [
         "swift-bit-vector-primitives",
         "swift-array-primitives",
@@ -1273,7 +1308,7 @@
     {
       "file": "2026-02-12-stack-buffer-remediation-bounded-canonical.md",
       "date": "2026-02-12",
-      "title": "Stack/Buffer Remediation \u2014 Bounded Indices as Sole Canonical API",
+      "title": "Stack/Buffer Remediation — Bounded Indices as Sole Canonical API",
       "packages": [
         "swift-stack-primitives",
         "swift-buffer-primitives"
@@ -1287,7 +1322,7 @@
     {
       "file": "2026-02-13-input-stream-noncopyable-element.md",
       "date": "2026-02-13",
-      "title": "Input.Stream.Protocol ~Copyable Element \u2014 Constraint Cascade and ~Escapable Discovery",
+      "title": "Input.Stream.Protocol ~Copyable Element — Constraint Cascade and ~Escapable Discovery",
       "packages": [
         "swift-input-primitives",
         "swift-parser-primitives"
@@ -1301,7 +1336,7 @@
     {
       "file": "2026-02-13-collection-sequence-inheritance-deduplication.md",
       "date": "2026-02-13",
-      "title": "Collection-Sequence Inheritance \u2014 Deduplication Through Protocol Refinement",
+      "title": "Collection-Sequence Inheritance — Deduplication Through Protocol Refinement",
       "packages": [
         "swift-collection-primitives",
         "swift-sequence-primitives"
@@ -1331,7 +1366,7 @@
     {
       "file": "2026-02-25-async-callback-nonsending-replacement.md",
       "date": "2026-02-25",
-      "title": "Async.Callback Nonsending Replacement \u2014 Research-to-Production Pipeline",
+      "title": "Async.Callback Nonsending Replacement — Research-to-Production Pipeline",
       "packages": [
         "swift-async-primitives",
         "swift-test-primitives",
@@ -1346,7 +1381,7 @@
     {
       "file": "2026-02-27-tagged-string-crossmodule-access-levels-and-shadowing.md",
       "date": "2026-02-27",
-      "title": "Tagged String Cross-Module \u2014 Access Levels and Shadowing",
+      "title": "Tagged String Cross-Module — Access Levels and Shadowing",
       "packages": [
         "swift-identity-primitives",
         "swift-string-primitives",
@@ -1361,7 +1396,7 @@
     {
       "file": "2026-02-27-source-location-and-located-error-unification.md",
       "date": "2026-02-27",
-      "title": "Source Location and Located Error Unification \u2014 Type Deduplication at Scale",
+      "title": "Source Location and Located Error Unification — Type Deduplication at Scale",
       "packages": [
         "swift-text-primitives",
         "swift-source-primitives",
@@ -1380,7 +1415,7 @@
     {
       "file": "2026-03-03-typed-throws-rethrows-overload-resolution.md",
       "date": "2026-03-03",
-      "title": "Typed Throws Conversion \u2014 rethrows Overload Resolution and E Inference",
+      "title": "Typed Throws Conversion — rethrows Overload Resolution and E Inference",
       "packages": [
         "swift-standard-library-extensions",
         "swift-geometry-primitives",
@@ -1400,7 +1435,7 @@
     {
       "file": "2026-03-18-iterative-render-machine-stack-overflow-fix.md",
       "date": "2026-03-18",
-      "title": "Iterative Render Machine \u2014 Stack Overflow Fix via Heap-Deferred Traversal",
+      "title": "Iterative Render Machine — Stack Overflow Fix via Heap-Deferred Traversal",
       "packages": [
         "swift-rendering-primitives",
         "swift-html-rendering",
@@ -1415,7 +1450,7 @@
     {
       "file": "2026-03-18-store-view-not-body-noncopyable-rendering.md",
       "date": "2026-03-18",
-      "title": "Store VIEW Not BODY \u2014 ~Copyable Body Support and Protocol Witness Ownership",
+      "title": "Store VIEW Not BODY — ~Copyable Body Support and Protocol Witness Ownership",
       "packages": [
         "swift-rendering-primitives",
         "swift-css-html-rendering"
@@ -1429,7 +1464,7 @@
     {
       "file": "2026-03-20-file-path-literal-vs-throwing-init-harmonization.md",
       "date": "2026-03-20",
-      "title": "File/Path Literal vs Throwing Init \u2014 Harmonization",
+      "title": "File/Path Literal vs Throwing Init — Harmonization",
       "packages": [
         "swift-file-system",
         "swift-paths",
@@ -1444,7 +1479,7 @@
     {
       "file": "2026-03-20-skill-system-overhaul-architecture.md",
       "date": "2026-03-20",
-      "title": "Skill System Overhaul \u2014 Application Gap, Research-Grounded Restructuring",
+      "title": "Skill System Overhaul — Application Gap, Research-Grounded Restructuring",
       "packages": [
         "swift-institute"
       ],
@@ -1457,7 +1492,7 @@
     {
       "file": "2026-03-20-pass4-compound-renames-and-generic-nesting.md",
       "date": "2026-03-20",
-      "title": "Pass 4: Compound Type Renames \u2014 Generic Nesting Discoveries",
+      "title": "Pass 4: Compound Type Renames — Generic Nesting Discoveries",
       "packages": [
         "swift-pool-primitives",
         "swift-cache-primitives",
@@ -1577,7 +1612,7 @@
     {
       "file": "2026-03-24-generalized-audit-skill-design.md",
       "date": "2026-03-24",
-      "title": "Generalized Audit Skill \u2014 From 82 Orphans to One Canonical Location",
+      "title": "Generalized Audit Skill — From 82 Orphans to One Canonical Location",
       "packages": [
         "swift-institute"
       ],
@@ -1590,7 +1625,7 @@
     {
       "file": "2026-03-24-swift-io-audit-consolidation.md",
       "date": "2026-03-24",
-      "title": "swift-io Audit Consolidation \u2014 From 3 Scattered Files to One Canonical Location",
+      "title": "swift-io Audit Consolidation — From 3 Scattered Files to One Canonical Location",
       "packages": [
         "swift-io",
         "swift-institute"
@@ -1621,7 +1656,7 @@
     {
       "file": "2026-03-26-channel-lifecycle-actor-removal-ownership-as-synchronization.md",
       "date": "2026-03-26",
-      "title": "Channel Lifecycle Actor Removal \u2014 Ownership as Synchronization",
+      "title": "Channel Lifecycle Actor Removal — Ownership as Synchronization",
       "packages": [
         "swift-io"
       ],
@@ -1634,7 +1669,7 @@
     {
       "file": "2026-03-26-io-api-remediation-sync-submission.md",
       "date": "2026-03-26",
-      "title": "IO API Remediation \u2014 Sync Submission and the Async Overload Ambiguity",
+      "title": "IO API Remediation — Sync Submission and the Async Overload Ambiguity",
       "packages": [
         "swift-io",
         "swift-kernel",
@@ -1649,7 +1684,7 @@
     {
       "file": "2026-03-27-async-channel-noncopyable-restructure.md",
       "date": "2026-03-27",
-      "title": "Async Channel ~Copyable Restructure \u2014 Closure Capture as the Real Blocker",
+      "title": "Async Channel ~Copyable Restructure — Closure Capture as the Real Blocker",
       "packages": [
         "swift-async-primitives"
       ],
@@ -1676,7 +1711,7 @@
     {
       "file": "2026-03-29-channel-split-full-duplex-io.md",
       "date": "2026-03-29",
-      "title": "Channel split() \u2014 Full-Duplex I/O via Ecosystem-Aligned Split Pattern",
+      "title": "Channel split() — Full-Duplex I/O via Ecosystem-Aligned Split Pattern",
       "packages": [
         "swift-io"
       ],
@@ -1746,7 +1781,7 @@
     {
       "file": "2026-03-30-sending-sendable-migration-cascade.md",
       "date": "2026-03-30",
-      "title": "Sending/Sendable Migration Cascade: Primitives \u2192 Foundations",
+      "title": "Sending/Sendable Migration Cascade: Primitives → Foundations",
       "packages": [
         "swift-async-primitives",
         "swift-async",
@@ -1793,7 +1828,7 @@
     {
       "file": "2026-03-31-convention3-unchecked-sendable-audit.md",
       "date": "2026-03-31",
-      "title": "Convention 3 Audit \u2014 @unchecked Sendable Truth-Telling",
+      "title": "Convention 3 Audit — @unchecked Sendable Truth-Telling",
       "packages": [
         "swift-io"
       ],
@@ -1819,7 +1854,7 @@
     {
       "file": "2026-03-31-copypropagation-noncopyable-enum-already-fixed.md",
       "date": "2026-03-31",
-      "title": "CopyPropagation ~Copyable Enum Crash \u2014 Already Fixed Upstream, Prior Misattribution Corrected",
+      "title": "CopyPropagation ~Copyable Enum Crash — Already Fixed Upstream, Prior Misattribution Corrected",
       "packages": [
         "swift-async-primitives"
       ],
@@ -1832,7 +1867,7 @@
     {
       "file": "2026-03-31-noncopyable-peek-escapable-scope-nesting-limit.md",
       "date": "2026-03-31",
-      "title": "~Escapable Peek Investigation \u2014 Property.View Is the Terminal Scope",
+      "title": "~Escapable Peek Investigation — Property.View Is the Terminal Scope",
       "packages": [
         "swift-queue-primitives",
         "swift-buffer-primitives",
@@ -1847,7 +1882,7 @@
     {
       "file": "2026-03-31-bridge-noncopyable-ownership-completion.md",
       "date": "2026-03-31",
-      "title": "Bridge ~Copyable Ownership Completion \u2014 Unification Over Duplication",
+      "title": "Bridge ~Copyable Ownership Completion — Unification Over Duplication",
       "packages": [
         "swift-queue-primitives",
         "swift-async-primitives"
@@ -1861,7 +1896,7 @@
     {
       "file": "2026-03-31-se0499-contextual-lookup-misdiagnosis.md",
       "date": "2026-03-31",
-      "title": "SE-0499 Contextual Lookup Misdiagnosis \u2014 Constraint Landscape Shift, Not Compiler Regression",
+      "title": "SE-0499 Contextual Lookup Misdiagnosis — Constraint Landscape Shift, Not Compiler Regression",
       "packages": [
         "swift-comparison-primitives",
         "swift-ordering-primitives",
@@ -1877,7 +1912,7 @@
     {
       "file": "2026-03-31-nonisolated-nonsending-channel-migration.md",
       "date": "2026-03-31",
-      "title": "Nonisolated(nonsending) Channel Migration \u2014 Protocol Witness Confirmation",
+      "title": "Nonisolated(nonsending) Channel Migration — Protocol Witness Confirmation",
       "packages": [
         "swift-async-primitives"
       ],
@@ -1934,7 +1969,7 @@
     {
       "file": "2026-03-31-storage-free-arena-bounded-migration.md",
       "date": "2026-03-31",
-      "title": "Storage.Free to Buffer.Arena.Bounded \u2014 Prior Audit Retraction and Migration",
+      "title": "Storage.Free to Buffer.Arena.Bounded — Prior Audit Retraction and Migration",
       "packages": [
         "swift-async-primitives",
         "swift-buffer-primitives"
@@ -1961,7 +1996,7 @@
     {
       "file": "2026-04-01-async-primitives-audit-round-two.md",
       "date": "2026-04-01",
-      "title": "Async Primitives Audit Round Two \u2014 Agent Verification and Ecosystem Delegation",
+      "title": "Async Primitives Audit Round Two — Agent Verification and Ecosystem Delegation",
       "packages": [
         "swift-async-primitives"
       ],
@@ -1974,7 +2009,7 @@
     {
       "file": "2026-04-01-deferred-compound-methods-and-generic-scoping.md",
       "date": "2026-04-01",
-      "title": "Deferred Compound Methods \u2014 Generic Scoping Constraint and Dead Code Discovery",
+      "title": "Deferred Compound Methods — Generic Scoping Constraint and Dead Code Discovery",
       "packages": [
         "swift-async-primitives"
       ],
@@ -1987,7 +2022,7 @@
     {
       "file": "2026-04-03-sending-over-sendable-migration.md",
       "date": "2026-04-03",
-      "title": "Sending Over Sendable Migration \u2014 Viral Sendability Removal Across Three Packages",
+      "title": "Sending Over Sendable Migration — Viral Sendability Removal Across Three Packages",
       "packages": [
         "swift-io",
         "swift-witnesses",
@@ -1997,7 +2032,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "sending-over-sendable pattern already in memory + code shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 sending-over-sendable pattern already in memory + code shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — sending-over-sendable pattern already in memory + code shipped"
     },
     {
       "file": "2026-04-12-eintr-completion-and-safe-socket-api.md",
@@ -2014,12 +2049,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Either error composition in memory, EINTR wrappers shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Either error composition in memory, EINTR wrappers shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Either error composition in memory, EINTR wrappers shipped"
     },
     {
       "file": "2026-04-02-experiment-consolidation-29-to-5.md",
       "date": "2026-04-02",
-      "title": "Experiment Consolidation \u2014 29 Scattered Packages to 5 Topic-Based Packages",
+      "title": "Experiment Consolidation — 29 Scattered Packages to 5 Topic-Based Packages",
       "packages": [
         "swift-institute",
         "swift-primitives"
@@ -2028,7 +2063,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "corpus consolidation complete, META skills updated",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 corpus consolidation complete, META skills updated"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — corpus consolidation complete, META skills updated"
     },
     {
       "file": "2026-04-13-io-uring-spec-completeness-and-type-relocation.md",
@@ -2042,7 +2077,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "spec audit + type relocation shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 spec audit + type relocation shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — spec audit + type relocation shipped"
     },
     {
       "file": "2026-04-13-iso9945-glob-encoding-and-fnmatch-delegation.md",
@@ -2057,12 +2092,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "three-layer glob/fnmatch encoding shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 three-layer glob/fnmatch encoding shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — three-layer glob/fnmatch encoding shipped"
     },
     {
       "file": "2026-04-01-async-primitives-reaudit-agent-verification-discipline.md",
       "date": "2026-04-01",
-      "title": "Async Primitives Re-Audit \u2014 Agent Verification Discipline and Handoff Triage",
+      "title": "Async Primitives Re-Audit — Agent Verification Discipline and Handoff Triage",
       "packages": [
         "swift-async-primitives",
         "swift-institute"
@@ -2076,7 +2111,7 @@
     {
       "file": "2026-04-01-swift-io-code-surface-reaudit.md",
       "date": "2026-04-01",
-      "title": "swift-io Code Surface Re-Audit \u2014 Agent Accuracy and ~Copyable Test Patterns",
+      "title": "swift-io Code Surface Re-Audit — Agent Accuracy and ~Copyable Test Patterns",
       "packages": [
         "swift-io"
       ],
@@ -2089,7 +2124,7 @@
     {
       "file": "2026-04-01-implementation-skill-condensation.md",
       "date": "2026-04-01",
-      "title": "Implementation Skill Condensation \u2014 Experiment Audit as Quality Gate",
+      "title": "Implementation Skill Condensation — Experiment Audit as Quality Gate",
       "packages": [
         "swift-institute"
       ],
@@ -2102,7 +2137,7 @@
     {
       "file": "2026-04-06-readiness-driver-platform-stack-alignment.md",
       "date": "2026-04-06",
-      "title": "Readiness Driver Platform Stack Alignment \u2014 ~Copyable Witness Design Discovery",
+      "title": "Readiness Driver Platform Stack Alignment — ~Copyable Witness Design Discovery",
       "packages": [
         "swift-io",
         "swift-kernel",
@@ -2112,7 +2147,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "readiness driver moved to swift-kernel, witness pattern validated",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 readiness driver moved to swift-kernel, witness pattern validated"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — readiness driver moved to swift-kernel, witness pattern validated"
     },
     {
       "file": "2026-04-01-path-protocol-architecture-and-platform-extension-principle.md",
@@ -2140,12 +2175,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "MIV import fixes shipped across 9 packages",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 MIV import fixes shipped across 9 packages"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — MIV import fixes shipped across 9 packages"
     },
     {
       "file": "2026-04-01-kernel-descriptor-deinit-test-hang.md",
       "date": "2026-04-01",
-      "title": "Kernel.Descriptor Deinit \u2014 Process fd Corruption and ~Copyable Ownership Gaps",
+      "title": "Kernel.Descriptor Deinit — Process fd Corruption and ~Copyable Ownership Gaps",
       "packages": [
         "swift-io",
         "swift-kernel-primitives"
@@ -2169,12 +2204,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "audit findings remediated, C types eliminated",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 audit findings remediated, C types eliminated"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — audit findings remediated, C types eliminated"
     },
     {
       "file": "2026-04-01-corpus-meta-analysis-experiment-coverage.md",
       "date": "2026-04-01",
-      "title": "Corpus Meta-Analysis Experiment Coverage \u2014 META-022 through META-026",
+      "title": "Corpus Meta-Analysis Experiment Coverage — META-022 through META-026",
       "packages": [
         "swift-institute"
       ],
@@ -2187,7 +2222,7 @@
     {
       "file": "2026-04-01-first-full-corpus-sweep-remediation.md",
       "date": "2026-04-01",
-      "title": "First Full Corpus Sweep Remediation \u2014 722 Items, 4-Phase Remediation",
+      "title": "First Full Corpus Sweep Remediation — 722 Items, 4-Phase Remediation",
       "packages": [
         "swift-institute",
         "swift-primitives",
@@ -2198,12 +2233,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "full corpus sweep remediation complete",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 full corpus sweep remediation complete"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — full corpus sweep remediation complete"
     },
     {
       "file": "2026-04-01-handle-descriptor-ownership-refactor.md",
       "date": "2026-04-01",
-      "title": "Handle Descriptor Ownership Refactor \u2014 Ownership Cascades and Lifecycle Footguns",
+      "title": "Handle Descriptor Ownership Refactor — Ownership Cascades and Lifecycle Footguns",
       "packages": [
         "swift-io",
         "swift-darwin-primitives",
@@ -2213,12 +2248,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Handle owns Kernel.Descriptor, EBADF fixed",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Handle owns Kernel.Descriptor, EBADF fixed"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Handle owns Kernel.Descriptor, EBADF fixed"
     },
     {
       "file": "2026-04-15-executor-primitives-l1-and-l3-compositions.md",
       "date": "2026-04-15",
-      "title": "Executor Primitives L1 and L3 Compositions \u2014 Layering Discoveries and ~Copyable Atomics",
+      "title": "Executor Primitives L1 and L3 Compositions — Layering Discoveries and ~Copyable Atomics",
       "packages": [
         "swift-executor-primitives",
         "swift-executors"
@@ -2232,7 +2267,7 @@
     {
       "file": "2026-04-01-buffer-link-discipline-factoring.md",
       "date": "2026-04-01",
-      "title": "Buffer.Link Discipline \u2014 Algorithm Factoring as the Unification Primitive",
+      "title": "Buffer.Link Discipline — Algorithm Factoring as the Unification Primitive",
       "packages": [
         "swift-buffer-primitives",
         "swift-async-primitives",
@@ -2242,7 +2277,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Buffer.Link<N> factored, compositions re-derived",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Buffer.Link<N> factored, compositions re-derived"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Buffer.Link<N> factored, compositions re-derived"
     },
     {
       "file": "2026-04-01-buffer-modularization-and-peek-miscompile.md",
@@ -2256,12 +2291,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "release-mode miscompile tracked in copypropagation memory",
-      "statusRaw": "processed (2026-04-13) MEMORY \u2014 release-mode miscompile tracked in copypropagation memory"
+      "statusRaw": "processed (2026-04-13) MEMORY — release-mode miscompile tracked in copypropagation memory"
     },
     {
       "file": "2026-04-01-link-primitives-audit-and-tests.md",
       "date": "2026-04-01",
-      "title": "Link Primitives Audit \u2014 Compound Identifier Blind Spot and Test Harness",
+      "title": "Link Primitives Audit — Compound Identifier Blind Spot and Test Harness",
       "packages": [
         "swift-link-primitives"
       ],
@@ -2269,12 +2304,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "audit fixes + Sendable correction shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 audit fixes + Sendable correction shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — audit fixes + Sendable correction shipped"
     },
     {
       "file": "2026-04-01-test-hang-executor-ownership-architecture.md",
       "date": "2026-04-01",
-      "title": "Test Hang Investigation \u2014 Executor Ownership as Architectural Question",
+      "title": "Test Hang Investigation — Executor Ownership as Architectural Question",
       "packages": [
         "swift-io",
         "swift-kernel"
@@ -2283,12 +2318,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "executor shutdown footgun tracked in project_executor_shutdown_footgun.md",
-      "statusRaw": "processed (2026-04-13) MEMORY \u2014 executor shutdown footgun tracked in project_executor_shutdown_footgun.md"
+      "statusRaw": "processed (2026-04-13) MEMORY — executor shutdown footgun tracked in project_executor_shutdown_footgun.md"
     },
     {
       "file": "2026-04-01-storage-inline-bottom-up-deinit.md",
       "date": "2026-04-01",
-      "title": "Storage.Inline Bottom-Up Deinit \u2014 From Workaround Cascade to One-Line Fix",
+      "title": "Storage.Inline Bottom-Up Deinit — From Workaround Cascade to One-Line Fix",
       "packages": [
         "swift-storage-primitives",
         "swift-buffer-primitives",
@@ -2298,12 +2333,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "deinit workaround tracked in noncopyable-deinit-workaround.md memory",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 deinit workaround tracked in noncopyable-deinit-workaround.md memory"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — deinit workaround tracked in noncopyable-deinit-workaround.md memory"
     },
     {
       "file": "2026-04-02-escapable-heap-storage-addressof-blocker.md",
       "date": "2026-04-02",
-      "title": "~Escapable Heap Storage \u2014 Builtin.addressof Blocker and Upstream Resolution",
+      "title": "~Escapable Heap Storage — Builtin.addressof Blocker and Upstream Resolution",
       "packages": [
         "swift-storage-primitives"
       ],
@@ -2311,12 +2346,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "INFORMATIONAL",
       "outcomeDescription": "upstream blocker confirmed, no workaround possible",
-      "statusRaw": "processed (2026-04-13) INFORMATIONAL \u2014 upstream blocker confirmed, no workaround possible"
+      "statusRaw": "processed (2026-04-13) INFORMATIONAL — upstream blocker confirmed, no workaround possible"
     },
     {
       "file": "2026-04-02-ownership-corpus-consolidation.md",
       "date": "2026-04-02",
-      "title": "Ownership Corpus Consolidation: 22 \u2192 4 Research Documents",
+      "title": "Ownership Corpus Consolidation: 22 → 4 Research Documents",
       "packages": [
         "swift-institute",
         "swift-primitives"
@@ -2325,12 +2360,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "22 docs consolidated to 4 topic-based documents",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 22 docs consolidated to 4 topic-based documents"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — 22 docs consolidated to 4 topic-based documents"
     },
     {
       "file": "2026-04-02-cq-poll-thread-hang-structural-analysis.md",
       "date": "2026-04-02",
-      "title": "CQ Poll Thread Hang \u2014 Structural Analysis via Code Tracing",
+      "title": "CQ Poll Thread Hang — Structural Analysis via Code Tracing",
       "packages": [
         "swift-io",
         "swift-async-primitives",
@@ -2340,12 +2375,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "poll thread hang root cause found and fixed",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 poll thread hang root cause found and fixed"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — poll thread hang root cause found and fixed"
     },
     {
       "file": "2026-04-02-cq-cleanup-principled-enforcement-points.md",
       "date": "2026-04-02",
-      "title": "CQ Cleanup \u2014 Principled Enforcement Points and Nonisolated Guard Reversal",
+      "title": "CQ Cleanup — Principled Enforcement Points and Nonisolated Guard Reversal",
       "packages": [
         "swift-io",
         "swift-kernel"
@@ -2354,7 +2389,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "guard reversal and enforcement points shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 guard reversal and enforcement points shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — guard reversal and enforcement points shipped"
     },
     {
       "file": "2026-04-02-io-bench-hang-noncopyable-socket-descriptor.md",
@@ -2369,12 +2404,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Socket.Descriptor made ~Copyable, hang fixed",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Socket.Descriptor made ~Copyable, hang fixed"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Socket.Descriptor made ~Copyable, hang fixed"
     },
     {
       "file": "2026-04-03-noncopyable-closure-capture-red-herring.md",
       "date": "2026-04-03",
-      "title": "~Copyable Closure Capture Investigation \u2014 Hypothesis Disproven, Verification Order Matters",
+      "title": "~Copyable Closure Capture Investigation — Hypothesis Disproven, Verification Order Matters",
       "packages": [
         "swift-io",
         "swift-kernel-primitives",
@@ -2384,12 +2419,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "verify hypotheses before acting, handoff misattribution pattern",
-      "statusRaw": "processed (2026-04-13) MEMORY \u2014 verify hypotheses before acting, handoff misattribution pattern"
+      "statusRaw": "processed (2026-04-13) MEMORY — verify hypotheses before acting, handoff misattribution pattern"
     },
     {
       "file": "2026-04-03-pair-noncopyable-widening-sendable-discovery.md",
       "date": "2026-04-03",
-      "title": "Pair ~Copyable Widening \u2014 Sendable & ~Copyable Discovery",
+      "title": "Pair ~Copyable Widening — Sendable & ~Copyable Discovery",
       "packages": [
         "swift-algebra-primitives",
         "swift-iso-9945"
@@ -2398,12 +2433,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Pair widened to ~Copyable, Sendable & ~Copyable composition validated",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Pair widened to ~Copyable, Sendable & ~Copyable composition validated"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Pair widened to ~Copyable, Sendable & ~Copyable composition validated"
     },
     {
       "file": "2026-04-03-unchecked-sendable-audit-classification.md",
       "date": "2026-04-03",
-      "title": "@unchecked Sendable Audit \u2014 Classification Taxonomy and Layer-Boundary Discipline",
+      "title": "@unchecked Sendable Audit — Classification Taxonomy and Layer-Boundary Discipline",
       "packages": [
         "swift-io"
       ],
@@ -2411,12 +2446,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "audit classification in project_unchecked_sendable_audit.md",
-      "statusRaw": "processed (2026-04-13) MEMORY \u2014 audit classification in project_unchecked_sendable_audit.md"
+      "statusRaw": "processed (2026-04-13) MEMORY — audit classification in project_unchecked_sendable_audit.md"
     },
     {
       "file": "2026-04-03-io-bench-echo-hang-pipeline-deadlock.md",
       "date": "2026-04-03",
-      "title": "io-bench Echo Hang \u2014 Pipeline Deadlock, Not Pool Starvation",
+      "title": "io-bench Echo Hang — Pipeline Deadlock, Not Pool Starvation",
       "packages": [
         "swift-io"
       ],
@@ -2424,12 +2459,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "pipeline deadlock fixed via split() pattern",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 pipeline deadlock fixed via split() pattern"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — pipeline deadlock fixed via split() pattern"
     },
     {
       "file": "2026-04-03-swift-io-implementation-audit-quick-wins.md",
       "date": "2026-04-03",
-      "title": "swift-io Implementation Audit \u2014 Three Mechanisms + Quick Wins",
+      "title": "swift-io Implementation Audit — Three Mechanisms + Quick Wins",
       "packages": [
         "swift-io"
       ],
@@ -2437,12 +2472,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "82 findings triaged, quick wins shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 82 findings triaged, quick wins shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — 82 findings triaged, quick wins shipped"
     },
     {
       "file": "2026-04-03-pre-publication-audit-fixes-complete.md",
       "date": "2026-04-03",
-      "title": "Pre-Publication Audit Fixes \u2014 18 Packages Across 3 Layers",
+      "title": "Pre-Publication Audit Fixes — 18 Packages Across 3 Layers",
       "packages": [
         "swift-iso-32000",
         "swift-iso-8601",
@@ -2453,12 +2488,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "pre-publication fixes shipped across 18 packages",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 pre-publication fixes shipped across 18 packages"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — pre-publication fixes shipped across 18 packages"
     },
     {
       "file": "2026-04-03-nonisolated-register-and-channel-init.md",
       "date": "2026-04-03",
-      "title": "Nonisolated Register/Deregister and Channel.init \u2014 From Diagnosis to Regression",
+      "title": "Nonisolated Register/Deregister and Channel.init — From Diagnosis to Regression",
       "packages": [
         "swift-io",
         "swift-async-primitives"
@@ -2467,7 +2502,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "nonisolated register/deregister shipped, regression tracked",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 nonisolated register/deregister shipped, regression tracked"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — nonisolated register/deregister shipped, regression tracked"
     },
     {
       "file": "2026-04-04-miv-noncopyable-array-discovery.md",
@@ -2484,12 +2519,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "MIV fixes + ~Copyable Array discovery shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 MIV fixes + ~Copyable Array discovery shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — MIV fixes + ~Copyable Array discovery shipped"
     },
     {
       "file": "2026-04-03-sending-mutex-nesting-flip.md",
       "date": "2026-04-03",
-      "title": "Sending-Mutex Composition \u2014 Nesting Flip Eliminates Hot-Path Allocation",
+      "title": "Sending-Mutex Composition — Nesting Flip Eliminates Hot-Path Allocation",
       "packages": [
         "swift-io",
         "swift-property-primitives",
@@ -2499,12 +2534,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "inout-sending-mechanism memory already captures pattern",
-      "statusRaw": "processed (2026-04-13) SKILL_UPDATE \u2014 inout-sending-mechanism memory already captures pattern"
+      "statusRaw": "processed (2026-04-13) SKILL_UPDATE — inout-sending-mechanism memory already captures pattern"
     },
     {
       "file": "2026-04-04-darwin-primitives-kernel-narrowing.md",
       "date": "2026-04-04",
-      "title": "Darwin Primitives Kernel Narrowing \u2014 Re-export Chain as Narrowing Leverage",
+      "title": "Darwin Primitives Kernel Narrowing — Re-export Chain as Narrowing Leverage",
       "packages": [
         "swift-darwin-primitives",
         "swift-ascii-parser-primitives"
@@ -2513,7 +2548,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "umbrella imports narrowed to variant modules",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 umbrella imports narrowed to variant modules"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — umbrella imports narrowed to variant modules"
     },
     {
       "file": "2026-04-05-readiness-driver-domain-model.md",
@@ -2527,7 +2562,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "kqueue driver ported, Recipe+Thing domain model landed",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 kqueue driver ported, Recipe+Thing domain model landed"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — kqueue driver ported, Recipe+Thing domain model landed"
     },
     {
       "file": "2026-04-06-epoll-port-management-and-api-research.md",
@@ -2543,12 +2578,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "epoll port + API research commissioned",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 epoll port + API research commissioned"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — epoll port + API research commissioned"
     },
     {
       "file": "2026-04-06-epoll-port-kernel-readiness.md",
       "date": "2026-04-06",
-      "title": "Epoll Port to Kernel.Readiness \u2014 ~Copyable Ownership Design Under Review Pressure",
+      "title": "Epoll Port to Kernel.Readiness — ~Copyable Ownership Design Under Review Pressure",
       "packages": [
         "swift-kernel-primitives",
         "swift-linux-primitives",
@@ -2559,7 +2594,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "epoll ported to Kernel.Readiness",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 epoll ported to Kernel.Readiness"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — epoll ported to Kernel.Readiness"
     },
     {
       "file": "2026-04-06-linux-docker-verification-cross-repo.md",
@@ -2576,12 +2611,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "INFORMATIONAL",
       "outcomeDescription": "cross-repo compilation debt exposed and tracked",
-      "statusRaw": "processed (2026-04-13) INFORMATIONAL \u2014 cross-repo compilation debt exposed and tracked"
+      "statusRaw": "processed (2026-04-13) INFORMATIONAL — cross-repo compilation debt exposed and tracked"
     },
     {
       "file": "2026-04-06-io-events-tier0-api-design.md",
       "date": "2026-04-06",
-      "title": "IO Events Tier 0 API Design \u2014 From Specification to Architectural Challenge",
+      "title": "IO Events Tier 0 API Design — From Specification to Architectural Challenge",
       "packages": [
         "swift-io"
       ],
@@ -2589,12 +2624,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "RESEARCH",
       "outcomeDescription": "Tier 0 API design captured in io-events research docs",
-      "statusRaw": "processed (2026-04-13) RESEARCH \u2014 Tier 0 API design captured in io-events research docs"
+      "statusRaw": "processed (2026-04-13) RESEARCH — Tier 0 API design captured in io-events research docs"
     },
     {
       "file": "2026-04-06-io-stream-span-async-validation.md",
       "date": "2026-04-06",
-      "title": "Span and MutableSpan Survive Async \u2014 The Perfect IO API Is Achievable Today",
+      "title": "Span and MutableSpan Survive Async — The Perfect IO API Is Achievable Today",
       "packages": [
         "swift-io",
         "swift-institute"
@@ -2603,12 +2638,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Span/MutableSpan async validation confirmed, IO.run shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Span/MutableSpan async validation confirmed, IO.run shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Span/MutableSpan async validation confirmed, IO.run shipped"
     },
     {
       "file": "2026-04-06-intent-over-machinery-module-design.md",
       "date": "2026-04-06",
-      "title": "Intent Over Machinery \u2014 Module Boundaries Must Reflect User Concepts",
+      "title": "Intent Over Machinery — Module Boundaries Must Reflect User Concepts",
       "packages": [
         "swift-io"
       ],
@@ -2616,7 +2651,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "principle reinforces implementation skill axiom",
-      "statusRaw": "processed (2026-04-13) SKILL_UPDATE \u2014 principle reinforces implementation skill axiom"
+      "statusRaw": "processed (2026-04-13) SKILL_UPDATE — principle reinforces implementation skill axiom"
     },
     {
       "file": "2026-04-04-array-name-shadowing-exported-import-precedence.md",
@@ -2632,12 +2667,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "@_exported import precedence confirmed, disambiguation removed",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 @_exported import precedence confirmed, disambiguation removed"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — @_exported import precedence confirmed, disambiguation removed"
     },
     {
       "file": "2026-04-06-shutdown-view-pointer-elimination-investigation.md",
       "date": "2026-04-06",
-      "title": "Shutdown View Pointer Elimination \u2014 @_unsafeNonescapableResult Is Orthogonal to TemporaryPointers",
+      "title": "Shutdown View Pointer Elimination — @_unsafeNonescapableResult Is Orthogonal to TemporaryPointers",
       "packages": [
         "swift-io",
         "swift-property-primitives",
@@ -2647,12 +2682,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "INFORMATIONAL",
       "outcomeDescription": "investigation concluded, orthogonality confirmed",
-      "statusRaw": "processed (2026-04-13) INFORMATIONAL \u2014 investigation concluded, orthogonality confirmed"
+      "statusRaw": "processed (2026-04-13) INFORMATIONAL — investigation concluded, orthogonality confirmed"
     },
     {
       "file": "2026-04-06-unsafe-pointer-audit-span-migration.md",
       "date": "2026-04-06",
-      "title": "Unsafe Pointer Audit \u2014 Span Migration Eliminates 18 Sites",
+      "title": "Unsafe Pointer Audit — Span Migration Eliminates 18 Sites",
       "packages": [
         "swift-io",
         "swift-iso-9945",
@@ -2662,12 +2697,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "18 unsafe pointer sites replaced with Span",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 18 unsafe pointer sites replaced with Span"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — 18 unsafe pointer sites replaced with Span"
     },
     {
       "file": "2026-04-06-downstream-span-audit-benchmark-drift.md",
       "date": "2026-04-06",
-      "title": "Downstream Span Audit \u2014 Benchmark Drift as Predictable Gap",
+      "title": "Downstream Span Audit — Benchmark Drift as Predictable Gap",
       "packages": [
         "swift-io"
       ],
@@ -2675,7 +2710,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "downstream consumers audited, benchmark gap tracked",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 downstream consumers audited, benchmark gap tracked"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — downstream consumers audited, benchmark gap tracked"
     },
     {
       "file": "2026-04-06-executor-threading-and-noncopyable-closure-constraints.md",
@@ -2689,7 +2724,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "noncopyable-sendable-capture memory covers this constraint",
-      "statusRaw": "processed (2026-04-13) MEMORY \u2014 noncopyable-sendable-capture memory covers this constraint"
+      "statusRaw": "processed (2026-04-13) MEMORY — noncopyable-sendable-capture memory covers this constraint"
     },
     {
       "file": "2026-04-06-executor-first-architecture-research-and-phase2.md",
@@ -2703,7 +2738,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "RESEARCH",
       "outcomeDescription": "executor-first architecture research doc produced, Phase 2 implemented",
-      "statusRaw": "processed (2026-04-13) RESEARCH \u2014 executor-first architecture research doc produced, Phase 2 implemented"
+      "statusRaw": "processed (2026-04-13) RESEARCH — executor-first architecture research doc produced, Phase 2 implemented"
     },
     {
       "file": "2026-04-08-descriptor-ownership-aliasing-anti-pattern.md",
@@ -2718,12 +2753,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "no_raw_descriptor_reconstruction memory covers this anti-pattern",
-      "statusRaw": "processed (2026-04-13) MEMORY \u2014 no_raw_descriptor_reconstruction memory covers this anti-pattern"
+      "statusRaw": "processed (2026-04-13) MEMORY — no_raw_descriptor_reconstruction memory covers this anti-pattern"
     },
     {
       "file": "2026-04-08-pool-primitives-canonical-form-second-round.md",
       "date": "2026-04-08",
-      "title": "Pool Primitives Canonical Form: Second-Round Refactor \u2014 The \"Go Further\" Pattern",
+      "title": "Pool Primitives Canonical Form: Second-Round Refactor — The \"Go Further\" Pattern",
       "packages": [
         "swift-pool-primitives",
         "swift-pools",
@@ -2734,12 +2769,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "second-round canonical form refactor complete",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 second-round canonical form refactor complete"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — second-round canonical form refactor complete"
     },
     {
       "file": "2026-04-08-io-blocking-domain-model-redesign.md",
       "date": "2026-04-08",
-      "title": "IO.Blocking Domain Model Redesign \u2014 From Surface Cleanup to Category-Error Discovery",
+      "title": "IO.Blocking Domain Model Redesign — From Surface Cleanup to Category-Error Discovery",
       "packages": [
         "swift-io",
         "swift-pools",
@@ -2752,12 +2787,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "IO.Blocking.Driver pattern shipped, status in project_blocking_refactor_complete.md",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 IO.Blocking.Driver pattern shipped, status in project_blocking_refactor_complete.md"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — IO.Blocking.Driver pattern shipped, status in project_blocking_refactor_complete.md"
     },
     {
       "file": "2026-04-08-io-blocking-refactor-regressions.md",
       "date": "2026-04-08",
-      "title": "IO.Blocking Refactor Regressions \u2014 Honest Post-Completion Assessment",
+      "title": "IO.Blocking Refactor Regressions — Honest Post-Completion Assessment",
       "packages": [
         "swift-io",
         "swift-executors",
@@ -2768,12 +2803,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "regressions tracked in project_blocking_refactor_complete.md",
-      "statusRaw": "processed (2026-04-13) MEMORY \u2014 regressions tracked in project_blocking_refactor_complete.md"
+      "statusRaw": "processed (2026-04-13) MEMORY — regressions tracked in project_blocking_refactor_complete.md"
     },
     {
       "file": "2026-04-08-descriptor-ownership-remediation.md",
       "date": "2026-04-08",
-      "title": "Descriptor Ownership Remediation \u2014 Language Features Over Custom Types",
+      "title": "Descriptor Ownership Remediation — Language Features Over Custom Types",
       "packages": [
         "swift-kernel-primitives",
         "swift-linux-primitives",
@@ -2785,7 +2820,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "language_features_over_custom_types memory captures principle",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 language_features_over_custom_types memory captures principle"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED — language_features_over_custom_types memory captures principle"
     },
     {
       "file": "2026-04-21-property-primitives-handoff-execution-and-docc-aggregation-research.md",
@@ -2880,7 +2915,7 @@
     {
       "file": "2026-04-24-carrier-primitives-code-surface-and-four-layer-split.md",
       "date": "2026-04-24",
-      "title": "Carrier Primitives \u2014 /code-surface pass, DocC symbol fix, and four-layer documentation split",
+      "title": "Carrier Primitives — /code-surface pass, DocC symbol fix, and four-layer documentation split",
       "packages": [
         "swift-primitives/swift-carrier-primitives",
         "swift-institute/Blog"
@@ -2950,7 +2985,7 @@
         {
           "type": "research_topic",
           "target": "asymmetric-quadrant-ergonomics-as-rejection-criterion.md",
-          "description": "RECOMMENDATION Tier 2 \u2014 codifies decision-test procedure for capability-protocol affordance proposals"
+          "description": "RECOMMENDATION Tier 2 — codifies decision-test procedure for capability-protocol affordance proposals"
         },
         {
           "type": "package_insight",
@@ -2984,13 +3019,20 @@
     {
       "file": "2026-04-26-cross-carrier-utilities-research-defer.md",
       "date": "2026-04-26",
-      "title": "Cross-Carrier Utilities Research \u2014 defer-all + the [RES-018] precedent stack",
+      "title": "Cross-Carrier Utilities Research — defer-all + the [RES-018] precedent stack",
       "packages": [
         "swift-carrier-primitives",
         "swift-institute/Research"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "no_action",
+          "description": "Carrier ad-hoc consolidation exception (one-time, principal-directed) — action items already landed via Skills/35dce3e and Research/2cc36be per Pass-Out 2026-04-30 against carrier-launch-skill-incorporation-backlog.md"
+        }
+      ]
     },
     {
       "file": "2026-04-26-ecosystem-audit-and-typed-tls-promotion.md",
@@ -3011,7 +3053,7 @@
     {
       "file": "2026-04-26-typealias-probe-matrix-disambiguation.md",
       "date": "2026-04-26",
-      "title": "Typealias-via-#if probe \u2014 matrix disambiguation under supervisor pushback",
+      "title": "Typealias-via-#if probe — matrix disambiguation under supervisor pushback",
       "packages": [
         "swift-primitives/swift-kernel-primitives"
       ],
@@ -3021,7 +3063,7 @@
     {
       "file": "2026-04-26-l1-exception-removal-skill-cycle.md",
       "date": "2026-04-26",
-      "title": "L1-exception-removal skill cycle \u2014 gate-opening for Descriptor migration",
+      "title": "L1-exception-removal skill cycle — gate-opening for Descriptor migration",
       "packages": [
         "swift-institute/Skills"
       ],
@@ -3045,7 +3087,7 @@
     {
       "file": "2026-04-28-sub-cycle-1-1-inverted-pattern-a.md",
       "date": "2026-04-28",
-      "title": "Sub-cycle 1.1 \u2014 File family INVERTED Pattern A landing",
+      "title": "Sub-cycle 1.1 — File family INVERTED Pattern A landing",
       "packages": [
         "swift-iso/swift-iso-9945",
         "swift-foundations/swift-kernel",
@@ -3059,7 +3101,7 @@
     {
       "file": "2026-04-29-path-x-phase-2-windows-mirror-execution.md",
       "date": "2026-04-29",
-      "title": "Path X Phase 2 \u2014 windows-standard mirror execution (in absentia, INVERTED Pattern A)",
+      "title": "Path X Phase 2 — windows-standard mirror execution (in absentia, INVERTED Pattern A)",
       "packages": [
         "swift-microsoft/swift-windows-standard",
         "swift-institute"

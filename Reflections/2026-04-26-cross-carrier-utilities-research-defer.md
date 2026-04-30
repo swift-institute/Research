@@ -4,7 +4,11 @@ session_objective: Resolve swift-carrier-primitives/HANDOFF.md (Cross-Carrier Ut
 packages:
   - swift-carrier-primitives
   - swift-institute/Research
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: no_action
+    description: Carrier ad-hoc consolidation exception (one-time, principal-directed) — action items already landed via Skills/35dce3e and Research/2cc36be per Pass-Out 2026-04-30 against carrier-launch-skill-incorporation-backlog.md
 ---
 
 # Cross-Carrier Utilities Research — defer-all + the [RES-018] precedent stack

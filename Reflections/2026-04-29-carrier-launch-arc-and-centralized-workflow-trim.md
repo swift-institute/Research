@@ -6,7 +6,11 @@ packages:
   - swift-institute (.github / Scripts / Research)
   - swift-primitives + swift-foundations + swift-standards (218-caller rollout)
   - swift-property-primitives + swift-ownership-primitives + swift-async-primitives (forums-review relocation)
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: no_action
+    description: Carrier ad-hoc consolidation exception (one-time, principal-directed) — action items already landed via Skills/35dce3e and Research/2cc36be per Pass-Out 2026-04-30 against carrier-launch-skill-incorporation-backlog.md
 ---
 
 # Carrier Launch Arc and Centralized Workflow Trim
