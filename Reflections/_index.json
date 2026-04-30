@@ -886,8 +886,26 @@
         "coenttb",
         "swift-foundations"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "description": "[RES-024] Empirical-Reproduction Requirement for Git-Recipe Claims",
+          "target": "research-process"
+        },
+        {
+          "type": "skill_update",
+          "description": "[PKG-NAME-010] GitHub Release vs Git Tag — Different Questions",
+          "target": "swift-package"
+        },
+        {
+          "type": "skill_update",
+          "description": "[SUPER-030] Bounded Final-Exchange for Supervisor Review Cycles",
+          "target": "supervise"
+        }
+      ]
     },
     {
       "file": "2026-04-23-ownership-borrow-unification-arc-and-defect-recovery.md",
@@ -910,8 +928,24 @@
         "swift-linux-foundation/swift-linux-standard",
         "swift-iso/swift-iso-9945"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "no_action",
+          "description": "AI 1 (workspace-wide grep cascade rule) superseded by [HANDOFF-035] added 2026-04-30"
+        },
+        {
+          "type": "skill_update",
+          "description": "[SUPER-029] Drift Signal Extension — Subordinate-Initiated Plan Restructuring",
+          "target": "supervise"
+        },
+        {
+          "type": "no_action",
+          "description": "AI 3 (yagni-user-facing-vs-internal Tier 1 research) superseded by [IMPL-101] codification added 2026-04-30"
+        }
+      ]
     },
     {
       "file": "2026-04-23-ci-permission-architecture-path-b-execution.md",
@@ -948,8 +982,25 @@
         "swift-cardinal-primitives",
         "swift-ordinal-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processed_date": "2026-04-30",
+      "triage_outcomes": [
+        {
+          "type": "skill_update",
+          "description": "[IMPL-102] Verify Conformance Expressibility Before Recommending Cross-Type Schemes",
+          "target": "implementation"
+        },
+        {
+          "type": "skill_update",
+          "description": "[REFL-013] Verify Untracked Session Writes Persist at Phase Boundaries",
+          "target": "reflect-session"
+        },
+        {
+          "type": "blog_idea",
+          "description": "Two kinds of phantom types: domain-identity vs verb-namespace (already flagged Medium priority in property-tagged-semantic-roles.md R6)"
+        }
+      ]
     },
     {
       "file": "2026-04-23-borrow-protocol-unification-full-cascade-and-iso-9899-tail.md",

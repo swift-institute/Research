@@ -5,7 +5,18 @@ packages:
   - swift-institute
   - coenttb
   - swift-foundations
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: research-process
+    description: "[RES-024] Empirical-Reproduction Requirement for Git-Recipe Claims — research/handoffs prescribing git command sequences MUST empirically reproduce in scratch repo before publishing."
+  - type: skill_update
+    target: swift-package
+    description: "[PKG-NAME-010] GitHub Release vs Git Tag — Different Questions. gh repo view latestRelease returns null when tag exists without Release; git describe --tags is the right API for tag-existence."
+  - type: skill_update
+    target: supervise
+    description: "[SUPER-030] Bounded Final-Exchange for Supervisor Review Cycles — pre-frame final exchange with numbered questions + word cap + 'no further discussion' framing."
 ---
 
 # Phase 1 Heritage Transfers and Multi-Round Plan Consolidation
