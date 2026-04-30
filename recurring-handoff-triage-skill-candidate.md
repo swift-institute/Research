@@ -92,9 +92,49 @@ If after the second cycle the framework is still durable, Option C (new skill) i
 
 **Tier classification**: Tier 2 per [RES-020] — cross-package, reversible precedent. Codifying or not codifying the framework affects skill discoverability for bulk-triage operations but is reversible (the framework can always be authored as a brief if no skill exists, and a poorly-fit skill can be deprecated).
 
+### Update 2026-04-30 — Prevention-side complement landed
+
+A second-cycle investigation landed today, but on the *prevention* side
+rather than the *response* side: `swift-institute/Research/handoff-lifecycle-and-retention.md`
+(v1.0.0 RECOMMENDATION) diagnosed why `[REFL-009]` does not prevent
+HANDOFF-*.md accumulation in the first place (bounded-cleanup-authority
+orphan zone is the dominant cause; HYP3/HYP4 sub-classes are real;
+HYP1/HYP5 are partial/amplifiers) and shipped three skill amendments:
+
+- `[HANDOFF-038]` HANDOFF Staleness Threshold (cadence rule, analog `[META-022]`).
+- `[HANDOFF-039]` Predecessor Retirement at Dispatch (writer-side discipline).
+- `[REFL-009]` stale-override exception clause.
+
+These are prevention rules; this Doc's framework is a response framework.
+They are complementary, not redundant. **Effect on this Doc's recommendation**:
+the prevention rules reduce the cadence at which the bulk-triage framework
+needs to fire. The principal's "~2-week cadence" estimate was based on the
+pre-prevention orphan-zone growth rate; with `[HANDOFF-038]`/`[HANDOFF-039]`
+catching accumulation at source, the framework's natural firing cadence
+should slow toward "ecosystem-wide audit pass at semi-annual cadence or
+major milestone" — not a routine 2-week sweep.
+
+**Revised codification priority**: lower. The framework still has value for
+ecosystem-wide periodic audits and as a one-time response when prevention
+fails (e.g., a multi-month period where /reflect-session was skipped on
+many sessions). But its primary use case (routine 2-week cleanup) is being
+absorbed by the prevention rules. The decision to codify as a skill (Option C)
+should wait until empirical observation: if the framework fires zero times
+in the next 6 months under the new prevention rules, codification's value
+proposition collapses and the doc should resolve as DECISION ("framework
+remains an ad-hoc brief; not codified as a skill"). If it fires once or
+twice in a way that's not adequately served by prevention, the codification
+question reopens with cleaner evidence.
+
+**Cross-reference**: `swift-institute/Research/handoff-lifecycle-and-retention.md`
+v1.0.0 (2026-04-30, RECOMMENDATION) is the prevention-side complement;
+neither doc supersedes the other.
+
 ## References
 
 - Reflection: [Research/Reflections/2026-04-29-handoff-triage-cycle-and-d-to-a-reclassification.md](Reflections/2026-04-29-handoff-triage-cycle-and-d-to-a-reclassification.md) — origin instance; six-phase framework executed end-to-end on 32 `HANDOFF-*.md` files.
+- Reflection: [Research/Reflections/2026-04-30-handoff-lifecycle-execution.md](Reflections/2026-04-30-handoff-lifecycle-execution.md) — prevention-side execution; the 2026-04-30 update above.
+- Research: [handoff-lifecycle-and-retention.md](handoff-lifecycle-and-retention.md) — prevention-side complement (RECOMMENDATION v1.0.0).
 - Triage table: `/Users/coen/Developer/HANDOFF-handoff-files-triage-and-cleanup-table.md` — durable record of the 2026-04-29 cycle.
-- Skills: [REFL-009], [REFL-009a], [HANDOFF-013a], [HANDOFF-021], [HANDOFF-029], [HANDOFF-032], [AUDIT-005]
+- Skills: [REFL-009], [REFL-009a], [HANDOFF-013a], [HANDOFF-021], [HANDOFF-029], [HANDOFF-032], [HANDOFF-038], [HANDOFF-039], [AUDIT-005]
 - Anti-pattern: [RES-018] premature-primitive heuristic

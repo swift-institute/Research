@@ -55,8 +55,19 @@
       "topic": "Should the six-phase bulk-triage framework executed on 2026-04-29 against 32 HANDOFF-*.md files be codified as a skill? Three options: (A) absorb into handoff skill as [HANDOFF-bulk-triage-*]; (B) extend reflect-session with a bulk-triage variant; (C) author new bulk-handoff-triage skill. Framework exercises [HANDOFF-021]/[HANDOFF-016]/[HANDOFF-029]/[REFL-009]/[REFL-012]/[AUDIT-005]/[AUDIT-009]/[AUDIT-002] — composes existing skills cleanly. Preliminary recommendation: defer codification until a second cycle is observed; preliminary preference is Option C because framework crosses [REFL-*], [HANDOFF-*], [AUDIT-*] without naturally fitting any single existing skill's surface.",
       "date": "2026-04-30",
       "status": "IN_PROGRESS",
-      "statusDetail": "Single-cycle observation pending second iteration; codification deferred per [RES-018] premature-primitive heuristic. Action items [REFL-009a] + [HANDOFF-032] codified now; framework-as-a-whole waits for second iteration",
+      "statusDetail": "Single-cycle observation pending second iteration; codification deferred per [RES-018] premature-primitive heuristic. 2026-04-30 update: prevention-side complement landed (handoff-lifecycle-and-retention.md v1.0.0 RECOMMENDATION; [HANDOFF-038]/[HANDOFF-039]/[REFL-009] amendment); codification priority lowered. Framework's primary use case (routine 2-week cleanup) being absorbed by prevention rules. Resolution path: if framework fires 0 times in next 6 months under new rules, resolve as DECISION (framework stays ad-hoc, not codified)",
       "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "handoff-lifecycle-and-retention.md",
+      "displayName": "handoff-lifecycle-and-retention.md",
+      "topic": "Why does [REFL-009] not prevent HANDOFF-*.md accumulation at workspace root (26 files at /Users/coen/Developer/ as of 2026-04-30 despite the rule's MUST-delete-when-complete clause)? Five-hypothesis diagnosis: HYP1 /reflect-session not firing (PARTIAL — rule IS firing); HYP2 bounded-cleanup-authority orphan zone (CONFIRMED, dominant — most files are out-of-authority for every session); HYP3 F-classified preserved indefinitely (CONFIRMED for SGR-unverified-but-superseded sub-class); HYP4 G-classified lacks auto-transition (CONFIRMED, latent — Path X completion will surface 7-9 simultaneous candidates); HYP5 working-dir non-git-tracked amplifies preservation bias (CONFIRMED amplifier). Six options analyzed; recommendation is composition of B (cadence rule analog [META-022]) + F (dispatch-side predecessor retirement) + amendment to [REFL-009] adding stale-override clause. Three skill amendments proposed: [HANDOFF-038] HANDOFF Staleness Threshold, [HANDOFF-039] Predecessor Retirement at Dispatch, [REFL-009] amendment. Complementary to recurring-handoff-triage-skill-candidate.md (this is prevention-side; that is response-side).",
+      "date": "2026-04-30",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Three skill amendments + retroactive bulk-triage proposed; awaits principal authorization for skill-amendment commits and per-file YES on retroactive deletions. Complements recurring-handoff-triage-skill-candidate.md (response-side) — prevention rules reduce cadence at which bulk-triage needs to fire",
+      "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
