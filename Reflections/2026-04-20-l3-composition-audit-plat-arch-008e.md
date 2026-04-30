@@ -6,7 +6,17 @@ packages:
   - swift-posix
   - swift-iso-9945
   - swift-file-system
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: audit
+    description: "[AUDIT-031] Shadow-Elimination FALSE_POSITIVE Rule — when upstream fix eliminates an inheritance/alias pattern at source, classify FALSE_POSITIVE not RESOLVED or OPEN-partially-tracked. Origin: Findings #3/#4 reclassification."
+  - type: skill_update
+    target: handoff
+    description: "[HANDOFF-034] Consumer Migration Bundling Anti-Pattern — consumer migration spanning multiple findings/audits MUST NOT be bundled as final commit in upstream dispatch; extract to standalone terminal handoff per [HANDOFF-017]."
+  - type: no_action
+    description: "Action item 3 ([doc] HANDOFF-kernel-file-flush-unifiers.md post-Phase-C ledger update) is a tracked future action conditional on Phase C commits landing; subsumed into the Flush handoff's normal completion workflow per [REFL-010]. No skill amendment needed."
 ---
 
 # L3 Composition Audit: [PLAT-ARCH-008e] Read-Only Classification Sweep
