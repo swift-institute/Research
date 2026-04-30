@@ -6,6 +6,29 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-04-30-phase-1b-stale-triage-and-deferred-fixed-codification.md",
+      "date": "2026-04-30",
+      "title": "Phase 1b Stale-Experiment Triage and the DEFERRED-to-FIXED Codification",
+      "packages": [
+        "swift-set-primitives",
+        "swift-array-primitives",
+        "swift-sequence-primitives",
+        "swift-equation-primitives",
+        "swift-input-primitives",
+        "swift-heap-primitives",
+        "swift-collection-primitives",
+        "swift-memory-primitives",
+        "swift-parser-primitives",
+        "swift-index-primitives",
+        "swift-render-primitives",
+        "swift-foundations/swift-witnesses",
+        "swift-institute/Skills",
+        "swift-institute/Audits"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-04-30-ownership-primitives-launch-and-release-readiness-validation.md",
       "date": "2026-04-30",
       "title": "Ownership-Primitives Launch and Release-Readiness Skill Validation",
