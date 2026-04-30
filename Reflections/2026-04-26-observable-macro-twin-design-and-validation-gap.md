@@ -4,7 +4,17 @@ session_objective: Build the @Observable macro for swift-observations under live
 packages:
   - swift-foundations/swift-observations
   - swift-primitives/swift-bit-primitives
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: testing-swiftlang
+    description: "[SWIFT-TEST-016] Macro Test Framework — Generic Helper, No XCTest, No Foundation. Codifies SwiftSyntaxMacrosGenericTestSupport with Swift Testing failureHandler adapter; documents the form-vs-site validation gap (real-swift-build integration test required). Sharper post-correction framing: absolute Foundation ban subsumes Apple-shadow workaround framing."
+  - type: skill_update
+    target: modularization
+    description: "[MOD-023] #externalMacro Module Name Normalization — string literal in #externalMacro must match the SwiftPM-normalized module identifier (spaces → underscores per [PATTERN-004b]), not the un-normalized target name or a collapsed-space form."
+  - type: no_action
+    description: "Apple-shadow framing of the runtime-test Box swap (Foundation NSObject + objc_sync_*) → Synchronization Mutex.withLock is superseded by the absolute Foundation ban in /implementation. Shadow disappears as a side benefit; Foundation rule forbids the import even on platforms where no shadow exists. No new rule needed — the absolute Foundation ban already covers this."
 ---
 
 # @Observable macro: twin-macro design forced by Swift's per-site validation, plus the assertMacroExpansion gap
