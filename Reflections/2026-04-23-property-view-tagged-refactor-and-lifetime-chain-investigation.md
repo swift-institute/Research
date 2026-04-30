@@ -8,6 +8,16 @@ packages:
   - swift-property-primitives
   - swift-queue-primitives
   - swift-buffer-primitives
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: no_action
+    description: "AI 1 (swift-ownership-primitives V12 pattern in _Package-Insights.md) deferred — V12 pattern is documented in [IMPL-100] Coroutine `_read`/`_modify` over `with*` Closure APIs; the specialization-by-Copyability detail is package-internal and stays in implementation comments rather than the package-insights doc."
+  - type: no_action
+    description: "AI 2 (V2.5/V2.6 experiment continuation) addressed by [EXP-021] One-Factor-At-A-Time at the Reduction-to-Trigger-Narrowing Boundary (added 2026-04-30). The V2.5/V2.6 narrowing path is the worked example of the rule; concrete experiment runs deferred until needed."
+  - type: skill_update
+    target: handoff
+    description: "[HANDOFF-037] Probe-List vs Do-Not-Touch Internal Contradiction (sixth staleness axis to [HANDOFF-016])."
   - swift-primitives/Experiments
 status: pending
 ---

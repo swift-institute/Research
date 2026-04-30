@@ -8,6 +8,15 @@ packages:
   - coenttb/swift-email
   - coenttb/swift-syndication
   - swift-institute/Research
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: no_action
+    description: "AI 1 (path-dep-ecosystem-lifecycle Tier 2 research) deferred — concrete write-up overhead exceeds value at present; trigger pending if hazard surfaces in another workstream. The hazard's mitigation is operationally captured by [HANDOFF-036] Recipe-and-Path-Math Empirical Verification (added 2026-04-30)."
+  - type: no_action
+    description: "AI 2 (git-history-transfer-patterns recipe correction update) deferred — superseded by [RES-024] Empirical-Reproduction Requirement for Git-Recipe Claims (added 2026-04-30). The corrected recipe shape (rm+checkout primary) is now embedded in the rule's worked example."
+  - type: no_action
+    description: "AI 3 ([SUPER-015] provenance note) — added inline as 'Empirical-Provenance Note (Compression-at-Pivot)' addendum to supervise/SKILL.md on 2026-04-30 alongside [SUPER-029] / [SUPER-030]."
   - supervise
   - handoff
 status: pending
