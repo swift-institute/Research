@@ -3,7 +3,18 @@ date: 2026-04-16
 session_objective: Complete handoff items (Sharded isolation, research promotions), then implement Cooperative donation contract
 packages:
   - swift-executors
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: existing-infrastructure
+    description: "[INFRA-026] Before Conforming to a stdlib Protocol — grep the target SDK's .swiftinterface before authoring conformance; protocols public in stdlib source can be absent from the SDK's binary interface."
+  - type: skill_update
+    target: research-process
+    description: "[RES-021] generalized from @_spi-only to all stdlib-protocol conformance verification. Two-mechanism model: SPI stripping + SDK-availability lag both produce the same failure mode."
+  - type: research_topic
+    target: stdlib-protocol-sdk-availability.md
+    description: "Tier 2 IN_PROGRESS — when do new stdlib protocols appear in SDK .swiftinterface? Holds operational rule (grep .swiftinterface) sufficient for current needs; pending multi-SDK spike + source archaeology."
 ---
 
 # Cooperative Donation Contract Landing and SDK Interface Gap Discovery
