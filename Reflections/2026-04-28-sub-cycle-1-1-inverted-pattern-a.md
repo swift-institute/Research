@@ -7,7 +7,18 @@ packages:
   - swift-foundations/swift-posix
   - swift-foundations/swift-memory
   - swift-foundations/swift-darwin
-status: pending
+status: processed
+processed_date: 2026-04-30
+triage_outcomes:
+  - type: skill_update
+    target: platform
+    description: "[PLAT-ARCH-019] INVERTED Pattern A — Additive Raw-Alongside-Typed at L2. Codifies the third compositional shape (alongside Pattern A and Phase 1.5 retroactive re-typing) for ecosystem-mirror cases where typed L2 forms exist and raw spec-coverage is added alongside; typed delegates to raw via _rawValue."
+  - type: skill_update
+    target: platform
+    description: "[PLAT-ARCH-020] L3-Unifier Shadow Pre-Flight Check. Before adding/modifying L2 typed forms at Kernel.X.Y, MUST grep swift-kernel/Sources for parallel extensions; if found, the L2 typed form needs @_disfavoredOverload to defer overload resolution to the L3-unifier. Generalizes the canonical-pattern-as-precondition-bound rule."
+  - type: skill_update
+    target: handoff
+    description: "[HANDOFF-024a] Linux Baseline Pre-Flight — Mandatory-to-Run, Conditional-on-Fix. Clarifies that the pre-flight check is MANDATORY but a prereq commit (analog to the cited prior SHA) is only required if the pre-flight surfaces latent breaks; a clean pre-flight proceeds directly to Wave 1."
 ---
 
 # Sub-cycle 1.1 — File family INVERTED Pattern A landing
