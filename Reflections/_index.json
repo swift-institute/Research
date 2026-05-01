@@ -6,6 +6,22 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-01-wave-4c-completion-and-finding-6-8-rewire.md",
+      "date": "2026-05-01",
+      "title": "Wave 4c envelope completion + Finding 6.8 swift-console rewire",
+      "packages": [
+        "swift-iso-9945",
+        "swift-foundations/swift-posix",
+        "swift-foundations/swift-windows",
+        "swift-microsoft/swift-windows-32",
+        "swift-foundations/swift-kernel",
+        "swift-foundations/swift-console",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-01-property-launch-and-cohort-readme-audience-inversion-sweep.md",
       "date": "2026-05-01",
       "title": "Property-primitives 0.1.0 launch + cohort README audience-inversion sweep",
