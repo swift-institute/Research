@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "ai-discoverability-llms-txt-placement.md",
+      "displayName": "ai-discoverability-llms-txt-placement.md",
+      "topic": "Placement strategy for the llms.txt / llms-full.txt / LLMS.md AI-discoverability conventions across the Swift Institute ecosystem (60+ packages, 17 orgs, swift-institute.org website). Five options analyzed (website-only, repo-only, path-scoped, layered-selective, layered-eager) against three consumer surfaces (web search, code agents, training crawlers). Verifies primary-source claims about the spec status: llms.txt active proposal at llmstxt.org, llms-full.txt is community convention NOT in spec, LLMS.md is draft v0.1, GitHub Issue #18 (multi-property orgs) has no maintainer resolution, retrieval-time crawler behavior is opaque on the consuming side. Recommends Option D — author swift-institute.org/llms.txt + llms-full.txt now (routine repo work, push gated separately per feedback_blog_publish_two_steps), defer per-repo LLMS.md until LLMS.md hits 1.0 OR 2+ major code-agent vendors document fetching it ([RES-018] two-consumers hurdle applied to convention adoption). Updates release-readiness skill with [RELEASE-AI-DISC] one-line append per launch. Re-evaluation trigger: 2026-11-01 or first confirmed vendor disclosure.",
+      "date": "2026-05-01",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Recommendation: Option D layered-selective. Concrete actions enumerated; none authorized yet pending per-action go-ahead. No per-package file ceremony at launch beyond a one-line append to the website llms.txt. Re-evaluate at 2026-11-01 or on first vendor disclosure of llms.txt fetching / LLMS.md spec 1.0, whichever fires first.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "cohort-readme-evaluator-pass.md",
       "displayName": "cohort-readme-evaluator-pass.md",
       "topic": "Per-paragraph evaluator-lens audit of the four swift-primitives 0.1.0 cohort READMEs (carrier, tagged, ownership, property). Diagnoses the recurring failure mode as **audience inversion** — author-side context (release-process state, design rationale, future-proposal speculation, internal workaround reasoning, ecosystem-convention framing) leaking into prose meant for consumer evaluation. Carrier post-cleanup is the discipline reference (control). Applies a KEEP / COMPRESS / RELOCATE / DELETE verdict per paragraph with line citations and concrete actions. Six surface patterns enumerated; canonical rewrites named per pattern. Grounds in a readme skill v2.1.0 amendment: 4-row [README-016] extension + new conditional [README-027] Stability operational form + [README-010] Architecture earning sub-rule. Per-repo cleanups land as separate follow-up commits ordered Property → Tagged → Ownership → Carrier (audit-only). Provenance: 3-round Claude/ChatGPT collaborative discussion CONVERGED 2026-05-01.",
