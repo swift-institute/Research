@@ -6,6 +6,21 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-01-readme-skill-family-v3-design-and-cleanup.md",
+      "date": "2026-05-01",
+      "title": "README skill family v3.0.0 — design convergence and self-review-caught defects",
+      "packages": [
+        "readme",
+        "swift-institute",
+        "swift-primitives",
+        "swift-standards",
+        "swift-foundations",
+        "coenttb"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-01-wave-4c-completion-and-finding-6-8-rewire.md",
       "date": "2026-05-01",
       "title": "Wave 4c envelope completion + Finding 6.8 swift-console rewire",
