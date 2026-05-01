@@ -62,7 +62,7 @@ own backlogs.
 | 1.6 | `implementation` or `code-surface` skill | Promote the **Self+Self vs Self+Self.Count** test to a general migration-triage discriminator. `capability-lift-pattern.md` v1.2.0 Recommendation #7 captures it for Carrier specifically; the operator-shape discriminator generalises. Add a sub-rule under `[IMPL-*]` or `[API-LAYER-*]`. | `Reflections/2026-04-26-carrier-integration-retrospective.md:151` | LANDED 35dce3e 2026-04-30 (`[API-LAYER-002]` in implementation/patterns.md) |
 | 1.7 | `code-surface` skill | Amend `[API-IMPL-007]` (extension filename `+` suffix pattern) to admit the **where-clause filename shape** as the canonical form for conditional protocol extensions whose discriminator is a constraint, not a conformance. Examples from carrier-primitives: `Carrier where Underlying == Self.swift`, `Carrier where Underlying == Self, Self ~Copyable.swift`, …. Principal direction (2026-04-29): the where-language form is preferred over `+` suffix mnemonics like `+Q1`/`+Q4` because it is self-documenting at the file level. The `+` suffix remains canonical for conformance-adding extensions (e.g., `Array.Dynamic+Sequence.swift`). | `swift-carrier-primitives/Audits/audit.md` Code Surface #1 (2026-04-29 principal direction) | LANDED 35dce3e 2026-04-30 — scope: limited to suppressed-protocol-constraint discriminators (`Self ~Copyable`, `Self ~Escapable`, or both); the unconditional base file in such a family (`Carrier where Underlying == Self.swift`) is admitted as part of the same convention per principal direction 2026-04-30. |
 | 1.8 | (cross-package corrective action, not a skill amendment) | Property / ownership / tagged-primitives place their Test Support targets under `Sources/...Test Support/` rather than the `[TEST-019]`-mandated `Tests/Support/`. Cross-package fix required before any of those packages tag. Carrier follows `[TEST-019]` correctly; the audit's earlier OPEN classification was inverted. | `swift-carrier-primitives/Audits/audit.md` Testing #6 (2026-04-29 reversal) | RESOLVED 2026-04-30 — verified during ownership-primitives 0.1.0 final pre-release scan (`swift-ownership-primitives/Audits/audit.md` Phase 6): all three packages (property, ownership, tagged) place Test Support correctly at `Tests/Support/`. Each `Package.swift` declares `path: "Tests/Support"`; each ships `Tests/Support/exports.swift`. The row text was a stale snapshot pre-dating the underlying remediation; no relocation work needed. |
-| 1.9 | (workspace tooling, not a skill amendment) | Centralize the local DocC preview helper. Currently bare `swift package preview-documentation` fails on multi-target umbrella packages because the SLI's `@_exported public import` shadows the umbrella's `Carrier` symbol. Per-package `Scripts/preview-docs.sh` would duplicate centralized CI work and accumulate drift. Options: (a) ship one parameterized `swift-institute/Scripts/preview-docs.sh` callable from any umbrella package; (b) upstream the `--exclude-module` flag to `swift package preview-documentation`; (c) skip — leave local preview as "rebuild via CI." Provenance: principal direction 2026-04-29 declined the per-package script in carrier-primitives and asked why centralized CI doesn't already cover this. | swift-carrier-primitives README Contributing decision (2026-04-29) | OPEN |
+| 1.9 | (workspace tooling, not a skill amendment) | Centralize the local DocC preview helper. Currently bare `swift package preview-documentation` fails on multi-target umbrella packages because the SLI's `@_exported public import` shadows the umbrella's `Carrier` symbol. Per-package `Scripts/preview-docs.sh` would duplicate centralized CI work and accumulate drift. Options: (a) ship one parameterized `swift-institute/Scripts/preview-docs.sh` callable from any umbrella package; (b) upstream the `--exclude-module` flag to `swift package preview-documentation`; (c) skip — leave local preview as "rebuild via CI." Provenance: principal direction 2026-04-29 declined the per-package script in carrier-primitives and asked why centralized CI doesn't already cover this. | swift-carrier-primitives README Contributing decision (2026-04-29) | RESOLVED 2026-04-30 — superseded by SPI + centralized `swift-docs.yml`. Build-time validation (broken cross-refs, unresolved symbols) is the CI gate; published rendered docs come from Swift Package Index on each tagged release. The remaining contributor scenario — *"see how this DocC change renders before pushing"* — is now the push→CI→SPI loop, which is the canonical pre-tag rehearsal. Option (c) chosen on principle, not laziness: a per-package or workspace `preview-docs.sh` would duplicate ~150 lines of `swift-docs.yml` (symbol-graph emit + patch + exclude-module + convert) in shell, then drift. Option (b) — upstream `--exclude-module` to SwiftPM `preview-documentation` — remains the right long-term fix for the SwiftPM tool itself; if a contributor pain case materializes, file via `/issue-investigation` against swiftlang/swift-package-manager rather than re-open here. |
 | 1.10 | `swift-forums-review` skill | Relocate output destination from `<package>/Research/` to `<package>/Audits/forums-review/`. Forums-review artifacts are pre-launch synthetic-critique exercises with bad public optics in `Research/`; `Audits/` is gitignored ecosystem-wide per `[AUDIT-002]` and semantically captures internal verification artifacts. **LANDED 2026-04-29** — skill commit `27ef561`; carrier (5 files), ownership (5 files), async (11 files) artifacts relocated and pushed (`69013ba`, `9383063`, `51f14eb`). Note: prior commits still contain the files in git history; full history-scrub via `git filter-repo` + force-push deferred. | swift-forums-review skill output paths (2026-04-29 principal direction) | LANDED 2026-04-29 |
 | 1.11 | `readme` skill | Add explicit rule **forbidding internal rule-ID citations** (`[MOD-015]`, `[PRIM-FOUND-001]`, etc.) in README prose. Rule IDs are author-oriented; consumers don't know what they mean. Reference impl (`swift-property-primitives/README.md`) has zero rule-ID citations but the skill never explicitly forbids them — relies on `[README-023]` evaluator's lens by inference. **Provenance**: 2026-04-29 carrier README review caught 2 rule-ID citations (`[MOD-015]`, `[PRIM-FOUND-001]`) that the prescribed shape would have caught with imitation but not via explicit rule. Proposed: new `[README-026]` "No internal rule-ID citations in README content. Implementation rationale belongs in `Research/`; consumer-facing prose names the behaviour, not the rule." | swift-carrier-primitives README cleanup (2026-04-29) | LANDED 35dce3e 2026-04-30 (`[README-026]` in readme/SKILL.md) |
 | 1.12 | `readme` skill | Add explicit rule **constraining Related Packages to public/released repos**. Linking private repos as ecosystem siblings produces 404s for external readers and advertises packages that don't exist yet. Reference impl behaviour is to link only released siblings. **Provenance**: 2026-04-29 carrier README review caught 4 private-repo links in Related Packages (swift-tagged-primitives, swift-cardinal-primitives, swift-ordinal-primitives, swift-hash-primitives) — all unreleased. Proposed: extend `[README-014]` Related Packages with "MUST link only to repos that are public AND have a shipped tag (or explicitly mark unreleased siblings as `(private, unreleased)` rather than as live links)." Plus `[README-016]` addition: prose rationale within Related Packages (e.g., "conformances of a foreign protocol live in the conformer's home package") is contributor-shaped — belongs in `Research/`, not the README's Related Packages section. | swift-carrier-primitives README cleanup (2026-04-29) | LANDED 35dce3e 2026-04-30 (`[README-014]` extended in readme/SKILL.md with public+tagged constraint and prose-rationale exclusion) |
@@ -156,14 +156,19 @@ The Tier 1 list contains 12 items. As of 2026-04-30 (Pass-Out):
   workspace-level git decision.)
 - **1 item previously LANDED**: #1.10 (forums-review output destination,
   skill commit `27ef561` 2026-04-29).
-- **1 item RESOLVED 2026-04-30 (premise stale)**: #1.8 (cross-package
-  Test Support layout) — verified during ownership-primitives 0.1.0
-  final pre-release scan that all three packages already place Test
-  Support at `Tests/Support/`. The OPEN classification was a row-text
-  snapshot from before the underlying state had been corrected; no
-  relocation work needed.
-- **1 item remains OPEN**: #1.9 (workspace tooling decision for DocC
-  preview centralization).
+- **2 items RESOLVED 2026-04-30 (superseded / premise stale)**:
+  - #1.8 (cross-package Test Support layout) — verified during
+    ownership-primitives 0.1.0 final pre-release scan that all three
+    packages already place Test Support at `Tests/Support/`. The OPEN
+    classification was a row-text snapshot from before the underlying
+    state had been corrected; no relocation work needed.
+  - #1.9 (DocC preview centralization) — superseded by SPI + centralized
+    `swift-docs.yml`. SPI hosts published rendered docs from each
+    tagged release; centralized CI gates broken cross-refs at push
+    time; local preview is the push→CI→SPI loop. Option (c) chosen on
+    principle. See row for full rationale.
+- **0 items remain OPEN.** All Tier 1 items are landed, superseded,
+  or resolved-by-supersession.
 
 Pass 2 supplemental promotions landed alongside the Tier 1 amendments:
 - New skill: `release-readiness` ([RELEASE-001]–[RELEASE-006]) seeded
@@ -181,11 +186,43 @@ Pass 3 supplemental refinements landed alongside:
 - Note: `reflections-processing` acknowledges the carrier ad-hoc
   consolidation as a one-time exception.
 
+Pass 4 — post-launch cohort README cleanup (2026-05-01, after all four
+0.1.0 launches shipped):
+- Trigger: principal observation that the cohort READMEs were "written
+  more for the maintainer than consumers of the package," diagnosed via
+  3-round Claude/ChatGPT collaborative discussion as **audience inversion**
+  (single failure class, six surface patterns).
+- Audit: `swift-institute/Research/cohort-readme-evaluator-pass.md`
+  (per-paragraph KEEP / COMPRESS / RELOCATE / DELETE table per repo;
+  carrier as control attestation).
+- Skill amendment: readme v2.1.0 (`swift-institute/Skills@242eab4`) —
+  `[README-016]` extension with 4 prohibited-content rows (pre-tag/process
+  notes, future-migration choreography, internal workaround rationale,
+  ecosystem-convention framing); new `[README-027]` Stability Section
+  Operational Form (conditional + SHOULD for infrastructure); `[README-010]`
+  Architecture earning sub-rule (every row answers a consumer dependency /
+  import / capability / adoption question; "When to import" recommended
+  for product tables).
+- Per-repo cleanups (separate follow-up commits, no force-push):
+  - `swift-property-primitives@af3f8b8` — Stack-based Quick Start
+    (replacing unreleased-package import), taxonomy compression,
+    Architecture trim, Documentation trim.
+  - `swift-tagged-primitives@ad39f92` — pre-tag note delete, absences
+    enumeration → 1-sentence + new `Research/sli-deliberate-absences.md`,
+    Versioning prose → operational table, ecosystem-convention bullet
+    rewrite, Property contrast tightening.
+  - `swift-ownership-primitives@9186f52` ("Design choices" removal) +
+    `4d3ced7` (Stability/Migration/Constraints → operational table +
+    new `Research/stdlib-interaction-notes.md`, Adoption section deletion).
+  - `swift-carrier-primitives` — audit-only, no edits (control).
+- Durable rule: `feedback_readme_evaluator_audience.md` indexed in
+  `MEMORY.md` for future README authoring.
+
 The ownership audit's Phase 2 may now proceed against the updated rule
 set. Tier 2/3/4 items expand the backlog but do NOT gate the cohort.
 
-Outstanding Tier 1 items (do NOT block carrier's tag; #1.8 RESOLVED on
-2026-04-30 with no work needed):
+Outstanding Tier 1 items: **none** (#1.8 and #1.9 RESOLVED 2026-04-30
+with no work needed):
 
 - ~~**#1.8** (Test Support layout corrective action) — three packages need
   to relocate Test Support from `Sources/...Test Support/` to
@@ -195,10 +232,16 @@ Outstanding Tier 1 items (do NOT block carrier's tag; #1.8 RESOLVED on
   final pre-release scan. All three packages were already at `Tests/Support/`
   at the time the row was written; the OPEN classification was a stale
   snapshot. See `swift-ownership-primitives/Audits/audit.md` Phase 6.
-- **#1.9** (DocC preview centralization) — workspace tooling decision;
+- ~~**#1.9** (DocC preview centralization) — workspace tooling decision;
   options A (parameterized `swift-institute/Scripts/preview-docs.sh`),
   B (upstream `--exclude-module` to `swift package preview-documentation`),
-  or C (skip).
+  or C (skip).~~ **RESOLVED 2026-04-30** — superseded by SPI + centralized
+  `swift-docs.yml`. Option (c) chosen on principle: SPI hosts published
+  rendered docs from each tagged release; CI gates broken cross-refs at
+  push time; local preview is the push→CI→SPI loop. Option (b) remains
+  the right long-term fix for SwiftPM itself; file via `/issue-investigation`
+  against swiftlang/swift-package-manager if a contributor pain case
+  materializes.
 
 ## References
 
