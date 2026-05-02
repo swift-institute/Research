@@ -1,10 +1,61 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-01",
+  "generatedAt": "2026-05-02",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-05-02-supervisor-multi-envelope-parallel-dispatch-and-verification-rhythm.md",
+      "date": "2026-05-02",
+      "title": "Supervisor reflection — multi-envelope parallel dispatch + empirical-verification rhythm",
+      "packages": [
+        "swift-cpu",
+        "swift-kernel",
+        "swift-memory-primitives",
+        "swift-memory",
+        "swift-iso-9945",
+        "swift-posix",
+        "swift-darwin",
+        "swift-linux",
+        "swift-windows",
+        "swift-windows-32",
+        "swift-glob-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-02-glob-l1-relocation-and-premise-inversion-research-gate.md",
+      "date": "2026-05-02",
+      "title": "Glob L1 relocation cycle and the premise-inversion research gate",
+      "packages": [
+        "swift-glob-primitives",
+        "swift-iso-9945",
+        "swift-posix",
+        "swift-windows"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-02-multi-envelope-execution-research-doc-layering-blindspot-and-empirical-classification-corrections.md",
+      "date": "2026-05-02",
+      "title": "Multi-envelope execution — research-doc layering blindspot + empirical classification corrections",
+      "packages": [
+        "swift-cpu",
+        "swift-kernel",
+        "swift-memory-primitives",
+        "swift-memory",
+        "swift-iso-9945",
+        "swift-windows-32",
+        "swift-darwin",
+        "swift-linux",
+        "swift-foundations/swift-windows"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-05-01-readme-skill-family-v3-design-and-cleanup.md",
       "date": "2026-05-01",
