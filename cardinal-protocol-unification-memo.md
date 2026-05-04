@@ -22,19 +22,54 @@ Five of the six listed packages migrated cleanly to the unified
 - `swift-cyclic-primitives` — ✅ deleted local `Ordinal+Cardinal.Bare.swift` companion (commit `8f90085`); 33 tests pass.
 - `swift-sequence-primitives` — ✅ reverted 5 `Cardinal(_:)` lifts at Ordinal-vs-Cardinal comparison sites (commit `2083160`); 160 tests pass.
 - `swift-finite-primitives` — ✅ reverted 7 `Cardinal(_:)` lifts (commit `c8e6b3b`); 79 tests pass.
-- `swift-bit-vector-primitives` — ⚠️ **NOT MIGRATED**. Re-examination
-  during the migration showed the 5 `Index<UInt>.Count.one` disambiguators
-  are needed to disambiguate against affine's
-  `+= <O: Ordinal.\`Protocol\`, V: Carrier.\`Protocol\`<Affine.Discrete.Vector>>`
-  overload, NOT against the Cardinal-side `+=`. The disambig is
-  Vector-related and persists until `Vector.\`Protocol\`` lands. The
-  memo body section "Where it has bitten" overstated bit-vector's
-  inclusion in the Cardinal-side fix; it is correctly classified as
-  pending-Vector-protocol.
+- `swift-bit-vector-primitives` — ✅ **migrated via operator-disfavor rebalance** (commits `7b40038` swift-ordinal-primitives + `3a2248c` swift-affine-primitives + `8e26916` swift-bit-vector-primitives); 70 tests pass.
 
-Net actually deleted: ~115 lines across five packages. Vector-related
-splits remain (affine's Vector-side, bit-vector's Vector-disambig)
-for the future Vector.\`Protocol\` cycle.
+  **Root cause of the bit-vector ambiguity.** Initial pass concluded
+  bit-vector was not migratable until `Vector.\`Protocol\`` landed —
+  incorrect. The actual conflict at `index += .one` was operator-resolution
+  preference between three competing `+=` overloads:
+
+  1. Cardinal-side generic (mine): `+= <O: Ordinal.\`Protocol\`, C: Cardinal.\`Protocol\`>(inout O, C) where O.Domain == C.Domain` — non-throwing
+  2. Affine bare-Vector concrete: `+= <O: Ordinal.\`Protocol\`>(inout O, Affine.Discrete.Vector) throws` — concrete RHS, was non-disfavored
+  3. Affine Carrier-of-Vector generic: `+= <O, V: Carrier.\`Protocol\`<Vector>>(inout O, V) throws` — `@_disfavoredOverload`
+
+  Pre-`46ded75` (Tagged cascade), `Tagged<Tag, Vector>.Underlying =
+  Vector.Underlying = Int`, so `Carrier where Underlying == Vector`
+  extension did NOT apply to Tagged-of-Vector. `Tagged<UInt, Vector>.one`
+  did not exist. Affine generic (#3) had no instantiable Tagged-of-Vector
+  RHS. `.one` resolution had no Vector candidate.
+
+  Post-`46ded75` (Tagged immediate-wrap), `Tagged<Tag, Vector>.Underlying ==
+  Vector` — the extension applies, `Tagged<UInt, Vector>.one` exists, and
+  affine generic (#3) becomes instantiable. Now `.one` had three candidate
+  resolutions for `inout Index<UInt>` LHS:
+
+  - `Tagged<UInt, Cardinal>.one` (via mine, forced by Domain == UInt)
+  - `Affine.Discrete.Vector.one` (via affine bare #2)
+  - `Tagged<UInt, Vector>.one` (via affine generic #3)
+
+  Both mine and affine #2 were non-disfavored (mine carried the
+  `@_disfavoredOverload` from the original concrete-form, but I'd already
+  removed that mark thinking it was for literal disambig — no other
+  overloads reach this site once #3 is filtered as disfavored). Then
+  Swift's "concrete RHS beats generic RHS" rule made affine #2 win,
+  forcing the throws version, breaking `.one` for non-throwing intent.
+
+  **Fix:** mark affine #2 (`+ <O>(O, Vector) throws` and
+  `+= <O>(inout O, Vector) throws`) as `@_disfavoredOverload` (commit
+  `3a2248c`), keep mine non-disfavored (commit `7b40038`). The minus-side
+  affine operators (`-`, `-=`) intentionally remain non-disfavored —
+  there is no Cardinal-side counterpart for them, so no resolution
+  conflict exists. The comparison operators (`<`, `<=`, `>`, `>=`) on
+  the cross-type Ordinal-Cardinal side retain `@_disfavoredOverload`
+  for their original `someOrdinal < .zero` literal-disambig role.
+
+  This is a cleaner outcome than deferring bit-vector to Vector.\`Protocol\`.
+  All six originally-listed packages migrated.
+
+Net deleted: ~115 lines across all six packages. Vector-side affine
+splits remain (Vector ↔ Cardinal cross-type comparisons; Vector ↔
+Tagged-of-Vector arithmetic) for the future Vector.\`Protocol\` cycle.
 
 Two corrections to the body below:
 
