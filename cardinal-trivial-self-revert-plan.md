@@ -754,3 +754,49 @@ Cardinal.\`Protocol\` cascade.
   adjustment in Phase 4 for the `.underlying.underlying` double-unwrap
   pattern).
 - All other swift-io discovery cascade repos: KEEP (pure rename + `_unchecked:`).
+
+## Deferred follow-up — Tagged-rename adoption sweep
+
+Phase 5's build-blocker subset (Option C, authorized 2026-05-04) closed the
+ecosystem-build gate. The grep-clean criterion remains incomplete because
+the upstream Tagged rename (`__unchecked: () → _unchecked:`,
+`RawValue → Underlying`, `.rawValue → .underlying` on Tagged-typed sites)
+was propagated incompletely across the broader ecosystem. The repos below
+have leftover sites at module-build boundaries that did not block builds
+but should be migrated in a future cleanup cycle. Each item: `<repo> —
+<pattern> at <approximate count>`.
+
+### L1 stylistic-only (build clean post-Phase-5; not block-of-record)
+
+- swift-infinite-primitives — `__unchecked: ()` Tagged init pattern at ~few sites
+- swift-vector-primitives — Mixed: Sources stylistic; Tests handled in earlier sweep
+- swift-ownership-primitives — `__unchecked: ()` at ~few sites
+- swift-time-primitives — Tests use `__unchecked: ()` at ~few sites
+- swift-array-primitives — leftover sites confirmed; build clean
+- swift-link-primitives — leftover sites confirmed; build clean
+- swift-parser-primitives — leftover sites confirmed; build clean
+- swift-binary-primitives — Tests use Reader/Cursor's own `__unchecked:` label convention; pre-rename style preserved deliberately by domain owner. Verify before changing.
+
+### L1 NEW findings (not in original 22-repo enumeration; flagged per Option-C rule 4)
+
+- swift-affine-geometry-primitives — Finding A/B (`.rawValue → .underlying` on Tagged sites). BLOCKER for swift-symmetry-primitives + swift-geometry-primitives + downstream.
+
+### L2 NEW findings (not in original 4-repo enumeration; flagged per Option-C rule 4)
+
+- swift-iso-9945 — Finding A (`RawValue == X`) at multiple files. BLOCKER for swift-darwin-standard.
+- swift-darwin-standard — upstream-blocked by swift-iso-9945 (will resolve once iso-9945 fixed).
+- swift-rfc-2046 — missing `ASCII` module import; NOT Finding A/B (separate concern: module rename or removal). BLOCKER for swift-email-standard.
+- swift-email-standard — upstream-blocked by swift-rfc-2046; NOT Finding A/B.
+- swift-time-standard — `ISO_8601.DateTime.timezoneOffsetSeconds` API drift; NOT Finding A/B (separate concern).
+
+### Pre-existing test failures unrelated to Phase 5 (build green; tests fail on issues independent of trivial-self revert)
+
+- swift-graph-primitives — tests crash with SIGSEGV (signal 11). Build green.
+- swift-pool-primitives — tests fail to compile (`barrier.arrive()` async/throws unmarked). Build green.
+- swift-color-standard — tests reference removed `Theme.caseCount` / `Theme.caseIndex` API. Build green.
+
+### Out-of-scope STDLIB-RawRepresentable consumers (correctly identified, NOT touched)
+
+- swift-ascii-serializer-primitives — `Self: Swift.RawRepresentable, Self.RawValue == [UInt8]` (stdlib protocol).
+- swift-base62-primitives — same stdlib pattern.
+- swift-binary-primitives Sources/Binary Serializable Primitives/Binary.Serializable.swift — same stdlib pattern.

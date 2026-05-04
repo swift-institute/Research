@@ -1,10 +1,24 @@
 ---
 title: Cardinal.`Protocol` unification — bare-vs-Carrier overload split pattern
-status: DECISION — Option C (add Cardinal.`Protocol`, defer Vector.`Protocol`)
+status: SUPERSEDED by cardinal-trivial-self-revert-plan.md
 date: 2026-05-03
 decided: 2026-05-04
 context: tagged-primitives + carrier-primitives downstream rename cascade, tier-12 checkpoint
 ---
+
+## Supersession (2026-05-04)
+
+**SUPERSEDED by `cardinal-trivial-self-revert-plan.md`.** Phase 5 verified
+green on 2026-05-04 with Option C build-blocker scope: 10 L1 BLOCKERS +
+1 L2 BLOCKER fixed, downstream cascade unblocked. Stylistic-only leftovers
+and newly-discovered cascade repos enumerated in the plan's "Deferred
+follow-up — Tagged-rename adoption sweep" section.
+
+The Cardinal.`Protocol` unification approach below was the working theory
+during the tier-12 checkpoint; the trivial-self revert architecture
+(restoring `Cardinal/Ordinal/Affine.Discrete.Vector: Carrier<Self>` with
+per-type `rawValue: UInt|Int` fields) replaced it. Historical notes
+preserved below for reference.
 
 ## Decision (2026-05-04)
 
