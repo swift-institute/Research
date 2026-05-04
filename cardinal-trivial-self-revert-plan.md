@@ -652,6 +652,31 @@ Cardinal.\`Protocol\` cascade.
 
 ## References
 
+### Empirical validation
+
+- **`swift-tagged-primitives/Experiments/carrier-recursive-root-extension/`**
+  (CONFIRMED, 2026-05-04) — design-validation experiment that tested
+  Path A against the full alternative-design space (Paths E, H3, H4)
+  empirically. Findings, in summary:
+  - **Path A (trivial-self)** uniquely preserves all of: Carrier-based
+    universal unifier (`some Carrier<Cardinal>` matches both bare and
+    Tagged-wrapped), type-safe Cardinal-vs-Ordinal distinction,
+    Property.View case, no new protocols, no per-domain
+    `*.\`Protocol\``.
+  - **Path E** (non-trivial Cardinal + depth-coupled constraint
+    `where C.Underlying.Underlying == UInt`) and **H4** (sibling
+    `Rooted` protocol with `Root` associatedtype) BOTH produce a
+    Cardinal-vs-Ordinal type-safety leak — generic dispatch over
+    "Cardinal-meaning" admits Ordinal-shaped values (and vice versa)
+    because both domain types share a UInt bottom.
+  - **H3** (recursive `Root` on Carrier itself) re-introduces the
+    Property.View blocker by forcing `Tagged: Carrier` to be
+    conditional on `Underlying: Carrier`.
+  - The empirical result table (E2/E5 false positives, E6 sugar-syntax
+    incompatibility) closes the design question: Path A is the only
+    structurally-correct endpoint under the principal's stated
+    constraints.
+
 ### Prior research
 
 - [`cardinal-protocol-unification-memo.md`](./cardinal-protocol-unification-memo.md)
