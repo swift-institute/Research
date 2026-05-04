@@ -1,7 +1,7 @@
 {
   "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-01",
+  "generatedAt": "2026-05-04",
   "title": "Research Index",
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
@@ -3036,13 +3036,32 @@
     {
       "file": "cardinal-protocol-unification-memo.md",
       "displayName": "cardinal-protocol-unification-memo.md",
-      "topic": "Decision (Option C, 2026-05-04) to add Cardinal.`Protocol` upstream in swift-cardinal-primitives — sibling to Carrier (not refinement), mirroring the Ordinal.`Protocol` precedent — to unify bare `Cardinal` and `Tagged<Tag, Cardinal>` under one constraint. Resolves the bare-vs-Carrier overload split pattern observed across six packages (swift-ordinal-primitives, swift-affine-primitives, swift-cyclic-primitives, swift-sequence-primitives, swift-finite-primitives, swift-bit-vector-primitives) after the Tagged `46ded75` cascade-drop. The memo body originally proposed an empty-marker `Carrier.`Protocol` where Underlying == UInt` shape; correction at top: that does not compile because `Tagged<Tag, Cardinal>.Underlying == Cardinal` post-cascade-drop. The working shape is the sibling pattern with its own `var cardinal: Cardinal { get }` accessor. Vector.`Protocol` deferred to L3 evidence accumulation.",
+      "topic": "Decision (Option C, 2026-05-04) to add Cardinal.`Protocol` upstream in swift-cardinal-primitives — sibling to Carrier (not refinement), mirroring the Ordinal.`Protocol` precedent — to unify bare `Cardinal` and `Tagged<Tag, Cardinal>` under one constraint. Resolves the bare-vs-Carrier overload split pattern observed across six packages (swift-ordinal-primitives, swift-affine-primitives, swift-cyclic-primitives, swift-sequence-primitives, swift-finite-primitives, swift-bit-vector-primitives) after the Tagged `46ded75` cascade-drop. The memo body originally proposed an empty-marker `Carrier.`Protocol` where Underlying == UInt` shape; correction at top: that does not compile because `Tagged<Tag, Cardinal>.Underlying == Cardinal` post-cascade-drop. The working shape is the sibling pattern with its own `var cardinal: Cardinal { get }` accessor. Vector.`Protocol` deferred to L3 evidence accumulation. NOTE: Pending supersession by `cardinal-trivial-self-revert-plan.md` (RECOMMENDATION 2026-05-04). The principal's stated direction post-DECISION reverses Option C in favor of trivial-self-Carrier on Cardinal/Ordinal/Vector with `Carrier<Cardinal>` as the universal unifier — eliminating the need for `Cardinal.`Protocol``. Status will move to SUPERSEDED once the revert plan is authorized for execution.",
       "date": "2026-05-03",
       "status": "DECISION",
-      "statusDetail": "DECISION 2026-05-04 Option C; migration COMPLETE for all 6 packages: ordinal/affine/cyclic/sequence/finite/bit-vector. Bit-vector resolved via operator-disfavor rebalance (paired commits 7b40038 ordinal + 3a2248c affine + 8e26916 bit-vector) — root cause was Swift overload-resolution concrete-RHS-beats-generic at `.one` ambiguity sites post-46ded75. Vector.`Protocol` deferred.",
+      "statusDetail": "DECISION 2026-05-04 Option C; migration COMPLETE for all 6 packages: ordinal/affine/cyclic/sequence/finite/bit-vector. Bit-vector resolved via operator-disfavor rebalance (paired commits 7b40038 ordinal + 3a2248c affine + 8e26916 bit-vector) — root cause was Swift overload-resolution concrete-RHS-beats-generic at `.one` ambiguity sites post-46ded75. Vector.`Protocol` deferred. PENDING SUPERSESSION by cardinal-trivial-self-revert-plan.md — principal direction (2026-05-04) reverses the Option C endpoint in favor of trivial-self-Carrier + Tagged-immediate-wrap as the unifier; status will become SUPERSEDED upon revert plan execution authorization.",
       "statusRaw": "DECISION",
       "tier": 2,
       "scope": "cross-package"
+    },
+    {
+      "file": "cardinal-trivial-self-revert-plan.md",
+      "displayName": "cardinal-trivial-self-revert-plan.md",
+      "topic": "Per-repo revert plan (RECOMMENDATION, 2026-05-04) restoring trivial-self-Carrier semantics on Cardinal/Ordinal/Affine.Discrete.Vector across ~13 of 23 inspected swift-primitives repos, while preserving (a) Tagged's `46ded75` immediate-wrap, (b) the Carrier-protocol-level `rawValue` → `underlying` rename, and (c) all parallel CI/metadata/Phase-7a-revalidation commits. Reverses the cascade endpoint documented in cardinal-protocol-unification-memo.md (Option C). Post-revert design: bare Cardinal `Underlying == Cardinal` (trivial-self) + Tagged<Tag, Cardinal> `Underlying == Cardinal` (immediate-wrap) → `Carrier<Cardinal>` matches both as universal unifier; `Cardinal.`Protocol`` sibling deleted. Three mixed commits (`ac7f308` cardinal, `8e83f7f` ordinal, `24a9286` vector) addressed via Mechanism A (hand-authored partial-revert commits separating rename portion from collapse portion). 5 phases: (1) carrier DocC text edit, (2) cardinal/ordinal/affine partial-reverts, (3) consumer reverts in bit-vector/binary/bit/memory, (4) buffer-primitives single-file accessor adjustment, (5) workspace-wide grep + ecosystem-wide build gate per [HANDOFF-035]. Estimated diff ~535 lines across 13 repos. Open Questions: (#1) per-type machine-word accessor name under trivial-self — recommends `rawValue: UInt|Int` restoration; (#2) `Ordinal.`Protocol`` longer-term disposition (separate cycle); (#3) Vector arithmetic empirical verification; (#4) Tagged ~Copyable lifetime gap noted but out of scope. Pending principal authorization for execution.",
+      "date": "2026-05-04",
+      "status": "RECOMMENDATION",
+      "statusDetail": "RECOMMENDATION 2026-05-04. Read-only drafting deliverable; execution gated on principal authorization of: (a) the revert plan as a whole, (b) Open Question #1 resolution (machine-word accessor name; recommends `rawValue`), (c) the supersession of cardinal-protocol-unification-memo.md. Per-phase per-repo execution is itself per-action authorization-gated per feedback_no_public_or_tag_without_explicit_yes (push gates remain separate from local commit gates).",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "ci-cache-strategy-branch-pinned-dependencies.md",
+      "displayName": "CI Cache Strategy for Branch-Pinned Swift Package Dependencies",
+      "topic": "ci/cache",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
     }
   ],
   "narrativeSections": [
