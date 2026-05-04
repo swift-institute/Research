@@ -3039,7 +3039,7 @@
       "topic": "Decision (Option C, 2026-05-04) to add Cardinal.`Protocol` upstream in swift-cardinal-primitives — sibling to Carrier (not refinement), mirroring the Ordinal.`Protocol` precedent — to unify bare `Cardinal` and `Tagged<Tag, Cardinal>` under one constraint. Resolves the bare-vs-Carrier overload split pattern observed across six packages (swift-ordinal-primitives, swift-affine-primitives, swift-cyclic-primitives, swift-sequence-primitives, swift-finite-primitives, swift-bit-vector-primitives) after the Tagged `46ded75` cascade-drop. The memo body originally proposed an empty-marker `Carrier.`Protocol` where Underlying == UInt` shape; correction at top: that does not compile because `Tagged<Tag, Cardinal>.Underlying == Cardinal` post-cascade-drop. The working shape is the sibling pattern with its own `var cardinal: Cardinal { get }` accessor. Vector.`Protocol` deferred to L3 evidence accumulation.",
       "date": "2026-05-03",
       "status": "DECISION",
-      "statusDetail": "DECISION 2026-05-04 Option C; migration COMPLETE for 5 of 6 packages: ordinal/affine/cyclic/sequence/finite. swift-bit-vector-primitives NOT migrated (its disambig is Vector-related, not Cardinal-related; persists until Vector.`Protocol` lands). Vector.`Protocol` deferred.",
+      "statusDetail": "DECISION 2026-05-04 Option C; migration COMPLETE for all 6 packages: ordinal/affine/cyclic/sequence/finite/bit-vector. Bit-vector resolved via operator-disfavor rebalance (paired commits 7b40038 ordinal + 3a2248c affine + 8e26916 bit-vector) — root cause was Swift overload-resolution concrete-RHS-beats-generic at `.one` ambiguity sites post-46ded75. Vector.`Protocol` deferred.",
       "statusRaw": "DECISION",
       "tier": 2,
       "scope": "cross-package"
