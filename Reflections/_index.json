@@ -6,6 +6,28 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-04-test-support-spine-strict-rollout-and-mod-024.md",
+      "date": "2026-05-04",
+      "title": "Test Support Spine Phase 2a Strict Rollout, [MOD-024] Codification, and Phase β Handoff",
+      "packages": [
+        "swift-primitives",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-04-principal-side-cicd-centralization-supervision.md",
+      "date": "2026-05-04",
+      "title": "Principal-Side Supervisory Reflection — L1 CI/CD Centralization Rollout",
+      "packages": [
+        "swift-institute",
+        "swift-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-04-per-repo-workflow-drift-rollout-c-d-b8-fnow.md",
       "date": "2026-05-04",
       "title": "Per-Repo-Workflow-Drift Rollout: C / D / B8 / F-now Execution + B6.5 R-Chain Recovery",
