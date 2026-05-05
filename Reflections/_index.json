@@ -6,6 +6,17 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-05-ci-audit-and-pm-cohort-rollout.md",
+      "date": "2026-05-05",
+      "title": "CI audit + PM cohort rollout — refactor framework, composite-tech-stack constraints, and the danger of changelog skimming",
+      "packages": [
+        "swift-institute/.github",
+        "swift-primitives/.github"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-05-track-b-skill-quality-refactor-execution.md",
       "date": "2026-05-05",
       "title": "Track B Phase B-1 + B-2 — diagnostic-driven skill-quality refactor execution",
