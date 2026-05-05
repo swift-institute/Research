@@ -1,7 +1,7 @@
 ---
 title: download-artifact v4 → v8 ladder migration
 type: investigation
-status: RECOMMENDATION
+status: INVESTIGATING
 date: 2026-05-05
 applies_to:
   - swift-institute/.github/.github/workflows/cron-audit-base.yml
@@ -11,156 +11,145 @@ deadline: 2026-06-02 (Node 20 forced-off on GitHub Actions)
 
 # download-artifact v4 → v8 ladder migration
 
-## Recommendation
+## Status: INVESTIGATING (downgraded 2026-05-05)
 
-**Migrate `actions/download-artifact@v4` → `@v8` directly across both
-sites with no caller-side changes.** No version-ladder walk needed; no
-`merge-multiple: true` adaptation needed; no `find`-vs-glob rewrite
-needed.
+The original v1.0.0 RECOMMENDATION (direct v4→v8 with no caller-side
+changes) was **falsified in production** within hours of being authored.
+This document is now the empirical record of what went wrong, what the
+actual v4..v8 behavior is for our matrix shape, and what the redesign
+target (Path A — layout-agnostic `find` rewrite) needs to satisfy
+before re-promotion to RECOMMENDATION.
 
-Empirical run: [`research-download-artifact-ladder` run 25377059431](https://github.com/swift-institute/.github/actions/runs/25377059431)
-(SHA `6502afe`, branch `research/download-artifact-ladder`, 2026-05-05).
+## Falsification (2026-05-05)
 
-## Empirical Evidence
+The v4→v8 migration was applied at commits `198b4b2`
+(cron-audit-base.yml) + `363208d` (submit-dep-graph-weekly.yml) on
+swift-institute/.github main. Both canaries against the post-bump SHA
+revealed regressions invisible to the original research workflow:
 
-A scratch workflow uploaded two artifacts (`test-counts-org1`,
-`test-counts-org2`) each carrying `org{N}-counts.txt` + `org{N}-failures.txt`,
-mirroring the production cron-audit-base + submit-dep-graph upload shape.
-The same artifact set was downloaded by `actions/download-artifact@v4`
-through `@v8` into separate paths, then `find -ls` and shell-glob
-expansion captured each layout.
+| Canary | Run ID | Conclusion | Failure mode |
+|--------|--------|-----------|--------------|
+| `submit-dep-graph-weekly.yml` (dry-run) | [25377628270](https://github.com/swift-institute/.github/actions/runs/25377628270) | **failure** | `report` job: `/tmp/counts/*/*-counts.txt: No such file or directory`, exit 1 |
+| `lint-license-header-weekly.yml` (calls cron-audit-base.yml) | [25377635397](https://github.com/swift-institute/.github/actions/runs/25377635397) | success | **silent false-positive**: `[[ -e "$f" ]] \|\| continue` guard absorbed the empty glob; report job emitted "All counts zero across orgs — no tracking issue needed." despite the actual sweep finding violations |
 
-### Result — layout is identical across v4..v8
+Both commits were reverted at `1092349` + `d2c7e3d`. Post-revert
+canaries (`25378241367` + `25378247875`) confirmed v4 production
+behavior is restored.
 
-| Version | On-disk layout | `*/*-counts.txt` glob matches |
-|---------|----------------|-------------------------------|
-| `@v4`   | `/tmp/v4-counts/test-counts-org{1,2}/org{1,2}-{counts,failures}.txt` | 2 matches ✓ |
-| `@v5`   | `/tmp/v5-counts/test-counts-org{1,2}/org{1,2}-{counts,failures}.txt` | 2 matches ✓ |
-| `@v6`   | `/tmp/v6-counts/test-counts-org{1,2}/org{1,2}-{counts,failures}.txt` | 2 matches ✓ |
-| `@v7`   | `/tmp/v7-counts/test-counts-org{1,2}/org{1,2}-{counts,failures}.txt` | 2 matches ✓ |
-| `@v8`   | `/tmp/v8-counts/test-counts-org{1,2}/org{1,2}-{counts,failures}.txt` | 2 matches ✓ |
+The `lint-license-header-weekly` silent-success path is the more
+dangerous regression: a workflow that returns green while never
+actually reading the artifact data would mask drift across all 5
+weekly orchestrators that route through `cron-audit-base.yml`.
 
-Every version produces an `<artifact-name>/` subdirectory under `path:`,
-with files extracted directly inside (no residual `.zip` files, no
-flattening). The default behavior is preserved across all five major
-versions.
+## Why the Original Research Missed This (Premise-Staleness Defect, Layer 2)
 
-### Side observation — `merge-multiple: true` flattens (v8)
+The research workflow (run [25377059431](https://github.com/swift-institute/.github/actions/runs/25377059431))
+uploaded **two** artifacts (`test-counts-org1`, `test-counts-org2`) and
+exercised v4..v8 download into separate paths. All five versions
+produced identical nested layouts. The conclusion — "layout is
+identical across v4..v8, no caller-side changes needed" — was correct
+**for that fixture**.
 
-| Variant | On-disk layout |
-|---------|----------------|
-| `@v8` + `merge-multiple: true` | `/tmp/v8-merge-counts/org{1,2}-{counts,failures}.txt` (flat) |
+The fixture diverged from production. Production matrix legs in both
+target workflows are currently:
 
-The flat-flatten variant is documented and works at v8 — useful if a
-future caller needs flat layout (none today).
-
-## Why the Prior Session's Diagnosis Was Wrong
-
-A prior session (commits `25e479a` v8 → `6738fe6` v7-pin → `5bdef3f`
-v4-revert, all 2026-05-05 ~12:21–12:41 CEST) attempted the v4→v8 bump,
-observed CI failures, and reverted with the explanation:
-
-> Both v7 (6738fe6) and v8 (25e479a) produced an on-disk layout where
-> the report jobs' `/tmp/counts/*/*.txt` globs find nothing, despite
-> the release notes attributing decompression behavior changes only
-> to v8. v7 was supposed to retain v4's auto-decompress; canary
-> disproved that.
-
-This diagnosis is empirically false. The actual failure mode of the
-v7+v8 attempts is independently confirmed: run 25371719434 (post-revert,
-SHA `e9b468e`, `download-artifact@v4`) failed with the SAME error:
-
-```
-report  Open or update tracking issue  could not add label: 'dep-graph' not found
-report  Open or update tracking issue  ##[error]Process completed with exit code 1.
+```yaml
+matrix:
+  org:
+    - swift-primitives
 ```
 
-The download-artifact step succeeded; the report job failed at the
-`gh issue create --label dep-graph` call because the org didn't have
-the `dep-graph` label yet. That bug was independently fixed by commit
-`ddf3b59` (label-missing fallback). Subsequent v4 runs at `ddf3b59`
-and beyond (run 25372048153, run 25372174394) passed.
+— a **single-org matrix**, producing a **single artifact per matrix
+leg** at the report-job aggregation step. v8 introduces a path-resolution
+branch that v4 lacks specifically for this case:
 
-The prior session attributed three failures (v8 attempt, v7 attempt,
-v4 revert) to download-artifact when the only common cause was the
-unrelated label-missing bug.
+| Version | Multi-artifact (`artifacts.length > 1`) | Single-artifact (`artifacts.length === 1`) |
+|---------|------------------------------------------|--------------------------------------------|
+| `@v4`   | nested: `<path>/<artifact-name>/<file>` | nested: `<path>/<artifact-name>/<file>` |
+| `@v8`   | nested: `<path>/<artifact-name>/<file>` | **flat: `<path>/<file>`** |
 
-## Why Source Code and Release Notes Both Predicted Layout Parity
+Source-of-truth diff:
 
-| Source | Evidence |
-|--------|----------|
-| [`actions/download-artifact@v4` source](https://github.com/actions/download-artifact/blob/v4/src/download-artifact.ts) | Path resolution: `path.join(resolvedPath, artifact.name)` for multi-artifact-no-name case |
-| [`actions/download-artifact@v8` source](https://github.com/actions/download-artifact/blob/v8/src/download-artifact.ts) | Same path resolution: `path.join(resolvedPath, artifact.name)` for multi-artifact-no-name case |
-| v5 release notes | Single-artifact-by-id path nesting fix only; multi-artifact-no-name unchanged |
-| v6 release notes | `@actions/artifact` package bump to v4.0.0; no path-resolution changes |
-| v7 release notes | Node.js 24 runtime requirement (min runner 2.327.1+); no path-resolution changes |
-| v8 release notes | Hash-mismatch errors default; ESM module migration; Content-Type-aware decompression. The "no longer attempt to unzip all" phrase refers to non-zip artifacts; zip artifacts (default `archive: true` from `actions/upload-artifact@v7`) decompress as before |
+| File | v4 condition | v8 condition |
+|------|--------------|--------------|
+| `actions/download-artifact/src/download-artifact.ts` (multi-artifact branch) | `isSingleArtifactDownload \|\| inputs.mergeMultiple` | `isSingleArtifactDownload \|\| inputs.mergeMultiple \|\| artifacts.length === 1` |
 
-The empirical capture confirms the source-code prediction: layout is
-preserved end-to-end.
+The `artifacts.length === 1` branch in v8 — flatten when only one
+artifact matched — was never exercised by the 2-artifact research
+fixture. Production exercises it on every matrix leg.
 
-## Migration Mechanics
+This is the second layer of premise-staleness in this work
+(the first was the inherited handoff's "v7+v8 layout broken"
+attribution to layout when the actual cause was an unrelated
+label-missing bug). Both layers compound: a research workflow
+correct-for-its-fixture but inapplicable to production produces
+RECOMMENDATIONs that empirically falsify in production.
 
-### Scope
+## Forward Path — Path A (layout-agnostic `find` rewrite)
+
+The redesign target is to make the consumer scripts **layout-agnostic**
+so they work uniformly under both nested (v4 always; v8 multi-artifact)
+and flat (v8 single-artifact; future versions; `merge-multiple: true`)
+layouts. The org name is recoverable from the **filename** (`<org>-counts.txt`),
+so the dependency on artifact-directory names can be eliminated.
+
+### Sketch
 
 ```bash
-grep -rln "actions/download-artifact@v4" \
-  /Users/coen/Developer/swift-institute/.github/.github/workflows/
-# 2 files:
-#   .github/workflows/cron-audit-base.yml
-#   .github/workflows/submit-dep-graph-weekly.yml
+# Original (couples to nested layout):
+for f in /tmp/counts/*/*-counts.txt; do
+  artifact_dir=$(basename "$(dirname "$f")")
+  org="${artifact_dir#cron-audit-counts-}"
+  ...
+done
+
+# Path A (layout-agnostic):
+while IFS= read -r f; do
+  filename=$(basename "$f")
+  org="${filename%-counts.txt}"
+  ...
+done < <(find /tmp/counts -type f -name '*-counts.txt')
 ```
 
-### Diff
+`find` walks the tree at any depth, matching `*-counts.txt` regardless
+of whether files sit at `<path>/<artifact-name>/<file>` or `<path>/<file>`.
+The org name is parsed from the filename's `<org>-counts.txt` suffix
+strip, which is stable across layouts.
 
-For each file, single-line bump:
+The same shape applies to the `*-failures.txt` and `*-extra.txt` loops
+in submit-dep-graph-weekly.yml and cron-audit-base.yml respectively.
 
-```diff
--      - uses: actions/download-artifact@v4
-+      - uses: actions/download-artifact@v8
-         with:
-           path: /tmp/counts
-```
+### Validation Gate (before re-promotion to RECOMMENDATION)
 
-No caller-side changes (`merge-multiple` not introduced; consumer
-shell scripts unchanged; `/tmp/counts/*/*-counts.txt` glob unchanged).
+The redesigned research workflow MUST exercise BOTH:
+- Single-artifact case (mirrors current production matrix shape)
+- Multi-artifact case (mirrors future N-org matrix expansion)
 
-### Canary
+For each case, BOTH the original glob `/tmp/counts/*/*-counts.txt`
+AND the proposed Path A `find /tmp/counts -name '*-counts.txt'` are
+captured against actual download output, against `download-artifact@v8`.
 
-Both workflows are scheduled-only with `workflow_dispatch`. Per [CI-050]
-mass-rollout discipline + [CI-052] gate, each push to `main` requires
-explicit per-action authorization. After each push:
-
-```bash
-gh workflow run submit-dep-graph-weekly.yml --ref main --repo swift-institute/.github -f dry-run=true
-gh run watch <run-id> --exit-status
-# Verify report job exits 0 with v8 download
-```
-
-For `cron-audit-base.yml` (a `workflow_call` reusable, not directly
-invocable), the canary fires on any `lint-*-weekly.yml` consumer:
-
-```bash
-gh workflow run lint-license-header-weekly.yml --ref main --repo swift-institute/.github
-```
-
-## Schedule
-
-- **Today (2026-05-05)**: research complete, recommendation ready.
-- **Migration push window**: any time before 2026-05-26 (gives 1 week
-  slack for canary observation before 2026-06-02 Node 20 forced-off).
-- **Step 1c migration**: one push per file, per-action auth, canary
-  per file.
-
-## Cleanup
-
-The scratch workflow `research-download-artifact-ladder.yml` lives on
-branch `research/download-artifact-ladder` only. Branch deleted after
-this research note is committed; no main-branch trace.
+Path A is the migration target only if it matches the same files in
+both cases against v8. If it breaks in either case, halt; do not
+improvise.
 
 ## Cross-References
 
-- [`HANDOFF-ci-action-version-tail.md`](../../HANDOFF-ci-action-version-tail.md) Step 1 (this work)
+- [`HANDOFF-ci-action-version-tail.md`](../../HANDOFF-ci-action-version-tail.md)
+  Step 1 (this work; updated with Premise-Falsification subsection)
 - `feedback_no_public_or_tag_without_explicit_yes.md` (per-push auth)
-- [CI-050], [CI-051] (mass-rollout discipline; this is 2 surgical commits)
-- [CI-031] reusable-consumption pattern
+- [CI-050], [CI-051] (mass-rollout discipline)
+- Memory candidate: `feedback_research_workflow_must_mirror_production_shape.md`
+  (research fixtures must mirror production shape; 2-artifact fixture
+  for 1-artifact production produced a recommendation that empirically
+  falsified)
+
+## Run Manifest
+
+| Run ID | SHA | What it tested | Outcome |
+|--------|-----|----------------|---------|
+| [25377059431](https://github.com/swift-institute/.github/actions/runs/25377059431) | 6502afe | Original research: 2-artifact fixture, v4..v8 ladder | "layout identical" finding (correct for fixture, inapplicable to production) |
+| [25377628270](https://github.com/swift-institute/.github/actions/runs/25377628270) | 363208d | Production canary: submit-dep-graph-weekly with v8 + 1-org matrix | **failure** — glob no-match, exit 1 |
+| [25377635397](https://github.com/swift-institute/.github/actions/runs/25377635397) | 363208d | Production canary: lint-license-header-weekly with v8 + 1-org matrix | success but **silent false-positive** (guard-skipped, "all counts zero") |
+| [25378241367](https://github.com/swift-institute/.github/actions/runs/25378241367) | 1092349 | Post-revert canary: submit-dep-graph-weekly | success — confirms v4 restoration |
+| [25378247875](https://github.com/swift-institute/.github/actions/runs/25378247875) | 1092349 | Post-revert canary: lint-license-header-weekly | success — real data path, updated tracking issue #9 |
