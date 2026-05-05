@@ -323,8 +323,8 @@ jobs:
         id: token
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ secrets.METADATA_APP_ID }}
-          private-key: ${{ secrets.METADATA_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.SWIFT_INSTITUTE_BOT_APP_ID }}
+          private-key: ${{ secrets.SWIFT_INSTITUTE_BOT_APP_PRIVATE_KEY }}
           owner: ${{ matrix.org }}
           repositories: ''  # all repos in the org installation
 
@@ -382,8 +382,8 @@ jobs:
         id: token
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ secrets.METADATA_APP_ID }}
-          private-key: ${{ secrets.METADATA_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.SWIFT_INSTITUTE_BOT_APP_ID }}
+          private-key: ${{ secrets.SWIFT_INSTITUTE_BOT_APP_PRIVATE_KEY }}
           owner: swift-institute
           repositories: .github
           permission-issues: write
@@ -963,7 +963,7 @@ When an audit's runtime needs are confined to Python stdlib (regex, json, pathli
 
 ##### 3.5.6 Cron orchestrator scope is bounded by GitHub App installation
 
-`actions/create-github-app-token@v1` mints an installation-scoped token. `gh repo list "$ORG"` against that token returns only the repos the app is installed on, not all repos in the org. Run `25361063976` on the license-header cron iterated only 4 of ~132 swift-primitives consumer repos because the `metadata-app` GitHub App is installed on a 4-repo subset.
+`actions/create-github-app-token@v1` mints an installation-scoped token. `gh repo list "$ORG"` against that token returns only the repos the app is installed on, not all repos in the org. Run `25361063976` on the license-header cron iterated only 4 of ~132 swift-primitives consumer repos because the `swift-institute-bot` GitHub App is installed on a 4-repo subset.
 
 **Pattern (resolution options):** (a) install the GitHub App on the whole org (operational, not workflow-side); OR (b) rewrite cron orchestrators to use unauthenticated public-repo listing via `curl https://api.github.com/orgs/$ORG/repos?per_page=100` (rate-limited but adequate for weekly). v1.3.0 documents the constraint; the choice between (a) and (b) is principal-side.
 

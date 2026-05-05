@@ -624,7 +624,7 @@ See § 4.4. Heuristic-seeded `.github/metadata.yaml` drafts; opens PRs.
 
 Earlier drafts of this proposal included a per-repo `metadata.yml` caller workflow that fired on PR (preview comment) and on push-to-main (immediate sync). The Path B resolution per § 7 Q9 (2026-04-29) removed this layer. Rationale:
 
-- Per-repo callers run in each repo's own org context; they need the App secrets (`METADATA_APP_ID` + `METADATA_APP_PRIVATE_KEY`) available there.
+- Per-repo callers run in each repo's own org context; they need the App secrets (`SWIFT_INSTITUTE_BOT_APP_ID` + `SWIFT_INSTITUTE_BOT_APP_PRIVATE_KEY`) available there.
 - Org-level secrets do not cross orgs. To support per-repo callers across the 17 ecosystem orgs, secrets would have to be duplicated to each org (~50 min of one-time setup).
 - The user's preference (centralise as much as possible; minimise input) makes Path B — keep secrets only at `swift-institute/.github`, accept that all token-minting workflows must run from there — the better fit.
 
@@ -662,7 +662,7 @@ Workflows authenticate cross-org via the **`swift-institute-bot`** GitHub App, i
 - Pull requests: **Read and Write** (for `generate-metadata.yml` PRs).
 - Issues: **Read and Write** (for the nightly tracking issue).
 
-App ID and private key live as `swift-institute/.github` **org-level secrets** `METADATA_APP_ID` and `METADATA_APP_PRIVATE_KEY` — and **only there**. Per § 7 Q9 Path B resolution, the secrets are not duplicated to other orgs. All workflows that mint App tokens run from `swift-institute/.github`'s context, so they have direct access to these secrets without needing `secrets: inherit`. The App's installation on the other 16 orgs gives it permission-to-act there; the secrets in this org give workflows credentials-to-mint-tokens that exercise that permission.
+App ID and private key live as `swift-institute/.github` **org-level secrets** `SWIFT_INSTITUTE_BOT_APP_ID` and `SWIFT_INSTITUTE_BOT_APP_PRIVATE_KEY` — and **only there**. Per § 7 Q9 Path B resolution, the secrets are not duplicated to other orgs. All workflows that mint App tokens run from `swift-institute/.github`'s context, so they have direct access to these secrets without needing `secrets: inherit`. The App's installation on the other 16 orgs gives it permission-to-act there; the secrets in this org give workflows credentials-to-mint-tokens that exercise that permission.
 
 The minted installation token is short-lived (1 hour) and obtained per-workflow-run via `actions/create-github-app-token@v1`. The action's `repositories:` and `permissions:` inputs scope each minted token narrower than the App's full ceiling.
 
@@ -704,7 +704,7 @@ Phased. Authorization gates at the moments when GitHub state is written; everyth
 
 ### Phase 1 — Land workflows in `swift-institute/.github`
 
-Land `sync-metadata.yml`, `sync-metadata-nightly.yml`, and `generate-metadata.yml` in `swift-institute/.github/.github/workflows/` per § 4.2 / 4.4. Configure the `METADATA_APP_*` org-level secrets per § 4.5. (The previously-planned per-repo caller fan-out is dropped per § 7 Q9 Path B resolution; no `Scripts/sync-metadata-callers.sh` and no caller template.)
+Land `sync-metadata.yml`, `sync-metadata-nightly.yml`, and `generate-metadata.yml` in `swift-institute/.github/.github/workflows/` per § 4.2 / 4.4. Configure the `SWIFT_INSTITUTE_BOT_APP_*` org-level secrets per § 4.5. (The previously-planned per-repo caller fan-out is dropped per § 7 Q9 Path B resolution; no `Scripts/sync-metadata-callers.sh` and no caller template.)
 
 **Authorization**: workflow-source PR is reviewed and merged in `swift-institute/.github`. No bulk-push.
 
