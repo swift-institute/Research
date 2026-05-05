@@ -6,11 +6,127 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-05-track-b-skill-quality-refactor-execution.md",
+      "date": "2026-05-05",
+      "title": "Track B Phase B-1 + B-2 — diagnostic-driven skill-quality refactor execution",
+      "packages": [
+        "swift-institute/Skills"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-05-workflow-construction-phase-1-reframe-and-fixture-harness.md",
+      "date": "2026-05-05",
+      "title": "Workflow construction phase 1 — premise-staleness reframe and audit-script-as-workflow-logic harness",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-05-ci-action-version-tail-cohort-with-two-layer-premise-staleness.md",
+      "date": "2026-05-05",
+      "title": "CI action-version-tail cohort with two-layer premise-staleness correction",
+      "packages": [
+        "swift-institute/.github"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-05-skill-verification-taxonomy-tier-2-tier-3-and-ecosystem-closure.md",
       "date": "2026-05-05",
       "title": "Skill-verification taxonomy tier-2 + tier-3 dispatch and ecosystem-wide classification closure",
       "packages": [
         "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-05-sequence-borrowing-protocol-completion.md",
+      "date": "2026-05-05",
+      "title": "Sequence.Borrowing.Protocol completion — PAT promotion + iterator-constraint family + local-function scoping for _read yield chains",
+      "packages": [
+        "swift-sequence-primitives",
+        "swift-buffer-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-05-centralized-ci-deduplication-cohort-execution.md",
+      "date": "2026-05-05",
+      "title": "Centralized CI deduplication — five-step cohort execution (25 commits + 5 labels across two repos)",
+      "packages": [
+        "swift-institute/.github",
+        "swift-primitives/.github",
+        "swift-institute/Skills"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-05-property-cascade-closeout-tagged-surface-drift-and-sli-ergonomics.md",
+      "date": "2026-05-05",
+      "title": "Property cascade closeout, Tagged surface drift cleanup, SLI literal-indexing ergonomics",
+      "packages": [
+        "swift-property-primitives",
+        "swift-comparison-primitives",
+        "swift-array-primitives",
+        "swift-memory-primitives",
+        "swift-foundations/swift-kernel",
+        "swift-sequence-primitives",
+        "swift-institute/Research",
+        "swift-institute/Blog",
+        "swift-institute/Skills"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-05-skill-verification-taxonomy-tier-1-extension-and-parallel-subagent-dispatch.md",
+      "date": "2026-05-05",
+      "title": "Skill-verification taxonomy tier-1 extension — parallel subagent dispatch and three new resistant patterns",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-05-property-rename-phase-5-autonomous-cascade.md",
+      "date": "2026-05-05",
+      "title": "Property.{View,View.Read,Consuming} → {Inout,Borrow,Consume} — autonomous Phase 5 cascade",
+      "packages": [
+        "swift-carrier-primitives",
+        "swift-ownership-primitives",
+        "swift-tagged-primitives",
+        "swift-order-primitives",
+        "swift-input-primitives",
+        "swift-list-primitives",
+        "swift-array-primitives",
+        "swift-memory-primitives",
+        "swift-async-primitives",
+        "swift-vector-primitives",
+        "swift-kernel",
+        "swift-strings",
+        "swift-slab-primitives",
+        "swift-stack-primitives",
+        "swift-set-primitives",
+        "swift-parser-primitives",
+        "swift-storage-primitives",
+        "swift-queue-primitives",
+        "swift-dictionary-primitives",
+        "swift-hash-table-primitives",
+        "swift-bit-vector-primitives",
+        "swift-collection-primitives",
+        "swift-heap-primitives",
+        "swift-sequence-primitives",
+        "swift-buffer-primitives",
+        "swift-graph-primitives"
       ],
       "status": "pending",
       "statusRaw": "pending"
