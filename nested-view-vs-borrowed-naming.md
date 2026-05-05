@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 1.2.0
-last_updated: 2026-05-01
+version: 1.3.0
+last_updated: 2026-05-05
 status: DECISION
 tier: 2
 scope: cross-package
@@ -12,6 +12,51 @@ scope: cross-package
 
 ## Revision History
 
+- **1.3.0 (2026-05-05)** — Property family rename cascade IMPLEMENTED per
+  v1.2.0 framework. Phases 1–8 complete. Execution summary:
+  - **swift-property-primitives** (5 commits, Phases 1–4): source rename,
+    test rename + Package.swift target/product rename, DocC catalogue
+    rename, distinguishing prose for `Property.Inout`/`Property.Borrow`
+    vs neighbours (Swift's `inout` modifier, `String.Borrowed`,
+    `Path.Borrowed`). HEAD `5da7f17`.
+  - **swift-comparison-primitives** (Phase 5 batch 1, canary): 7 files
+    edited / 3 filename renames. HEAD `8aac833`.
+  - **26 cascade packages** (Phase 5 full cascade): 1 commit each,
+    upstream-first ordering at push time (property → comparison →
+    ownership/carrier/tagged → tier-by-tier downstream → foundations).
+    Includes **swift-slab-primitives** — discovered mid-cascade by the
+    executing agent via generic-instantiated `Property<X, Y>.View`
+    forms that the canonical literal-form grep had silently missed.
+  - **Total**: 33 commits across 28 repos pushed to GitHub.
+  - **DocC catalogue Topics restructured**: `~Copyable Inout Types` /
+    `~Copyable Borrow Types` replacing prior `View Types` /
+    `Read-Only View Types` groupings.
+  - **`Property.Borrow` structurally flattened** — no longer nests under
+    `Property.Inout`. The v1.1.0 `Property.View.Read` shape (read-mode
+    nested under exclusive-mutable wrapper) was rejected during
+    framework derivation as a coincidence of legacy implementation
+    rather than a semantic invariant.
+  - **Workspace-wide grep post-execution**: zero residual references in
+    both literal and generic-instantiated forms across all 28 cascade
+    targets. cclsp/SourceKit-LSP regenerated against post-rename
+    workspace; cross-layer `find_references` for `Property.Inout` /
+    `Property.Borrow` / `Property.Consume` returns full results.
+  - **Lessons codified**:
+    - `ecosystem_grep_generic_instantiations.md` (memory) — canonical
+      reproducible-enumeration grep commands MUST cover BOTH literal
+      forms (`Property.View`) AND generic-instantiated forms
+      (`Property<X, Y>.View`). Literal-only grep silently misses sites;
+      slab-primitives was the near-miss case study.
+    - `feedback_triage_dirty_worktree.md` (memory) — pre-existing dirty
+      working tree at cascade start triggers triage discipline:
+      coherence + scope check before reverting/including. Surfaced
+      because `swift-graph-primitives` and `swift-sequence-primitives`
+      held unrelated WIP at cascade start.
+  - **Pre-existing test failures surfaced** by post-cascade `swift test`
+    — NOT introduced by this rename, queued for separate Tagged-surface
+    cleanup cycle: array-primitives Tagged.rawValue + `__unchecked` →
+    `_unchecked` rename, kernel-foundations Int-literal-to-Tagged
+    conversion errors. Drafts at `/tmp/property-cascade-followups/`.
 - **1.2.0 (2026-05-01)** — Adopted semantic-invariant framework with
   governing-axis identification + axis-based decision table. Supersedes
   v1.1.0's Pattern 2 keep-`.View` ruling for the access-mode-discriminated
