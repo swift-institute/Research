@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 1.2.0
-last_updated: 2026-05-04
+version: 1.3.0
+last_updated: 2026-05-05
 status: RECOMMENDATION
 research_tier: 2
 applies_to: [institute, primitives, standards, foundations, body-orgs]
@@ -13,6 +13,7 @@ normative: false
 
 ## Changelog
 
+- **v1.3.0 (2026-05-05)**: Implementation lessons appendix (§3.5) added after empirical Phase β + γ-1a + γ-1b + γ-1c + γ-2 + γ-2b + γ-3 + γ-4 rollout to swift-institute/.github + swift-primitives/.github layer wrapper. Seven runtime-correctness corrections to the v1.1.0/v1.2.0 spec, each backed by a specific failed CI run and a fix commit. The most consequential: `continue-on-error: true` at the calling site of a `workflow_call` job is INVALID YAML in GitHub Actions — only regular jobs and steps support it. The advisory/gating switch must live as an `advisory: bool` input on the called reusable, gated inside the run step's `exit 1` line. §1.4-§1.5 reference text is annotated with the correction; the canonical pattern lives in §3.5. Phase β + γ-1a/b/c + γ-2 + γ-4 all landed advisory and verified green on swift-carrier-primitives + swift-tagged-primitives canaries on 2026-05-05. γ-2b dep-graph submission DEFERRED again (different reason than v1.1.0): the called workflow's `permissions: contents: write` declaration causes `startup_failure` across the consumer→layer-wrapper→universal call chain when the outer levels don't grant it; resolution requires either (a) declaring `contents: write` at every call-chain level, OR (b) a non-reusable invocation pattern (per-package opt-in workflow). γ-3 Wasm SDK landed in the swift-primitives layer wrapper; SDK install succeeds, `swift build --swift-sdk swift-6.3-RELEASE_wasm-embedded` fails with "module compiled with Swift 6.3 cannot be imported by 6.3.1" — classified as B (toolchain) under the four-class soak. The advisory captures it correctly; mismatch resolves when the published Wasm SDK matches the container's Swift version.
 - **v1.2.0 (2026-05-04)**: Principal-driven correction post-convergence. The v1.1.0 deferral of GH dependency-graph submission was over-calibrated against a static "private packages stay private" reading; the principal clarified that intra-Institute private packages will go public on a near-term timeline. Re-analysis decomposes the original privacy concern into three sub-concerns (Sub-1: name leakage of currently-private packages BEFORE they go public — time-bounded; Sub-2: relationship disclosure between two public packages — generally a feature, not a bug; Sub-3: pre-1.0 refactor churn — not specific to dep-graph submission). Only Sub-1 was load-bearing for the deferral; it dissolves on the publish-wave timeline. **Resolution**: GH dep-graph submission promoted from DEFERRED to **γ-2b** (advisory now, alongside γ-2 mechanical hygiene). New §3.4.5b documents the design (separate `submit-dep-graph.yml` reusable; SHA-pinned `vapor-community/swift-dependency-submission`; push-to-main only; `permissions: contents: write` at calling site per `[CI-026]` Path B; public-only via `[CI-032]`). §3.4.1 roadmap table updated; §3.4.8 retained but reframed as "what remains deferred" (now empty). §Outcome updated. §3.4.10 graduation table updated (judgment-based: monthly review of submission success rate + Dependabot signal-to-noise). The collaborative-discussion conclusion at v1.1.0 stays in the historical record — it represents what the 4-round Claude+ChatGPT conversation concluded under the framing it had; v1.2.0 represents the principal's post-discussion correction with the additional information about the publish wave.
 - **v1.1.0 (2026-05-04)**: Converged plan after collaborative discussion (Claude + ChatGPT, 4 rounds, transcript at `/tmp/ci-improvements-catalog-transcript.md`, converged artifact at `/tmp/ci-improvements-catalog-converged.md`). User selected 8 capabilities from §3.1's catalog: Foundation-import, License-header, broken-symlink, YAML lint, commit-lint, Embedded Wasm SDK, Static SDK Linux musl. Discussion produced material refinements: γ-1 split into γ-1a (Foundation) / γ-1b (License-header three-step) / γ-1c (API-breakage advisory pilot, four-class tracking — promoted from P3 deferred); Foundation rule extended to family (`Foundation`, `FoundationEssentials`, `FoundationInternationalization`) with full attribute matrix including `@preconcurrency`; License-header surfaced as advisory→codemod→gate three-step (empirical: L1 source files currently lack Apache 2.0 headers); commit-lint reframed as PR-title lint at γ-4 (squash-merge alignment); Static SDK Linux musl lifted from "P5 unfit" to "γ-3b advisory if cheap" after the unlimited-public-minutes correction reframed cost calculus from minutes-constrained to signal-constrained; GH dep-graph submission DEFERRED — sharper, not weaker, given private-package leakage from public consumers' graphs (verified: `swift-property-primitives` is public and depends on private siblings); two-track audit model (public CI + principal-side periodic on-disk audit) bridges the public-only-CI ecosystem-coverage gap; graduation models formalized per check class (deterministic / pilot-classified / fidelity-classified / judgment-based). §3 fully rewritten; §Outcome updated. §1 and §2 unchanged from v1.0.0. **NOTE**: v1.1.0's GH dep-graph deferral SUPERSEDED by v1.2.0 per principal correction — see v1.2.0 changelog.
 - **v1.0.0 (2026-05-04)**: Initial RECOMMENDATION. Phase β advisory CI gate design for `[MOD-024]`; literature survey of 9 Swift orgs at verified main-SHAs; improvements catalog (20 capabilities, 6 priority bands P0–P5).
@@ -911,10 +912,70 @@ The distinction: deterministic checks have binary "violation/no-violation" outco
 
 - All new audits as **separate reusable workflows** (per-concern), not folded into one large soundness-style file. Matches the three-tier `[CI-001]` chain and the Phase β template.
 - Each reusable called from the universal `swift-ci.yml` (transitive ride; no per-package caller edits per `[CI-031]`).
-- Advisory mode = `continue-on-error: true` at the calling site; flip to gating = single-line removal.
+- Advisory mode = ~~`continue-on-error: true` at the calling site~~ → **CORRECTED v1.3.0** to an `advisory: bool` input on the reusable; flip to gating = drop the `with:` block at the calling site. See §3.5 for why.
 - Per-family weekly tracking issues for γ-1 (Foundation, License-header, API-breakage); consolidated weekly tracking issue for γ-2 (YAML + symlink); push-event-based with month-1 + month-3 review for γ-2b GH dep-graph; event-based with monthly review for γ-4 PR-title lint; classified-fidelity tracking for γ-3 / γ-3b.
 - Public-CI-only via `[CI-032]` visibility gate.
 - L1 layer wrapper hosts γ-3 / γ-3b target-fidelity jobs (alongside existing `embedded` job).
+
+#### 3.5 Implementation lessons (v1.3.0 addendum, 2026-05-05)
+
+Empirical rollout of Phase β + γ-1a/b/c + γ-2 + γ-4 + γ-3 across `swift-institute/.github` and `swift-primitives/.github` surfaced seven runtime-correctness corrections to the v1.1.0 / v1.2.0 spec. Each is backed by a specific failed CI run and a fix commit. Future spec authoring should encode these as preconditions, not lessons-from-incident.
+
+##### 3.5.1 `continue-on-error` is invalid on `workflow_call` jobs
+
+GitHub Actions YAML rejects `continue-on-error:` on a job that uses `uses: ./.github/workflows/X.yml`. The flag is supported only on regular jobs (those with `runs-on:` and `steps:`) and individual steps. Run `25359051812` on swift-tagged-primitives surfaced this with `(Line: 220, Col: 5): Unexpected value 'continue-on-error'` against universal `swift-ci.yml`'s spine caller.
+
+**Pattern (canonical):** the called reusable declares an `advisory: bool` input (default `false` = gating). The caller passes `with: { advisory: true }` during the advisory phase. The reusable's run-step gates the `exit 1` on `${{ inputs.advisory }} != "true"`. Phase γ flip = drop the `with:` block at the caller (default `false` reasserts gating). Single-line edit, like the original `continue-on-error` flip would have been.
+
+**Fix commit:** `swift-institute/.github` `b5d8445`. Applies to every `workflow_call`-routed advisory in the v1.1.0/v1.2.0 spec: §1.4, §1.5, §3.4.5b's calling-site snippet.
+
+##### 3.5.2 `swift:6.3` container default shell is `sh -e`, not bash
+
+The `swift:6.3` Docker image's default shell for `run:` blocks is dash/POSIX-`sh`, not bash. `set -o pipefail` is bash-only and dash rejects it: `Illegal option -o pipefail`, exit code 2. Run `25359050534` on swift-carrier-primitives surfaced this on the spine workflow's "Fetch audit script" step.
+
+**Pattern:** every run-step inside a container that uses bash idioms (`set -euo pipefail`, `mapfile`, `[[`, `<<<`, process substitution `<( ... )`) MUST declare `shell: bash` explicitly. The existing `swift-ci.yml` SwiftLint install step already follows this pattern (line ~194).
+
+**Fix commit:** `swift-institute/.github` `4756b74`.
+
+##### 3.5.3 `swift:6.3` lacks `curl`, `python3`, and `gh`
+
+The `swift:6.3` image is a minimal Swift toolchain on `ubuntu:jammy`. It does NOT ship `curl`, `python3`, or the GitHub CLI. Three runs (`25359142784` curl, `25359222877` python3, plus the spine cron's planned `gh` install) surfaced these gaps in sequence.
+
+**Pattern:** containerized run-steps that use these tools must `apt-get update -qq && apt-get install -qq -y <tools>` first. For pure-Python audits without `swift package dump-package` needs (γ-1a Foundation-import, γ-1b License-header), prefer `runs-on: ubuntu-latest` no-container — it ships `curl` + `python3` + `gh` pre-installed and saves ~3-5 min per run on container pull + apt install.
+
+**Fix commits:** `swift-institute/.github` `2c1b429` (curl), `bd52c33` (python3 + cron's gh), `1aafa89` (γ-1a/b switch off swift:6.3 to ubuntu-latest).
+
+##### 3.5.4 Permissions chain: a called workflow's declared `permissions:` must be ≤ its caller's
+
+A `workflow_call` reusable that declares `permissions: contents: write` at its job level CANNOT escalate above the caller's grant. If the consumer-→layer-wrapper-→universal chain doesn't grant `contents: write` at every level, the workflow chain fails parse with `startup_failure`, *before any job runs*, and the API returns `jobs: []`. Run `25359721818` on swift-carrier-primitives surfaced this with three consecutive startup_failures after `2480628` added the γ-2b `submit-dep-graph` calling job.
+
+**Pattern:** for any reusable whose job needs elevated permissions (write/issues/etc.), the caller chain at every level must declare equivalent or greater. With `[CI-031]` minimum at consumer ci.yml (no permissions block by design), the only viable invocation is a NON-reusable pattern — a separate per-package workflow that takes its top-level `permissions:` directly. γ-2b dep-graph submission RE-DEFERRED in v1.3.0 pending this design choice.
+
+**Fix commit:** `swift-institute/.github` `41e1815` (caller commented out).
+
+##### 3.5.5 Pure-Python audits prefer ubuntu-latest no-container
+
+When an audit's runtime needs are confined to Python stdlib (regex, json, pathlib) — no `swift package dump-package`, no `swift build` — `runs-on: ubuntu-latest` (no container) outperforms `container: swift:6.3` by ~3-5 min per run (saved on container pull + apt install). Run `25360357293` had γ-1a + γ-1b at 5m+ each in swift:6.3; the same audits switched to ubuntu-latest run in ~3s each.
+
+**Pattern:** `container: swift:6.3` is justified ONLY when `swift` (or specific Swift toolchain tooling) is on the audit's hot path. Default to ubuntu-latest no-container otherwise.
+
+**Fix commit:** `swift-institute/.github` `1aafa89`.
+
+##### 3.5.6 Cron orchestrator scope is bounded by GitHub App installation
+
+`actions/create-github-app-token@v1` mints an installation-scoped token. `gh repo list "$ORG"` against that token returns only the repos the app is installed on, not all repos in the org. Run `25361063976` on the license-header cron iterated only 4 of ~132 swift-primitives consumer repos because the `metadata-app` GitHub App is installed on a 4-repo subset.
+
+**Pattern (resolution options):** (a) install the GitHub App on the whole org (operational, not workflow-side); OR (b) rewrite cron orchestrators to use unauthenticated public-repo listing via `curl https://api.github.com/orgs/$ORG/repos?per_page=100` (rate-limited but adequate for weekly). v1.3.0 documents the constraint; the choice between (a) and (b) is principal-side.
+
+**Reference:** spine cron ID `25360873926` runs against the apt-installed `gh` in swift:6.3 with the same App token; longer runtime (~10 min) suggests it iterates more repos, but per-installation rather than per-org.
+
+##### 3.5.7 Wasm SDK ABI is pinned to a specific Swift version
+
+The official `swift-6.3-RELEASE_wasm.artifactbundle` is built against Swift 6.3.0. The `swift:6.3` Docker image currently provides Swift 6.3.1. `swift build --swift-sdk swift-6.3-RELEASE_wasm-embedded` fails with `module compiled with Swift 6.3 cannot be imported by the Swift 6.3.1 compiler` — a class-B (toolchain) failure under the four-class soak per §3.4.6. Run `25361066201` on swift-carrier-primitives surfaced this; SDK install ✓, build ✗.
+
+**Pattern:** the Wasm SDK and the container Swift toolchain MUST match exactly (down to the patch version). When swift.org publishes an updated SDK matching `swift:6.3.1` (or pin the container to `swift:6.3.0` via a deeper image tag), γ-3 will start passing. Until then, the advisory captures the failure correctly — this is exactly what the four-class soak is designed for.
+
+**Fix commit:** none — advisory captures the mismatch; resolution is upstream (swift.org SDK release cadence) or container-pin discipline.
 
 ---
 
