@@ -6,6 +6,16 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-05-skill-verification-taxonomy-tier-2-tier-3-and-ecosystem-closure.md",
+      "date": "2026-05-05",
+      "title": "Skill-verification taxonomy tier-2 + tier-3 dispatch and ecosystem-wide classification closure",
+      "packages": [
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-05-swift-87136-pr-shipping-and-six-round-adversarial-discussion.md",
       "date": "2026-05-05",
       "title": "swiftlang/swift#87136: PR shipping after six-round adversarial collaborative-discussion",
