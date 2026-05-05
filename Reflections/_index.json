@@ -1,10 +1,66 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-04",
+  "generatedAt": "2026-05-05",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-05-05-swift-87136-pr-shipping-and-six-round-adversarial-discussion.md",
+      "date": "2026-05-05",
+      "title": "swiftlang/swift#87136: PR shipping after six-round adversarial collaborative-discussion",
+      "packages": [
+        "swift-tagged-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+    },
+    {
+      "file": "2026-05-05-swiftlang-swift-87136-comment-and-pr-prep.md",
+      "date": "2026-05-05",
+      "title": "swiftlang/swift#87136: comment posted, PR drafted (gated), iterative minimization under user pressure",
+      "packages": [
+        "swift-tagged-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+    },
+    {
+      "file": "2026-05-05-swift-primitives-scope-finalization-canary-and-frozen.md",
+      "date": "2026-05-05",
+      "title": "swift-primitives scope finalization: canary discipline and per-action @frozen authorization",
+      "packages": [
+        "swift-parser-machine-primitives",
+        "swift-tagged-primitives",
+        "swift-ownership-primitives",
+        "swift-graph-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+    },
+    {
+      "file": "2026-05-05-ci-cd-rollout-finalization-and-100-percent-confidence-sweep.md",
+      "date": "2026-05-05",
+      "title": "CI/CD Rollout Finalization and 100% Confidence Sweep",
+      "packages": [
+        "swift-primitives",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+    },
     {
       "file": "2026-05-04-test-support-spine-strict-rollout-and-mod-024.md",
       "date": "2026-05-04",
@@ -14,7 +70,10 @@
         "swift-institute"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-04-principal-side-cicd-centralization-supervision.md",
@@ -25,7 +84,10 @@
         "swift-primitives"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-04-per-repo-workflow-drift-rollout-c-d-b8-fnow.md",
@@ -41,7 +103,10 @@
         "swift-pool-primitives",
         "swift-graph-primitives"
       ],
-      "status": "pending"
+      "status": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-04-primitives-ci-cd-straggler-cleanup-and-private-repo-creation.md",
@@ -56,7 +121,10 @@
         "ci-cd-workflows"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-02-supervisor-multi-envelope-parallel-dispatch-and-verification-rhythm.md",
@@ -76,7 +144,10 @@
         "swift-glob-primitives"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-02-glob-l1-relocation-and-premise-inversion-research-gate.md",
@@ -89,7 +160,10 @@
         "swift-windows"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-02-multi-envelope-execution-research-doc-layering-blindspot-and-empirical-classification-corrections.md",
@@ -107,7 +181,10 @@
         "swift-foundations/swift-windows"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-01-readme-skill-family-v3-design-and-cleanup.md",
@@ -122,7 +199,10 @@
         "coenttb"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-01-wave-4c-completion-and-finding-6-8-rewire.md",
@@ -138,7 +218,10 @@
         "swift-institute"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-01-property-launch-and-cohort-readme-audience-inversion-sweep.md",
@@ -152,7 +235,10 @@
         "swift-institute"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-01-link-check-orchestrator-and-mentor-question-execution-drift.md",
@@ -165,7 +251,10 @@
         "swift-primitives/swift-primitives.org"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-01-spm-stall-comprehensive-mirror-mitigation.md",
@@ -179,7 +268,10 @@
         "coenttb/swift-package-mirrors"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-05-01-property-readiness-and-ownership-public-flip.md",
@@ -190,7 +282,10 @@
         "swift-ownership-primitives"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-04-30-path-x-multi-cycle-kernel-primitives-removal.md",
@@ -210,7 +305,10 @@
         "swift-terminal-primitives"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-04-30-path-x-completion-cycles-19-23-and-g6.md",
@@ -225,7 +323,10 @@
         "swift-standards/swift-darwin-standard"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-04-30-handoff-lifecycle-execution.md",
@@ -262,7 +363,10 @@
         "swift-institute/Audits"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-04-30-ownership-primitives-launch-and-release-readiness-validation.md",
@@ -304,7 +408,10 @@
         "swift-linux-foundation/swift-linux-standard"
       ],
       "status": "pending",
-      "statusRaw": "pending"
+      "statusRaw": "pending",
+      "triagedPhase1": true,
+      "triagedPhase1Date": "2026-05-05",
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
     },
     {
       "file": "2026-04-29-path-x-phase-2-windows-mirror-execution.md",
