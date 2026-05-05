@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-05
 status: RECOMMENDATION
 research_tier: 2
@@ -10,6 +10,26 @@ applies_to: [swift-primitives]
 normative: false
 ---
 -->
+
+## v1.1.0 update (2026-05-05) — Post-canary drop of [API-IMPL-005]
+
+After W1 + W2 + tagged + carrier canary pushes (commits 7f53280, 8a03db6, 24d4a4c, 22faf2e), live CI surfaced 14 [API-IMPL-005] `one_declaration_per_file` violations on swift-tagged-primitives' Tests/ files — all in the [TEST-005] @Suite category pattern (multiple top-level `private enum TagN {}` fixtures + the @Suite struct). Investigation:
+
+- SwiftLint's built-in `one_declaration_per_file` rule **does not support per-rule path scoping** (verified: rule-doc page shows only `severity:` is configurable; per-rule `included:`/`excluded:` produces "Invalid configuration ... falling back to default"; SwiftLint README documents per-rule path filters as a custom-regex-rule feature only).
+- Available scoping mechanisms — global `excluded: [Tests]` (too broad; loses all linting on tests), 132-file sub-config fanout, separate CI invocations, source refactor to nest fixtures — all exceed Phase 1 scope.
+
+**Decision**: drop `[API-IMPL-005]` from Phase 1. Phase 1 now lands **2 rules**: `[DOC-003]` + `[PRIM-FOUND-001]`. `[API-IMPL-005]` deferred to Phase 1.5+ pending one of: (a) tests refactored to nest fixtures inside @Suite, (b) CI restructured for separate Sources/Tests invocations, or (c) sync-tests-swiftlint.sh fanout infrastructure.
+
+Tier 1 amendment committed at swift-institute/.github commit `900b753` and pushed; tagged + carrier re-canary confirms the rule no longer fires (carrier overall conclusion: success; tagged's only remaining new failure is the intended [DOC-003] doc-comment diagnostic).
+
+**Updated violation baseline** (post-drop):
+
+| Rule | Violations | Affected packages |
+|---|---|---|
+| `[DOC-003]` ValidateDocumentationComments | 155 | 33 |
+| `[PRIM-FOUND-001]` Foundation imports | 79 | 6 |
+| `[API-IMPL-005]` (DROPPED) | n/a | n/a — deferred |
+| **Total** | **234** | — |
 
 ## Context
 
