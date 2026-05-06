@@ -6,6 +6,70 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-06-phase-2-file-based-canonical-migration-completion.md",
+      "date": "2026-05-06",
+      "title": "Phase 2 file-based-canonical migration — execution + Phase 2.5 carve-out + push wave + canonical retirement",
+      "packages": [
+        "swift-foundations/swift-linter",
+        "swift-foundations/swift-manifest",
+        "swift-institute/.github",
+        "swift-primitives/.github",
+        "swift-primitives/swift-tagged-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-06-r1r4-cleanup-cycle-evasion-discipline-and-bottom-out-pattern.md",
+      "date": "2026-05-06",
+      "title": "R1–R4 cleanup cycle: evasion discipline evolution and the typed-system bottom-out pattern",
+      "packages": [
+        "swift-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-06-cross-ecosystem-ci-wrapper-rollout-org-hierarchy-mirror-and-d4-finalization.md",
+      "date": "2026-05-06",
+      "title": "Cross-ecosystem CI/CD wrapper rollout: org-hierarchy mirror principal correction, mass uniformity sweep, D4 finalization",
+      "packages": [
+        "swift-institute",
+        "swift-primitives",
+        "swift-standards",
+        "swift-foundations",
+        "swift-ietf",
+        "swift-iso",
+        "swift-w3c",
+        "swift-whatwg",
+        "swift-ecma",
+        "swift-incits",
+        "swift-ieee",
+        "swift-iec",
+        "swift-arm-ltd",
+        "swift-intel",
+        "swift-riscv",
+        "swift-linux-foundation",
+        "swift-microsoft"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-06-supervisor-mode-cleanup-cycle-and-secret-management-seed.md",
+      "date": "2026-05-06",
+      "title": "Supervisor-mode cleanup cycle, secret-management research seed, and the brief-vs-state staleness incident",
+      "packages": [
+        "swift-institute/.github",
+        "swift-institute/Skills",
+        "swift-institute/Research",
+        "swift-standards/.github",
+        "swift-foundations/.github"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-06-ci-cd-security-review-cohort-cleanup-and-bot-installations.md",
       "date": "2026-05-06",
       "title": "CI/CD security review investigation, cohort cleanup, and bot-installations enumeration",
