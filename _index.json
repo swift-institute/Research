@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "result-builder-performance-optimization.md",
+      "displayName": "result-builder-performance-optimization.md",
+      "topic": "Recovers on-par-or-better performance for the Round-1 + Round-2 result-builder ecosystem when builder bodies contain `for` loops. Empirical baseline (`Experiments/result-builder-perf/`) shows 11–39× slowdown vs imperative for `Swift.Array` for-loop bodies at N=100–1000; canonical declarative-shape (≤ 10 literal statements) is on-par or faster. Root cause: per-iteration `[Element]` allocation in `buildExpression`, mandated by SE-0289's transform of `for` in builder body. Six options analyzed (A: document-only; B: consume buildPartialBlock; C: Buffer.Linear intermediate; D: drop buildArray; E: `Repeat` helper; F: compiler fusion). Recommends Option E — additive, non-breaking; introduces `Repeat<S, Element>` bulk-add expression that materializes once with `reserveCapacity`, recovering ~1.5–2.0× of imperative cost. Pattern mirrors SwiftUI's `ForEach` (which forbids bare `for` for the same reason). Three-phase implementation: (1) Repeat + Swift.Array.Builder overload + sub-experiment validation; (2) per-builder Phase-2 dispatch across Set.Ordered, Bitset, Dictionary.Ordered, Tree.Binary, Tree.Unbounded; (3) ~Copyable-Element variants deferred to Round-3.",
+      "date": "2026-05-06",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0. Authored after `/experiment-process` produced empirical PARTIAL acceptance verdict (6/10 pass; for-loop case fails). User requested follow-up research with ecosystem-reuse focus (sequence-primitives, buffer-primitives consulted). Internal grep confirmed no prior research on result-builder performance. Recommends additive `Repeat` helper as Phase 1 unblocking the adoption sweep; Phase 2 generalizes across builders; Phase 3 (~Copyable) deferred to Round-3.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
       "file": "private-repo-secret-management-at-scale.md",
       "displayName": "private-repo-secret-management-at-scale.md",
       "topic": "Architectural options for distributing PRIVATE_REPO_TOKEN (or its eventual replacement) across the swift-institute ecosystem at 1000+ org scale. Seeded 2026-05-06 after Option A (bot-driven read-only verification via organization_secrets:read) executed; remainder deferred to dedicated investigation. Four options stubbed: B (distribute App credentials to mint per-run tokens), C (bot writes secrets via organization_secrets:write), C-split (two-App separation of duties with separate secrets-bot), E (OIDC + external secret manager — Vault/Doppler/cloud-native). Common worst-case framing: App-key leak is catastrophic baseline regardless of option (existing contents:write across 17 orgs). Decision criteria: operational footprint at N=17/100/1000, threat-model blast radius, migration cost from Option A, required mitigations per option, terminal state + phased migration path. Sub-questions to verify empirically + prior-art targets enumerated. Tier 2, ecosystem-wide, IN_PROGRESS.",
