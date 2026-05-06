@@ -6,6 +6,18 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-06-ci-cd-security-review-cohort-cleanup-and-bot-installations.md",
+      "date": "2026-05-06",
+      "title": "CI/CD security review investigation, cohort cleanup, and bot-installations enumeration",
+      "packages": [
+        "swift-institute/Research",
+        "swift-institute/Skills",
+        "swift-institute/.github"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-06-ci-reviewer-feedback-rollout-permissions-pitfall-and-doctrines.md",
       "date": "2026-05-06",
       "title": "CI reviewer-feedback rollout, the permissions-chain pitfall, and two newly-codified doctrines",
