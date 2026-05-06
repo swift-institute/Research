@@ -1,10 +1,23 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-05",
+  "generatedAt": "2026-05-06",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-05-06-ci-reviewer-feedback-rollout-permissions-pitfall-and-doctrines.md",
+      "date": "2026-05-06",
+      "title": "CI reviewer-feedback rollout, the permissions-chain pitfall, and two newly-codified doctrines",
+      "packages": [
+        "swift-institute/.github",
+        "swift-primitives/.github",
+        "swift-institute/Skills",
+        "swift-institute/Research"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-05-05-ci-audit-and-pm-cohort-rollout.md",
       "date": "2026-05-05",
