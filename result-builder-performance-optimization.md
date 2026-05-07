@@ -2,13 +2,15 @@
 
 <!--
 ---
-version: 2.0.0
-last_updated: 2026-05-06
+version: 2.1.0
+last_updated: 2026-05-07
 status: DECISION
 tier: 2
 scope: cross-package
 ---
 -->
+
+> **Update 2026-05-07 (v2.1.0)**: The "in-body `.map` 21× slowdown" loose end filed in v2.0.0 has been investigated and **refuted**. The slowdown is not builder-specific; it is the intrinsic cost of stdlib's `Collection.map` and applies equally inside or outside builder bodies. See `Experiments/result-builder-map-investigation/` and the *Residual* section near the end of this document. The decision in v2.0.0 stands; v2.1.0 corrects the diagnostic framing.
 
 > **Update 2026-05-06 (v2.0.0)**: This document originally recommended Option E (`Repeat<S, Element>` helper type). Validation experiments showed Option E works but introduces a new type. The user's preference was to AVOID a new type in standard-library-extensions. A bare-`Sequence` overload (renamed Option G in `Experiments/result-builder-perf-repeat/`) was prototyped and benchmarks at **0.13× of imperative for N=100** and **0.17× for N=1000** — i.e., the builder is 5–7× FASTER than imperative for direct sequences. **Decision: ship Option G + Option B (consume `buildPartialBlock`), do not ship Option E.** See *Final Decision* section at end.
 
@@ -338,9 +340,40 @@ Option E's only advantage is the in-builder-body transform path. The transform-v
 | For-loop in body | `Array<Int> { for i in 0..<N { i } }` | **Avoid** — 12-44× slower |
 | Lazy chain | `Array<Int> { (0..<100).lazy.map { … } }` | **Avoid** — ~20× slower; pre-materialize instead |
 
-### Residual: in-body `.map` slowdown
+### Residual: in-body `.map` slowdown — INVESTIGATED 2026-05-07, REFUTED
 
-`Array<Int> { (0..<100).map { $0 * 2 } }` measures at ~4500 ns vs imperative 211 ns even though `.map` returns `[Int]` and should hit the existing `[Element]` overload identity path. Root cause is unclear and is filed for separate investigation. Workaround: pre-materialize.
+The earlier framing was that `Array<Int> { (0..<100).map { $0 * 2 } }` measures at ~4500 ns vs imperative 211 ns due to some builder-specific transform issue, filed for separate investigation. The investigation has been completed and the framing is **refuted**.
+
+**Investigation experiment**: `swift-institute/Experiments/result-builder-map-investigation/` (status: REFUTED).
+
+**Decisive variants** (release mode, Swift 6.3.1, N=100, 50,000 iterations):
+
+| Variant | ns/iter | Verdict |
+|---------|--------:|---------|
+| V14 same-module `@inlinable` map standalone | 211 ns | FAST — reference |
+| V8 stdlib `.map` standalone | 4,083 ns | 19× slower than V14 |
+| V13 same-module map inside builder | 211 ns | builder adds **zero** measurable overhead |
+| V2 stdlib `.map` inside builder | 4,271 ns | matches V8 — identical to standalone |
+| V15 same-module map with `rethrows` | 210 ns | rules out `rethrows` hypothesis |
+| V4 explicit `Array()` wrap of stdlib `.map` | 3,950 ns | rules out overload resolution |
+| V5 explicit `as [Int]` annotation | 3,940 ns | rules out type inference |
+| V12 bare Range via Sequence overload | 43 ns | bulk-fill (Option G) confirmed correct |
+
+**Root cause**: stdlib's `Collection.map` does not specialize the closure at the consumer call site despite `@inlinable` markers on both `map` and the closure literal. ~40 ns/element of indirect-call + protocol-dispatch overhead vs ~2 ns/element for an equivalent same-module `@inlinable` map. This is a Swift stdlib issue, **not** a builder issue.
+
+**Implications**:
+
+1. The Sequence overload (Option G) shipped in v2.0.0 is correct and remains the right fix for direct sequences (Range, Array, Set, etc.). It bypasses `.map` entirely via `Array.init(_ sequence:)` bulk-fill.
+
+2. The for-loop-in-builder-body slowdown (12–44× imperative) is **separate** from this. That cost is the SE-0289 per-iteration `buildExpression([Element])` allocation pattern; it is real, builder-specific, and unfixed at the library level.
+
+3. The earlier recommendation "use `seq.map { ... }` for transforms in builder bodies" was misleading — users pay stdlib `.map`'s ~10× cost regardless of whether the `.map` is inside or outside a builder. The same advice applies outside builders, so it isn't a builder-pattern decision.
+
+4. For best transform performance in builder bodies, consumers should write an `@inlinable` helper in their own module or use an imperative loop. Both bypass stdlib `.map`'s specialization gap.
+
+5. Pre-materializing as `let m = seq.map { ... }; Builder { m }` does **not** improve performance — `seq.map` is the cost, not the builder.
+
+This is a Swift-stdlib-level issue worth investigating further (see swiftlang/swift's stdlib `Collection.map` implementation and specialization behavior). It is not actionable at the institute-builder-API layer.
 
 ### Phase 2 status
 
