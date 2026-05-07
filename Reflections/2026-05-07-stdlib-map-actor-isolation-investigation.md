@@ -3,7 +3,15 @@ date: 2026-05-07
 session_objective: Conduct Tier 2/3 literature study on the residual "stdlib Collection.map specialization gap" framing left by result-builder-performance-optimization.md v2.1.0; characterize the cause precisely, recommend remediation, write the research doc and update cross-references.
 packages:
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-05-07
+triage_outcomes:
+  - type: skill_update
+    target: research-process
+    description: "[RES-028] Smallest-Isolation-First Heuristic added; composes with [RES-013a]/[RES-023] for mechanism-claim verification"
+  - type: doc_update
+    target: swift-institute/Research/sequence-operator-unification.md
+    description: "Cross-reference note added flagging the 7× framing as partial-truth post-2026-05-07"
 ---
 
 # stdlib Collection map "specialization gap" refuted as SE-0423 actor-isolation overhead

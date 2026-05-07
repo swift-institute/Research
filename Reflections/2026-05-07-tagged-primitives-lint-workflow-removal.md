@@ -3,7 +3,12 @@ date: 2026-05-07
 session_objective: Remove per-package lint workflow from swift-tagged-primitives to stop advisory-noise and restore centralized CI pattern
 packages:
   - swift-primitives/swift-tagged-primitives
-status: pending
+status: processed
+processed_date: 2026-05-07
+triage_outcomes:
+  - type: informational
+    target: n/a
+    description: "Clean tactical execution; no action items surfaced"
 ---
 
 # Tagged-Primitives Lint Workflow Removal
