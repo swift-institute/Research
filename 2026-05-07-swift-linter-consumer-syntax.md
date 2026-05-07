@@ -2,9 +2,12 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.0.1
 last_updated: 2026-05-07
 status: RECOMMENDATION
+changelog:
+  - "1.0.1 (2026-05-07): v1 implementation dispatch surfaced type-inference ambiguity in §Outcome Q1b's leading-dot template — bare `.enable(R.self)` fails at Array<Element>.Builder's top-level element position because the builder declares 4 buildExpression overloads. Migration uses fully-qualified `Lint.Rule.Configuration.enable(R.self)`. Inline correction note added at §Outcome v1 change 1."
+  - "1.0.0 (2026-05-07): initial RECOMMENDATION."
 research_tier: 2
 applies_to: [swift-foundations/swift-linter, swift-foundations/swift-linter-rules, swift-primitives/swift-linter-primitives]
 normative: false
@@ -1291,9 +1294,25 @@ authoritative until a separate dispatch is signed off.
 - Remove the `if enabled.contains(R.id)` gates inside the
   `Lint.Configuration(rules: { ... })` body (lines 91–146).
 - Replace each `if enabled.contains(R.id) { Lint.Rule.Configuration.enable(R.self) }`
-  with a bare `.enable(R.self)`.
+  with a fully-qualified `Lint.Rule.Configuration.enable(R.self)` (NOT
+  the bare leading-dot `.enable(R.self)` form — leading-dot type
+  inference fails at the `Array<Element>.Builder` top-level element
+  position because the builder declares four `buildExpression` overloads
+  (`Element` / `[Element]` / `Sequence` / `Element?`); the contextual
+  type is ambiguous and the compiler cannot resolve which overload is
+  intended without the receiver type. Empirically verified during the
+  v1 implementation dispatch on 2026-05-07).
 
 Total diff: ~50 lines deleted, ~14 lines simplified, net ~64 fewer lines.
+
+**Empirical correction (v1.0.1, 2026-05-07)**: the original v1.0.0 of
+this section recommended a bare leading-dot `.enable(R.self)` form;
+the v1 implementation dispatch caught the type-inference ambiguity and
+the migration was completed using the fully-qualified form (matching
+the gating-block form the original code already used inside the `if`
+branches). This patch corrects the template; future research-doc
+templates should default to fully-qualified factory calls when the
+result-builder accepts multiple `buildExpression` shapes.
 
 ### v1 change 2 — add Manifest.validate()
 
