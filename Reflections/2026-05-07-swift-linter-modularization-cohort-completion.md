@@ -8,7 +8,18 @@ packages:
   - swift-foundations/swift-file-system
   - swift-primitives/swift-manifest-primitives
   - swift-primitives/swift-path-primitives
-status: pending
+status: processed
+processed_date: 2026-05-07
+triage_outcomes:
+  - type: skill_update
+    target: code-surface
+    description: "[API-NAME-009] Educational-Diagnostic Message Format added"
+  - type: research_update
+    target: package-extraction-defect-catalog
+    description: "Research/2026-05-07-package-extraction-defect-catalog.md authored as IN_PROGRESS"
+  - type: package_insight
+    target: swift-foundations/swift-linter-rules
+    description: "Rule-target-naming tension recorded in Research/_Package-Insights.md"
 ---
 
 # swift-linter Modularization Cohort Completion — 4 Phases, 12 Commits, 6 Repos

@@ -10,7 +10,18 @@ packages:
   - swift-primitives/swift-manifest-primitives
   - swift-primitives/swift-path-primitives
   - swift-institute/Scripts
-status: pending
+status: processed
+processed_date: 2026-05-07
+triage_outcomes:
+  - type: informational
+    target: swift-package
+    description: "[PKG-DEP-001] path-form-as-safe-default already-captured during cohort (commit bf63961)"
+  - type: package_insight
+    target: swift-foundations/swift-linter
+    description: "Inert single-file fallback documentation gap recorded in Research/_Package-Insights.md"
+  - type: informational
+    target: swift-foundations/swift-linter/Research
+    description: "canonical-tier-rule-activation-design.md already-captured during cohort"
 ---
 
 # Swift-linter architecture cohort: PoC + decouple + wave-1 migration + push wave

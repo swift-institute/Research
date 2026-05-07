@@ -8,7 +8,18 @@ packages:
   - swift-primitives/swift-linter-primitives
   - swift-primitives/swift-manifest-primitives
   - swift-primitives/swift-tagged-primitives
-status: pending
+status: processed
+processed_date: 2026-05-07
+triage_outcomes:
+  - type: skill_update
+    target: code-surface
+    description: "[API-NAME-002] sub-rule for namespace-implicit-prefix-removal added inline"
+  - type: informational
+    target: skill-update-pending
+    description: "Mid-dispatch-infrastructure-unblock discrimination rule routed informationally; needs separate dispatch (partial capture via [SUPER-032] push-bundle discipline)"
+  - type: informational
+    target: swift-primitives
+    description: "7-package URL→path mechanical cleanup deferred to separate authorized dispatch per action item"
 ---
 
 # Code-Surface Cleanup Cohort + Mirror-Config Unblock

@@ -371,6 +371,8 @@ Validated by `Experiments/lazy-pipeline-release-mode/` (2026-02-25, Apple Swift 
 
 Lazy matches hand-rolled within 2%. Eager (stdlib `.map`/`.filter` with intermediate arrays) is **7x slower**. The compiler fully eliminates lazy intermediate type overhead in `-O` mode.
 
+> **Note (2026-05-07 partial-truth refinement)**: The "intermediate arrays cause the overhead" framing is partial-truth post-2026-05-07. The 2026-05-07 SE-0423 actor-isolation investigation (`stdlib-collection-map-actor-isolation-overhead.md` v1.0.0) demonstrated that stdlib `Collection.map`'s closure-call overhead is dominated at small N by SE-0423's per-element `swift_task_isCurrentExecutor` runtime check fired by `@MainActor`-implicit closures crossing into stdlib HOFs whose `.swiftinterface` is `isConcurrencyChecked() == false`. The intermediate-arrays cost is real but compounds with the actor-isolation cost at small N (the stdlib-collection-map doc measured ~20× ratio in SwiftPM target, dropping to 1.07× in single-file `swiftc -O` reproduction). The lazy-pipeline benchmark above measured at N=10M where the intermediate-arrays cost dominates; smaller N would show the SE-0423 contributor more visibly. Cross-reference: `stdlib-collection-map-actor-isolation-overhead.md`.
+
 ### No Experiments Remaining
 
 All three originally listed experiments are now confirmed. The consuming chain, ~Escapable chain, and compiler inlining all work as hypothesized.

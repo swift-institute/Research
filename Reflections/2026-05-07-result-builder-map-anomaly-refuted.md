@@ -14,7 +14,18 @@ packages:
   - swift-primitives/swift-dictionary-primitives
   - swift-primitives/swift-tree-primitives
   - swift-foundations/swift-linter
-status: pending
+status: processed
+processed_date: 2026-05-07
+triage_outcomes:
+  - type: skill_update
+    target: research-process
+    description: "[RES-027] Loose-End Follow-Up Requires Extant or Immediate Experiment Package added"
+  - type: skill_update
+    target: implementation
+    description: "[IMPL-105] Overload Accepting Existing Protocol Over New Wrapper Type added to style.md"
+  - type: informational
+    target: blog
+    description: "BLOG-IDEA-079 advance-through-review deferred to separate blog dispatch; Blog/_index.json notes field flags revision-pending state"
 ---
 
 # Result-builder `.map` anomaly refuted: stdlib's, not the builder's
