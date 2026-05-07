@@ -6,6 +6,20 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-07-pre-publishable-polish-stream-2.md",
+      "date": "2026-05-07",
+      "title": "Stream 2 — Pre-publishable polish cohort execution",
+      "packages": [
+        "swift-institute (Skills repo)",
+        "swift-foundations/swift-linter",
+        "swift-foundations/swift-linter-rules",
+        "swift-foundations/swift-manifests",
+        "swift-primitives/swift-manifest-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-07-tagged-primitives-lint-workflow-removal.md",
       "date": "2026-05-07",
       "title": "Tagged-primitives lint workflow removal — restore centralized CI pattern",
