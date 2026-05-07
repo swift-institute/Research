@@ -6,6 +6,17 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-07-d7-path-filter-runtime-enforcement.md",
+      "date": "2026-05-07",
+      "title": "D7' — Path.Filter Runtime Enforcement",
+      "packages": [
+        "swift-foundations/swift-linter",
+        "swift-primitives/swift-linter-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-07-d1-readme-and-driver-repair.md",
       "date": "2026-05-07",
       "title": "D1' \u2014 README Repair + Driver Workspace-Path Removal",
