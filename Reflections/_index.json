@@ -1,10 +1,58 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-06",
+  "generatedAt": "2026-05-07",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-05-07-result-builder-map-anomaly-refuted.md",
+      "date": "2026-05-07",
+      "title": "Result-builder .map anomaly refuted: stdlib's, not the builder's",
+      "packages": [
+        "swift-primitives/swift-standard-library-extensions",
+        "swift-primitives/swift-array-primitives",
+        "swift-primitives/swift-buffer-primitives",
+        "swift-primitives/swift-list-primitives",
+        "swift-primitives/swift-stack-primitives",
+        "swift-primitives/swift-queue-primitives",
+        "swift-primitives/swift-heap-primitives",
+        "swift-primitives/swift-set-primitives",
+        "swift-primitives/swift-bitset-primitives",
+        "swift-primitives/swift-dictionary-primitives",
+        "swift-primitives/swift-tree-primitives",
+        "swift-foundations/swift-linter"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-07-swift-linter-modularization-cohort-completion.md",
+      "date": "2026-05-07",
+      "title": "swift-linter Modularization Cohort Completion — 4 Phases, 12 Commits, 6 Repos",
+      "packages": [
+        "swift-foundations/swift-linter",
+        "swift-foundations/swift-linter-rules",
+        "swift-foundations/swift-manifests",
+        "swift-foundations/swift-file-system",
+        "swift-primitives/swift-manifest-primitives",
+        "swift-primitives/swift-path-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-06-swift-linter-ai-harness-mission-staging.md",
+      "date": "2026-05-06",
+      "title": "swift-linter AI-harness mission — staged briefs and strategic handoff update",
+      "packages": [
+        "swift-foundations/swift-linter",
+        "swift-foundations/swift-linter-rules",
+        "swift-primitives/swift-linter-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-05-06-phase-2-file-based-canonical-migration-completion.md",
       "date": "2026-05-06",
