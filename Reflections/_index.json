@@ -6,6 +6,38 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-07-swift-linter-code-surface-cleanup-cohort-and-mirror-config-unblock.md",
+      "date": "2026-05-07",
+      "title": "Code-surface cleanup cohort + mirror-config unblock — cohort #3",
+      "packages": [
+        "swift-foundations/swift-linter",
+        "swift-foundations/swift-manifests",
+        "swift-foundations/swift-linter-rules",
+        "swift-primitives/swift-linter-primitives",
+        "swift-primitives/swift-manifest-primitives",
+        "swift-primitives/swift-tagged-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-07-swift-linter-architecture-cohort-execution.md",
+      "date": "2026-05-07",
+      "title": "Swift-linter architecture cohort: PoC + decouple + wave-1 migration + push wave",
+      "packages": [
+        "swift-foundations/swift-linter",
+        "swift-foundations/swift-linter-rules",
+        "swift-foundations/swift-manifests",
+        "swift-foundations/swift-file-system",
+        "swift-primitives/swift-tagged-primitives",
+        "swift-primitives/swift-manifest-primitives",
+        "swift-primitives/swift-path-primitives",
+        "swift-institute/Scripts"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-07-result-builder-map-anomaly-refuted.md",
       "date": "2026-05-07",
       "title": "Result-builder .map anomaly refuted: stdlib's, not the builder's",
@@ -22,6 +54,16 @@
         "swift-primitives/swift-dictionary-primitives",
         "swift-primitives/swift-tree-primitives",
         "swift-foundations/swift-linter"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-07-stdlib-map-actor-isolation-investigation.md",
+      "date": "2026-05-07",
+      "title": "stdlib Collection map \"specialization gap\" refuted as SE-0423 actor-isolation overhead",
+      "packages": [
+        "swift-institute"
       ],
       "status": "pending",
       "statusRaw": "pending"
