@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 2.1.0
+version: 2.2.0
 last_updated: 2026-05-07
 status: DECISION
 tier: 2
@@ -10,7 +10,9 @@ scope: cross-package
 ---
 -->
 
-> **Update 2026-05-07 (v2.1.0)**: The "in-body `.map` 21× slowdown" loose end filed in v2.0.0 has been investigated and **refuted**. The slowdown is not builder-specific; it is the intrinsic cost of stdlib's `Collection.map` and applies equally inside or outside builder bodies. See `Experiments/result-builder-map-investigation/` and the *Residual* section near the end of this document. The decision in v2.0.0 stands; v2.1.0 corrects the diagnostic framing.
+> **Update 2026-05-07 (v2.2.0)**: v2.1.0's framing of the residual cost as "intrinsic cost of stdlib's `Collection.map`" / "specialization gap" has been further refined. The cost is the runtime actor-isolation check mandated by SE-0423, conditioned on stdlib's `.swiftinterface` being built with `-swift-version 5`; it materialises only when an isolated synchronous closure (e.g., one written at top-level Swift 6 `main.swift` scope, which is implicitly `@MainActor`-isolated) crosses a non-strict-concurrency module boundary. Generic specialization is not failing. See `stdlib-collection-map-actor-isolation-overhead.md`. The v2.0.0 decision (Option G + Option B) stands; v2.2.0 only corrects the residual diagnostic.
+
+> **Update 2026-05-07 (v2.1.0)**: The "in-body `.map` 21× slowdown" loose end filed in v2.0.0 has been investigated and **refuted**. The slowdown is not builder-specific; it applies equally inside or outside builder bodies. See `Experiments/result-builder-map-investigation/` and the *Residual* section near the end of this document. The decision in v2.0.0 stands; v2.1.0 corrects the diagnostic framing. (v2.2.0 further refines the *cause* of the cost.)
 
 > **Update 2026-05-06 (v2.0.0)**: This document originally recommended Option E (`Repeat<S, Element>` helper type). Validation experiments showed Option E works but introduces a new type. The user's preference was to AVOID a new type in standard-library-extensions. A bare-`Sequence` overload (renamed Option G in `Experiments/result-builder-perf-repeat/`) was prototyped and benchmarks at **0.13× of imperative for N=100** and **0.17× for N=1000** — i.e., the builder is 5–7× FASTER than imperative for direct sequences. **Decision: ship Option G + Option B (consume `buildPartialBlock`), do not ship Option E.** See *Final Decision* section at end.
 
@@ -359,21 +361,21 @@ The earlier framing was that `Array<Int> { (0..<100).map { $0 * 2 } }` measures 
 | V5 explicit `as [Int]` annotation | 3,940 ns | rules out type inference |
 | V12 bare Range via Sequence overload | 43 ns | bulk-fill (Option G) confirmed correct |
 
-**Root cause**: stdlib's `Collection.map` does not specialize the closure at the consumer call site despite `@inlinable` markers on both `map` and the closure literal. ~40 ns/element of indirect-call + protocol-dispatch overhead vs ~2 ns/element for an equivalent same-module `@inlinable` map. This is a Swift stdlib issue, **not** a builder issue.
+**Root cause** (v2.2.0 refinement; supersedes the v2.1.0 specialization-gap framing): the ~40 ns/element overhead is the runtime actor-isolation check (`swift_task_isCurrentExecutor` + `swift_task_reportUnexpectedExecutor`) mandated by SE-0423 *Dynamic actor isolation enforcement from non-strict-concurrency contexts*. It fires when an isolated synchronous closure (e.g., a closure literal written at top-level Swift 6 `main.swift` scope, which is implicitly `@MainActor`-isolated) is passed to a non-strict-concurrency module's higher-order function. Stdlib's binary `.swiftinterface` is built with `-swift-version 5`, so `isConcurrencyChecked()` returns false at the import boundary, satisfying SE-0423's "non-strict-concurrency module" predicate. SIL inspection confirms generic specialization is not failing — `smul_with_overflow_Int64` for `$0 * 2` is fully inlined into the loop body for both V8 and V14; what V8 adds is the per-element executor-check sequence. See `stdlib-collection-map-actor-isolation-overhead.md` for the empirical triangulation, SIL evidence, and primary-source citations.
 
 **Implications**:
 
-1. The Sequence overload (Option G) shipped in v2.0.0 is correct and remains the right fix for direct sequences (Range, Array, Set, etc.). It bypasses `.map` entirely via `Array.init(_ sequence:)` bulk-fill.
+1. The Sequence overload (Option G) shipped in v2.0.0 is correct and remains the right fix for direct sequences (Range, Array, Set, etc.). It bypasses `.map` entirely via `Array.init(_ sequence:)` bulk-fill — and crucially, `Array.init(_ sequence:)` does not take a closure parameter, so SE-0423's check does not fire.
 
 2. The for-loop-in-builder-body slowdown (12–44× imperative) is **separate** from this. That cost is the SE-0289 per-iteration `buildExpression([Element])` allocation pattern; it is real, builder-specific, and unfixed at the library level.
 
-3. The earlier recommendation "use `seq.map { ... }` for transforms in builder bodies" was misleading — users pay stdlib `.map`'s ~10× cost regardless of whether the `.map` is inside or outside a builder. The same advice applies outside builders, so it isn't a builder-pattern decision.
+3. The earlier recommendation "use `seq.map { ... }` for transforms in builder bodies" was misleading. Users pay the stdlib-HOF actor-isolation cost regardless of whether the `.map` is inside or outside a builder *and* regardless of whether the call site is in a builder. The cost is conditioned on `@MainActor`-isolated closure ↔ Swift-5-`.swiftinterface` boundary, not on builder shape.
 
-4. For best transform performance in builder bodies, consumers should write an `@inlinable` helper in their own module or use an imperative loop. Both bypass stdlib `.map`'s specialization gap.
+4. For best transform performance, consumers writing performance-sensitive `.map`/`.filter`/`.reduce` calls inside `@MainActor` contexts (top-level `main.swift`, view bodies, view models) should hoist the call into a `nonisolated` function or method. The closure inherits the function's nonisolated context and SE-0423's elision rule fires. The institute's same-module `@inlinable` higher-order functions are unaffected because both call site and callee are Swift 6 strict-concurrency-checked.
 
-5. Pre-materializing as `let m = seq.map { ... }; Builder { m }` does **not** improve performance — `seq.map` is the cost, not the builder.
+5. Pre-materializing as `let m = seq.map { ... }; Builder { m }` does **not** improve performance — the `.map` call itself, in `@MainActor` scope, pays the per-element cost; the builder is innocent.
 
-This is a Swift-stdlib-level issue worth investigating further (see swiftlang/swift's stdlib `Collection.map` implementation and specialization behavior). It is not actionable at the institute-builder-API layer.
+6. The upstream resolution path is a stdlib build-configuration change: rebuilding stdlib's `.swiftinterface` with `-swift-version 6` (or special-casing stdlib in `closuresRequireDynamicIsolationChecking`) resolves the cost ecosystem-wide without any institute-side action. Tracking artifact: PR swiftlang/swift#82795 (closed without merge 2025-07-24 once the underlying configuration issue was identified).
 
 ### Phase 2 status
 
