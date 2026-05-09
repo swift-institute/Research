@@ -50,6 +50,14 @@
       "scope": "ecosystem-wide"
     },
     {
+      "file": "noncopyable-property-extract-via-underscore-owned.md",
+      "displayName": "noncopyable-property-extract-via-underscore-owned.md",
+      "topic": "DECISION (v1.1.0): Is there a non-method, non-init form for ~Copyable consume-extract from a property in current Swift? Verdict: YES via @_owned + consuming get + UnderscoreOwned, BUT structurally blocked for generic ~Copyable enums (Either's exact shape) on the latest 2026-05-07-a nightly post the 2026-04-30 fix wave. Non-generic ~Copyable types work. Phase 1 ships today: free function `value(of:)` for ~Copyable arms; property form `e.value` retained for Copyable arms. Phase 2 deferred indefinitely pending Swift compiler coverage of generic-enum consuming getters. Supersedes feature-flags-assessment.md §3.3 (UnderscoreOwned SKIP verdict) for the enum-payload-extraction use case.",
+      "status": "DECISION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "sub-product-split-decision-rubric.md",
       "displayName": "sub-product-split-decision-rubric.md",
       "topic": "Decision rubric for sub-product splits in swift-primitives. Codifies priority order across three competing signals — upstream-pruning (Gate 1, dominant during pre-1.0 dev), structural axis [MOD-003] (Gate 2), capability rent [MOD-RENT] consumer criterion (Gate 3, PUBLIC-RELEASE only) — under [MOD-DOMAIN] coherence as Gate 0 hard precondition. Resolves the recurring misframing where sibling-variant split candidates were evaluated on downstream consumer count (the Gate 3 signal) in isolation, leading to proposals that passed conceptual cleanliness but failed upstream effect. Worked failure examples: Buffer Linear, Memory Pool, Async Channel — each passes Gate 0/2 but fails Gate 1 (no upstream-tree compression on extraction), so each stays as sibling target. Counter-example: LEB128 / algebra-primitives split — passes Gate 1 (tier compression from 8 to 3, freeing numeric-primitives consumer). Operationalizes upstream-pruning measurement by reference to the [MOD-025] uniquely-providing-dep audit. Lifecycle gating: consumer-criterion sub-rule of [MOD-RENT] is deferred from development to PUBLIC-RELEASE/TAG time per feedback_correctness_sole_driver_during_development. Three anti-patterns explicitly rejected: downstream-consumer-count framing as primary signal; conceptual-purity defense without upstream effect; file-count optimization mistaken for upstream-pruning. Decision procedure given as operational flow (Gate 0 → 1 → 2 → lifecycle check → optional Gate 3 at release).",
