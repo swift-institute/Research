@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "property-ownership-escapable-base-upgrade.md",
+      "displayName": "property-ownership-escapable-base-upgrade.md",
+      "topic": "DECISION (v1.0.0): Cross-package ~Escapable Base/Value upgrade for Property<Tag, Base> + Ownership.Inout<Value>. Establishes the cascade-execution-order (ownership-primitives lands first; property-primitives lands second), cites escapable-support-pair-either-product.md v1.1.0 as canonical cohort pattern, cites Ownership.Borrow as structural template (raw-pointer storage; minus _owner field, minus init(borrowing:) path that Inout doesn't need). Resolves the 4 open questions from HANDOFF-property-primitives-escapable-upgrade.md: Tagged needs no upgrade (already admits ~Escapable Underlying); Property.View ~Escapable re-add SUPERSEDED (already shipped 2026-03-25 commit 43247e3); supersession path SUPERSEDED (already done); Carrier composition unaffected (already admits ~Escapable Underlying). Phase 0 + Phase 0.5 readiness audit: only Ownership.Inout (Value: ~Copyable only) needs structural upgrade. Per-package execution lives in swift-ownership-primitives/Research/escapable-value-upgrade.md and swift-property-primitives/Research/escapable-base-upgrade.md.",
+      "date": "2026-05-09",
+      "status": "DECISION",
+      "statusDetail": "v1.0.0. Tier 2 cross-package research. Authored 2026-05-09 in Phase 1 of HANDOFF-property-primitives-escapable-upgrade.md cascade. Phase 2 implementation gated on per-action user authorization at the Phase 1→Phase 2 boundary; both ownership and property pushes are class-(c) public-repo pushes gated independently.",
+      "statusRaw": "DECISION (v1.0.0)",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
       "file": "2026-05-07-tool-path-env-var-fallback-pattern.md",
       "displayName": "2026-05-07-tool-path-env-var-fallback-pattern.md",
       "topic": "Canonical pattern for tools deployed beyond the developer's workspace, when the tool's runtime needs a path / config / endpoint that varies per adopter. Origin: swift-linter Driver hardcoded fallback to /Users/coen/Developer/swift-foundations/swift-linter when SWIFT_LINTER_PATH unset; the fallback worked in dev but would silently misbehave on first non-developer adopter run. Question axes: env-var-or-fail vs env-var-or-fallback; acceptable fallback shapes (XDG, CWD-walk, well-known install location); diagnostic discipline (silent vs warn vs hard-fail); detection at release-readiness time. Four options: A (env-var-or-fail), B (env-var-or-warn-and-empty-default — current post-fix shape), C (XDG fallback), D (CWD-walk per Cargo/npm convention). Pending investigation.",
