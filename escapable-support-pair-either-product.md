@@ -2,9 +2,18 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-09
-status: RECOMMENDATION
+status: DECISION
+changelog:
+  - v1.1.0 (2026-05-09): Shipped. Recommended action landed across the cohort plus institute-protocol upgrades:
+    - swift-equation-primitives `3495e50` — Equation.Protocol now admits ~Escapable conformers.
+    - swift-hash-primitives `0e5708e` — Hash.Protocol now admits ~Escapable conformers.
+    - swift-comparison-primitives `a4fd209` — Comparison.Protocol now admits ~Escapable conformers.
+    - swift-either-primitives `b6b7672` — swapped, value(of:), map (un-transformed arm) admit ~Escapable; institute conformances admit ~Escapable arms; flatMap/fold remain Escapable-only (Gap A); 65/65 tests on triple-toolchain.
+    - swift-pair-primitives `7f7c7ef` — type-level ~Escapable upgrade; swapped + apply admit both arms ~Escapable; map/map admit ~Escapable on un-transformed arm; institute conformances admit ~Escapable arms; 32/32 tests on triple-toolchain.
+    - swift-product-primitives — unchanged at `14f4278`; parameter-pack ~Copyable / ~Escapable suppression remains the Swift-language blocker.
+  - v1.0.0 (2026-05-09): Initial RECOMMENDATION.
 tier: 2
 scope: cross-package
 applies_to: [swift-pair-primitives, swift-either-primitives, swift-product-primitives]
