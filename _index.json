@@ -1,7 +1,7 @@
 {
   "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-07",
+  "generatedAt": "2026-05-10",
   "title": "Research Index",
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
@@ -3413,6 +3413,17 @@
       "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": "swift-primitives"
+    },
+    {
+      "file": "corpus-drift-taxonomy.md",
+      "displayName": "corpus-drift-taxonomy.md",
+      "topic": "Initial inventory of 12 distinct corpus-drift classes observed in /corpus-meta-analysis sweeps. Maps each class to detection mechanism + responsible [META-*] rule. Surfaces 4 gap classes (9, 10, 11, 12) with no current rule coverage. Open questions: phase-vs-class organization, canonical-anchor enforcement, proactive parallel-session contamination check, pre-2026-04-30 inventory pass.",
+      "date": "2026-05-10",
+      "status": "IN_PROGRESS",
+      "statusDetail": "v0.1.0. Tier 2 ecosystem-wide research. Authored as ResearchTopic outcome of /reflections-processing on Reflections/2026-04-30-corpus-meta-analysis-and-phase-11-completion.md (Pattern 3 corpus-drift-comes-in-many-distinct-flavors). 12 drift classes inventoried; 4 open questions; resumption trigger = next /corpus-meta-analysis run or new skill update introducing a previously-unknown class.",
+      "statusRaw": "IN_PROGRESS (v0.1.0)",
+      "tier": 2,
+      "scope": "ecosystem-wide"
     }
   ],
   "narrativeSections": [
