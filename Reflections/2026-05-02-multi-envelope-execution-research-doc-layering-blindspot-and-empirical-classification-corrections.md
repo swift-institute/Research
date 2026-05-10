@@ -11,7 +11,11 @@ packages:
   - swift-darwin
   - swift-linux
   - swift-foundations/swift-windows
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: SkillUpdate [PLAT-ARCH-025] Class A vs Class B Classification by Declaration Site (entry 4 AI 2). Three-axis L1-redesign verification (entry 4 AI 1) covered by [SUPER-035] axis 2 (research-doc layering claim). Sendable absorption pattern research deferred useful but small-scope.
 ---
 
 # Multi-envelope execution: research-doc layering blindspot + empirical classification corrections

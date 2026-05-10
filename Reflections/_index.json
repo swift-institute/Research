@@ -635,11 +635,14 @@
         "swift-windows-32",
         "swift-glob-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [SUPER-035] (pre-dispatch empirical state verification consolidating premise-inversion + reframe-not-defend protocol), [SUPER-036] (edit-zone non-overlap discipline for parallel dispatch), [SUPER-037] (build-warning classification at verification boundary)."
     },
     {
       "file": "2026-05-02-glob-l1-relocation-and-premise-inversion-research-gate.md",
@@ -651,11 +654,14 @@
         "swift-posix",
         "swift-windows"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction BSD sed word-boundary guidance too narrow for skill-rule scope; recoverable via feedback memory on recurrence. Namespace-anchor file-glob caveat (X.swift not matching X.dot.swift) deferred small-but-real candidate for future modularization rule. Cross-platform package-dependency audit research deferred single-instance follow-up not warranting dedicated research doc."
     },
     {
       "file": "2026-05-02-multi-envelope-execution-research-doc-layering-blindspot-and-empirical-classification-corrections.md",
@@ -672,11 +678,14 @@
         "swift-linux",
         "swift-foundations/swift-windows"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [PLAT-ARCH-025] Class A vs Class B Classification by Declaration Site (entry 4 AI 2). Three-axis L1-redesign verification (entry 4 AI 1) covered by [SUPER-035] axis 2 (research-doc layering claim). Sendable absorption pattern research deferred useful but small-scope."
     },
     {
       "file": "2026-05-01-readme-skill-family-v3-design-and-cleanup.md",
@@ -709,11 +718,14 @@
         "swift-foundations/swift-console",
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction skill-text-precedes-code cross-audit gate already covered by [SKILL-LIFE-001] minimal revision + [PLAT-ARCH-008e] composition discipline cross-references. Typed-parameters principle (entry 3 AI 2) already covered by [PLAT-ARCH-005a] No Platform C Types in Public API. Test namespace drift survey deferred package-specific empirical work, not skill rule."
     },
     {
       "file": "2026-05-01-property-launch-and-cohort-readme-audience-inversion-sweep.md",
@@ -796,11 +808,14 @@
         "swift-linux-standard",
         "swift-terminal-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate via [PLAT-ARCH-024] consolidation (L2 platform-extension pre-check) covering \"Cycle X precedent applies\" precondition concern; [SUPER-035] consolidates pre-dispatch empirical state verification; [SUPER-002]/[GIT-001] already cover unauthorized push/publish ground-rules concern."
     },
     {
       "file": "2026-04-30-path-x-completion-cycles-19-23-and-g6.md",
@@ -814,11 +829,14 @@
         "swift-linux-foundation/swift-linux-standard",
         "swift-standards/swift-darwin-standard"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [PLAT-ARCH-024] L2 Platform-Extension Pre-Check Before L3 Placement (the central rule consolidating Path X arc) + worked-example table citing Completion / Event / File / Wakeup / Time / Token cycle outcomes. Modularization namespace-identity unification deferred (already implicit in [PLAT-ARCH-005])."
     },
     {
       "file": "2026-04-30-handoff-lifecycle-execution.md",
@@ -5224,6 +5242,30 @@
       "triageOutcome": null,
       "outcomeDescription": null,
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-08-two-l1-layer-reversals-system-and-iso.md",
+      "date": "2026-05-08",
+      "title": "Two L1 Layer Reversals: Memory↔System and Algebra↔Iso",
+      "packages": [
+        "swift-memory-primitives",
+        "swift-system-primitives",
+        "swift-algebra-primitives",
+        "swift-algebra-magma-primitives",
+        "swift-algebra-monoid-primitives",
+        "swift-algebra-semiring-primitives",
+        "swift-algebra-semilattice-primitives",
+        "swift-algebra-group-primitives",
+        "swift-algebra-ring-primitives",
+        "swift-algebra-field-primitives",
+        "swift-algebra-module-primitives",
+        "swift-finite-primitives"
+      ],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [HANDOFF-040] amended with form-position variants in conformance lists (entry 7 AI 1). Tier-table update is data work for primitives skill (entry 7 AI 2), tracked separately. Layering-inversion-via-small-bridge research (entry 7 AI 3) deferred to a follow-up sweep real ecosystem class, but small instance count (2 in 2 days) does not yet warrant a Tier-2 doc.",
+      "statusRaw": "processed"
     }
   ]
 }

@@ -6,7 +6,11 @@ packages:
   - swift-iso-9945
   - swift-posix
   - swift-windows
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction BSD sed word-boundary guidance too narrow for skill-rule scope; recoverable via feedback memory on recurrence. Namespace-anchor file-glob caveat (X.swift not matching X.dot.swift) deferred small-but-real candidate for future modularization rule. Cross-platform package-dependency audit research deferred single-instance follow-up not warranting dedicated research doc.
 ---
 
 # Glob L1 Relocation Cycle and the Premise-Inversion Research Gate
