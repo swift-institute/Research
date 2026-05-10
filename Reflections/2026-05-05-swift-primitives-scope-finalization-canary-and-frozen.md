@@ -6,7 +6,11 @@ packages:
   - swift-tagged-primitives
   - swift-ownership-primitives
   - swift-graph-primitives
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction issue-investigation 5th resolution path (continue-on-error canary) candidate for follow-up issue-investigation skill amendment. NoAction handoff [HANDOFF-016] verification-command baseline covered by [HANDOFF-047] Writer-Side Primary-Source Sampling (landed Cluster J). NoAction handoff [HANDOFF-018] offered-options trade-off surfacing small amendment deferred.
 ---
 
 # swift-primitives scope finalization: canary discipline and per-action @frozen authorization

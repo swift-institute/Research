@@ -3,7 +3,11 @@ date: 2026-05-05
 session_objective: Submit the swiftlang/swift#87136 stale-assertion fix as a PR after stress-testing it via adversarial collaborative-discussion
 packages:
   - swift-tagged-primitives
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: SkillUpdate [SWIFT-PR-012] PR Body Claim Audit + HEREDOC Body-Escaping (consolidates with comment-and-pr-prep entry AI 1+2; HEREDOC backtick escape + enumerative non-regression evidence worked examples). NoAction handoff [HANDOFF-016] local-environment claims sub-axis covered by [HANDOFF-047] Writer-Side Primary-Source Sampling (landed Cluster J).
 ---
 
 # swiftlang/swift#87136: PR shipping after six-round adversarial collaborative-discussion
