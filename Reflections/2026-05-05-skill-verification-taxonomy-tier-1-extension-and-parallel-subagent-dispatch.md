@@ -6,8 +6,15 @@ packages:
 status: processed
 processed_date: 2026-05-10
 triage_outcomes:
-  - type: mixed
-    description: NoAction handoff [HANDOFF-010] step 5 generalization small-scope amendment deferred. NoAction reflect-session [REFL-014] commit-shape (REFL-014 already taken with different content; deferred). NoAction parallel-subagent dispatch patterns research deferred (research candidate; useful but small scope).
+  - type: SkillUpdate
+    target: handoff/SKILL.md [HANDOFF-010] step 5
+    description: Cluster G — generalized stamp-location to "the handoff file (sequential HANDOFF.md per [HANDOFF-002] OR branching HANDOFF-{topic}.md per [HANDOFF-005])". Eliminates re-derivation needed for branching handoffs.
+  - type: SkillUpdate
+    target: reflect-session/SKILL.md [REFL-016]
+    description: Cluster G — new rule for commit-shape disposition under inherited dirty working tree (REFL-014 was already taken for routing; rule landed at REFL-016). Generalizes feedback_triage_dirty_worktree.md from staging-decision to file-level commit-shape decision. Companion to [HANDOFF-049] stash-edit-commit-pop.
+  - type: ResearchTopic
+    target: parallel-subagent dispatch patterns for skill-corpus tasks
+    description: Deferred — three pre-conditions and cluster-sizing heuristic validated empirically through tier-2/3 reuse; the reuse itself is validation. Tier-1 research note codifying the dispatch shape is candidate output but deferred until 3rd parallel-subagent corpus-task instance.
 ---
 
 # Skill-verification taxonomy tier-1 extension — parallel subagent dispatch and three new resistant patterns

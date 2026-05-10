@@ -6,8 +6,15 @@ packages:
 status: processed
 processed_date: 2026-05-10
 triage_outcomes:
-  - type: mixed
-    description: NoAction research-process explicit-class-enumeration discipline rule covered by [SUPER-035] Pre-Dispatch Empirical State Verification (axis-2 research-doc layering claim). NoAction engagement skills classification annex deferred (specialized scope). NoAction handoff stash-edit-commit-pop pattern covered by [HANDOFF-019] commit-as-you-go + feedback_cross_stream_working_tree_isolation memory.
+  - type: SkillUpdate
+    target: research-process/SKILL.md [RES-030]
+    description: Cluster G — new rule for explicit-class enumeration in taxonomy-classification subagent prompts. Verbatim enumeration of valid classes intercepts analogical-completion bias before negation can fire. ~95 force-fit γ marks across 4 of 8 subagents in tier-2/3 dispatches is the canonical incident. (Sibling session's note cited [SUPER-035] but that rule covers principal-side dispatch verification, not subagent-prompt enumeration; the gap was real.)
+  - type: SkillUpdate
+    target: handoff/SKILL.md [HANDOFF-049]
+    description: Cluster G — new rule codifying stash-edit-commit-pop pattern for cross-session contamination. Selective git stash push -- {files} → edit clean baseline → commit → git stash pop with auto-merge. Used cleanly twice in this session (tier-2 commit bc8d682, tier-3 commit 0b725da). Generalizes [HANDOFF-019] commit-as-you-go to file-level contamination-isolation primitive.
+  - type: ResearchTopic
+    target: Engagement skills classification annex
+    description: 9 engagement+ingest skills surfaced as out-of-scope for tier-3 brief. Estimated 50-100 additional rules; ecosystem-wide totals would shift by < ±2 pp. Deferred — open question whether engagement private-sibling-repo boundary warrants separate dispatch or symlink-directory becomes canonical scope.
 ---
 
 # Skill-verification taxonomy tier-2 + tier-3 dispatch and ecosystem-wide classification closure
