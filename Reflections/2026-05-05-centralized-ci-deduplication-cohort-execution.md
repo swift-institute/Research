@@ -5,7 +5,11 @@ packages:
   - swift-institute/.github
   - swift-primitives/.github
   - swift-institute/Skills
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction 3 GitHub Actions context-availability rules already captured in feedback memories (composite_action_description_no_expressions, env_invalid_in_runs_on_container, scheduled_workflow_canary_gap). 3 architectural building blocks (configure-private-repos, install-swift-sdk, cron-audit-base) deferred to ci-cd-workflows expansion. download-artifact v5/v6/v7/v8 layout research deferred narrow investigation.
 ---
 
 # Centralized CI deduplication — five-step cohort execution

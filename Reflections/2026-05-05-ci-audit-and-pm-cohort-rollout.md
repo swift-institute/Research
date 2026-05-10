@@ -4,7 +4,11 @@ session_objective: Independent fresh-eyes audit of the 3-cohort CI corpus that c
 packages:
   - swift-institute/.github
   - swift-primitives/.github
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction composite-action tech-stack constraints candidate for ci-cd-workflows but narrowly scoped to PM #1+#2 instances. Refactor decision framework Tier 2 doc deferred research candidate. NoAction reflect-session [REFL-006] canary scoping extension covered by [REFL-015] parser-pass principle (different mechanism, parallel discipline).
 ---
 
 # CI audit + PM cohort rollout — refactor framework, composite-tech-stack constraints, and the danger of changelog skimming

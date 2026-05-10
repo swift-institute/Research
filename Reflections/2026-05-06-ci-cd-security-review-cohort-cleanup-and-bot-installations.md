@@ -5,7 +5,11 @@ packages:
   - swift-institute/Research
   - swift-institute/Skills
   - swift-institute/.github
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: SkillUpdate [REFL-015] Parser-Pass on Structured-Data Files (entry 12 AI 1; the v1.0.0 manifest top-level structural defect worked example). NoAction [CI-053] rule-coverage gap already covered by existing placeholder in ci-cd-workflows. v1.2.0 follow-on research is package-owner work.
 ---
 
 # CI/CD security review investigation, cohort cleanup, and bot-installations enumeration

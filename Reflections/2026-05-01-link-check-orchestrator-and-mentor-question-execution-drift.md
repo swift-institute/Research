@@ -6,7 +6,11 @@ packages:
   - swift-primitives/swift-carrier-primitives
   - swift-primitives/swift-ownership-primitives
   - swift-primitives/swift-primitives.org
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction supervise auto-mode meta-permission rule already covered by [SUPER-014a] supervisor-in-absentia + [SUPER-024] ground-rule compliance via inaction. Pre-proposal infrastructure audit (entry 1 AI 2) candidate for swift-institute skill but smaller scope. Close-on-clean link-check logic is package-implementation work tracked in package _Package-Insights.md.
 ---
 
 # Link-check orchestrator: three architectural reversals and two execution-drift denials

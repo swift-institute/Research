@@ -8,7 +8,11 @@ packages:
   - swift-dictionary-primitives (R1 recovery)
   - swift-cache-primitives, swift-parser-primitives, swift-pool-primitives (R1 recovery)
   - swift-graph-primitives (R1 halted — pre-existing compiler crash)
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction F-deferred [CI-059]/[CI-060] already landed in ci-cd-workflows skill (verified). Compiler SIGABRT investigation (entry 4 AI 2) package-specific, deferred. NoAction experiment-process [EXP-006b] sub-rule for compiler-behavior experiments small-but-useful candidate for future extension.
 ---
 
 # Per-Repo-Workflow-Drift Rollout: C / D / B8 / F-now Execution + B6.5 R-Chain Recovery

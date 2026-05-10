@@ -3,7 +3,11 @@ date: 2026-05-05
 session_objective: Build / test / document phase-1 γ-class advisory CI workflows (γ-1a Foundation-import, γ-1b license-header advisory, γ-2 mechanical hygiene) per centralized-swift-ci-and-spine-gate.md v1.2.0 §3.4.2/§3.4.3/§3.4.5
 packages:
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction [HANDOFF-013a] BUILD-framed extension already covered by [HANDOFF-046] proactive-read-before-copy stop-condition (landed Cluster F). NoAction Auto Mode + ask: composition rule covered by [SUPER-031] CI-Failure Attribution + [SUPER-024] ground-rule compliance via inaction. Audit-script-as-workflow-logic offline harness pattern research deferred.
 ---
 
 # Workflow construction phase 1 — premise-staleness reframe and audit-script-as-workflow-logic harness

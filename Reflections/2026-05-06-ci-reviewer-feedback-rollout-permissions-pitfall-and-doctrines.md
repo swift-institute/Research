@@ -6,7 +6,11 @@ packages:
   - swift-primitives/.github
   - swift-institute/Skills
   - swift-institute/Research
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction [CI-090] Reusable-vs-Standalone Permissions-Shape already landed (verified). NoAction [CI-091] Uniform-Platform-Matrix Doctrine already landed (verified). NoAction [CI-004]/[CI-004a]/[CI-004b] cross-ecosystem-reuse skill amendments already landed (verified). All three CI doctrines from this entry are present in ci-cd-workflows skill at session start.
 ---
 
 # CI reviewer-feedback rollout, the permissions-chain pitfall, and two newly-codified doctrines
