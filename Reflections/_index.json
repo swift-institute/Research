@@ -835,11 +835,31 @@
         "swift-primitives",
         "coenttb/swift-package-mirrors"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "skill-update",
+      "outcomeDescription": "Cluster D — SkillUpdate [ISSUE-026] negative-experiment conclusion MUST cite coverage scope (canonical incident: single-URL mirror false-negative). Companion to 2026-05-08 templates-institute-migration entry; the SwiftPM identity-collision upstream defect class is consumer-side governed by [PKG-DEP-002] (added in companion). Workspace-mirror maintenance protocol deferred to package-local Research/_Package-Insights.md."
+    },
+    {
+      "file": "2026-05-08-templates-institute-migration-and-build-planner-stall.md",
+      "date": "2026-05-08",
+      "title": "Templates Institute Migration and Build-Planner Stall on swift-dependencies Identity Collision",
+      "packages": [
+        "coenttb/swift-money",
+        "coenttb/swift-document-templates",
+        "swift-foundations/swift-translating",
+        "swift-foundations/swift-html",
+        "swift-foundations/swift-dependencies"
+      ],
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "skill-update",
+      "outcomeDescription": "Cluster D — SkillUpdate [PKG-DEP-002] package-identity audit before path-form sibling deps. Pairs with 2026-05-01 spm-stall entry's [ISSUE-026] coverage-scope rule; together they govern the consumer-side discipline + the conclusion-writing discipline for the same upstream defect class (URL/path-form name collision producing build-planner stall). Upstream filing deferred."
     },
     {
       "file": "2026-05-01-property-readiness-and-ownership-public-flip.md",
