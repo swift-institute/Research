@@ -12,7 +12,11 @@ packages:
   - swift-w3c
   - swift-whatwg
   - swift-incits
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: SkillUpdate [SOC-011] Post-Tuning Design-QA Gate via Multimodal Subordinate Agent (entry AI 1; render-without-upload + multimodal-agent QA pass; 5 BLOCK clippings worked example). NoAction supervise multimodal-agent design-QA pattern as sub-pattern covered by [SOC-011] generalized brief shape. Blog "We tried to centralize this in CI. Then we did not." idea routed to Blog/_index.json (deferred to blog process).
 ---
 
 # Social Preview Ecosystem Rollout: Iterative Design Tuning Across 89 Cards

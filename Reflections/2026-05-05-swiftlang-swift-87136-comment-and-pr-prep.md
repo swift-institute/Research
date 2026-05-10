@@ -3,7 +3,11 @@ date: 2026-05-05
 session_objective: Investigate swiftlang/swift#87136 follow-ups per the inherited handoff — post a minimal Tagged + InternalImportsByDefault reproducer comment, optionally assess assertion site for an upstream PR
 packages:
   - swift-tagged-primitives
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: SkillUpdate [SWIFT-PR-012] PR Body Claim Audit + HEREDOC Body-Escaping (consolidates this entry AI 1 + PR-shipping entry AI 1; "predates IIBD" temporal marker + reachability/failure conflation worked examples). NoAction issue-investigation [ISSUE-NNN] Mechanical Validation via Installed Dev Toolchain narrow-scope workaround (single-instance, captured in feedback memory if recurrence). NoAction implementation [IMPL-NNN] Subtractive-First covered by [IMPL-101] YAGNI at API Surface (subtractive default is implicit).
 ---
 
 # swiftlang/swift#87136: comment posted, PR drafted (gated), iterative minimization under user pressure

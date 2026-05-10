@@ -408,8 +408,11 @@
       "packages": [
         "swift-institute/Skills"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction Tier-3 Part 27 sub-classification refinement is taxonomy work tracked separately. NoAction skill-lifecycle ID-suffix scheme conflict-resolution policy small amendment deferred. NoAction EXP-004/EXP-006 future-SPLIT readiness research deferred (CI-tooling-time follow-up)."
     },
     {
       "file": "2026-05-05-workflow-construction-phase-1-reframe-and-fixture-harness.md",
@@ -444,8 +447,11 @@
       "packages": [
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction research-process explicit-class-enumeration discipline rule covered by [SUPER-035] Pre-Dispatch Empirical State Verification (axis-2 research-doc layering claim). NoAction engagement skills classification annex deferred (specialized scope). NoAction handoff stash-edit-commit-pop pattern covered by [HANDOFF-019] commit-as-you-go + feedback_cross_stream_working_tree_isolation memory."
     },
     {
       "file": "2026-05-05-sequence-borrowing-protocol-completion.md",
@@ -504,8 +510,11 @@
       "packages": [
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction handoff [HANDOFF-010] step 5 generalization small-scope amendment deferred. NoAction reflect-session [REFL-014] commit-shape (REFL-014 already taken with different content; deferred). NoAction parallel-subagent dispatch patterns research deferred (research candidate; useful but small scope)."
     },
     {
       "file": "2026-05-05-property-rename-phase-5-autonomous-cascade.md",
@@ -552,11 +561,14 @@
       "packages": [
         "swift-tagged-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [SWIFT-PR-012] PR Body Claim Audit + HEREDOC Body-Escaping (consolidates with comment-and-pr-prep entry AI 1+2; HEREDOC backtick escape + enumerative non-regression evidence worked examples). NoAction handoff [HANDOFF-016] local-environment claims sub-axis covered by [HANDOFF-047] Writer-Side Primary-Source Sampling (landed Cluster J)."
     },
     {
       "file": "2026-05-05-swiftlang-swift-87136-comment-and-pr-prep.md",
@@ -565,11 +577,14 @@
       "packages": [
         "swift-tagged-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [SWIFT-PR-012] PR Body Claim Audit + HEREDOC Body-Escaping (consolidates this entry AI 1 + PR-shipping entry AI 1; \"predates IIBD\" temporal marker + reachability/failure conflation worked examples). NoAction issue-investigation [ISSUE-NNN] Mechanical Validation via Installed Dev Toolchain narrow-scope workaround (single-instance, captured in feedback memory if recurrence). NoAction implementation [IMPL-NNN] Subtractive-First covered by [IMPL-101] YAGNI at API Surface (subtractive default is implicit)."
     },
     {
       "file": "2026-05-05-swift-primitives-scope-finalization-canary-and-frozen.md",
@@ -581,11 +596,14 @@
         "swift-ownership-primitives",
         "swift-graph-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction issue-investigation 5th resolution path (continue-on-error canary) candidate for follow-up issue-investigation skill amendment. NoAction handoff [HANDOFF-016] verification-command baseline covered by [HANDOFF-047] Writer-Side Primary-Source Sampling (landed Cluster J). NoAction handoff [HANDOFF-018] offered-options trade-off surfacing small amendment deferred."
     },
     {
       "file": "2026-05-05-ci-cd-rollout-finalization-and-100-percent-confidence-sweep.md",
@@ -5333,11 +5351,11 @@
         "swift-whatwg",
         "swift-incits"
       ],
-      "status": "pending",
-      "processedDate": null,
-      "triageOutcome": null,
-      "outcomeDescription": null,
-      "statusRaw": "pending"
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [SOC-011] Post-Tuning Design-QA Gate via Multimodal Subordinate Agent (entry AI 1; render-without-upload + multimodal-agent QA pass; 5 BLOCK clippings worked example). NoAction supervise multimodal-agent design-QA pattern as sub-pattern covered by [SOC-011] generalized brief shape. Blog \"We tried to centralize this in CI. Then we did not.\" idea routed to Blog/_index.json (deferred to blog process).",
+      "statusRaw": "processed"
     },
     {
       "file": "2026-05-08-two-l1-layer-reversals-system-and-iso.md",

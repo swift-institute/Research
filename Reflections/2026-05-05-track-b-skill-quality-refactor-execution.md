@@ -3,7 +3,11 @@ date: 2026-05-05
 session_objective: Execute Track B Phase B-1 + B-2 — diagnostic-driven skill-quality refactor of composite-rule and reference-illustration findings from the verification-taxonomy classification sweep.
 packages:
   - swift-institute/Skills
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction Tier-3 Part 27 sub-classification refinement is taxonomy work tracked separately. NoAction skill-lifecycle ID-suffix scheme conflict-resolution policy small amendment deferred. NoAction EXP-004/EXP-006 future-SPLIT readiness research deferred (CI-tooling-time follow-up).
 ---
 
 # Track B Phase B-1 + B-2 — diagnostic-driven skill-quality refactor execution
