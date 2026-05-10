@@ -7,7 +7,11 @@ packages:
   - swift-institute/.github
   - swift-primitives/.github
   - swift-primitives/swift-tagged-primitives
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction supervise verification gate path-distinguishing covered by [SUPER-009a] verification scope sub-rule. swift-manifest cache invalidation is package-implementation work. NoAction handoff dispatch-document-literal commands covered by [HANDOFF-036] recipe-and-path-math empirical verification.
 ---
 
 # Phase 2 file-based-canonical migration — execution + Phase 2.5 carve-out + push wave + canonical retirement

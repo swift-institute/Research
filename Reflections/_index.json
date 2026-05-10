@@ -13,8 +13,11 @@
         "swift-primitives/swift-linter-primitives",
         "swift-foundations/swift-linter"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [IMPL-110] Pair Tagged-Typed Identities With Typed Operations (entry 5 AI 1; D7-prime-prime Tagged.hasPrefix worked example; before/after .underlying grep 18 to 0). NoAction walker-emission shape research deferred package-specific. NoAction institute-namespace stdlib-shadowing catalog covered by [PLAT-ARCH-022] Swift.<Protocol> Qualification."
     },
     {
       "file": "2026-05-07-d7-path-filter-runtime-enforcement.md",
@@ -24,8 +27,11 @@
         "swift-foundations/swift-linter",
         "swift-primitives/swift-linter-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction Linter_Primitives.Path vs Paths.Path collision research deferred (single-instance, package-specific). Handoff brief consumer-emission shape captured in [HANDOFF-031] syntactic-vs-semantic disclaimer. Blog Tagged + SLI ExpressibleByStringLiteral candidate for Blog/_index.json (deferred to blog process)."
     },
     {
       "file": "2026-05-07-d1-readme-and-driver-repair.md",
@@ -268,8 +274,11 @@
         "swift-foundations/swift-linter-rules",
         "swift-primitives/swift-linter-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction handoff multi-feature strategic mission coverage covered by [HANDOFF-007] Program-shape exception (landed Cluster B). L4 component package research deferred. swift-linter Package-Insights documentation is package-implementation work."
     },
     {
       "file": "2026-05-06-phase-2-file-based-canonical-migration-completion.md",
@@ -282,8 +291,11 @@
         "swift-primitives/.github",
         "swift-primitives/swift-tagged-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction supervise verification gate path-distinguishing covered by [SUPER-009a] verification scope sub-rule. swift-manifest cache invalidation is package-implementation work. NoAction handoff dispatch-document-literal commands covered by [HANDOFF-036] recipe-and-path-math empirical verification."
     },
     {
       "file": "2026-05-06-r1r4-cleanup-cycle-evasion-discipline-and-bottom-out-pattern.md",
@@ -292,8 +304,11 @@
       "packages": [
         "swift-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction typed-system bottom-out template already implicit in [INFRA-103] cardinal precedent + existing custom rules. NoAction per-wave inventory exhaustive captured in feedback memory feedback_per_wave_inventory_must_be_exhaustive. NoAction anti-pattern preservation test implicit in linter rule messages."
     },
     {
       "file": "2026-05-06-cross-ecosystem-ci-wrapper-rollout-org-hierarchy-mirror-and-d4-finalization.md",
@@ -5314,6 +5329,28 @@
       "processedDate": "2026-05-10",
       "triageOutcome": "mixed",
       "outcomeDescription": "SkillUpdate [HANDOFF-040] amended with form-position variants in conformance lists (entry 7 AI 1). Tier-table update is data work for primitives skill (entry 7 AI 2), tracked separately. Layering-inversion-via-small-bridge research (entry 7 AI 3) deferred to a follow-up sweep real ecosystem class, but small instance count (2 in 2 days) does not yet warrant a Tier-2 doc.",
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-08-swift-linter-d5-release-readiness-pilot.md",
+      "date": "2026-05-08",
+      "title": "swift-linter D5 Release-Readiness Pilot — Multi-Source Skill Backlog Authoring",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction code-surface Tier 1 item 1.17 ([API-NAME-002] extension to struct-field property names) part of cohort backlog tracked separately. NoAction release-readiness Tier 1 items 1.20/1.21 covered by ongoing release-readiness skill work + [RELEASE-001a]/[RELEASE-001b] precedents. Engine-shape vs primitives-shape calibration research deferred. SUPERSEDED on Phase 0 self-verification claim by 2026-05-08 X2 entry.",
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-08-x2-build-cache-masked-defect-and-supervised-class-c-flow.md",
+      "date": "2026-05-08",
+      "title": "X2 — Build-Cache-Masked Defect and the Class-(c) Escalation Flow",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [RELEASE-001c] Phase 0 Baseline Build MUST Use rm -rf .build Clean State (entry 7 AI 1; Memory.Page to System.Page upstream-state divergence worked example; closes the gap symmetrically with [RELEASE-001a]/[RELEASE-001b]). SkillUpdate [SUPER-039] Class-(c) Trigger for Build-Gate Failure from Upstream-Package State Divergence (entry 7 AI 2; codifies the trigger so subordinate routes directly to escalation). NoAction SwiftPM incremental cache invalidation research deferred (research candidate; useful but not blocking).",
       "statusRaw": "processed"
     }
   ]
