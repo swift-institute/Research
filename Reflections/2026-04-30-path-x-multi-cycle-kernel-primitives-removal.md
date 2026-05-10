@@ -13,7 +13,11 @@ packages:
   - swift-darwin-standard
   - swift-linux-standard
   - swift-terminal-primitives
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: SkillUpdate via [PLAT-ARCH-024] consolidation (L2 platform-extension pre-check) covering "Cycle X precedent applies" precondition concern; [SUPER-035] consolidates pre-dispatch empirical state verification; [SUPER-002]/[GIT-001] already cover unauthorized push/publish ground-rules concern.
 ---
 
 # Path X Completion: Multi-Cycle swift-kernel-primitives Removal

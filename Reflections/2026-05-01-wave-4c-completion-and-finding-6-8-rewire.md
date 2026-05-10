@@ -9,7 +9,11 @@ packages:
   - swift-kernel
   - swift-console
   - swift-institute (Skills + Audits)
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction skill-text-precedes-code cross-audit gate already covered by [SKILL-LIFE-001] minimal revision + [PLAT-ARCH-008e] composition discipline cross-references. Typed-parameters principle (entry 3 AI 2) already covered by [PLAT-ARCH-005a] No Platform C Types in Public API. Test namespace drift survey deferred package-specific empirical work, not skill rule.
 ---
 
 # Wave 4c Envelope Completion + Finding 6.8 swift-console Rewire
