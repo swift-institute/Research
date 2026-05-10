@@ -7,7 +7,18 @@ packages:
   - swift-iso/swift-iso-9945
   - swift-primitives (multiple)
   - coenttb/swift-package-mirrors
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: SkillUpdate
+    target: issue-investigation/SKILL.md [ISSUE-026]
+    description: New rule — negative-experiment conclusion MUST cite coverage scope; "X did not help" reads as "X exhausted" but truthful form is "X with [stated coverage] did not help; broader-coverage variants not yet tested." Canonical incident is single-URL mirror false-negative.
+  - type: ResearchTopic
+    target: package-mirror-vs-upstream-filing decision criteria
+    description: Deferred — when to ship workspace-side mitigation vs file upstream SwiftPM/compiler bug. Single-incident sample. Cross-references with Cluster D 2026-05-08 entry's [PKG-DEP-002] (downstream consumer-side discipline).
+  - type: PackageInsight
+    target: coenttb/swift-package-mirrors
+    description: Maintenance protocol deferred to package-local Research/_Package-Insights.md when 2nd mirror-coverage incident surfaces; current Scripts/verify.sh checks existing mappings, not coverage of new URLs.
 ---
 
 # SPM-stall: comprehensive global mirror as the structural mitigation
