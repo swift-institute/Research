@@ -7,7 +7,18 @@ packages:
   - swift-tagged-primitives
   - swift-ownership-primitives
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: SkillUpdate
+    target: github-repository/SKILL.md [GH-REPO-075]
+    description: New rule — sync-ci-callers MUST validate caller-side secrets/with against centralized workflow_call schema; reference-template-movement requires EXCLUDE-list update. Canonical incident is property's stale callers (EXCLUDE'd as the prior reference) producing silent startup_failure post-flip.
+  - type: SkillUpdate
+    target: readme/sub-package.md [README-008]
+    description: Extended Installation Format with explicit pre-tag vs post-tag pin form — `from: "X.Y.Z"` permitted only when tag X.Y.Z exists; pre-tag packages MUST use `branch: "main"`. Canonical incident is the cohort-wide 4-repo `from: "0.1.0"` → `branch: "main"` correction during the property launch.
+  - type: SkillUpdate
+    target: release-readiness/SKILL.md [RELEASE-002] Phase 2
+    description: Phase 2 amendment — explicit discovery-lens sub-pass (cover-with-your-hand evaluator's-lens test on README + profile prose). Per-package per-rule audits do not surface cohort-recurring patterns where the rules themselves need extension; this gate catches them before launch.
 ---
 
 # Property-primitives 0.1.0 launch + cohort README audience-inversion sweep

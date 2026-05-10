@@ -8,7 +8,18 @@ packages:
   - swift-standards
   - swift-foundations
   - coenttb
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: SkillUpdate
+    target: readme/ci-automation.md [README-162]
+    description: Extended structure-linter detection-rules table with explicit count-claim consistency check (1-liner / opening / footer / catalog-row-count cross-comparison); canonical worked example is the 2026-05-01 swift-foundations 129/130/137 disagreement.
+  - type: SkillUpdate
+    target: readme/SKILL.md [README-028]
+    description: New universal meta-rule — speculative family / rule validation discipline. Zero-instance proposals MUST be flagged "speculative — pending validation" with explicit validation criterion. Canonical incidents are Family B / Family D drops in v3.0.0 design.
+  - type: SkillUpdate
+    target: readme/sub-package.md [README-006]
+    description: Composition-claim completeness sub-rule on the one-liner — when prose names "composes A, B, C" the listed names MUST equal Package.swift dep set or be marked "among others". Canonical incident is swift-geometry-primitives 4-of-7 deps.
 ---
 
 # README Skill Family v3.0.0 — Design Convergence and Self-Review-Caught Defects
