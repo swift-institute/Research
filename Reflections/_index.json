@@ -5461,6 +5461,39 @@
       "triageOutcome": "mixed",
       "outcomeDescription": "SkillUpdate [SUPER-040] swift package clean After Upstream Branch-Tracking Dependency Prune (entry 7 AI 1; staleness via \"symbol not found\" linker errors). SkillUpdate [HANDOFF-047] consolidates entry 7 AI 2 (dispatch concrete-number primary-source sampling). PackageInsight swift-property-primitives _Package-Insights.md created with \"Property value-add IS the view-of-self pattern\" insight (entry 7 AI 3).",
       "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-10-bifunctor-executor-pivot-and-suspected-injection-source.md",
+      "date": "2026-05-10",
+      "title": "Bifunctor execution: protocol-pivot to Option A, supervisor-correction-by-empirics, and suspected-injection misidentification",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction package-local Skills/SKILL.md surfacing mechanism research deferred to follow-up sweep (genuine investigation candidate but specific to one observed instance). NoAction git-operations [GIT-003] vs feedback memory reconciliation already addressed by 2026-05-08 narrowing of feedback_no_public_or_tag_without_explicit_yes; the memory tombstone pattern points to git-operations skill as canonical.",
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-10-bifunctor-home-framework-without-inspection.md",
+      "date": "2026-05-10",
+      "title": "Pair↔Either bridge home: framework-without-inspection caught twice",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [HANDOFF-048] Writer-Side Destination-Inspection Before Recommending a Target (entry 2 AI 1; algebra-law-primitives premise + Bifunctor-protocol-prescription worked examples). NoAction code-surface [API-NAME-001/002] doc-artifact scope clarification deferred (existing rules sufficient; over-correction is a usage signal not a rule signal). Categorical-structure-micro-package research deferred (research candidate; useful but small instance count).",
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-10-coproduct-blog-annotations-and-schedule-cascade.md",
+      "date": "2026-05-10",
+      "title": "Blog Draft Annotation Processing and Schedule-Shift Cascade",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [BLOG-023] Schedule-Shift Cohort Sweep (entry 3 AI 1; Tuesday to Monday cohort compression worked example with cohort-surface enumeration). NoAction swift-coproduct-primitives README staleness is package-implementation work tracked separately (cohort sweep before Monday launch).",
+      "statusRaw": "processed"
     }
   ]
 }
