@@ -28,7 +28,18 @@ packages:
   - swift-sequence-primitives
   - swift-buffer-primitives
   - swift-graph-primitives
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: NoAction
+    target: handoff/SKILL.md [HANDOFF-040] (literal AND generic-instantiated regex)
+    description: Already covered by [HANDOFF-040] Generic-Instantiated Forms in Cascade-Migration Grep Patterns. The slab-primitives miss is the canonical worked example cited in [HANDOFF-040] body. Post-Cluster-A amendment for form-position variants extended the rule further. No additional skill update needed.
+  - type: NoAction
+    target: mechanical bulk-rename pair-rename atomicity
+    description: Tool-design topic with low cross-session fire rate (one cycle Phase 5 used `fix_misrename.py` repair pass; future bulk-renames may use AST-aware tools or single-regex pair-matching). Captured in this reflection's Pattern 2 + memory ecosystem_grep_generic_instantiations.md. Defer skill-rule promotion until a 2nd mechanical bulk-rename surfaces with the same atomicity gap.
+  - type: PackageInsight
+    target: swift-graph-primitives
+    description: swift test SIGSEGV in Sequential Tests after user's Vector refactor — investigate hypotheses (a) interaction between Vector backing and EarlyPerfInliner workaround on Sequential.Transform.Subgraph; (b) new instance of inliner specialization on Vector's lazy-index closure; (c) Vector materialization during Sequential.Transform path. Build clean, test SIGSEGVs. Deferred to user-side investigation per the Phase 5 cascade closure.
 ---
 
 # Property.{View,View.Read,Consuming} → {Inout,Borrow,Consume} — autonomous Phase 5 cascade
