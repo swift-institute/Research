@@ -16,7 +16,17 @@ packages:
   - swift-foundations/swift-witnesses
   - swift-institute/Skills
   - swift-institute/Audits
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: skill_update
+    target: experiment-process
+    description: Added [EXP-006d] FIXED-Verdict Methodological Caveat for Reducers with Unverified Pre-History — bit-packed-crash worked example; mandatory caveat when reducer's pre-history is unverified
+  - type: skill_update
+    target: handoff
+    description: Amended [HANDOFF-007] with Program-shape exception — multi-session program briefs MUST pre-split into per-wave sub-handoffs when total > 800 tokens; "single 1500-token program brief" form forbidden
+  - type: no_action
+    description: AI 3 [package] swift-tagged-primitives 3 UNEXPECTED_PASS revalidations — already resolved in 10 days since reflection (Experiments/_index.json now records all 3 as PARTIAL with detailed Strideable-presence-vs-absence statusDetail; the original "UNEXPECTED_PASS" framing has been investigated and superseded by the dormant-vs-active distinction)
 ---
 
 # Phase 1b Stale-Experiment Triage and the DEFERRED-to-FIXED Codification

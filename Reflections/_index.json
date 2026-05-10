@@ -1,7 +1,7 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-07",
+  "generatedAt": "2026-05-10",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
@@ -854,11 +854,14 @@
         "swift-institute/Skills",
         "swift-institute/Audits"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate (added [EXP-006d] FIXED-Verdict caveat for reducers with unverified pre-history) + SkillUpdate (amended [HANDOFF-007] with Program-shape exception) + NoAction (3 UNEXPECTED_PASS revalidations now resolved as PARTIAL with statusDetail in Experiments/_index.json)"
     },
     {
       "file": "2026-04-30-ownership-primitives-launch-and-release-readiness-validation.md",
@@ -899,11 +902,14 @@
         "swift-microsoft/swift-windows-standard",
         "swift-linux-foundation/swift-linux-standard"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction (REFL-PROC-002a already captured) + SkillUpdate (added [SKILL-LIFE-006] Post-Edit Content Verification) + ResearchTopic (created corpus-drift-taxonomy.md Tier 2 IN_PROGRESS)"
     },
     {
       "file": "2026-04-29-path-x-phase-2-windows-mirror-execution.md",
