@@ -4,7 +4,11 @@ session_objective: Close the Path.Filter runtime-enforcement gap (D7'/CQ5/DT1/PR
 packages:
   - swift-foundations/swift-linter
   - swift-primitives/swift-linter-primitives
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction Linter_Primitives.Path vs Paths.Path collision research deferred (single-instance, package-specific). Handoff brief consumer-emission shape captured in [HANDOFF-031] syntactic-vs-semantic disclaimer. Blog Tagged + SLI ExpressibleByStringLiteral candidate for Blog/_index.json (deferred to blog process).
 ---
 
 # D7' — Path.Filter Runtime Enforcement
