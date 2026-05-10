@@ -455,8 +455,11 @@
         "swift-sequence-primitives",
         "swift-buffer-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "no-action",
+      "outcomeDescription": "Cluster E — NoAction local-function pattern for _read yield chain + @_lifetime(borrow self) per author's explicit gating (3rd call-site triggers [IMPL-*] promotion). Sample size 1 cycle (4 internal call sites in same file). Documented in reflection's Lesson 3."
     },
     {
       "file": "2026-05-05-centralized-ci-deduplication-cohort-execution.md",
@@ -488,8 +491,11 @@
         "swift-institute/Blog",
         "swift-institute/Skills"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "Cluster E — SkillUpdate [HANDOFF-039] amended with topic-matched parallel-session sibling disposition (search-before-write preamble for /handoff). SkillUpdate [REFL-011] generalized from correction-only to all factual state-claims (first-assertion + correction; canonical first-assertion incident BLOG-IDEA target list staleness). ResearchTopic Tagged SLI conformance fan-out deferred — 3rd consumer cleanup triggers research write-up."
     },
     {
       "file": "2026-05-05-skill-verification-taxonomy-tier-1-extension-and-parallel-subagent-dispatch.md",
@@ -533,8 +539,11 @@
         "swift-buffer-primitives",
         "swift-graph-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "Cluster E — NoAction literal+generic-instantiated regex already covered by [HANDOFF-040] (slab-primitives is the canonical worked example). NoAction mechanical bulk-rename pair-rename atomicity deferred to 2nd-instance trigger (tool-design topic). PackageInsight swift-graph-primitives Vector SIGSEGV deferred to user-side investigation."
     },
     {
       "file": "2026-05-05-swift-87136-pr-shipping-and-six-round-adversarial-discussion.md",
@@ -869,11 +878,14 @@
         "swift-property-primitives",
         "swift-ownership-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "Cluster E — SkillUpdate [RELEASE-014] post-flip first-public-CI baseline (run-level conclusion vs job-level; cohort-canonical lint-config presence pre-flip). SkillUpdate [FREVIEW-021] post-triage critical re-assessment (anchor-correct vs prescription-correct as orthogonal axes). PackageInsight swift-ownership-primitives Transfer.Retained.Outgoing abandoned-path deinit fix shipped 0d5b399."
     },
     {
       "file": "2026-04-30-path-x-multi-cycle-kernel-primitives-removal.md",

@@ -4,7 +4,18 @@ session_objective: Run /release-readiness for swift-property-primitives, run /sw
 packages:
   - swift-property-primitives
   - swift-ownership-primitives
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: SkillUpdate
+    target: release-readiness/SKILL.md [RELEASE-014]
+    description: New rule — post-flip first-public-CI baseline discipline. Run-level conclusion is the gate, not job-level; cohort-canonical lint-config presence pre-flip. Canonical incident is reactive source-patching on continue-on-error: true nightly job + missing .swiftlint.yml producing 184 trailing_comma violations.
+  - type: SkillUpdate
+    target: swift-forums-review/SKILL.md [FREVIEW-021]
+    description: New rule — post-triage critical re-assessment of surviving critiques. Anchor-correct vs prescription-correct as orthogonal axes. Canonical incident is 6-of-11 ownership critiques downgraded post-pushback (Sendable conflicting with Unchecked's purpose, swift-storage-primitives namespace collision, generic-over-Copyable rename break).
+  - type: PackageInsight
+    target: swift-ownership-primitives
+    description: Transfer.Retained.Outgoing missing abandoned-path deinit fix shipped in 0d5b399; ~Copyable struct holding unbalanced ARC retain MUST carry explicit deinit + use discard self in any consuming func that balances the retain. Companion verification confirms no other instances in ownership package.
 ---
 
 # Property readiness and ownership public flip

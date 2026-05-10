@@ -11,7 +11,18 @@ packages:
   - swift-institute/Research
   - swift-institute/Blog
   - swift-institute/Skills
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: SkillUpdate
+    target: handoff/SKILL.md [HANDOFF-039]
+    description: Amended with topic-matched parallel-session sibling disposition (search-before-write preamble for /handoff invocation when a different session has authored HANDOFF-{topic}.md for the same task). Canonical incident is HANDOFF.md (sequential) vs HANDOFF-sequence-protocol-primary-associated-type.md (branching, parallel session) duplication.
+  - type: SkillUpdate
+    target: reflect-session/SKILL.md [REFL-011]
+    description: Generalized from correction-only to all factual state-claims (first-assertion + correction). Canonical first-assertion incident is supervisor-report claim "BLOG-IDEA-076/063/062 reference old type names" — only 076 actually had refs at execution-time grep.
+  - type: ResearchTopic
+    target: Tagged SLI conformance fan-out
+    description: Question deferred — should Tagged-using packages re-export Tagged_Primitives_Standard_Library_Integration via @_exported public import (transitive friction reduction) or always require explicit per-target deps (preserving stdlib-free L1 boundary). Tier-2 cross-package decision; affects every package whose public API has a Tagged-typed typealias. Sample size 2 cleanups (kernel + array-primitives); 3rd instance triggers research write-up.
 ---
 
 # Property cascade closeout, Tagged surface drift cleanup, SLI literal-indexing ergonomics

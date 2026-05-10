@@ -4,7 +4,12 @@ session_objective: Promote Sequence.Protocol-family to primary-associated-type f
 packages:
   - swift-sequence-primitives
   - swift-buffer-primitives
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: NoAction
+    target: implementation skill local-function pattern for _read yield chain + @_lifetime(borrow self)
+    description: Defer per author's explicit gating ("if a third call-site needs the local-function pattern in a different file/package, promote it to an [IMPL-*] rule"). Sample size 1 cycle (4 internal call sites in Sequence.Span+Property.Inout.swift, all in the same file). Pattern documented in this reflection's Lesson 3; promotion criterion is 3rd call-site in different file/package.
 ---
 
 # Sequence.Borrowing.Protocol completion — PAT promotion + iterator-constraint family + local-function scoping for _read yield chains
