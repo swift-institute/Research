@@ -5372,6 +5372,83 @@
       "triageOutcome": "mixed",
       "outcomeDescription": "SkillUpdate [RELEASE-001c] Phase 0 Baseline Build MUST Use rm -rf .build Clean State (entry 7 AI 1; Memory.Page to System.Page upstream-state divergence worked example; closes the gap symmetrically with [RELEASE-001a]/[RELEASE-001b]). SkillUpdate [SUPER-039] Class-(c) Trigger for Build-Gate Failure from Upstream-Package State Divergence (entry 7 AI 2; codifies the trigger so subordinate routes directly to escalation). NoAction SwiftPM incremental cache invalidation research deferred (research candidate; useful but not blocking).",
       "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-08-pair-either-product-extraction-execution-scope-b-cascade.md",
+      "date": "2026-05-08",
+      "title": "Pair / Either / Product Extraction Execution and Scope-B Cascade",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction [HANDOFF-026] strengthening with 3 sub-classes deferred (small-scope amendment, candidate for follow-up). NoAction [HANDOFF-040] transitive-consumer-via-re-export-chain extension already covered by [HANDOFF-040] amendment with form-position variants (landed Cluster A). NoAction [MOD-NNN] post-extraction re-export-chain repair patterns deferred to follow-up modularization sweep.",
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-08-orchestrator-cycle-ds-launch-prep.md",
+      "date": "2026-05-08",
+      "title": "Orchestrator Cycle — Data-Structure Launch Prep",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "Layering-inversion-audit research deferred (research candidate per pre-pass; Cluster A landed [PLAT-ARCH-024] which addresses the central pattern). NoAction handoff orchestrator-verified subordinate quantitative claims covered by [HANDOFF-047] writer-side primary-source sampling (landed Cluster J). NoAction [MOD-024] amendment small clarification deferred.",
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-08-array-bounded-index-retreat-execution-and-target-shape-divergence.md",
+      "date": "2026-05-08",
+      "title": "Array.Bounded.Index Retreat Execution — Verdict Conjecture vs Existing Better Shape",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction Array.Bounded specification follow-on is package-implementation work tracked separately. NoAction Index typealias category-error audit deferred research candidate. PackageInsight swift-array-primitives unused Equation/Hash deps captured in package _Package-Insights.md (deferred separate task).",
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-08-binding-and-placement-research-arc.md",
+      "date": "2026-05-08",
+      "title": "Binding-vs-Placement Research Arc — Cost-Axis vs Semantic-Identity Framing",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [RES-029] Framing-Challenge for Binding/Membership/Placement Questions (entry 4 AI 1; semantic identity FIRST, cost as tiebreaker; v1.0.0 to v2.0.0 reframe worked example). NoAction [MOD-NNN] witness-placement principle deferred (small-scope amendment, candidate for follow-up). Carrier-extension vs kind-extension standardization research deferred.",
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-09-escapable-cohort-property-detour-orchestration.md",
+      "date": "2026-05-09",
+      "title": "~Escapable Cohort + Property Detour Multi-Chat Orchestration",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [HANDOFF-047] Writer-Side Primary-Source Sampling for All Paraphrased Technical Detail (consolidates entry 5 memory-entry-cited prescriptions + entry 6 paraphrased technical detail + entry 7 concrete-number primary-source sampling). NoAction [SUPER-NNN] triple-toolchain refined rule covered by [SUPER-037] Build-Warning Classification + existing [PKG-BUILD-*] practices. NoAction [AUDIT-NNN] Deferred/Resolved Capabilities pattern is audit-skill amendment deferred (small but real, candidate for follow-up).",
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-09-escapable-property-tier-prune-supervision-arc.md",
+      "date": "2026-05-09",
+      "title": "Cascade-Tail Prune Supervision Arc and Three-Strikes Writer-Side Staleness",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [HANDOFF-047] consolidates Pattern 2 generalized writer-side discipline. SkillUpdate [SUPER-041] Calibration: Option-Matrix to Recommendation-First on User Trust Signal (entry 6 AI 2). NoAction [SUPER-NNN] CI-status-delta as automatic diagnostic deferred (narrow workflow detail, candidate for follow-up).",
+      "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-09-cascade-tail-prune-execution-and-doc-amendment.md",
+      "date": "2026-05-09",
+      "title": "Cascade-Tail Prune Execution and Doc Forward-Amendment",
+      "packages": [],
+      "status": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [SUPER-040] swift package clean After Upstream Branch-Tracking Dependency Prune (entry 7 AI 1; staleness via \"symbol not found\" linker errors). SkillUpdate [HANDOFF-047] consolidates entry 7 AI 2 (dispatch concrete-number primary-source sampling). PackageInsight swift-property-primitives _Package-Insights.md created with \"Property value-add IS the view-of-self pattern\" insight (entry 7 AI 3).",
+      "statusRaw": "processed"
     }
   ]
 }
