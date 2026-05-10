@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-04-30
+version: 1.2.0
+last_updated: 2026-05-10
 status: DEFERRED
 ---
 -->
@@ -15,6 +15,19 @@ The accidental leak of Anthropic's Claude Code source (~1,900 TypeScript files, 
 **Scope**: Cross-layer analysis (L1 Primitives through L4 Components). Tier 2 research — cross-package, reversible precedent, medium cost of error.
 
 **Companion documents**: `claurst-analysis.md`, `claurst-rust-patterns.md` (both in this Research/ directory).
+
+## Resume Conditions (v1.2.0 update, 2026-05-10)
+
+The 2026-04-30 v1.1.0 deferral cited "TLS strategy" as the block — a tactical reason. The 2026-05-10 comparative-analysis session (`agent-harness-engineering-comparative-analysis.md` v1.1.0 §Q5) adds a strategic reason: the harness-architecture *target* is moving. Per the harness-engineering survey §7.1 (DSPy → GEPA → Meta-Harness → Agentic Harness Engineering frontier) and §7.4 (harness-in-the-loop RL post-training dissolves the model/harness boundary), a Swift rewrite of a Claude-Code-shape harness today targets a shape the field is moving past.
+
+**Resume requires both gates clearing:**
+
+1. **Tactical**: TLS strategy decided (platform-TLS-wrapping vs pure-Swift). Without this, HTTP transport is blocked, and the 6 downstream packages tracked in the Subsystem Mapping below cannot proceed.
+2. **Strategic**: harness-shape volatility converged. The frontier is currently active; targeting a 6–12-month build cycle against an unstable target is high-cost-low-value.
+
+**Park duration**: ≥ 1 year; revisit 2027-Q2 absent a triggering event (e.g., field convergence on a stable harness shape, TLS strategy resolution, user-driven re-prioritization).
+
+**Note for future readers**: this deferral is not a verdict on architectural feasibility. The v1.1.0 Subsystem Mapping below remains the authoritative analysis — the architecture *can* be reimplemented in the Swift Institute ecosystem. The deferral is on the *timing*. The architectural analysis is preserved as-is.
 
 ## Question
 

@@ -5521,6 +5521,17 @@
       "processedDate": "2026-05-10",
       "triageOutcome": "skill-update",
       "outcomeDescription": "Cluster K — SkillUpdate [REFL-017] no redundant polling under notification semantics (3 polling tasks spawned during pilot worked example). NoAction [GH-REPO-094] consolidation per author's explicit gating (single instance; defer to 2nd per [SKILL-LIFE-021]). ResearchTopic cohort-expansion architecture for discussion-thread pilot (matrix enumerate-at-runtime vs hard-coded) deferred to next pilot expansion."
+    },
+    {
+      "file": "2026-05-10-wave-2b-finalization-batch-3-4-6-completion.md",
+      "date": "2026-05-10",
+      "title": "Wave 2b Finalization Batch 3/4/6 Completion — 17 Lint Rules + Skill Cross-References",
+      "packages": [
+        "swift-foundations/swift-linter-rules",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
