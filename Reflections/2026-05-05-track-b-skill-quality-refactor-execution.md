@@ -6,8 +6,15 @@ packages:
 status: processed
 processed_date: 2026-05-10
 triage_outcomes:
-  - type: mixed
-    description: NoAction Tier-3 Part 27 sub-classification refinement is taxonomy work tracked separately. NoAction skill-lifecycle ID-suffix scheme conflict-resolution policy small amendment deferred. NoAction EXP-004/EXP-006 future-SPLIT readiness research deferred (CI-tooling-time follow-up).
+  - type: SkillUpdate
+    target: skill-lifecycle/SKILL.md [SKILL-LIFE-028]
+    description: Cluster G — new rule for ID-suffix scheme conflict-resolution policy when SPLIT lands on a rule whose natural sub-suffix is claimed. Resolution order: KEEP-with-Composite-annotation → renumber to next integer → topic split (rare). Hyphenated/dotted suffix forbidden. [EXP-004]/[EXP-004a] is the canonical worked example.
+  - type: ResearchTopic
+    target: Tier-3 Part 27 (illustration-pure) vs (illustration-supporting) sub-classification
+    description: 9-of-10 SKIP rate empirically supports the distinction. Annotation-content vs annotation-prescription mismatch as the underlying pattern. Deferred to next taxonomy refresh — same-session annotation refinement would be premature without a 2nd refactor pass to confirm SKIP rate.
+  - type: ResearchTopic
+    target: EXP-004 / EXP-006 future-SPLIT readiness
+    description: Deferred — KEEP-with-annotation captures structural distinction without breaking citations; SPLIT becomes warranted at CI-tooling time when independent workflows for build-verification (separate from reduction methodology) and revalidation-verdicts (separate from outcome documentation) materialize.
 ---
 
 # Track B Phase B-1 + B-2 — diagnostic-driven skill-quality refactor execution

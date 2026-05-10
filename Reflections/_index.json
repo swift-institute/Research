@@ -411,8 +411,8 @@
       "status": "processed",
       "statusRaw": "processed",
       "processedDate": "2026-05-10",
-      "triageOutcome": "mixed",
-      "outcomeDescription": "NoAction Tier-3 Part 27 sub-classification refinement is taxonomy work tracked separately. NoAction skill-lifecycle ID-suffix scheme conflict-resolution policy small amendment deferred. NoAction EXP-004/EXP-006 future-SPLIT readiness research deferred (CI-tooling-time follow-up)."
+      "triageOutcome": "skill-update",
+      "outcomeDescription": "Cluster G — SkillUpdate [SKILL-LIFE-028] ID-suffix scheme conflict-resolution policy for SPLIT operations (KEEP-with-annotation → renumber → topic split; hyphenated forbidden). [EXP-004]/[EXP-004a] is canonical worked example. ResearchTopic Tier-3 Part 27 sub-classification + EXP-004/EXP-006 future-SPLIT readiness deferred."
     },
     {
       "file": "2026-05-05-workflow-construction-phase-1-reframe-and-fixture-harness.md",
@@ -450,8 +450,8 @@
       "status": "processed",
       "statusRaw": "processed",
       "processedDate": "2026-05-10",
-      "triageOutcome": "mixed",
-      "outcomeDescription": "NoAction research-process explicit-class-enumeration discipline rule covered by [SUPER-035] Pre-Dispatch Empirical State Verification (axis-2 research-doc layering claim). NoAction engagement skills classification annex deferred (specialized scope). NoAction handoff stash-edit-commit-pop pattern covered by [HANDOFF-019] commit-as-you-go + feedback_cross_stream_working_tree_isolation memory."
+      "triageOutcome": "skill-update",
+      "outcomeDescription": "Cluster G — SkillUpdate [RES-030] explicit-class enumeration in taxonomy-classification subagent prompts. SkillUpdate [HANDOFF-049] stash-edit-commit-pop pattern for cross-session contamination. ResearchTopic Engagement skills classification annex deferred. (Sibling-session note had cited [SUPER-035] for the enumeration rule but that covers principal-side dispatch verification, not subagent-prompt enumeration; the gap was real.)"
     },
     {
       "file": "2026-05-05-sequence-borrowing-protocol-completion.md",
@@ -513,8 +513,8 @@
       "status": "processed",
       "statusRaw": "processed",
       "processedDate": "2026-05-10",
-      "triageOutcome": "mixed",
-      "outcomeDescription": "NoAction handoff [HANDOFF-010] step 5 generalization small-scope amendment deferred. NoAction reflect-session [REFL-014] commit-shape (REFL-014 already taken with different content; deferred). NoAction parallel-subagent dispatch patterns research deferred (research candidate; useful but small scope)."
+      "triageOutcome": "skill-update",
+      "outcomeDescription": "Cluster G — SkillUpdate handoff [HANDOFF-010] step 5 generalization to branching handoffs (sequential HANDOFF.md OR branching HANDOFF-{topic}.md). SkillUpdate reflect-session [REFL-016] commit-shape disposition under inherited dirty working tree (REFL-014 was taken with different content; new rule landed at REFL-016). ResearchTopic parallel-subagent dispatch patterns deferred — pattern reused successfully in tier-2/3 (the reuse itself is validation)."
     },
     {
       "file": "2026-05-05-property-rename-phase-5-autonomous-cascade.md",
