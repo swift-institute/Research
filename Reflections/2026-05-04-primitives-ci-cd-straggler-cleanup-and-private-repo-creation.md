@@ -8,7 +8,11 @@ packages:
   - swift-path-primitives
   - swift-ordinal-primitives
   - ci-cd-workflows
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction DocC-catalog -> docs-job coupling rule covered by existing [DOC-019a] convention; explicit promotion candidate but not high-value. swift-glob-primitives docs-job item is package-implementation tracked in package todo.
 ---
 
 # Primitives CI/CD straggler cleanup and PRIVATE repo creation for unpublished L1 packages

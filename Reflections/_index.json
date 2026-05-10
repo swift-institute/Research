@@ -318,8 +318,11 @@
         "swift-linux-foundation",
         "swift-microsoft"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [HANDOFF-045] Stale-Acceptance-Criterion in Re-Issued Briefs (entry 13 AI 1; the L3 README already-pushed worked example). SkillUpdate [HANDOFF-046] Proactive Read-Before-Copy Content-Judgment Stop-Condition (entry 13 AI 2; the L3-positioning-prose worked example). DocImprovement Research/ci-uniformity-audit.md D4 RESOLVED status update deferred to package owner."
     },
     {
       "file": "2026-05-06-supervisor-mode-cleanup-cycle-and-secret-management-seed.md",
@@ -332,8 +335,11 @@
         "swift-standards/.github",
         "swift-foundations/.github"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [SUPER-038] Brief-vs-State-Staleness Pre-Send Verification (entry 11 AI 1; supervisor-side mirror of [HANDOFF-045]). NoAction private-repo-secret-management research expansion is principal-directed dedicated session. NoAction [CI-053] rule-coverage gap already documented as placeholder in ci-cd-workflows."
     },
     {
       "file": "2026-05-06-ci-cd-security-review-cohort-cleanup-and-bot-installations.md",
@@ -344,8 +350,11 @@
         "swift-institute/Skills",
         "swift-institute/.github"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "SkillUpdate [REFL-015] Parser-Pass on Structured-Data Files (entry 12 AI 1; the v1.0.0 manifest top-level structural defect worked example). NoAction [CI-053] rule-coverage gap already covered by existing placeholder in ci-cd-workflows. v1.2.0 follow-on research is package-owner work."
     },
     {
       "file": "2026-05-06-ci-reviewer-feedback-rollout-permissions-pitfall-and-doctrines.md",
@@ -357,8 +366,11 @@
         "swift-institute/Skills",
         "swift-institute/Research"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction [CI-090] Reusable-vs-Standalone Permissions-Shape already landed (verified). NoAction [CI-091] Uniform-Platform-Matrix Doctrine already landed (verified). NoAction [CI-004]/[CI-004a]/[CI-004b] cross-ecosystem-reuse skill amendments already landed (verified). All three CI doctrines from this entry are present in ci-cd-workflows skill at session start."
     },
     {
       "file": "2026-05-05-ci-audit-and-pm-cohort-rollout.md",
@@ -368,8 +380,11 @@
         "swift-institute/.github",
         "swift-primitives/.github"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction composite-action tech-stack constraints candidate for ci-cd-workflows but narrowly scoped to PM #1+#2 instances. Refactor decision framework Tier 2 doc deferred research candidate. NoAction reflect-session [REFL-006] canary scoping extension covered by [REFL-015] parser-pass principle (different mechanism, parallel discipline)."
     },
     {
       "file": "2026-05-05-track-b-skill-quality-refactor-execution.md",
@@ -388,8 +403,11 @@
       "packages": [
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction [HANDOFF-013a] BUILD-framed extension already covered by [HANDOFF-046] proactive-read-before-copy stop-condition (landed Cluster F). NoAction Auto Mode + ask: composition rule covered by [SUPER-031] CI-Failure Attribution + [SUPER-024] ground-rule compliance via inaction. Audit-script-as-workflow-logic offline harness pattern research deferred."
     },
     {
       "file": "2026-05-05-ci-action-version-tail-cohort-with-two-layer-premise-staleness.md",
@@ -398,8 +416,11 @@
       "packages": [
         "swift-institute/.github"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction research-workflow-mirrors-production-shape captured in feedback memory. NoAction canary-verify-real-data-path captured in feedback memory. NoAction [HANDOFF-016] cross-reference candidate for future amendment."
     },
     {
       "file": "2026-05-05-skill-verification-taxonomy-tier-2-tier-3-and-ecosystem-closure.md",
@@ -431,8 +452,11 @@
         "swift-primitives/.github",
         "swift-institute/Skills"
       ],
-      "status": "pending",
-      "statusRaw": "pending"
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction 3 GitHub Actions context-availability rules already captured in feedback memories (composite_action_description_no_expressions, env_invalid_in_runs_on_container, scheduled_workflow_canary_gap). 3 architectural building blocks (configure-private-repos, install-swift-sdk, cron-audit-base) deferred to ci-cd-workflows expansion. download-artifact v5/v6/v7/v8 layout research deferred narrow investigation."
     },
     {
       "file": "2026-05-05-property-cascade-closeout-tagged-surface-drift-and-sli-ergonomics.md",
@@ -547,11 +571,14 @@
         "swift-primitives",
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction shape-uniformity-over-rule-permissiveness principle already implicit in [CI-031] Per-Package ci.yml + [CI-091] Uniform-Platform-Matrix Doctrine. NoAction org-side enumeration discipline candidate for audit skill but narrow scope. Background-subagent vs in-shell research deferred meta-investigation."
     },
     {
       "file": "2026-05-04-test-support-spine-strict-rollout-and-mod-024.md",
@@ -561,11 +588,14 @@
         "swift-primitives",
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction tools-classify-by-capability MUST derive from audit JSON candidate for ci-cd-workflows but narrowly scoped (single-instance EXISTING_TS_PRIORITY false-positive); document in feedback memory if recurrence. NoAction [MOD-024] path-fixup amendment small-but-real candidate for future modularization extension. Build-health snapshot research deferred package-data work, not skill rule."
     },
     {
       "file": "2026-05-04-principal-side-cicd-centralization-supervision.md",
@@ -575,11 +605,14 @@
         "swift-institute",
         "swift-primitives"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction empirical canary verification rule already covered by [SUPER-027] Pre-Dispatch Ecosystem-Constraint Scan + [CI-056] Per-Package Build Verification. NoAction explicit-scope expression already covered by [SUPER-036] Edit-Zone Non-Overlap (landed Cluster A). Standalone Swift Format silent no-op research deferred narrow investigation."
     },
     {
       "file": "2026-05-04-per-repo-workflow-drift-rollout-c-d-b8-fnow.md",
@@ -595,10 +628,14 @@
         "swift-pool-primitives",
         "swift-graph-primitives"
       ],
-      "status": "pending",
+      "status": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction F-deferred [CI-059]/[CI-060] already landed in ci-cd-workflows skill (verified). Compiler SIGABRT investigation (entry 4 AI 2) package-specific, deferred. NoAction experiment-process [EXP-006b] sub-rule for compiler-behavior experiments small-but-useful candidate for future extension.",
+      "statusRaw": "processed"
     },
     {
       "file": "2026-05-04-primitives-ci-cd-straggler-cleanup-and-private-repo-creation.md",
@@ -612,11 +649,14 @@
         "swift-ordinal-primitives",
         "ci-cd-workflows"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction DocC-catalog -> docs-job coupling rule covered by existing [DOC-019a] convention; explicit promotion candidate but not high-value. swift-glob-primitives docs-job item is package-implementation tracked in package todo."
     },
     {
       "file": "2026-05-02-supervisor-multi-envelope-parallel-dispatch-and-verification-rhythm.md",
@@ -699,11 +739,14 @@
         "swift-foundations",
         "coenttb"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "skill-update",
+      "outcomeDescription": "Cluster C — landed [README-162] count-claim consistency lint extension in readme/ci-automation.md; [README-028] speculative family/rule validation discipline in readme/SKILL.md (universal meta-rule); [README-006] composition-claim completeness sub-rule in readme/sub-package.md (canonical 4-of-7-deps swift-geometry-primitives incident)."
     },
     {
       "file": "2026-05-01-wave-4c-completion-and-finding-6-8-rewire.md",
@@ -738,11 +781,14 @@
         "swift-ownership-primitives",
         "swift-institute"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "skill-update",
+      "outcomeDescription": "Cluster C — landed [GH-REPO-075] thin-caller schema validation (sync-ci-callers gate + reference-template-movement EXCLUDE staleness); [README-008] pre-tag installation pin extension (from: vs branch: forms); [RELEASE-002] Phase 2 discovery-lens sub-pass amendment (cohort-recurring patterns missed by per-rule audit)."
     },
     {
       "file": "2026-05-01-link-check-orchestrator-and-mentor-question-execution-drift.md",
@@ -754,11 +800,14 @@
         "swift-primitives/swift-ownership-primitives",
         "swift-primitives/swift-primitives.org"
       ],
-      "status": "pending",
-      "statusRaw": "pending",
+      "status": "processed",
+      "statusRaw": "processed",
       "triagedPhase1": true,
       "triagedPhase1Date": "2026-05-05",
-      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md"
+      "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "mixed",
+      "outcomeDescription": "NoAction supervise auto-mode meta-permission rule already covered by [SUPER-014a] supervisor-in-absentia + [SUPER-024] ground-rule compliance via inaction. Pre-proposal infrastructure audit (entry 1 AI 2) candidate for swift-institute skill but smaller scope. Close-on-clean link-check logic is package-implementation work tracked in package _Package-Insights.md."
     },
     {
       "file": "2026-05-01-spm-stall-comprehensive-mirror-mitigation.md",

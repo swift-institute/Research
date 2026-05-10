@@ -4,7 +4,11 @@ session_objective: Complete Phase 2a of the Test Support spine rollout (swift-pr
 packages:
   - swift-primitives (49 repos modified)
   - swift-institute (Skills/modularization, Scripts/preflight-test-support-spine.py)
-status: pending
+status: processed
+processed_date: 2026-05-10
+triage_outcomes:
+  - type: mixed
+    description: NoAction tools-classify-by-capability MUST derive from audit JSON candidate for ci-cd-workflows but narrowly scoped (single-instance EXISTING_TS_PRIORITY false-positive); document in feedback memory if recurrence. NoAction [MOD-024] path-fixup amendment small-but-real candidate for future modularization extension. Build-health snapshot research deferred package-data work, not skill rule.
 ---
 
 # Test Support Spine Phase 2a Strict Rollout, [MOD-024] Codification, and Phase β Handoff
