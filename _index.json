@@ -6,6 +6,50 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "agent-harness-engineering-comparative-analysis.md",
+      "displayName": "agent-harness-engineering-comparative-analysis.md",
+      "topic": "RECOMMENDATION (v1.5.0): Tier 3 comparative analysis of the workspace's actual harness against the 20-component canonical taxonomy from agent-harness-engineering-state-of-the-art.md (the survey, also v1.0.0). v1.0.0 mapped each canonical component (loop / tool surface / filesystem / sandbox / sub-agents / planner / memory / context / skills / hooks / permissions / guides / sensors / self-verification / observability / eval / HITL / durability / optimizer / policy) onto verified workspace state. v1.1.0 folds in five-test bet-or-gap adjudication of six Open Questions. v1.2.0 refines §4.1 to three-layer + substrate architecture (L0/L1/L2/L3) with comprehensive harness inventory and CI/CD reframed as L2 workflow harness. v1.3.0 appends Wave 2 retrospective: Recommendation #2 (SessionEnd reflection-cadence hook, L1), Recommendation #4 (OTel GenAI semconv with PII-safe defaults, L0), Recommendation #7 (sandbox×cclsp probe, L0/L1 — Codex-issue-#18243 failure mode verified absent) all delivered. v1.4.0 appends Wave 3 retrospective: Recommendation #3 (error-analysis on reflection corpus, L3) delivered as Scripts/reflection-corpus-analysis.py + companion baseline doc reflection-corpus-error-analysis.md; surfaces 13 non-canonical triage_outcomes[].type strings as actionable finding. v1.5.0 appends Wave 4 retrospective: surfaced [REFL-PROC-001] guardrail forcing scope-correction (cannot run /reflections-processing during active implementation session); delivered single-item canonicalization rule [REFL-PROC-003a] in Skills/reflections-processing — 8 canonical snake_case type values, 13 forbidden non-canonical forms enumerated, last_reviewed bumped 2026-05-05→2026-05-10, provenance per [SKILL-LIFE-002] cites reflection-corpus-error-analysis.md. Wave 4 demonstrates the harness-as-corpus self-validating loop: Wave 3 measurement substrate surfaces drift → Wave 4 codifies write-time enforcement → drift stops re-accumulating forward. Cumulative Waves 1-4 touch every layer of the three-layer + substrate architecture at least twice.",
+      "date": "2026-05-10",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.5.0 (2026-05-10). Tier 3 ecosystem-wide research. Five same-day amendments preserved per [RES-008]: v1.0.0 (initial); v1.1.0 (Open Questions adjudication); v1.2.0 (three-layer + substrate refinement); v1.3.0 (Wave 2 retrospective); v1.4.0 (Wave 3 retrospective); v1.5.0 (Wave 4 retrospective + guardrail correction). Wave 1: [BET-HOOK]/[BET-EVAL]/[BET-COMPACT]/[BET-REWRITE] register at swift-institute-core; [CI-094]/[CI-095] at ci-cd-workflows; MEMORY.md 31.3KB→24.3KB. Wave 2: SessionEnd hook + cadence log; OTEL env with PII-safe defaults; cclsp×sandbox probe passed. Wave 3: Scripts/reflection-corpus-analysis.py + reflection-corpus-error-analysis.md REFERENCE doc. Wave 4: [REFL-PROC-003a] write-time canonical-form enforcement on triage_outcomes[].type. [REFL-PROC-001] guardrail withdrew /reflections-processing from this session; promoted to Wave 5. Wave 5 candidates: process 9 pending reflections (separate session); backward-normalize 35+ non-canonical entries (separate session); pick OTel exporter backend; parked #9. Status remains RECOMMENDATION; Wave 5 awaits user authorization.",
+      "statusRaw": "RECOMMENDATION (v1.5.0)",
+      "tier": 3,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "reflection-corpus-error-analysis.md",
+      "displayName": "reflection-corpus-error-analysis.md",
+      "topic": "REFERENCE (v1.0.0): Error-analysis on the reflection corpus per Recommendation #3 of agent-harness-engineering-comparative-analysis.md (Wave 3). Captures the analysis tool (Scripts/reflection-corpus-analysis.py — 240-line Python script reading Research/Reflections/*.md, computing 8 frequency tables + [REFL-PROC-011] convergence-health signals + cadence-log integration; output forms: markdown / JSON / quiet exit-code-only) and the baseline snapshot (2026-05-10): 278 reflections analyzed, 21 distinct triage_outcomes[].type strings observed where [REFL-PROC-003] names 8 canonical (13 non-canonical: PascalCase drift like SkillUpdate / ResearchTopic; ad-hoc types like informational / feedback_memory). Top targeted skills: implementation (30), handoff (15), code-surface (14), audit (12), supervise (12). Top reflected packages: swift-io (55), swift-institute (47), swift-iso-9945 (46). Status: 269 processed / 8 pending / 1 SUPERSEDED. Processing latency: median 2 days, mean 2.73 days, same-day 24.5%. Convergence-health WARNs on last-10-window are partially measurement artifact of recent type:mixed single-line summary form embedding multiple outcome mentions in description text. Three direction items surfaced: (1) reflect-session canonicalization rule, (2) process the 9 pending reflections, (3) periodic re-run of analysis. Per [BET-EVAL]: error-analysis on real traces, NOT LLM-as-judge eval, NOT benchmarks, NOT auto-mutation; decisions human-driven.",
+      "date": "2026-05-10",
+      "status": "REFERENCE",
+      "statusDetail": "v1.0.0. Tier 2 cross-package research. Authored 2026-05-10 as Wave 3 deliverable of agent-harness-engineering-comparative-analysis.md Recommendation #3. The companion artifact is Scripts/reflection-corpus-analysis.py; this document is the snapshot + tool reference. Per [BET-EVAL] the script informs human decisions; it does not drive them.",
+      "statusRaw": "REFERENCE (v1.0.0)",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "agent-harness-engineering-state-of-the-art.md",
+      "displayName": "agent-harness-engineering-state-of-the-art.md",
+      "topic": "RECOMMENDATION (v1.0.0): Tier 3 SLR survey of state of the art in agent harness engineering as of 2026-05. Synthesizes the 20-component canonical taxonomy converged on by Trivedy (LangChain), Böckeler (Thoughtworks), Lopopolo (OpenAI), Anthropic engineering, Horthy (HumanLayer/12-factor), Schott (Flue), Karpathy. Surveys per-component state of the art across loop/tools/filesystem/sandbox/sub-agents/planner/memory/context/skills/hooks/permissions/guides/sensors/self-verification/observability/eval/HITL/durability/optimizer/policy. Comparative survey of 12+ shipping harnesses (Claude Code, Cursor, Aider, Codex CLI, Cline, Roo, Devin, OpenHands, Continue, Replit, Warp, Zed, Augment). Empirical foundations from SWE-bench/Aider polyglot/Terminal-Bench/RULER/Lost-in-the-Middle/Context-Rot. Theoretical grounding via CoALA/ACI thesis/harness-as-compiler/cybernetics. 2026 frontier: Meta-Harness, Agentic Harness Engineering, coding-agent-as-long-context-processor, harness-in-the-loop RL post-training, memory governance. Failure-mode taxonomy synthesizing MAST + 12-factor + internal supervision corpus. Output is the survey input for a planned next-session comparative analysis against the workspace's own harness (CI, skills, memory) — comparison intentionally not performed here. Identifies the workspace's strongest component (procedural memory via skills with [PREFIX-*] requirement IDs) and most exposed component (zero hooks configured) as direction items for the comparative session.",
+      "date": "2026-05-10",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0. Tier 3 ecosystem-wide research. Authored 2026-05-10 via /research-process at user request. SLR per Kitchenham methodology, parallel-subagent verification per [RES-020], primary sources cited per [RES-026]. Extends but does not supersede prior agent-workflow corpus (agent-handoff-patterns, agent-supervision-patterns, audit, ai-context-reduction, claude-code-rewrite-feasibility, multi-repo-automation). Companion to the planned comparative-analysis session.",
+      "statusRaw": "RECOMMENDATION (v1.0.0)",
+      "tier": 3,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "swift-compiler-bug-catalog.md",
+      "displayName": "swift-compiler-bug-catalog.md",
+      "topic": "REFERENCE: Tier 2 cross-package compiler-bug catalog. 15 entries (A1–A7 miscompiles/SIL crashes, B1–B5 type-system pitfalls, C1–C3 patterns/reference tables) plus master fix-status table absorbing the prior swift-6.3-fix-status.md content (verified-as-of 2026-04-30). Created 2026-05-10 as Wave 6 of the memory→skill refactor consolidating 14 compiler-knowledge MEMORY.md entries; discoverability via [ISSUE-028] in issue-investigation skill.",
+      "date": "2026-05-10",
+      "status": "REFERENCE",
+      "statusDetail": "v1.0.0 (2026-05-10). Tier 2 cross-package REFERENCE doc. Created as Wave 6 consolidation of 14 compiler-knowledge memories. last_verified: 2026-04-30 (Phase 7a sweep). Public upstream filings preserved (issues #88022, #88985, #88986, #88987, #85743, #86652).",
+      "statusRaw": "REFERENCE (v1.0.0)",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
       "file": "property-ownership-escapable-base-upgrade.md",
       "displayName": "property-ownership-escapable-base-upgrade.md",
       "topic": "DECISION (v1.0.0): Cross-package ~Escapable Base/Value upgrade for Property<Tag, Base> + Ownership.Inout<Value>. Establishes the cascade-execution-order (ownership-primitives lands first; property-primitives lands second), cites escapable-support-pair-either-product.md v1.1.0 as canonical cohort pattern, cites Ownership.Borrow as structural template (raw-pointer storage; minus _owner field, minus init(borrowing:) path that Inout doesn't need). Resolves the 4 open questions from HANDOFF-property-primitives-escapable-upgrade.md: Tagged needs no upgrade (already admits ~Escapable Underlying); Property.View ~Escapable re-add SUPERSEDED (already shipped 2026-03-25 commit 43247e3); supersession path SUPERSEDED (already done); Carrier composition unaffected (already admits ~Escapable Underlying). Phase 0 + Phase 0.5 readiness audit: only Ownership.Inout (Value: ~Copyable only) needs structural upgrade. Per-package execution lives in swift-ownership-primitives/Research/escapable-value-upgrade.md and swift-property-primitives/Research/escapable-base-upgrade.md.",
@@ -790,13 +834,13 @@
     {
       "file": "claude-code-swift-rewrite-feasibility.md",
       "displayName": "claude-code-swift-rewrite-feasibility.md",
-      "topic": "Can the Claude Code agent architecture be reimplemented using the Swift Institute ecosystem? Subsystem mapping, gap analysis, new package proposals. Tier 2, ecosystem-wide.",
+      "topic": "Can the Claude Code agent architecture be reimplemented using the Swift Institute ecosystem? Subsystem mapping, gap analysis, new package proposals. Tier 2, ecosystem-wide. v1.2.0 (2026-05-10) adds Resume Conditions section reframing the deferral: original tactical block (TLS strategy) is supplemented by a strategic block (harness-architecture target moving per survey §7.1 + §7.4 — DSPy/GEPA/Meta-Harness frontier; harness-in-the-loop RL post-training dissolves model/harness boundary). Park ≥1 year; revisit 2027-Q2 absent triggering event.",
       "status": "DEFERRED",
-      "statusDetail": "Feasibility analysis complete; ecosystem covers ~40-50% of required infrastructure; 6 L2 + 2 L3 + 1 L4 new packages identified. Deferred pending strategic decision on TLS approach (platform-wrap vs pure-Swift). Independent work (prototype, HTTP spike, tool protocol) can begin without prejudicing the strategic call.",
-      "statusRaw": "DEFERRED",
+      "statusDetail": "v1.2.0 (2026-05-10). Feasibility analysis (v1.0.0/v1.1.0) complete and preserved; ecosystem covers ~40-50% of required infrastructure; 6 L2 + 2 L3 + 1 L4 new packages identified. v1.2.0 update reframes deferral with dual gates: (1) tactical — TLS strategy decided (platform-wrap vs pure-Swift); (2) strategic — harness-shape volatility converged. Both gates must clear to resume. Architectural feasibility unchanged; deferral is on timing only. Authorized inline by agent-harness-engineering-comparative-analysis.md v1.1.0 §Q5 + Recommendation #8.",
+      "statusRaw": "DEFERRED (v1.2.0)",
       "tier": 2,
       "scope": "ecosystem-wide",
-      "date": "2026-04-30"
+      "date": "2026-05-10"
     },
     {
       "file": "transfer-cell-cancellation-propagation.md",

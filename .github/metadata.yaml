@@ -7,3 +7,5 @@ topics:
   - design
   - documentation
 homepage: "https://swift-institute.org"
+readme:
+  family: C
