@@ -5512,6 +5512,29 @@
       "triageOutcome": "mixed",
       "outcomeDescription": "SkillUpdate [BLOG-023] Schedule-Shift Cohort Sweep (entry 3 AI 1; Tuesday to Monday cohort compression worked example with cohort-surface enumeration). NoAction swift-coproduct-primitives README staleness is package-implementation work tracked separately (cohort sweep before Monday launch).",
       "statusRaw": "processed"
+    },
+    {
+      "file": "2026-05-10-centralized-discussion-threads-pilot-and-failure-fix-arc.md",
+      "date": "2026-05-10",
+      "title": "Centralized Discussion Threads Pilot — Carrier Canary Failure-and-Fix Arc",
+      "packages": [
+        "swift-carrier-primitives",
+        "swift-tagged-primitives",
+        "swift-comparison-primitives",
+        "swift-either-primitives",
+        "swift-equation-primitives",
+        "swift-hash-primitives",
+        "swift-ownership-primitives",
+        "swift-pair-primitives",
+        "swift-product-primitives",
+        "swift-property-primitives",
+        "swift-standard-library-extensions"
+      ],
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-10",
+      "triageOutcome": "skill-update",
+      "outcomeDescription": "Cluster K — SkillUpdate [REFL-017] no redundant polling under notification semantics (3 polling tasks spawned during pilot worked example). NoAction [GH-REPO-094] consolidation per author's explicit gating (single instance; defer to 2nd per [SKILL-LIFE-021]). ResearchTopic cohort-expansion architecture for discussion-thread pilot (matrix enumerate-at-runtime vs hard-coded) deferred to next pilot expansion."
     }
   ]
 }
