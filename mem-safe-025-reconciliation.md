@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-11
-status: RECOMMENDATION
+status: DECISION
 ---
 -->
 
@@ -209,9 +209,7 @@ not required.
 
 ## Outcome
 
-**Status**: RECOMMENDATION — three options surfaced; decision pending.
-
-Provisional lean: **Option B** (two-rule replacement per partition doc).
+**Status**: DECISION (2026-05-11) — **Option B** selected (two-rule replacement per partition doc).
 
 The argument is policy-coherence: the partition doc's articulated
 institute direction is to forbid `@safe` entirely; Option B is the

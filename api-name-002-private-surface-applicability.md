@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-11
-status: RECOMMENDATION
+status: DECISION
 ---
 -->
 
@@ -170,9 +170,7 @@ reasons):
 
 ## Outcome
 
-**Status**: RECOMMENDATION — three options surfaced; decision pending.
-
-Provisional lean: **Option B** (apply to fileprivate+private exemption).
+**Status**: DECISION (2026-05-11) — **Option B** selected (apply to fileprivate+private exemption).
 
 The argument is structural: the rule's intent is consumer-observable
 readability; fileprivate/private decls have NO consumer-observable
