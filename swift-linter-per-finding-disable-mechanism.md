@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-11
-status: RECOMMENDATION
+status: DECISION
 ---
 -->
 
@@ -230,10 +230,7 @@ target rule disable extends it.
 
 ## Outcome
 
-**Status**: RECOMMENDATION — four options surfaced; decision pending.
-
-Provisional lean: **Option D — hybrid (line-comment primary +
-config-file for rule-wide)**.
+**Status**: DECISION (2026-05-11) — **Option D selected — hybrid (line-comment primary + config-file for rule-wide)**.
 
 The argument is composability: per-line escape hatches and per-
 target rule disables are categorically different problems. Option A
