@@ -14,7 +14,7 @@ Our defense-in-depth fix for swiftlang/swift#88022 (SimplifyMarkDependence guard
 
 **Trigger**: [RES-001] — Design question arose during PR review feedback. @eeckstein may ask why we're not fixing the root cause.
 
-**Prior work**: `compiler-pr-copypropagation-mark-dependence-handoff.md` (v2.0.0) identified PredictableDeadAllocationElimination as the source but attributed the destroy_value to `InstructionDeleter.forceDelete`. This was **wrong**.
+**Prior work**: `swift-institute/Issues/swift-issue-copypropagation-nonescapable-mark-dependence/INVESTIGATION-ARC.md` (v2.0.0; formerly `Research/compiler-pr-copypropagation-mark-dependence-handoff.md`, moved 2026-05-11) identified PredictableDeadAllocationElimination as the source but attributed the destroy_value to `InstructionDeleter.forceDelete`. This was **wrong**.
 
 ## Question
 
@@ -132,7 +132,7 @@ See: `swift-institute/Experiments/predictable-memopt-destroy-value-source/EXPERI
 ## References
 
 - swiftlang/swift#88022 — CopyPropagation crash
-- `compiler-pr-copypropagation-mark-dependence-handoff.md` — prior (partially incorrect) analysis
+- `swift-institute/Issues/swift-issue-copypropagation-nonescapable-mark-dependence/INVESTIGATION-ARC.md` — prior (partially incorrect) analysis (moved 2026-05-11 from `Research/compiler-pr-copypropagation-mark-dependence-handoff.md`)
 - `PredictableMemOpt.cpp:2331-2346` — promoteMarkDepBase
 - `PredictableMemOpt.cpp:2054-2079` — value collection for lifetime completion
 - `OSSALifetimeCompletion.cpp:565-598` — completeOSSALifetime

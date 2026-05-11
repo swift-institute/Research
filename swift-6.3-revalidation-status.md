@@ -125,7 +125,7 @@ The Phase 7a sweep extended coverage from the 04-17 baseline. Toolchain unchange
 
 - `Research/swift-6.3-ecosystem-opportunities.md` — comprehensive 6.3 feature catalog (per-package audit)
 - `Research/noncopyable-ecosystem-state.md` — consolidated ~Copyable state
-- `Research/compiler-pr-copypropagation-mark-dependence-handoff.md` — #88022 root cause
+- `Issues/swift-issue-copypropagation-nonescapable-mark-dependence/INVESTIGATION-ARC.md` — #88022 root cause (moved 2026-05-11 from `Research/compiler-pr-copypropagation-mark-dependence-handoff.md`)
 - `Audits/swift-6.3.1-revalidation-sweep-2026-04-30.md` — Phase 7a sweep audit (full per-cluster receipts)
 - Memory: `swift-6.3-fix-status.md` (canonical fix-status surface), `copypropagation-nonescapable-fix.md`, `noncopyable-deinit-workaround.md`, `copytoborrow-actor-state-barrier.md`
 - Reflections: `2026-04-17-swift-6-3-1-experiment-revalidation.md`, `2026-04-17-swift-6-3-1-corpus-completion-and-drift-relocation.md`, `2026-03-22-copypropagation-nonescapable-root-cause-and-fix.md`, `2026-03-22-rawlayout-deinit-compiler-fix.md`, `2026-03-31-copypropagation-noncopyable-enum-already-fixed.md`, `2026-03-22-swift-64-dev-compatibility-and-dual-compiler-discovery.md`
