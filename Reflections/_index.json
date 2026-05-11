@@ -6,6 +6,21 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-11-wave-3-closure-and-amendment-surface-enumeration.md",
+      "date": "2026-05-11",
+      "title": "Wave 3 closure: rule amendments, research docs, aggregate — and the Thread 2 surface-enumeration gap",
+      "packages": [
+        "swift-foundations/swift-linter-rules",
+        "swift-foundations/swift-institute-linter-rules",
+        "swift-foundations/swift-linter",
+        "swift-primitives/swift-ownership-primitives",
+        "swift-primitives/swift-standard-library-extensions",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-11-pointer-arithmetic-miscompile-three-round-investigation-and-issues-repo-canon.md",
       "date": "2026-05-11",
       "title": "Linux Pointer-Arithmetic Miscompile — Three-Round Investigation Arc + Issues-Repo Canon",
