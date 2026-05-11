@@ -661,4 +661,4 @@ This is structurally identical to [ISSUE-004] Required Ingredient Verification b
 - `Research/Reflections/2026-03-21-rawlayout-experiment-consolidation-and-workaround-exhaustion.md`
 - `Research/Reflections/2026-03-22-sil-copypropagation-bug2-workaround.md`
 - `Research/Reflections/2026-03-22-rawlayout-deinit-compiler-fix.md`
-- `Research/compiler-pr-copypropagation-mark-dependence-handoff.md`
+- `Issues/swift-issue-copypropagation-nonescapable-mark-dependence/INVESTIGATION-ARC.md` (moved 2026-05-11 from `Research/compiler-pr-copypropagation-mark-dependence-handoff.md`)

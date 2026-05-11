@@ -8,8 +8,8 @@ consolidates:
   - noncopyable-ownership-transfer-patterns.md (DECISION, 2026-03-31)
   - noncopyable-closure-capture-relaxation.md (IN_PROGRESS, 2026-03-31)
   - noncopyable-synchronization-ecosystem-audit.md (IN_PROGRESS, 2026-03-26)
-  - noncopyable-value-generic-deinit-bug.md (DECISION, 2026-03-15)
-  - mark-dependence-copypropagation-bug-report.md (IN_PROGRESS, 2026-03-22)
+  - noncopyable-value-generic-deinit-bug.md (DECISION, 2026-03-15) — moved 2026-05-11 to `swift-institute/Issues/swift-issue-rawlayout-noncopyable-deinit/INVESTIGATION-ARC.md`
+  - mark-dependence-copypropagation-bug-report.md (IN_PROGRESS, 2026-03-22) — moved 2026-05-11 to `swift-institute/Issues/swift-issue-copypropagation-nonescapable-mark-dependence/PRE-FILING-BUG-REPORT.md`
 -->
 
 # ~Copyable Ecosystem State
@@ -56,14 +56,14 @@ the accepted industry workaround.
 | CopyPropagation / mark_dependence | Double `end_lifetime` on `~Copyable ~Escapable` values across control flow | Remove `~Escapable` from Property.View | Pending filing |
 
 (from noncopyable-ergonomics-compiler-state.md, 2026-03-31;
-noncopyable-value-generic-deinit-bug.md, 2026-03-15;
-mark-dependence-copypropagation-bug-report.md, 2026-03-22)
+noncopyable-value-generic-deinit-bug.md [→ `swift-institute/Issues/swift-issue-rawlayout-noncopyable-deinit/INVESTIGATION-ARC.md`], 2026-03-15;
+mark-dependence-copypropagation-bug-report.md [→ `swift-institute/Issues/swift-issue-copypropagation-nonescapable-mark-dependence/PRE-FILING-BUG-REPORT.md`], 2026-03-22)
 
 **Deinit bug scale**: Workaround applied to 21 types across 9 packages (Queue, Array,
 Stack, Heap, Set.Ordered, Dictionary.Ordered, Slab, List.Linked, Tree.N variants).
 Trigger requires all 5 conditions: ~Copyable container, cross-package stored property,
 value-generic parameter, `@_rawLayout` storage, generic element.
-(from noncopyable-value-generic-deinit-bug.md, 2026-03-15)
+(from noncopyable-value-generic-deinit-bug.md [→ `swift-institute/Issues/swift-issue-rawlayout-noncopyable-deinit/INVESTIGATION-ARC.md`], 2026-03-15)
 
 ---
 

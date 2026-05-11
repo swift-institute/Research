@@ -19,7 +19,7 @@ triage_outcomes:
   - type: experiment_topic
     description: "Update copypropagation-nonescapable-mark-dependence experiment per [EXP-006]"
   - type: research_topic
-    target: mark-dependence-copypropagation-bug-report.md
+    target: swift-institute/Issues/swift-issue-copypropagation-nonescapable-mark-dependence/PRE-FILING-BUG-REPORT.md  # moved 2026-05-11 from Research/mark-dependence-copypropagation-bug-report.md
     description: "File Swift bug report with standalone reproducer for mark_dependence/CopyPropagation interaction"
   - type: skill_update
     target: memory
