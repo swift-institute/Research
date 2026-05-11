@@ -64,8 +64,10 @@ direction: "hold off for filing. do every other work." Did the everything-else:
 
 - Drafted `UPSTREAM-DRAFT.md` per [ISSUE-017] format inside the issue subdirectory
 - Added entry to `swift-compiler-bug-catalog.md` (this Research repo) per [ISSUE-028]
-- Wrote `swift-issue-pointer-arithmetic-investigation-arc.md` (this Research repo)
-  capturing the three-round arc with the two false trails
+- Wrote the investigation-arc note capturing the three-round arc with the two
+  false trails (originally landed in `swift-institute/Research/`; subsequently
+  moved to `swift-institute/Issues/swift-issue-pointer-arithmetic-linux-miscompile/INVESTIGATION-ARC.md`
+  per user direction "all issue stuff to /Issues")
 - Wrote `swift-affine-primitives/Research/swift-issue-pointer-arithmetic-workaround.md`
   with three consumer workaround patterns
 - Committed locally to three repos (`10d1f80` on Research, `1339375` on affine, `6d131ed`
@@ -208,3 +210,71 @@ institutional record even when superseded.
   The miscompile is cross-platform and release-mode; the blast radius across production
   Swift code may be substantial. Quick scan via `grep -rE
   '\.advanced\(by:.*\)\.advanced\(by:.*-' Sources/` per package would surface candidates.
+
+---
+
+## Post-session validation (2026-05-11, after independent `/collaborative-discussion`)
+
+An independent two-model `/collaborative-discussion` was run in a separate chat
+with a minimal-context input pack (only the 8-line repro + execution recipe;
+no investigation arc, no SIL findings, no Issues-repo reference). The
+convergence produced three corrections to this session's understanding:
+
+1. **Known issue**: matches [`swiftlang/swift#77558`](https://github.com/swiftlang/swift/issues/77558)
+   filed 2024-11-12 (title: "Code generation bug in release mode"). My [ISSUE-001]
+   keyword search across 8 combinations missed it — the upstream report's
+   generic title ("Code generation bug in release mode") and Xcode-context
+   framing didn't match my mechanism-focused keywords ("unsafe keyword pointer
+   arithmetic", "advanced linux release miscompile", etc.).
+2. **Trigger narrower than this reflection's text**: the bug requires `Array<T>`
+   LITERAL initialization (not `Array(repeating:count:)`), trivial element
+   type (not ARC-bearing class elements), chained COMPILE-TIME-CONSTANT offsets
+   (not parameterized), AND storage through `_ContiguousArrayStorage` / CoW
+   lowering (not manual `UnsafeMutableBufferPointer.allocate`). My "chained
+   `.advanced(by:)` with negative offset" framing was correct in direction but
+   overstated the blast radius.
+3. **Fixed on Swift 6.4-dev nightly-main** (commit `82b7720768ba875`); awaiting
+   backport or 6.4 release. The discussion's standalone-`swiftc -O` test on
+   nightly-main passed; my SwiftPM CI on `swiftlang/swift:nightly-main-jammy`
+   showed failures — the discrepancy is most likely a stale-container vs
+   fresh-pull divergence (the nightly Docker tag updates daily; the CI's pull
+   may have been an older nightly that still had the bug).
+
+Candidate fix-commits (2025-10-10 quad) identified via the orchestrator's optional
+compiler-source scan: `1cbed39f326` (COWOpts), `de557cab56f`
+(ArrayCountPropagation), `71381fab3c0` (ConstExpr), `02fafc63d67`
+(ForEachLoopUnroll) — all "Optimizer: support the new array literal
+initialization pattern". COWOpts is the most directly suggestive given the
+converged CoW-lowering trigger.
+
+### Updated action item 1 (replaces original [ISSUE-001] generalization)
+
+The two [skill] action items above are still correct, but a third is added:
+
+- [ ] **[skill]** issue-investigation: Strengthen [ISSUE-001] keyword-search
+  discipline with: (a) include both technical-mechanism AND user-facing-symptom
+  keyword classes (`"Code generation bug"` would have matched #77558 even though
+  the body has nothing about pointers); (b) search Swift Forums in addition to
+  GitHub Issues — many compiler bugs surface as Forums threads BEFORE the
+  GitHub Issue is filed; (c) for miscompile-class issues, add the canonical
+  failure-mode keywords ("dead store elimination", "uninitialized memory",
+  "array literal miscompile") as a third keyword class.
+
+### Investigation value despite landing on known issue
+
+The arc still produced value: fresh standalone repro at filing-grade quality,
+empirically narrowed trigger conditions (16-target SwiftPM bisection ruled out
+many candidates), identified the fix-bearing nightly toolchain via
+cross-toolchain verification, and surfaced the [ISSUE-001] blind spot as
+actionable feedback into the /issue-investigation skill. The de-escalation
+path (comment on #77558 rather than file new issue) is the right disposition.
+
+### Repo-shape correction (2026-05-11, post-convergence)
+
+User direction landed during the convergence-amendment phase: "all issue stuff
+to /Issues". The investigation-arc note originally written to
+`swift-institute/Research/` was moved to
+`swift-institute/Issues/swift-issue-pointer-arithmetic-linux-miscompile/INVESTIGATION-ARC.md`.
+Catalog + workaround + comment-draft cross-references updated. A `/handoff`
+will be initiated to triage other `swift-institute/Research/` entries that
+are similarly per-issue investigation notes and should follow the same move.
