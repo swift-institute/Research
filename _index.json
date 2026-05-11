@@ -6,6 +6,28 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "swift-linter-per-finding-disable-mechanism.md",
+      "displayName": "swift-linter-per-finding-disable-mechanism.md",
+      "topic": "RECOMMENDATION (v1.0.0): Tier 2 ecosystem-wide design proposal surfaced by HANDOFF Wave 3 thread #8. swift-linter currently has no per-finding disable mechanism; the rule message references SwiftLint's `// swiftlint:disable:next` which the swift-linter engine does not recognize. Empirical anchor: 2 unchecked_call_site findings on Ownership.Slot.Move.swift:51,59 are genuine institute escape hatches that the rule cannot exempt structurally. Surfaces four options: A line-comment protocol (mirror SwiftLint syntax), B custom attribute, C config-file entries, D hybrid (A primary + C for rule-wide disables — provisional lean). Includes engine-implementation sketch (~150 LOC), migration plan for 40 existing swiftlint:disable sites, meta-audit rule for orphan suppressions. Decision pending; would land as engine-level addition + rule message text updates.",
+      "date": "2026-05-11",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0. Tier 2 design-proposal-first per HANDOFF Wave 3 thread #8 explicit constraint ('Design proposal first (research-process); engine implementation second'). Four options enumerated with pros/cons + comparison matrix on eight criteria. Provisional lean is Option D (hybrid). Decision pending user/principal deliberation.",
+      "statusRaw": "RECOMMENDATION (v1.0.0)",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "mem-safe-025-reconciliation.md",
+      "displayName": "mem-safe-025-reconciliation.md",
+      "topic": "RECOMMENDATION (v1.0.0): Tier 2 ecosystem-wide policy reconciliation surfaced by HANDOFF Wave 3 thread #7. Current [MEM-SAFE-025] REQUIRES @safe adjacent to nonisolated(unsafe); institute policy FORBIDS @safe in Sources entirely. Empirical catalogue: 13 @safe sites ecosystem-wide (6 live decls, mostly on Category-A @unchecked Sendable patterns); 247 @unchecked Sendable sites in swift-primitives. Surfaces three options: A retain status quo, B two-rule replacement per partition doc (require invariant comment + forbid @safe — provisional lean), C hybrid. Includes implementation plan for Option B: skill update, lint rule split, ~10-site source migration. Resolves 1 AMBIGUOUS + 3 held findings (per HANDOFF) once direction is chosen.",
+      "date": "2026-05-11",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0. Tier 2 policy reconciliation surfaced as research-first per HANDOFF Wave 3 thread #7 explicit constraint ('Output: research doc + skill update'). Three options enumerated with pros/cons + comparison matrix on eight criteria. Provisional lean is Option B (partition doc's articulated direction). Decision pending; skill update gated on decision.",
+      "statusRaw": "RECOMMENDATION (v1.0.0)",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "api-name-002-private-surface-applicability.md",
       "displayName": "api-name-002-private-surface-applicability.md",
       "topic": "RECOMMENDATION (v1.0.0): Tier 2 ecosystem-wide cross-cutting question surfaced by HANDOFF Wave 3 thread #4. Does [API-NAME-002] (no compound identifiers) apply uniformly to all visibility levels, or only to consumer-observable surface? Surfaces three options: A uniform (status quo), B exempt fileprivate+private (module-export boundary, provisional lean), C exempt internal+below (named-export boundary). Empirical anchor: 2 RULE-WRONG findings on Ownership.Transfer.Erased.Outgoing.Header fileprivate fields (destroyPayload, payloadOffset) in swift-ownership-primitives Wave 2 leaf triage. Decision pending; would amend [API-NAME-002] in the code-surface skill plus the Lint.Rule.Naming.Compound rule. Follow-up: extend lint pass to capture visibility per finding to measure the fileprivate/private slice ecosystem-wide.",
