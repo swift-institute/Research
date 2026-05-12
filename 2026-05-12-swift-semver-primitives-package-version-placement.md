@@ -4,11 +4,31 @@
 ---
 version: 1.0.0
 last_updated: 2026-05-12
-status: RECOMMENDATION
+status: SUPERSEDED
 tier: 2
 scope: cross-package
+supersededBy: 2026-05-12-swift-package-and-version-primitives-design.md
 ---
 -->
+
+> **SUPERSEDED 2026-05-12** by
+> [`2026-05-12-swift-package-and-version-primitives-design.md`](2026-05-12-swift-package-and-version-primitives-design.md)
+> v1.0.0 RECOMMENDATION, applying the framework codified in
+> [`2026-05-12-typed-identifier-naming-framework.md`](2026-05-12-typed-identifier-naming-framework.md).
+>
+> The substantive recommendation (Option C — separate package owns
+> the versioning primitives; cross-ecosystem reuse rationale via
+> Rust semver / node-semver / pub_semver precedent; SE-0292
+> validation reference) survives in the successor §Q3 +
+> swift-version-primitives section. Naming references throughout
+> this doc (`swift-semver-primitives` package name, `SemVer.*`
+> namespace, `SemVer.Version` type) are SUPERSEDED — both
+> "swift-semver" and "SemVer" are abbreviations of "Semantic
+> Versioning" forbidden by framework Axiom 1. Corrected: package
+> `swift-version-primitives`, namespace `Version.*`, primary type
+> `Version.Semantic` (per user explicit guidance; the `SemVer`
+> typealias MAY land post-v1.0.0 as additive convenience per
+> framework Axiom 1's typealias carve-out).
 
 ## Context
 

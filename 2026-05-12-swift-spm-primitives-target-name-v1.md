@@ -4,11 +4,24 @@
 ---
 version: 1.0.0
 last_updated: 2026-05-12
-status: RECOMMENDATION
+status: SUPERSEDED
 tier: 2
 scope: cross-package
+supersededBy: 2026-05-12-swift-package-and-version-primitives-design.md
 ---
 -->
+
+> **SUPERSEDED 2026-05-12** by
+> [`2026-05-12-swift-package-and-version-primitives-design.md`](2026-05-12-swift-package-and-version-primitives-design.md)
+> v1.0.0 RECOMMENDATION, applying the framework codified in
+> [`2026-05-12-typed-identifier-naming-framework.md`](2026-05-12-typed-identifier-naming-framework.md).
+>
+> The substantive recommendation (Target.Name included in v1.0.0;
+> swift-foundations/swift-dependency-analysis is the independent
+> second consumer per [RES-018]; Option D — trio + roadmap section)
+> survives in the successor §Q3 + §Q9. Naming references throughout
+> this doc (`SwiftPM.Target.Name`) are SUPERSEDED — corrected to
+> `Target.Name` per framework Axioms 1 and 2.
 
 ## Context
 

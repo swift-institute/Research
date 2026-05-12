@@ -4,11 +4,25 @@
 ---
 version: 1.0.0
 last_updated: 2026-05-12
-status: RECOMMENDATION
+status: SUPERSEDED
 tier: 2
 scope: cross-package
+supersededBy: 2026-05-12-swift-package-and-version-primitives-design.md
 ---
 -->
+
+> **SUPERSEDED 2026-05-12** by
+> [`2026-05-12-swift-package-and-version-primitives-design.md`](2026-05-12-swift-package-and-version-primitives-design.md)
+> v1.0.0 RECOMMENDATION, applying the framework codified in
+> [`2026-05-12-typed-identifier-naming-framework.md`](2026-05-12-typed-identifier-naming-framework.md).
+>
+> The substantive recommendations of this doc (typealias trio, no
+> validation, greenfield + SE-0292 citation, Tier 2) survive in the
+> successor. The naming choices (`SwiftPM.*` namespace,
+> `swift-spm-primitives` package name) are SUPERSEDED — both violate
+> the framework's Axioms 1 (no abbreviations) and 2 (generic-noun
+> namespace). Corrected names: `Package.*` / `Product.*` / `Target.*`
+> namespaces in `swift-package-primitives` package.
 
 ## Context
 
