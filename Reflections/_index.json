@@ -21,6 +21,18 @@
       "statusRaw": "pending"
     },
     {
+      "file": "2026-05-11-swift-standard-library-extensions-stress-test-and-tier-0-boundary-pattern.md",
+      "date": "2026-05-11",
+      "title": "swift-standard-library-extensions stress test and the Tier-0 boundary pattern",
+      "packages": [
+        "swift-primitives/swift-standard-library-extensions",
+        "swift-foundations/swift-linter-rules",
+        "swift-foundations/swift-institute-linter-rules"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-11-pointer-arithmetic-miscompile-three-round-investigation-and-issues-repo-canon.md",
       "date": "2026-05-11",
       "title": "Linux Pointer-Arithmetic Miscompile — Three-Round Investigation Arc + Issues-Repo Canon",
@@ -5566,6 +5578,20 @@
       "packages": [
         "swift-institute/Issues",
         "swift-institute/Experiments"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-12-orchestrator-meta-process-independent-audits-and-cross-session-rules.md",
+      "date": "2026-05-12",
+      "title": "Orchestrator meta-process: independent audits catch review blind spots; per-action YES gating needs cross-session codification",
+      "packages": [
+        "swift-affine-primitives",
+        "swift-institute/.github",
+        "swift-institute/Issues",
+        "swift-institute/Experiments",
+        "swift-institute/Research"
       ],
       "status": "pending",
       "statusRaw": "pending"
