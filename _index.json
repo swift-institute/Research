@@ -610,6 +610,17 @@
       "scope": "ecosystem-wide"
     },
     {
+      "file": "three-tier-linter-rules-partition.md",
+      "displayName": "three-tier-linter-rules-partition.md",
+      "topic": "Three-tier partition of 72 linter rules across universal/institute/primitives packages",
+      "date": "2026-05-11",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v0.1.0 — 7 universal / 60 institute / 5 primitives after borderline adjudication; 4 policy follow-ups tracked",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
       "file": "value-generic-parameter-naming-convention.md",
       "displayName": "value-generic-parameter-naming-convention.md",
       "topic": "Value-generic parameter naming convention (capacity vs N)",
