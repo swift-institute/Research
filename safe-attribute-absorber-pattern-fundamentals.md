@@ -2,13 +2,23 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-12
-status: RECOMMENDATION
+status: DECISION
 tier: 2
 scope: ecosystem-wide
 ---
 -->
+
+## Changelog
+
+- **v1.1.0 (2026-05-12)** — Stamped **DECISION** (Option B). User-tier authorization received in the dispatching session. Open-question dispositions resolved per below; all align with the research's recommended defaults:
+  1. **Cluster C (pure-documentation `@safe`)**: author judgment per site. Lint does not force keep-or-drop. Sites where `@safe` has no mechanical effect (no SE-0458 warning to suppress) MAY drop the attribute; sites where `@safe` provides documentation signal MAY keep it. Either is internally consistent.
+  2. **`@safe` on individual methods/properties/inits/subscripts/lets/vars**: admitted under the same disclosure requirement. The Wave 3 carve-out's "direct `@safe` on non-type-decls remains forbidden" clause is dropped — that was the same tool-capability-bound distinction the carve-out's type-vs-method axis was reifying.
+  3. **`[MEM-SAFE-024]` Category citation**: SHOULD-strength. SHOULD cite when applicable; MAY explain in prose when the site is not categorizable under A/B/C/D (cluster C pure-documentation sites; novel patterns). Forces no Category-E pressure.
+  4. **Wave 5 sequencing**: parallel. Option B's inversion closes Wave 4 residuals dramatically (strict superset closure relative to the Wave 4 carve-out); Wave 5 L2/L3 triage proceeds without coupling.
+  5. **"Absorber pattern" terminology**: kept. Describes the role per `[MEM-SAFE-020]`; `@safe` is now the language-level mechanism that materializes the role.
+- **v1.0.0 (2026-05-12)** — Initial Tier 2 RECOMMENDATION. Prior-art survey of SE-0458, Memory Safety Vision, Rust unsafe model, Haskell Safe extensions, Proof-Carrying Code theory. Empirical universe verified at 125 ecosystem-wide `@safe` sites in three clusters (~70 direct absorber, ~30 transitive, ~25 pure-documentation). Seven options enumerated (A–G). Recommendation: Option B (embrace SE-0458, layer institute disclosure-requirement).
 
 ## Context
 
