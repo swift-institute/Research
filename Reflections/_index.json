@@ -5558,6 +5558,17 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-12-per-issue-precedent-extension-deferred.md",
+      "date": "2026-05-12",
+      "title": "Per-Issue Precedent Extension: Four Candidates, Four No-Fits",
+      "packages": [
+        "swift-institute/Issues",
+        "swift-institute/Experiments"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
