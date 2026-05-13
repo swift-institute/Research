@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-13
 status: RECOMMENDATION
 tier: 3
@@ -13,9 +13,11 @@ applies_to:
   - swift-primitives/swift-binary-parser-primitives
   - swift-primitives/swift-ascii-parser-primitives
   - swift-foundations/swift-parsers
-verification_experiment: none (analysis-only; spike scoped at adoption time if reconsidered)
+verification_experiment: swift-parser-primitives/Experiments/parser-protocol-self-noncopyable-witness-tables/
 predecessor: 2026-05-13-noncopyable-adoption-ecosystem-corners-audit.md (v1.0.0 RECOMMENDATION; Row 11 gating decision lift)
 trigger: HANDOFF-parser-protocol-noncopyable-escapable-relaxation.md (Tier-3 follow-up to ecosystem-corners audit Q1)
+changelog:
+  - v1.1.0 (2026-05-13): Empirical verification of the witness-table SIGSEGV blocker via /experiment-process; six variants across Swift 6.2.3 / 6.3.2 / 6.4-dev nightly, including V5 with the full original-crash conditions. The SIGSEGV does NOT reproduce on Swift 6.3.2 with the proposed Self: ~Copyable axis added. Revised (d) cascade-cost score 5/5 → 4/5. Sibling-type workaround framing dropped per `feedback_no_sibling_type_workarounds.md` — protocol-level relaxation is the architectural goal; the recommendation tree is "protocol-relaxation-with-validated-blockers OR defer-until-second-consumer." Option δ recommendation stands, but rationale shifts from "verified-unfixed compiler bug + cascade swamp" to "high mechanical migration ceremony without a second consumer per [RES-018] + stdlib-Array cap on `Parser.OneOf.Any.parsers: [Closure]` as a structural design limit."
 ---
 -->
 
@@ -96,11 +98,17 @@ ecosystem-corners audit. The audit's Q1 is **resolved** here.
   it has shipped since Swift 5.9 / SE-0427.
 - **Witness-table SIGSEGV** (`swiftlang/swift#85441` pattern): cross-
   module ~Copyable witness-table instantiation crash documented for
-  `Parser.`Protocol`.Input: ~Copyable` in February 2026. NO upstream
-  fix shipped; workaround is local wrapper types in tests. The bug
-  scales with the metadata complexity of the concrete type — extending
-  `~Copyable` to `Self` materially worsens exposure (every composed
-  combinator with cross-module concrete Self would hit the same path).
+  `Parser.`Protocol`.Input: ~Copyable` in February 2026 on Swift 6.2.3.
+  **EMPIRICALLY RESOLVED on Swift 6.3.2** per the v1.1.0 verification
+  experiment at
+  `swift-parser-primitives/Experiments/parser-protocol-self-noncopyable-witness-tables/`.
+  Six variants (V1–V6) including V5 with the full original-crash
+  conditions (external-package Input `Input.Slice<Buffer<UInt8>.Linear>` +
+  protocol composition `Map<Fail<…>>: Π_α` + cross-module instantiation +
+  `Self: ~Copyable`) PASS on Swift 6.3.2 (current production toolchain)
+  without SIGSEGV. The 2026-02-14 crash appears to have been resolved by
+  an unannounced Swift 6.3.x compiler fix. See `EXPERIMENT.md` for full
+  results.
 - **Stdlib `Array`, `Set`, `Dictionary`**: still do NOT support
   `~Copyable` elements as of Swift 6.4. Parser values are often stored
   in stdlib arrays at consumer sites (e.g., `Parser.OneOf.Any.parsers:
@@ -393,11 +401,16 @@ rationale §3.
 The bug class is therefore narrow: ONE confirmed case (Row 11 Cache
 aliasing). The other two are either non-existent or speculative.
 
-**(d) Cascade cost: 5/5 (HIGHEST — STRUCTURAL BARRIER).** Cascade
-breakdown:
+**(d) Cascade cost: 4/5 (revised v1.1.0; was 5/5).** Cascade breakdown:
 
 - **166 direct conformer sites** across 4 packages — every conformer
-  must be re-evaluated for `~Copyable` propagation.
+  must be re-evaluated for `~Copyable` propagation. Each conformer
+  extension requires explicit `where Upstream: ~Copyable` per
+  `[feedback_extension_implies_copyable]` (the verification experiment
+  hit this gotcha at its first compile: bare
+  `extension Parser.Map: Parser.\`Protocol\`` implicitly constrained
+  `Upstream: Copyable` and refused to admit `~Copyable` conformers).
+  Mechanical migration cost, not structural blocker.
 - **~30 wrapper types** with parser-typed fields must propagate
   `~Copyable` through their type declarations OR explicitly constrain
   `Upstream: Copyable`.
@@ -408,18 +421,22 @@ breakdown:
 - **Closure-capture limits**: `Parser.OneOf.Any.parsers: [(inout Input) throws -> Output]`
   cannot host `~Copyable` parser elements — forces the type-erased
   combinator to remain Copyable, creating an in-ecosystem asymmetry.
-- **`@autoclosure` for `Parser.Lazy`**: partially supported for
-  ~Copyable returns per SE-0432 / SE-0497; risks toolchain-specific
-  fragility.
-- **Witness-table SIGSEGV** (`swiftlang/swift#85441` pattern): the
-  predecessor research confirmed cross-module witness-table
-  instantiation crashes when ~Copyable protocol constraints meet
-  composed generic types from external packages on Swift 6.2.3. The
-  bug is currently confined to the `Input: ~Copyable` surface;
-  extending to `Self: ~Copyable` materially expands exposure across the
-  166-site cascade. No upstream fix has shipped. The workaround (local
-  wrapper types in tests) does not scale to production cross-package
-  composition.
+  **This is a hard structural cap on the design space, not removable
+  by compiler progress.**
+- **`Parser.Lazy<P>` closure capture**: empirically **resolved** for the
+  closure-returning-`~Copyable` case per the v1.1.0 experiment V6
+  (`Parser.Lazy<Fail<…>>: ~Copyable` with `let build: () -> P` and
+  `P: ~Copyable` compiles, dispatches, and composes cleanly on Swift
+  6.3.2). The `@autoclosure` variant was not exercised; likely needs
+  toolchain-specific care but no longer a load-bearing blocker.
+- **Witness-table SIGSEGV** (`swiftlang/swift#85441` pattern):
+  **EMPIRICALLY RESOLVED** on Swift 6.3.2 per the v1.1.0 experiment.
+  The 2026-02-14 documented crash on Swift 6.2.3 does not reproduce
+  under the current production target toolchain with the full original-
+  crash conditions (V5 with `Input.Slice<Buffer<UInt8>.Linear>`) AND
+  the new `Self: ~Copyable` axis added. The bug appears to have been
+  fixed by an unannounced Swift 6.3.x compiler change. **This downgrades
+  the dominant (d) cost item from the v1.0.0 analysis.**
 - **Stdlib-protocol losses**: SE-0499 unblocks Hashable / Equatable /
   Comparable on `~Copyable`, but parsers do not currently conform to
   these (parsers are descriptions, not data). `Sendable` is the only
@@ -432,9 +449,10 @@ breakdown:
   store an Upstream by value — likely covering 30–50 % of the
   combinator set.
 
-The witness-table SIGSEGV is the decisive factor: this is a
-**verified, unfixed compiler bug** that scales adversely with the
-proposed change.
+The dominant residual cost factor after v1.1.0 verification is the
+**`Parser.OneOf.Any.parsers: [Closure]` structural cap** plus the
+**mechanical 166-site cascade ceremony**. The verified compiler-bug
+blocker is gone; the remaining costs are policy and ceremony.
 
 **(e) Pattern-establishing: 3/5.** If adopted, this would be the
 institute's largest protocol-Self `~Copyable` adoption to date. It
@@ -485,11 +503,13 @@ or accident?`) that the Wave-5+6 cheap-cascade is the EXCEPTION within
 the Copyable residual, NOT the rule. Parser protocol relaxation is the
 canonical example of the rule.
 
-**Total: 1 + 2 + 2 + 3 + 2 − 5 = 5/30** (cascade-cost-inverted).
+**Total (v1.1.0): 1 + 2 + 2 + 3 + 2 − 4 = 6/30** (cascade-cost-inverted).
 
 Compare to v1.2.0's adopted Row 1 (`Lint.Source.Parsed`: 25/30) and
-Row 2 (`Source.Manager`: 20/30): **5/30 is decisively below the
-adoption threshold**.
+Row 2 (`Source.Manager`: 20/30): **6/30 is still decisively below the
+adoption threshold**, but the gap reasoning has shifted from "blocked
+on an unfixed compiler bug" (v1.0.0) to "high mechanical migration
+ceremony without a clear second-consumer payback per [RES-018]" (v1.1.0).
 
 #### Scoring Option β (`Self: ~Copyable & ~Escapable`)
 
@@ -595,14 +615,14 @@ This is a meta-option (no protocol change). Costs and benefits:
 **Total: 0/30 cascade cost; full benefit of leaving the ecosystem
 shape intact.**
 
-#### Summary scoring table
+#### Summary scoring table (v1.1.0)
 
 | Option | (a) | (b) | (c) | (d) cost | (e) | (f) | **Total** | Verdict |
 |---|---|---|---|---|---|---|---|---|
-| α (Self: ~Copyable) | 1 | 2 | 2 | **5** | 3 | 2 | **5/30** | Below threshold |
+| α (Self: ~Copyable) | 1 | 2 | 2 | **4** (was 5; SIGSEGV empirically resolved) | 3 | 2 | **6/30** (was 5/30) | Below threshold; cascade-ceremony dominant |
 | β (Self: ~Copyable & ~Escapable) | 0 | 0 | 1 | **5** | 1 | 0 | **0/30** floored from −3 | Structurally untenable |
-| γ (Self: ~Copyable; combinators Copyable by convention) | 1 | 2 | 2 | **4** | 3 | 2 | **6/30** | Below threshold; fragile invariant |
-| δ (Defer; sibling-type workaround for Row 11) | n/a | n/a | n/a | **0** | n/a | n/a | **n/a — meta-option, no cascade** | **RECOMMENDED** |
+| γ (Self: ~Copyable; combinators Copyable by convention) | 1 | 2 | 2 | **3** (was 4; same SIGSEGV resolution) | 3 | 2 | **7/30** (was 6/30) | Below threshold; fragile invariant |
+| δ (Defer until [RES-018] second consumer surfaces) | n/a | n/a | n/a | **0** | n/a | n/a | **n/a — meta-option, no cascade** | **RECOMMENDED** |
 
 ### D. Examination of `Parser.Span.swift:48` constraint
 
@@ -852,16 +872,16 @@ inherits and extends:
 | **Error-proneness** | High. The cascade interacts with closure capture (Lazy, OneOf.Any), result builders, and stdlib container storage. Each interaction is a potential foot-gun for consumers. |
 | **Abstraction** | The change abstracts up at the protocol level (one declaration changes; ~166 conformer sites change with it). High-leverage but high-blast-radius. |
 
-For Option δ:
+For Option δ (v1.1.0 revised — sibling-type framing removed per `feedback_no_sibling_type_workarounds.md`):
 
 | Dimension | Option δ evaluation |
 |---|---|
-| **Visibility** | The protocol shape is preserved; Row 11 workaround surfaces a clearly-named sibling type (`Parser.Machine.Compiled.Owned` or similar) at the call site for consumers who want ~Copyable semantics. |
-| **Consistency** | Matches the L1-~Copyable / L3-Copyable bifurcation already established for `Path_Primitives.Path` / `Paths.Path`. |
-| **Viscosity** | Low adoption cost (one or two new types; no cascade). Reversion: trivially preserved (no shape change to protocol). |
-| **Role-expressiveness** | The `Parser.Machine.Compiled.Owned : ~Copyable` type signals "single-owner cache" explicitly without forcing the signal across the rest of the protocol. |
-| **Error-proneness** | Low. Consumer who wants ~Copyable semantics opts in by-type-name; consumer who doesn't gets the protocol-typed compositional surface. |
-| **Abstraction** | Low-leverage but low-blast-radius. Targeted to the audit's Row 11 motivation. |
+| **Visibility** | The protocol shape is preserved unchanged. Row 11's `Cache` aliasing remains a documented invariant at `Parser.Machine.Compiled.swift:27–31`, not elevated to a compile-time guarantee. |
+| **Consistency** | Matches the existing in-domain `Compiled` (single-owner, in-domain) / `Prepared` (shared, immutable, conditionally Sendable) bifurcation — the architectural split already does the work `~Copyable` would otherwise enforce. |
+| **Viscosity** | Zero adoption cost (no code change). Zero reversion cost. |
+| **Role-expressiveness** | The documented invariant + `Compiled`/`Prepared` split + Swift actor-model `Sendable` discipline together bound the aliasing exposure. The compile-time guarantee is forfeited; the documented one survives. |
+| **Error-proneness** | Low. Consumer is bounded by `Sendable` across isolation domains; in-domain copy is the only residual risk and is bounded by the `Compiled` doc-comment. |
+| **Abstraction** | No abstraction change. The ecosystem remains as-authored until a second consumer surfaces. |
 
 ---
 
@@ -869,18 +889,22 @@ For Option δ:
 
 **Status**: RECOMMENDATION (Tier-3).
 
-### Recommended option: δ — Defer indefinitely; offer a sibling-type workaround for Row 11
+### Recommended option: δ — Defer until [RES-018] second-consumer hurdle is cleared
 
-**Rationale**:
+**Rationale (v1.1.0 revised)**:
 
-1. **Six-axis score 5/30 for Option α is decisively below the v1.2.0
-   adoption threshold (Wave-5 Row 1: 25/30; Wave-6 Row 2: 20/30).** The
-   protocol-level `~Copyable` carries weak resource-correlation (the
-   resource is in ONE type, not the protocol), weak safety-bug-class
-   payback (the bug class exists only at Row 11), and a 5/5 cascade
-   cost across 166 conformer sites + builder generics + closure-
-   capture surface + the verified witness-table SIGSEGV (`swiftlang/
-   swift#85441` pattern).
+1. **Six-axis score 6/30 for Option α is below the v1.2.0 adoption
+   threshold (Wave-5 Row 1: 25/30; Wave-6 Row 2: 20/30).** Protocol-
+   level `~Copyable` carries weak resource-correlation (the resource is
+   in ONE type, not the protocol), weak safety-bug-class payback (the
+   bug class exists only at Row 11), and a 4/5 cascade cost (revised
+   down from 5/5 — the witness-table SIGSEGV that dominated v1.0.0 is
+   **empirically resolved on Swift 6.3.2** per the v1.1.0 verification
+   experiment). Residual cascade is 166 conformer sites of mechanical
+   `where Upstream: ~Copyable` extension annotations + builder generics
+   re-evaluation + the **structural cap on `Parser.OneOf.Any.parsers: [Closure]`**
+   (stdlib `Array` of `~Copyable` not supported; type-erased combinator
+   forced to remain `Copyable`).
 
 2. **Option β (~Escapable Self) is structurally untenable** — 0/30
    floored from −3. ~Escapable Self is categorically wrong for a
@@ -891,7 +915,7 @@ For Option δ:
 3. **Option γ is the same cascade with a less defensible invariant.**
    The "combinators stay Copyable by convention" rule is not type-
    system-enforced; it would degrade over time as new combinators are
-   added. Marginal score improvement (6/30) does not change the
+   added. Marginal score improvement (7/30 v1.1.0) does not change the
    verdict.
 
 4. **Prior art per [RES-021] does NOT support universal
@@ -904,128 +928,140 @@ For Option δ:
 
 5. **Audit Q1 deferral stands and is reinforced.** The ecosystem-corners
    audit deferred Q1 pending a second consumer per [RES-018]. This
-   Tier-3 analysis confirms: there is no second consumer. The Machine.*
-   family's Row 11 (`Compiled`) is the lone parser-stack consumer
-   wanting `~Copyable` semantics; everything else in the family is
-   internal (Builder, already ~Copyable) or shares the same single use
-   case (Prepared, deliberately Copyable for cross-task sharing).
+   Tier-3 analysis confirms: there is no second consumer at
+   investigation time. `Parser.Machine.Compiled` is the lone parser-
+   stack consumer wanting `~Copyable` semantics; everything else in the
+   `Machine.*` family is internal (`Builder`, already `~Copyable` at
+   `Machine.swift:71`) or shares the same single use case (`Prepared`,
+   deliberately Copyable for cross-task sharing).
 
-6. **The L1-~Copyable / L3-Copyable bifurcation already in the
-   ecosystem (Path / Paths.Path; Kernel.Thread.Handle / Kernel.Thread.
-   Handle.Reference; Parser.Machine.Compiled / Parser.Machine.Prepared)
-   IS the canonical pattern.** Option δ's sibling-type workaround
-   (`Parser.Machine.Compiled.Owned : ~Copyable`, NOT conforming to
-   `Parser.`Protocol``, consumed directly) preserves the resource-
-   correlation win for the one consumer without forcing the protocol
-   to invert its conventions.
+6. **Sibling-type workarounds are explicitly rejected** per
+   `feedback_no_sibling_type_workarounds.md` (2026-05-13). The
+   architectural goal of an Option α arc is to make the protocol viable
+   for `~Copyable` conformers, not to route around it with an opt-in
+   escape valve. The recommendation tree is strictly:
+   protocol-level relaxation (with empirical-blocker validation) OR
+   defer-until-second-consumer-surfaces. Row 11's `Cache` aliasing
+   stays as a documented invariant (`Parser.Machine.Compiled.swift:27–31`)
+   until protocol relaxation becomes viable on the merits (i.e., a
+   second consumer surfaces clearing [RES-018]).
 
-### Sibling-type workaround for Row 11 (concrete shape under Option δ)
+### Row 11 status under Option δ (no workaround)
 
-Add a sibling type to `Parser.Machine`:
+`Parser.Machine.Compiled.Cache` aliasing remains a **documented invariant**
+at `Parser.Machine.Compiled.swift:27–31`:
 
-```swift
-extension Parser.Machine {
-    /// Single-owner compiled wrapper.
-    /// 
-    /// Use when the cache must be uniquely owned (e.g., a single-isolation-
-    /// domain parse pipeline). For protocol-typed composition (`some
-    /// Parser.\`Protocol\`<…>` slots), use `Parser.Machine.Compiled`
-    /// (Copyable), which trades single-ownership documentation for
-    /// composability.
-    public struct OwnedCompiled<P: Parser.\`Protocol\`>: ~Copyable
-    where
-        P.Input: Parser.Input.\`Protocol\`,
-        P.Failure: Swift.Error
-    {
-        @usableFromInline let source: P
-        @usableFromInline let witness: Compile.Witness<P>
-        @usableFromInline var cache: Cache  // structural change: cache as inout-mutable struct, or final-class with consume-discipline
-        
-        public consuming func parse(_ input: inout P.Input) throws(P.Failure) -> P.Output {
-            // single-owner parse implementation; consumes self
-        }
-        
-        public consuming func prepared() -> Parser.Machine.Prepared<P> {
-            // single-owner prepared() implementation; consumes self
-        }
-    }
-}
-```
+> *"`Compiled` is NOT `Sendable`. Use it within a single isolation
+> domain. For cross-task sharing, use `prepared()` which returns an
+> immutable `Prepared` wrapper that is conditionally `Sendable`."*
 
-This type:
+The aliasing exposure is bounded by the `Sendable` discipline: a
+`Compiled` value cannot cross isolation boundaries; the only multi-
+owner risk is in-domain accidental copy. Under Swift's actor model and
+the existing `Compiled`/`Prepared` bifurcation, this is the smallest
+residual exposure the ecosystem accepts; it is NOT elevated to a
+compile-time guarantee under Option δ. When a second consumer surfaces,
+Option α reopens for adoption with the empirical SIGSEGV blocker
+already cleared per the v1.1.0 experiment.
 
-- Does NOT conform to `Parser.`Protocol`` — avoids the protocol-level
-  cascade entirely.
-- IS `~Copyable` — closes the audit's Row 11 (c)-3 bug class at compile
-  time for callers who opt in.
-- Offers a consuming `prepared()` to transition to the immutable
-  shared variant — preserving the architectural Compiled/Prepared
-  bifurcation.
-- Calling sites that need protocol-typed composition continue to use
-  the Copyable `Parser.Machine.Compiled` (no behavior change for
-  existing code).
+### Empirical-validation done (v1.1.0)
 
-### Highest-information first step (IF the recommendation is reconsidered)
+The v1.0.0 "highest-information first step" — a spike of `Parser.Fail`
+to test the witness-table SIGSEGV under cross-module conditions — has
+been **executed** via /experiment-process at
+`swift-parser-primitives/Experiments/parser-protocol-self-noncopyable-witness-tables/`.
+Six variants tested across Swift 6.2.3 / 6.3.2 / 6.4-dev nightly 2026-05-07,
+including V5 with the full original-crash conditions (Required Conditions
+1+2+3+4 from the 2026-02-14 research). **The witness-table SIGSEGV does
+not reproduce on Swift 6.3.2** (the current production target toolchain).
 
-If, in the future, a second parser-stack consumer surfaces with
-strong borrow-by-default needs (e.g., a stateful streaming parser
-with a connection handle in Self, or a memory-mapped Binary parser
-with mmap region ownership in Self), and reconsideration of Options
-α / γ is warranted, the highest-information first step is:
+This **forecloses the dominant v1.0.0 (d) cost item** but does NOT clear
+the remaining blockers (cascade ceremony, `Parser.OneOf.Any` stdlib-Array
+cap, [RES-018] second-consumer hurdle, foundations-layer Copyable-
+constraint cascade). The recommendation stands at Option δ; the rationale
+shifts from "verified-unfixed compiler bug + cascade swamp" to "high
+ceremony without a second consumer."
 
-**Spike Parser.Fail as an Option α proof-of-shape.**
+### Highest-information next step (IF a second consumer surfaces)
 
-Parser.Fail is the simplest leaf parser:
+If a second parser-stack consumer surfaces (e.g., a stateful streaming
+parser with a connection handle in `Self`, or a memory-mapped Binary
+parser with mmap region ownership in `Self`), reconsideration of Option
+α becomes warranted. The next-highest-information step would be:
 
-```swift
-public struct Fail<Input, Output, F: Swift.Error>: Sendable {
-    let error: F
-    public init(_ error: F) { self.error = error }
-}
-extension Parser.Fail: Parser.`Protocol` { … }
-```
+**Stage a controlled Option α migration starting with leaf parsers.**
 
-It has:
-- No stored `Parser.`Protocol`` field (so no upward cascade).
-- A simple `Sendable` constraint.
-- A single error stored property.
-- Conforms to `Parser.`Protocol`` directly.
-- Is named in the brief as a candidate.
+Order (by cascade-cost minimization):
 
-Spike steps:
+1. **Phase 1 — Leaf parsers (no `Parser.`Protocol`` field stored):**
+   `Parser.Fail`, `Parser.Always`, `Parser.End`, `Parser.Rest`,
+   `Parser.First.Element`, `Parser.First.Where`, `Parser.Byte`,
+   `Parser.Literal`, `Parser.Prefix.*`, `Parser.Consume.Exactly`,
+   `Parser.Discard.Exactly`. ~25 sites. Each gets `: ~Copyable` on
+   its struct declaration AND `where Input: ~Copyable & ~Escapable`
+   on its `Parser.`Protocol`` extension (per the
+   `[feedback_extension_implies_copyable]` gotcha hit at experiment
+   compile time).
 
-1. Change `Parser.`Protocol`` to `: ~Copyable` on its declaration.
-2. Add `: ~Copyable` to `Parser.Fail` and verify it still compiles in
-   isolation.
-3. Build the package in 6.4-dev nightly.
-4. If the build succeeds, compose `Parser.Fail` into a `Parser.Map.Transform`
-   (the simplest single-parser combinator) in a cross-module consumer
-   (e.g., a test target in another package). This exercises the witness-
-   table SIGSEGV surface for the smallest combinator shape.
-5. If the spike runs cleanly without SIGSEGV, the witness-table bug
-   is partially relaxed and the analysis can be re-opened. If it
-   crashes, δ remains irrefutable.
+2. **Phase 2 — Single-parser combinators:** `Parser.Map.Transform`,
+   `Parser.Map.Throwing`, `Parser.FlatMap`, `Parser.Filter`,
+   `Parser.Trace`, `Parser.Lazy`, `Parser.Optional`,
+   `Parser.Optionally`, `Parser.Peek`, `Parser.Not`, `Parser.Error.Map`,
+   `Parser.Error.Replace`, `Parser.Many.Simple`, `Parser.Many.Separated`,
+   `Parser.Span`, `Parser.Tracked` wrappers. ~20 sites. Each gets
+   `: ~Copyable` AND `where Upstream: ~Copyable` on its extension.
 
-Spike scope: ~30 lines of edits + one cross-module test target. Cost:
-≤ 2 hours. Information-yield: validates / invalidates the most cost-
-dominating axis (cascade cost (d), specifically the witness-table SIGSEGV
-contribution).
+3. **Phase 3 — N-parser combinators:** `Parser.Take.Two`,
+   `Parser.OneOf.Two`, `Parser.Skip.First`, `Parser.Skip.Second`,
+   `Parser.OneOf.Three`, plus Foundations-layer combinators
+   `Parser.Chain.Left`, `Parser.Chain.Right`, `Parser.Expression.Climbing`,
+   `Parser.Separated`. ~15 sites. Cascade multiplies by N at field-store.
 
-### Re-evaluation triggers
+4. **Phase 4 — Builder generic-function re-evaluation:**
+   `Parser.Take.Builder.buildBlock` (12 sites) and
+   `Parser.OneOf.Builder.buildBlock` (5 sites). Returned wrapper types
+   must propagate `~Copyable` through their `P0, P1, …` field stores.
+
+5. **Phase 5 — Type-erased combinator opt-out:** `Parser.OneOf.Any`
+   stays `Copyable` (its `parsers: [Closure]` field cannot host
+   `~Copyable` per stdlib `Array<~Copyable>` cap). Document the
+   exception with a `[MEM-COPY-*]` rationale.
+
+6. **Phase 6 — Row 11 adoption:** `Parser.Machine.Compiled` becomes
+   `: ~Copyable` with `Parser.`Protocol`` conformance; the audit's
+   Row 11 motivation lands.
+
+Expected total cascade footprint: 166 conformer-extension annotations
++ 17 builder function constraint re-evaluations + foundations-layer
+Copyable-constraint partition expansion. Scope: 4 packages. Estimate
+~8–16 hours of mechanical migration once a second consumer justifies it.
+
+### Re-evaluation triggers (revised v1.1.0)
 
 Option δ should be revisited if:
 
 1. A second parser-stack consumer (beyond `Parser.Machine.Compiled`)
    surfaces with strong borrow-by-default needs ([RES-018] second-
-   consumer hurdle).
-2. The witness-table SIGSEGV (`swiftlang/swift#85441` pattern) is
-   fixed upstream and re-verified against the ecosystem's cross-module
-   surface.
-3. SE-0497 (closure-capture for ~Copyable) ships and the Lazy /
-   OneOf.Any cascade is materially de-risked.
-4. The ecosystem authors a new parser package whose primary type IS
+   consumer hurdle). **This is now the dominant remaining gate.**
+
+2. ~~The witness-table SIGSEGV (`swiftlang/swift#85441` pattern) is
+   fixed upstream and re-verified~~ — **EMPIRICALLY RESOLVED on Swift
+   6.3.2 per v1.1.0 experiment**.
+
+3. SE-0497 (closure-capture for ~Copyable) ships — partially
+   de-risked by v1.1.0 V6 (closure-returning-~Copyable works on
+   6.3.2); full closure-capture-of-~Copyable-values remains
+   toolchain-dependent.
+
+4. Stdlib `Array` adds `~Copyable` element support — unblocks
+   `Parser.OneOf.Any.parsers` from its current structural cap. This
+   would allow the type-erased combinator to participate in Option α
+   without an opt-out.
+
+5. The ecosystem authors a new parser package whose primary type IS
    resource-correlated (e.g., a kernel-level network parser whose
-   parser instance owns a socket descriptor).
+   parser instance owns a socket descriptor). Same as trigger 1 but
+   makes the second consumer concrete.
 
 In the absence of any of these, the recommendation stands.
 
@@ -1035,11 +1071,12 @@ In the absence of any of these, the recommendation stands.
 
 | # | Question | Status | Resolution path |
 |---|---|---|---|
-| Q1 | Is the proposed `Parser.Machine.OwnedCompiled` sibling type the right shape for Row 11 adoption under Option δ, or is a different shape preferable (e.g., `extension Parser.Machine.Compiled where Self: …`)? | DEFERRED. The naming + exact API surface is a per-package detail; the architectural pattern (sibling ~Copyable type not conforming to the protocol) is the recommendation. | Resolve at Row 11 adoption time. |
-| Q2 | If SE-0497 (closure-capture for ~Copyable) ships, does the Lazy / OneOf.Any cascade collapse enough to re-open the analysis? | DEFERRED. The witness-table SIGSEGV remains the dominant cost; SE-0497 addresses a different axis (closure-capture, axis (d)). Both would need to land for material re-opening. | Re-evaluate when both SE-0497 ships AND `swiftlang/swift#85441` is fixed. |
-| Q3 | Should `Parser.Printer` (the sibling protocol at `Parser.Printer.swift:46`) also be re-evaluated as part of any future Option α reconsideration? | YES (downstream consequence). `Parser.Printer` shares the `Self: Copyable` (implicit) shape with `Parser.`Protocol``. Any future relaxation should apply symmetrically. | Couple any reconsideration to a `Parser.Printer` parallel analysis. |
-| Q4 | Does the Machine.* family's `Parser.Machine.Builder<Input, Failure>: ~Copyable` (at Machine.swift:71) serve as evidence that a partial `~Copyable` adoption is viable in the parser stack? | RESOLVED INLINE. Yes for the Builder (which doesn't conform to Parser.`Protocol`). The pattern is "Builder is `~Copyable`, executor wrappers Conform-as-Copyable" — exactly what Option δ recommends preserving for the protocol-level shape. | No further action. |
+| Q1 | ~~Is the proposed `Parser.Machine.OwnedCompiled` sibling type the right shape for Row 11 adoption under Option δ?~~ | **WITHDRAWN v1.1.0**. Sibling-type workarounds explicitly rejected per `feedback_no_sibling_type_workarounds.md`. Row 11's Cache aliasing stays as documented invariant until protocol relaxation is viable on the merits. | n/a |
+| Q2 | If SE-0497 (closure-capture for ~Copyable) ships, does the Lazy / OneOf.Any cascade collapse enough to re-open the analysis? | **PARTIALLY RESOLVED v1.1.0** for `Parser.Lazy` per experiment V6 (closure-returning-~Copyable works on Swift 6.3.2). `Parser.OneOf.Any.parsers: [Closure]` remains a structural cap due to stdlib `Array<~Copyable>` non-support — independent of SE-0497. | Re-evaluate `OneOf.Any` when stdlib `Array<~Copyable>` lands. |
+| Q3 | Should `Parser.Printer` (the sibling protocol at `Parser.Printer.swift:46`) also be re-evaluated as part of any future Option α reconsideration? | YES (downstream consequence). `Parser.Printer` shares the `Self: Copyable` (implicit) shape with `Parser.`Protocol``. Any future relaxation should apply symmetrically. The witness-table SIGSEGV resolution in v1.1.0 carries through to `Parser.Printer` because they share the same protocol-shape pattern. | Couple any reconsideration to a `Parser.Printer` parallel analysis. |
+| Q4 | Does the Machine.* family's `Parser.Machine.Builder<Input, Failure>: ~Copyable` (at Machine.swift:71) serve as evidence that a partial `~Copyable` adoption is viable in the parser stack? | RESOLVED INLINE. Yes for the Builder (which doesn't conform to Parser.`Protocol`). The Builder is internal-to-Machine and ~Copyable as a stand-alone choice, not via protocol-level relaxation. | No further action. |
 | Q5 | Are there ASCII / Binary parser-primitives consumers (e.g., `Binary.Parse.Access<P>`) that suggest a second consumer is imminent? | INSUFFICIENT EVIDENCE. The 8 binary-parser-primitives conformers + 2 ASCII-parser-primitives conformers are leaf-shape and combinator-shape; none are resource-correlated. The `Binary.Bytes.Input.View` is a borrowed-Input shape, but it's an Input, not a Self. | Watch for new Binary / ASCII consumer arc; re-survey if one lands. |
+| Q6 | The v1.1.0 experiment ran on Swift 6.2.3 + 6.3.2 + 6.4-dev nightly 2026-05-07. Will the SIGSEGV resolution hold on future Swift toolchains? | OPEN. The 2026-02-14 → 2026-05-13 gap saw the SIGSEGV become irreproducible; the underlying compiler change is unannounced (no associated SE proposal or release note). A regression is possible but not predicted. | Re-run the experiment as a regression check at each major Swift release. |
 
 ---
 
@@ -1058,6 +1095,15 @@ In the absence of any of these, the recommendation stands.
 - `swift-institute/Research/parser-bridge-architecture.md` — partial-Copyable patterns at Input axis
 - `swift-institute/Research/parser-syntax-ergonomics-comparison.md` RECOMMENDATION (2026-03-05) — comparison vs pointfreeco/swift-parsing
 - `swift-institute/Research/path-type-ecosystem-model.md` (2026-04-18) — L3-Copyable / L1-~Copyable bifurcation reference architectural shape
+
+### Verification experiment (per [RES-021] / [EXP-001])
+
+- `swift-primitives/swift-parser-primitives/Experiments/parser-protocol-self-noncopyable-witness-tables/` —
+  six-variant probe of `Self: ~Copyable` on `Parser.\`Protocol\`` under Swift 6.2.3 / 6.3.2 / 6.4-dev nightly. V5 reproduces the full original-crash conditions; result: NO SIGSEGV on Swift 6.3.2. Authored 2026-05-13 in support of this v1.1.0 revision.
+- `swift-primitives/swift-parser-primitives/Experiments/parser-protocol-self-noncopyable-witness-tables/EXPERIMENT.md` —
+  experiment write-up per [EXP-006].
+- `swift-primitives/swift-parser-primitives/Experiments/metadata-crash-bisection/` —
+  adjacent Feb-2026 Input-side bisection (control set for the experiment shape).
 
 ### Source files (verified 2026-05-13)
 
