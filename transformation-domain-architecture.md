@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 3.2.0
-last_updated: 2026-03-04
+version: 3.4.0
+last_updated: 2026-05-13
 status: DECISION
 tier: 2
 ---
@@ -31,8 +31,10 @@ Coder.Protocol           // bidirectional: decode + encode (separate types)
 This follows the pattern already established by `Parser` — an empty enum namespace
 containing a `.Protocol`, `.Builder`, `.Error`, and combinator types.
 
-Printer remains internal to Parser (see Part 1 analysis). Formatter is deferred
-until concrete use cases emerge.
+Printer remains internal to Parser (see Part 1 analysis). Formatter is the
+fourth top-level capability domain as of v3.3.0 (2026-05-13), with capability
+and vocabulary split across two packages — see "Formatter Decision (v3.3.0)"
+below for the un-deferral and Split B design.
 
 Additionally, associated-type protocols are planned:
 
@@ -468,11 +470,18 @@ For users wanting bidirectional transformation:
   separate decode/encode types, round-trip by testing)
 
 `Parser.Printer` and `Parser.ParserPrinter` remain nested under `Parser`. They are
-not promoted to top-level namespaces. Formatter.Protocol is deferred until concrete
-use cases emerge (see Conceptual Foundations — Formatting).
+not promoted to top-level namespaces. Formatter.Protocol was deferred at v3.2.0
+"until concrete use cases emerge" (see Conceptual Foundations — Formatting);
+v3.3.0 un-defers it under Split B — see "Formatter Decision (v3.3.0)" below.
 
-**Decision**: Three top-level domains: **Parser**, **Serializer**, **Coder**.
-Printer is Parser-internal. Formatter is deferred.
+**Decision (v3.2.0)**: Three top-level domains: **Parser**, **Serializer**,
+**Coder**. Printer is Parser-internal. Formatter deferred.
+
+**Decision (v3.3.0)**: Four top-level domains: **Parser**, **Serializer**,
+**Coder**, **Formatter**. Printer remains Parser-internal. Formatter splits
+capability (Formatter.Protocol, in swift-formatter-primitives) from
+vocabulary (Format.* configuration values, in swift-format-primitives) per
+Split B.
 
 ### Part 2: Package Structure
 
@@ -836,6 +845,161 @@ Only ONE new package (`swift-coder-primitives`). `swift-serializer-primitives`
 already exists and is expanded with the protocol + builder. No shared core needed.
 No Body/Builder split needed. No diamonds. [MOD-DOMAIN] satisfied.
 
+## Formatter Decision (v3.3.0)
+
+The v3.2.0 decision deferred `Formatter.Protocol` "until concrete use cases
+emerge." Between v3.2.0 (2026-03-04) and v3.3.0 (2026-05-13),
+`swift-format-primitives` shipped at L1 with a `Format.Style` protocol modelled
+on Apple Foundation's `FormatStyle` — value-to-value transformation,
+infallible, no Builder. The shape is principled but diverges from the
+Parser/Serializer/Coder family pattern at four points: namespace (`Format`
+noun vs `Formatter` verb-actor); protocol name (`Style` vs `.Protocol`);
+signature (return-complete vs buffer-append); failure axis (none vs
+`Failure: Error`).
+
+A 2026-05-13 transformation-domain audit surfaced this asymmetry. The
+candidate paths to reconcile it:
+
+| Path | What it does | Tradeoff |
+|---|---|---|
+| **A — Rename Format → Formatter** | Single package, full family symmetry; `Format.Decimal` → `Formatter.Decimal` | Loses noun-vs-actor distinction; Foundation precedent diverges |
+| **B — Split capability from vocabulary** | Two packages: `swift-formatter-primitives` (abstract) + `swift-format-primitives` (configuration vocabulary); concrete formatters relocate to subject-domain packages over time | Largest reorganization; principled separation maps Apple's FormatStyle.Configuration boundary onto our namespace conventions |
+| **C — Keep Format, rename protocol only** | Single package, rename `Format.Style` → `Format.Protocol`; add `Formattable` | Preserves Foundation-mirror naming; family asymmetry persists at namespace layer |
+
+**Decision: Split B.** Capability and vocabulary belong in different
+packages.
+
+### The Split B shape
+
+```
+swift-formatter-primitives  (NEW, abstract capability)
++-- enum Formatter {}
++-- Formatter.Protocol<Input, Output, Failure>
++-- Formattable
+
+swift-format-primitives     (EXISTING, reshaped to vocabulary)
++-- enum Format {}
++-- Format.Notation         (scientific / engineering / decimal)
++-- Format.Sign             (always / exceptZero / never)
++-- Format.Separator        (grouping / decimal separators)
++-- Format.Precision        (digit-count / significant-figures)
++-- ... other configuration value types as they accrue
+
+Subject-domain packages (long-term relocation target for concrete formatters)
++-- Numeric.Decimal.Formatter   (from Format.Decimal)
++-- Text.Case.Formatter         (from Format.Case)
+```
+
+### Formatter.Protocol signature
+
+```swift
+extension Formatter {
+    public protocol `Protocol`<Input, Output, Failure> {
+        associatedtype Input
+        associatedtype Output
+        associatedtype Failure: Error          // plain Error per [MEM-SEND-012]
+        func format(_ value: Input) throws(Failure) -> Output
+    }
+}
+```
+
+Differences from the v3.2.0 family (Parser/Serializer/Coder):
+
+| Axis | Parser/Serializer/Coder | Formatter |
+|---|---|---|
+| Buffer op | consume / append / both | **Return complete** |
+| Body / Builder | yes (Parser, Serializer) or no (Coder) | **no** (leaf-only, like Coder) |
+| Failure type | `: Error` (plain) per [MEM-SEND-012] | **`: Error`** (same) |
+| Method signature | mutates `inout` buffer / input | **`(Input) throws(Failure) -> Output`** |
+
+The return-complete signature reflects the axis-analysis table from v2.0.0
+("Buffer op: Return complete; Buffer type: String (typically)"). Formatters
+produce a complete value per call — typically a String, but the protocol is
+generic over Output so non-String formatters (`Formatter.Protocol<Date, AttributedString, _>`)
+compose without ceremony. Compositional formatting lives at the call site
+via `.formatted(_:)` chains and method extensions, not via a Builder. Leaf
+shape matches Coder's reasoning: one formatter per format × value pair; no
+declarative composition algebra at the protocol layer.
+
+`Failure: Error` (plain, no `& Sendable`) per [MEM-SEND-012] — region
+isolation supersedes Sendable annotation in protocol-layer designs.
+Infallible formatters use `Failure == Never`; specific formatters that can
+fail (locale parse failures, precision overflow, encoding rejection) declare
+a real failure type.
+
+### Formattable
+
+```swift
+public protocol Formattable {
+    associatedtype Formatter: Formatter_Primitives.Formatter.`Protocol`
+    static var formatter: Formatter { get }
+}
+```
+
+Same shape as `Parseable` / `Serializable` / `Codable`. Static accessor
+`formatter` for family symmetry. Independent of the other associated-type
+protocols (a type may be Formattable without being Parseable, and vice
+versa).
+
+### Why split capability from vocabulary
+
+The `Format` namespace contains value types that *parameterize* formatters:
+`Format.Notation` (scientific, engineering, decimal), `Format.Sign`
+(always, exceptZero, never), `Format.Separator`, `Format.Precision`. These
+aren't formatters themselves — they're configuration values consumers pass
+into a formatter. Keeping the `Format` namespace for the vocabulary lets
+call sites read:
+
+```swift
+let style = Numeric.Decimal.Formatter(
+    notation: .scientific,
+    sign: .exceptZero,
+    precision: .significantDigits(3)
+)
+let s = 42.5.formatted(style)
+```
+
+`Format.Notation = .scientific` is vocabulary; `Numeric.Decimal.Formatter`
+is capability. This mirrors Apple Foundation's structural separation
+between `FormatStyle.Configuration.*` (vocabulary) and the format styles
+themselves (capability) — without forcing nested compound names that
+[API-NAME-002] forbids.
+
+### Concrete formatter relocation
+
+Existing concrete formatters in `swift-format-primitives` (`Format.Case`,
+`Format.Decimal`, `Format.Numeric`) stay in the package transitionally,
+conforming to `Formatter.Protocol`. Long-term they relocate to
+subject-domain packages per the [ascii-parsing-domain-ownership.md]
+precedent — subject domains own their formatters; capability primitives
+host only the protocol.
+
+| Current | Target home (when subject domain materializes) |
+|---|---|
+| `Format.Case` | `Text.Case.Formatter` in a text-domain package |
+| `Format.Decimal` | `Numeric.Decimal.Formatter` in a numeric-domain package |
+
+The relocation isn't blocking — the transitional state is well-formed under
+Formatter.Protocol — but it's the target end-state.
+
+### Family at v3.3.0
+
+| Domain | Namespace | Protocol | Body/Builder | Assoc-type protocol | Package |
+|---|---|---|---|---|---|
+| Parser | `enum Parser {}` | `Parser.Protocol<Input, Output, Failure>` | yes | `Parseable` | `swift-parser-primitives` |
+| Serializer | `enum Serializer {}` | `Serializer.Protocol<Output, Buffer, Failure>` | yes | `Serializable` | `swift-serializer-primitives` |
+| Coder | `enum Coder {}` | `Coder.Protocol<DecodeInput, EncodeBuffer, Output>` (separate failures) | **no** (leaf-only) | `Codable` | `swift-coder-primitives` |
+| Formatter | `enum Formatter {}` | `Formatter.Protocol<Input, Output, Failure>` (return-complete) | **no** (leaf-only) | `Formattable` | `swift-formatter-primitives` |
+
+Plus the vocabulary namespace:
+
+| Namespace | Contents | Package |
+|---|---|---|
+| Format | `Format.Notation`, `Format.Sign`, `Format.Separator`, `Format.Precision`, ... | `swift-format-primitives` |
+
+Four capability domains. One vocabulary namespace. Five top-level namespaces
+total at the transformation layer.
+
 ## Outcome
 
 **Status**: DECISION
@@ -847,7 +1011,14 @@ No Body/Builder split needed. No diamonds. [MOD-DOMAIN] satisfied.
 | Three top-level namespaces: Parser, Serializer, Coder | Each independent domain deserves its own namespace enum |
 | **Three independent packages** (Option A) | [MOD-DOMAIN], duality alignment, no diamonds, no Body/Builder split. Prior art divergence acknowledged but [MOD-DOMAIN] overrides co-location precedent. |
 | Printer stays internal to Parser (`Parser.Printer`) | Structural dual — coupled by shared `Input` type, prepend semantics, 18 combinator conformances |
-| Formatter deferred | Semantically distinct from Serializer but no concrete infrastructure yet |
+| Formatter deferred *(v3.2.0; superseded by v3.3.0)* | Semantically distinct from Serializer but no concrete infrastructure yet at v3.2.0 |
+| **Formatter active as fourth top-level domain *(v3.3.0)*** | `swift-format-primitives` materialized between v3.2.0 and v3.3.0 with a value-to-value `Format.Style` protocol; v3.3.0 promotes Formatter to the family, splits capability (`swift-formatter-primitives`) from vocabulary (`swift-format-primitives`), keeps return-complete signature |
+| **Formatter.Protocol uses return-complete signature** | `(Input) throws(Failure) -> Output`, not `(Output, into: &Buffer)`. Formatters produce a complete value per call; the formatting axis-analysis already captured this distinction ("Buffer op: Return complete") |
+| **Formatter has no Body / no Builder** | Formatters are leaf types like Coder. Compositional formatting lives at the call site via `.formatted(_:)` chains, not Builder |
+| **Formattable independent of Parseable / Serializable** | Same shape as the existing three associated-type protocols; `static var formatter: Formatter` accessor |
+| **`Format` namespace retained for vocabulary** | `Format.Notation`, `Format.Sign`, `Format.Separator`, `Format.Precision` — value types that parameterize formatters; not formatters themselves |
+| **Failure: Error (no `& Sendable`) at protocol layer** | Per [MEM-SEND-012] — region isolation supersedes Sendable constraint in protocol-layer designs |
+| **No `Sendable` restrictions on combinator types or stored closures *(v3.4.0)*** | Per [MEM-SEND-013] — combinator-layer extension of [MEM-SEND-012]. Combinator structs parameterized over protocol-bound generics (`Parser.Map.Transform<Upstream>`, `Serialization.Parsing.Whole<…>`, `Binary.Coder<Output>`, etc.) MUST NOT carry conditional `: Sendable` conformances gated on those parameters, `& Sendable` on the generic parameters, `where Self: Sendable` extension constraints, or `@Sendable` on stored closures. Cross-isolation transport is the consumer's responsibility, resolved via `sending` at the call site |
 | `.Parser` naming (not `.Parse`) | Type names describe what a type IS |
 | `ParseOutput` -> `Output` | Clean naming — no Parser legacy in Serializer/Coder |
 | `Coder.Protocol` with separate decode/encode types | Binary.Coder insight — cursor vs mutable buffer, avoids O(n^2) prepend |
@@ -887,8 +1058,67 @@ No Body/Builder split needed. No diamonds. [MOD-DOMAIN] satisfied.
 6. Build `Binary.Coder` conformance to `Coder.Protocol`
 7. ~~Define canonical selection guidance~~ DONE — see [canonical-witness-capability-attachment.md](canonical-witness-capability-attachment.md) (DECISION)
 
+### Next Steps (v3.3.0 — Formatter Split B)
+
+1. Create `swift-formatter-primitives` package with `Formatter.Protocol`
+   (return-complete signature, typed throws) + `Formattable` associated-type
+   protocol.
+2. Reshape `swift-format-primitives`: drop `Format.Style` (moved to
+   `Formatter.Protocol`); retain `Format` namespace for vocabulary types
+   (`Format.Notation`, `Format.Sign`, `Format.Separator`, `Format.Precision`);
+   make existing `Format.Case` / `Format.Decimal` conform to
+   `Formatter.Protocol` transitionally.
+3. (Future, non-blocking) Relocate concrete formatters to subject-domain
+   packages: `Format.Case` → `Text.Case.Formatter`; `Format.Decimal` →
+   `Numeric.Decimal.Formatter`. Trigger: when the subject-domain home is
+   established. Not gating Phase 1.
+4. (Optional, separate from Formatter work) [MOD-DOMAIN] correction: move
+   `Binary.Coder` from `swift-binary-parser-primitives` to a new
+   `swift-binary-coder-primitives` package.
+
 ## Changelog
 
+- **v3.4.0** (2026-05-13): Region-based isolation sweep applied across the
+  combinator and witness layer of the four transformation packages plus the
+  upstream Effect.Protocol cascade. New [MEM-SEND-013] codifies the rule:
+  combinator structs parameterized over protocol-bound generics drop
+  conditional `: Sendable` conformances, `& Sendable` on generic parameters,
+  `where Self: Sendable` extension constraints, and `@Sendable` on stored
+  closures. Cross-isolation transport is the consumer's responsibility via
+  `sending` at the call site. Affected packages: `swift-effect-primitives`
+  (3 protocols: `__EffectProtocol`, `__EffectContinuation`, `__EffectHandler`),
+  `swift-parser-primitives` (~30 combinator files), `swift-serializer-primitives`
+  (5 witness types), `swift-binary-coder-primitives` (`Binary.Coder`),
+  `swift-binary-parser-primitives` (`Binary.Parse.Access` + the `.parse` extension).
+  Concrete leaf Sendable conformances on error types and value containers are
+  preserved. Concrete `Effect.Continuation.One/Multi` Sendable retained per
+  the documented compiler-bug workaround (`Effect.Continuation.One.swift:39-49`).
+  Remaining sweeps (separate phases): (A) `Binary.Bytes.Machine.Combinators`
+  + `Binary.Bytes.Machine.Instruction` inside the Machine subsystem;
+  (B) upstream `swift-input-primitives` `Input.Slice<Base: Sendable & ~Copyable>`.
+  Provenance: 2026-05-13 follow-up to v3.3.0 transformation-domain audit,
+  user direction to push the principle through the combinator and
+  Effect-protocol layers. Status remains DECISION.
+- **v3.3.0** (2026-05-13): Formatter un-deferred under **Split B** —
+  capability (`swift-formatter-primitives`, holds `Formatter.Protocol` +
+  `Formattable`) split from vocabulary (`swift-format-primitives`, holds
+  `Format.Notation` / `Format.Sign` / `Format.Separator` / `Format.Precision`
+  configuration value types). `Formatter.Protocol` uses return-complete
+  signature `(Input) throws(Failure) -> Output`, no Body/Builder (leaf-only
+  like Coder), `Failure: Error` (plain, no `& Sendable`) per [MEM-SEND-012]
+  region-isolation-over-Sendable rule added 2026-05-13. Concrete formatters
+  (`Format.Case`, `Format.Decimal`) stay in `swift-format-primitives`
+  transitionally, conforming to `Formatter.Protocol`; long-term relocation
+  to subject-domain packages (`Text.Case.Formatter`,
+  `Numeric.Decimal.Formatter`) per the ASCII domain-ownership precedent.
+  Three top-level capability domains (v3.2.0) → four top-level capability
+  domains (v3.3.0). One vocabulary namespace (`Format`). Five top-level
+  namespaces total at the transformation layer. Status remains DECISION.
+  Provenance: 2026-05-13 transformation-domain audit + collaboration
+  discussion. Companion: variadic-OneOf experiment
+  ([variadic-oneof-same-element-blocker](https://github.com/swift-institute/Experiments/tree/main/variadic-oneof-same-element-blocker))
+  isolates the upstream same-element-requirements blocker for combinator
+  unification; [MOD-030] codifies micro modules as deliberate at L1.
 - **v3.2.0** (2026-03-04): Canonical-witness capability attachment research concluded
   (DECISION). All open questions resolved, empirically validated (10/10 experiment
   variants CONFIRMED). Next step 7 marked done. Status RECOMMENDATION → DECISION.
