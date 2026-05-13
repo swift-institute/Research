@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-05-13
 status: RECOMMENDATION
 tier: 2
@@ -390,6 +390,26 @@ performance-only with no resource-correlation; the cascade hits every
 reporter (SARIF, Text, future formatters), every suppression-elision
 consumer, and every CI parser. Deferred — better as a smaller-grain
 profile-driven optimization later.
+
+**v1.2.0 update (2026-05-13, post-Wave-5+6 calibration)**: the fresh
+adoption-cost data (Wave 5 Lint.Source.Parsed: ~2-3h actual vs 6-8h
+estimated; Wave 6 Source.Manager: ~1-2h actual vs 3-5h estimated)
+suggested Row 3 might also be cheaper than the 11/30 verdict
+implied. Reassessment shows the opposite: the Wave-5+6 "ecosystem-
+readiness" benefit (closure-type inference auto-propagating
+`borrowing`; existing `inout` discipline at consumer sites) is
+**structurally absent** for Row 3. Findings flow through stdlib
+`[Lint.Finding]` arrays at every stage — `Lint.Run.Outcome.findings`
++ `.suppressed` fields (line 96/104), aggregation `var findings:
+[Lint.Finding] = []` (line 140), and every reporter consumer.
+Stdlib `Array<T>` requires Copyable `T`; making `Lint.Finding`
+~Copyable would force every `[Lint.Finding]` storage site to migrate
+to `~Copyable`-element containers (`Storage.Pool.Inline` / `Inline.Array`)
+or to a callback-based emission pattern. That's structural API
+redesign, not absorbed cascade. Row 3 is downstream of a separate
+design decision about findings emission pattern (`[T]` vs callback
+vs `Inline.Array<T>`) — `~Copyable` adoption is the **consequence**
+of that decision, not the trigger.
 
 #### Row 4 — `Lint.Suppression` / `Lint.Suppression.Entry`
 
