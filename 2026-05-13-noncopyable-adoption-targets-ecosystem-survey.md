@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-13
 status: RECOMMENDATION
 tier: 2
@@ -660,6 +660,37 @@ shape:
 
 Total adoption estimate: **~6–8 hours**, single principal-authorization
 gate for the cascade landing.
+
+### Path-vs-String Cleavage (resolved as side effect of top-pick adoption)
+
+The investigation's parent trigger was Source.Location.filePath's
+`Swift.String?` vs `Path` question (Wave 3 of the linter arc). The
+top-pick recommendation resolves it cleanly by recognizing that
+"filePath" is two structurally different things wearing the same name:
+
+| Layer | Field | Type | Reason |
+|---|---|---|---|
+| Inside `~Copyable` `Lint.Source.Parsed` | the path the parsed source was *loaded from* | `Path_Primitives.Path` (~Copyable) | **Resource** — real open/read lifecycle; parent type is now `~Copyable` so it can hold a `~Copyable` field naturally |
+| Inside Copyable `Source.Location` | the file path embedded in a diagnostic record | `Swift.String?` (status quo) | **Identifier** — external boundaries are genuinely String at every producer site (`#filePath` macro, SwiftSyntax `SourceLocationConverter`, JSON wire format, `hasSuffix` matching in tests) |
+| Projection boundary | one well-defined site where Parsed's Path becomes a diagnostic's filePath String | `Path → String` once | The cleavage point is mechanically clear — wherever a `Source.Location` is constructed from a Parsed source, the path projects to its string form via `Path`'s existing string-conversion accessor |
+
+This cleaves along the **resource-vs-identifier** line without forcing
+`~Copyable` cascade on Source.Location (per Row 5's structural objection,
+which survives SE-0499 because it's grounded in zero-resource-correlation,
+not protocol losses).
+
+**On the optional Tagged<Source.File, Swift.String> refinement at the
+identifier layer** — purely cosmetic compile-time discrimination for
+"this String is a filePath, not arbitrary text". The investigation
+framework's [RES-018] second-consumer rule applies: defer until a real
+second consumer surfaces. The current single-consumer state (just
+Source.Location) does not justify the wrapping cost; status quo
+`Swift.String?` wins on cost-benefit.
+
+**Implementer instruction**: Phase 4 of the adoption plan (rule pack
+cascade) is the natural place to surface the projection-boundary site
+explicitly in the code — annotate where `Path → String` projects so a
+future reader can identify the cleavage at a glance.
 
 ### Per [HANDOFF-039] / [RES-027] notes
 
