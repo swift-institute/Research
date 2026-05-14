@@ -3708,6 +3708,17 @@
       "statusRaw": "DEFERRED",
       "tier": 2,
       "scope": "ecosystem-wide"
+    },
+    {
+      "file": "streaming-machinery-l1-extraction.md",
+      "displayName": "Streaming-Parser Machinery — L1 Extraction",
+      "topic": "RFC_8259.Span.EventStream + RFC_8259.Span.Assemble are generic streaming-parser machinery (pull-driven event cursor with depth tracking + structural skip; event-to-tree assembler), not RFC-8259-specific spec content. Under a stricter [ARCH-LAYER-*] reading, neither should live at L2 in swift-rfc-8259; the right home is a new (or existing) L1 primitives package with swift-rfc-8259 as a thin RFC-8259 specialisation. DEFERRED — gated on [RES-018] second-consumer hurdle (swift-rfc-8259 is the only L2 streaming-format-parser today; XML/YAML/TOML/CBOR alternatives use different parser architectures). Orthogonal to the +25% event-grain regression diagnosed at the same T-1+T-2 session — extraction would add module boundaries, not remove them; performance fix must come first. Surfaced 2026-05-14 by principal mid-session as addendum to the placement audit's framing.",
+      "date": "2026-05-14",
+      "status": "DEFERRED",
+      "statusDetail": null,
+      "statusRaw": "DEFERRED",
+      "tier": 2,
+      "scope": "ecosystem-wide"
     }
   ],
   "narrativeSections": [
