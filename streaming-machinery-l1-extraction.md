@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-14
 status: DEFERRED
 tier: 2
@@ -37,25 +37,28 @@ Equivalently: under what conditions does the cost of keeping the streaming machi
 
 ## Status
 
-**DEFERRED.** Not blocking any current arc. Surfaced for future inventory awareness:
+**Reclassified 2026-05-14 under the [RES-018] amendment.** This arc is now **case (c) — Layer-agnostic primitive surfaced inside an L2/L3 package** under the four-case framing in research-process SKILL.md (2026-05-14). Pull-down to L1 is the architecturally mandated default; swift-rfc-8259 IS the first consumer. The second-consumer hurdle that previously gated this arc (the v1.0.0 framing here) is no longer operative.
 
-- **`[RES-018]` second-consumer hurdle**: swift-rfc-8259 is the only structural-format-with-streaming-deserialize consumer today. swift-xml exists but uses a different parser architecture (DOM-shaped, not event-stream); swift-yaml and swift-toml are L3 consumers, not L2 streaming-parser implementations. Until a second L2 structural-format package adopts an event-stream pattern, the L1 extraction lacks the demonstrated reuse that `[RES-018]` requires.
-- **Orthogonal to the performance regression** raised at the same session: the +25% event-grain wedge on the T-1 + T-2 landing is a cross-module inlining / Tracker integration concern, not a placement concern. Extracting the machinery to L1 would *add* a module boundary, not remove one — it would make the inlining situation worse before it gets better. The performance fix must come first or be done concurrently with the extraction; doing the extraction speculatively while a performance regression is unresolved compounds the failure mode.
-- **`[BENCH-010]` discipline**: extraction without consumer pull is exactly the speculative-architecture pattern the rule warns against. swift-rfc-8259 owning the machinery today is suboptimal but not broken; the cost of correctness-now exceeds the benefit until reuse is demonstrated.
+The arc therefore moves from "speculative-architecture deferral" to "scheduled pull-down gated on remaining technical concerns." Two gates persist before the extraction fires:
+
+- **Performance-residual gate**: the +25% event-grain wedge on the T-1 + T-2 landing was profiled (`swift-institute/Audits/streaming-deserialize-regression-profile.md`, commit `de3e3c8`) and materially closed (~37%) by Options A+B (swift-lexer-primitives `3fbf66f` + swift-rfc-8259 `94c1616`). ~12 ms residual remains above pre-T-1 baseline, with no fire point identified for it in the profile. Extracting `EventStream` + `Assemble` to L1 *adds* a module boundary while an integration-shape cost is still unresolved — the failure mode the profile flagged. The extraction MUST be sequenced after the residual is dispositioned (either isolated and resolved, or accepted as known with rationale).
+- **Phase 2 shape-analysis gate**: the comparative shape analysis below must classify which parts of `RFC_8259.Span.EventStream` + `RFC_8259.Span.Assemble` are genuinely format-agnostic vs which smuggle in JSON-specific assumptions (e.g., what does `skipValue()` look like in XML's tag-balanced grammar?). `[BENCH-011]` integration-probe applies post-extraction.
+
+**Status**: DEFERRED — gated on performance-residual disposition + Phase 2 shape-analysis. The v1.0.0 second-consumer-hurdle framing is retired.
 
 ## Likely follow-on arc shape
 
-When this is revisited:
+Under case (c), Phase 1 of the v1.0.0 plan (second-consumer inventory) is no longer required — pull-down is the default. The revised plan:
 
-1. **Phase 1 — Second-consumer inventory.** Catalog structural-format consumers in the institute today and over the next 12 months. Candidates: swift-xml (if migrating from DOM to streaming), swift-yaml, swift-toml, swift-cbor (if any institute interest), swift-messagepack (if any interest), `swift-protobuf`-style wire-format parsers. Identify which (if any) would adopt an event-stream + tree-assembler pattern. If the inventory yields zero genuine second consumers, the arc halts here with disposition "extraction not justified."
-2. **Phase 2 — Comparative shape analysis.** If Phase 1 yields a second consumer, enumerate the substrate-shared core of `RFC_8259.Span.EventStream` + `RFC_8259.Span.Assemble` vs the domain-specific overlays. Determine whether the shared core is genuinely format-agnostic or smuggles in JSON-specific assumptions (e.g., what does `skipValue()` look like in XML's tag-balanced grammar?).
-3. **Phase 3 — Extraction design.** Propose the L1 package name + shape. Candidates: `swift-event-stream-primitives` standalone, OR absorption into `swift-parser-primitives` as a new submodule. Apply `[BENCH-011]` integration probe to both consumers before any migration arc fires.
+1. **Phase 1 — Performance-residual disposition.** Resolve or accept the ~12 ms post-A+B residual flagged in `parse-performance.md` v1.3.0. Without this, adding the L1 module boundary risks compounding the unidentified integration-shape cost.
+2. **Phase 2 — Comparative shape analysis.** Enumerate the substrate-shared core of `RFC_8259.Span.EventStream` + `RFC_8259.Span.Assemble` vs the JSON-specific overlays. Question: does `skipValue()` smuggle JSON assumptions (recursive nesting via `{` / `[` / `}` / `]`)? Does the depth-tracking discipline encode anything format-specific? Does the FAST/SLOW path split in `Assemble` rely on JSON-value-tree shape? Output: a "shared-vs-overlay" decomposition table.
+3. **Phase 3 — Extraction design.** Propose the L1 package shape: standalone `swift-event-stream-primitives` vs absorption into `swift-parser-primitives` as a new submodule. Apply `[BENCH-011]` integration probe before migration.
 4. **Phase 4 — Migration.** swift-rfc-8259's `Span.EventStream` + `Span.Assemble` become thin RFC-8259-specialisations of the L1 primitives. swift-json's wrapper stays thin (same shape, deeper substrate).
 
 ## Out of scope for this note
 
 - The actual extraction design — Phase 2/3 work of a future arc.
-- The performance regression diagnosed at the T-1 + T-2 implementation session (commits `b4ec277` + `1f4647e` + `90cba4c` + `0960da6`) — separately tracked; profile-first investigation in progress.
+- The performance regression diagnosed at the T-1 + T-2 implementation session (commits `b4ec277` + `1f4647e` + `90cba4c` + `0960da6`) — separately tracked. Profile committed at `swift-institute/Audits/streaming-deserialize-regression-profile.md` (`de3e3c8`); Options A+B landed (swift-lexer-primitives `3fbf66f` + swift-rfc-8259 `94c1616`); ~12 ms residual remains as a Phase 1 gate above.
 - The JSON-serialization cohesion question (`JSON.Serializable` vs `Coder.Codable`) — separately tracked in the placement audit's Ticket T-3 (different question, different `[RES-018]` gate; mentioned at `swift-institute/Audits/streaming-deserialize-placement-audit.md` §Phase 2 T-3).
 - The byte-cursor primitive unification question — separately tracked at `swift-institute/Research/byte-cursor-primitive-unification.md` (DEFERRED).
 
@@ -70,3 +73,5 @@ When this is revisited:
 ## Provenance
 
 Surfaced 2026-05-14 by principal during the T-1 + T-2 implementation session's Step 5 disposition discussion. The implementer's Step 5 report quoted the principal's framing verbatim ("swift-rfc-8259 should implement the RFC 8259 specification and nothing else…"). The principal's addendum offered three adjudication options (A: accept as landed; B: plan follow-up T-4; C: roll back T-1 + T-2 and re-plan); principal direction at session close was option A-equivalent — accept the current landing while recording the architectural observation as deferred research for future inventory awareness. Recorded here as a durable parking-lot so the question doesn't get lost on the next L2 streaming-format-parser addition.
+
+**v1.1.0 reclassification 2026-05-14**: the [RES-018] amendment (same date) introduced a four-case classification for primitive-extraction proposals. This arc fits case (c) — layer-agnostic primitive surfacing inside an L2 package — where pull-down to L1 is the architecturally mandated default and the originating package counts as the first consumer. The v1.0.0 "second-consumer hurdle" framing is retired. The remaining gates are technical (performance residual, shape analysis), not policy (consumer-count threshold).

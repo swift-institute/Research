@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-14
 status: DEFERRED
 tier: 2
@@ -31,11 +31,18 @@ Equivalently: under what conditions does the cost of maintaining two parallel cu
 
 ## Status
 
-**DEFERRED.** Not blocking any current arc. Surfaced for future inventory awareness:
+**Reclassified 2026-05-14 under the [RES-018] amendment.** Under the four-case framing in research-process SKILL.md (2026-05-14), this arc is **case (a) — Cross-cutting primitive (Memory/Storage/Buffer/Collection grade, intended for re-use across unrelated domains)**. Binary parsing and text lexing are explicitly distinct domains; the proposal targets a substrate that would be shared across both.
 
-- `[DS-020]` second-consumer rule: two consumers (binary + text) exist, satisfying the surface count. But the institute's discipline for new L1 primitives is "demonstrated reuse-without-domain-knowledge," and the two cursors have non-overlapping domain features (binary parsing has byte-order endian concerns; text lexing has Text.Location.Tracker). Whether the *shared substrate* (cursor scaffolding minus domain features) is itself a viable primitive is the open design question.
-- `[RES-018]` generalisation discipline: applies if the unified primitive would be proposed as new ecosystem infrastructure. The streaming-deserialize-placement audit's recommendation that T-1 ride on `Lexer.Scanner` (existing) rather than propose a generic cursor (new) honored this rule for the *consumer-side* decision; the unification-side decision is the inverse question.
-- `[BENCH-011]` integration-probe rule: any unification arc must measure both binary and text consumers post-unification to verify no regression in either domain.
+The case (a) gate is **composition check + cross-domain fit check**, not a raw consumer count. Triage against the new gate:
+
+- **Cross-domain fit**: prima facie satisfied. `Binary.Bytes.Input.View` (binary parsing — endian concerns, structural reads) and `Lexer.Scanner` (text lexing — `Text.Location.Tracker` integration) are unrelated domains with already-existing parallel implementations. The unified primitive's audience is exactly the cross-domain audience case (a) tests for.
+- **Composition check**: NOT yet performed. The substrate-shared core (cursor scaffolding minus domain features) must be enumerated against the two existing consumers, and an explicit composition shape proposed (generic-Element / protocol-shaped / composition-adapter). This is the substantive remaining gate under case (a), inheriting from the v1.0.0 "Phase 1 — Comparative shape analysis" below.
+- **`[DS-020]` second-consumer rule** (companion to [RES-018]; substance unchanged per the 2026-05-14 amendment notice): the surface count of two consumers exists. The institute's "demonstrated reuse-without-domain-knowledge" discipline is the same shape as case (a)'s composition check.
+- **`[BENCH-011]` integration-probe rule**: any unification arc must measure both binary and text consumers post-unification to verify no regression in either domain.
+
+The v1.0.0 [RES-018] "generalisation discipline" citation is dropped — under the amendment, [RES-018] does not gate this arc independently of the case (a) classification.
+
+**Status**: DEFERRED — gated on the composition check (Phase 1 below). The second-consumer hurdle as a *blocking* concern is retired; remaining gates are technical (shape, cost-benefit, integration probe).
 
 ## Likely follow-on arc shape
 
@@ -43,7 +50,7 @@ When this is revisited:
 
 1. **Phase 1 — Comparative shape analysis.** Read `Binary.Bytes.Input.View.swift` and `Lexer.Scanner.swift` in detail; identify the substrate-shared core vs the domain-specific overlays. Enumerate at least 3 candidate unification shapes (e.g., generic-Element cursor with concrete Element=UInt8; protocol-shaped cursor with two conforming structs; new primitive with composition adapters in each consumer).
 2. **Phase 2 — Cost/benefit analysis.** Migration cost for each consumer + cost of the new primitive + maintenance benefit of unification. Apply `[BENCH-011]` integration-probe requirement.
-3. **Phase 3 — Recommendation.** If unification clears `[DS-020]` and the cost-benefit favours it, propose the consolidation arc. Otherwise document the duplication as accepted (per the same `[DS-020]` discipline that rejects speculative primitives).
+3. **Phase 3 — Recommendation.** If the composition check (Phase 1) and cost-benefit (Phase 2) both favour unification, propose the consolidation arc. Otherwise document the duplication as accepted — the case (a) gate doesn't mandate unification, only requires that the analysis is genuine when one is proposed.
 
 ## Out of scope for this note
 
@@ -61,3 +68,5 @@ When this is revisited:
 ## Provenance
 
 Surfaced during the streaming-JSON-deserialize Phase 2 audit (2026-05-14) as out-of-scope ecosystem observation. Recorded here as a durable parking lot so the question doesn't get lost the next time a binary parser or text lexer touches `Swift.Span<UInt8>`. Parent session has confirmed this will be the subject of a separate future research arc.
+
+**v1.1.0 reclassification 2026-05-14**: the [RES-018] amendment (same date) introduced a four-case classification for primitive-extraction proposals. This arc fits case (a) — cross-cutting primitive intended for re-use across unrelated domains. The v1.0.0 [RES-018] citation as a generalisation discipline is dropped; [DS-020] remains operative as the companion second-consumer rule (substance unchanged per the amendment notice). The cross-domain fit appears satisfied prima facie; the composition check is the substantive remaining gate.
