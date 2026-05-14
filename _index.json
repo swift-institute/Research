@@ -3697,6 +3697,17 @@
       "statusRaw": "IN_PROGRESS (v0.1.0)",
       "tier": 2,
       "scope": "ecosystem-wide"
+    },
+    {
+      "file": "byte-cursor-primitive-unification.md",
+      "displayName": "Byte-Cursor Primitive Unification",
+      "topic": "The ecosystem has two parallel ~Copyable & ~Escapable byte-cursor implementations over Swift.Span<UInt8>: Binary.Bytes.Input.View (swift-binary-parser-primitives, binary domain) and Lexer.Scanner (swift-lexer-primitives, text domain). Substrate scaffolding is identical; domain overlays differ (binary needs endianness; text needs Text.Location.Tracker). Open design question: should the institute extract a generic L1 byte-cursor primitive with both as composed specialisations? DEFERRED — gated on [DS-020] second-consumer discipline. Surfaced 2026-05-14 by the streaming-deserialize placement audit as out-of-scope observation; recorded as durable parking-lot so the question doesn't get lost on the next binary-parser or text-lexer touch of Span<UInt8>.",
+      "date": "2026-05-14",
+      "status": "DEFERRED",
+      "statusDetail": null,
+      "statusRaw": "DEFERRED",
+      "tier": 2,
+      "scope": "ecosystem-wide"
     }
   ],
   "narrativeSections": [
