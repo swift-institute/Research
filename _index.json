@@ -3701,22 +3701,33 @@
     {
       "file": "byte-cursor-primitive-unification.md",
       "displayName": "Byte-Cursor Primitive Unification",
-      "topic": "The ecosystem has two parallel ~Copyable & ~Escapable byte-cursor implementations over Swift.Span<UInt8>: Binary.Bytes.Input.View (swift-binary-parser-primitives, binary domain) and Lexer.Scanner (swift-lexer-primitives, text domain). Substrate scaffolding is identical; domain overlays differ (binary needs endianness; text needs Text.Location.Tracker). Open design question: should the institute extract a generic L1 byte-cursor primitive with both as composed specialisations? DEFERRED — gated on [DS-020] second-consumer discipline. Surfaced 2026-05-14 by the streaming-deserialize placement audit as out-of-scope observation; recorded as durable parking-lot so the question doesn't get lost on the next binary-parser or text-lexer touch of Span<UInt8>.",
+      "topic": "The ecosystem has two parallel ~Copyable & ~Escapable byte-cursor implementations over Swift.Span<UInt8>: Binary.Bytes.Input.View (swift-binary-parser-primitives, binary domain) and Lexer.Scanner (swift-lexer-primitives, text domain). Substrate scaffolding is identical; domain overlays differ (binary needs endianness; text needs Text.Location.Tracker). Open design question: should the institute extract a generic L1 byte-cursor primitive with both as composed specialisations? Reclassified 2026-05-14 under the [RES-018] amendment (v1.1.0) as case (a) — cross-cutting primitive intended for re-use across unrelated domains. Cross-domain fit appears satisfied prima facie (binary vs text are distinct domains); the composition check is the substantive remaining gate. [DS-020] companion (substance unchanged per the amendment) still applies. Surfaced 2026-05-14 by the streaming-deserialize placement audit.",
       "date": "2026-05-14",
       "status": "DEFERRED",
-      "statusDetail": null,
-      "statusRaw": "DEFERRED",
+      "statusDetail": "v1.1.0 reclassified as case (a) cross-cutting primitive; v1.0.0 second-consumer-hurdle framing retired.",
+      "statusRaw": "DEFERRED (v1.1.0)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
     {
       "file": "streaming-machinery-l1-extraction.md",
       "displayName": "Streaming-Parser Machinery — L1 Extraction",
-      "topic": "RFC_8259.Span.EventStream + RFC_8259.Span.Assemble are generic streaming-parser machinery (pull-driven event cursor with depth tracking + structural skip; event-to-tree assembler), not RFC-8259-specific spec content. Under a stricter [ARCH-LAYER-*] reading, neither should live at L2 in swift-rfc-8259; the right home is a new (or existing) L1 primitives package with swift-rfc-8259 as a thin RFC-8259 specialisation. DEFERRED — gated on [RES-018] second-consumer hurdle (swift-rfc-8259 is the only L2 streaming-format-parser today; XML/YAML/TOML/CBOR alternatives use different parser architectures). Orthogonal to the +25% event-grain regression diagnosed at the same T-1+T-2 session — extraction would add module boundaries, not remove them; performance fix must come first. Surfaced 2026-05-14 by principal mid-session as addendum to the placement audit's framing.",
+      "topic": "RFC_8259.Span.EventStream + RFC_8259.Span.Assemble are generic streaming-parser machinery (pull-driven event cursor with depth tracking + structural skip; event-to-tree assembler), not RFC-8259-specific spec content. Under a stricter [ARCH-LAYER-*] reading, neither should live at L2 in swift-rfc-8259; the right home is a new (or existing) L1 primitives package with swift-rfc-8259 as a thin RFC-8259 specialisation. Reclassified 2026-05-14 under the [RES-018] amendment (v1.1.0) as case (c) — layer-agnostic primitive surfacing inside an L2 package, where pull-down to L1 is the architecturally mandated default. swift-rfc-8259 IS the first consumer; the second-consumer hurdle is retired. Remaining gates are technical: (a) performance-residual disposition (~12 ms residual above pre-T-1 baseline post-A+B; tracked in parse-performance.md v1.3.0); (b) Phase 2 comparative shape-analysis. Surfaced 2026-05-14 by principal mid-session as addendum to the placement audit's framing.",
       "date": "2026-05-14",
       "status": "DEFERRED",
-      "statusDetail": null,
-      "statusRaw": "DEFERRED",
+      "statusDetail": "v1.1.0 reclassified as case (c) layer-agnostic primitive surfacing in L2; v1.0.0 second-consumer-hurdle framing retired. Remaining gates technical (performance-residual disposition + Phase 2 shape-analysis).",
+      "statusRaw": "DEFERRED (v1.1.0)",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "integration-shape-vs-substrate-cost.md",
+      "displayName": "Integration-Shape vs Substrate Cost — Skill-Amendment Proposal",
+      "topic": "Typed-primitive substrate cost claims (e.g., [INFRA-003]'s 'compiles to identical assembly', [CONV-010]'s 'typed-arithmetic is zero-cost') apply at the substrate level — per-operation, in isolation. They do NOT bound integration-shape cost — where on the call graph the substrate operations fire. The streaming-deserialize regression arc demonstrated the gap concretely: T-1 moved position-work from cold (error) path to hot (per-byte / per-token) path; substrate-level zero-cost claim was satisfied; +25% measured regression still fired. Proposes three composing amendments: (1) clarifying note on [INFRA-003] body in existing-infrastructure skill; (2) new [BENCH-012]/[BENCH-011a] companion in benchmark skill extending integration-probe trigger to call-graph-shape migrations; (3) audit-skill checklist requiring zero-cost-prior citations to be paired with hot-path integration assertion. Each amendment is small; together they cover the failure mode at three points (substrate citation, measurement gate, audit gate).",
+      "date": "2026-05-14",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0. Tier 2 ecosystem-wide proposal. Three composing skill amendments identified (existing-infrastructure / benchmark / audit). Skill-lifecycle mutation deferred to a separate session per principal's direction.",
+      "statusRaw": "RECOMMENDATION (v1.0.0)",
       "tier": 2,
       "scope": "ecosystem-wide"
     }
