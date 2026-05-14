@@ -709,7 +709,7 @@ No public types. Provides shared infrastructure for parser variants.
 ### ASCII Parser Primitives (Umbrella)
 
 Module: `ASCII_Parser_Primitives`
-Re-exports: `ASCII_Decimal_Parser_Primitives`, `ASCII_Hexadecimal_Parser_Primitives`, `Parseable_Integer_Primitives`
+Re-exports: `ASCII_Decimal_Parser_Primitives`, `ASCII_Hexadecimal_Parser_Primitives`, `ASCII_Parser_Primitives_Standard_Library_Integration`
 
 | Type | Kind |
 |------|------|
@@ -733,9 +733,9 @@ Module: `ASCII_Hexadecimal_Parser_Primitives`
 | `ASCII.Hexadecimal.Error` | enum (Error) |
 | `ASCII.Hexadecimal.Parser<Input, T>` | struct (Sendable, Parser.Protocol) |
 
-### Parseable Integer Primitives
+### ASCII Parser Primitives Standard Library Integration
 
-Module: `Parseable_Integer_Primitives`
+Module: `ASCII_Parser_Primitives_Standard_Library_Integration`
 
 No new types. Retroactive conformance extensions:
 

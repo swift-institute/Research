@@ -30,7 +30,7 @@ The `Parser.ASCII.*` and `Serializer.ASCII.*` types in parser-primitives / seria
 - Committed: `2cffca8`
 
 **Step 1 — Created `swift-ascii-parser-primitives` (Tier 18, new package):**
-- 4 targets: `ASCII Decimal Parser Primitives`, `ASCII Hexadecimal Parser Primitives`, `Parseable Integer Primitives`, `ASCII Parser Primitives` (umbrella)
+- 4 targets: `ASCII Decimal Parser Primitives`, `ASCII Hexadecimal Parser Primitives`, `ASCII Parser Primitives Standard Library Integration`, `ASCII Parser Primitives` (umbrella)
 - Types: `ASCII.Decimal.Parser<Input, T>`, `ASCII.Decimal.Error`, `ASCII.Hexadecimal.Parser<Input, T>`, `ASCII.Hexadecimal.Error`, `ASCII.Parser` (empty capability umbrella)
 - 2 test targets (19 tests total, all passing)
 - Dependencies: `swift-ascii-primitives` + `swift-parser-primitives`
@@ -48,7 +48,7 @@ The `Parser.ASCII.*` and `Serializer.ASCII.*` types in parser-primitives / seria
 - Committed: `1c52ba4`
 
 **Step 3 — Removed old types from `swift-parser-primitives`:**
-- Deleted: `Parser ASCII Integer Primitives` target + product (6 files), `Parseable Integer Primitives` target + product (2 files), test target
+- Deleted: `Parser ASCII Integer Primitives` target + product (6 files), `ASCII Parser Primitives Standard Library Integration` target + product (2 files), test target
 - Removed from `Parser Primitives` umbrella dependencies
 - Umbrella `exports.swift` already did NOT re-export these (they were never in the umbrella exports)
 - 163 remaining tests pass
