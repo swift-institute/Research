@@ -79,7 +79,7 @@ Implementation is byte-for-byte identical to the deleted `Serializer.ASCII.Integ
 
 | Package | Build | Notes |
 |---------|-------|-------|
-| `swift-parser-primitives` | PASS | `Parser ASCII Integer Primitives` and `Parseable Integer Primitives` targets fully removed. No dangling re-exports in umbrella. |
+| `swift-parser-primitives` | PASS | `Parser ASCII Integer Primitives` and `ASCII Parser Primitives Standard Library Integration` targets fully removed. No dangling re-exports in umbrella. |
 | `swift-serializer-primitives` | PASS | `Serializer ASCII Integer Primitives` and `Serializable Integer Primitives` targets fully removed. No dangling re-exports. |
 
 ---
@@ -120,14 +120,14 @@ Zero stale references.
 |---|----------|----------|-------|
 | 1 | `parsing-serialization-capability-organization.md` | **HIGH** | 15+ line references to `Parser.Serializer` throughout (body text, Finding 1 table). Should be `Serializer.Protocol`. Document is internally inconsistent — its own Tension 2 resolution acknowledges the migration. |
 | 2 | `ascii-parsing-domain-ownership.md` | **MEDIUM** | Claims "four capability protocols" including `Parser.Serializer` in parser-primitives (lines 74-76, 158, 641, 669). Now three protocols; serialization is separate. |
-| 3 | `ascii-parsing-domain-ownership.md` | **MEDIUM** | Package Structure (lines 530-549) shows `ASCII.Decimal.swift` inside parser package with wrong target names. Namespace lives in `swift-ascii-primitives`. Actual target names use `Parser` suffix. Missing `Parseable Integer Primitives` target. |
+| 3 | `ascii-parsing-domain-ownership.md` | **MEDIUM** | Package Structure (lines 530-549) shows `ASCII.Decimal.swift` inside parser package with wrong target names. Namespace lives in `swift-ascii-primitives`. Actual target names use `Parser` suffix. Missing `ASCII Parser Primitives Standard Library Integration` target. |
 | 4 | `transformation-domain-architecture.md` | **HIGH** | Line 427 lists `Parser.Serializer.swift` as existing file in `Parser Primitives Core/`. File removed. |
 | 5 | `transformation-domain-architecture.md` | **HIGH** | Lines 14-16 describe `Parser.Serializer` as "currently" nested under Parser namespace in present tense. Already migrated. |
 | 6 | `transformation-domain-architecture.md` | **MEDIUM** | Lines 881-888 list Next Steps 1-5 as TODO. All five are implemented: `Serializer.Protocol`, `Coder.Protocol`, `Parser.Serializer` removal, `ParseOutput→Output`, `Parseable`. |
 | 7 | `transformation-domain-architecture.md` | **LOW** | Line 419 says "37 targets". Actual count is 36 (after `Parser ASCII Integer Primitives` removal). |
 | 8 | `parsing-serialization-capability-organization.md` | **LOW** | Lines 51, 709 reference package name `serialization-primitives`. Renamed to `serializer-primitives`. |
 | 9 | `ascii-parsing-domain-ownership.md` | **MEDIUM** | Lines 16-17, 127-135, 618, 737 reference `Parser.ASCII.*` types and `Parser ASCII Integer Primitives` target as currently existing. Target removed. |
-| 10 | `ascii-parsing-domain-ownership.md` | **LOW** | Package Structure missing `Parseable Integer Primitives` target; wrong target names throughout. |
+| 10 | `ascii-parsing-domain-ownership.md` | **LOW** | Package Structure missing `ASCII Parser Primitives Standard Library Integration` target; wrong target names throughout. |
 
 **Root cause:** All three documents capture architectural decisions that have since been implemented. The decisions are correct; the documents describe pre-migration state in present tense.
 
@@ -214,7 +214,7 @@ All fixed in commits `571ad49` (rfc-9110), `6779be6` (rfc-3986), `2e48ab8` (iso-
 |---|--------|----------|--------|
 | B1 | Update all `Parser.Serializer` references to `Serializer.Protocol` | `parsing-serialization-capability-organization.md` | OPEN |
 | B2 | Correct "four protocols" to "three protocols" + separate serializer | `ascii-parsing-domain-ownership.md` | OPEN |
-| B3 | Update Package Structure with correct target names and add `Parseable Integer Primitives` | `ascii-parsing-domain-ownership.md` | OPEN |
+| B3 | Update Package Structure with correct target names and add `ASCII Parser Primitives Standard Library Integration` | `ascii-parsing-domain-ownership.md` | OPEN |
 | B4 | Remove `Parser.Serializer.swift` from file listing | `transformation-domain-architecture.md` | OPEN |
 | B5 | Mark Next Steps 1-5 as DONE | `transformation-domain-architecture.md` | OPEN |
 | B6 | Update target count to 36 | `transformation-domain-architecture.md` | OPEN |

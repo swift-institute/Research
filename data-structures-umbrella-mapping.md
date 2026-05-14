@@ -58,7 +58,7 @@ Product names use spaces (Package.swift); module names use underscores (`import`
 - ASCII Parser Primitives Core -> `ASCII_Parser_Primitives_Core` (internal target, not a product)
 - ASCII Decimal Parser Primitives -> `ASCII_Decimal_Parser_Primitives`
 - ASCII Hexadecimal Parser Primitives -> `ASCII_Hexadecimal_Parser_Primitives`
-- Parseable Integer Primitives -> `Parseable_Integer_Primitives`
+- ASCII Parser Primitives Standard Library Integration -> `ASCII_Parser_Primitives_Standard_Library_Integration`
 
 **Test Support**: ASCII Parser Primitives Test Support -> `ASCII_Parser_Primitives_Test_Support`
 
