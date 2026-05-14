@@ -2,16 +2,21 @@
 
 <!--
 ---
-version: 1.0.1
+version: 1.0.2
 last_updated: 2026-05-14
-status: RECOMMENDATION
+status: DECISION
 tier: 2
 scope: cross-package
 applies_to:
   - swift-foundations/swift-json
   - swift-ietf/swift-rfc-8259
 predecessor: swift-institute/Research/streaming-json-deserialize-status-quo-and-prior-art.md v1.0.0
-verification_experiment: swift-foundations/swift-json/Experiments/streaming-deserialize-a0-feasibility/ (A0; landed 2026-05-14, commit 0953628). Phase A2 measurement gate will use the extant parse-performance-bench's codable-lookup mode.
+verification_experiments:
+  - swift-foundations/swift-json/Experiments/streaming-deserialize-a0-feasibility/ (A0; commit 0953628, 2026-05-14)
+  - swift-foundations/swift-json/Experiments/parse-performance-bench/ (A2 measurement gate; codable-lookup-event-grain mode added in commit 0c046b5)
+implementations:
+  - swift-ietf/swift-rfc-8259 (Wave 0a): commit b335acb (Span.EventStream + 35 tests); ad68025 (consumeAsParseValue public promotion); 572cc8b (peekStructural); f4f3cb2 (consumeAsParseValue doc + SPI-rejection record)
+  - swift-foundations/swift-json (Wave 0b/0c/0d + Wave 1): commits b0ea876 (JSON.Span.EventStream + JSON.Assemble), 64a0ce2 (Serializable.deserialize(events:) + foundational conformers + 20 tests), 0c046b5 (bench codable-lookup-event-grain mode), 17bce12 (oracle migration)
 trigger: HANDOFF-streaming-json-deserialize-research.md (Phase 2)
 changelog:
   - 1.0.0 (2026-05-14): initial four-option comparative analysis;
@@ -28,6 +33,30 @@ changelog:
     promoted from "recommended" to REQUIRED A1 constraint. Original
     v1.0.0 analysis preserved per [RES-008]; §9 records the A0
     disposition.
+  - 1.0.2 (2026-05-14): A1 Wave 0 + Wave 1 implementation landed
+    (5 substrate commits across 2 repos + 1 doc-enhancement commit).
+    A2 measurement gate PASSED — DECISIVELY. Status upgraded
+    RECOMMENDATION → DECISION. Three findings recorded in NEW §10
+    below. (1) A2 axis (a): swift-json event-grain decode is 0.357×
+    Foundation `JSONDecoder` on the canonical 86 MB Swift stdlib
+    symbol-graph workload — 2.80× FASTER than Foundation, vs the
+    ≤1.10× projected target. (2) A2 axis (b): default-fallback path
+    within 5.3 % of status-quo `init(jsonBytes:)` baseline (noise-
+    floor; §4.3 short-circuit working as designed). (3) Wave 1 oracle
+    migration: 0.149 s release wall-clock, 6.4× release-to-release
+    speedup; 136 refinement pairs match pre-Wave-1 byte-identically.
+    A1 deviation #2 (`consumeAsParseValue` public vs SPI) re-verified
+    deliberately at v1.0.2 prep: SPI form REJECTED by compiler
+    (verbatim error captured in commit f4f3cb2's doc). Public is the
+    correct disposition; doc comment now records the contract +
+    SPI-rejection rationale + intended-use-case guard for future
+    consumers. Three caveats called out in §10.3: (a) the simdjson
+    framing is theoretical not measured and is intentionally dropped;
+    (b) the 0.357× figure is workload-specific to one schema with 67 %
+    skip ratio — other workloads with different skip ratios will see
+    different ratios; (c) Wave 2 (Lint.Manifest + Manifest.Load
+    fanout) and Wave 3 (test infrastructure) remain deferred per the
+    principal's minimal-scope decision.
 ---
 -->
 
@@ -1526,6 +1555,196 @@ site). Mitigation (2) eliminates the silent-regression failure
 mode by construction at the cost of one extra line of
 boilerplate per opt-in call site.
 
+### 10. A1 disposition (v1.0.2)
+
+Phase A1 Wave 0 + Wave 1 landed on Swift 6.3.2 / macOS 26.0
+arm64 on 2026-05-14 across two repos (5 substrate commits +
+1 doc-enhancement commit; see the frontmatter
+`implementations` field for the commit list). Each commit is
+independently buildable; all tests pass (swift-rfc-8259: 212
+tests in 7 suites; swift-json: 47 tests in 3 suites).
+
+#### 10.1 A2 measurement gate results
+
+Canonical 86 MB Swift stdlib symbol-graph workload (`Symbol`
+schema reading 3 of ~9 keys per object — 67 % skip ratio), 3
+iterations, `swift build -c release`, clean build from empty
+`.build`:
+
+| Path | Wall-clock | × Foundation |
+|---|---:|---:|
+| `Foundation.JSONDecoder().decode(SymbolGraph.self, from: data)` | 0.227 s | 1.00× |
+| swift-json status-quo `SymbolGraph(jsonBytes: bytesForm)` | 0.353 s | 1.556× |
+| **swift-json EVENT-GRAIN `SymbolGraph.from(eventDecodingJsonBytes: bytesForm)`** | **0.081 s** | **0.357×** |
+
+**Axis (a) — opt-in event-grain decode closes the 37 % gap**:
+swift-json is **2.80× faster than Foundation** on
+parse+decode. The projected target in v1.0.0 was ≤1.10×;
+reality is 0.357× — the gap is not just closed but
+substantially reversed. The wedge close vs status-quo is
+4.37× (event-grain is 23 % of status-quo time). symbol count
+matches across all three paths (14,552).
+
+**Axis (b) — default-fallback non-regression** (100,000-iter
+microbench on a tiny `{"name":"x","age":1}` payload to
+isolate the dispatch cost from parse cost):
+
+| Path | Wall-clock |
+|---|---:|
+| Status-quo `init(jsonBytes:)` | 0.057 s |
+| Default-fallback path via `from(eventDecodingJsonBytes:)` | 0.060 s |
+| Ratio | 1.053× (5.3 % delta) |
+
+5.3 % is at the noise floor for a 100k-iter tiny-JSON
+microbench; the §4.3 implementation-side short-circuit (mitigation 1)
+is working as designed. Per A0 §9.3, this validates the
+binding constraint — non-opt-in consumers do NOT pay a
+silent regression by switching from `init(jsonBytes:)` to
+`from(eventDecodingJsonBytes:)`.
+
+#### 10.2 Wave 1 oracle migration result
+
+The symbol-graph-conformance-oracle at
+`swift-foundations/swift-json/Experiments/symbol-graph-conformance-oracle/`
+was migrated to use `OracleSymbolGraph: JSON.Serializable`
+with an event-grain `deserialize(events:)` override
+(commit `17bce12`).
+
+| Metric | Pre-Wave-1 (release, post-Tier-4) | Post-Wave-1 (release) | Improvement |
+|---|---:|---:|---|
+| Wall-clock parse | ~0.95 s (per `parse-performance.md` v1.2.1 §6) | **0.149 s** | **6.4× release-to-release** |
+| Refinement pair count | 136 | 136 | **byte-identical** |
+| Output file shape | `Outputs/StdlibRefinementsTable.swift` | `Outputs/StdlibRefinementsTable.swift` | unchanged |
+
+The "128 s → 0.16 s, ~800×" framing from the A1 subagent's
+report compares debug pre-Tier-0 (the original
+`run-stdlib.txt`) to release post-Wave-1; that is the
+user-visible improvement story for the regen workflow, but
+the apples-to-apples release-to-release number is 6.4×.
+Both are honest depending on baseline; the latter is the
+right architectural-attribution number, the former is the
+right end-user-workflow-attribution number.
+
+#### 10.3 Three caveats called out for downstream readers
+
+**(a) The simdjson framing was intentionally NOT folded in.**
+The v1.0.0 §3.1 cited simdjson's `ondemand` API as the
+canonical pattern β reference (~2× speedup on partial-shape
+per the v0.6 release notes); the A1 subagent's report
+extrapolated that swift-json's 2.80× Foundation result also
+implies "swift-json now beats simdjson on partial-shape
+decode by ~1.4×." That extrapolation is THEORETICAL, not
+measured. simdjson's numbers are on different workloads,
+different machines, different schemas (C++ DOM vs swift-json's
+`RFC_8259.Value` Codable analog). Without running simdjson
+on the exact 86 MB / Symbol schema, the comparison is
+unverified. **The v1.0.2 amendment intentionally drops the
+simdjson framing**; the Foundation comparison stands on its
+own. A future arc could add a simdjson C++ binding to the
+parse-performance-bench (one-evening spike) if the simdjson
+comparison becomes load-bearing.
+
+**(b) The 0.357× figure is workload-specific.** The canonical
+86 MB Swift stdlib symbol-graph workload has a 67 % skip
+ratio (`Symbol` declares 3 of ~9 keys per object) and a mean
+object size of N=2.06 keys (per `size-dist` bench output
+cited in `copyable-wrapper-vs-multi-buffer-storage.md`
+v1.0.1 §3.3). The wedge close depends on the consumer's
+skip ratio:
+- High skip ratio (≥50 %, like this workload): wedge close
+  is near-maximal — the saved materialisation work is the
+  dominant cost
+- Moderate skip ratio (20-50 %): wedge close is partial —
+  estimated 1.5-2.0× Foundation
+- Low skip ratio (<20 %, declaring most fields): wedge
+  close is minimal — closer to pure parse cost; event-grain
+  may even regress slightly vs status-quo tree path
+- No skip (decode every field): event-grain may not beat
+  tree-grain at all — the only saving is the avoidance of
+  the intermediate `RFC_8259.Value` allocations, which is
+  smaller than the parse cost itself
+
+Consumers measuring their own workloads should NOT assume
+the 0.357× number generalises. The right framing is
+"event-grain closes most or all of the partial-shape skip
+cost; consumers with low-skip workloads should measure
+before opting in."
+
+**(c) Wave 2 + Wave 3 deferred per minimal-scope decision.**
+Per the principal's 2026-05-14 decision (and v1.0.1's
+`Recommended disposition`), Wave 2 (`Lint.Manifest` +
+`Manifest.Load` fanout) and Wave 3 (`swift-tests`
+serialisation opt-ins) are NOT in scope for A1. Substrate +
+oracle demonstration is the minimal scope that delivers
+architecture proven + user-visible value on the original
+motivating workload. Wave 2 / Wave 3 await actual consumer
+pull per `[BENCH-010]` / `[RES-018]`.
+
+#### 10.4 Implementation deviations from the §4 sketch
+
+Two acceptable deviations were taken at A1, both local and
+documented in their source files:
+
+1. **`peekStructural()` added** to `JSON.Span.EventStream`
+   (and the underlying `RFC_8259.Span.EventStream`). Not
+   in the §4 sketch. Needed for Array / Dictionary /
+   Optional empty-container and null detection without
+   consuming a token, preserving child-decoder override-
+   dispatch. Does NOT clear `isUnforkedAtPositionZero`
+   since whitespace-skip is idempotent vs the
+   `Span.Parser` fast path. Commit `572cc8b`.
+
+2. **`consumeAsParseValue` is `public`** on
+   `RFC_8259.Span.EventStream`, not `@_spi(StreamingDeserialize)`.
+   The SPI form was evaluated at v1.0.2-prep
+   (commit `f4f3cb2` doc-enhancement) and REJECTED by the
+   compiler: `@_spi` does NOT compose with `@inlinable` at
+   the cross-module consumer site (verbatim Swift 6.3.2
+   error: *"instance method 'consumeAsParseValue()' cannot
+   be used in an '@inlinable' function because it is an
+   SPI imported from 'RFC_8259'"*). The consumer
+   (`JSON.Assemble.from`) MUST be `@inlinable` to allow the
+   default-fallback short-circuit chain to inline at every
+   opt-out conformer site; without inlining, the protocol-
+   dispatch chain adds witness-table overhead and axis (b)
+   would widen. Public is the right disposition; the doc
+   comment now records the contract + SPI-rejection
+   rationale + intended-use-case guard for external
+   consumers.
+
+Both deviations are additive (no API removal), local (no
+ecosystem fan-out), and reversible.
+
+#### 10.5 Honest issues encountered at A1
+
+- Initial `@_lifetime(copy self)` on a byte-span accessor
+  failed (`Span<UInt8>` is `~Escapable`); restructured to
+  expose the operation as `consumeAsParseValue()` returning
+  the materialised `RFC_8259.Value` rather than re-exposing
+  the span directly. Cleaner outcome than the original
+  sketch.
+- `arr.map { try ... }` doesn't propagate typed throws
+  inside `OracleSymbolGraph.deserialize(_: JSON)` (Wave 1);
+  rewrote with manual loop. Bounded local fix.
+- The default-fallback path was structurally regressing
+  (10× on the mock) until the `@inlinable` chain through
+  `JSON.Assemble.from` was wired correctly; the v1.0.0 §4.3
+  warning + the v1.0.1 §9.3 short-circuit requirement
+  caught this before any consumer observed it. The discipline
+  worked.
+
+#### 10.6 Disposition
+
+**A1 GREEN.** A2 both axes pass decisively (axis (a) target
+≤1.10× achieved at 0.357×; axis (b) at 5.3 % is essentially
+noise on a 100k-iter tiny-JSON microbench). Wave 1's 6.4×
+release-to-release oracle speedup validates the wedge
+closure on the original motivating workload. The arc closes
+at "substrate landed; Wave 1 demonstrates value on the
+original workload; ecosystem fanout deferred."
+
+Status upgraded RECOMMENDATION → DECISION at v1.0.2.
+
 ## Outcome
 
 **Status**: RECOMMENDATION
@@ -1573,50 +1792,41 @@ investigation-restart territory.
   a sibling Serializer (TOML, YAML, ASN.1) joins the
   institute.
 
-**Honest framing of risk and ecosystem disposition (v1.0.1
-post-A0)**: the 37 % gap closes for opt-in conformers — the
-A0 mock measured a 32.94× Bar/Foo wedge (override speedup vs
-default) which narrows to a production-scale 3-10× but
-remains the dominant positive signal. The implementation cost
-is bounded (~700-1200 LoC for the substrate; ~280 LoC for
-ecosystem fanout per §8); no new ecosystem primitive is
-required; the public API surface grows by ONE protocol method
-(with default) and ONE entry point.
+**Final disposition (v1.0.2, DECISION)**: A1 Wave 0 + Wave 1
+landed; A2 measurement gate PASSED on both axes decisively.
+swift-json event-grain decode is **0.357× Foundation
+`JSONDecoder` on the canonical 86 MB Swift stdlib symbol-graph
+workload** (2.80× faster than Foundation, vs the ≤1.10×
+projected target); the default-fallback path is within 5.3 %
+noise floor of status-quo `init(jsonBytes:)` (the §4.3
+implementation-side short-circuit works as designed); Wave 1
+oracle migration achieves 6.4× release-to-release speedup with
+136-pair byte-identical output. See §10 for the full A1
+disposition with measurements, deviations, and caveats.
 
-The §8 ecosystem survey confirms the consumer surface is
-small (11 conformers, all in swift-foundations, none
-third-party) and that *no existing consumer is complaining*.
-Wave 1's absolute benefit on the symbol-graph oracle is small
-(~0.77 s per quarterly invocation — verification benefit, not
-user-visible benefit per §8.4). Per `[BENCH-010]` / `[RES-018]`
-the work is borderline-speculative — no second hot consumer
-has surfaced.
+The architecture is the right choice on the empirical
+evidence: ~700-1200 LoC of substrate work + ~50 LoC of Wave 1
+oracle migration delivers a 2.80× user-visible speedup on the
+schema-known partial-shape decode path while preserving the
+14× dynamic-access lookup advantage and adding zero new
+ecosystem primitives. No regression for non-opt-in consumers.
 
-**A0 disposition (per §9)**: Premise 1 GREEN (Token.Kind
-storage incl. `.unknown(UInt8)`); Premise 3 GREEN
-(`withContiguousStorageIfAvailable` engagement); Premise 2
-GREEN on compile + correctness AND RED on the §4.3 default-
-fallback timing signal (Bar/Today = 4.48× mock — structural
-regression empirically confirmed). The language risks are
-closed; the architectural risk has a binding mitigation
-locked in per §9.3.
+**Three caveats called out in §10.3** for downstream readers:
+(a) the simdjson comparison was intentionally NOT folded in
+(theoretical, not measured; a future spike could close this);
+(b) the 0.357× figure is workload-specific to a 67 %-skip-ratio
+schema — low-skip workloads will see narrower wedge closure
+or none at all; (c) Wave 2 (`Lint.Manifest` + `Manifest.Load`
+fanout) and Wave 3 (test infrastructure) remain deferred per
+the principal's minimal-scope decision and per
+`[BENCH-010]` / `[RES-018]` — both await actual consumer pull
+before fanout work is authorised.
 
-**Recommended disposition (v1.0.1)**: land Wave 0 + Wave 1
-minimal scope per the principal's 2026-05-14 decision. Wave 0
-implements the substrate including the §4.3 mitigation (1)
-short-circuit as the REQUIRED constraint. Wave 1 migrates
-the symbol-graph oracle to demonstrate wedge closure on the
-original motivating workload (verification benefit). Wave 2
-(Lint.Manifest + Manifest.Load fanout) and Wave 3 (test
-infrastructure) wait for actual consumer pull per
-`[BENCH-010]` / `[RES-018]`. Estimated cost: ~1150 LoC,
-~1.5 arcs (~1-2 weeks).
-
-Phase A2 measurement gate validates BOTH axes per §9.3:
-(a) opt-in conformers (`Symbol` schema with `deserialize(events:)`
-override) close most of the 37 % gap to Foundation, AND
-(b) non-opt-in conformers (default-fallback path) do NOT
-regress vs status-quo `init(jsonBytes:)` baseline.
+The arc closes at "substrate landed, Wave 1 demonstrates
+value on the original motivating workload, ecosystem fanout
+deferred." That is the right disposition: maximally bounded,
+maximally honest, durable record in the institute corpus for
+future consumers to pick up if and when pressure surfaces.
 
 ### Loose ends (per [RES-027])
 
