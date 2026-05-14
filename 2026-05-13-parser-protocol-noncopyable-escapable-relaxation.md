@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-05-13
+version: 1.2.0
+last_updated: 2026-05-14
 status: RECOMMENDATION
 tier: 3
 scope: ecosystem-wide
@@ -13,10 +13,13 @@ applies_to:
   - swift-primitives/swift-binary-parser-primitives
   - swift-primitives/swift-ascii-parser-primitives
   - swift-foundations/swift-parsers
-verification_experiment: swift-parser-primitives/Experiments/parser-protocol-self-noncopyable-witness-tables/
+verification_experiments:
+  - swift-parser-primitives/Experiments/parser-protocol-self-noncopyable-witness-tables/ (v1.1.0; SIGSEGV blocker refuted)
+  - swift-parser-primitives/Experiments/owned-consuming-get-on-protocol-extension/ (v1.2.0; Option A refuted)
 predecessor: 2026-05-13-noncopyable-adoption-ecosystem-corners-audit.md (v1.0.0 RECOMMENDATION; Row 11 gating decision lift)
 trigger: HANDOFF-parser-protocol-noncopyable-escapable-relaxation.md (Tier-3 follow-up to ecosystem-corners audit Q1)
 changelog:
+  - v1.2.0 (2026-05-14): Stratified-architecture reframing. Phase 2 protocol-only relaxation EXECUTED at `swift-parser-primitives` commit `3ed1961` (Parser.`Protocol`: ~Copyable + Parser.Printer: ~Copyable; 2 file changes vs v1.1.0 projection of 111; 163/163 tests; all 4 downstream packages still build green). Empirical finding: the v1.1.0 cascade projection conflated Phase 2 (protocol-only) with Phase 3 (combinator-level) — Phase 3 is NOT required for Row 11 adoption because `Parser.Machine.Compiled` is a *terminal* runtime parser, not a participant in combinator chains. Combinators stay Copyable-only via implicit constraint; `.error.map { ... }` syntax preserved without disruption. Option A (`@_owned consuming get` on protocol extension to preserve `.error.map` fluent syntax under combinator-cascade) EMPIRICALLY REFUTED via `/experiment-process` at `swift-parser-primitives/Experiments/owned-consuming-get-on-protocol-extension/` (commit `2221537`): Swift 6.3.1/6.3.2 reject `@_owned` as unknown attribute; 6.4-dev passes only inside consuming-parameter wrapper helpers, fails at direct call-site with "borrowed by non-Escapable type". Compiler crash discovered on `consume c` + `@_owned consuming get` (SIL verifier abort at `MemoryLifetimeVerifier.cpp:263`) — deferred to `issue-investigation`. [RES-018] second-consumer framing rejected per principal `feedback_correctness_and_evergreen.md`. **Recommendation supersedes v1.1.0 Option δ: adopt α-stratified — protocol relaxation lands at the protocol level only; combinators stay Copyable; ~Copyable conformers exist as terminals.** Phase 4 (`Parser.Machine.Compiled: ~Copyable`, Row 11) is the immediate next executable phase, blocked only on parallel-session coordination in `swift-parser-machine-primitives`.
   - v1.1.0 (2026-05-13): Empirical verification of the witness-table SIGSEGV blocker via /experiment-process; six variants across Swift 6.2.3 / 6.3.2 / 6.4-dev nightly, including V5 with the full original-crash conditions. The SIGSEGV does NOT reproduce on Swift 6.3.2 with the proposed Self: ~Copyable axis added. Revised (d) cascade-cost score 5/5 → 4/5. Sibling-type workaround framing dropped per `feedback_no_sibling_type_workarounds.md` — protocol-level relaxation is the architectural goal; the recommendation tree is "protocol-relaxation-with-validated-blockers OR defer-until-second-consumer." Option δ recommendation stands, but rationale shifts from "verified-unfixed compiler bug + cascade swamp" to "high mechanical migration ceremony without a second consumer per [RES-018] + stdlib-Array cap on `Parser.OneOf.Any.parsers: [Closure]` as a structural design limit."
 ---
 -->
@@ -885,11 +888,18 @@ For Option δ (v1.1.0 revised — sibling-type framing removed per `feedback_no_
 
 ---
 
-## Outcome
+## Outcome (v1.1.0 — superseded by v1.2.0 Empirical Update below)
+
+> **NOTE (v1.2.0, 2026-05-14)**: The v1.1.0 recommendation of Option δ (Defer)
+> has been superseded by **Option α-stratified** per the v1.2.0 Empirical
+> Update section below. The v1.1.0 analysis is preserved unchanged per
+> [RES-008] (preserve original analysis). The two empirical events that
+> drove the reframing — Phase 2 executed at commit `3ed1961`, Option A
+> refuted at commit `2221537` — are documented in the v1.2.0 section.
 
 **Status**: RECOMMENDATION (Tier-3).
 
-### Recommended option: δ — Defer until [RES-018] second-consumer hurdle is cleared
+### Recommended option (v1.1.0): δ — Defer until [RES-018] second-consumer hurdle is cleared
 
 **Rationale (v1.1.0 revised)**:
 
@@ -1067,13 +1077,207 @@ In the absence of any of these, the recommendation stands.
 
 ---
 
+## v1.2.0 Empirical Update — Stratified Architecture Resolution
+
+Between v1.1.0 (2026-05-13) and v1.2.0 (2026-05-14), three empirical events
+reshaped the analysis and produced a substantively different recommendation.
+The v1.1.0 analysis above is preserved unchanged per [RES-008]; this section
+supersedes v1.1.0's Outcome.
+
+### Phase 1 — `Parser.OneOf.\`Any\`` deletion (commit `b1473280`)
+
+Per principal direction, `Parser.OneOf.\`Any\`` was deleted from
+`swift-parser-primitives`. Zero call-sites verified across the 2,482-package
+workspace (broader than the per-package Tier-2 RECOMMENDATION's 9-package
+survey at `swift-parser-primitives/Research/2026-05-13-parser-oneof-storage-redesign-for-noncopyable.md`).
+The deletion removes the named stdlib-`Array<T: Copyable>` structural cap on
+`Parser.OneOf.Any.parsers: [Closure]` that v1.1.0 cited as the dominant
+residual structural blocker.
+
+### Phase 2 — protocol-only relaxation EXECUTED (commit `3ed1961`)
+
+Per principal direction, Phase 2 was dispatched and lands as protocol-only:
+
+- `swift-parser-primitives/Sources/Parser Primitives Core/Parser.Parser.swift`:
+  `public protocol \`Protocol\`<Input, Output, Failure>: ~Copyable`
+- `swift-parser-primitives/Sources/Parser Primitives Core/Parser.Printer.swift`:
+  symmetric `: ~Copyable` on the sibling protocol (required because many
+  combinators conform to both — asymmetric relaxation broke compile)
+- **2 file changes total** vs. v1.1.0's projected 111 cascade sites
+- 163/163 tests in 80 suites pass
+- All 4 downstream packages (`swift-parser-primitives`,
+  `swift-binary-parser-primitives`, `swift-ascii-parser-primitives`,
+  `swift-foundations/swift-parsers`) still build green without modification
+
+**Empirical surprise**: the 111-site cascade projected in v1.1.0 was Phase 3
+scope mis-counted into Phase 2. Protocol-only relaxation costs ~0 sites — the
+lowest-cost waveform observed in the ecosystem.
+
+The dispatch agent also attempted a combinator cascade (making
+`Parser.Map.Transform`, `Parser.OneOf.Two`, `Parser.Take.Sequence`, etc.
+`~Copyable`). The attempt produced in-package green builds but broke
+downstream `.error.map { ... }` and `.parse(...)` call sites across 4
+packages: every consumer use of these accessors hit a
+"borrowed by non-Escapable type" diagnostic at function scope. The agent
+reverted to protocol-only and surfaced the cross-package coordination defect.
+
+The follow-up Option A experiment (below) confirmed the revert was **not**
+incomplete work — it was the right call.
+
+### Option A empirically refuted (commit `2221537`)
+
+Per principal direction, Option A (`@_owned consuming get` on protocol
+extension to preserve `parser.error.map { ... }` fluent syntax under
+combinator cascade) was tested via `/experiment-process` at
+`swift-parser-primitives/Experiments/owned-consuming-get-on-protocol-extension/`:
+
+| Variant | Swift 6.3.1 | Swift 6.3.2 | 6.4-dev 2026-05-07 | 6.4-dev 2026-05-12 |
+|---|---|---|---|---|
+| V1 non-generic struct | FAIL: unknown attr `_owned` | FAIL: unknown attr `_owned` | PASS | PASS |
+| V2 generic struct | FAIL | FAIL | PASS | PASS |
+| V3 protocol-extension (target) | FAIL | FAIL | PASS (wrapped) | PASS (wrapped) |
+| V4 end-to-end `.error.map` chain | FAIL | FAIL | PASS (wrapped) | PASS (wrapped) |
+| V5 direct call-site (no wrapper) | n/a | n/a | **FAIL**: borrowed by non-Escapable | **FAIL**: borrowed by non-Escapable |
+| V5 `consume c` keyword | n/a | n/a | not retested | **CRASH**: SIL verifier abort |
+
+**Verdict**: V3 + V4 pass only inside consuming-parameter wrapper helpers.
+Direct call-site `parser.error.map { ... }` at function scope fails. The
+wrapper-only workaround is no better than the rejected method-form migration
+— it pushes the consuming-binding requirement from one declaration site to
+every call site.
+
+**Compiler crash discovered**: `consume c` keyword on a `@_owned consuming get`
+accessor crashes Swift 6.4-dev with SIL verifier abort at
+`MemoryLifetimeVerifier.cpp:263`. Deferred to a separate `issue-investigation`
+workflow.
+
+The v1.1.0 user-hint "might also work in 6.3.2" was empirically REFUTED —
+both 6.3.1 and 6.3.2 emit `error: unknown attribute '_owned'`.
+
+### The stratified-architecture insight
+
+Phase 3 (combinator cascade) and Option A (`@_owned consuming get`) failures
+together establish a structural insight that resolves the entire arc:
+
+**`Parser.Machine.Compiled` (Row 11) is a TERMINAL runtime parser — it does
+not compose into combinator chains after compilation.** The lifecycle is:
+
+```swift
+let parser = MyDescription()           // Copyable, built via combinators + .error.map
+let compiled = parser.compile()         // ~Copyable terminal
+let result = try compiled.parse(&input) // direct execution
+```
+
+Phase 2 (commit `3ed1961`) already does the load-bearing work:
+`Parser.\`Protocol\`: ~Copyable` admits *both* Copyable and ~Copyable
+conformers. The combinator family (`Parser.Map`, `Parser.OneOf.Two`,
+`Parser.Take.Sequence`, etc.) stays Copyable-only via its existing implicit
+constraint — `.error.map { ... }` continues to work exactly as before.
+~Copyable conformers like `Compiled` exist as TERMINALS, not in combinator
+chains.
+
+**Stratified architecture**:
+
+| Layer | Copyability | Status |
+|---|---|---|
+| `Parser.\`Protocol\`` | admits both | Phase 2 done at `3ed1961` |
+| Combinators (Map, OneOf, Take, Skip, etc.) | Copyable-only (implicit) | unchanged |
+| `.error.map { ... }` accessor chain | Copyable-only | preserved as-is |
+| Terminal runtime parsers | ~Copyable | Phase 4 = Row 11 (blocked on parallel work) |
+
+This delivers:
+
+- ✓ Row 11 achievable
+- ✓ No method-form migration of `.error.map`
+- ✓ No `~Escapable` cascade through Map / Take / OneOf
+- ✓ No upstream-Swift block / SE proposal wait
+- ✓ No call-site disruption across 4 packages
+- ✓ `swift-property-primitives` stays the canonical pattern for the cases it
+  was designed for (Bit.Vector-style protocol delegation) but isn't
+  press-ganged into a value-transfer role for protocol-extension consuming-get
+
+### Recommended option (v1.2.0): α-stratified
+
+**Status**: RECOMMENDATION (Tier-3) — supersedes v1.1.0 Option δ.
+
+Adopt `Parser.\`Protocol\`: ~Copyable` at the protocol level (DONE, commit
+`3ed1961`); leave combinators Copyable-only via their existing implicit
+constraint (no cascade); admit ~Copyable conformers as TERMINALS only;
+proceed to Row 11 (`Parser.Machine.Compiled: ~Copyable`) once parallel work
+in `swift-parser-machine-primitives` lands.
+
+This is **not** a revision of the v1.1.0 six-axis scoring — the empirical
+finding is that the v1.1.0 framing treated combinator cascade as necessary
+for Row 11, which is not the case. With combinator-cascade scope removed,
+the actual cost of adoption collapses to ~0 sites (Phase 2 done) plus the
+eventual Phase 4 (a single-type adoption in a single package, blocked only
+on parallel-session coordination).
+
+### Disposition of v1.1.0 options
+
+| Option | v1.1.0 verdict | v1.2.0 disposition |
+|---|---|---|
+| α (Self: ~Copyable, full cascade) | 6/30, below threshold | **Reframed as α-stratified — combinator cascade NOT required. ADOPTED at protocol level (`3ed1961`).** |
+| β (Self: ~Copyable & ~Escapable) | 0/30, untenable | unchanged — still structurally untenable |
+| γ (Self: ~Copyable + combinators-Copyable-by-convention) | 7/30, fragile invariant | **OBSOLETED by α-stratified — same outcome via type-system-enforced implicit constraint, not by convention.** |
+| δ (Defer until [RES-018] second consumer surfaces) | RECOMMENDED in v1.1.0 | **SUPERSEDED. [RES-018] consumer-threshold framing rejected per principal `feedback_correctness_and_evergreen.md`; ecosystem decisions optimize for structural correctness + evergreen, not demand triangulation.** |
+| B (Property.View as ownership-transfer layer) | Surfaced after v1.1.0 | NOT NEEDED — stratified architecture preserves `.error.map { ... }` syntax without needing a property-primitives ownership-transfer layer for protocol-extension consuming-get. Property.View remains canonical for its intended access-not-transfer use cases. |
+| C (Map: ~Copyable, ~Escapable with pointer storage) | Surfaced after v1.1.0 | NOT NEEDED — Map stays Copyable in the stratified architecture; only terminal types like `Compiled` become ~Copyable. |
+
+### Phase plan (v1.2.0)
+
+The v1.1.0 IF-second-consumer staged migration (Phases 1–6 in §"Highest-information
+next step") is **obsolete**. The actual phase plan is:
+
+| Phase | Scope | Status |
+|---|---|---|
+| 1 | `Parser.OneOf.\`Any\`` deletion (+ swift-standards twin deferred) | DONE: `swift-parser-primitives@b1473280` |
+| 2 | Protocol-relaxation: `Parser.\`Protocol\`: ~Copyable` + `Parser.Printer: ~Copyable` | DONE: `swift-parser-primitives@3ed1961` |
+| 3 | Combinator cascade | NOT REQUIRED — formally dropped; combinators stay Copyable-only via implicit constraint |
+| 4 | `Parser.Machine.Compiled: ~Copyable` (Row 11 = the audit's immediate target) | BLOCKED on parallel work in `swift-parser-machine-primitives` (17 dirty files including `Parser.Machine.Compiled.swift`); execute when parallel session lands |
+| 1b | `Parsing.OneOf.\`Any\`` deletion in `swift-standards` (the twin) | BLOCKED on parallel work in `swift-standards/Sources/Parsing/` (9 dirty files); execute when parallel session lands |
+
+### Re-evaluation triggers (v1.2.0 — simplified)
+
+The v1.1.0 triggers are largely obsolete now that the structural insight is
+recorded. v1.2.0's residual triggers:
+
+1. **If Phase 4 (Row 11) execution surfaces an unanticipated structural issue
+   not predicted by this analysis**, reopen and update.
+2. **If a future Compiled-style terminal type wants `~Copyable` semantics**
+   (e.g., a memory-mapped Binary parser with mmap region ownership in `Self`,
+   or a kernel-level network parser with socket descriptor ownership in
+   `Self`), it should adopt the same stratified pattern: ~Copyable conformer
+   of `Parser.\`Protocol\``, NOT a participant in combinator chains. Add the
+   adoption to the per-package research; this Tier-3 doc need not be
+   re-revised unless the new consumer reveals a structural issue.
+3. **If the Swift compiler crash on `consume c` + `@_owned consuming get`
+   (SIL verifier abort) is fixed upstream**, the Option A reproduction in the
+   experiment package can be re-tested; the disposition is unchanged
+   (stratified architecture supersedes Option A regardless), but the bug
+   would close as resolved.
+
+### Cross-references to v1.2.0 commits
+
+- `swift-parser-primitives@b1473280` — Phase 1: `Parser.OneOf.\`Any\`` deletion
+- `swift-parser-primitives@3ed1961` — Phase 2: protocol-only relaxation
+- `swift-parser-primitives@2221537` — Option A experiment
+- `swift-parser-primitives@7b3e356` — Tier-2 OneOf storage-redesign research doc
+- `swift-parser-primitives@5b3f258`, `dbde275` — witness-table SIGSEGV experiment + index
+- `swift-institute/Research@4582bc5` — v1.1.0 RECOMMENDATION (pushed)
+
+Phase 1 + experiment commits pushed at `4e2f7e5..b147328` (parser-primitives main).
+Subsequent commits (`3ed1961`, `2221537`) await principal authorization to push.
+
+---
+
 ## Open Questions
 
 | # | Question | Status | Resolution path |
 |---|---|---|---|
 | Q1 | ~~Is the proposed `Parser.Machine.OwnedCompiled` sibling type the right shape for Row 11 adoption under Option δ?~~ | **WITHDRAWN v1.1.0**. Sibling-type workarounds explicitly rejected per `feedback_no_sibling_type_workarounds.md`. Row 11's Cache aliasing stays as documented invariant until protocol relaxation is viable on the merits. | n/a |
 | Q2 | If SE-0497 (closure-capture for ~Copyable) ships, does the Lazy / OneOf.Any cascade collapse enough to re-open the analysis? | **PARTIALLY RESOLVED v1.1.0** for `Parser.Lazy` per experiment V6 (closure-returning-~Copyable works on Swift 6.3.2). `Parser.OneOf.Any.parsers: [Closure]` remains a structural cap due to stdlib `Array<~Copyable>` non-support — independent of SE-0497. | Re-evaluate `OneOf.Any` when stdlib `Array<~Copyable>` lands. |
-| Q3 | Should `Parser.Printer` (the sibling protocol at `Parser.Printer.swift:46`) also be re-evaluated as part of any future Option α reconsideration? | YES (downstream consequence). `Parser.Printer` shares the `Self: Copyable` (implicit) shape with `Parser.`Protocol``. Any future relaxation should apply symmetrically. The witness-table SIGSEGV resolution in v1.1.0 carries through to `Parser.Printer` because they share the same protocol-shape pattern. | Couple any reconsideration to a `Parser.Printer` parallel analysis. |
+| Q3 | Should `Parser.Printer` (the sibling protocol at `Parser.Printer.swift:46`) also be re-evaluated as part of any future Option α reconsideration? | **RESOLVED v1.2.0**. Phase 2 (commit `3ed1961`) included `Parser.Printer: ~Copyable` symmetric relaxation — asymmetric relaxation broke compile because many combinators conform to both protocols. Both protocols now admit ~Copyable conformers under the stratified architecture. | No further action. |
 | Q4 | Does the Machine.* family's `Parser.Machine.Builder<Input, Failure>: ~Copyable` (at Machine.swift:71) serve as evidence that a partial `~Copyable` adoption is viable in the parser stack? | RESOLVED INLINE. Yes for the Builder (which doesn't conform to Parser.`Protocol`). The Builder is internal-to-Machine and ~Copyable as a stand-alone choice, not via protocol-level relaxation. | No further action. |
 | Q5 | Are there ASCII / Binary parser-primitives consumers (e.g., `Binary.Parse.Access<P>`) that suggest a second consumer is imminent? | INSUFFICIENT EVIDENCE. The 8 binary-parser-primitives conformers + 2 ASCII-parser-primitives conformers are leaf-shape and combinator-shape; none are resource-correlated. The `Binary.Bytes.Input.View` is a borrowed-Input shape, but it's an Input, not a Self. | Watch for new Binary / ASCII consumer arc; re-survey if one lands. |
 | Q6 | The v1.1.0 experiment ran on Swift 6.2.3 + 6.3.2 + 6.4-dev nightly 2026-05-07. Will the SIGSEGV resolution hold on future Swift toolchains? | OPEN. The 2026-02-14 → 2026-05-13 gap saw the SIGSEGV become irreproducible; the underlying compiler change is unannounced (no associated SE proposal or release note). A regression is possible but not predicted. | Re-run the experiment as a regression check at each major Swift release. |
