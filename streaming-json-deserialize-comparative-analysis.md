@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.0.1
 last_updated: 2026-05-14
 status: RECOMMENDATION
 tier: 2
@@ -11,8 +11,23 @@ applies_to:
   - swift-foundations/swift-json
   - swift-ietf/swift-rfc-8259
 predecessor: swift-institute/Research/streaming-json-deserialize-status-quo-and-prior-art.md v1.0.0
-verification_experiment: parse-performance-bench (extant; codable-lookup mode produced the 37 % finding and will serve as the A2 measurement gate)
+verification_experiment: swift-foundations/swift-json/Experiments/streaming-deserialize-a0-feasibility/ (A0; landed 2026-05-14, commit 0953628). Phase A2 measurement gate will use the extant parse-performance-bench's codable-lookup mode.
 trigger: HANDOFF-streaming-json-deserialize-research.md (Phase 2)
+changelog:
+  - 1.0.0 (2026-05-14): initial four-option comparative analysis;
+    recommended Option B (event-emitting Span parser); A0/A1/A2 phased
+    plan; §8 ecosystem migration survey.
+  - 1.0.1 (2026-05-14): A0 spike landed; three premise results recorded
+    in NEW §9 below. Premise 1 (Token.Kind storage incl .unknown(UInt8))
+    GREEN. Premise 3 (withContiguousStorageIfAvailable engagement)
+    GREEN. Premise 2 (lifetime + inout + protocol dispatch) GREEN on
+    compile/correctness BUT RED on the §4.3 default-fallback timing
+    signal (Bar/Today = 4.48× mock; production narrows but wedge is
+    structural). §4.3 amended: "UNTESTED at write time" → "EMPIRICALLY
+    CONFIRMED at A0"; implementation-side `JSON.assemble` short-circuit
+    promoted from "recommended" to REQUIRED A1 constraint. Original
+    v1.0.0 analysis preserved per [RES-008]; §9 records the A0
+    disposition.
 ---
 -->
 
@@ -816,7 +831,7 @@ side. The helper exists primarily for the fallback path — it
 should NEVER be used by opt-in conformers (the opt-in fast path
 goes byte-to-target directly without an intermediate tree).
 
-**Default-fallback regression risk — UNTESTED at write time.**
+**Default-fallback regression risk — EMPIRICALLY CONFIRMED at A0 (v1.0.1; see §9).**
 The fallback path's call graph adds one protocol-dispatch
 boundary versus the direct tree path:
 
@@ -851,19 +866,55 @@ switches entry points from `init(jsonBytes:)` to
 `deserialize(events:)` silently slows down — exactly the
 opt-in trap the migration story is supposed to avoid.
 
-**Two mitigation paths if regression is measured at A1**:
+**Two mitigation paths; A1 MUST adopt one** (v1.0.1: A0 §9
+empirically confirmed the regression as 4.48× on the mock —
+upper bound, but the wedge is structural and present in
+production-scale measurements proportionally):
 
-1. **Implementation-side**: rewrite `JSON.assemble` to detect
-   that the EventStream is at position 0 and unforked, and
-   route to `RFC_8259.Span.Parser.parse(_:)` directly,
-   bypassing the event-pull-and-rebuild entirely. The
-   EventStream becomes a no-op intermediary on the default
-   path. Preserves the dispatch surface; eliminates the
-   cost.
-2. **API-side**: do NOT add `from(eventDecodingJsonBytes:)` as
-   a general entry point. Instead require opt-in consumers to
-   construct the EventStream explicitly and call their
-   conformer's `deserialize(events:)` directly:
+1. **Implementation-side (REQUIRED at A1 — recommended path)**:
+   rewrite `JSON.assemble` to detect that the EventStream is at
+   position 0 and unforked, and route to
+   `RFC_8259.Span.Parser.parse(_:)` directly, bypassing the
+   event-pull-and-rebuild entirely. The EventStream becomes a
+   no-op intermediary on the default path; the dispatch surface
+   is preserved and the cost is eliminated by collapsing the
+   fallback chain to today's tree path.
+
+   Concrete shape:
+   ```swift
+   internal enum JSON.Assemble {
+       static func from(
+           _ events: inout JSON.Span.EventStream
+       ) throws(JSON.Error) -> JSON {
+           // Fast path: EventStream is at position 0 and the
+           // consumer hasn't advanced it yet. Delegate directly
+           // to RFC_8259.Span.Parser.parse(_:) — equivalent to
+           // status-quo init(jsonBytes:).
+           if events.isUnforkedAtPositionZero {
+               return try events.consumeAsParseValue()
+           }
+           // Slow path: events have been partially consumed;
+           // build the JSON value from the remaining events
+           // (used if a future caller wraps a partial-decode
+           // pattern; not exercised on the §4.3 default
+           // fallback).
+           ...
+       }
+   }
+   ```
+
+   `JSON.Span.EventStream` exposes an `isUnforkedAtPositionZero`
+   property (or equivalent) for the short-circuit detection.
+   A1 must verify the detection is sound AND measure that the
+   fast path matches status-quo `init(jsonBytes:)` performance
+   to within noise on the bench's `codable-lookup-event-grain`
+   mode for non-opt-in conformers.
+
+2. **API-side (FALLBACK if (1) proves harder than expected)**:
+   do NOT add `from(eventDecodingJsonBytes:)` as a general
+   entry point. Instead require opt-in consumers to construct
+   the EventStream explicitly and call their conformer's
+   `deserialize(events:)` directly:
 
    ```swift
    var stream = JSON.Span.EventStream(span)
@@ -873,13 +924,13 @@ opt-in trap the migration story is supposed to avoid.
    This makes the opt-in explicit at the call site; consumers
    cannot accidentally engage the fallback path. Costs API
    ergonomics (one extra line per call site) but eliminates
-   the silent-regression failure mode by construction.
+   the silent-regression failure mode by construction. Pick
+   this only if A1 discovers that the short-circuit detection
+   in (1) is non-trivial.
 
-The A0 spike #2 (lifetime + inout + protocol dispatch — see §5)
-is the cheap empirical check that informs which mitigation is
-needed. If the protocol-dispatch chain inlines flat, mitigation
-(1) is unnecessary; if it doesn't, both (1) and (2) are
-candidates and A1 chooses based on measured cost.
+Mitigation (1) is the recommended path; (2) is the backstop.
+Either is binding — A1 cannot ship the naïve default-fallback
+shape exhibited in the v1.0.0 sketch.
 
 The init that opts into the event-grain path:
 
@@ -1369,6 +1420,112 @@ toolchain limitation X" rather than "speculatively
 deferred"). The land-or-park choice is then made with
 better evidence.
 
+### 9. A0 disposition (v1.0.1)
+
+Phase A0 ran on Swift 6.3.2 (swiftlang-6.3.2.1.108) / macOS 26.0
+arm64 on 2026-05-14. Spike artifact:
+`swift-foundations/swift-json/Experiments/streaming-deserialize-a0-feasibility/`
+(commit `0953628`; three executable targets, build clean under
+`swift build -c release`).
+
+| Premise | Status | Source / measurement |
+|---|---|---|
+| 1. `RFC_8259.Token.Kind` storage in `~Copyable & ~Escapable` struct, including `case .unknown(UInt8)` per §4.1 | **GREEN** | `check-token-kind-storage`: 22/22 PASS across 12 enum cases (11 payload-free + `.unknown(UInt8)` exercised across 8 distinct `UInt8` payloads: `0x00, 0x20, 0x41, 0x7F, 0x80, 0xC0, 0xFE, 0xFF`). Payload-free + `.unknown(UInt8)` coexist inside one struct lifetime via `Optional<Token.Kind>` storage with `@_lifetime(self: copy self)` mutating methods. The §4.1 design holds; no `UInt8` raw-value fallback required. |
+| 2. `@_lifetime` + `inout` + typed-throws through protocol dispatch (compile + correctness AND §4.3 default-fallback timing) | **GREEN (compile + correctness)** + **RED (§4.3 timing)** | `check-lifetime-inout-protocol`: compilation, correctness, and typed-error propagation through protocol witness all PASS. **Three-path timing (10 000 iter × 256 bytes/iter)**: Foo (override) 0.392 ms; Today (status-quo tree path) 2.880 ms; Bar (default-fallback) 12.907 ms. Derived ratios: **Bar/Today = 4.48× (§4.3 silent-regression signal, mock upper bound)**; **Bar/Foo = 32.94× (opt-in wedge — the speedup overriding consumers gain)**. |
+| 3. `String.UTF8View.withContiguousStorageIfAvailable` engagement on the inputs consumers actually pass (regression check vs Tier 4) | **GREEN** | `check-contiguous-storage`: 8/8 PASS across the seven previously-engaging shapes (native Swift String small + long, `[UInt8]`, `ContiguousArray<UInt8>`, `ArraySlice<UInt8>`, bridged NSString small + long on Apple) + the non-contiguous lazy-collection canary correctly fails to engage. No regression vs the Tier 4 A0 finding (`parse-performance-architecture.md` v1.0.1 §8). |
+
+#### 9.1 Interpretation
+
+- **Premise 1 GREEN** locks in the §4.1 cursor design. The
+  `Token.Kind.unknown(UInt8)` trivial-payload concern raised
+  during the v1.0.0 → v1.0.1 review is empirically closed; no
+  storage-shape fallback is needed.
+
+- **Premise 3 GREEN** locks in the §4.3 dispatch fork on
+  contiguous storage. Bridged NSString continues to hit the
+  fast path on Apple platforms (consistent with the Tier 4 A0
+  finding).
+
+- **Premise 2 GREEN on compile + correctness** unblocks the
+  language-composition risks: `@_lifetime` annotations,
+  `inout ~Copyable & ~Escapable` parameters on protocol
+  methods, and typed throws all flow through a protocol
+  witness as the §4.2 design requires.
+
+- **Premise 2 RED on §4.3 timing** empirically confirms the
+  silent-regression concern flagged in §4.3 as UNTESTED at
+  v1.0.0 write time. The mock's `MockTree` is a flat
+  `[UInt8]` (upper bound on the structural regression);
+  production with the real `RFC_8259.Value` tree assembly
+  will narrow the ratio (both Bar and Today get more expensive
+  proportionally) but the wedge is structural — driving events
+  through `next()` and re-building a tree is strictly more
+  work than building a tree directly. **The naïve default-
+  fallback shape exhibited in the v1.0.0 §4.3 sketch cannot
+  ship at A1.** The implementation-side short-circuit
+  (§4.3 mitigation 1) is now the REQUIRED A1 constraint, not
+  a discretionary design choice.
+
+- **Bar/Foo = 32.94× is a positive signal for Option B's
+  architectural hypothesis.** Override consumers gain decisive
+  performance for their opt-in effort — consistent with the
+  field's pattern γ (System.Text.Json, serde_json, jsoniter)
+  closing partial-shape decode gaps. The 32.94× wedge will
+  narrow under production scaling but remains the dominant
+  signal: opt-in is worth doing.
+
+#### 9.2 Caveats on the timing numbers
+
+The §4.3 4.48× ratio is mock-scale; the real wedge is
+narrower because `JSON.assemble` would build the full
+`RFC_8259.Value` tree (with `String` + `RFC_8259.Number` +
+heap-backed Object/Array storage), not a flat `[UInt8]`. Both
+the Bar and Today paths get proportionally more expensive at
+production scale. The Bar/Foo 32.94× wedge is similarly
+mock-scale; under production scaling it likely narrows to
+3-10×, still decisive for opt-in but not as dramatic as the
+mock suggests. Phase A2's `codable-lookup-event-grain` bench
+mode on the canonical 86 MB workload is the ground truth.
+
+#### 9.3 A1 binding constraints (locked in by A0)
+
+A1 is unblocked but constrained by three A0 findings:
+
+1. **§4.3 mitigation (1) is REQUIRED**, not optional.
+   `JSON.assemble.from(_: &events)` MUST detect the
+   unforked-at-position-zero case and short-circuit to
+   `RFC_8259.Span.Parser.parse(_:)`. The detection mechanism is
+   A1's design choice; the constraint is that the fast path
+   measurably matches status-quo `init(jsonBytes:)` performance
+   on the bench's `codable-lookup-event-grain` mode for
+   non-opt-in conformers.
+
+2. **The `RFC_8259.Span.EventStream` cursor MUST expose an
+   `isUnforkedAtPositionZero` property** (or equivalent
+   primitive enabling the §4.3 mitigation). The cheapest shape
+   is probably a single `Bool` flag set to `true` at init,
+   cleared by the first `next()` / `currentString()` /
+   `currentNumber()` / `skipValue()` call.
+
+3. **The A2 measurement gate MUST validate both axes**:
+   (a) opt-in conformers (the bench's `Symbol` schema with
+   `deserialize(events:)` override) close most of the 37 % gap
+   to Foundation; and (b) non-opt-in conformers (the default
+   fallback path) do NOT regress vs the status-quo
+   `init(jsonBytes:)` baseline. Both axes are pass/fail; A2
+   does not promote to DECISION unless both clear.
+
+If A1 discovers the short-circuit detection in §4.3
+mitigation (1) is non-trivial (e.g., the
+`isUnforkedAtPositionZero` flag introduces measurable
+overhead in the cursor's hot path, or the short-circuit
+delegation path itself adds cost), fall to §4.3 mitigation
+(2) (API-side: drop `from(eventDecodingJsonBytes:)`; require
+explicit `JSON.Span.EventStream` construction at the call
+site). Mitigation (2) eliminates the silent-regression failure
+mode by construction at the cost of one extra line of
+boilerplate per opt-in call site.
+
 ## Outcome
 
 **Status**: RECOMMENDATION
@@ -1416,12 +1573,13 @@ investigation-restart territory.
   a sibling Serializer (TOML, YAML, ASN.1) joins the
   institute.
 
-**Honest framing of risk and ecosystem disposition**: the 37 %
-gap closes to ≤1.10× Foundation with high confidence for
-opt-in conformers — the field has converged on this answer
-and the substrate supports it cleanly. The implementation
-cost is bounded (~700-1200 LoC for the substrate; ~280 LoC
-for ecosystem fanout per §8); no new ecosystem primitive is
+**Honest framing of risk and ecosystem disposition (v1.0.1
+post-A0)**: the 37 % gap closes for opt-in conformers — the
+A0 mock measured a 32.94× Bar/Foo wedge (override speedup vs
+default) which narrows to a production-scale 3-10× but
+remains the dominant positive signal. The implementation cost
+is bounded (~700-1200 LoC for the substrate; ~280 LoC for
+ecosystem fanout per §8); no new ecosystem primitive is
 required; the public API surface grows by ONE protocol method
 (with default) and ONE entry point.
 
@@ -1434,24 +1592,31 @@ user-visible benefit per §8.4). Per `[BENCH-010]` / `[RES-018]`
 the work is borderline-speculative — no second hot consumer
 has surfaced.
 
-The recommended disposition is therefore **run Phase A0
-regardless of the land-or-park choice**:
-- A0 is cheap (½ day, three premise checks); per §4.1 and §5
-  it MUST exercise `Token.Kind.unknown(UInt8)` storage explicitly,
-  and per §4.3 the spike #2 (lifetime + inout + protocol
-  dispatch through default) doubles as the empirical signal on
-  the default-fallback regression risk.
-- A0 GREEN → land-or-park decision is made with strong
-  evidence; if land, Phase A1 follows directly; if park, the
-  research corpus carries an empirically-verified spike outcome
-  for a future consumer to pick up.
-- A0 RED → archive the arc with a documented toolchain
-  blocker; revisit when the language closes the gap.
+**A0 disposition (per §9)**: Premise 1 GREEN (Token.Kind
+storage incl. `.unknown(UInt8)`); Premise 3 GREEN
+(`withContiguousStorageIfAvailable` engagement); Premise 2
+GREEN on compile + correctness AND RED on the §4.3 default-
+fallback timing signal (Bar/Today = 4.48× mock — structural
+regression empirically confirmed). The language risks are
+closed; the architectural risk has a binding mitigation
+locked in per §9.3.
 
-Phase A1 itself remains conditional on user authorization
-per `[BENCH-010]` / `[RES-018]` even after A0 GREEN — the
-land-or-park choice is the investment-appetite question that
-the architecture analysis cannot decide.
+**Recommended disposition (v1.0.1)**: land Wave 0 + Wave 1
+minimal scope per the principal's 2026-05-14 decision. Wave 0
+implements the substrate including the §4.3 mitigation (1)
+short-circuit as the REQUIRED constraint. Wave 1 migrates
+the symbol-graph oracle to demonstrate wedge closure on the
+original motivating workload (verification benefit). Wave 2
+(Lint.Manifest + Manifest.Load fanout) and Wave 3 (test
+infrastructure) wait for actual consumer pull per
+`[BENCH-010]` / `[RES-018]`. Estimated cost: ~1150 LoC,
+~1.5 arcs (~1-2 weeks).
+
+Phase A2 measurement gate validates BOTH axes per §9.3:
+(a) opt-in conformers (`Symbol` schema with `deserialize(events:)`
+override) close most of the 37 % gap to Foundation, AND
+(b) non-opt-in conformers (default-fallback path) do NOT
+regress vs status-quo `init(jsonBytes:)` baseline.
 
 ### Loose ends (per [RES-027])
 
