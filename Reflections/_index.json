@@ -6,6 +6,22 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-05-15-linter-corpus-wave-3-three-tier-relocation-and-org-prefix-naming.md",
+      "date": "2026-05-15",
+      "title": "Wave 3 Three-Tier Relocation and the Org-Prefix Naming Convention",
+      "packages": [
+        "swift-foundations/swift-linter-rules",
+        "swift-foundations/swift-institute-linter-rules",
+        "swift-primitives/swift-primitives-linter-rules",
+        "swift-primitives/swift-cyclic-primitives",
+        "swift-primitives/swift-standard-library-extensions",
+        "swift-institute/Skills",
+        "swift-institute/Audits"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-05-15-phase-d-wave-b-cascade-fix-and-session-spanning-goal.md",
       "date": "2026-05-15",
       "title": "Phase D Wave B Cascade-Fix and Session-Spanning /goal Enforcement",
