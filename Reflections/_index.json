@@ -1,10 +1,54 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-11",
+  "generatedAt": "2026-05-14",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-05-14-ci-review-arc-phase-a-c-supervision-gaps.md",
+      "date": "2026-05-14",
+      "title": "CI Review Arc — Phase A through Phase C: Supervision Gaps, Verification Discipline, and Relay Patterns",
+      "packages": [
+        "swift-institute/.github",
+        "swift-institute/Skills",
+        "swift-institute/Audits"
+      ],
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-15",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "3 SkillUpdate outcomes applied across lint-rule-promotion + skill-lifecycle + handoff + supervise per the entry"
+    },
+    {
+      "file": "2026-05-14-ci-class-d-sweep-closeout-and-review-orchestrator.md",
+      "date": "2026-05-14",
+      "title": "CI Class D Sweep Closeout and Multi-Angle Review Orchestrator",
+      "packages": [
+        "swift-institute/.github",
+        "swift-institute/Skills/ci-cd-workflows",
+        "swift-institute/Audits",
+        "swift-foundations/swift-linter-rules"
+      ],
+      "status": "processed",
+      "statusRaw": "processed",
+      "processedDate": "2026-05-15",
+      "triageOutcome": "SKILL_UPDATE",
+      "outcomeDescription": "3 SkillUpdate outcomes applied across lint-rule-promotion + skill-lifecycle + handoff + supervise per the entry"
+    },
+    {
+      "file": "2026-05-12-re-triage-takeifpresent-absorber-anchoring-detection.md",
+      "date": "2026-05-12",
+      "title": "Re-triage of takeIfPresent + absorber-pattern: anchoring detected via in-package sibling",
+      "packages": [
+        "swift-foundations/swift-linter-rules",
+        "swift-foundations/swift-institute-linter-rules",
+        "swift-primitives/swift-ownership-primitives",
+        "swift-institute"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-05-11-wave-3-closure-and-amendment-surface-enumeration.md",
       "date": "2026-05-11",
