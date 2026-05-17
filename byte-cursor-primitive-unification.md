@@ -4,7 +4,7 @@
 ---
 version: 1.3.0
 last_updated: 2026-05-17
-status: RECOMMENDATION
+status: IN_PROGRESS
 tier: 2
 scope: ecosystem-wide
 ---
@@ -241,7 +241,9 @@ Phase 3 rationale, evergreen-correctness anchored:
 
 ## Outcome
 
-**Status**: RECOMMENDATION.
+**Status**: IN_PROGRESS.
+
+> **2026-05-17 downgrade**: this Outcome is preserved as v1.3.0's recorded analytical state but is no longer authoritative. v1.3.0's RECOMMENDATION (Shape F) was downgraded to IN_PROGRESS the same day after Phase 0 prior-research grep surfaced load-bearing prior artifacts v1.3.0 did not engage. See §Successor for the forwarding path.
 
 Unify `Binary.Bytes.Input.View` and `Lexer.Scanner` via decompose-compose-reuse:
 
@@ -253,6 +255,25 @@ Unify `Binary.Bytes.Input.View` and `Lexer.Scanner` via decompose-compose-reuse:
 The unified primitive's package home, naming (Cursor vs Span.Cursor vs Input.Span.Cursor vs another), and the optional `Byte.Position`/`Byte.Count`/`Byte.Offset` typealias additions to swift-byte-primitives are implementation choices left to the follow-up dispatch.
 
 `Text.Location.Tracker` is a composable overlay (Phase 1 §Text.Location.Tracker), confirmed empirically. Item 2 (D5 Binary.Bytes.Input vs Byte.Input unification) is a separate arc at HANDOFF.md Wave 1 Item 2 (Phase 1 §"Item 1 vs Item 2"), unaffected by this RECOMMENDATION.
+
+## Successor
+
+This document is superseded as the canonical answer on cursor unification by a forthcoming **Tier 3 `/research-process` arc** on cursor abstractions across the institute L1 ecosystem (working title: *"Cursor Abstractions Across the Institute L1 Ecosystem"*). v1.3.0's analytical content remains as *input* to the successor arc, NOT as the canonical answer.
+
+- **Shape F decomposition insight survives as INPUT to the Tier 3 arc**, not as a decided answer. The empirical decomposition probe (`Text.Position` ≡ `Tagged<Text, Ordinal>` at `swift-text-primitives/Sources/Text Primitives/Text.Position.swift:27`; `Index<Element>` ≡ `Tagged<Element, Ordinal>` at `swift-index-primitives/Sources/Index Primitives Core/Index.swift:38`; therefore `Index<Byte>` ≡ `Tagged<Byte, Ordinal>` as the byte-domain parallel of `Text.Position`) is verified at the source level and is part of what the Tier 3 arc inherits.
+
+- **The Tier 3 arc engages**:
+  - **(a)** `Binary.Cursor` in `swift-binary-primitives` (`Sources/Binary Cursor Primitives/Binary.Cursor.swift`) as a *third* cursor abstraction missed by v1.3.0 — `~Copyable & Escapable` (NOT `~Escapable`) owned reader-writer over `Storage: Memory.Contiguous.Protocol & ~Copyable where Storage.Element == UInt8`, with dual `Index<Storage>` reader/writer indices, `throws(Binary.Error)` move/set operations, `readableBytes: Span<UInt8>` accessor. Structurally distinct from the two `~Copyable & ~Escapable` borrow-only Span-cursors v1.3.0 evaluated.
+  - **(b)** `swift-binary-primitives/Research/Lifetime Dependent Borrowed Cursors.md` (RECOMMENDATION, 2026-01-19, Tier 2+, ~1200 lines) — prior research arguing the protocol-based dispatch (`Binary.Bytes.Parser`) is *structurally required* for `~Escapable` borrowed cursor APIs under Swift 6.x (the closure integration gap; §5–§7). The doc's *Two Worlds Architecture* (§8.5: owned `Binary.Bytes.Input` + `Parsing.Parser` vs borrowed `Binary.Bytes.Input.View` + `Binary.Bytes.Parser`) and reuse strategies (§8.6: bridge layer, defunctionalized machine execution) are the institute's prior position that v1.3.0's Shape F framing did not engage.
+  - **(c)** Academic prior art on cursor abstractions: iteratees (Oleg Kiselyov), parsing combinators (Hutton/Meijer, Parsec, swift-parsing), Conduit/Pipes (Haskell streaming libraries), the Rust borrow-checker's cursor patterns (`std::io::Cursor`, `slice::Iter`, `bytes::Buf`), linear/affine types in research languages.
+
+- **HANDOFF.md Wave 1 Items 2 / 3 / 4 / 5 are on hold pending the Tier 3 arc's outcome**:
+  - Item 2 (D5 `Binary.Bytes.Input` vs `Byte.Input` typed-input unification)
+  - Item 3 (R3 `Word16.Protocol` / `Word32.Protocol` / `Word64.Protocol` viability)
+  - Item 4 (D6 serializer-side parallel extraction)
+  - Item 5 (F2 non-Byte conformers proliferation)
+
+  Each may be informed by — or composed into — the Tier 3 arc's recommendation. The byte-ecosystem finalization arc resumes from Wave 2 onward contingent on the Tier 3 disposition.
 
 ## Implementation prerequisites and risks (for follow-up dispatch)
 
@@ -303,6 +324,7 @@ Surfaced 2026-05-14 by the streaming-JSON-deserialize Phase 2 audit. v1.0.0 / v1
 
 ## Changelog
 
+- **v1.3.0 → IN_PROGRESS (2026-05-17 downgrade)**: Status downgraded `RECOMMENDATION → IN_PROGRESS` after the byte-arc finalization arc's Phase 0 prior-research grep (scheduled by the principal for the boundary between Wave 1 Item 1 closure and the implementation arc per `[HANDOFF-013a]`) surfaced two load-bearing prior artifacts that v1.3.0's analysis did not engage: **(a)** `Binary.Cursor` in `swift-binary-primitives` (`Sources/Binary Cursor Primitives/Binary.Cursor.swift`) — a *third* cursor abstraction (`~Copyable & Escapable` owned reader-writer over `Storage: Memory.Contiguous.Protocol`, dual `Index<Storage>` reader/writer indices, throws `Binary.Error` move/set operations), structurally distinct from the two `~Copyable & ~Escapable` Span-cursors v1.3.0 evaluated; **(b)** `swift-binary-primitives/Research/Lifetime Dependent Borrowed Cursors.md` (RECOMMENDATION, 2026-01-19, ~1200 lines) — prior research arguing protocol-based dispatch (`Binary.Bytes.Parser`) is *structurally required* for `~Escapable` borrowed cursors under Swift 6.x, plus a Two Worlds architecture (owned `Binary.Bytes.Input` + `Parsing.Parser` vs borrowed `Binary.Bytes.Input.View` + `Binary.Bytes.Parser`) that v1.3.0's Shape F framing did not engage. v1.3.0's prior-research grep was ecosystem-wide only; the per-package grep that surfaced these ran AFTER v1.3.0 was authored. RECOMMENDATION status was structurally unreliable on incomplete analysis. Shape F's decomposition insight (Tagged<DomainTag, Ordinal> as already-decomposed substrate; `Index<Byte>` as Binary's parallel of `Text.Position`) survives as analytical INPUT to the forthcoming Tier 3 `/research-process` arc — see §Successor. HANDOFF.md Wave 1 Items 2 / 3 / 4 / 5 are on hold pending the Tier 3 arc's outcome.
 - **v1.3.0** (2026-05-17): RECOMMENDATION — Shape F (unify via decompose-compose-reuse). Re-executes Phase 1/2/3 with three corrections to v1.2.0: drops the `[API-NAME-001c]` miscite (the capability-marker arc declined meta-protocols over capability-markers, not unification protocols over near-identical implementations); re-evaluates Shape C on the correct parameterization axis (position-type, not element-type) as new Shape C′; adds the decomposition probe on Text.Position (succeeds — Text.Position is already Tagged<Text, Ordinal>; Index<Byte> is its byte-domain parallel). The composition check passes under Shape F. v1.2.0's principled-refuse DECISION is retracted.
 - **v1.2.0** (2026-05-17): DECISION — principled refuse (RETRACTED by v1.3.0). Phase 1 comparative shape analysis identified ~100 LOC of mechanically-symmetric scaffolding and verified Text.Location.Tracker as a composable overlay; Phase 2 evaluated five shapes (A–E); Phase 3 landed principled refuse. Principal review on 2026-05-17 identified three structural gaps in the grounding (preserved in v1.3.0 §"v1.3.0 — Corrections to v1.2.0 analysis").
 - **v1.1.0** (2026-05-14): DEFERRED — reclassified under the `[RES-018]` amendment as case (a) cross-cutting primitive; composition check named as substantive remaining gate.
