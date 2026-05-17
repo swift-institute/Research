@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.3.0
+version: 1.4.0
 last_updated: 2026-05-17
-status: DECISION
+status: IMPLEMENTED
 tier: 3
 scope: ecosystem-wide
 ---
@@ -1105,7 +1105,7 @@ The implementation arc that follows this DECISION executes **Shape γ as the imm
 **Phases 0-3: Shape γ (immediate)** — the implementation arc must satisfy:
 
 1. **`[BENCH-011]` integration probe** as Phase 0. Generic specialization of `~Copyable & ~Escapable` types parameterized over `Tagged<DomainTag, Ordinal>` is the load-bearing perf assumption. Probe the binary-parsing and text-lexing hot paths against current per-domain implementations BEFORE any source change. If a regression surfaces that mitigation (`@inlinable`, monomorphization tuning) cannot close, the arc reverts to Shape ε (position-only retrofit on `Binary.Bytes.Input.View`) AND Shape ι expansion correspondingly aborts. This is the sole technical fallback that voids the ι commitment.
-2. **One new L1 package** hosts World 2's unified primitive. Naming: `swift-cursor-primitives` is the principal-authorized choice — the package is the eventual end-state home for all three Worlds under Phase 4 expansion, so the name does not artificially restrict to Span-substrate. Tier at Phase 1: 6-8 (Tagged + Ordinal + Cardinal + Affine + Index deps; no Memory.Contiguous.Protocol). Phase 4 expansion lifts the tier to ≥ 13 (per the authorization's accepted Tier 13 commitment) or maintains the split-package mitigation depending on BENCH-011 evidence.
+2. **One new L1 package** hosts World 2's unified primitive. Naming: `swift-cursor-primitives` is the principal-authorized choice — the package is the eventual end-state home for all three Worlds under Phase 4 expansion, so the name does not artificially restrict to Span-substrate. Tier at Phase 1: 6-8 (Tagged + Ordinal + Cardinal + Affine + Index deps; no Memory.Contiguous.Protocol). Phase 4 expansion lifts the tier to ≥ 13 (per the authorization's accepted Tier 13 commitment) or maintains the split-package mitigation depending on BENCH-011 evidence. **API surface (as implemented)**: `init(_:Span<UInt8>)`, `position`, `count`, `isAtEnd`, `peek()`, `peek(at:)`, `advance()`, `advance(by:)`, `consume()`, `seek(to:)`. `seek(to:)` was added beyond the originally-enumerated surface (peek / peek(at:) / advance / advance(by:) / consume / isAtEnd / count / position) to support parser-machine backtracking — `Binary.Bytes.withBorrowed`'s alternative-frame branches restore the cursor to a previously-captured position when a branch fails; the legacy `public var position: Int` settable allowed this directly, and the cursor analog is `seek(to:)`. Position-only seeks are well-defined on a borrowed Span-cursor because no data is consumed destructively. Class-(c) judgment within the spec's "(exact signatures: your judgment within the spec)" latitude.
 3. **`Binary.Bytes.Input.View` migrates to typealias** on the unified W2 primitive. Position type migrates from raw `Int` to `Tagged<Byte, Ordinal>` (or the chosen DomainTag). Source-transparent at construction sites; extensions on the typealiased identity may need re-anchoring to the cursor-primitives type.
 4. **`Lexer.Scanner` migrates to a thin wrapper struct** composing the W2 substrate with `Text.Location.Tracker` overlay state. `@inlinable` forwarding methods eliminate runtime indirection at known call sites. Existing `Lexer.Scanner` consumer API remains source-compatible.
 5. **Worlds 1 and 3 unchanged in Phases 0-3.** `Binary.Cursor<Storage>` + `Binary.Reader<Storage>` remain in `swift-binary-primitives`; `Binary.Bytes.Input` remains in `swift-binary-parser-primitives`. They migrate in Phase 4.
@@ -1128,6 +1128,114 @@ The implementation arc that follows this DECISION executes **Shape γ as the imm
 - **Whether to add a Cursor.Protocol** (Shape B) as a future enhancement. Stays open until a generic-over-cursors consumer materializes.
 - **Whether to retrofit `Binary.Bytes.Input`'s position from `Index<UInt8>` to `Index<Byte>`**. That is HANDOFF.md Wave 1 Item 2's province; Phase 4 inherits Item 2's outcome.
 - **Implementation sequencing**, source modifications, or dispatch authoring. Per the original brief's ground rules, this DECISION is research only; the implementation arc is a separate dispatch.
+
+## Implementation Outcomes
+
+The implementation arc executing Phases 0-3 of Shape γ landed across three packages between 2026-05-17 and 2026-05-17, under principal supervision. Phase 4 Shape ι expansion remains pending per the authorization — gated on HANDOFF.md Wave 1 Item 2 settling.
+
+### Phase 0 — BENCH-011 integration probe (HARD GATE)
+
+Probe at `swift-institute/Experiments/cursor-span-bench-011/` (release build, macOS 26 / arm64e, 200 iterations × 65 KiB buffer, warmup 10):
+
+| Probe | Legacy | Cursor | Ratio |
+|---|---|---|---|
+| Text peekAdvance | 165.75 µs | 165.50 µs | 0.998 |
+| Text consume | 165.54 µs | 165.50 µs | 1.000 |
+| Binary consumeLoop | 17.27 ms | 162.9 µs | 0.009 |
+| Binary peekAdvance | 17.70 ms | 839 µs | 0.047 |
+
+Text path parity (Lexer.Scanner already used `Tagged<Text, Ordinal>` position — see §Implementation Notes for the structural difference). Binary path 20-100× faster. No regression on any path. **Phase 0 gate: GREEN.**
+
+### Phase 1 — swift-cursor-primitives created
+
+- Repository: `swift-primitives/swift-cursor-primitives` (PRIVATE; public release requires separate principal YES per `feedback_never_create_public_repos.md`).
+- Tier: 6-8 in the primitives DAG. Deps: `swift-tagged-primitives`, `swift-ordinal-primitives`, `swift-cardinal-primitives`, `swift-index-primitives` (Test Support spine only). NO `Memory.Contiguous.Protocol` dep.
+- Structure: 4 library products per `[MOD-001]` / `[MOD-005]` / `[MOD-024]` — Core (namespace + re-exports), Cursor Span Primitives (variant hosting `Cursor.Span<DomainTag>`), umbrella, Test Support (anchored on `Index_Primitives_Test_Support`).
+- Lint configuration: `Lint.swift` declares `Lint.Rule.Bundle.primitives`. swift-linter run: 0 findings on cursor-primitives source.
+- Tests: 12 pass in 6 suites (Unit / Edge Case / Integration / Performance per `[TEST-005]`; Performance suite empty — substantive benchmarks live in the BENCH-011 experiment).
+- Commits: `0f57273` (initial) + `2bd7800` (add `seek(to:)` for parser-machine backtracking).
+
+### Phase 2a — Binary.Bytes.Input.View migration
+
+- Repository: `swift-primitives/swift-binary-parser-primitives` commit `13e4dbf2`.
+- Type shape: `Binary.Bytes.Input.View` is now `typealias View = Cursor.Span<Byte>` (`Byte` from `swift-byte-primitives` as DomainTag).
+- Position retrofit: `var position: Int` → `var position: Tagged<Byte, Ordinal>` (read-only computed on cursor; writeback via `Cursor.Span.seek(to:)`).
+- Count retrofit: `var count: Int` → `var count: Tagged<Byte, Cardinal>` (see §Implementation Notes for source-transparency verification).
+- Legacy binary-domain API preserved via `@inlinable` extensions on `Cursor.Span where DomainTag == Byte`: `isEmpty`, `first`, `removeFirst`, `removeFirst(_:)`, `consumedCount`, `subscript[offset:]`, `starts(with:)`, `copyToOwned()`, plus the `Index<UInt8>` subscript from `+typed.swift`.
+- `Binary.Bytes.withBorrowed` parser-machine backtracking migrated from `view.position = N` to `view.seek(to: savedCheckpoint.retag(Byte.self))`.
+- Tests: 69 pass in 22 suites.
+- New deps: `swift-byte-primitives`, `swift-cursor-primitives` (path-form per `[PKG-DEP-001]`).
+
+### Phase 2b — Lexer.Scanner migration
+
+- Repository: `swift-primitives/swift-lexer-primitives` commit `575e4cb`.
+- Type shape: `Lexer.Scanner: ~Copyable, ~Escapable` is now a thin wrapper struct with stored fields `inner: Cursor.Span<Text>` + `source: Span<UInt8>` (preserved for sub-span extraction in internal lexing helpers) + `tracker: Text.Location.Tracker` + `hasEmittedEndOfFile: Bool`.
+- Public API preserved exactly: `init(_:)`, `position`, `location`, `location(at:)`, `isAtEnd`, `peek()`, `peek(at:)`, `advance()`, `advance(by:)`, `consume()`, `newline(at:)`, `next(diagnostics:)`. All forwarded via `@inlinable`.
+- Internal `cursor` accessor (forwards reads to `inner.position`, writes to `inner.seek(to:)`) preserves Scanner+Lexing.swift's `cursor += .one` hot-loop pattern without mechanical refactor. `@inlinable` collapses the indirection in release builds.
+- Tests: 48 pass in 3 suites.
+- New deps: `swift-cursor-primitives` (path-form).
+
+### Phase 3 — Termination gate per [HANDOFF-035] / [HANDOFF-040]
+
+Workspace-wide grep (literal + generic-instantiated forms) for `Binary.Bytes.Input.View`, `Lexer.Scanner`, and `Cursor.Span` across `swift-primitives` + `swift-standards` + `swift-foundations`: zero residuals on old shapes. All references are expected — internal package sources, the typealias declaration sites, the wrapper declaration site, and docstring/comment mentions in research notes.
+
+Ecosystem-wide `swift build --build-tests` from a fresh `.build` across every transitive consumer:
+
+| Package | Build | Tests |
+|---|---|---|
+| swift-primitives/swift-cursor-primitives | green | 12 pass |
+| swift-primitives/swift-binary-parser-primitives | green | 69 pass |
+| swift-primitives/swift-lexer-primitives | green | 48 pass |
+| swift-primitives/swift-binary-coder-primitives | green | (not run) |
+| swift-foundations/swift-lexer | green | 6 pass |
+| swift-foundations/swift-json | green | **216 pass** |
+| swift-foundations/swift-ascii | green | (not run) |
+
+swift-json's 216 tests passing is the load-bearing signal — it's the major Lexer.Scanner external consumer (stores `var scanner: Lexer.Scanner`, forwards extensively to its cursor operations).
+
+## Implementation Notes
+
+These notes record substantive findings surfaced during the implementation arc that were not pre-determined by the DECISION.
+
+### Count retrofit (Int → `Tagged<Byte, Cardinal>`) was not in the original brief
+
+The DECISION's §Implementation Gating Phase 1 prescribed the **position** retrofit (`Int → Tagged<Byte, Ordinal>`) as the explicit pre-1.0 breakage permitted per `[ARCH-LAYER-008]`. The migration also retrofitted **count** (`var count: Int → var count: Tagged<Byte, Cardinal>`) because `Cursor.Span<DomainTag>` exposes a typed `count: Tagged<DomainTag, Cardinal>` accessor and a coexisting `count: Int` accessor would have introduced a duplicate-name compile collision.
+
+Source-transparency at the build level: verified by the Phase 3 ecosystem build gate (216 swift-json tests + 69 binary-parser-primitives tests pass, including test code that does `let n = view.count` and `#expect(n == 5)`).
+
+Source-transparency at the semantic level: verified by workspace-wide grep for `view.count` usages on Binary.Bytes.Input.View. The only matches are (a) the package's own tests (already verified passing) and (b) a comment in `Binary.Bytes.withBorrowed.swift` line 329 (`// Compute remaining from locals (avoid view.count)` — not actual code). No downstream code performs typed-arithmetic (`view.count + intExpr`) or annotated-type assignments (`let n: Int = view.count`) on the retrofit-affected `view.count`. The retrofit holds in spirit, not just in build-passing.
+
+The same retrofit-extension justification applies to `consumedCount` and `position`: the typed forms enable the cursor's typed-position discipline; preserving the Int form would have required either a name collision or a renamed accessor.
+
+### Binary 20-100× speedup root cause
+
+The Phase 0 BENCH-011 probe showed Cursor.Span<Byte> outperforming legacy Binary.Bytes.Input.View by 20-100× on hot-loop paths. This is not benchmark anomaly or compiler magic. The structural difference:
+
+```swift
+// Pre-migration Binary.Bytes.Input.View
+public struct View: ~Copyable, ~Escapable {
+    @usableFromInline let span: Span<UInt8>
+    public var position: Int       // ← PUBLIC stored property, no @inlinable
+    ...
+}
+
+// Post-migration Cursor.Span<DomainTag>
+public struct Span<DomainTag: ~Copyable & ~Escapable>: ~Copyable, ~Escapable {
+    @usableFromInline internal let source: Swift.Span<UInt8>
+    @usableFromInline internal var _position: Tagged<DomainTag, Ordinal>
+    ...
+}
+```
+
+`public var position: Int` is a public stored property without `@inlinable`. Public stored properties default to *resilient* access — the compiler emits opaque getter/setter call sequences rather than direct field loads/stores, because the storage layout is not part of the module's stable ABI by default. Inside `@inlinable` mutating methods like `removeFirst()`, every position read and every position write goes through the resilient access pattern, which optimizer passes cannot fully simplify.
+
+`@usableFromInline internal var _position` is the cursor's pattern. Internal visibility with `@usableFromInline` means the storage is non-resilient (it's part of the module's compile-time-known layout) AND is accessible from `@inlinable` methods, so the optimizer can inline position reads/writes as direct memory operations.
+
+`Lexer.Scanner`'s pre-migration cursor field was already `@usableFromInline internal var cursor: Text.Position` — the same pattern as the post-migration cursor. The Text path therefore showed parity, not speedup. The Binary path's speedup is *specifically* the optimization that the legacy `public var position: Int` was preventing.
+
+This is the (a) category from the principal review: legacy Binary.Bytes.Input.View had a real perf defect that the cursor migration accidentally fixed. The defect is not unique to this type — any `public var` stored property on an `@inlinable`-method-bearing struct pays the same hidden cost. An ecosystem-wide audit for the `public var` storage pattern is worth scheduling before pre-1.0, separate from this arc.
+
+Full investigation record: `swift-institute/Experiments/cursor-span-bench-011/README.md`.
 
 ## Open Questions Routed to Implementation
 
@@ -1314,6 +1422,7 @@ The recommendation aligns with the user's stated preference (2026-05-17): cursor
 
 ## Changelog
 
+- **v1.4.0** (2026-05-17): **IMPLEMENTED (Shape γ)** — Phases 0-3 of Shape γ landed under principal supervision across `swift-primitives/swift-cursor-primitives` (new repo, commits `0f57273` + `2bd7800`), `swift-primitives/swift-binary-parser-primitives` (commit `13e4dbf2`), `swift-primitives/swift-lexer-primitives` (commit `575e4cb`), and `swift-institute/Experiments` (BENCH-011 probe at `cursor-span-bench-011`, commit `3180870`). Phase 4 Shape ι expansion remains pending per the original authorization — gated on HANDOFF.md Wave 1 Item 2 settling. Adds §Implementation Outcomes (Phase 0 BENCH-011 GREEN results table + Phases 1/2a/2b/3 commit SHAs and build-gate evidence across 7 packages including swift-json's 216 tests). Adds §Implementation Notes (count retrofit Int → Tagged<Byte, Cardinal> was not in the original brief, source-transparency verified by build + grep; Binary 20-100× speedup root cause attributed to legacy `public var position: Int` storage preventing `@inlinable` method optimization — the cursor's `@usableFromInline internal var _position` pattern accidentally fixed a real perf defect, not benchmark anomaly or compiler magic). Updates §Implementation Gating Phase 1 API surface to include `seek(to:)` (added during Phase 1 for parser-machine backtracking — `Binary.Bytes.withBorrowed`'s alternative-frame branches restore the cursor to a previously-captured position when a branch fails; the legacy `public var position: Int` settable allowed this directly, the cursor analog is `seek(to:)`; class-(c) judgment within the spec's signature-latitude). No change to the Three-Worlds type structure verdict, the SE-0503 finding, the obsolescence of Lifetime Dependent Borrowed Cursors.md's structural-constraint claim, the inventory of six L1 cursor primitives, or the §Principal Authorization. Phase 4 dispatch opens as a separate follow-on.
 - **v1.3.0** (2026-05-17): **DECISION** — Principal authorized choice C on 2026-05-17: Shape γ as the immediate move (Phases 0-3) **with Shape ι expansion explicitly scheduled as a committed Phase 4 follow-on arc**. Adds §Principal Authorization section recording the authorization, binding decisions, sole technical fallback (BENCH-011 unmitigable specialization regression voids ι expansion via Shape ε fallback on W2), and what the authorization does/does-not do. Updates §Implementation Gating: Phase 4 reframed from "evaluate Shape ι expansion" (v1.2.0) to "execute Shape ι expansion" (v1.3.0). Technical gates (BENCH-011 evidence; Item 2's settled outcome) reframed as inputs to Phase 4's *shape* (single-package vs split-package; W3's consolidated typed-input cursor identity) rather than gates on its *commitment*. Decision Matrix updated to mark Shape γ as authorized for Phases 0-3 and Shape ι as authorized as committed Phase 4 follow-on. Package naming `swift-cursor-primitives` is principal-authorized (the package is the eventual end-state home; no `swift-cursor-span-primitives` artificial restriction). No change to the Three-Worlds type structure verdict, the SE-0503 finding, the obsolescence of Lifetime Dependent Borrowed Cursors.md's structural-constraint claim, the inventory of six L1 cursor primitives, the SLR / prior art / theoretical grounding / formal semantics / empirical validation sections, or the Open Questions on detailed cursor-type naming. This Tier 3 arc closes as DECISION; the implementation arc opens as a separate dispatch.
 - **v1.2.0** (2026-05-17): RECOMMENDATION (superseded by v1.3.0 DECISION) — Three-Worlds type structure unchanged; **placement recommendation inverted**: Shape γ (W2 unification only) becomes the principled-first immediate move; Shape ι (full centralization of W1+W3 to cursor-primitives) becomes a deferred follow-on arc gated on HANDOFF.md Item 2 settling + BENCH-011 evidence. Inversion responds to reviewer feedback identifying three structural defects in v1.1.0's "Shape ι preferred" framing: (a) the duplication-elimination argument is W2-specific — W1 has intentional rw/ro structural specialization (not the kind centralization eliminates), W3 stands alone with no duplication; (b) Tier 13 elevation is post-publication irreversible and Shape γ avoids it entirely (W2-only sits at Tier 6-8 without Memory.Contiguous.Protocol dep); (c) W3 placement is premature because Item 2 (Binary.Bytes.Input vs Byte.Input) is in flight within W3. Reversibility heuristic load-bearing: γ → ι is a small follow-on; ι → γ is a costly back-out. No change to the Three-Worlds type structure verdict, the SE-0503 finding, the obsolescence of Lifetime Dependent Borrowed Cursors.md's structural-constraint claim, or the inventory of six L1 cursor primitives.
 - **v1.1.0** (2026-05-17): RECOMMENDATION (SUPERSEDED by v1.2.0) — Shape ι preferred / Shape γ fallback framing. Added Shape ι to the Decision Space Enumeration. Reviewer feedback identified three structural defects (see v1.2.0 changelog).
