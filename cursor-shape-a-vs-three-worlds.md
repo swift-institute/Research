@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-18
-status: RECOMMENDATION
+status: DECISION
 tier: 3
 scope: ecosystem-wide
 ---
@@ -114,70 +114,102 @@ The type-level invariant Case B requires — `String.Borrowed`'s null-terminatio
 
 ### Sub-Question 2: Shape A's exact shape
 
+**The base Cursor type IS generic** (no `.Generic` middle naming per principal direction 2026-05-18). The institute's structural pattern — mirrored by `Property<Tag, Base>`, `Tagged<Tag, Underlying>`, and the array-primitives variant family — puts the base generic struct at the namespace's identity and nests specializations under it.
+
 ```swift
 // In swift-cursor-primitives (new shape):
 
-extension Cursor {
-    @safe
-    public struct Generic<
-        Storage: ~Copyable & ~Escapable,
-        PositionTag: ~Copyable
-    >: ~Copyable, ~Escapable {
-        @usableFromInline
-        internal var storage: Storage
+@safe
+public struct Cursor<
+    Storage: ~Copyable & ~Escapable,
+    PositionTag: ~Copyable
+>: ~Copyable, ~Escapable {
+    @usableFromInline
+    internal var storage: Storage
 
-        @usableFromInline
-        internal var _position: Tagged<PositionTag, Ordinal>
+    @usableFromInline
+    internal var _position: Tagged<PositionTag, Ordinal>
 
-        // Copyable-Storage init (W3 case)
-        @inlinable
-        @_lifetime(borrow storage)
-        public init(_ storage: borrowing Storage) where Storage: Copyable {
-            self.storage = copy storage
-            self._position = Tagged<PositionTag, Ordinal>(_unchecked: Ordinal(UInt(0)))
-        }
+    // Copyable-Storage init (W3 case)
+    @inlinable
+    @_lifetime(borrow storage)
+    public init(_ storage: borrowing Storage) where Storage: Copyable {
+        self.storage = copy storage
+        self._position = Tagged<PositionTag, Ordinal>(_unchecked: Ordinal(UInt(0)))
+    }
 
-        // ~Copyable-Storage init (W1, W2)
-        @inlinable
-        @_lifetime(copy storage)
-        public init(consumingStorage storage: consuming Storage) {
-            self.storage = storage
-            self._position = Tagged<PositionTag, Ordinal>(_unchecked: Ordinal(UInt(0)))
-        }
+    // ~Copyable-Storage init (W1, W2)
+    @inlinable
+    @_lifetime(copy storage)
+    public init(consumingStorage storage: consuming Storage) {
+        self.storage = storage
+        self._position = Tagged<PositionTag, Ordinal>(_unchecked: Ordinal(UInt(0)))
     }
 }
 
-extension Cursor.Generic: Copyable
+extension Cursor: Copyable
 where Storage: Copyable & ~Escapable, PositionTag: ~Copyable {}
 
-extension Cursor.Generic: Escapable
+extension Cursor: Escapable
 where Storage: Escapable & ~Copyable, PositionTag: ~Copyable {}
 ```
 
-World typealiases:
+**Two acceptable structural forms** (the principal endorsed both 2026-05-18):
+
+**Form A — flat two-generic** (recommended for clarity):
 
 ```swift
-extension Cursor {
-    /// W2 — borrowed Span-cursor for byte streams. Storage = Byte.Borrowed
-    /// (Pattern 1 borrow-view). PositionTag is the phantom domain tag.
-    public typealias Span<DomainTag: ~Copyable> =
-        Cursor.Generic<Byte.Borrowed, DomainTag>
+public struct Cursor<Storage: ~Copyable & ~Escapable, PositionTag: ~Copyable>: ~Copyable, ~Escapable { ... }
+```
 
-    /// W1 — owned read-only cursor over Memory.Contiguous storage. Phase 4.
-    public typealias OwnedReader<Storage: Memory.Contiguous.`Protocol` & ~Copyable> =
-        Cursor.Generic<Storage, Storage> where Storage.Element == UInt8
+The base type carries both generics directly. World specializations are module-level typealiases:
 
-    /// W3 — owned Copyable input cursor. Phase 4.
-    public typealias Input<Element> =
-        Cursor.Generic<[Element], Element>
+```swift
+public typealias CursorOverBorrowedBytes<DomainTag: ~Copyable> = Cursor<Byte.Borrowed, DomainTag>
+public typealias CursorOverOwnedStorage<Storage> = Cursor<Storage, Storage>
+  where Storage: Memory.Contiguous.`Protocol` & ~Copyable, Storage.Element == UInt8
+public typealias CursorOverArray<Element> = Cursor<[Element], Element>
+```
+
+Or as nested-under-Cursor typealiases (via conditional extension):
+
+```swift
+// Inside swift-cursor-primitives module scope:
+extension Cursor where Storage == Byte.Borrowed {
+    // (typealiases on parameterized extensions have limitations; defer naming
+    // choice to implementation arc — module-level may be cleanest)
 }
 ```
 
-Operation surfaces are conditional extensions:
+**Form B — `.Typed`-nested specialization** (mirrors Property.View.Typed exactly):
+
+```swift
+public struct Cursor<Storage: ~Copyable & ~Escapable>: ~Copyable, ~Escapable {
+    @usableFromInline internal var storage: Storage
+    @usableFromInline internal var _position: Ordinal  // raw position at base
+}
+
+extension Cursor {
+    @safe
+    public struct Typed<Tag: ~Copyable>: ~Copyable, ~Escapable {
+        @usableFromInline internal var storage: Storage
+        @usableFromInline internal var _position: Tagged<Tag, Ordinal>
+    }
+}
+
+// W2:
+public typealias CursorOverBorrowedBytes<DomainTag: ~Copyable> = Cursor<Byte.Borrowed>.Typed<DomainTag>
+```
+
+Form B adds an extra type-decl layer; the base `Cursor<Storage>` carries the untyped raw position, and `.Typed<Tag>` adds the phantom-tag specialization. Mirrors `Property<Tag, Base>.View.Typed<Element>.Valued<n>` exactly.
+
+**Selection deferred to implementation arc**: Both forms are structurally valid. Form A is simpler (one type-decl, two generics); Form B mirrors property-primitives' nested-specialization discipline more precisely and may compose better with Phase 4's W1 dual-index reader-writer as a sibling specialization (`Cursor<Storage>.ReaderWriter` parallel to `.Typed`). The implementation arc chooses based on Phase 4 ergonomics; both forms preserve the structural finding that Shape A is achievable via Storage-as-borrow-carrier.
+
+Operation surfaces are conditional extensions on the base `Cursor` type:
 
 ```swift
 // W2 ops — peek/advance/consume over Byte.Borrowed's inner span
-extension Cursor.Generic
+extension Cursor
 where Storage == Byte.Borrowed, PositionTag: ~Copyable {
     public func peek() -> UInt8? { ... }
     public mutating func advance() { ... }
@@ -186,15 +218,15 @@ where Storage == Byte.Borrowed, PositionTag: ~Copyable {
 }
 
 // W3 ops — peek/advance/consume over [Element]
-extension Cursor.Generic
+extension Cursor
 where Storage == [UInt8], PositionTag == UInt8 {
     public func peek() -> UInt8? { ... }
     public mutating func advance() { ... }
     public mutating func consume() -> UInt8 { ... }
 }
 
-// W1 ops — dual-index reader-writer over Memory.Contiguous storage (Phase 4)
-extension Cursor.Generic
+// W1 ops — single-index reader over Memory.Contiguous storage (Phase 4)
+extension Cursor
 where Storage: Memory.Contiguous.`Protocol` & ~Copyable,
       Storage.Element == UInt8 { ... }
 ```
@@ -203,11 +235,13 @@ The Cursor's Copyability inheritance:
 
 | Instantiation | Storage attrs | Cursor result |
 |---|---|---|
-| `Cursor.Span<Byte>` = `Cursor.Generic<Byte.Borrowed, Byte>` | Byte.Borrowed: `~Copyable, ~Escapable` | `~Copyable, ~Escapable` ✓ |
-| `Cursor.OwnedReader<Storage>` | Storage: `~Copyable, Escapable` | `~Copyable, Escapable` ✓ |
-| `Cursor.Input<UInt8>` = `Cursor.Generic<[UInt8], UInt8>` | `[UInt8]`: `Copyable, Escapable` | `Copyable, Escapable` ✓ |
+| W2: `Cursor<Byte.Borrowed, Byte>` | Byte.Borrowed: `~Copyable, ~Escapable` | `~Copyable, ~Escapable` ✓ |
+| W1 ro: `Cursor<HeapStorage, HeapStorage>` | HeapStorage: `~Copyable, Escapable` | `~Copyable, Escapable` ✓ |
+| W3: `Cursor<[UInt8], UInt8>` | `[UInt8]`: `Copyable, Escapable` | `Copyable, Escapable` ✓ |
 
 All three Worlds emerge from one generic type with the correct attributes. No Mode discriminator.
+
+**Important**: the existing v1.4.0-shipping `public enum Cursor {}` namespace at `swift-cursor-primitives/Sources/Cursor Primitives Core/Cursor.swift` is REPLACED by the generic struct. `Cursor.Span<DomainTag>`'s current shape (typealias under the enum namespace) reshapes into either a module-level typealias (Form A) or a nested `.Typed` (Form B). The shape change is breaking at the namespace level, source-transparent at most call sites if convenience inits and typealiases preserve construction syntax.
 
 ### Sub-Question 3: BENCH-011 under generic Storage
 
@@ -221,28 +255,19 @@ All three Worlds emerge from one generic type with the correct attributes. No Mo
 
 ### Sub-Question 4: Migration cost from currently-shipping Three Worlds
 
-Migration sequence (estimated, pre-1.0 correctness-driver per `[ARCH-LAYER-008]`):
+**Migration cost is not a gating factor** per principal direction 2026-05-18 ("ignore migration cost, we're pre-release"). The migration is bounded and pre-1.0-permissible per `[ARCH-LAYER-008]` correctness-driver; the implementation arc executes whatever sequence the chosen structural form requires.
 
-| Step | Change | Files | Commits |
-|---|---|---|---|
-| 1 | Add `Byte.Borrowed: ~Copyable, ~Escapable, Ownership.Borrow.\`Protocol\`` to `swift-byte-primitives` | 2 files (Byte.Borrowed.swift + conformance) | 1 |
-| 2 | Re-shape `Cursor.Span<DomainTag>` → `Cursor.Generic<Byte.Borrowed, DomainTag>` typealias in `swift-cursor-primitives` | 3 files (Cursor.Generic.swift new, Cursor.Span.swift becomes typealias, Cursor.Span+Cursor.swift extensions retarget) | 1 |
-| 3 | Re-run BENCH-011 probe. If RED → revert to Shape γ. If GREEN → proceed. | Experiment package | (no commit; verification gate) |
-| 4 | Update `Binary.Bytes.Input.View` typealias path through `Cursor.Span<Byte>` (no change at construction sites — typealias still resolves) | 0 files (transitive) | (none — should require no commit if shape is layered cleanly) |
-| 5 | Update `Lexer.Scanner` wrapper's `inner: Cursor.Span<Text>` field — no change at the wrapper's API surface (Cursor.Span typealias intact) | 0 files | (none) |
-| 6 | Add `Ownership.Borrow.\`Protocol\`` dep on `swift-cursor-primitives` (for Storage bound) | 1 file (Package.swift) | 1 |
+Substantive ecosystem-level work the implementation arc must complete:
+- Create `Byte.Borrowed` in `swift-byte-primitives` (Case B conformer of `Ownership.Borrow.\`Protocol\``).
+- Add `swift-byte-primitives` + `swift-ownership-primitives` as deps of `swift-cursor-primitives`.
+- Reshape `swift-cursor-primitives`: `public enum Cursor {}` namespace → `public struct Cursor<...>` generic struct (per principal direction: Cursor IS the generic type, no `.Generic` middle naming).
+- Reshape the W2 `Cursor.Span<DomainTag>` typealias to point at the new shape — module-level typealias OR `.Typed`-nested per implementation arc's chosen form.
+- Update `Binary.Bytes.Input.View` typealias path through W2 — source-transparent at construction sites if convenience init preserves shape.
+- Update `Lexer.Scanner` wrapper's `inner: Cursor.Span<Text>` field — no change at the wrapper's public API surface.
 
-**Total**: 3 commits, ~6 files modified, plus 1 BENCH-011 experiment run.
+Tier impact: cursor-primitives currently Tier 6-8 (Tagged + Ordinal + Cardinal + Index). Adding Byte (Tier 2) and Ownership (Tier 1-2) preserves the Tier 6-8 range — these deps already sit below cursor's tier.
 
-**Costs**:
-- Add `swift-byte-primitives` as dep of `swift-cursor-primitives` (currently NOT a dep — cursor-primitives was deliberately byte-agnostic).
-- Add `swift-ownership-primitives` as dep of `swift-cursor-primitives`.
-- Tier shift: cursor-primitives currently Tier 6-8 (Tagged + Ordinal + Cardinal + Index). Adding Byte (Tier 2) and Ownership (Tier 1-2) preserves tier-6-8 range — these deps already sit below cursor's tier.
-
-**Benefits**:
-- Eliminates the bespoke `BorrowedBytes` shape that the V5 experiment invented. `Byte.Borrowed` becomes the canonical institute primitive parallel to `String.Borrowed` / `Path.Borrowed`.
-- Aligns Shape A with the existing `Ownership.Borrow.\`Protocol\`` framework (Case B conformer).
-- Removes the conceptual gap noted in the principal redirect: the Mode-discriminator approach was attempting to invent a mechanism the institute already has.
+Benefit: eliminates the bespoke `BorrowedBytes` shape that the V5 experiment invented. `Byte.Borrowed` becomes the canonical institute primitive parallel to `String.Borrowed` / `Path.Borrowed`, conforming to `Ownership.Borrow.\`Protocol\`` (Case B).
 
 ### Sub-Question 5: Phase 4 Shape ι expansion
 
@@ -296,9 +321,9 @@ Net: Phase 4 under Shape A collapses three new types into one extension to exist
 
 ## Outcome
 
-**Status**: RECOMMENDATION (pending principal review; not yet DECISION).
+**Status**: DECISION (principal-authorized 2026-05-18).
 
-**Recommendation**: Transition to Shape A as the canonical L1 cursor architecture, conditional on a `Bytes.Borrowed` (specifically `Byte.Borrowed`) primitive being added to `swift-byte-primitives` and a BENCH-011 re-measurement clearing GREEN under the generic-Storage indirection.
+**Decision**: Transition to Shape A as the canonical L1 cursor architecture. The implementation arc executes the migration with BENCH-011 replay as the hard verification gate — if generic-Storage indirection regresses perf and mitigation (`@inlinable @_alwaysEmitIntoClient` on the Storage accessor) cannot close the gap, the arc reverts to Shape γ. BENCH-011 verification is implementation-time, not design-time; the design question is settled.
 
 **Rationale**:
 
@@ -328,9 +353,23 @@ Net: Phase 4 under Shape A collapses three new types into one extension to exist
 - The exact BENCH-011 replay experiment's design — flagged as the verification gate; experiment dispatch decides.
 - Phase 4's dual-index reader-writer's exact name and home (`Cursor.OwnedReaderWriter` vs `Binary.Cursor` relocated, or other).
 
-**If RECOMMENDATION is approved**: this doc transitions to DECISION; an implementation arc executes the migration sequence in Sub-Q4 with BENCH-011 replay as the hard gate. Phase 4 Shape ι expansion (currently scheduled per v1.4.0) collapses into typealiases on the unified `Cursor.Generic`.
+**Principal authorization (2026-05-18)**:
 
-**If RECOMMENDATION is rejected**: v1.4.0's Three Worlds remains the canonical shape. This research arc gets archived as `SUPERSEDED` with the rationale recorded. The corrected reasoning from this arc still gets back-ported into v1.4.0 (the "structurally impossible" claim is replaced with the narrower correct reasoning about Mode-discriminator constraints).
+- **Byte.Borrowed creation**: approved.
+- **Structural shape**: Cursor IS the generic struct (no `.Generic` middle naming). Two acceptable forms — flat `Cursor<Storage, PositionTag>` or nested `Cursor<Storage>.Typed<Tag>`. Implementation arc picks based on Phase 4 ergonomics.
+- **Migration cost**: not a gating factor (pre-release).
+- **BENCH-011 replay**: implementation-time verification gate, not a design gate.
+
+**Implementation arc opens immediately** as a separate dispatch:
+
+1. Create `Byte.Borrowed: ~Copyable, ~Escapable, Ownership.Borrow.\`Protocol\`` in `swift-byte-primitives` (Case B conformer per `ownership-borrow-protocol-unification.md` v1.0.0).
+2. Reshape `swift-cursor-primitives`: convert `public enum Cursor {}` namespace → `public struct Cursor<...>` generic struct. Pick flat or `.Typed`-nested form.
+3. Run BENCH-011 replay against the new shape. GREEN → proceed; RED with mitigation closure → tune; RED unmitigable → revert reshape and surface as v1.2.0 amendment with Shape γ reaffirmed.
+4. Update consumer typealias: `Binary.Bytes.Input.View` resolves to the new Cursor instantiation; source-transparent at construction sites.
+5. Update `Lexer.Scanner` wrapper's `inner` field type; preserve wrapper's public API.
+6. Phase 4 Shape ι expansion (W1 read-only / W3 / dual-index reader-writer) executes as a follow-on dispatch on the unified shape.
+
+The corrected reasoning from this arc back-ports into `cursor-abstractions-l1-ecosystem.md` v1.5.0 amendment, replacing the "structurally impossible" claim with the narrower-correct reasoning about Mode-discriminator constraints and the Storage-as-borrow-carrier resolution.
 
 ## References
 
@@ -378,4 +417,5 @@ The principal observed that the experiment's V3/V4 Mode-discriminator approach w
 
 ## Changelog
 
-- **v1.0.0** (2026-05-18): RECOMMENDATION — Transition to Shape A as the canonical L1 cursor architecture, conditional on Byte.Borrowed creation and BENCH-011 replay clearing GREEN. v1.4.0 Three-Worlds reasoning corrected (the "structurally impossible" claim is empirically false per Tagged + cursor-shape-a-feasibility V1/V5/V6/V7). The narrower true Swift constraint (no Mode-discriminator conditional conformance per V3/V4 diagnostic) doesn't block Shape A because Storage-as-borrow-carrier sidesteps the discriminator entirely. Recommendation pending principal review.
+- **v1.1.0** (2026-05-18): DECISION — Principal authorized Shape A transition 2026-05-18. Three substantive amendments vs v1.0.0: (a) Cursor IS the generic struct directly (no `.Generic` middle naming) — both flat `Cursor<Storage, PositionTag>` and nested `Cursor<Storage>.Typed<Tag>` forms are acceptable, implementation arc selects; (b) migration cost no longer gates the decision (pre-release); (c) BENCH-011 replay reframed from design-gate to implementation-time verification gate. The "If RECOMMENDATION is approved/rejected" branching collapses into a single Implementation Arc Opens section. The corrected reasoning back-ports into v1.4.0 → v1.5.0 amendment.
+- **v1.0.0** (2026-05-18): RECOMMENDATION — Transition to Shape A as the canonical L1 cursor architecture, conditional on Byte.Borrowed creation and BENCH-011 replay clearing GREEN. v1.4.0 Three-Worlds reasoning corrected (the "structurally impossible" claim is empirically false per Tagged + cursor-shape-a-feasibility V1/V5/V6/V7). The narrower true Swift constraint (no Mode-discriminator conditional conformance per V3/V4 diagnostic) doesn't block Shape A because Storage-as-borrow-carrier sidesteps the discriminator entirely. Pending principal review.
