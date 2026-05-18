@@ -320,7 +320,7 @@ research candidates:
 | parser-primitives test-scaffolding ByteInput cleanup | [HANDOFF-byte-arc-followups.md](../../HANDOFF-byte-arc-followups.md) | Test Support cleanup; not blocking. |
 | swift-linter buildExpression rule amendment | [HANDOFF-byte-arc-followups.md](../../HANDOFF-byte-arc-followups.md) | NOTE handed off to linter agent in package. |
 | Byte+Bitwise lift to Carrier SLI | [HANDOFF-byte-arc-followups.md](../../HANDOFF-byte-arc-followups.md) | Could generalize bitwise to all `Carrier.Protocol where Underlying: FixedWidthInteger`; deferred pending design decision. |
-| Serializer-side parallel extraction | [HANDOFF-byte-arc-followups.md](../../HANDOFF-byte-arc-followups.md) | Mirror arc for `Serializer.Byte` → `Byte.Serializer`; same pattern, different domain. |
+| Serializer-side parallel extraction | [HANDOFF-byte-arc-followups.md](../../HANDOFF-byte-arc-followups.md) — **RESOLVED 2026-05-18** at `swift-primitives/swift-byte-serializer-primitives` (Item 6 closed). Mechanical mirror per [API-NAME-001b]; three asymmetries from the parser side documented (Failure = Never; no separate reverse role; no Byte.Buffer typealias). | Mirror arc for `Serializer.Byte` → `Byte.Serializer`; same pattern, different domain. |
 
 ## References
 
