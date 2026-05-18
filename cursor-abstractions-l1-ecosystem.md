@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.7.0
+version: 1.8.0
 last_updated: 2026-05-18
 status: SUPERSEDED
 tier: 3
@@ -1460,6 +1460,46 @@ The single substantive evolution relative to v1.3.0: the Tier 3 analysis surface
 
 The recommendation aligns with the user's stated preference (2026-05-17): cursor-primitives unification where principally correct. The principled answer is World 2 unification with Worlds 1 and 3 staying structurally separate — the Three-Worlds architecture.
 
+## Phase 4 W1 Resolution (2026-05-18, v1.8.0)
+
+The Phase 4 W1 expansion question (`Binary.Cursor<Storage>` +
+`Binary.Reader<Storage>` migration to `swift-cursor-primitives`) is settled
+2026-05-18 by `cursor-w1-expansion.md` v1.0.0 DECISION — **Option (c)
+principled refuse**.
+
+Binary.Cursor + Binary.Reader stay in `swift-binary-primitives`. cursor-primitives
+stays at Tier 6-8 with only the borrowed Span-cursor cohort. Phase 4 closes
+without source changes.
+
+The 2026-05-17 Principal Authorization committed Shape ι expansion under
+the *Three-Worlds* architecture (this doc's v1.0.0-v1.3.0 framing). The
+2026-05-18 v1.2.0 IMPLEMENTED single-generic shape (`cursor-shape-a-vs-three-worlds.md`)
+replaced that with `Cursor<DomainTag: Ownership.Borrow.\`Protocol\` & ~Copyable>`
+— a *borrow-view* contract that does not generalize to owned storage. The
+v1.2.0 doc explicitly re-opened the question (*"W1/W3 unification deferred
+without commitment"*); the brief `HANDOFF-cursor-phase-4-w1-expansion.md`
+enumerated principled-refuse as a valid option. The architectural ground
+changed, the prior commitment's scope no longer applies, and the W1 question
+warranted fresh DECISION-grade evaluation.
+
+Verdict grounded in seven structural arguments (see `cursor-w1-expansion.md`
+v1.0.0 §Phase 2 §Rationale): the v1.2.0 architecture change; W1 has no
+cross-domain duplication; the Item 2 / typed-input precedent (W3 placed in
+its byte-domain home, not cursor-primitives); `Ownership.Borrow.\`Protocol\``
+is the borrow-view contract not the owned-storage contract;
+`nested-view-vs-borrowed-naming.md` v1.3.0 Pattern 3 classifies cursors as
+stateful traversal (not borrow-projections); Tier 13 elevation is
+post-publication-irreversible; `[ARCH-LAYER-006]` domain completeness
+determines L1 existence.
+
+The Shape ι "committed expansion" framing in this doc's v1.3.0 §Principal
+Authorization is closed under the new architectural ground. Phase 4 W1 is
+settled; W3 was settled 2026-05-18 by `typed-input-unification.md` v1.0.0
+DECISION (Binary.Bytes.Input → Byte.Input typealias chain, owned-input
+identity placed in swift-byte-parser-primitives).
+
+`HANDOFF.md` Wave 1 Item 1's Phase 4 expansion is CLOSED.
+
 ## Phase 4 W3 Simplification (2026-05-18, v1.7.0)
 
 HANDOFF.md Wave 1 Item 2 (D5 `Binary.Bytes.Input` vs `Byte.Input` unification) landed 2026-05-18 as `typed-input-unification.md` v1.0.0 DECISION. The Phase 4 follow-on framing in this doc anticipated migrating W3 (`Binary.Bytes.Input`) into `swift-cursor-primitives` as part of full Shape ι centralization; that W3 portion is **dissolved** by the typed-input-unification landing.
@@ -1477,6 +1517,7 @@ The successor `cursor-shape-a-vs-three-worlds.md` v1.2.0 IMPLEMENTED shape (sing
 
 ## Changelog
 
+- **v1.8.0** (2026-05-18): Status remains SUPERSEDED — adds §"Phase 4 W1 Resolution" recording that the Phase 4 W1 expansion question is settled by `cursor-w1-expansion.md` v1.0.0 DECISION via Option (c) principled-refuse. `Binary.Cursor<Storage>` + `Binary.Reader<Storage>` stay in `swift-binary-primitives`; cursor-primitives stays at Tier 6-8 with only the borrowed Span-cursor cohort. The Shape ι "committed expansion" framing in v1.3.0 §Principal Authorization is closed under the v1.2.0 single-generic architecture's changed ground (Ownership.Borrow.\`Protocol\` is the borrow-view contract, not the owned-storage contract). W3 was settled 2026-05-18 by `typed-input-unification.md` v1.0.0; W1 is now settled. HANDOFF.md Wave 1 Item 1's Phase 4 expansion is CLOSED. No change to the Three-Worlds analytical content, the SE-0503 finding, the SLR / prior art / theoretical grounding sections, or the v1.5.0/v1.6.0 successor pointers — the supersession verdict is unchanged.
 - **v1.7.0** (2026-05-18): Status remains SUPERSEDED — adds §"Phase 4 W3 Simplification" recording that HANDOFF.md Wave 1 Item 2 landed as `typed-input-unification.md` v1.0.0 DECISION (`Binary.Bytes.Input = Byte.Input` typealias chain). The Phase 4 W3 centralization to `swift-cursor-primitives` contemplated in v1.3.0/v1.4.0's Implementation Gating is dissolved — `Binary.Bytes.Input`'s identity now lives in `swift-byte-parser-primitives` (the canonical byte-domain owned-input home) and the substrate lives in `swift-input-primitives`. Phase 4 dispatch reduces to W1 only. No change to the Three-Worlds analytical content, the SE-0503 finding, the SLR / prior art / theoretical grounding sections, or the v1.5.0/v1.6.0 successor pointers — the supersession verdict is unchanged.
 - **v1.6.0** (2026-05-18): Status remains SUPERSEDED — single-generic refinement of the successor `cursor-shape-a-vs-three-worlds.md` (v1.1.0 DECISION → v1.2.0 IMPLEMENTED) lands. Cursor's shape further collapses from two-generic `Cursor<Storage, PositionTag>` (v1.5.0 supersession framing) to single-generic `Cursor<DomainTag: Ownership.Borrow.`Protocol` & ~Copyable>` — storage is now derived as `DomainTag.Borrowed` via the protocol's associated type rather than a separate generic parameter. Call sites collapse `Cursor<Byte.Borrowed, Byte>(span)` → `Cursor<Byte>(span)` and `Cursor<Byte.Borrowed, Text>(...)` → `Cursor<Text>(...)`. Added `Text: Ownership.Borrow.`Protocol`` conformance with `Borrowed = Byte.Borrowed` (principled domain-identity — text storage IS bytes). Implementation: swift-text-primitives 190fb64, swift-cursor-primitives b4dc49e, swift-binary-parser-primitives a6fbf075, swift-lexer-primitives 511d06e. BENCH-011 replay GREEN at parity across all four probes (ratios 0.998–0.999); ecosystem build gate clean across 8 packages (~990 tests pass). The SUPERSEDED banner is updated to point at the v1.2.0 successor and document both refinements 1 (two-generic) and 2 (single-generic) within the 2026-05-18 same-day landing. No change to the doc's analytical content; the supersession verdict is unchanged. W1/W3 (owned-storage Worlds) remain explicitly deferred — the single-generic protocol bound forecloses "one cursor type for all three Worlds" option A; Phase 4 dispatch decides between a sibling owned-cursor type and a more general protocol bound.
 - **v1.5.0** (2026-05-18): SUPERSEDED by `cursor-shape-a-vs-three-worlds.md` v1.1.0 DECISION. Three-Worlds architecture replaced by Shape A — a single generic `Cursor<Storage, PositionTag>` type whose Copyable/Escapable attributes inherit from Storage via Tagged-style conditional conformance. The v1.4.0 doc's Shape A rejection reasoning ("Swift offers no way to make Escapable conditional on a generic parameter") is empirically refuted; the actual narrower Swift constraint (no Mode-discriminator conditional conformance) doesn't block Shape A because Storage-as-borrow-carrier — using the institute's existing `Ownership.Borrow.\`Protocol\`` framework (`ownership-borrow-protocol-unification.md` v1.0.0) and a new `Byte.Borrowed` Case B conformer in swift-byte-primitives — sidesteps the discriminator entirely. The Three-Worlds inventory + SLR + theoretical grounding sections survive as historical analysis input; the architectural verdict is superseded. Implementation arc landed 2026-05-18: Byte.Borrowed in `swift-byte-primitives` (commit `c0e50aa` + public-span amend `9e0bd46`), `swift-cursor-primitives` reshape (commit `64717b2`), `swift-binary-parser-primitives` retarget (commit `65bcdfd0`), `swift-lexer-primitives` retarget (commit `25dddd1`). BENCH-011 replay GREEN — all four probes at parity (ratios 0.95-1.00); 216 swift-json tests pass, 6 swift-lexer tests pass, 69 binary-parser tests pass, 48 lexer tests pass. Phase 4 Shape ι expansion under the new shape collapses to typealiases + conditional extensions on the unified Cursor; reframed as future-work follow-on. The successor doc `cursor-shape-a-vs-three-worlds.md` is the canonical reference; this v1.4.0 → v1.5.0 transition is a status update preserving the analytical content of the earlier arc.

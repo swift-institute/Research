@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.2.0
+version: 1.3.0
 last_updated: 2026-05-18
 status: IMPLEMENTED
 tier: 3
@@ -418,6 +418,60 @@ The single-generic shape forecloses Phase 4's "one cursor type for all three Wor
 
 This trade-off was accepted at the v1.2.0 reshape — pre-1.0 break-freely permissive; Phase 4 dispatch decides which path. The W2 cohort (Cursor<Byte>, Cursor<Text>, future byte-domain Cursor<…>) is unified under the cleanest possible call-site shape; W1/W3 unification deferred without commitment.
 
+## Phase 4 Resolution (2026-05-18, v1.3.0)
+
+The Phase 4 W1 + W3 deferral acknowledged in v1.2.0 is now settled:
+
+**W3** — settled 2026-05-18 by `typed-input-unification.md` v1.0.0 DECISION
+(Option A `Binary.Bytes.Input = Byte.Input` typealias chain rooted in
+`swift-byte-parser-primitives`; substrate in `swift-input-primitives`). The
+W3 portion of the original Shape ι expansion was dissolved — the owned
+byte-domain input identity lives in its canonical byte-domain home, not in
+`swift-cursor-primitives`.
+
+**W1** — settled 2026-05-18 by `cursor-w1-expansion.md` v1.0.0 DECISION via
+**Option (c) principled refuse**. `Binary.Cursor<Storage>` +
+`Binary.Reader<Storage>` stay in `swift-binary-primitives`.
+`swift-cursor-primitives` stays at Tier 6-8 with only the borrowed
+Span-cursor cohort (`Cursor<DomainTag>`). Phase 4 closes without source
+changes.
+
+The seven structural arguments grounding W1 principled-refuse are documented
+in `cursor-w1-expansion.md` §Phase 2 §Rationale. Summary:
+
+1. The v1.2.0 single-generic architecture changed the design ground — the
+   2026-05-17 Shape ι commitment was scoped to the now-SUPERSEDED
+   Three-Worlds shape.
+2. W1 has no cross-domain duplication (intentional structural specialization
+   within the binary domain per `[API-IMPL-008]` / `[API-IMPL-006]`).
+3. The W3 / typed-input-unification precedent supports per-domain owned-cursor
+   placement.
+4. `Ownership.Borrow.\`Protocol\`` is the borrow-view contract, not the
+   owned-storage contract; no parallel exists in the ecosystem.
+5. `nested-view-vs-borrowed-naming.md` v1.3.0 Pattern 3 classifies cursors as
+   stateful traversal, not borrow-projections.
+6. Tier 13 elevation is post-publication-irreversible.
+7. `[ARCH-LAYER-006]` domain completeness determines L1 existence.
+
+The "deferred without commitment" framing is replaced by **closed under
+principled refuse**. The W2 single-generic cohort stands as the final
+shape of cursor-primitives; W1 stays in its binary-domain home.
+
+The Phase 4 expansion of `HANDOFF.md` Wave 1 Item 1 is CLOSED.
+
+### Revisit conditions
+
+W1 principled-refuse is closed under current ecosystem state. Revisit if:
+
+1. A second cross-domain owned-cursor consumer materializes (non-binary L1
+   package needing dual-index or single-index owned reader/writer over
+   `Memory.Contiguous.\`Protocol\`` storage). Zero such consumers exist at
+   HEAD 2026-05-18.
+2. A sub-Tier-13 cursor-needing consumer surfaces that would benefit from
+   owned-cursor primitives.
+3. `Memory.Contiguous.\`Protocol\``'s shape changes substantively (e.g.,
+   absorbed into a broader L2 boundary).
+
 ## References
 
 ### Internal prior research
@@ -464,6 +518,7 @@ The principal observed that the experiment's V3/V4 Mode-discriminator approach w
 
 ## Changelog
 
+- **v1.3.0** (2026-05-18): Status remains IMPLEMENTED — adds §"Phase 4 Resolution" recording that the v1.2.0 W1/W3 deferral is now closed. W3 settled by `typed-input-unification.md` v1.0.0 DECISION (Option A `Binary.Bytes.Input = Byte.Input` typealias chain rooted in swift-byte-parser-primitives). W1 settled by `cursor-w1-expansion.md` v1.0.0 DECISION via Option (c) principled refuse — `Binary.Cursor<Storage>` + `Binary.Reader<Storage>` stay in swift-binary-primitives; cursor-primitives stays at Tier 6-8 with only the borrowed Span-cursor cohort. The W2 single-generic cohort stands as the final shape of cursor-primitives; W1 stays in its binary-domain home. Phase 4 expansion of HANDOFF.md Wave 1 Item 1 is CLOSED. Seven structural arguments grounding W1 principled-refuse (see cursor-w1-expansion.md §Phase 2 §Rationale). No change to the v1.2.0 single-generic shape, the SHAs, the BENCH-011 results, or the analytical content; the IMPLEMENTED verdict is unchanged.
 - **v1.2.0** (2026-05-18): IMPLEMENTED — Single-generic refinement of the v1.1.0 two-generic landing. Cursor reshapes from `Cursor<Storage: ~Copyable & ~Escapable, PositionTag: ~Copyable>` to `Cursor<DomainTag: Ownership.Borrow.`Protocol` & ~Copyable>` with storage derived as `DomainTag.Borrowed`. Call sites collapse from `Cursor<Byte.Borrowed, Byte>(span)` to `Cursor<Byte>(span)`. The two-generic shape was structurally redundant — `Byte`'s and `Text`'s `Ownership.Borrow.`Protocol`` conformance already encoded the Storage choice via the associatedtype `Borrowed = Byte.Borrowed`. Conditional Copyable/Escapable extensions are dropped — the borrowed-view shape is always `~Copyable, ~Escapable`. Implementation: swift-text-primitives 190fb64 (Text conformance), swift-cursor-primitives b4dc49e (single-generic reshape), swift-binary-parser-primitives a6fbf075 (View typealias), swift-lexer-primitives 511d06e (Scanner inner field). BENCH-011 replay GREEN at parity across all four probes; ecosystem build gate clean across 8 packages (~990 tests). Adds §Implementation Outcomes documenting both refinement 1 (two-generic, morning) and refinement 2 (single-generic, afternoon) within the same day. W1/W3 deferral acknowledged as Phase 4 concern — single-generic shape forecloses "one cursor for all three Worlds" option A; Phase 4 needs a sibling owned-cursor type or a more general protocol bound. Status: DECISION → IMPLEMENTED.
 - **v1.1.0** (2026-05-18): DECISION — Principal authorized Shape A transition 2026-05-18. Three substantive amendments vs v1.0.0: (a) Cursor IS the generic struct directly (no `.Generic` middle naming) — both flat `Cursor<Storage, PositionTag>` and nested `Cursor<Storage>.Typed<Tag>` forms are acceptable, implementation arc selects; (b) migration cost no longer gates the decision (pre-release); (c) BENCH-011 replay reframed from design-gate to implementation-time verification gate. The "If RECOMMENDATION is approved/rejected" branching collapses into a single Implementation Arc Opens section. The corrected reasoning back-ports into v1.4.0 → v1.5.0 amendment.
 - **v1.0.0** (2026-05-18): RECOMMENDATION — Transition to Shape A as the canonical L1 cursor architecture, conditional on Byte.Borrowed creation and BENCH-011 replay clearing GREEN. v1.4.0 Three-Worlds reasoning corrected (the "structurally impossible" claim is empirically false per Tagged + cursor-shape-a-feasibility V1/V5/V6/V7). The narrower true Swift constraint (no Mode-discriminator conditional conformance per V3/V4 diagnostic) doesn't block Shape A because Storage-as-borrow-carrier sidesteps the discriminator entirely. Pending principal review.
