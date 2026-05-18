@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-18
 status: DECISION
 tier: 2
@@ -11,10 +11,17 @@ implementations:
   - swift-primitives/swift-input-primitives@450a77f (consumedCount on Input.Slice)
   - swift-primitives/swift-byte-parser-primitives@5fe4774 (exports re-export Input_Primitives + Array_Dynamic_Primitives)
   - swift-primitives/swift-binary-parser-primitives@bea39a47 (Binary.Bytes.Input → typealias for Byte.Input)
+  - swift-primitives/swift-byte-parser-primitives@2fd4070 (v1.1.0: relocate Byte.Input.View typealias + byte-domain extensions from binary-parser-primitives)
+  - swift-primitives/swift-binary-parser-primitives@59dc8d30 (v1.1.0: residual typealias removal — delete Binary.Bytes.Input typealias declaration + 3 +ext files; migrate 7 internal call sites to Byte.Input)
+  - swift-primitives/swift-binary-coder-primitives@e3db3ae (v1.1.0: migrate Binary.Coder.swift call sites to Byte.Input)
+  - swift-primitives/swift-binary-coder-primitives@65cb1f1 (v1.1.0: migrate Binary.Coder.Protocol surface to Byte.Input; bundles in-flight Coder.Protocol refactor)
+  - swift-primitives/swift-coder-primitives@9f14ffc (v1.1.0: DocC Choosing-Bidirectional-vs-Coder.md migration)
 ---
 -->
 
-> **DECISION 2026-05-18**: `Binary.Bytes.Input` collapses to `typealias Input = Byte.Input` in `swift-binary-parser-primitives`. The byte-domain owned-input identity lives in `swift-byte-parser-primitives` (canonical home). All 5 +extension files in binary-parser-primitives delete; the 2 inits and 1 helper that don't already exist on `Byte.Input` survive as extensions on the typealias (which bind through to the underlying `Input.Slice<Array<UInt8>.Indexed<UInt8>>`). 678 tests pass across the 4 most-affected packages; ecosystem build gate clean across 16 packages.
+> **DECISION 2026-05-18 (v1.0.0)**: `Binary.Bytes.Input` collapses to `typealias Input = Byte.Input` in `swift-binary-parser-primitives`. The byte-domain owned-input identity lives in `swift-byte-parser-primitives` (canonical home). All 5 +extension files in binary-parser-primitives delete; the 2 inits and 1 helper that don't already exist on `Byte.Input` survive as extensions on the typealias (which bind through to the underlying `Input.Slice<Array<UInt8>.Indexed<UInt8>>`). 678 tests pass across the 4 most-affected packages; ecosystem build gate clean across 16 packages.
+>
+> **AMENDMENT 2026-05-18 (v1.1.0)**: The residual `Binary.Bytes.Input` typealias is stripped entirely. The byte-domain owned-input identity is now the sole canonical name; binary-domain consumers reference `Byte.Input` directly. View typealias relocates from `Binary.Bytes.Input.View` (in binary-parser-primitives) to `Byte.Input.View` (in byte-parser-primitives, canonical home). Five implementation commits + one DocC consumer migration. See §Residual Typealias Removal below.
 
 ## Context
 
@@ -161,10 +168,48 @@ Ecosystem build gate across 16 packages — all green per `rm -rf .build && swif
 - `HANDOFF.md` Wave 1 Item 2 — closes here
 - `HANDOFF-byte-arc-followups.md` Item 5 D5 — resolves here
 
+## Residual Typealias Removal (v1.1.0)
+
+The v1.0.0 disposition (Option A typealias chain) was a minimum-change shape: it kept the `Binary.Bytes.Input` name as a typealias to `Byte.Input`. Within hours of v1.0.0 landing, principal direction surfaced that the unification is incomplete while the older domain-named alias survives: "one canonical name for the owned byte-input concept." The successor arc — tracked at `HANDOFF-binary-bytes-input-removal.md` — strips the residual typealias entirely.
+
+### Pre-committed decisions (carried forward from the successor handoff)
+
+1. **Remove `Binary.Bytes.Input` typealias** — the older domain-named alias is the only target of removal. `Byte.Input` is the sole canonical name for the owned byte-input concept.
+2. **View moves to `Byte.Input.View`** — the borrowed-bytes view typealias relocates from binary-parser-primitives to byte-parser-primitives. Path of least cost: `extension Byte.Input { typealias View = Cursor<Byte> }` resolves via typealias-namespace lookup per [API-IMPL-016], parallel to the prior `extension Binary.Bytes.Input { ... }` shape.
+3. **`Binary.Bytes` namespace is preserved** — other members (`Binary.Bytes.Machine`, `Binary.Bytes.WithBorrowed`, `Binary.Bytes._withBorrowedPrefix`, `Binary.Bytes.Parser`) stay. Only the `.Input` member is removed.
+
+### Implementation summary (v1.1.0)
+
+Five commits across three packages plus one DocC consumer migration:
+
+| # | Commit | Package | Purpose |
+|---|---|---|---|
+| 1 | `2fd4070` | swift-byte-parser-primitives | Relocate `Byte.Input.View` typealias + byte-domain extensions (`isEmpty`, `first`, `consumedCount`, `removeFirst`, `subscript`, `starts(with:)`, `copyToOwned()`) from binary-parser-primitives to byte-parser-primitives. Adds deps on swift-cursor-primitives + swift-index-primitives. Re-exports `Cursor_Primitives_Core` + `Index_Primitives`. |
+| 2 | `59dc8d30` | swift-binary-parser-primitives | Delete `Binary.Bytes.Input.swift` (typealias declaration), `Binary.Bytes.Input.View.swift`, `Binary.Bytes.Input.View+typed.swift` (the View's home — relocated to commit 1). Migrate 7 internal call sites in `Binary.Bytes.Machine.swift`, `Binary.Bytes.Machine.Run.swift`, `Parser.Parser+parse.swift`, `Binary.Parse.Access.swift`, `Binary.Parse.Access+prefix.swift`, `Binary.Parse.Access+whole.swift` to `Byte.Input`. Rename tests `Binary.Bytes.Input Tests.swift` → `Byte.Input Tests.swift`; same for the View test file. Net diff: -349 / +70 lines. |
+| 3 | `e3db3ae` | swift-binary-coder-primitives | Migrate `Binary.Coder.swift` (5 call sites + 2 doc comments) from `Binary.Bytes.Input` to `Byte.Input`. |
+| 4 | `65cb1f1` | swift-binary-coder-primitives | Migrate `Binary.Coder+Coder.Protocol.swift` (2 sites) + new `Binary.Coder.Protocol Tests.swift` (3 sites). Bundles in-flight Coder.Protocol refactor (typealias renames `DecodeInput`/`EncodeBuffer`/`DecodeFailure`/`EncodeFailure` → `Input`/`Buffer`/`Failure`; throws shape → `Either<Binary.Bytes.Machine.Fault, Never>`; `decode(_:)` → `parse(_:)`; `encode(_:into:)` → `serialize(_:into:)`) that was mid-flight on the same lines. Bundling rationale: the WIP file still referenced `Binary.Bytes.Input` on the modified lines post-`59dc8d30`, leaving the package unbuildable; splitting via stash-edit-commit-pop is rejected per `feedback_commit_unrelated_wip_not_stash.md`; bundle keeps history compilable and preserves WIP author's structural work. Package.swift dep on Either Primitives added. |
+| 5 | `9f14ffc` | swift-coder-primitives | Consumer-doc migration: `Coder Primitives.docc/Choosing-Bidirectional-vs-Coder.md` — single `Binary.Bytes.Input` → `Byte.Input` reference in the `UInt32Coder` example. Surfaced by Phase 0's workspace-wide grep. |
+
+### Out of scope on v1.1.0
+
+- **`swift-binary-primitives` DocC `_Package-Insights.md`** carries 5 historical `Binary.Bytes.Input` / `Binary.Bytes.Input.View` references (architectural-reasoning article on the Span / `~Escapable` constraint triangle). Per the v1.1.0 handoff's `Do Not Touch` list, swift-binary-primitives is Phase 4 W1 territory (principled-refuse) and out of scope for this arc. References documented as historical analysis; not migrated.
+- **Research docs across the ecosystem** that reference the historical `Binary.Bytes.Input` name (e.g., predecessor arcs in `swift-binary-parser-primitives/Research/`, `swift-cursor-primitives/`, `swift-foundations/swift-json/Research/`) — historical references in design rationale, left intact per [SKILL-LIFE-001] minimal-revision discipline.
+- **Two intentional provenance comments** in source that explicitly cite the historical name as removed:
+  - `swift-byte-parser-primitives/Sources/Byte Parser Primitives/Byte.Input.View.swift` (in the `Provenance` doc-comment block).
+  - `swift-binary-parser-primitives/Sources/Binary Input Primitives/exports.swift` (in the comment documenting the typealias removal date).
+- **`Binary Input Primitives` + `Binary Input View Primitives` targets** are retained as thin re-export shims (each `exports.swift` re-exports `Byte_Parser_Primitives`) for source-compatibility with downstream consumers depending on the target names. Not deleted in this arc.
+
+### Termination gate (v1.1.0)
+
+**Workspace-wide grep** (Sources + Tests, both literal and generic-instantiated per `[HANDOFF-040]`): three live-code residuals total — two intentional provenance comments above + one Do-Not-Touch DocC article in swift-binary-primitives. Zero residuals in live code.
+
+**Ecosystem build gate**: blocked by a pre-existing baseline failure in `swift-array-primitives` (`extension Array: Collection.Remove.Last where Element: ~Copyable {}` at `Array.Dynamic.swift:26` — the protocol requires `static func last(_ base: inout Self) -> Element?` but the package provides `static func removeLast(_ base: inout Self) -> Element?` instead). This baseline break is unrelated to the v1.1.0 arc (pure textual identifier rename); my migration introduces no new build errors. Per `feedback_parallel_workspace_no_build.md`, surfaced rather than worked around. Full build verification deferred pending baseline resolution.
+
 ## Provenance
 
-Authored 2026-05-18 as Phase 3 doc back-port of HANDOFF-typed-input-unification.md. Implementation commits cited above.
+Authored 2026-05-18 as Phase 3 doc back-port of HANDOFF-typed-input-unification.md. Implementation commits cited above. Amended 2026-05-18 (v1.1.0) as Phase 3 doc back-port of HANDOFF-binary-bytes-input-removal.md — successor arc that strips the residual typealias landed by v1.0.0.
 
 ## Changelog
 
+- **v1.1.0** (2026-05-18): AMENDMENT — Residual typealias removal. The `Binary.Bytes.Input` typealias landed by v1.0.0 is stripped entirely; `Byte.Input` becomes the sole canonical name for the owned byte-input concept. View typealias relocates from `Binary.Bytes.Input.View` (binary-parser-primitives) to `Byte.Input.View` (byte-parser-primitives, canonical home). Five implementation commits + one DocC consumer migration. Ecosystem build gate blocked by pre-existing `Array` × `Collection.Remove.Last` baseline failure (unrelated). Closes the binary-bytes-input-removal arc successor.
 - **v1.0.0** (2026-05-18): DECISION — Option A (`Binary.Bytes.Input = Byte.Input`) lands across three packages with the ecosystem build gate green at 16 packages and 678+ tests passing on the 4 most-affected packages. Dissolves the Phase 4 W3 centralization concern from `cursor-abstractions-l1-ecosystem.md`. Closes HANDOFF.md Wave 1 Item 2 and HANDOFF-byte-arc-followups.md Item 5 (D5).
