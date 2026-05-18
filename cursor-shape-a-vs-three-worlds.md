@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-05-18
-status: DECISION
+status: IMPLEMENTED
 tier: 3
 scope: ecosystem-wide
 ---
@@ -371,6 +371,53 @@ Net: Phase 4 under Shape A collapses three new types into one extension to exist
 
 The corrected reasoning from this arc back-ports into `cursor-abstractions-l1-ecosystem.md` v1.5.0 amendment, replacing the "structurally impossible" claim with the narrower-correct reasoning about Mode-discriminator constraints and the Storage-as-borrow-carrier resolution.
 
+## Implementation Outcomes
+
+The implementation arc landed in two refinements over the same day.
+
+### Refinement 1 — Two-generic shape (2026-05-18 morning)
+
+The first reshape landed `Cursor<Storage: ~Copyable & ~Escapable, PositionTag: ~Copyable>` per the v1.1.0 principal authorization (form A). Implementation SHAs:
+
+- `swift-byte-primitives` HEAD `9e0bd46` — `Byte.Borrowed` Case B conformer (commit `c0e50aa` + public-span amend `9e0bd46`).
+- `swift-cursor-primitives` HEAD `64717b2` — Cursor reshape from `enum Cursor {}` namespace + `Cursor.Span<DomainTag>` to `public struct Cursor<Storage, PositionTag>` + conditional Copyable/Escapable extensions.
+- `swift-binary-parser-primitives` HEAD `65bcdfd0` — `typealias View = Cursor<Byte.Borrowed, Byte>`.
+- `swift-lexer-primitives` HEAD `25dddd1` — `var inner: Cursor<Byte.Borrowed, Text>`.
+
+BENCH-011 replay GREEN at parity; ecosystem build clean (216 swift-json tests, 6 swift-lexer, 69 binary-parser, 48 lexer, all pass).
+
+### Refinement 2 — Single-generic shape (2026-05-18 afternoon)
+
+Principal observed mid-day that the two-generic shape was structurally redundant: with `Byte` (and any byte-domain phantom-tag) conforming to `Ownership.Borrow.\`Protocol\`` with a specific `Borrowed` type, the explicit Storage parameter restated information the conformance already encoded. The single-generic shape:
+
+```swift
+public struct Cursor<DomainTag: Ownership.Borrow.`Protocol` & ~Copyable>: ~Copyable, ~Escapable {
+    @usableFromInline internal var storage: DomainTag.Borrowed
+    @usableFromInline internal var _position: Tagged<DomainTag, Ordinal>
+}
+```
+
+Storage derives from `DomainTag.Borrowed`. Call sites collapse from `Cursor<Byte.Borrowed, Byte>(span)` to `Cursor<Byte>(span)` and from `Cursor<Byte.Borrowed, Text>(...)` to `Cursor<Text>(...)`.
+
+The conditional Copyable/Escapable extensions are dropped — storage is always `~Copyable, ~Escapable` (per the protocol's associated-type declaration), so the cursor is always `~Copyable, ~Escapable`. The W1 (owned `Memory.Contiguous.\`Protocol\`` storage) and W3 (owned `[UInt8]`) Worlds don't fit the borrowed-view protocol bound and remain deferred to a sibling owned-cursor type or a more general protocol bound (Phase 4).
+
+Implementation SHAs (refinement 2):
+
+- `swift-text-primitives` HEAD `190fb64` — `extension Text: Ownership.Borrow.\`Protocol\` { typealias Borrowed = Byte.Borrowed }`. Text is a Case-B-shaped conformer where the Borrowed type is upstream-defined (`Byte.Borrowed`) rather than locally declared — principled domain-identity statement since text storage IS bytes.
+- `swift-cursor-primitives` HEAD `b4dc49e` — single-generic Cursor reshape; storage = `DomainTag.Borrowed`; method extensions move from `where Storage == Byte.Borrowed, PositionTag: ~Copyable` to `where DomainTag.Borrowed == Byte.Borrowed, DomainTag: ~Copyable`.
+- `swift-binary-parser-primitives` HEAD `a6fbf075` — typealias `View = Cursor<Byte>`; binary-domain extensions move from `where Storage == Byte.Borrowed, PositionTag == Byte` to `where DomainTag == Byte`.
+- `swift-lexer-primitives` HEAD `511d06e` — `var inner: Cursor<Text>`.
+
+BENCH-011 replay GREEN again: Text peekAdvance ratio 0.998, Text consume 0.999, Binary consumeLoop 0.999, Binary peekAdvance 0.999 — parity across all probes, no regression vs the two-generic shape. The 20-100× Binary speedup vs pre-cursor `Binary.Bytes.Input.View` (public-stored-property defect) is locked in — both Subject A (now `Cursor<Byte>` via typealias) and Subject B (vendored frozen two-generic) operate on the @usableFromInline internal `_position`, both at the post-fix performance tier.
+
+Ecosystem build gate across 8 packages clean: cursor-primitives (12 tests), byte-primitives (32), binary-parser-primitives (69), lexer-primitives (48), binary-coder-primitives (45), swift-lexer foundation (6), swift-json (216), swift-ascii (501), plus text-primitives itself (61). Total ~990 tests pass.
+
+### W1 / W3 deferral
+
+The single-generic shape forecloses Phase 4's "one cursor type for all three Worlds" option A — `Ownership.Borrow.\`Protocol\`` is the borrowed-view contract, not the owned-storage contract. Phase 4 needs either (a) a sibling owned-cursor type (`Cursor.Owned<Storage>` or similar) OR (b) a more general protocol bound (e.g., `Cursor.Storage.\`Protocol\`` with a broader associated-type contract).
+
+This trade-off was accepted at the v1.2.0 reshape — pre-1.0 break-freely permissive; Phase 4 dispatch decides which path. The W2 cohort (Cursor<Byte>, Cursor<Text>, future byte-domain Cursor<…>) is unified under the cleanest possible call-site shape; W1/W3 unification deferred without commitment.
+
 ## References
 
 ### Internal prior research
@@ -417,5 +464,6 @@ The principal observed that the experiment's V3/V4 Mode-discriminator approach w
 
 ## Changelog
 
+- **v1.2.0** (2026-05-18): IMPLEMENTED — Single-generic refinement of the v1.1.0 two-generic landing. Cursor reshapes from `Cursor<Storage: ~Copyable & ~Escapable, PositionTag: ~Copyable>` to `Cursor<DomainTag: Ownership.Borrow.`Protocol` & ~Copyable>` with storage derived as `DomainTag.Borrowed`. Call sites collapse from `Cursor<Byte.Borrowed, Byte>(span)` to `Cursor<Byte>(span)`. The two-generic shape was structurally redundant — `Byte`'s and `Text`'s `Ownership.Borrow.`Protocol`` conformance already encoded the Storage choice via the associatedtype `Borrowed = Byte.Borrowed`. Conditional Copyable/Escapable extensions are dropped — the borrowed-view shape is always `~Copyable, ~Escapable`. Implementation: swift-text-primitives 190fb64 (Text conformance), swift-cursor-primitives b4dc49e (single-generic reshape), swift-binary-parser-primitives a6fbf075 (View typealias), swift-lexer-primitives 511d06e (Scanner inner field). BENCH-011 replay GREEN at parity across all four probes; ecosystem build gate clean across 8 packages (~990 tests). Adds §Implementation Outcomes documenting both refinement 1 (two-generic, morning) and refinement 2 (single-generic, afternoon) within the same day. W1/W3 deferral acknowledged as Phase 4 concern — single-generic shape forecloses "one cursor for all three Worlds" option A; Phase 4 needs a sibling owned-cursor type or a more general protocol bound. Status: DECISION → IMPLEMENTED.
 - **v1.1.0** (2026-05-18): DECISION — Principal authorized Shape A transition 2026-05-18. Three substantive amendments vs v1.0.0: (a) Cursor IS the generic struct directly (no `.Generic` middle naming) — both flat `Cursor<Storage, PositionTag>` and nested `Cursor<Storage>.Typed<Tag>` forms are acceptable, implementation arc selects; (b) migration cost no longer gates the decision (pre-release); (c) BENCH-011 replay reframed from design-gate to implementation-time verification gate. The "If RECOMMENDATION is approved/rejected" branching collapses into a single Implementation Arc Opens section. The corrected reasoning back-ports into v1.4.0 → v1.5.0 amendment.
 - **v1.0.0** (2026-05-18): RECOMMENDATION — Transition to Shape A as the canonical L1 cursor architecture, conditional on Byte.Borrowed creation and BENCH-011 replay clearing GREEN. v1.4.0 Three-Worlds reasoning corrected (the "structurally impossible" claim is empirically false per Tagged + cursor-shape-a-feasibility V1/V5/V6/V7). The narrower true Swift constraint (no Mode-discriminator conditional conformance per V3/V4 diagnostic) doesn't block Shape A because Storage-as-borrow-carrier sidesteps the discriminator entirely. Pending principal review.
