@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.1.1
 last_updated: 2026-05-18
 status: DECISION
 tier: 2
@@ -16,6 +16,12 @@ implementations:
   - swift-primitives/swift-binary-coder-primitives@e3db3ae (v1.1.0: migrate Binary.Coder.swift call sites to Byte.Input)
   - swift-primitives/swift-binary-coder-primitives@65cb1f1 (v1.1.0: migrate Binary.Coder.Protocol surface to Byte.Input; bundles in-flight Coder.Protocol refactor)
   - swift-primitives/swift-coder-primitives@9f14ffc (v1.1.0: DocC Choosing-Bidirectional-vs-Coder.md migration)
+  - swift-foundations/swift-ascii@36443b4 (v1.1.0: 6-file consumer migration — `where P.Input == Byte.Input` constraints + `inout Byte.Input` closure-parameter types)
+  - swift-primitives/swift-coder-primitives@ca45377 (v1.1.0: doc-example refresh in Coder.Protocol.swift + Coder.swift)
+  - swift-primitives/swift-input-primitives@c60dcde (v1.1.0: doc-comment refresh in Input.swift "Borrowed Alternative" pointer)
+  - swift-primitives/swift-lexer-primitives@3249908 (v1.1.0: doc-comment refresh in Lexer.Pull.Stream.swift + Lexer.Scanner.swift "see also" pointers)
+  - swift-foundations/swift-institute-linter-rules@26c148a (v1.1.0: LeafBodyTypealias rule test fixture refresh)
+  - swift-primitives/swift-cursor-primitives@202b6c7 (v1.1.0: README substrate-mapping refresh)
 ---
 -->
 
@@ -180,7 +186,7 @@ The v1.0.0 disposition (Option A typealias chain) was a minimum-change shape: it
 
 ### Implementation summary (v1.1.0)
 
-Five commits across three packages plus one DocC consumer migration:
+Five core commits across three packages plus one DocC consumer migration handle the structural removal; six additional commits handle the surfaced consumer migration (swift-ascii) and the documentation-refresh sweep across remaining packages:
 
 | # | Commit | Package | Purpose |
 |---|---|---|---|
@@ -189,6 +195,12 @@ Five commits across three packages plus one DocC consumer migration:
 | 3 | `e3db3ae` | swift-binary-coder-primitives | Migrate `Binary.Coder.swift` (5 call sites + 2 doc comments) from `Binary.Bytes.Input` to `Byte.Input`. |
 | 4 | `65cb1f1` | swift-binary-coder-primitives | Migrate `Binary.Coder+Coder.Protocol.swift` (2 sites) + new `Binary.Coder.Protocol Tests.swift` (3 sites). Bundles in-flight Coder.Protocol refactor (typealias renames `DecodeInput`/`EncodeBuffer`/`DecodeFailure`/`EncodeFailure` → `Input`/`Buffer`/`Failure`; throws shape → `Either<Binary.Bytes.Machine.Fault, Never>`; `decode(_:)` → `parse(_:)`; `encode(_:into:)` → `serialize(_:into:)`) that was mid-flight on the same lines. Bundling rationale: the WIP file still referenced `Binary.Bytes.Input` on the modified lines post-`59dc8d30`, leaving the package unbuildable; splitting via stash-edit-commit-pop is rejected per `feedback_commit_unrelated_wip_not_stash.md`; bundle keeps history compilable and preserves WIP author's structural work. Package.swift dep on Either Primitives added. |
 | 5 | `9f14ffc` | swift-coder-primitives | Consumer-doc migration: `Coder Primitives.docc/Choosing-Bidirectional-vs-Coder.md` — single `Binary.Bytes.Input` → `Byte.Input` reference in the `UInt32Coder` example. Surfaced by Phase 0's workspace-wide grep. |
+| 6 | `36443b4` | swift-foundations/swift-ascii | **Additional consumer surfaced by Phase 0 (not in pre-stated set)**: 6 source files migrated — `Binary.ASCII.Access.swift`, `Binary.ASCII.Parsing.Prefix.swift` + `+call.swift`, `Binary.ASCII.Parsing.Whole.swift` + `+call.swift`, `Parsing.Parser+ascii.swift`. All sites use `where P.Input == Byte.Input` constraints or `inout Byte.Input` closure parameters for `Binary.Bytes.withInput(_:)` callbacks. Module qualifier dropped: relies on transitive re-export through `Binary_Parser_Primitives → Binary_Input_Primitives → Byte_Parser_Primitives`. |
+| 7 | `ca45377` | swift-coder-primitives | Doc-example refresh in `Coder.Protocol.swift` (UInt32Coder doc-comment example, 2 sites) + `Coder.swift` (Coder.Witness canonical-example comment). Adjacent to 9f14ffc which migrated the separate DocC catalog article. |
+| 8 | `c60dcde` | swift-input-primitives | Doc-comment refresh in `Input.swift` — the "Borrowed Alternative" pointer that referenced the older `Binary.Bytes.Input.View` name updates to `Byte.Input.View`. |
+| 9 | `3249908` | swift-lexer-primitives | Doc-comment refresh in `Lexer.Pull.Stream.swift` and `Lexer.Scanner.swift` — both "see also" pointers to `Binary.Bytes.Input.View` update to `Byte.Input.View`. |
+| 10 | `26c148a` | swift-institute-linter-rules | Test-fixture refresh in `Lint.Rule.Conformance.LeafBodyTypealias Tests.swift` line 74 — the `Binary.Coder` example-source string used `Binary.Bytes.Input` as a typealias name; aligned with post-rename ecosystem state. No behavior change (rule fires on the leaf-conformance shape, not on the cited type identity). |
+| 11 | `202b6c7` | swift-cursor-primitives | README substrate-mapping update — `Cursor<Byte>` is described as the substrate for `Byte.Input.View` (was `Binary.Bytes.Input.View`). Doc-only refresh; user-facing README at the canonical substrate-owning package. |
 
 ### Out of scope on v1.1.0
 
@@ -211,5 +223,6 @@ Authored 2026-05-18 as Phase 3 doc back-port of HANDOFF-typed-input-unification.
 
 ## Changelog
 
+- **v1.1.1** (2026-05-18): EXTENDS the v1.1.0 implementation record with the six additional commits surfaced by the arc's workspace-wide grep — swift-ascii (substantive consumer migration; 6 source files) and the doc-comment refresh sweep across swift-coder-primitives, swift-input-primitives, swift-lexer-primitives, swift-institute-linter-rules, swift-cursor-primitives. No structural decision change.
 - **v1.1.0** (2026-05-18): AMENDMENT — Residual typealias removal. The `Binary.Bytes.Input` typealias landed by v1.0.0 is stripped entirely; `Byte.Input` becomes the sole canonical name for the owned byte-input concept. View typealias relocates from `Binary.Bytes.Input.View` (binary-parser-primitives) to `Byte.Input.View` (byte-parser-primitives, canonical home). Five implementation commits + one DocC consumer migration. Ecosystem build gate blocked by pre-existing `Array` × `Collection.Remove.Last` baseline failure (unrelated). Closes the binary-bytes-input-removal arc successor.
 - **v1.0.0** (2026-05-18): DECISION — Option A (`Binary.Bytes.Input = Byte.Input`) lands across three packages with the ecosystem build gate green at 16 packages and 678+ tests passing on the 4 most-affected packages. Dissolves the Phase 4 W3 centralization concern from `cursor-abstractions-l1-ecosystem.md`. Closes HANDOFF.md Wave 1 Item 2 and HANDOFF-byte-arc-followups.md Item 5 (D5).
