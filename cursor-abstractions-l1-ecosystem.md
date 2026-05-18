@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.5.0
+version: 1.6.0
 last_updated: 2026-05-18
 status: SUPERSEDED
 tier: 3
@@ -10,7 +10,7 @@ scope: ecosystem-wide
 ---
 -->
 
-> **SUPERSEDED 2026-05-18 by [`cursor-shape-a-vs-three-worlds.md`](./cursor-shape-a-vs-three-worlds.md) v1.1.0 DECISION.**
+> **SUPERSEDED 2026-05-18 by [`cursor-shape-a-vs-three-worlds.md`](./cursor-shape-a-vs-three-worlds.md) v1.2.0 IMPLEMENTED.**
 >
 > The Three-Worlds architecture in this doc was chosen against a phantom
 > alternative. The stated Shape A rejection — "Swift offers no way to make
@@ -22,16 +22,32 @@ scope: ecosystem-wide
 > (`ownership-borrow-protocol-unification.md` v1.0.0) — sidesteps the
 > discriminator entirely.
 >
-> The implementation arc landed 2026-05-18: `Byte.Borrowed` now exists in
-> `swift-byte-primitives` (Case B conformer parallel to `String.Borrowed`),
-> `swift-cursor-primitives` is reshaped as a unified `Cursor<Storage,
-> PositionTag>` generic struct (no more `Cursor.Span<DomainTag>` distinct
-> shape), and `Binary.Bytes.Input.View` / `Lexer.Scanner` retarget to the
-> new shape. BENCH-011 replay GREEN at parity across all probes.
+> The implementation arc landed 2026-05-18 in two refinements over the same
+> day. **Refinement 1 (morning, v1.1.0 DECISION shape)**: `Byte.Borrowed`
+> landed in `swift-byte-primitives` (Case B conformer parallel to
+> `String.Borrowed`); `swift-cursor-primitives` reshaped as a two-generic
+> `Cursor<Storage: ~Copyable & ~Escapable, PositionTag: ~Copyable>` generic
+> struct (replacing the prior `Cursor.Span<DomainTag>` enum-namespaced
+> shape); `Binary.Bytes.Input.View` / `Lexer.Scanner` retargeted to
+> `Cursor<Byte.Borrowed, Byte>` / `Cursor<Byte.Borrowed, Text>`.
+> **Refinement 2 (afternoon, v1.2.0 IMPLEMENTED shape)**: principal observed
+> the two-generic shape was structurally redundant — when `DomainTag`
+> already conforms to `Ownership.Borrow.\`Protocol\`` with a specific
+> `Borrowed` type, the explicit Storage parameter restated information
+> already encoded by the conformance. The single-generic refinement:
+> `Cursor<DomainTag: Ownership.Borrow.\`Protocol\` & ~Copyable>` with storage
+> derived as `DomainTag.Borrowed`. Call sites collapse from
+> `Cursor<Byte.Borrowed, Byte>(span)` to `Cursor<Byte>(span)` and from
+> `Cursor<Byte.Borrowed, Text>(...)` to `Cursor<Text>(...)`. Added `Text:
+> Ownership.Borrow.\`Protocol\`` with `typealias Borrowed = Byte.Borrowed`
+> (text storage IS bytes; principled domain-identity statement). BENCH-011
+> replay GREEN at parity across all probes after BOTH refinements.
 >
 > This doc's SLR, prior art, theoretical grounding, formal semantics, and
 > empirical validation sections survive as historical analysis input. The
-> Three-Worlds architectural verdict is superseded.
+> Three-Worlds architectural verdict is superseded; see
+> `cursor-shape-a-vs-three-worlds.md` v1.2.0 §Implementation Outcomes for
+> the landing details.
 >
 
 ## Context
@@ -1446,6 +1462,7 @@ The recommendation aligns with the user's stated preference (2026-05-17): cursor
 
 ## Changelog
 
+- **v1.6.0** (2026-05-18): Status remains SUPERSEDED — single-generic refinement of the successor `cursor-shape-a-vs-three-worlds.md` (v1.1.0 DECISION → v1.2.0 IMPLEMENTED) lands. Cursor's shape further collapses from two-generic `Cursor<Storage, PositionTag>` (v1.5.0 supersession framing) to single-generic `Cursor<DomainTag: Ownership.Borrow.`Protocol` & ~Copyable>` — storage is now derived as `DomainTag.Borrowed` via the protocol's associated type rather than a separate generic parameter. Call sites collapse `Cursor<Byte.Borrowed, Byte>(span)` → `Cursor<Byte>(span)` and `Cursor<Byte.Borrowed, Text>(...)` → `Cursor<Text>(...)`. Added `Text: Ownership.Borrow.`Protocol`` conformance with `Borrowed = Byte.Borrowed` (principled domain-identity — text storage IS bytes). Implementation: swift-text-primitives 190fb64, swift-cursor-primitives b4dc49e, swift-binary-parser-primitives a6fbf075, swift-lexer-primitives 511d06e. BENCH-011 replay GREEN at parity across all four probes (ratios 0.998–0.999); ecosystem build gate clean across 8 packages (~990 tests pass). The SUPERSEDED banner is updated to point at the v1.2.0 successor and document both refinements 1 (two-generic) and 2 (single-generic) within the 2026-05-18 same-day landing. No change to the doc's analytical content; the supersession verdict is unchanged. W1/W3 (owned-storage Worlds) remain explicitly deferred — the single-generic protocol bound forecloses "one cursor type for all three Worlds" option A; Phase 4 dispatch decides between a sibling owned-cursor type and a more general protocol bound.
 - **v1.5.0** (2026-05-18): SUPERSEDED by `cursor-shape-a-vs-three-worlds.md` v1.1.0 DECISION. Three-Worlds architecture replaced by Shape A — a single generic `Cursor<Storage, PositionTag>` type whose Copyable/Escapable attributes inherit from Storage via Tagged-style conditional conformance. The v1.4.0 doc's Shape A rejection reasoning ("Swift offers no way to make Escapable conditional on a generic parameter") is empirically refuted; the actual narrower Swift constraint (no Mode-discriminator conditional conformance) doesn't block Shape A because Storage-as-borrow-carrier — using the institute's existing `Ownership.Borrow.\`Protocol\`` framework (`ownership-borrow-protocol-unification.md` v1.0.0) and a new `Byte.Borrowed` Case B conformer in swift-byte-primitives — sidesteps the discriminator entirely. The Three-Worlds inventory + SLR + theoretical grounding sections survive as historical analysis input; the architectural verdict is superseded. Implementation arc landed 2026-05-18: Byte.Borrowed in `swift-byte-primitives` (commit `c0e50aa` + public-span amend `9e0bd46`), `swift-cursor-primitives` reshape (commit `64717b2`), `swift-binary-parser-primitives` retarget (commit `65bcdfd0`), `swift-lexer-primitives` retarget (commit `25dddd1`). BENCH-011 replay GREEN — all four probes at parity (ratios 0.95-1.00); 216 swift-json tests pass, 6 swift-lexer tests pass, 69 binary-parser tests pass, 48 lexer tests pass. Phase 4 Shape ι expansion under the new shape collapses to typealiases + conditional extensions on the unified Cursor; reframed as future-work follow-on. The successor doc `cursor-shape-a-vs-three-worlds.md` is the canonical reference; this v1.4.0 → v1.5.0 transition is a status update preserving the analytical content of the earlier arc.
 - **v1.4.0** (2026-05-17): **IMPLEMENTED (Shape γ)** — Phases 0-3 of Shape γ landed under principal supervision across `swift-primitives/swift-cursor-primitives` (new repo, commits `0f57273` + `2bd7800`), `swift-primitives/swift-binary-parser-primitives` (commit `13e4dbf2`), `swift-primitives/swift-lexer-primitives` (commit `575e4cb`), and `swift-institute/Experiments` (BENCH-011 probe at `cursor-span-bench-011`, commit `3180870`). Phase 4 Shape ι expansion remains pending per the original authorization — gated on HANDOFF.md Wave 1 Item 2 settling. Adds §Implementation Outcomes (Phase 0 BENCH-011 GREEN results table + Phases 1/2a/2b/3 commit SHAs and build-gate evidence across 7 packages including swift-json's 216 tests). Adds §Implementation Notes (count retrofit Int → Tagged<Byte, Cardinal> was not in the original brief, source-transparency verified by build + grep; Binary 20-100× speedup root cause attributed to legacy `public var position: Int` storage preventing `@inlinable` method optimization — the cursor's `@usableFromInline internal var _position` pattern accidentally fixed a real perf defect, not benchmark anomaly or compiler magic). Updates §Implementation Gating Phase 1 API surface to include `seek(to:)` (added during Phase 1 for parser-machine backtracking — `Binary.Bytes.withBorrowed`'s alternative-frame branches restore the cursor to a previously-captured position when a branch fails; the legacy `public var position: Int` settable allowed this directly, the cursor analog is `seek(to:)`; class-(c) judgment within the spec's signature-latitude). No change to the Three-Worlds type structure verdict, the SE-0503 finding, the obsolescence of Lifetime Dependent Borrowed Cursors.md's structural-constraint claim, the inventory of six L1 cursor primitives, or the §Principal Authorization. Phase 4 dispatch opens as a separate follow-on.
 - **v1.3.0** (2026-05-17): **DECISION** — Principal authorized choice C on 2026-05-17: Shape γ as the immediate move (Phases 0-3) **with Shape ι expansion explicitly scheduled as a committed Phase 4 follow-on arc**. Adds §Principal Authorization section recording the authorization, binding decisions, sole technical fallback (BENCH-011 unmitigable specialization regression voids ι expansion via Shape ε fallback on W2), and what the authorization does/does-not do. Updates §Implementation Gating: Phase 4 reframed from "evaluate Shape ι expansion" (v1.2.0) to "execute Shape ι expansion" (v1.3.0). Technical gates (BENCH-011 evidence; Item 2's settled outcome) reframed as inputs to Phase 4's *shape* (single-package vs split-package; W3's consolidated typed-input cursor identity) rather than gates on its *commitment*. Decision Matrix updated to mark Shape γ as authorized for Phases 0-3 and Shape ι as authorized as committed Phase 4 follow-on. Package naming `swift-cursor-primitives` is principal-authorized (the package is the eventual end-state home; no `swift-cursor-span-primitives` artificial restriction). No change to the Three-Worlds type structure verdict, the SE-0503 finding, the obsolescence of Lifetime Dependent Borrowed Cursors.md's structural-constraint claim, the inventory of six L1 cursor primitives, the SLR / prior art / theoretical grounding / formal semantics / empirical validation sections, or the Open Questions on detailed cursor-type naming. This Tier 3 arc closes as DECISION; the implementation arc opens as a separate dispatch.
