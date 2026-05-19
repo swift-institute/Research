@@ -308,6 +308,45 @@ foundational landing + the new structural blocker.
 | (b) Manual Codable per consumer | Each affected struct needs explicit `init(from:)` / `encode(to:)` that routes through `rawValue.underlying`. Mass per-consumer boilerplate. |
 | (c) Drop Codable conformance | Consumers like `RFC_791.Precedence: Codable` lose the auto-synthesized conformance. Likely unacceptable for spec types. |
 
+**RESOLVED 2026-05-19** (principal direction): **Option (a) — add `extension Byte: Codable`** in swift-byte-primitives, UInt8 wire form (encode as a JSON number identical to UInt8's encoding). Rationale:
+
+- No identity-discipline violation. Codable is a serialization conformance, orthogonal to the byte-vs-arithmetic axis. Q1 (UInt8 ≢ Byte.Protocol) and Q3 (Byte has no arithmetic) both intact.
+- Right level of conformance. Byte already has the foundational stdlib conformances (Equatable, Hashable, Comparable, ExpressibleByIntegerLiteral, Sendable, bitwise). Codable belongs in that same set — it's part of what makes a stdlib-respectable value type.
+- Tagged<X, Byte> inherits via Tagged's existing `Codable where Underlying: Codable` conditional conformance once Byte gains it.
+- Wire form: UInt8 number representation (`42`, not `{"underlying": 42}` or `"0x2A"`). Preserves wire compatibility with existing `[UInt8]` fields in spec-mirroring types — senders can migrate to `[Byte]` without breaking JSON consumers.
+
+**Implementation sketch**:
+
+```swift
+// swift-byte-primitives/Sources/Byte Primitives/Byte+Codable.swift
+extension Byte: Codable {
+    @inlinable
+    public init(from decoder: Decoder) throws {
+        try self.init(UInt8(from: decoder))
+    }
+
+    @inlinable
+    public func encode(to encoder: Encoder) throws {
+        try underlying.encode(to: encoder)
+    }
+}
+```
+
+Plus a round-trip test (encode → decode → equality).
+
+**Proactive audit while at it** — quick once-over of other likely-missing stdlib conformances on Byte before resuming the cascade. If the subordinate hits any of these as cascade blockers, bundle into the same commit as Codable (saves round-trips):
+
+| Conformance | Should Byte have it? | Note |
+|---|---|---|
+| Codable | **YES** (this disposition) | UInt8 wire form |
+| CustomStringConvertible | Verify — probably already has it | Decimal or hex representation? |
+| CustomDebugStringConvertible | YES if missing | Usually hex-formatted for byte values |
+| LosslessStringConvertible | Verify — if UInt8 has it, Byte should too (symmetric) | |
+| Strideable | **NO** | Stride would imply arithmetic — Q3 territory; intentional absence |
+| CaseIterable | **NO** | 256 cases is a misuse of the protocol |
+
+**Adjacent (NOT in this commit's scope)**: per `feedback_json_serializable_canonical.md`, the institute prefers `swift-json`'s `JSON.Serializable` over `Swift.Codable` for institute consumer types. Adding JSON.Serializable to Byte is a separate, smaller addition. Subordinate may bundle it with Codable in the same commit (recommended; both are foundational) or land separately later. Default: bundle.
+
 **Remaining cascade scope** (workspace-wide grep after foundational landing): **~50 files** across IETF (rfc-768, rfc-791, rfc-3596, rfc-4291, rfc-4648, rfc-5952, rfc-6068, rfc-6455, rfc-6531, rfc-6891, rfc-7301, rfc-7519, rfc-8200, rfc-8446, rfc-9293), ISO (iso-21320, iso-32000), INCITS (4-1986), and `swift-primitives/swift-ascii-primitives`. Each requires per-package container retype + body bridges; the Codable resolution above is the gating decision.
 
 **Landed (kept)**:
@@ -338,6 +377,8 @@ foundational landing + the new structural blocker.
 **Report for supervisor review**: `swift-institute/Research/2026-05-19-w2-byte-cascade-structural-issue.md` — proposes discrimination criterion ("full UInt8 → Byte, only UInt8 where truly appropriate") with sites-that-MUST-stay-UInt8 vs sites-that-MUST-retype-to-Byte tables, and recommends unifying W2+W3 into a single coupled cascade per consumer package.
 
 **Gates W3 dispatch**: BLOCKED pending principal adjudication on report's open questions (W2+W3 unification, scope expansion, `bytes(endianness:)` Byte-companion, ambiguous-case treatment).
+
+**Codable blocker — RESOLVED 2026-05-19** (principal direction): `extension Byte: Codable` AUTHORIZED with UInt8 wire form. See § Wave 2 — Outcome above for full disposition + implementation sketch + proactive audit guidance. Subordinate proceeds with: (1) land Byte+Codable in swift-byte-primitives; (2) bundle any other surfaced stdlib conformance gaps from the proactive audit table; (3) optionally bundle JSON.Serializable in the same commit; (4) resume per-package cascade across the ~50 remaining files.
 
 ### Wave 3 — Outcome
 
