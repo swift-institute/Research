@@ -335,6 +335,48 @@ Concrete RFC 791 type-by-type analysis:
 
 Per-RFC, the analysis differs. Per-package cascade work is **not mechanical** — it requires per-type judgment.
 
+**Cascade execution progress (2026-05-19)**:
+
+Two representative patterns established at `swift-ietf/swift-rfc-791@cde98cb`:
+
+- **Byte-domain (storage retype)**: `RFC_791.Flags` — storage retypes to Byte, error case associated value retypes, `[UInt8]` extension becomes `[Byte]` primary + `[UInt8]` `@_disfavoredOverload` forwarder. Pure bitwise → clean retype.
+- **Arithmetic-domain (witness-only retype)**: `RFC_791.TTL` — storage stays `UInt8` (decremented per hop), witness signature retypes to `Buffer.Element == Byte`, body bridges via `firstByte.underlying` at the conformance boundary + `bytes(endianness: .big)` for serialization.
+
+The two patterns cover the universe; remaining ~50 files each fit one or the other after per-type analysis. Per-file work is **NOT mechanical** — each requires inspecting the rawValue usage (arithmetic-domain? bit-field? opaque?) before applying the appropriate pattern.
+
+**Remaining cascade scope** (~50 files):
+
+| Package | Files | Predominant pattern |
+|---|---|---|
+| swift-ietf/swift-rfc-768 | 6 | UInt16 (Port/Length/Checksum) — witness retype + `bytes(endianness:)` |
+| swift-ietf/swift-rfc-791 | 10 (Flags/TTL done) | Mixed — needs per-type judgment per table above |
+| swift-ietf/swift-rfc-3596 | 1 | UInt32 (IPv6 AAAA — bitwise) |
+| swift-ietf/swift-rfc-4291 | 1 | UInt32 (IPv6 — bitwise) |
+| swift-ietf/swift-rfc-4648 | 11 | Base16/32/64 encoders — likely [Byte] payload retypes |
+| swift-ietf/swift-rfc-5952 | 1 | IPv6 formatting — witness only |
+| swift-ietf/swift-rfc-6068 / 6531 | 2 | Email/mailto — likely string-domain witnesses |
+| swift-ietf/swift-rfc-6455 | 1 | WebSocket Frame — UInt16/UInt32 fields |
+| swift-ietf/swift-rfc-6891 | 2 | DNS OPT — UInt16 fields |
+| swift-ietf/swift-rfc-7301 | 2 | TLS ALPN — opaque bytes |
+| swift-ietf/swift-rfc-7519 | 1 | JWT — opaque `[UInt8]` payloads → `[Byte]` |
+| swift-ietf/swift-rfc-8200 | 2 | IPv6 ext header — UInt8/UInt16 fields |
+| swift-ietf/swift-rfc-8446 | 4 | TLS — opaque + UInt16/UInt32 |
+| swift-ietf/swift-rfc-9293 | 7 | TCP — UInt16/UInt32 fields + flags |
+| swift-incits/swift-incits-4-1986 | 1 | INCITS_4_1986.ASCII surface |
+| swift-iso/swift-iso-21320 | 1 | ISO 21320 CRC32 |
+| swift-iso/swift-iso-32000 | 10 | PDF — mixed (some [UInt8] opaque payloads, some character processing) |
+| swift-primitives/swift-ascii-primitives | 2 | ASCII.Classification + ASCII.Serialization — likely byte-domain |
+
+Total: ~55 remaining files. Each gets ~10–30 minutes of per-type analysis + edit + build verification + commit. **Estimated total**: 12–25 hours of focused execution work.
+
+**Per-package execution pattern** (established as the rubric for remaining work):
+
+1. List Binary.Serializable conformers in the package.
+2. For each, classify rawValue domain: arithmetic / bit-field / opaque / 16+-bit / tuple-of-octets / [UInt8]-payload.
+3. Apply the appropriate pattern per the discrimination table above.
+4. `swift build` in the package; fix any consumer-site bridges that surface.
+5. Commit per package with the pattern citation.
+
 | Disposition option | Implication |
 |---|---|
 | (a) Add `Codable` to Byte | Unblocks cascade. Byte gains stdlib-Codable conformance routing through UInt8 wire form. Single-commit change in swift-byte-primitives. |
