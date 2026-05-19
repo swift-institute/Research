@@ -730,6 +730,105 @@ ascii-primitives:       1  (forwarder; effectively done)
 - Stdlib idioms (`String(ascii:)`, `String(decoding:as:UTF8.self)`, MaskingKey.apply that takes UInt8) bridged via `.underlying` at consumer call site rather than retyping the stdlib-shaped API.
 - Package.swift dep gap surfaced for iso-21320: `Standard_Library_Extensions` does NOT re-export `Byte`; packages without transitive byte-primitives must add it as direct dep.
 
+## Post-W2 L1 byte-domain cleanup (parallel arc C)
+
+> Companion arc to swift-linter byte-discipline (A) and consumer cascade (B).
+> Disjoint territory: L1 only (`swift-primitives/*`). Targets the
+> parameter / storage / return surface that survived W2's witness-signature
+> retype. Per `HANDOFF-l1-byte-domain-cleanup.md` (2026-05-19).
+>
+> **Migration principle** — INPUT-side wins on generic relaxation:
+> 1. `some Sequence<some Byte.\`Protocol\`>` (most permissive)
+> 2. `some Collection<some Byte.\`Protocol\`>`
+> 3. `some Sequence<Byte>` / `some Collection<Byte>`
+> 4. `[Byte]` (concrete; fallback when caller necessarily passes Array)
+>
+> Storage + returns: concrete (`[Byte]` / `ContiguousArray<Byte>`).
+> ~Copyable element support: institute `Sequence.\`Protocol\`` /
+> `Collection.\`Protocol\`` (NOT Swift.Sequence/Collection).
+> No push (program rule).
+
+### Checkpoint — Final (2026-05-19)
+
+**12 commits across 11 packages** — all on `main`, no push.
+
+| # | Package | Commit | Tier | Files |
+|---|---|---|---|---|
+| 1 | swift-byte-parser-primitives | `1438f1b` | B | Byte.Input.View.swift (`starts(with:)` INPUT relaxation, `copyToOwned` storage retype) + Parser.Builder+Literal.swift (`Input == ArraySlice<Byte>`) |
+| 2 | swift-byte-serializer-primitives | `860ca99` | B + folded | Byte.Literal.Serializer + Byte.Serializer (sibling) + Serializer.Builder + 2 test files |
+| 3 | swift-input-primitives | `0636fa5` | B (doc) | Input.Slice.swift — generic Collection, only doc-example UInt8→Byte |
+| 4 | swift-binary-parser-primitives | `379d148d` | B + D | Parser.Parser+parse.swift (doc) + Byte.Input.View Tests.swift (`as [Byte]` disambig) |
+| 5 | swift-byte-parser-primitives | `a22a871` | B (Wave 3 pattern) | Parser.Builder+Literal.swift — relocated Parser.Take.Builder byte-array overload (`Input == ArraySlice<Byte>`) |
+| 6 | swift-parser-primitives | `5aba2a8` | B | Parser.Take.Builder.swift — byte-array literal overload moved out (no byte-domain dep) |
+| 7 | swift-serializer-primitives | `e7a22c7` | B | Serializer.Literal.swift (Buffer + storage + init) + tests + Package.swift dep |
+| 8 | swift-binary-base-primitives | `d8a6d80` | B + D + folded decode | 3 Encode + 3 Decode (folded sibling) + Binary.Base.16.Tests + Package.swift dep |
+| 9 | swift-render-primitives | `cd4b975` | B + folded protocol | Sink.Protocol + Buffered + Chunked + Package.swift dep |
+| 10 | swift-input-primitives | `89cfcbf` | D | Input.Buffer Tests.swift — byte parsing scenario `[Byte]` + Package.swift dep |
+| 11 | swift-ascii-primitives | `6a00928` | G | ASCII.Classification+Collection.swift — primary retype `Byte` → `ASCII.Code` (UInt8 forwarders preserved) |
+| 12 | swift-test-primitives | `d3a48d6` | G | Test.Attachment.swift (storage + init INPUT relaxation) + Tests + Package.swift dep |
+
+### Per-site discrimination axis + generic-constraint choice
+
+**Tier B (12 enumerated source files + sibling folds)**:
+
+| File | Site | Axis | Generic-constraint choice |
+|---|---|---|---|
+| Byte.Input.View.swift | `starts(with:)` parameter | byte-domain | `some Sequence<some Byte.\`Protocol\`>` (1: most permissive) |
+| Byte.Input.View.swift | `copyToOwned()` accumulator | byte-domain storage | `[Byte]` concrete (4: storage rule); boundary via `.map(\.underlying)` for Byte.Input init |
+| Parser.Builder+Literal.swift | `Input == ArraySlice<UInt8>` constraint | byte-domain | `ArraySlice<Byte>` concrete (4) |
+| Byte.Literal.Serializer.swift | Buffer.Element constraint | byte-domain | `Buffer.Element == Byte` concrete (4 of brief variant for type-level constraint) |
+| Byte.Literal.Serializer.swift | storage `bytes: [UInt8]` | byte-domain storage | `[Byte]` concrete |
+| Byte.Literal.Serializer.swift | `init(_ bytes:)` | byte-domain | `some Sequence<some Byte.\`Protocol\`>` (1) |
+| Byte.Serializer.swift (folded) | Buffer.Element constraint | byte-domain | `Buffer.Element == Byte` concrete |
+| Serializer.Builder+Literal.swift | `where B.Element == UInt8` constraint | byte-domain | `B.Element == Byte` concrete |
+| Input.Slice.swift | none (generic over `Base: ~Copyable`); doc example only | n/a | doc example UInt8→Byte |
+| Parser.Parser+parse.swift | none (generic over Parser.Protocol); doc example only | n/a | doc example UInt8→Byte |
+| Parser.Take.Builder.swift | byte-array literal overload | byte-domain | RELOCATED to swift-byte-parser-primitives per Wave 3 byte-extraction pattern |
+| Serializer.Literal.swift | Buffer constraint + storage + init | byte-domain | `Buffer.Element == Byte` + `[Byte]` storage + `some Sequence<some Byte.\`Protocol\`>` init |
+| Property+Binary.Base.16.Encode.swift | bytes + alphabet parameters | byte-domain | `borrowing [Byte]` concrete (4: hot-path encoders) |
+| Property+Binary.Base.32.Encode.swift | bytes + alphabet + pad | byte-domain | `borrowing [Byte]`, `pad: Byte?` |
+| Property+Binary.Base.64.Encode.swift | bytes + alphabet + pad | byte-domain | `borrowing [Byte]`, `pad: Byte?` |
+| Property+Binary.Base.{16,32,64}.Decode.swift (folded) | alphabet + pad + return | byte-domain | `borrowing [Byte]`, `pad: Byte?`, return `[Byte]?` |
+| Render.Async.Sink.Protocol.swift (folded) | write requirements | byte-domain | `some Sequence<Byte> & Sendable`, `byte: Byte` (concrete; protocol requirement clarity) |
+| Render.Async.Sink.Buffered.swift | channel element + buffer + write | byte-domain | `ArraySlice<Byte>` channel, `[Byte]` storage |
+| Render.Async.Sink.Chunked.swift | stream element + buffer + append | byte-domain | `AsyncStream<ArraySlice<Byte>>`, `[Byte]` storage, `S.Element == Byte` |
+
+**Tier D (test files)**:
+
+| File | Disposition |
+|---|---|
+| Byte.Input.View Tests.swift | DONE (in 379d148d) — `as [Byte]` disambiguation on 2 array-literal call sites |
+| Binary.Base.16.Tests.swift | DONE (in d8a6d80) — `hexAlphabet: [Byte]`, bytes literal `[Byte]` |
+| Input.Buffer Tests.swift | DONE (in 89cfcbf) — `byte parsing scenario` test only (rest is generic over Int) |
+| Parser.Test.Bytes.swift | **SURFACE-AND-STOP** (class-c) — test support type with cross-package consumers in swift-parser-machine-primitives `Helpers.swift`; migration to Byte cascades into out-of-arc test infrastructure |
+| Byte.Input Tests.swift | **SURFACE-AND-STOP** (non-breaking) — test compiles unchanged because Byte.Input's `init(_ bytes: [UInt8])` accepts UInt8 literals; identity-only retype has no Tier B baseline dependency |
+
+**Tier G (ASCII-domain or special)**:
+
+| File | Disposition |
+|---|---|
+| ASCII.Classification+Collection.swift | DONE (in 6a00928) — 11 primary predicates retype `Bytes.Element == Byte` → `Bytes.Element == ASCII.Code`; existing 11 @_disfavoredOverload UInt8 forwarders preserved |
+| Test.Attachment.swift | DONE (in d3a48d6) — `bytes: [UInt8]` storage → `[Byte]`; INPUT `some Sequence<some Byte.\`Protocol\`>`; brief's "surface-and-stop if ambiguous" check passed (zero workspace consumers) |
+| ASCII.Decimal.Float.Parser.swift | **SURFACE-AND-STOP** (class-c) — public `static func parse(_ span: borrowing Swift.Span<UInt8>)` has cross-package consumer in `swift-foundations/swift-json/Sources/JSON/JSON.Decode.Implementation.swift:671`. Body uses extensive UInt8 arithmetic (`b &- 0x30` digit extraction); ASCII.Code retype forces `.underlying` rewrites throughout. Both factors push migration into arc B's IETF/ISO/foundations consumer-cascade territory. |
+| ASCII.Decimal.Float.Slow.swift | **SURFACE-AND-STOP** — `slowPath` is the fallback for Parser.swift's Span entry; migrating in isolation desynchronizes the call signature. Defer to coordinated Tier-G follow-up alongside Parser.swift. |
+| Binary.Base.62.Alphabet.swift | **SURFACE-AND-STOP** (class-c cascade) — rubric "Base62 alphabet = ASCII.Code; raw input = Byte" requires retyping `init(_ bytes: [UInt8])` + `encode(_:UInt8)` + `decode(_:UInt8) -> UInt8?` + `isValid(_:UInt8)` + `encodeTable: [UInt8]` to ASCII.Code substrate. The cascade pulls in Property+Binary.Base.62.Encode.swift (`standardAlphabet`, `gmpAlphabet`, `invertedAlphabet` named alphabets + `callAsFunction(alphabet:)`) and Property+Binary.Base.62.Decode.swift (`digit(_:byte:)`, `isValid(_:byte:)`), plus extensive test rewrites in Binary.Base.62.{Alphabet,}.Tests.swift (which heavily use `UInt8(ascii: "X")` patterns). Substantive design work beyond the file's explicit enumeration in Tier G. |
+
+### Discrimination patterns established / refined
+
+- **INPUT-side most-permissive form**: `some Sequence<some Byte.\`Protocol\`>` is the spec preference; works whenever the body only iterates (`for byte in bytes`). Compares via `.byte` accessor to unify with concrete `Byte` (`observed == byte.byte`).
+- **Storage rule applies to type-field storage, not transient local accumulators in function bodies** — when a function's local `var bytes` immediately feeds an out-of-scope init taking `[UInt8]`, accumulating `[Byte]` with `.map(\.underlying)` bridge at the boundary is the right shape (preserves byte-domain identity in the visible code path without forcing out-of-scope edits).
+- **Concrete `[Byte]` (option 4) is justified** for hot-path encoders/decoders where the algorithms require RandomAccessCollection with Int Index (`bytes[i]`, `bytes[i+1]`, `bytes[i+2]` peek-ahead in Base64). Generic `some Collection<Byte>` doesn't satisfy without Int-Index constraint; Array is the natural input shape from callers.
+- **Sibling fold pattern**: when a Tier B file's public API is the type-level constraint of a struct with sibling files in the same package (e.g., Byte.Literal.Serializer ↔ Byte.Serializer; Property+Binary.Base.N.Encode ↔ Property+Binary.Base.N.Decode; Sink.Buffered ↔ Sink.Chunked ↔ Sink.Protocol), folding the sibling preserves package coherence at commit time per [HANDOFF-019] commit-as-you-go and [SUPER-046] alpha-pace.
+- **Wave 3 byte-extraction pattern carried forward**: byte-domain overloads in byte-domain-agnostic packages (swift-parser-primitives, formerly swift-serializer-primitives) move out to byte-aware packages rather than adding `swift-byte-primitives` as a new architectural dep upstream. swift-parser-primitives' Parser.Take.Builder byte-array literal overload relocated to swift-byte-parser-primitives' Parser.Builder+Literal.swift.
+- **Package.swift dep additions** (per-package, path-form per swift-package skill pre-publishable default): swift-serializer-primitives, swift-binary-base-primitives, swift-render-primitives, swift-input-primitives, swift-test-primitives each add `swift-byte-primitives` path dep + `Byte Primitives` product to the affected target. Each test target additionally needs `Byte Primitives` because `MemberImportVisibility` requires test files importing `Byte` directly.
+- **Test-fix bundle scope**: tests that BREAK from Tier B source migrations (Byte.Input.View Tests, Binary.Base.16.Tests, Byte.Literal.Serializer Tests, Byte.Serializer Tests, Serializer.Literal Tests) are bundled with the source migration in the same commit. Tests that need only byte-domain identity clarification (Byte.Input Tests, Parser.Test.Bytes) without breaking are left for arc-coordinated follow-up.
+
+### Class-c surface for principal
+
+1. **Parser.Test.Bytes.swift** — Tier D entry on the brief but its cascade through swift-parser-primitives/Tests/Support/{Parser.Test.Iterator,Parser.Test.Input}.swift AND swift-parser-machine-primitives' Helpers.swift (cross-package test helpers) makes migration scope substantially larger than a single-file retype. Recommend: bundle Parser.Test.Bytes + Iterator + Input + cross-package Helpers into a single coordinated test-infrastructure migration arc after lint rules ([API-BYTE-003] / [API-BYTE-004]) have surfaced the broader cascade scope.
+2. **ASCII.Decimal.Float.{Parser,Slow}.swift** — Tier G "→ ASCII.Code" rubric. Cross-package consumer in swift-foundations/swift-json's JSON.Decode.Implementation.swift:671 (`ASCII.Decimal.Float.parse(span)` with `Span<UInt8>`) puts this in arc B's foundations consumer-cascade territory by structural necessity. Defer to coordinated arc-B + arc-C handoff or post-W4 arc.
+3. **Binary.Base.62.Alphabet.swift** — Tier G "Base62 alphabet = ASCII.Code; raw input = Byte" rubric. Single-file enumeration in brief but the type's API surface is consumed by Property+Binary.Base.62.{Encode,Decode}.swift (named alphabets, byte-level lookup APIs) AND extensively used in Base62 tests with `UInt8(ascii: "X")` patterns. Migration requires 3 source files + 2 test files coordinated, plus consumer-call-site retypes — beyond the explicit brief enumeration.
+
 ### Wave 4 — Outcome
 
 *To be stamped by W4 executor.*
