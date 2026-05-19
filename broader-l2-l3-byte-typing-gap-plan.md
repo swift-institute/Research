@@ -479,6 +479,125 @@ Plus a round-trip test (encode → decode → equality).
 
 *To be stamped by W3 executor.*
 
+## Post-W2 swift-linter byte-discipline arc (parallel arc A)
+
+> Companion arc to the consumer cascade sweep (arc B). Authors six
+> UInt8/Byte discipline lint rules that encode the W2 discrimination
+> rubric mechanically, plus a new `byte-discipline` skill housing
+> `[API-BYTE-001..006]`. Per `HANDOFF-swift-linter-byte-discipline.md`
+> (2026-05-19). Arc A's output drives arc B's per-package prioritization;
+> the two arcs are complementary.
+
+### Phase 1 — swift-linter CLI restoration: DEFERRED structurally
+
+Diagnosis (full trace in `HANDOFF-swift-linter-byte-discipline.md` §
+Findings): swift-linter CLI build fails because its transitive
+dependency graph reaches `swift-rfc-791/Sources/RFC 791/RFC_791.TypeOfService.swift`
+(a W2 cascade-broken consumer file) via the chain
+`swift-linter → swift-uri-standard → swift-rfc-3986 → swift-ipv4-standard → swift-rfc-791`.
+Cascade-broken files are Do-Not-Touch; the structural fix is W2
+completion (arc B's work). All three rule packages
+(`swift-linter-rules`, `swift-institute-linter-rules`,
+`swift-primitives-linter-rules`) build clean independently — Phase 2
+deliverable path unaffected.
+
+### Phase 2 — Six byte-discipline lint rules: COMPLETE
+
+New pack `Institute Linter Rule Byte` at
+`swift-foundations/swift-institute-linter-rules`. All six rules
+registered in `Lint.Rule.Bundle.institute` per [PROMOTE-006] atomic
+landing. **51 tests in 34 suites pass** via `swift test --filter Byte`
+(0.055 s).
+
+| ID | Rule | Encodes |
+|---|---|---|
+| [API-BYTE-001] | `uint8 conforms to byte protocol` | Q1 guard — byte-protocol-capability-marker v1.1.0 |
+| [API-BYTE-002] | `byte conforms to arithmetic protocol` | Q3 guard — byte-arithmetic-conformance v1.0.0 RECOMMENDATION ζ |
+| [API-BYTE-003] | `binary serializable uint8 witness` | W2 protocol-retype cascade guard |
+| [API-BYTE-004] | `binary serializable rawvalue uint8` | W2 discrimination-rubric per-site review-prompt |
+| [API-BYTE-005] | `uint8 ascii extension` | W5 wrapper-regression guard |
+| [API-BYTE-006] | `uint8 forwarder missing disfavored` | Stdlib-interop forwarder attribute discipline |
+
+Per-rule outcome records:
+`swift-institute/Audits/PROMOTE-API-BYTE-{001..006}-2026-05-19.md`.
+Validation receipts:
+`swift-foundations/swift-linter/Research/promote-API-BYTE-{001..006}-validation-2026-05-19.md`.
+
+### Ground-truth probe table (PRE-arc-B-checkpoint-1 snapshot)
+
+Snapshot timestamp: **2026-05-19, early in the day, before arc B's
+Checkpoint 1 landings** (`b6b95f8` / `74da3d5` / `21892e2` / `ba16b6d` /
+`b5a3bf6` per arc B § Checkpoint 1). Regex pre-scan upper bound (AST
+fire counts after `@_disfavoredOverload` exemption will be lower). Read-
+only `grep` against `Sources/` — no source modifications by arc A.
+
+| Package | R1 (UInt8:Byte.Protocol) | R2 (Byte:arithmetic) | R3 (Element==UInt8) | R4 (rawValue:UInt8) | R5 (UInt8.ASCII) | R6 (Byte-domain ext) |
+|---------|---:|---:|---:|---:|---:|---:|
+| swift-rfc-791 | 0 | 0 | 0 | **7** | 0 | 0 |
+| swift-rfc-768 | 0 | 0 | 0 | 0 | 0 | 0 |
+| swift-rfc-9293 | 0 | 0 | **13** | **6** | 0 | 0 |
+| swift-rfc-7519 | 0 | 0 | **1** | 0 | 0 | 0 |
+| swift-rfc-4648 | 0 | 0 | **52** | 0 | 0 | 0 |
+| swift-iso-32000 | 0 | 0 | **73** | 0 | 0 | 0 |
+| swift-incits-4-1986 | 0 | 0 | **6** | 0 | 0 | 0 |
+| swift-ascii-primitives | 0 | 0 | **15** | 0 | 0 | 0 |
+| swift-binary-primitives | 0 | 0 | 3 | 0 | 0 | 8 |
+| swift-foundations/swift-ascii | 0 | 0 | **1** | 0 | 0 | 0 |
+
+**Arc-B coordination note**: Arc B's Checkpoint 1 (after this snapshot)
+landed `swift-rfc-791` (10 remaining types per arc B's Checkpoint 1
+table), `swift-rfc-768`, `swift-rfc-4291`, `swift-rfc-8200`, and
+`swift-ascii-primitives`. Arc B's End-of-tier-0 workspace grep shows
+rfc-791 / rfc-768 / rfc-4291 / rfc-8200 / ascii-primitives at 0 post-
+Checkpoint-1. The arc A probe table above represents pre-sweep state
+and is preserved verbatim as the leverage-point baseline for the rules'
+calibration. Future arc B checkpoints can compare against the same
+baseline.
+
+R1/R2/R5 = 0 ecosystem-wide both pre- and post-Checkpoint-1 (no
+existing UInt8→Byte.Protocol or Byte→arithmetic violations; W5 wrapper
+not re-introduced post-W4-deletion).
+
+### Skill landing
+
+New skill `byte-discipline` at
+`swift-institute/Skills/byte-discipline/SKILL.md` houses
+`[API-BYTE-001]` through `[API-BYTE-006]`. The `[API-BYTE-004]` body
+carries the W2 discrimination rubric (byte-vs-arithmetic-domain axis)
+as the load-bearing principle the six rules collectively encode.
+`swift-institute/CLAUDE.md` Skill Routing table updated to route
+"byte-domain API surface decisions" → `byte-discipline`, IDs
+`[API-BYTE-*]`.
+
+Skill citation chain:
+- `byte-protocol-capability-marker.md` v1.1.0 (Q1) → [API-BYTE-001] + [API-BYTE-005]
+- `byte-arithmetic-conformance.md` v1.0.0 (Q3) → [API-BYTE-002] + [API-BYTE-004] arithmetic-domain disposition
+- W2 protocol-retype cascade (`swift-binary-primitives@b121c0e`) → [API-BYTE-003] + [API-BYTE-004] byte-domain disposition
+- W1 BSLI forwarder pattern → [API-BYTE-006]
+
+### Arc-A / Arc-B coordination
+
+Arc A produces rules; arc B consumes them as work prioritization. The
+ground-truth probe table above is arc B's calibration baseline.
+Specifically:
+
+| Rule | Arc-B usage |
+|---|---|
+| [API-BYTE-001] | Future-prevention; arc B does not encounter active firings |
+| [API-BYTE-002] | Future-prevention; arc B does not encounter active firings |
+| [API-BYTE-003] | **Primary surfacing mechanism** — fires at every Wave 2 witness signature still on UInt8 substrate; per-package fire-count is the work-queue prioritization input |
+| [API-BYTE-004] | **Per-site disposition surfacing** — fires at every conformer whose `rawValue: UInt8` needs domain classification under the W2 rubric (arithmetic-domain stays UInt8; byte-domain retypes to Byte) |
+| [API-BYTE-005] | Future-prevention; arc B does not re-introduce the wrapper |
+| [API-BYTE-006] | Future-prevention with low-batch-fix risk; arc B should preserve the `@_disfavoredOverload` discipline when adding new byte-domain extensions |
+
+The downstream sweep arc (arc B) requires linter-CLI availability OR
+test-target validation harness per `lint-rule-promotion` Phase 6
+Detection method. swift-linter CLI restoration depends on (a)
+completing the sweep (chicken-and-egg) OR (b) one-off harness execution
+per sweep target. Arc B chose path (b) — manual per-package execution
+under the rubric without depending on CLI. The arc-A rules remain as
+mechanical regression guards for any future drift.
+
 ## Post-W2 consumer cascade sweep (parallel arc B)
 
 > Parallel arc to the swift-linter byte-discipline arc (A) per
