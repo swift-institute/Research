@@ -134,8 +134,9 @@ W5 and W6 may execute in parallel post-W4.
 | ID | Question | Disposition |
 |---|---|---|
 | OQ-1 | swift-incits-4-1986 `[UInt8]+INCITS_4_1986.ASCII.swift` — retype to what? | **RESOLVED 2026-05-19** (principal direction, revised). **RETYPE TO `ASCII.Code` substrate** — NOT `[Byte]`. INCITS 4-1986 IS the US-ASCII spec; canonical typed substrate is `ASCII.Code` (per byte-protocol-capability-marker + byte-arithmetic-conformance + ascii-code-structural-shape research). Parent-arc framing of "deliberate UInt8" was incorrect — the file uses the UInt8.ascii wrapper being deprecated in W4. Precedent: `swift-foundations/swift-ascii/Sources/ASCII/ASCII.Code+INCITS_4_1986.swift` already exists as canonical pattern. Migration: `[UInt8]+INCITS_4_1986.ASCII.swift` → `[ASCII.Code]+INCITS_4_1986.ASCII.swift` (extension target retyped); `UInt8.ascii.lf` consumer call sites → `ASCII.Code.lf` |
-| OQ-2 | `swift-binary-primitives/Binary.Parseable.swift` symmetric UInt8 lock — W2 scope? | **RESOLVED 2026-05-19** (principal direction). **INCLUDE as W2.5** — same-package structural pair; splitting Serializable/Parseable creates protocol-boundary inconsistency W3 would have to repair |
-| OQ-3 | `swift-foundations/swift-file-system/.../Binary.Serializable.swift` extension — in scope? | **RESOLVED 2026-05-19** (principal direction). **INCLUDE in W2** — downstream extension of the parent protocol; compile-forced anyway per [HANDOFF-035] cascade-termination. The 89-consumer set is the de facto W2 scope |
+| OQ-2 | `swift-binary-primitives/Binary.Parseable.swift` symmetric UInt8 lock — W2 scope? | **PRINCIPAL-CONFIRMED 2026-05-19**. **INCLUDE in W2** (atomic cascade, NOT W2.5 split). Rationale: same-package symmetric protocol; atomic cascade preserves coherence. Splitting risks a temporary state where `Serializable` expects `Buffer.Element == Byte` and `Parseable` expects `Bytes.Element == UInt8`, which downstream conformers (RFC packages already migrated in the parent arc) would observe as an internal inconsistency |
+| OQ-3 | `swift-foundations/swift-file-system/.../Binary.Serializable.swift` extension — in scope? | **PRINCIPAL-CONFIRMED 2026-05-19**. **INCLUDE in W2**. Rationale: it's a conformance authoring site — compile-forced by the protocol substrate change; MUST be in the build gate |
+| OQ-2b | `swift-parser-primitives` Parser combinators — in scope? | **PRINCIPAL-CONFIRMED 2026-05-19**. **OUT of scope**. Different protocol family (`Parser_Primitives.Parser.\`Protocol\`` is `Input.Element`-typed, not `Binary.Serializable`). Previous cohort subagents already flagged this as a separate retyping arc; consistent disposition here |
 | OQ-4 | W5 host skill — `byte-protocol-capability-marker` or sibling? | **RESOLVED 2026-05-19** (principal direction). **`code-surface` skill, new `[API-NAME-NNN]`** — rule constrains namespace shapes (forbids `extension UInt8` with `static var ascii`), squarely [API-NAME-*] domain. Cite byte-protocol-capability-marker research as provenance. Reserve dedicated byte-substrate skill if >2 rules accrue in this domain |
 | OQ-5 | swift-rfc-7519 JWT public `[UInt8]` storage — retype (breaking) or bridge? | **RESOLVED 2026-05-19** (principal direction). **RETYPE to `[Byte]`** (breaking public API accepted). Pre-1.0 per `feedback_correctness_and_evergreen.md`; JWT bytes are byte-domain. Consumers constructing from `[UInt8]` use BSLI bridge `[Byte](source)` at FFI boundary |
 
@@ -216,7 +217,13 @@ W5 and W6 parallel post-W4. Per-wave handoffs at workspace root
 
 - swift-byte-primitives `b2d2668` — phase boundary checkpoint per [HANDOFF-019] commit-as-you-go; all 6 W1 files in a single commit (Array+Byte refactor + Collection+Byte + Numeric+Byte + 2 test files + bsli-gap-inventory.md update). Reviewed clean by principal 2026-05-19.
 
-**Gates W2 dispatch**: W2 (`Binary.Serializable` parent retype) **HOLD** pending principal answer on Parseable / File.System scope — see § Open questions OQ-2 + OQ-3 (currently carry investigator recommendations; principal direction needed before W2 fires to set the termination criterion and [HANDOFF-035] ecosystem-wide build gate's surface).
+**Gates W2 dispatch**: W2 **AUTHORIZED 2026-05-19** by principal. Scope confirmed:
+- `Binary.Serializable` parent retype (89 workspace consumers)
+- `Binary.Parseable` symmetric retype (same package, atomic cascade per OQ-2)
+- `swift-foundations/swift-file-system/.../Binary.Serializable.swift` extension (per OQ-3)
+- swift-parser-primitives Parser combinators **EXCLUDED** (per OQ-2b — different protocol family)
+
+**W2 termination criterion**: ecosystem-wide build gate covers Binary.Serializable consumers + Parseable consumers (same-package atomic) + file-system extension. Parser_Primitives consumers excluded.
 
 ### Wave 2 — Outcome
 
