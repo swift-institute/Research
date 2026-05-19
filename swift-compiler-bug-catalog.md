@@ -60,6 +60,7 @@ Verification anchor: 215 first-pass + 32 anchor-add second pass per `[EXP-007a]`
 | Bug | Upstream ID | Workaround for shipped 6.3.x | Evidence |
 |-----|-------------|------------------------------|----------|
 | Array-literal storage + chained `index_addr` `+M, −N` with compile-time-constant offsets miscompiles under `-O` / `-Osize` (macOS arm64 + Linux x86_64). DSE eliminates the live stores at intermediate array-literal indices, so the chained load reads uninitialized storage. | [`swiftlang/swift#77558`](https://github.com/swiftlang/swift/issues/77558) (existing upstream report from 2024-11-12). Confirmation [comment](https://github.com/swiftlang/swift/issues/77558#issuecomment-4425028051) posted 2026-05-11 under `coenttb` (empirical narrowing: SwiftPM-test-runner-path firing on `swift:6.3-jammy`; bare `swiftc -O` does not reproduce on current 6.3.x distributions; fix-detection harness flips red on `nightly-main-jammy`). | Subscript `buf[i]` OR single positive `.advanced(by:)` OR use `Array(repeating:count:)` instead of literal init. Narrower trigger than initially scoped — does NOT bug with non-literal init, ARC-bearing elements, parameterized offsets, or manual `UnsafeMutableBufferPointer.allocate`. See `swift-affine-primitives/Research/swift-issue-pointer-arithmetic-workaround.md`. | 8-line standalone `swiftc -O` reproducer at `swift-institute/Issues/swift-issue-pointer-arithmetic-linux-miscompile/`. SIL byte-identical between with/without `unsafe` keyword. Optimized SIL keeps only stores at offsets 0 and 4 of the 5-element literal; chained `index_addr +4, −2` reads from offset 2 (eliminated). Linux `-Osize` per-run variance is uninitialized-memory signature. **Fixed on `swiftlang/swift:nightly-main` (Swift 6.4-dev, commit `82b7720768ba875`).** Candidate fix-commits (2025-10-10 quad): `1cbed39f326` (COWOpts), `de557cab56f` (ArrayCountPropagation), `71381fab3c0` (ConstExpr), `02fafc63d67` (ForEachLoopUnroll) — all "Optimizer: support the new array literal initialization pattern". Investigation arc with false trails (.Lifetimes, `unsafe` keyword, operator wrapping — all ruled out) at `swift-institute/Issues/swift-issue-pointer-arithmetic-linux-miscompile/INVESTIGATION-ARC.md`. |
+| Parameterized-typealias + Base-constrained extension on a generic type in an imported module's scope triggers "failed to produce diagnostic for expression" ICE during test-target compilation of files that contain parameterized-protocol opaque-return type declarations (`var body: some P<TypeParam, Output, Error> { ... }`). Both `public typealias X = Generic<Concrete>` and `public extension Generic where Base == Concrete { ... }` are independently sufficient triggers. | Not yet filed (fix is on 6.4-dev nightly-main snapshot `swift-DEVELOPMENT-SNAPSHOT-2026-05-12-a`; upstream commit search pending). | **File-split**: keep parser declarations and test method bodies in separate files. The parser-declaration file does NOT import the module exposing the parameterized typealias. The test-method-body file DOES import it. Test H8 confirmed: removing the import from the parser-declarations file eliminates the ICE. See § A8. | In-cohort reproducer: `swift-ascii-parser-primitives/Tests/Declarative Parser Syntax Tests/Declarative Parser Syntax Tests.swift` at baseline commit `17b97da`, with `swift-parser-primitives` at `eb01abd` or any commit exposing `Parser.Test.Input` as a public typealias. 4 ICEs at lines 121/162/205/258. Single-file `swiftc` and 2-module minimal SwiftPM did NOT reproduce — full trigger requires multi-module + complex body builder (result builder, chained `.map` transformations). Full investigation arc (11 hypothesis tests, 8 disconfirmed) at `swift-institute/Issues/swift-issue-parameterized-typealias-opaque-return-ice/INVESTIGATION-ARC.md`. |
 
 ### Language-surface tightening between 6.2.3 and 6.3.x
 
@@ -104,6 +105,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | A5 | CopyPropagation `try_apply` borrow-scope shortening | 6.3.1 (workaround in place) | `do/catch` around `~Copyable` borrow generates `try_apply`; CopyPropagation ends `begin_borrow` early |
 | A6 | WMO + CopyToBorrowOptimization actor-state miscompile | 6.3.1 (still broken) | `guard state == .running` constant-folded to `true` after shutdown; 6 trigger conditions required |
 | A7 | SIL EarlyPerfInliner crash on ~Copyable value-type `_read` yield | 6.3.1 (still broken) | "Cannot initialize a nonCopyable type with a guaranteed value" at SILPerformanceInlinerPass |
+| A8 | Parameterized-typealias × parameterized-protocol opaque-return ICE | 6.3.2 (FIXED 6.4-dev) | `public typealias X = Generic<Concrete>` OR `extension Generic where Base == Concrete` in imported module triggers "failed to produce diagnostic" at test-target opaque returns |
 | B1 | `Property.View ~Copyable` extension constraint placement | 6.3.x (lang spec) | All constraints MUST be at extension level, not method level — implicit `Base: Copyable` else |
 | B2 | `Property.View` rejected on `Copyable` types (~Copyable + ~Escapable result from mutating method) | 6.3.x (lang spec) | Use `Property<Tag, Base>` for `@CoW` Copyable types instead |
 | B3 | Tagged constrained-extension nested-type ambiguity | 6.3.1 (still broken) | `extension Tagged where Tag == X, RawValue == Y { typealias Foo = ... }` causes cross-instantiation ambiguity |
@@ -113,7 +115,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | C2 | Typed throws — Swift 6.2.4 stdlib support matrix | 6.2.4 / 6.3.x (lang spec) | Some stdlib `rethrows` APIs propagate `throws(E)`; many erase to `any Error` |
 | C3 | Typed throws — catch blocks preserve concrete typed error | 6.3.x (lang spec) | `error` in catch IS the concrete typed error, NOT `any Error` |
 
-**Total entries: 16** (15 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
+**Total entries: 17** (16 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
 
 ---
 
@@ -320,6 +322,77 @@ public static func map<each NewElement, E: Swift.Error>(
 **Revalidation**: rebuild any of the four experiments `-c release` — when they stop crashing, Option C becomes viable.
 
 **Source: master fix-status table (still-broken section); `swift-6.3-fix-status.md` (deleted 2026-05-10 in Wave 6).**
+
+---
+
+### A8. Parameterized-typealias × parameterized-protocol opaque-return ICE
+
+**Swift versions**: 6.3.2 (FIRES); 6.4-dev snapshot `swift-DEVELOPMENT-SNAPSHOT-2026-05-12-a` (FIXED).
+
+**Symptom**: `error: failed to produce diagnostic for expression; please submit a bug report (https://swift.org/contributing/#reporting-bugs)` emitted at the `}` of `var body: some SomeProtocol<TypeParam, Output, Error> { ... }` declarations during **test-target** compilation (`swift test`). Library targets (`swift build`) compile cleanly — only test-target compilation reaches the ICE site. The error cascade terminates the build with `error: fatalError`.
+
+**Trigger** (either is independently sufficient when in an imported module's public scope):
+
+1. **Parameterized typealias**: `public typealias X = Generic<Concrete>` — a typealias for a generic-type instantiation (the typealias's right-hand side is `SomeType<ConcreteTypeArg>`).
+2. **Base-constrained extension on a generic type**: `public extension Generic where Base == Concrete { ... }` — an extension constrained to a specific generic instantiation.
+
+Both must be in module-export scope (visible to the consumer via `import`). Same-file declarations do not trigger.
+
+**Empirically NOT the trigger** (each independently disconfirmed via 11 hypothesis tests, see `swift-institute/Issues/swift-issue-parameterized-typealias-opaque-return-ice/INVESTIGATION-ARC.md`):
+- Stale `.build/` artifacts (clean build reproduces).
+- The typealias name (any identifier ICEs the same).
+- Local-generic-param × typealias-name shadowing (renaming local param doesn't help).
+- The namespace location (nested in a parent enum vs top-level both ICE).
+- Explicit `<ExplicitParam, …>` binding in body builders (vs `_` placeholder; both ICE).
+- `@retroactive` conformance status of constrained extensions (both retroactive and non-retroactive extensions trigger when Base-constrained on a parameterized type).
+
+**Workaround for shipped 6.3.x — SwiftPM `exclude` the offending file**:
+
+Defer compilation of the test file that contains the ICE-triggering parser declarations via SwiftPM `exclude` on the test target. The file stays in the repo with cohort-renamed types so it's re-enable-ready when 6.4 ships.
+
+```swift
+.testTarget(
+    name: "Declarative Parser Syntax Tests",
+    dependencies: [
+        "ASCII Decimal Parser Primitives",
+        .product(name: "Parser Primitives Test Support", package: "swift-parser-primitives"),
+    ],
+    exclude: ["Declarative Parser Syntax Tests.swift"]
+)
+```
+
+Empirical confidence: **HIGH — directly validated 2026-05-16**. With this workaround applied in `swift-ascii-parser-primitives`, `swift test` produces 29 tests pass / 0 ICEs. The other 3 cohort packages (parser-primitives, parser-machine-primitives, byte-parser-primitives) pass cleanly with the public typealias `Parser.Test.Input` retained — Step 1+2 commits (subagent's defensive workaround that removed the public typealias) were `git reset`'d after empirical verification confirmed they were unnecessary.
+
+**Trigger model — UNDERDETERMINED**. The apparent ingredients (parameterized typealias `X = Input.Slice<Concrete>` in module-export scope + `var body: some Parser.\`Protocol\`<TypeParam, …>` opaque return in same test target) are present in BOTH:
+- parser-primitives `Tests/Parser Take Primitives Tests/Parser.Builder Tests.swift` — **passes** (150 tests green)
+- ascii `Tests/Declarative Parser Syntax Tests/Declarative Parser Syntax Tests.swift` — **ICEs** (4 sites)
+
+So the apparent pattern is necessary but not sufficient. Some additional structural factor in ascii's file distinguishes it; the precise minimum was not isolated. Candidate axes (each plausible, none confirmed in isolation):
+- Cross-module parser type inside body result builder (`ASCII.Decimal.Parser<_, UInt16>` in ascii vs same-file `Digit<Input>` in parser-primitives)
+- Placeholder generic argument `<_, UInt16>` (ascii) vs explicit `<Input>` (parser-primitives)
+- String-literal `ExpressibleByStringLiteral` triggers in the result builder
+- Number of parser declarations (ascii has 4; parser-primitives Parser.Builder Tests has ~10)
+
+The bug is fixed in Swift 6.4-dev (snapshot `swift-DEVELOPMENT-SNAPSHOT-2026-05-12-a`); reduction was deprioritized once upstream fix was confirmed.
+
+**Workarounds considered and rejected**:
+- *Struct wrapper instead of typealias* — heavy consumer-side rewrite (~340 call sites), conformance forwarding non-trivial.
+- *Remove public typealias + file-private aliases at consumers* (subagent's Path C-original) — verified insufficient; ICE persists in ascii after the underlying defensive change.
+- *File-split (parser decls in one file, test bodies in another)* — verified insufficient. Failed empirically against the same ICE sites.
+- *Move parser declarations to a separate library target* — violates `[MOD-DOMAIN]` ("a new target MUST represent a coherent semantic domain"). The deferred file's content (Network.Endpoint.Parser, Geometry.Point.Parser, etc.) has no coherent semantic identity — they're declarative-syntax examples, not a domain.
+- *Roll back the parent rename* — loses three `[API-NAME-002]` cleanups permanently.
+
+**Pattern coverage redundancy**: the deferred `Declarative Parser Syntax Tests.swift` exercises the `var body: some Parser.\`Protocol\`<TypeParam, …>` declarative-syntax pattern. The same pattern is exercised redundantly by parser-primitives' `Parser.Builder Tests.swift` (which passes on 6.3.2). Deferring ascii's file loses no unique coverage.
+
+**In-cohort reproducer**: `swift-ascii-parser-primitives/Tests/Declarative Parser Syntax Tests/Declarative Parser Syntax Tests.swift` at any state where the file references `Parser.Test.Input` typealias and the file is NOT excluded from its test target. Run `swift test` in `swift-ascii-parser-primitives` to reproduce — 4 ICEs at the `var body:` lines of the 4 parser conformances.
+
+**Standalone reproducer status**: ATTEMPTED, NOT ACHIEVED. Single-file `swiftc`-buildable reproducer compiles cleanly. Minimal 2-module SwiftPM reproducer with simple body (returning a single P conformer) also did not reproduce on 6.3.2.
+
+**Revalidation**: when `TOOLCHAINS=swift swift test` (against any current 6.4-dev snapshot) in `swift-ascii-parser-primitives` with the `exclude:` clause REMOVED from `Package.swift` emits zero `failed to produce diagnostic` messages, the fix has landed. Verified on snapshot `swift-DEVELOPMENT-SNAPSHOT-2026-05-12-a` 2026-05-16.
+
+**Sunset condition — when this workaround is removed**: when the workspace migrates default toolchain to Swift 6.4+ (currently 6.4-dev only). Remove the `exclude:` clause from `swift-ascii-parser-primitives/Package.swift`; the file's content is already at canonical `Parser.Test.*` names. No content change required.
+
+**Source: `swift-institute/Issues/swift-issue-parameterized-typealias-opaque-return-ice/{INVESTIGATION-ARC.md, README.md}` — investigation arc 2026-05-16.**
 
 ---
 

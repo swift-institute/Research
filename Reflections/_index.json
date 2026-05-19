@@ -1,10 +1,68 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-15",
+  "generatedAt": "2026-05-18",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-05-18-orchestrator-continuation-d8-cascade-and-item-3c-investigation.md",
+      "date": "2026-05-18",
+      "title": "Orchestrator continuation: D8 cascade + Item 3c investigation + F4 re-verify",
+      "packages": [
+        "swift-primitives/swift-sequence-primitives",
+        "swift-primitives/swift-bit-vector-primitives",
+        "swift-primitives/swift-hash-table-primitives",
+        "swift-primitives/swift-byte-primitives",
+        "swift-primitives/swift-input-primitives",
+        "swift-primitives/swift-parser-primitives",
+        "swift-primitives/swift-parser-machine-primitives",
+        "swift-primitives/swift-text-primitives",
+        "swift-primitives/swift-cursor-primitives",
+        "swift-primitives/swift-binary-parser-primitives",
+        "swift-primitives/swift-byte-parser-primitives",
+        "swift-primitives/swift-binary-coder-primitives",
+        "swift-primitives/swift-coder-primitives",
+        "swift-primitives/swift-lexer-primitives",
+        "swift-institute/Audits",
+        "swift-institute/Research"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-18-cursor-arc-closeout-single-generic-refinement-typed-input-unification.md",
+      "date": "2026-05-18",
+      "title": "Cursor Arc Closeout, Single-Generic Refinement, and Typed-Input Unification",
+      "packages": [
+        "swift-primitives/swift-cursor-primitives",
+        "swift-primitives/swift-byte-primitives",
+        "swift-primitives/swift-byte-parser-primitives",
+        "swift-primitives/swift-binary-parser-primitives",
+        "swift-primitives/swift-text-primitives",
+        "swift-primitives/swift-lexer-primitives",
+        "swift-primitives/swift-input-primitives",
+        "swift-institute/Research",
+        "swift-institute/Experiments"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-05-17-byte-arc-continuation-ascii-code-landing.md",
+      "date": "2026-05-17",
+      "title": "Byte Arc Continuation: ASCII.Code Landing and Triage-Roadmap Authorship",
+      "packages": [
+        "swift-primitives/swift-byte-primitives",
+        "swift-primitives/swift-byte-parser-primitives",
+        "swift-primitives/swift-parser-primitives",
+        "swift-primitives/swift-parser-machine-primitives",
+        "swift-primitives/swift-ascii-parser-primitives",
+        "swift-primitives/swift-ascii-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-05-15-linter-corpus-wave-3-three-tier-relocation-and-org-prefix-naming.md",
       "date": "2026-05-15",

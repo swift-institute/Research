@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 1.2.0
-last_updated: 2026-05-14
+version: 1.2.1
+last_updated: 2026-05-18
 status: RECOMMENDATION
 tier: 3
 scope: ecosystem-wide
@@ -19,6 +19,7 @@ verification_experiments:
 predecessor: 2026-05-13-noncopyable-adoption-ecosystem-corners-audit.md (v1.0.0 RECOMMENDATION; Row 11 gating decision lift)
 trigger: HANDOFF-parser-protocol-noncopyable-escapable-relaxation.md (Tier-3 follow-up to ecosystem-corners audit Q1)
 changelog:
+  - v1.2.1 (2026-05-18): Phase 4 EXECUTED and landed. Two commits at `swift-parser-machine-primitives`: `41c691e` (step 1 — consume P in leaf and witness for ~Copyable support) + `f685f53` (step 2 — Cache holds Optional<P> + conditional Copyable on Compiled). Principled redesign: `Compiled.Cache` (final class) now holds `var source: P?` and consumes parser on first compile via `source.take()`; `Compiled` is unconditionally `~Copyable` with a conditional `Copyable` extension `where P: Copyable` (preserves original reference-sharing semantics for Copyable parsers — Cache instance shared across copies via class reference, amortizing compilation cost). `Prepared` accepts `& ~Copyable` constraint relaxation but stays Copyable itself (no P storage, only Program + Node.ID). `Witness` similarly stays Copyable with consume-shape closure. Verified: swift-parser-machine-primitives 66 tests / 49 suites pass; downstream packages (swift-binary-parser-primitives, swift-ascii-parser-primitives, swift-byte-parser-primitives, swift-foundations/swift-parsers) all build green. **Row 11 of the 2026-05-13 ecosystem-corners audit CLOSED.** Direct constructor `Parser.Machine.Compiled(source:, witness:)` works for ~Copyable P; discoverable accessor `parser.parse.compiled()` remains Copyable-only pending optional Phase 2b on `Parser.Parse: ~Copyable` (tracked as HANDOFF.md Wave 1 Item 3c). Empirical predicate validated: an initial trivial-propagation attempt empirically refuted `(borrowing P, …) -> Expression` witness shape (build error: `'parser' is borrowed and cannot be consumed`); the Cache-Optional-P redesign is the principled-correct structural decomposition because long-lived closure capture inside `Leaf` must consume (move), not borrow. **Citation correction**: v1.2.0 cited SE-0497 throughout as "Closures capturing noncopyable types" with a fabricated proposal URL. The actual SE-0497 in Swift 6.3 is the `@export` Attribute (verified via `swift-institute/Research/swift-6.3-ecosystem-opportunities.md` § SE-0497). The closures-capturing-noncopyable Swift Evolution proposal exists conceptually but its actual proposal number is to-be-confirmed; the bibliography and inline references throughout this doc have been neutralized to remove the incorrect SE-0497 attribution while preserving the structural argument (closure-capture-of-~Copyable-by-value is gated by a pending Swift Evolution proposal). The argument is unchanged; only the citation is corrected.
   - v1.2.0 (2026-05-14): Stratified-architecture reframing. Phase 2 protocol-only relaxation EXECUTED at `swift-parser-primitives` commit `3ed1961` (Parser.`Protocol`: ~Copyable + Parser.Printer: ~Copyable; 2 file changes vs v1.1.0 projection of 111; 163/163 tests; all 4 downstream packages still build green). Empirical finding: the v1.1.0 cascade projection conflated Phase 2 (protocol-only) with Phase 3 (combinator-level) — Phase 3 is NOT required for Row 11 adoption because `Parser.Machine.Compiled` is a *terminal* runtime parser, not a participant in combinator chains. Combinators stay Copyable-only via implicit constraint; `.error.map { ... }` syntax preserved without disruption. Option A (`@_owned consuming get` on protocol extension to preserve `.error.map` fluent syntax under combinator-cascade) EMPIRICALLY REFUTED via `/experiment-process` at `swift-parser-primitives/Experiments/owned-consuming-get-on-protocol-extension/` (commit `2221537`): Swift 6.3.1/6.3.2 reject `@_owned` as unknown attribute; 6.4-dev passes only inside consuming-parameter wrapper helpers, fails at direct call-site with "borrowed by non-Escapable type". Compiler crash discovered on `consume c` + `@_owned consuming get` (SIL verifier abort at `MemoryLifetimeVerifier.cpp:263`) — deferred to `issue-investigation`. [RES-018] second-consumer framing rejected per principal `feedback_correctness_and_evergreen.md`. **Recommendation supersedes v1.1.0 Option δ: adopt α-stratified — protocol relaxation lands at the protocol level only; combinators stay Copyable; ~Copyable conformers exist as terminals.** Phase 4 (`Parser.Machine.Compiled: ~Copyable`, Row 11) is the immediate next executable phase, blocked only on parallel-session coordination in `swift-parser-machine-primitives`.
   - v1.1.0 (2026-05-13): Empirical verification of the witness-table SIGSEGV blocker via /experiment-process; six variants across Swift 6.2.3 / 6.3.2 / 6.4-dev nightly, including V5 with the full original-crash conditions. The SIGSEGV does NOT reproduce on Swift 6.3.2 with the proposed Self: ~Copyable axis added. Revised (d) cascade-cost score 5/5 → 4/5. Sibling-type workaround framing dropped per `feedback_no_sibling_type_workarounds.md` — protocol-level relaxation is the architectural goal; the recommendation tree is "protocol-relaxation-with-validated-blockers OR defer-until-second-consumer." Option δ recommendation stands, but rationale shifts from "verified-unfixed compiler bug + cascade swamp" to "high mechanical migration ceremony without a second consumer per [RES-018] + stdlib-Array cap on `Parser.OneOf.Any.parsers: [Closure]` as a structural design limit."
 ---
@@ -263,7 +264,7 @@ public struct Lazy<P: Parser.`Protocol`> {
 // Under Self: ~Copyable, with P: ~Copyable:
 public struct Lazy<P: Parser.`Protocol` & ~Copyable>: ~Copyable {
     internal let build: () -> P                          // closure-returns-~Copyable: works post-SE-0432
-    public init(_ build: @escaping () -> P) { … }        // @autoclosure on ~Copyable expression: WIP per SE-0432 / SE-0497
+    public init(_ build: @escaping () -> P) { … }        // @autoclosure on ~Copyable expression: WIP per SE-0432 / closures-capturing-noncopyable proposal (SE# TBD; v1.2.0 cited SE-0497 in error — see v1.2.1 changelog)
 }
 ```
 
@@ -725,10 +726,11 @@ precedent — confirms the absence of upstream demand.
   `switch consume value { case … }` discipline.
 - **SE-0437 Noncopyable Standard Library Primitives**: Optional, Result
   as `~Copyable`-able.
-- **SE-0497 Closures capturing noncopyable types** (status: in
-  review at time of this writing per Swift Evolution corpus): would
-  unblock closure-capture for Lazy / OneOf.Any. Until SE-0497 ships,
-  the Option α cascade is materially worse than projected here.
+- **Closures-capturing-noncopyable proposal** (Swift Evolution; actual
+  SE number TBD — v1.2.0 cited SE-0497 in error per v1.2.1 changelog;
+  the actual SE-0497 in Swift 6.3 is the `@export` Attribute): would
+  unblock closure-capture for Lazy / OneOf.Any. Until it ships, the
+  Option α cascade is materially worse than projected here.
 - **SE-0499 Support `~Copyable` and `~Escapable` in Standard Library
   Protocols**: brings Hashable / Equatable / Comparable to ~Copyable.
   Not directly relevant to `Parser.`Protocol`` (institute-owned), but
@@ -1058,7 +1060,8 @@ Option δ should be revisited if:
    fixed upstream and re-verified~~ — **EMPIRICALLY RESOLVED on Swift
    6.3.2 per v1.1.0 experiment**.
 
-3. SE-0497 (closure-capture for ~Copyable) ships — partially
+3. The closures-capturing-noncopyable proposal (SE# TBD; v1.2.0
+   cited SE-0497 in error) ships — partially
    de-risked by v1.1.0 V6 (closure-returning-~Copyable works on
    6.3.2); full closure-capture-of-~Copyable-values remains
    toolchain-dependent.
@@ -1234,8 +1237,8 @@ next step") is **obsolete**. The actual phase plan is:
 | 1 | `Parser.OneOf.\`Any\`` deletion (+ swift-standards twin deferred) | DONE: `swift-parser-primitives@b1473280` |
 | 2 | Protocol-relaxation: `Parser.\`Protocol\`: ~Copyable` + `Parser.Printer: ~Copyable` | DONE: `swift-parser-primitives@3ed1961` |
 | 3 | Combinator cascade | NOT REQUIRED — formally dropped; combinators stay Copyable-only via implicit constraint |
-| 4 | `Parser.Machine.Compiled: ~Copyable` (Row 11 = the audit's immediate target) | BLOCKED on parallel work in `swift-parser-machine-primitives` (17 dirty files including `Parser.Machine.Compiled.swift`); execute when parallel session lands |
-| 1b | `Parsing.OneOf.\`Any\`` deletion in `swift-standards` (the twin) | BLOCKED on parallel work in `swift-standards/Sources/Parsing/` (9 dirty files); execute when parallel session lands |
+| 4 | `Parser.Machine.Compiled: ~Copyable` (Row 11 = the audit's immediate target) | **DONE 2026-05-18** — `swift-parser-machine-primitives@41c691e` (step 1: consume P in leaf and witness) + `@f685f53` (step 2: Cache holds Optional<P> + conditional Copyable on Compiled). Compiled is unconditionally `~Copyable` with a conditional `Copyable` extension `where P: Copyable` (preserves reference-sharing semantics for Copyable parsers). 66 tests / 49 suites pass; 4 downstream packages build green. Direct constructor works for ~Copyable P; discoverable accessor `parser.parse.compiled()` remains Copyable-only pending optional Phase 2b (Item 3c in HANDOFF.md). |
+| 1b | `Parsing.OneOf.\`Any\`` deletion in `swift-standards` (the twin) | **DONE** — landed at `swift-standards/swift-standards@2f53917` ("T2: Remove legacy Parsing + Binary targets"). |
 
 ### Re-evaluation triggers (v1.2.0 — simplified)
 
@@ -1276,7 +1279,7 @@ Subsequent commits (`3ed1961`, `2221537`) await principal authorization to push.
 | # | Question | Status | Resolution path |
 |---|---|---|---|
 | Q1 | ~~Is the proposed `Parser.Machine.OwnedCompiled` sibling type the right shape for Row 11 adoption under Option δ?~~ | **WITHDRAWN v1.1.0**. Sibling-type workarounds explicitly rejected per `feedback_no_sibling_type_workarounds.md`. Row 11's Cache aliasing stays as documented invariant until protocol relaxation is viable on the merits. | n/a |
-| Q2 | If SE-0497 (closure-capture for ~Copyable) ships, does the Lazy / OneOf.Any cascade collapse enough to re-open the analysis? | **PARTIALLY RESOLVED v1.1.0** for `Parser.Lazy` per experiment V6 (closure-returning-~Copyable works on Swift 6.3.2). `Parser.OneOf.Any.parsers: [Closure]` remains a structural cap due to stdlib `Array<~Copyable>` non-support — independent of SE-0497. | Re-evaluate `OneOf.Any` when stdlib `Array<~Copyable>` lands. |
+| Q2 | If the closures-capturing-noncopyable proposal (SE# TBD; v1.2.0 cited SE-0497 in error) ships, does the Lazy / OneOf.Any cascade collapse enough to re-open the analysis? | **PARTIALLY RESOLVED v1.1.0** for `Parser.Lazy` per experiment V6 (closure-returning-~Copyable works on Swift 6.3.2). `Parser.OneOf.Any.parsers: [Closure]` remains a structural cap due to stdlib `Array<~Copyable>` non-support — independent of the closure-capture proposal. **OBSOLETED v1.2.0**: `OneOf.Any` deleted at `swift-parser-primitives@b1473280`; question retained for historical context. | — |
 | Q3 | Should `Parser.Printer` (the sibling protocol at `Parser.Printer.swift:46`) also be re-evaluated as part of any future Option α reconsideration? | **RESOLVED v1.2.0**. Phase 2 (commit `3ed1961`) included `Parser.Printer: ~Copyable` symmetric relaxation — asymmetric relaxation broke compile because many combinators conform to both protocols. Both protocols now admit ~Copyable conformers under the stratified architecture. | No further action. |
 | Q4 | Does the Machine.* family's `Parser.Machine.Builder<Input, Failure>: ~Copyable` (at Machine.swift:71) serve as evidence that a partial `~Copyable` adoption is viable in the parser stack? | RESOLVED INLINE. Yes for the Builder (which doesn't conform to Parser.`Protocol`). The Builder is internal-to-Machine and ~Copyable as a stand-alone choice, not via protocol-level relaxation. | No further action. |
 | Q5 | Are there ASCII / Binary parser-primitives consumers (e.g., `Binary.Parse.Access<P>`) that suggest a second consumer is imminent? | INSUFFICIENT EVIDENCE. The 8 binary-parser-primitives conformers + 2 ASCII-parser-primitives conformers are leaf-shape and combinator-shape; none are resource-correlated. The `Binary.Bytes.Input.View` is a borrowed-Input shape, but it's an Input, not a Self. | Watch for new Binary / ASCII consumer arc; re-survey if one lands. |
@@ -1325,7 +1328,7 @@ Subsequent commits (`3ed1961`, `2221537`) await principal authorization to push.
 - [SE-0427 Noncopyable Generics](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0427-noncopyable-generics.md) — protocol-Self `~Copyable`
 - [SE-0432 Borrowing and consuming pattern matching for noncopyable types](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0432-noncopyable-switch.md) — `switch consume` discipline
 - [SE-0437 Noncopyable Standard Library Primitives](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0437-noncopyable-stdlib-primitives.md) — Optional / Result `~Copyable`
-- [SE-0497 Closures capturing noncopyable types](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0497-closures-capturing-noncopyable.md) — closure capture for `~Copyable`
+- ~~[SE-0497 Closures capturing noncopyable types](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0497-closures-capturing-noncopyable.md)~~ — **CITATION ERROR (v1.2.0)**: SE-0497 in Swift 6.3 is the `@export` Attribute, not closures-capturing-noncopyable. The proposal URL above is fabricated. The conceptual proposal exists; actual SE number is to-be-confirmed. See v1.2.1 changelog. Cross-reference: `swift-institute/Research/swift-6.3-ecosystem-opportunities.md` § SE-0497.
 - [SE-0499 Support `~Copyable` and `~Escapable` in Standard Library Protocols](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0499-support-non-copyable-simple-protocols.md) — stdlib protocol relaxation
 
 ### External prior art
