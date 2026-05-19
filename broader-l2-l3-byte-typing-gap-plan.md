@@ -302,6 +302,39 @@ foundational landing + the new structural blocker.
 
 **Question for supervisor**: should `Byte` gain `Codable` conformance in `swift-byte-primitives`? It would route encode/decode through `UInt8.rawValue` (single-byte wire form). The capability-marker recipe doesn't currently mention Codable; it focuses on byte-domain identity vs arithmetic. Adding Codable to Byte unblocks the W2+W3 cascade for every consumer with `rawValue: Byte` + `Codable` conformance.
 
+**Disposition (supervisor, 2026-05-19)**: option (a) — add `extension Byte: Codable` in swift-byte-primitives. **Landed at `swift-byte-primitives@ffc1510`**. Also bundled `extension Byte: CustomStringConvertible` (decimal description). 94/94 tests pass.
+
+**Third structural blocker — Byte has no arithmetic** (anticipated, surfaced post-Codable): per-file inspection of `swift-rfc-791` cascade post-Codable revealed types like `RFC_791.TTL` whose `rawValue: UInt8` is **arithmetic-domain** (`rawValue - 1` for decrement). Per `byte-arithmetic-conformance.md` v1.0.0 RECOMMENDATION ζ, `Byte` does NOT gain arithmetic. So such consumers' `rawValue` MUST stay `UInt8` — falls under "MUST stay UInt8 (truly appropriate)" per the supervisor's discrimination amendment: **arithmetic-domain byte storage stays UInt8**.
+
+**Discrimination refinement (added 2026-05-19, post-cascade-attempt)**:
+
+| Pattern | Disposition |
+|---|---|
+| `rawValue: UInt8` participating in arithmetic (`-`, `+`, increment/decrement, modular roll-over) | **STAYS UInt8** — Byte has no arithmetic by design (byte-arithmetic-conformance.md). Adding `.underlying` bridges at arithmetic call sites IS the discipline. |
+| `rawValue: UInt8` purely bit-field / kind-tag / opaque-byte (no arithmetic on it) | **RETYPE to Byte** |
+| 16-bit field (`rawValue: UInt16`) | Stays UInt16; serialization uses the new Byte-primary `bytes(endianness:)`. |
+| 32-bit field (`rawValue: UInt32`) | Same as 16-bit. |
+| Tuple `(UInt8, UInt8, UInt8, UInt8)` (octets) | Per-case judgment — if octets are byte-domain identifiers (IP address) **retype to Byte**; if arithmetic carriers (digest byte counters) stay UInt8. |
+
+Concrete RFC 791 type-by-type analysis:
+
+| Type | rawValue | Arithmetic? | Disposition |
+|---|---|---|---|
+| Flags | UInt8 (bit field) | bitwise only | retype to Byte |
+| HeaderChecksum | UInt16 | arithmetic (sum) | UInt16 stays; serialize via bytes(endianness:) |
+| IHL | UInt8 (count) | `* 4` (header-length multiplier) | **STAYS UInt8** |
+| IPv4.Address | UInt32 | bitwise | UInt32 stays |
+| Identification | UInt16 | none (opaque ID) | UInt16 stays |
+| FragmentOffset | UInt16 (13-bit) | shift / mask | UInt16 stays |
+| Precedence | UInt8 (3-bit) | bitwise only | retype to Byte |
+| Protocol | UInt8 (catalog) | none (lookup) | retype to Byte |
+| TTL | UInt8 (count) | `- 1` (decrement) | **STAYS UInt8** |
+| TotalLength | UInt16 | arithmetic (sum/check) | UInt16 stays |
+| TypeOfService | UInt8 (bit field) | bitwise | retype to Byte |
+| Version | UInt8 (literal) | none | retype to Byte |
+
+Per-RFC, the analysis differs. Per-package cascade work is **not mechanical** — it requires per-type judgment.
+
 | Disposition option | Implication |
 |---|---|
 | (a) Add `Codable` to Byte | Unblocks cascade. Byte gains stdlib-Codable conformance routing through UInt8 wire form. Single-commit change in swift-byte-primitives. |
