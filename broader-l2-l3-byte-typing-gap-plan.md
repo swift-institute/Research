@@ -377,6 +377,26 @@ Total: ~55 remaining files. Each gets ~10–30 minutes of per-type analysis + ed
 4. `swift build` in the package; fix any consumer-site bridges that surface.
 5. Commit per package with the pattern citation.
 
+### Wave 2 — PAUSED 2026-05-19 (principal direction)
+
+**Meaningful W2 deliverables complete**:
+
+- Protocol surface retype landed at `swift-binary-primitives@b121c0e` + downstream commits.
+- `extension Byte: Codable` + `CustomStringConvertible` landed at `swift-byte-primitives@ffc1510` (unblocks consumer Codable auto-synthesis).
+- Two cascade patterns proven: byte-domain (Flags) + arithmetic-domain (TTL) at `swift-rfc-791@cde98cb`.
+- Discrimination rubric documented (per-type table for RFC 791 + per-package rubric for remaining 17 packages).
+
+**Remaining cascade re-framed as post-swift-linter mechanical cleanup**: the ~50 file sweep across IETF / ISO / INCITS / ascii-primitives becomes a downstream arc once **swift-linter restoration + UInt8/Byte lint rules** land. The lint rules will encode the discrimination criteria (storage UInt8 stays / Buffer.Element == UInt8 retypes / arithmetic-domain rawValue stays / bit-field rawValue retypes) and surface every site mechanically. Each rule firing becomes a deterministic per-site retype, not a per-package judgment call.
+
+**Sequencing post-pause**:
+
+1. swift-linter restoration arc (separate program).
+2. Author lint rules encoding the W2 discrimination criteria.
+3. Mechanical sweep: rule fires per site → deterministic retype → commit.
+4. End-of-sweep build gate + grep verification (the [HANDOFF-035] cascade-termination criterion W2 originally specified, but now reachable mechanically rather than judgmentally).
+
+The W2+W3 unification (supervisor sign-off 2026-05-19) remains the structural framing; the lint-rule-driven sweep is the **execution mechanism** for the unified cascade.
+
 | Disposition option | Implication |
 |---|---|
 | (a) Add `Codable` to Byte | Unblocks cascade. Byte gains stdlib-Codable conformance routing through UInt8 wire form. Single-commit change in swift-byte-primitives. |
