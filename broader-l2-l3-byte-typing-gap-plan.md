@@ -280,10 +280,35 @@ W2 execution surfaced a structural inconsistency (full report at `swift-institut
 
 Ecosystem build currently red on ~50 consumer files; nothing pushed. Proceed with bundled cascade.
 
-### Wave 2 — Outcome (2026-05-19)
+### Wave 2 — Outcome (2026-05-19, revised)
 
-**Status**: PARTIAL — protocol retype landed; consumer cascade SURFACED + STOPPED for principal
-adjudication. Ecosystem build INTENTIONALLY broken pending unified W2+W3 path decision.
+**Status**: PARTIAL — protocol retype + foundational cascade landed; per-package consumer
+container retype SURFACED A SECOND STRUCTURAL BLOCKER (Byte not Codable). Ecosystem build
+remains red on ~50 consumer files. Per-package execution dispatched as focused subordinate
+work per the supervisor's W2+W3 unification direction; this Wave 2 outcome captures
+foundational landing + the new structural blocker.
+
+**Foundational cascade landed**:
+
+| Repo | Commit | Notes |
+|---|---|---|
+| `swift-binary-primitives` | `b121c0e`, `31395d8`, `d12142e` | Protocol retype; `BinaryInteger.bytes(endianness:)` → `[Byte]` primary with `[UInt8]` `@_disfavoredOverload` forwarder; `Span<UInt8>` `withSerializedBytes` forwarder added; `RangeReplaceableCollection<UInt8>.append(utf8:)/append(_:)` utility retype to Byte primary + UInt8 forwarders. **337/337 tests pass.** |
+| `swift-ascii-serializer-primitives` | `06613af` | Sibling-family `Binary.ASCII.Serializable → Binary.Serializable` bridge simplification (direct delegation now that parent is Byte). |
+| `swift-foundations/swift-paths` | `3b3f5f4` | `Path` + `Path.Component` Binary.Serializable witness retype to `Buffer.Element == Byte`. Body uses BSLI cross-domain bridge (`string.utf8` → `Buffer<Byte>`). |
+| `swift-foundations/swift-file-system` | `6f0ef45` | 5 conformer retypes: `File.Directory.Entry.Kind` and `File.System.Metadata.Kind` get container-retype `rawValue: UInt8 → Byte` (enums auto-synthesize Codable via raw value, and these are simple enums); `File.System.Metadata.Permissions` / `Ownership` / `File.Name` witness signatures retyped with body BSLI bridges (`.bytes()` and `appendUTF8` UInt8-tmp-buffer). |
+| `swift-foundations/swift-ascii` | `5f426f8` | `String<T: Binary.ASCII.Serializable>(_:)` body routes through BSLI `.underlying` at the `String(decoding:as:)` boundary (stdlib idiom carve-out). |
+
+**Second structural blocker — Byte does not conform to Codable**: per-file inspection of `swift-rfc-791` cascade revealed that retyping `rawValue: UInt8 → Byte` on structs that conform to `Codable` (e.g., `RFC_791.Precedence`, `RFC_791.TTL`, `RFC_791.Flags`) breaks Codable auto-synthesis because `Byte` itself is not `Codable`. `Byte` is its own `struct` (per `byte-primitive-extraction-and-domain-naming.md`), not a `Tagged` typealias — so the existing `Tagged: Codable where Underlying: Codable` conformance does not apply.
+
+**Question for supervisor**: should `Byte` gain `Codable` conformance in `swift-byte-primitives`? It would route encode/decode through `UInt8.rawValue` (single-byte wire form). The capability-marker recipe doesn't currently mention Codable; it focuses on byte-domain identity vs arithmetic. Adding Codable to Byte unblocks the W2+W3 cascade for every consumer with `rawValue: Byte` + `Codable` conformance.
+
+| Disposition option | Implication |
+|---|---|
+| (a) Add `Codable` to Byte | Unblocks cascade. Byte gains stdlib-Codable conformance routing through UInt8 wire form. Single-commit change in swift-byte-primitives. |
+| (b) Manual Codable per consumer | Each affected struct needs explicit `init(from:)` / `encode(to:)` that routes through `rawValue.underlying`. Mass per-consumer boilerplate. |
+| (c) Drop Codable conformance | Consumers like `RFC_791.Precedence: Codable` lose the auto-synthesized conformance. Likely unacceptable for spec types. |
+
+**Remaining cascade scope** (workspace-wide grep after foundational landing): **~50 files** across IETF (rfc-768, rfc-791, rfc-3596, rfc-4291, rfc-4648, rfc-5952, rfc-6068, rfc-6455, rfc-6531, rfc-6891, rfc-7301, rfc-7519, rfc-8200, rfc-8446, rfc-9293), ISO (iso-21320, iso-32000), INCITS (4-1986), and `swift-primitives/swift-ascii-primitives`. Each requires per-package container retype + body bridges; the Codable resolution above is the gating decision.
 
 **Landed (kept)**:
 
