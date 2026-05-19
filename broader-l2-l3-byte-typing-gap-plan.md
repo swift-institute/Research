@@ -225,9 +225,39 @@ W5 and W6 parallel post-W4. Per-wave handoffs at workspace root
 
 **W2 termination criterion**: ecosystem-wide build gate covers Binary.Serializable consumers + Parseable consumers (same-package atomic) + file-system extension. Parser_Primitives consumers excluded.
 
-### Wave 2 — Outcome
+### Wave 2 — Outcome (2026-05-19)
 
-*To be stamped by W2 executor.*
+**Status**: PARTIAL — protocol retype landed; consumer cascade SURFACED + STOPPED for principal
+adjudication. Ecosystem build INTENTIONALLY broken pending unified W2+W3 path decision.
+
+**Landed (kept)**:
+
+| Repo | Commit | What |
+|---|---|---|
+| `swift-binary-primitives` | `b121c0e` | Protocol retype: `Binary.Serializable.Buffer.Element` and `Binary.Parseable.Source.Element` from `UInt8 → Byte`. Tagged conformance, FixedWidthInteger-RawValue defaults, StringProtocol-RawValue defaults, byte-collection conformances ([Byte]/ContiguousArray<Byte>/ArraySlice<Byte>) retyped. Stdlib-interop forwarders preserved as `@_disfavoredOverload` (`serialize(into:) where Buffer.Element == UInt8`, `[UInt8].init<S: Binary.Serializable>(_:)`, etc.). In-package test fixtures retyped. Package.swift adds `Byte Primitives` + `Byte Primitives Standard Library Integration` to Serializable + Parseable targets; exports.swift re-exports both for transitive visibility. Build + test verified: **337/337 tests pass in 111 suites**. |
+| `swift-ascii-serializer-primitives` | `06613af` | Sibling-family bridge simplification: `Binary.ASCII.Serializable → Binary.Serializable` direct delegation now that parent is Byte-typed too (was a `byteBuffer.underlying` workaround during the parent-arc partial state). |
+
+**Reverted (out of W2 scope per principal direction 2026-05-19)**:
+
+| Repo | Reverted commit | Reason |
+|---|---|---|
+| `swift-foundations/swift-paths` | `db3de1c` reverts `6e440f9` | Consumer witness retype on `Path` / `Path.Component` — stdlib-`.utf8` BSLI bridge OK in isolation, but consumer-witness cascade falls outside W2 scope per principal. |
+| `swift-foundations/swift-file-system` | `040e97b` reverts `c790c1d` | Consumer witness retypes on 5 file-system types — `Byte(value.rawValue)` wraps on Kind enums hit mass-patching pattern. |
+
+**Workspace cascade results**:
+
+- Workspace-wide grep at W2 start: **89 files** with `Binary.Serializable` references; **95 files** with `Buffer.Element == UInt8`; **2 Package.swift** with `Binary Serializable Primitives` product references. [Verified: 2026-05-19]
+- After protocol retype + reverts: **~50 consumer files** fail to compile against the new Byte-typed protocol — their witnesses retain `Buffer.Element == UInt8` signatures or their bodies append from `rawValue: UInt8` internal storage element-by-element.
+- Sequence-level appends (`buffer.append(contentsOf: str.utf8)`, `buffer.append(contentsOf: rawValue.bytes())`) bridge cleanly via the BSLI cross-domain extension. Element-level appends (`buffer.append(value.rawValue)`) do NOT — fixing them requires either `Byte(...)` mass-patching (forbidden by hard rule) OR consumer container retype (W3's job).
+
+**Structural issue surfaced**: the brief's three constraints are jointly inconsistent —
+- W2 termination "ecosystem build clean" requires every consumer's witness to compile
+- W2→W3 strict ordering requires W2 to land before W3 begins
+- W3 cohort enumerates only 6 packages, not the ~50 actually affected by the protocol retype
+
+**Report for supervisor review**: `swift-institute/Research/2026-05-19-w2-byte-cascade-structural-issue.md` — proposes discrimination criterion ("full UInt8 → Byte, only UInt8 where truly appropriate") with sites-that-MUST-stay-UInt8 vs sites-that-MUST-retype-to-Byte tables, and recommends unifying W2+W3 into a single coupled cascade per consumer package.
+
+**Gates W3 dispatch**: BLOCKED pending principal adjudication on report's open questions (W2+W3 unification, scope expansion, `bytes(endianness:)` Byte-companion, ambiguous-case treatment).
 
 ### Wave 3 — Outcome
 
