@@ -479,6 +479,68 @@ Plus a round-trip test (encode → decode → equality).
 
 *To be stamped by W3 executor.*
 
+## Post-W2 consumer cascade sweep (parallel arc B)
+
+> Parallel arc to the swift-linter byte-discipline arc (A) per
+> `HANDOFF-uint8-byte-consumer-cascade.md`. Mechanical ~50-file sweep
+> applying the W2 discrimination rubric (pinned commit `0fbc860`) to ~17
+> consumer packages across IETF/ISO/foundations. Reference patterns:
+> `swift-rfc-791@cde98cb` (Flags + TTL). Per-package commit + checkpoint
+> every 5 packages per [HANDOFF-019] + [HANDOFF-035].
+
+### Checkpoint 1 (after 5 packages, 2026-05-19)
+
+**Landed** (per-package SHAs + discrimination axis):
+
+| Package | SHA | Files | Discrimination |
+|---|---|---|---|
+| `swift-rfc-4291` | `b6b95f8` | 1 src + 1 test | Pattern B (UInt16 segments stay, witness retype, `bytes(endianness: .big)` body) |
+| `swift-primitives/swift-ascii-primitives` | `74da3d5` | 2 src | Sequence-predicate `Bytes.Element` retype to Byte; `.underlying` bridge to single-byte `isXxx(UInt8)` impls; `serializeDecimal` `Buffer.Element` retype with internal UInt8 digit-calc storage + `Byte()` bridge at append boundary; 13 `@_disfavoredOverload` UInt8 forwarders |
+| `swift-rfc-791` (10 remaining types) | `21892e2` | 10 src + 11 test + 2 Error | Pattern A: Precedence/TypeOfService/Version/Protocol (3–8-bit bitwise, no arithmetic) — storage retype to Byte. Pattern B: Identification/HeaderChecksum/TotalLength/FragmentOffset (UInt16) + IPv4.Address (UInt32 + octet tuple retype to Byte + `init(_ octet: Byte, ...)` primary + UInt8 forwarder) + IHL (UInt8 arithmetic, × 4 multiplier — STAYS UInt8) |
+| `swift-rfc-768` (UDP) | `ba16b6d` | 6 src + 1 test | Pattern B for Port/Length/Checksum (UInt16); `compute/verify/sumWords` static helpers retype `Bytes.Element` to Byte; Header aggregate parse+serialize; Datagram opaque payload `data: [Byte]` (primary) + `[UInt8]` forwarder; PseudoHeader bridges `RFC_768.protocolNumber` (UInt8 stays in Constants) via `Byte()` |
+| `swift-rfc-8200` (IPv6 ext header) | `b5a3bf6` | 2 src + 1 test | Header witness retype; internal arithmetic-domain UInt8/UInt32 bitwise calc with `Byte()` bridge at `buffer.append` boundary; `payloadLength` via `bytes(endianness:)`. Fragment witness retype; UInt16/UInt32 fields via `bytes(endianness:)` |
+
+**Tests**: 36 (rfc-4291) + 0 (ascii-primitives, no tests) + 225 (rfc-791) + 19 (rfc-768) + 20 (rfc-8200) = **300/300 pass**.
+
+**End-of-tier-0 workspace grep** (`Buffer.Element == UInt8` in scope packages):
+
+```
+rfc-768:                0  (✓ done)
+rfc-791:                0  (✓ done)
+rfc-3596:               1  (BLOCKED on rfc-1035 baseline)
+rfc-4291:               0  (✓ done)
+rfc-4648:               6  (tier 3, untouched — gates rfc-5952, rfc-7519)
+rfc-5952:               1  (BLOCKED on rfc-4648)
+rfc-6068:               0  (different pattern; deps on rfc-3986/5322 out of scope)
+rfc-6455:               1  (untouched)
+rfc-6531:               0  (different pattern; multiple out-of-scope deps)
+rfc-6891:               2  (BLOCKED on rfc-1035 baseline)
+rfc-7301:               2  (BLOCKED on rfc-8446 tier 3)
+rfc-7519:               1  (BLOCKED on rfc-4648)
+rfc-8200:               0  (✓ done)
+rfc-8446:               4  (tier 3, untouched — gates rfc-7301)
+rfc-9293:               7  (tier 3, untouched)
+iso-21320:              0  (deps on rfc-1951; needs verify)
+iso-32000:              6  (tier 4, untouched)
+incits-4-1986:          0  (OQ-1 ascii surface pattern, separate)
+ascii-primitives:       1  (forwarder; effectively done)
+```
+
+**Blockers surfaced** (class-c surface, not auto-fixed per
+`feedback_orchestrator_match_subordinate_stop.md`):
+
+| Blocker | Affected | Disposition |
+|---|---|---|
+| `swift-rfc-1035` baseline broken at `f4925e9 refactor: retype ASCII Buffer.Element to Byte` — 4 errors `Byte == ASCII.Code` in `RFC_1035.Domain.Label.swift` lines 142/161/177 + `RFC_1035.Domain.swift:145`. rfc-1035 is OUT of arc cohort per pinned plan. | rfc-3596, rfc-6891 (transitive deps via Package.swift) | DEFERRED — surface to principal; not auto-fixed (parallel-session WIP, sibling arc) |
+| Tier-3 packages gate tier-0/1/2 leaves | rfc-5952 (waits rfc-4648), rfc-7301 (waits rfc-8446), rfc-7519 (waits rfc-4648) | EASY-TIER-FIRST violated by dep order; proceeding with rfc-4648 + rfc-8446 next to unblock leaves |
+
+**Remaining file count** (post-checkpoint-1): ~30 in-scope files across 9
+packages.
+
+**Continuing**: tier 3 (rfc-4648, rfc-8446, rfc-9293) to unblock leaves +
+tier 4 (iso-32000, incits-4-1986, iso-21320). rfc-3596/rfc-6891 remain
+DEFERRED pending principal direction on rfc-1035 baseline.
+
 ### Wave 4 — Outcome
 
 *To be stamped by W4 executor.*
