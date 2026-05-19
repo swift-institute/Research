@@ -225,6 +225,61 @@ W5 and W6 parallel post-W4. Per-wave handoffs at workspace root
 
 **W2 termination criterion**: ecosystem-wide build gate covers Binary.Serializable consumers + Parseable consumers (same-package atomic) + file-system extension. Parser_Primitives consumers excluded.
 
+### W2+W3 unification (principal direction 2026-05-19, post-execution-surfacing)
+
+W2 execution surfaced a structural inconsistency (full report at `swift-institute/Research/2026-05-19-w2-byte-cascade-structural-issue.md`): W2 protocol retype breaks compile on ~50 consumers whose Pattern A/B witness bodies append element-by-element from `UInt8` storage. The original W3 cohort (6 named packages) covered only the container-retype subset, not the wider witness-signature cascade.
+
+**Disposition**: W2 + W3 **BUNDLE** into a single unified cascade. Cohort: ~35–40 packages enumerated by the workspace-wide grep in the issue report § "Recommended scope expansion". Strict ordering W2-before-W3 dropped (the two are mechanically coupled). Subsequent waves W4 (Phase 3 deletion) / W5 (promote-rule) / W6 (audit-site migration) unaffected.
+
+**Termination criterion** (revised): ecosystem-wide `swift build --build-tests` clean across all ~35–40 cascade packages, AND workspace-wide grep showing zero residual `Buffer.Element == UInt8` outside the discriminated "must stay UInt8" exceptions below.
+
+**Discrimination criteria — MUST stay UInt8** (principal-signed-off 2026-05-19):
+
+- Stdlib boundary types (`String.UTF8View.Element`, `Substring.utf8`, etc.)
+- Stdlib protocol witnesses where stdlib defines the signature (`String(decoding: bytes, as: UTF8.self)`)
+- FFI / C interop (`read(2)` / `write(2)` syscalls taking `UnsafeMutablePointer<UInt8>`)
+- File I/O raw read buffers (POSIX boundary)
+- Internal helper utilities for stdlib idioms (e.g., `swift-strings/Array.String.Char+PlatformNativeUTF8.appendUTF8(into:)`)
+
+**Discrimination criteria — MUST retype to Byte** (principal-signed-off 2026-05-19):
+
+- `Binary.Serializable` / `Binary.Parseable` witness signatures
+- Domain-typed enum `rawValue: UInt8` (e.g., `File.Directory.Entry.Kind.rawValue`)
+- Domain-typed struct field `xxx: UInt8` (e.g., `RFC_791.Flags.rawValue`)
+- Octet tuples representing addresses (`RFC_791.IPv4.Address.octets`)
+- Opaque byte payloads (`RFC_7519.JWT.payload`, etc.)
+- `Buffer.Element == UInt8` in any institute extension
+- Wrappers around byte values (e.g., `Binary.ASCII.Wrapper.bytes`)
+- **Test bodies comparing serialized output** (use `[Byte]` literal inference per W1's test-syntax convention)
+- **`BinaryInteger.bytes(endianness:)`** — primary returns `[Byte]`; `[UInt8]` form retained as `@_disfavoredOverload` (it's an institute extension, byte-domain output; eliminating the BSLI bridge at every integer-RawValue conformer is the structural win this cascade enables)
+
+**Ambiguous-case dispositions** (principal-signed-off 2026-05-19):
+
+| Site | Disposition |
+|---|---|
+| `BinaryInteger.bytes(endianness:)` | Primary `-> [Byte]`; `-> [UInt8]` forwarder as `@_disfavoredOverload`. Lands in `Standard_Library_Extensions` (or current home); add to W2 scope. |
+| `withBytes(_:Span<Byte>)` on File.Name | Primary Span<Byte>; Span<UInt8> as `@_disfavoredOverload` for POSIX-FFI callers. |
+| Test bodies | Convert to `[Byte]` literal comparisons. |
+| `String(decoding:as:)` in conformer bodies | Stays UInt8 (stdlib idiom); source can stay `[Byte]` via existing `Sequence.underlying: [UInt8]` BSLI accessor at the boundary. |
+
+**Forwarder scope on Binary.Serializable** (principal-signed-off 2026-05-19, all `@_disfavoredOverload`):
+
+- `serialize(into:) where Buffer.Element == UInt8`
+- `Array.init<S: Binary.Serializable>(_:) where Element == UInt8`
+- `ContiguousArray.init<S: Binary.Serializable>(_:) where Element == UInt8`
+- `RangeReplaceableCollection<UInt8>.append<S: Binary.Serializable>(_:)`
+- `withSerializedBytes(_:(borrowing Span<UInt8>) throws -> R)` — primary becomes `Span<Byte>`; UInt8 form forwards
+- `var bytes: [UInt8]` default convenience — primary `var bytes: [Byte]`; callers reach for `.bytes.underlying` via existing BSLI accessor to get `[UInt8]`
+
+**State at direction time** (2026-05-19):
+
+- swift-binary-primitives `b121c0e` — protocol retype landed; in-package tests pass (337/337). Keep.
+- swift-ascii-serializer-primitives `06613af` — bridge simplified. Keep.
+- swift-foundations/swift-paths `db3de1c` (reverts `6e440f9`) — REDO under expanded W2+W3 scope.
+- swift-foundations/swift-file-system `040e97b` (reverts `c790c1d`) — REDO under expanded W2+W3 scope.
+
+Ecosystem build currently red on ~50 consumer files; nothing pushed. Proceed with bundled cascade.
+
 ### Wave 2 — Outcome (2026-05-19)
 
 **Status**: PARTIAL — protocol retype landed; consumer cascade SURFACED + STOPPED for principal
