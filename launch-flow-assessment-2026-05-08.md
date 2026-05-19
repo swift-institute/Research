@@ -2,9 +2,16 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-05-08
+version: 1.2.0
+last_updated: 2026-05-13
 status: DECISION
+supersession_note: |
+  v1.2.0 (2026-05-13): The ≥3-day inter-launch floor recommendation in §"Pacing"
+  (lines ~183, 192–194; resolved-question row #3 at line ~252) is RETIRED per
+  principal directive 2026-05-13 after Story 2 Wave 1+2 demonstrated the floor
+  adds no detectable value and produces real friction. Original text retained
+  below for historical record; operational pacing rule is now "per-package
+  readiness only" — see `Blog/Series/data-structures-launch-2026.md` §Pacing.
 status_note: |
   v1.0.0 (RECOMMENDATION) shipped with six open questions for orchestrator.
   v1.1.0 (DECISION) folds in orchestrator answers received 2026-05-08:
@@ -12,6 +19,7 @@ status_note: |
   pacing confirmed driven-by-readiness, cohort overview at Blog/Series/
   data-structures-launch-2026.md, finite→algebra-group prune deferred
   (chain stays at 42), `cohort:` frontmatter primary (`series:` also acceptable).
+  v1.2.0 (2026-05-13) retires the ≥3-day inter-launch floor — see supersession_note above.
 scope: cross-package
 tier: 1
 audience: orchestrator (data-structure publish-chain decision; storytelling axis only)
