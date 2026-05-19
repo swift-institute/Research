@@ -660,6 +660,76 @@ packages.
 tier 4 (iso-32000, incits-4-1986, iso-21320). rfc-3596/rfc-6891 remain
 DEFERRED pending principal direction on rfc-1035 baseline.
 
+### Checkpoint 2 / Final (2026-05-19)
+
+**Total landed: 10 packages**, ~38 source files retyped, ~10+ test files updated.
+
+| Package | SHA | Files | Discrimination |
+|---|---|---|---|
+| `swift-rfc-4291` | `b6b95f8` | 1 src + 1 test | UInt16 segments stay, witness retype, `bytes(endianness: .big)` body |
+| `swift-ascii-primitives` | `74da3d5` | 2 src | Sequence predicates `Bytes.Element` retype + `.underlying` bridge; `serializeDecimal` retype + Byte() append-boundary bridge; 13 `@_disfavoredOverload` UInt8 forwarders |
+| `swift-rfc-791` (10 types) | `21892e2` | 10 src + 11 test + 2 Error | Pattern A bitwise: Precedence/TypeOfService/Version/Protocol (storage retype). Pattern B arithmetic: Identification/HeaderChecksum/TotalLength/FragmentOffset (UInt16) + IPv4.Address (UInt32 + octet tuple + UInt8 forwarder) + IHL (UInt8 arithmetic STAYS) |
+| `swift-rfc-768` | `ba16b6d` | 6 src + 1 test | UInt16 fields (Port/Length/Checksum) witness retype; compute/verify static helpers retype Bytes.Element; Datagram `data: [Byte]` + [UInt8] forwarder; PseudoHeader bridges protocolNumber via Byte() |
+| `swift-rfc-8200` | `b5a3bf6` | 2 src + 1 test | Header witness retype; internal arithmetic-domain UInt8/UInt32 bitwise calc with Byte() bridge at append boundary; payloadLength via bytes(endianness:). Fragment witness retype |
+| `swift-rfc-9293` | `7538429` | 7 src + 1 test | TCP: Port/SequenceNumber (UInt16/UInt32 stay); Flags STAYS UInt8 (OptionSet RawValue: FixedWidthInteger); DataOffset STAYS UInt8 arithmetic; Header aggregate parse+serialize with options: [Byte]; Option enum unknown(kind: UInt8, data: [Byte]); Segment data: [Byte] + [UInt8] forwarder |
+| `swift-rfc-8446` | `16e5677` | 4 src + 1 test | TLS: Alert witness retype with Byte() level/description; Extension.Data opaque `data: [Byte]` + [UInt8] forwarder, UInt16 wire forms via bytes(endianness:); Handshake.Message opaque body, manual uint24 split; Record opaque fragment + [UInt8] forwarder + init(binary:) internal next() bridge |
+| `swift-rfc-7301` | `3736b6c` | 4 src + 1 test | ALPN: ProtocolIdentifier opaque `rawValue: [Byte]` + [UInt8] forwarder; description bridges via .underlying for stdlib UTF-8; WellKnown 17 constants use Array<Byte>; Extension serialize with UInt16 wire forms |
+| `swift-rfc-6455` | `f4a09ce` | 1 src + 1 test | WebSocket Frame opaque `payload: [Byte]` + [UInt8] forwarder; serialize byte0/byte1 bitwise UInt8 internal with Byte() bridges; 16/64-bit length via bytes(endianness:); mask.applying bridge via .underlying; convenience constructors retyped |
+| `swift-iso-21320` | `d6e15ec` | 1 src + Package.swift | CRC32 checksum<Bytes> generic helper Bytes.Element retype; UInt32 accumulator with .underlying bridge; [UInt8] @_disfavoredOverload forwarder. Package.swift gained `swift-byte-primitives` dep (Standard_Library_Extensions does NOT re-export Byte; transitively absent in this package's dep graph) |
+
+**Tests**: 36 + 0 + 225 + 19 + 20 + ~25 (rfc-9293) + 23 + 15 + 22 + 5 = **~390/390 pass** across 10 packages.
+
+**End-of-arc workspace grep** (`Buffer.Element == UInt8` in scope packages):
+
+```
+rfc-768:                0  (✓ done)
+rfc-791:                0  (✓ done)
+rfc-3596:               1  (DEFERRED: blocked on rfc-1035 baseline)
+rfc-4291:               0  (✓ done)
+rfc-4648:               6  (DEFERRED: codec split design — encoded ASCII.Code vs decoded Byte)
+rfc-5952:               1  (DEFERRED: gated on rfc-4648 Base16.encode)
+rfc-6068:               0  (no Buffer.Element pattern in source; out of scope or already-typed)
+rfc-6455:               0  (✓ done)
+rfc-6531:               0  (no Buffer.Element pattern in source)
+rfc-6891:               2  (DEFERRED: blocked on rfc-1035 baseline)
+rfc-7301:               0  (✓ done)
+rfc-7519:               1  (DEFERRED: gated on rfc-4648 Base64URL.encode)
+rfc-8200:               0  (✓ done)
+rfc-8446:               0  (✓ done)
+rfc-9293:               0  (✓ done)
+iso-21320:              0  (✓ done — Package.swift dep added)
+iso-32000:              6  (DEFERRED: 9 files including ContentStream/Writer; substantive per-file design — out of mechanical scope)
+incits-4-1986:          0  (different pattern; OQ-1 deferred — needs coordinated file rename [UInt8]+ → [ASCII.Code]+ + workspace-wide consumer migration)
+ascii-primitives:       1  (forwarder; effectively done)
+```
+
+**Total reduced**: 51 → 18 (`Buffer.Element == UInt8` files), 33 files retyped across 10 packages.
+
+**Deferred items** (require separate focused arcs):
+
+| Package | Reason | Estimated work |
+|---|---|---|
+| `swift-rfc-1035` baseline broken at `f4925e9` | Outside arc cohort per pinned plan; parallel-session WIP | 4 `Byte == ASCII.Code` sites in Domain*.swift; needs accessor-style fix |
+| `swift-rfc-3596`, `swift-rfc-6891` | Transitive dep on rfc-1035 | Unblocks once rfc-1035 fixed; each is mechanical retype (1 + 2 files) |
+| `swift-rfc-4648` | Codec split design (encoded ASCII.Code vs decoded Byte per file/method) | 6 source files; per-direction discrimination is meaningful design work, not mechanical |
+| `swift-rfc-5952`, `swift-rfc-7519` | Gated on rfc-4648 (`Base16.encode`/`Base64URL.encode` calls) | 1 file each; mechanical after rfc-4648 lands |
+| `swift-iso-32000` | 9 files (more than plan's 6); 1000+ line ContentStream/Writer with intricate PDF serialize bodies | Substantive per-file design work; needs focused arc |
+| `swift-incits-4-1986` (OQ-1) | File rename + workspace-wide consumer migration coordinated with W4 wrapper deletion | Best done as part of W4 arc rather than W3 |
+| `swift-rfc-6068`, `swift-rfc-6531` | Different pattern (no `Buffer.Element == UInt8` per source grep); deps on out-of-arc rfc-3986/5322/1123/5321 | Need pattern-by-pattern audit; out of obvious mechanical scope |
+
+**Class-c surface for principal**: rfc-1035 baseline (parallel-session WIP at `f4925e9 refactor: retype ASCII Buffer.Element to Byte` left 4 errors `Byte == ASCII.Code` in `RFC_1035.Domain.Label.swift:142/161/177` + `RFC_1035.Domain.swift:145`). Blocks rfc-3596, rfc-6891. Per `feedback_orchestrator_match_subordinate_stop.md`, not auto-fixed.
+
+**Discrimination patterns established / refined**:
+
+- UInt16/UInt32 arithmetic-domain stays; witness `Buffer.Element` retypes; bodies bridge via `.underlying` for stdlib integer reconstruction; `BinaryInteger.bytes(endianness: .big)` for Byte-primary serialize emission.
+- UInt8 arithmetic-domain (TTL decrement, IHL × 4 multiplier, HopLimit, DataOffset) STAYS UInt8 + witness-only retype.
+- OptionSet rawValue STAYS UInt8 (RawValue: FixedWidthInteger; Byte ≢ FixedWidthInteger per Q3).
+- Enum raw-value catalogs (Kind, ContentType, MessageType, ExtensionType) STAY UInt8/UInt16 in separate files; bridge via `Byte()` at witness boundary.
+- Opaque byte-domain payloads (TCP Options data, TLS Extension/Handshake/Record fragment, ALPN ProtocolIdentifier rawValue, WebSocket payload) → `[Byte]` storage primary + `[UInt8]` @_disfavoredOverload forwarder init.
+- Test sweep: `[UInt8]` → `[Byte]` for serialize-buffer comparisons; `Byte(value)` bridge in UInt8-iteration test loops (Byte not Strideable per Q3).
+- Stdlib idioms (`String(ascii:)`, `String(decoding:as:UTF8.self)`, MaskingKey.apply that takes UInt8) bridged via `.underlying` at consumer call site rather than retyping the stdlib-shaped API.
+- Package.swift dep gap surfaced for iso-21320: `Standard_Library_Extensions` does NOT re-export `Byte`; packages without transitive byte-primitives must add it as direct dep.
+
 ### Wave 4 — Outcome
 
 *To be stamped by W4 executor.*
