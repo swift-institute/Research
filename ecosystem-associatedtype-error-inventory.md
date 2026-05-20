@@ -2,10 +2,25 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-05-20
+version: 1.1.0
+last_updated: 2026-05-21
 status: RECOMMENDATION
 ---
+-->
+
+<!--
+## Changelog
+
+- v1.1.0 (2026-05-21): Deep-dive on the two FITS candidates (Ordinal /
+  Color) replaces speculative framing with verified file:line evidence.
+  Pre-existing infrastructure surfaced for both arcs: Cyclic.Group.Static
+  .Element already has the EXACT migration-shape init signature; Color
+  .Error already exists with `.outOfGamut` / `.invalidComponent` cases.
+  Migration sketches added for both. Conformer counts now grounded
+  (Ordinal: 1 refined conformer landed; Color: 7 conformers — 2 throwing
+  candidates, 5 universal-domain). Q1 and Q2 in §"Open questions" updated
+  to reflect verified state.
+- v1.0.0 (2026-05-20): Initial inventory + triage.
 -->
 
 ## Context
@@ -148,14 +163,20 @@ They are listed here for completeness; the triage verdict for each is
 | File | `Sources/Ordinal Primitives Core/Ordinal.Protocol.swift:57` |
 | Init requirements | `init(_ ordinal: Ordinal)` — NO throws |
 | Fallible method requirements | none |
-| Existing universal conformer | `Ordinal` (self-conformance) |
-| Existing refined conformer | none direct; `Tagged<Tag, R: Ordinal.\`Protocol\`>` is universal-shape |
-| Hypothetical refined conformers | `Cyclic.Group.Static<n>.Element` (currently a separate type wrapping Ordinal but bounded to 0..<n); any bounded-Ordinal newtype |
-| Current failure handling | none — total construction by design today |
+| Existing universal conformer | `Ordinal` (self-conformance, line 83) |
+| Existing refined conformer (verified) | `Cyclic.Group.Static<n>.Element` — exists today in `swift-cyclic-primitives/Sources/Cyclic Group Static Element Primitives/Cyclic.Group.Static.Element.swift:46` BUT does NOT currently declare `: Ordinal.\`Protocol\`` conformance; the protocol-conformance hookup is missing |
+| Existing refined conformer's init signature | `public init(_ position: Ordinal) throws(Self.Error)` (Cyclic.Group.Static.Element.swift:56) — IDENTICAL to the byte-discipline pattern's `init(_ byte: Byte) throws(Self.Error)` shape, modulo type names |
+| Existing refined conformer's Error type | `Cyclic.Group.Static.Element.Error` (Cyclic.Group.Static.Element.Error.swift:17) — typed enum with `.invalidModulus` and `.outOfBounds(Int)` cases, ready to slot in as the protocol's associated Error |
+| Existing Ordinal→Element direction | `extension Ordinal { public init<let N: Int>(_ element: Cyclic.Group.Static<N>.Element) }` (Cyclic.Group.Static.Element+Ordinal.swift:25) — TOTAL (every Element produces an Ordinal); current asymmetry: Ordinal-from-Element is total, Element-from-Ordinal is partial. Matches `Byte` ↔ `ASCII.Code` asymmetry exactly. |
+| Hypothetical further refined conformers | any future bounded-ordinal newtype (e.g., `Index<T>.Bounded<N>`, `Finite.Element<N>`) |
+| Current failure handling on Element side | typed throws already in place; the only missing piece is the protocol-side AT |
 
-The protocol is the operator-ergonomics sibling to `Carrier.\`Protocol\`<Ordinal>`
-(per file header). The file header makes the parallel to `Byte.\`Protocol\``
-explicit and lists future refined conformers as a possibility.
+**Verification stamp (v1.1.0)**: The refined-conformer landscape is NOT
+speculative. `Cyclic.Group.Static.Element` exists, has the partial-failure
+init, has the typed Error enum, has the `position: Ordinal` accessor that
+maps to the protocol's required `ordinal: Ordinal { get }` getter. The
+migration's only structural work is wiring three pieces that already exist
+into a conformance declaration that does not yet exist.
 
 #### B.2 — `Color.\`Protocol\``
 
@@ -164,17 +185,22 @@ explicit and lists future refined conformers as a possibility.
 | Package | swift-color-standard |
 | File | `Sources/Color Standard/Color.Protocol.swift:51` |
 | Init requirements | `init(_ color: Color)` — NO throws |
-| Fallible method requirements | `func canonical() -> Color` — total, but reverse `init(_:Color)` is conceptually partial for restricted-gamut conformers |
-| Existing universal conformer | `Color` itself (self-conformance) |
-| Existing refined conformer | `IEC_61966.\`2\`.\`1\`.sRGB` and other per-IEC/ISO color-space types (in spec packages, out-of-scope for the layer but conform downstream) |
-| Hypothetical refined conformers | Any narrow-gamut representation (sRGB, P3, Rec.2020, CMYK, lab-restricted), per the doc comment which explicitly enumerates lossy-conversion shapes |
-| Current failure handling | silent clipping — the doc comment explicitly notes "Colors outside the target's gamut during reverse conversion may be clipped" |
+| Fallible method requirements | `func canonical() -> Color` — total; the reverse `init(_:Color)` is partial for restricted-gamut conformers |
+| Conformer count (verified, all in-scope) | **7** total conformers, all declared in `swift-color-standard` itself |
+| Conformer breakdown | (1) `Color` self-conformance — identity, total — `Color.Protocol.swift:90`; (2) `IEC_61966.\`2\`.\`1\`.sRGB` — restricted gamut, silently clamps — `Color+sRGB.swift:9`; (3) `IEC_61966.\`2\`.\`1\`.LinearSRGB` — restricted gamut, silently clamps — `Color+sRGB.swift:92`; (4) `Color.LAB` — universal gamut (every canonical Color maps in), but internal clamp on Lightness — `Color+LAB.swift:8`; (5) `Color.LCH` — universal gamut — `Color+LCH.swift:6`; (6) `Color.Oklab` — universal gamut — `Color+Oklab.swift:8`; (7) `Color.Oklch` — universal gamut — `Color+Oklch.swift:6` |
+| Conformers needing throwing init | **2 of 7**: sRGB + LinearSRGB. Their `init(_ color: Color)` implementations silently clamp out-of-gamut colors (`Color+sRGB.swift:32–34` calls `Color._toSRGB` which "Create linear sRGB (clamping values)" — file:line 83). Doc comment explicitly states: "Colors outside the sRGB gamut will be clipped to the nearest representable color." |
+| Conformers staying `Error == Never` | **5 of 7**: Color, LAB, LCH, Oklab, Oklch. Their canonical Color → Self direction is structurally universal (every canonical Color produces a valid wide-gamut representation). |
+| Pre-existing error infrastructure | **`Color.Error` already exists** at `Color.Error.swift:8` with `.outOfGamut`, `.unsupportedColorSpace`, `.invalidComponent(component:value:)` cases — the error type is in the codebase, just not yet wired into the protocol. **`Color.LAB.Lightness.Error`** also exists (`Color.LAB.swift:105`) — typed-throws error already in place for the typed Lightness component. |
+| Current failure handling | silent clipping at `_toSRGB` / `_fromRGB` boundaries; documented in protocol doc comment as a structural feature of the protocol's signature |
 
-This is a textbook FITS shape: the protocol's own documentation acknowledges
-the partial-failure mode and currently handles it via silent clipping. The
-canonical Color value space is broader than any single refined color space's
-gamut; `Color(canonicalColor)` for `IEC_61966.\`2\`.\`1\`.sRGB` partial-fails
-for out-of-sRGB-gamut canonical colors.
+**Verification stamp (v1.1.0)**: The refined-conformer landscape is NOT
+speculative. Seven conformers exist today (all in `swift-color-standard`),
+two of which carry the exact silent-clipping anti-pattern the
+byte-discipline arc rejected. The error type the migration would use
+(`Color.Error.outOfGamut`) already exists. The pattern's payoff at the
+sRGB / LinearSRGB sites is concrete: silent clipping replaced with
+explicit `throws(Color.Error)`, while the five universal-gamut conformers
+preserve non-throwing call sites via `Error == Never` default.
 
 #### B.3 — `TernaryLogic.\`Protocol\``
 
@@ -355,21 +381,21 @@ listed here.
 
 | Field | Value |
 |---|---|
-| Verdict | **FITS cleanly** |
-| Rationale | Strongest direct parallel to `Byte.\`Protocol\``. The protocol has `init(_ ordinal: Ordinal)`; today it is total (no throws), but refined conformers exist conceptually (any bounded-ordinal newtype like `Cyclic.Group.Static<n>.Element` whose valid range is `0..<n`). The file header makes the parallel to `Byte.\`Protocol\`` explicit by listing the sibling-shape relationship to `Carrier.\`Protocol\``. Universal conformer `Ordinal` would take `Error == Never` (non-throwing call sites preserved); a future `Cyclic.Group.Static.Element: Ordinal.\`Protocol\`` would declare its own Error and validate the value against the static bound. |
-| Conformer impact | Current direct conformers: 2 (Ordinal, Tagged<Tag, R: Ordinal.\`Protocol\`>). Estimated call sites needing `try`: zero today (universal conformers' Error stays Never). Future refined conformers: 1–N (Cyclic.Group.Static<n>.Element if migrated; bounded-ordinal newtypes the ecosystem may add). |
-| Recommended sequencing | Lands cleanly as a standalone arc with low ripple. Can be done before or after the Carrier reshape (the two are siblings, not refinements). Recommended cohort entry point because the rubric calibration was developed on this exact shape (Byte). |
-| Notes | The `Tagged<Tag, R: Ordinal.\`Protocol\`>` recursive conformance must declare `typealias Error = R.Error` (same pattern as `Tagged+Byte.Protocol.swift`); not a structural blocker. |
+| Verdict | **FITS cleanly** (verified) |
+| Rationale | Strongest direct parallel to `Byte.\`Protocol\``. The refined conformer (`Cyclic.Group.Static.Element`) ALREADY EXISTS with the byte-discipline pattern's exact init shape (`init(_ position: Ordinal) throws(Self.Error)`) and a typed Error enum (`.invalidModulus`, `.outOfBounds(Int)`). The protocol-conformance hookup is the only missing piece — the partial-failure infrastructure is already in place on the conformer side. Universal conformer `Ordinal` takes `Error == Never` (non-throwing call sites preserved); refined conformer `Cyclic.Group.Static.Element` declares its existing Error and gets connected to the protocol it should always have conformed to. |
+| Conformer impact | Current direct conformers post-migration: 3 (Ordinal — Never, Tagged<Tag, R: Ordinal.\`Protocol\`> — propagates R.Error, Cyclic.Group.Static.Element — concrete Error). Estimated call sites needing `try`: zero new (the Element's `init(_:Ordinal)` already throws; existing call sites already write `try` or use `init(__unchecked:)` / `init(wrapping:)` alternates). Future refined conformers: any future bounded-ordinal newtype (Index<T>.Bounded<N>, Finite.Element<N>) plugs in trivially. |
+| Recommended sequencing | Standalone arc with low ripple. Independent of Color arc. Recommended FIRST because (a) rubric calibration matches Byte exactly; (b) refined conformer already shipped — this is connecting existing wiring, not new design; (c) Cyclic.Group.Static.Element gains "first-class ordinal" status that consumer-side generic algorithms over `some Ordinal.\`Protocol\`` can use. |
+| Notes | The `Tagged<Tag, R: Ordinal.\`Protocol\`>` recursive conformance must declare `typealias Error = R.Error` (same pattern as `Tagged+Byte.Protocol.swift`); mechanical. The Element's `var position: Ordinal` and the protocol's `var ordinal: Ordinal { get }` requirement have different names — the conformance declaration provides a `var ordinal: Ordinal { position }` adapter, OR rename `position` to `ordinal` for symmetry. Decision deferred to execution-time. |
 
 #### B.2 — `Color.\`Protocol\``
 
 | Field | Value |
 |---|---|
-| Verdict | **FITS cleanly** |
-| Rationale | The protocol's own doc comment explicitly enumerates the partial-failure modes that the pattern is designed to surface: "Gamut limitations", "Precision loss", "Model differences". Today these are handled by silent clipping ("Colors outside the target's gamut during reverse conversion may be clipped") — exactly the anti-pattern the byte-discipline arc rejects. The canonical `Color` value space is broader than any refined color space's gamut; `Color(canonicalColor)` for sRGB / P3 / Rec.2020 / CMYK partial-fails for out-of-gamut canonical colors. Universal conformer `Color` (self-conformance, total) takes `Error == Never`; refined per-IEC color spaces declare a concrete Error and throw on out-of-gamut. |
-| Conformer impact | Estimated existing refined conformers: depends on swift-color-standard ecosystem; the protocol is referenced from `IEC_61966.\`2\`.\`1\`.sRGB` and likely other IEC/ISO color types (out-of-layer-scope but downstream conformers). Estimated call sites needing `try`: at the `Color(canonicalColor)` call sites only for refined color types; the `canonical()` direction is total and unaffected. |
-| Recommended sequencing | After Ordinal.\`Protocol\` (smaller, rubric-calibrating arc lands first). Color is the largest non-Byte FITS in the inventory and a good second target. |
-| Notes | The `canonical()` direction is total (every refined color produces a canonical), so only the `init(_:Color)` direction grows the throws clause. This is a one-direction migration; the protocol's symmetry is preserved (lossy direction = throws; lossless direction = no throws). |
+| Verdict | **FITS cleanly** (verified, more concrete than Ordinal) |
+| Rationale | Seven verified conformers in-scope (all in swift-color-standard). Two carry the silent-clipping anti-pattern (sRGB + LinearSRGB) — their `init(_ color: Color)` is documented to "Clip to the nearest representable color." The migration replaces silent clipping with explicit `throws(Color.Error)`. The Color.Error enum already exists with the right cases (`.outOfGamut`, `.invalidComponent(component:value:)`). The five wide-gamut conformers (Color, LAB, LCH, Oklab, Oklch) take `Error == Never` and remain non-throwing at call sites — call-site impact bounded to sRGB/LinearSRGB consumers. |
+| Conformer impact | Throwing migrations: 2 (sRGB, LinearSRGB). Non-throwing (Error = Never) migrations: 5 (Color, LAB, LCH, Oklab, Oklch). Existing `converted<Target: Color.\`Protocol\`>(to:)` extension at `Color.Protocol.swift:83` becomes `throws(Target.Error)` and is non-throwing when Target.Error == Never (5 of 7 cases). Consumer-site ripple: every `IEC_61966.\`2\`.\`1\`.sRGB(canonicalColor)` and `LinearSRGB(canonicalColor)` call site needs `try`; estimated single-digit count in foundations layer (one verified hit in `swift-pdf-html-render/.../PDF.Color.swift:13`). |
+| Recommended sequencing | Second (after Ordinal), or in parallel. The two arcs share zero overlap. Color has more conformer files to touch (8 source files) but no cross-package cascade because all conformers live in swift-color-standard. The `Color.Error` enum is the only existing error type that needs no work — already shaped right. |
+| Notes | The `canonical()` direction stays total (Self → canonical Color always succeeds — refined values are subsets of canonical). Only the inverse direction grows the throws clause, and only for restricted-gamut conformers. The protocol's symmetry is preserved: lossless direction = no throws; lossy direction = typed throws with default Never. |
 
 #### B.3 — `TernaryLogic.\`Protocol\``
 
@@ -507,25 +533,141 @@ The triage produces TWO FITS verdicts. Both are independent of each other
 and of the byte-discipline arc that originated the pattern. Suggested
 ordering:
 
-### Arc 1 (small, rubric-calibrating): `Ordinal.\`Protocol\``
+### Arc 1 (small, mechanical): `Ordinal.\`Protocol\``
 
 | Property | Value |
 |---|---|
-| Scope | Add `associatedtype Error: Swift.Error = Never` to `Ordinal.\`Protocol\`` per `Byte.\`Protocol\``'s shape; add `init(_ ordinal: Ordinal) throws(Self.Error)`; gate any default impls that depend on totality with `where Error == Never`; add `typealias Error = R.Error` to the recursive Tagged conformance |
-| Risk | Low — direct parallel to a landed arc; the shape is mechanically reproducible from `Byte.Protocol.swift` |
-| Downstream consumer ripple | Universal-conformer call sites: zero (Error defaults to Never; `throws(Never)` is non-throwing). Refined conformer migration is optional and per-package (e.g., Cyclic.Group.Static.Element migration would be a separate sub-arc). |
-| Dependencies | None — independent of any other proposed arc |
-| Estimated wave count | 1–2 waves (protocol shape + Tagged extension; optional Cyclic.Group.Static.Element wave deferred) |
+| Scope | (a) Add `associatedtype Error: Swift.Error = Never` to `Ordinal.\`Protocol\``; (b) change `init(_ ordinal: Ordinal)` to `init(_ ordinal: Ordinal) throws(Self.Error)`; (c) gate any default impls that depend on totality with `where Error == Never`; (d) add `typealias Error = R.Error` to the recursive Tagged conformance in `Tagged: Ordinal.\`Protocol\`` extension; (e) wire `Cyclic.Group.Static.Element: Ordinal.\`Protocol\`` conformance with `typealias Error = Cyclic.Group.Static.Element.Error` and `var ordinal: Ordinal { position }` (or rename `position` to `ordinal`) |
+| Risk | Low — refined conformer already throws in its init; existing infrastructure connects rather than rebuilds |
+| Downstream consumer ripple | Universal-conformer call sites: zero new `try`s (Ordinal stays Never; Tagged propagates Never when wrapping Ordinal). Cyclic.Group.Static.Element call sites: already use `try` (the init already throws); the conformance hookup is API-positive (Element gains generic-algorithm participation) |
+| Dependencies | None — independent of Color arc |
+| Estimated wave count | 2 waves: (W1) protocol shape + Tagged extension in swift-ordinal-primitives; (W2) Element conformance in swift-cyclic-primitives |
+| Files touched (estimated) | 3-4 files: `Ordinal.Protocol.swift`, `Tagged+Ordinal.Protocol.swift`-adjacent, `Cyclic.Group.Static.Element.swift` (or a new sibling `Cyclic.Group.Static.Element+Ordinal.Protocol.swift`) |
 
-### Arc 2 (larger, downstream-conformer-heavy): `Color.\`Protocol\``
+#### Migration sketch — Ordinal.\`Protocol\`
+
+```swift
+// swift-ordinal-primitives/Sources/Ordinal Primitives Core/Ordinal.Protocol.swift
+
+extension Ordinal {
+    public protocol `Protocol` {
+        associatedtype Domain: ~Copyable
+        associatedtype Count: Carrier.`Protocol`<Cardinal>
+        associatedtype Error: Swift.Error = Never  // NEW
+
+        var ordinal: Ordinal { get }
+        init(_ ordinal: Ordinal) throws(Self.Error)  // CHANGED: throws clause
+    }
+}
+
+extension Ordinal: Ordinal.`Protocol` {
+    public typealias Domain = Never
+    public typealias Count = Cardinal
+    // Error defaults to Never — no typealias needed; throws(Never) ≡ non-throwing
+    @inlinable public var ordinal: Ordinal { self }
+    @inlinable public init(_ ordinal: Ordinal) { self = ordinal }
+}
+
+extension Tagged: Ordinal.`Protocol`
+where Underlying: Ordinal.`Protocol`, Tag: ~Copyable {
+    public typealias Domain = Tag
+    public typealias Count = Tagged<Tag, Cardinal>
+    public typealias Error = Underlying.Error  // NEW: propagate
+    @inlinable public var ordinal: Ordinal { underlying.ordinal }
+    @_disfavoredOverload
+    @inlinable
+    public init(_ ordinal: Ordinal) throws(Underlying.Error) {  // CHANGED
+        self.init(_unchecked: try Underlying(ordinal))
+    }
+}
+```
+
+```swift
+// swift-cyclic-primitives — new file or extension on Element
+
+extension Cyclic.Group.Static.Element: Ordinal.`Protocol` {
+    public typealias Domain = Never
+    public typealias Count = Cardinal
+    // Error is already defined on the type via Cyclic.Group.Static.Element.Error.swift
+    // The associated-type witness resolves to the nested enum.
+
+    @inlinable public var ordinal: Ordinal { position }
+    // init(_ ordinal: Ordinal) throws(Self.Error) already exists at file:line
+    // Cyclic.Group.Static.Element.swift:56 — no change needed.
+}
+```
+
+### Arc 2 (medium, conformer-heavy but self-contained): `Color.\`Protocol\``
 
 | Property | Value |
 |---|---|
-| Scope | Add `associatedtype Error: Swift.Error = Never` to `Color.\`Protocol\``; convert `init(_ color: Color)` to `init(_ color: Color) throws(Self.Error)`; for refined-gamut conformers (sRGB, P3, CMYK, etc.) declare concrete Error and replace silent clipping with explicit throws |
-| Risk | Higher — touches every per-color-standard conformer in spec packages (IEC/ISO color spaces) |
-| Downstream consumer ripple | Every call site `OtherColor(canonicalColor)` for refined conformers needs `try`; `Color(otherColor)` direction unchanged (Color is universal-conformer). The `converted(to:)` convenience extension needs `throws(Target.Error)` (or `where Target.Error == Never` for total cases). |
-| Dependencies | None on Arc 1 — independent. Could land before, after, or in parallel. |
-| Estimated wave count | 3–5 waves: (a) protocol shape; (b) convert silent-clip sites in refined conformers to throws; (c) update `converted(to:)` extension; (d) consumer-site `try` additions across downstream color packages; (e) optional documentation / example sweep |
+| Scope | (a) Add `associatedtype Error: Swift.Error = Never` to `Color.\`Protocol\``; (b) change `init(_ color: Color)` to `init(_ color: Color) throws(Self.Error)`; (c) for sRGB + LinearSRGB declare `typealias Error = Color.Error` (already exists) and replace silent-clamp `Color._toSRGB` with throwing variant that raises `.outOfGamut`; (d) the 5 wide-gamut conformers (Color, LAB, LCH, Oklab, Oklch) take Error = Never — no behavioral change; (e) update `converted<Target: Color.\`Protocol\`>(to:)` to `throws(Target.Error)`; (f) consumer-site `try` additions where sRGB/LinearSRGB are constructed from canonical Color |
+| Risk | Medium — multi-conformer arc but ALL conformers live in swift-color-standard (no cross-package cascade); Color.Error already exists |
+| Downstream consumer ripple | foundations-layer: spot-verified one site in `swift-pdf-html-render/.../PDF.Color.swift:13` already uses optional-return failure shape (`guard let srgb = sRGB(color) else`); most consumers expecting non-throwing today need to add `try` only for sRGB/LinearSRGB |
+| Dependencies | None on Arc 1 — independent |
+| Estimated wave count | 3-4 waves: (W1) protocol shape + Color/LAB/LCH/Oklab/Oklch wide-gamut conformer typealiases; (W2) sRGB + LinearSRGB throwing inits + Color.Error wiring; (W3) `converted(to:)` extension update; (W4) consumer-site sweep in foundations |
+| Files touched (estimated) | 8 files in swift-color-standard: `Color.Protocol.swift`, `Color+sRGB.swift` (2 conformances), `Color+LAB.swift`, `Color+LCH.swift`, `Color+Oklab.swift`, `Color+Oklch.swift`. `Color.Error.swift` unchanged (already shaped). Plus 1-N consumer files in swift-foundations. |
+
+#### Migration sketch — Color.\`Protocol\`
+
+```swift
+// swift-color-standard/Sources/Color Standard/Color.Protocol.swift
+
+extension Color {
+    public protocol `Protocol`: Sendable {
+        associatedtype Error: Swift.Error = Never  // NEW
+
+        func canonical() -> Color
+        init(_ color: Color) throws(Self.Error)  // CHANGED: throws clause
+    }
+}
+
+extension Color.`Protocol` {
+    // Generic conversion gains throws(Target.Error) — when Target.Error == Never,
+    // call sites infer non-throwing automatically.
+    public func converted<Target: Color.`Protocol`>(
+        to targetType: Target.Type
+    ) throws(Target.Error) -> Target {
+        try Target(self.canonical())
+    }
+}
+
+// Self-conformance — Error defaults to Never
+extension Color: Color.`Protocol` {
+    public func canonical() -> Color { self }
+    public init(_ color: Color) { self = color }
+}
+```
+
+```swift
+// swift-color-standard/Sources/Color Standard/Color+sRGB.swift (updated)
+
+extension IEC_61966.`2`.`1`.sRGB: Color.`Protocol` {
+    public typealias Error = Color.Error  // NEW — already exists in Color.Error.swift
+
+    public func canonical() -> Color { Color._fromSRGB(self) }
+
+    public init(_ color: Color) throws(Color.Error) {  // CHANGED
+        // Throwing version of _toSRGB: validate that linear RGB ∈ [0, 1]^3
+        // rather than silently clamping.
+        guard let srgb = Color._toSRGBThrowing(color) else {
+            throw .outOfGamut
+        }
+        self = srgb
+    }
+}
+```
+
+```swift
+// Wide-gamut conformers (LAB / LCH / Oklab / Oklch): no behavioral change,
+// just signature alignment.
+
+extension Color.LAB: Color.`Protocol` {
+    // Error defaults to Never — every canonical Color produces a valid LAB
+    public func canonical() -> Color { Color._fromLAB(self) }
+    public init(_ color: Color) { self = Color._toLAB(color) }
+}
+```
 
 ### Deferred / not-recommended arcs
 
@@ -537,28 +679,52 @@ ordering:
 
 ## Open questions for principal
 
-### Q1 — Confirm Ordinal.\`Protocol\` FITS-verdict on the refined-conformer landscape
+### Q1 — Confirm Ordinal.\`Protocol\` arc execution (v1.1.0: refined-conformer verified)
 
-The inventory found no current refined-Ordinal conformer in scope; the FITS
-verdict rests on the hypothetical `Cyclic.Group.Static<n>.Element` plus any
-future bounded-ordinal newtype. Is this hypothetical conformer count enough
-to motivate a per-protocol arc, or should Ordinal wait for the first refined
-conformer to actually arrive before the protocol is reshaped?
+**v1.0.0 framing**: hypothetical refined conformer ("wait for the first
+one"). **v1.1.0 update**: the refined conformer (`Cyclic.Group.Static
+.Element`) already exists with the exact partial-failure init shape and
+typed Error enum — it just isn't conformed to `Ordinal.\`Protocol\`` yet
+(see §B.1). The arc is "connect existing wiring", not "design new
+machinery".
 
-If "wait for the first refined conformer": the arc is DEFERRED rather than
-FITS-now. If "redesign now in anticipation of the cohort": the arc is
-authorized as recommended.
+Two sub-questions for execution:
 
-### Q2 — Confirm Color.\`Protocol\` arc scope and dependency on swift-standards
+- **Q1.a**: Adopt the `var ordinal: Ordinal { position }` accessor adapter,
+  OR rename `Cyclic.Group.Static.Element.position` to `ordinal` for symmetry
+  with the protocol requirement? The rename is more consistent
+  ecosystem-wide (Byte → `byte`, Ordinal → `ordinal`) but breaks one type's
+  existing public API. The adapter preserves API but introduces a small
+  naming asymmetry.
+- **Q1.b**: Should Arc 1 also audit other "almost-Ordinal" types in the
+  ecosystem (e.g., `Index<T>` direct users, `Finite.Element<N>` if exists)
+  for opt-in conformance, OR keep Arc 1 strictly to Ordinal + Element +
+  Tagged and queue the rest as follow-up? The minimal scope recommendation
+  is the latter.
 
-`Color.\`Protocol\`` lives in `swift-color-standard` (L2). Conformers live in
-sibling spec packages (IEC color spaces, ISO color spaces, etc.) — some of
-those are out-of-scope for the dispatching handoff. The cascade affects
-those packages.
+### Q2 — Confirm Color.\`Protocol\` arc execution (v1.1.0: cascade fully in-scope)
 
-Is the principal authorizing a multi-package cascade across the
-color-standard ecosystem, or should the protocol-side change land first
-and conformer migration be queued as a separate cohort arc?
+**v1.0.0 framing**: cascade spans IEC/ISO spec packages (out-of-scope
+fear). **v1.1.0 update**: all 7 Color.\`Protocol\` conformers are declared
+INSIDE `swift-color-standard` itself (extension declarations on
+IEC_61966 types still live in swift-color-standard, not in the IEC
+spec package). The cascade does NOT cross into out-of-scope spec
+packages (see §B.2). The arc is single-package on the
+protocol-+-conformer side; consumer-site `try` additions ripple out to
+swift-foundations layer (verified one hit; estimated single-digit count
+ecosystem-wide).
+
+One sub-question for execution:
+
+- **Q2.a**: Should sRGB-clipping behavior be PRESERVED behind an explicit
+  alternative init (e.g., `init(clamping color: Color)` ↔ throwing `init(_:Color)`),
+  mirroring the precedent set by `Color.LAB.Lightness` which has both
+  `init(_:) throws(Error)` and `init(clamping:)` (file:line
+  `Color.LAB.swift:87, 97`)? This preserves the existing silent-clip
+  behavior for callers who genuinely want clamping (display-pipeline
+  use cases) while making the throwing version the documented default.
+  Recommended: YES — both inits is the established pattern at the
+  component level; lifting it to the color-level matches.
 
 ### Q3 — Confirm `= Never` default addition for Memory.Allocator / Lexer.Pull.Tokens / Formatter
 
