@@ -905,9 +905,61 @@ The opaque-byte-domain row in [API-BYTE-004] rubric (Arc B 2026-05-20 refinement
 
 *To be stamped by W5 executor.*
 
-### Wave 6 — Outcome
+### Wave 6 — Outcome (2026-05-20, Arc E parallel arc)
 
-*To be stamped by W6 executor.*
+**12 commits across 12 packages — all on `main`, no push.** Independent of W4/W5; can run any time post-Arc-A. Closes the `.underlying`-marked audit sites added during W2 cascade per `byte-arithmetic-conformance.md` v1.0.0 RECOMMENDATION ζ.
+
+| # | Package | Commit | Sites | Pattern |
+|---|---|---|---|---|
+| 1 | swift-rfc-3339 | `47fd726` | 3 | digitValue body refactor (Offset + DateTime); parseFraction round-trip removed (direct isDigit + Character(code)) |
+| 2 | swift-rfc-791 | `f96025c` | 7 | IPv4 parser body → `code.digitValue!`; 6 appendDecimal arithmetic→byte sites retain `.underlying` bridge with refined comment |
+| 3 | swift-rfc-4291 | `a21f8b6` | 3 | IPv6 hex parser if/else chain → `code.hexValue!` guard |
+| 4 | swift-rfc-3986 | `b7a202a` | 1 | URI.Port digit decode → `UInt32(code.digitValue!)` |
+| 5 | swift-rfc-2183 | `7035535` | 1 | Filename high-bit check → `!code.isASCII` |
+| 6 | swift-rfc-2045 | `cbc4c07` | 2 | ContentTransferEncoding case-shift → `code.lowercased()` (ternary removed); Parameter.Name range → `code.isVisible` |
+| 7 | swift-rfc-6531 | `f687dc3` | 1 | LocalPart high-bit → `!code.isASCII` |
+| 8 | swift-rfc-5321 | `f750615` | 2 | LocalPart high-bit → `isASCII`; quoted-string range → `isPrintable` |
+| 9 | swift-rfc-2046 | `3759368` | 1 | Boundary.Error radix-format — stdlib-interop boundary; `.underlying` retained, audit comment removed |
+| 10 | swift-rfc-4648 | `eb9c713` | 2 | Internal + Base16 — stdlib-interop boundary (Base64/32 decodeTable); already typed, audit comments removed |
+| 11 | swift-foundations/swift-ascii | `a70a0a5` | 1 | UInt8.ASCII.Serializable Tests fixture — test specifically about UInt8 element; `.underlying` retained with refined comment |
+| 12 | swift-primitives/swift-terminal-primitives | `683500d` | 4 | Parser+CSI digit accumulation (2) → `code.digitValue!`; Parser+Control Ctrl-letter mapping (2) retains `.underlying` with refined arithmetic-domain bridge comment |
+
+**Total: 28 audit sites migrated.** Brief estimated ~38; actual count was 28 (no swift-json sites; no swift-ascii-serializer-primitives sites; rfc-4648 not in brief's 9-rfc enumeration but had 2 sites surfaced by grep). End-of-wave grep confirms zero residual `audit: underlying` markers in the migration scope.
+
+### Wave 6 — Per-site disposition summary
+
+Sites group into three dispositions per the W2 discrimination rubric:
+
+| Disposition | Count | Pattern |
+|---|---|---|
+| **byte→value migration** | 16 | `code.digitValue!`, `code.hexValue!`, `code.isASCII` / `.isVisible` / `.isPrintable`, `code.lowercased()` |
+| **arithmetic→byte / stdlib-interop bridge** (audit comment removed; `.underlying` retained per rubric) | 11 | Arithmetic-domain construction at conformance boundary; Byte has no arithmetic by design ([API-BYTE-002]) |
+| **typed-API already-correct** (audit comment was advisory) | 1 | rfc-4648 line referenced `ASCII.Code(byte).isWhitespace` already; nearby decodeTable[Int(byte)] stays UInt8 for stdlib-interop |
+
+### Wave 6 — Test status
+
+| Package | Test target | Cause |
+|---|---|---|
+| swift-rfc-3339 | ✅ 91 tests, 25 suites passed | clean |
+| swift-rfc-791 | ✅ 225 tests, 14 suites passed | clean |
+| swift-rfc-4291 | ✅ 36 tests, 3 suites passed | clean |
+| swift-rfc-4648 | ✅ 185 tests, 11 suites passed | clean |
+| swift-rfc-3986 | ⚠ test target link-fails | RFC_4007 Binary.ASCII.Serializable UInt8 overload missing (baseline; rfc-4007 in cascade-broken state) |
+| swift-rfc-2045 | ⚠ source dep build-fails | rfc-1035 Byte/ASCII.Code `==` baseline (Do Not Touch) |
+| swift-rfc-2183 | ⚠ source dep build-fails | rfc-1035 baseline (Do Not Touch) |
+| swift-rfc-6531 | ⚠ source dep build-fails | rfc-1035 baseline (Do Not Touch) |
+| swift-rfc-5321 | ⚠ source dep build-fails | rfc-1035 baseline (Do Not Touch) |
+| swift-rfc-2046 | ⚠ source dep build-fails | rfc-1035 baseline (Do Not Touch) |
+| swift-foundations/swift-ascii | ⚠ test target compile-fails | EdgeCases Tests.swift `Input.Slice` typing mismatch — pre-existing test cascade (NOT in my edited test file) |
+| swift-primitives/swift-terminal-primitives | ⚠ test target compile-fails | Terminal.Input.Parser.CSI.Tests.swift uses `&buffer` of UInt8 type while `Parser.parse<Storage>` requires `Storage.Element == Byte` — pre-existing W2 cascade in test files |
+
+**Eight test-target failures verified as pre-existing baseline cascade** (per source-only `swift build` cross-check). All failure files are UNTOUCHED by Arc-E migration. Per Do Not Touch directive in brief: rfc-1035 baseline, rfc-4648 codec-split, iso-32000, "etc." cascade-broken consumer files — LINT but do not edit.
+
+### Wave 6 — Class-c surfaces (none for principal)
+
+Migration was fully deterministic per the W2 discrimination rubric; no class-c rubric ambiguity surfaced.
+
+**Surface for principal awareness (NOT class-c)**: The "8 baseline test-target failures" enumerated above are expected per the Do Not Touch list. Their resolution is queued under broader W4 / post-W2 deferred items (rfc-1035 baseline, rfc-4007 Binary.ASCII.Serializable UInt8 overload reconciliation, swift-ascii Input.Slice test fixtures, terminal-primitives Parser test fixtures).
 
 ## References
 
