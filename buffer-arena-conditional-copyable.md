@@ -2,12 +2,21 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-02-11
-status: RECOMMENDATION
+version: 1.2.0
+last_updated: 2026-05-20
+status: IMPLEMENTED
 tier: 2
 ---
 -->
+
+> **v1.2.0 (2026-05-20)** — Canada-perf forcing function. Spike-verified that
+> the v1.1.0 RECOMMENDATION (Option A: Arena-aware storage class) has already
+> landed in production. `Buffer.Arena: Copyable where Element: Copyable` is live
+> at `swift-buffer-primitives/Sources/Buffer Arena Primitives Core/Buffer.Arena.swift:197`.
+> `ensureUnique()` + `copy()` CoW infrastructure is in production at
+> `Buffer.Arena Copyable.swift:10-38`. Spike confirms semantic correctness.
+> Status upgraded RECOMMENDATION → IMPLEMENTED. See "v1.2.0 — Canada-perf
+> Forcing Function (2026-05-20)" section appended below.
 
 ## Context
 
@@ -611,6 +620,163 @@ Declare `extension Buffer.Arena: Copyable where Element: Copyable {}`.
 This document extends `tree-primitives-buffer-arena-migration.md` Q6, which
 identified the problem and high-level options. This analysis provides the
 structural recommendation for Arena's storage representation change.
+
+## v1.2.0 — Canada-perf Forcing Function (2026-05-20)
+
+### Trigger
+
+Today's empirical microbench on swift-foundations/swift-json (commit 590f38c,
+2026-05-20) validated v1.1.0 of `parse-performance-architecture.md` (Tier 4,
+DECISION 2026-05-13): the residual ~233 ms of canada.json parse time (after
+Patches 1+2+3) is structurally NOT in float parsing (~1% of total) but in the
+tree-emit phase. The candidate L1 foundational primitive for closing canada AND
+benefiting every tree-emitting format (JSON, XML, plist, CBOR, MessagePack, ...)
+is arena-allocated tree storage via `Buffer.Arena` + `Tree.N`, with Copyable
+public Value types backed by arena storage via CoW.
+
+This document's v1.1.0 was the analytical predecessor: it argued that Option A
+(Arena-aware storage class) was the recommended approach and laid out the
+implementation sequence. v1.2.0 is the **closure pass**: verify what shipped,
+empirically confirm CoW semantics, and answer the canada-perf decision.
+
+### Production State (verified file:line)
+
+The v1.1.0 RECOMMENDATION has already landed:
+
+- `swift-storage-primitives/Sources/Storage Primitives Core/Storage.Arena.swift:46-164`
+  — `Storage<Element>.Arena` is a `final class` composing `Memory.Arena` for raw
+  byte lifecycle; SoA layout (Meta region + Element region) per the v1.1.0
+  diagram; deinit at line 153-163 iterates meta tokens and deinitializes
+  occupied slots, then `Memory.Arena` deinit fires automatically to free raw
+  storage. This is precisely Option A's design.
+- `swift-buffer-primitives/Sources/Buffer Arena Primitives Core/Buffer.Arena.swift:178-191`
+  — `Buffer.Arena` now stores two fields: `header: Header + storage: Storage<Element>.Arena`.
+  No `_meta: UnsafeMutablePointer<Meta>`, no `deinit` on the struct.
+- `swift-buffer-primitives/Sources/Buffer Arena Primitives Core/Buffer.Arena.swift:197`
+  — `extension Buffer.Arena: Copyable where Element: Copyable {}` is live.
+- `swift-buffer-primitives/Sources/Buffer Arena Primitives Core/Buffer.Arena.Bounded.swift:39`
+  — `extension Buffer.Arena.Bounded: Copyable where Element: Copyable {}` likewise.
+- `swift-buffer-primitives/Sources/Buffer Arena Primitives/Buffer.Arena Copyable.swift:1-38`
+  — Public CoW infrastructure: `ensureUnique() -> Bool` returns whether a copy
+  was made; `copy()` (package) preserves slot indices, deep-copies meta and
+  elements via `Buffer<Element>.Arena.forEach(occupied:meta:)`.
+- `swift-buffer-primitives/Tests/Buffer Arena Primitives Tests/Buffer.Arena.Bounded Tests.swift:136-148`
+  — `ensureUnique copies shared storage` test asserts the boolean contract
+  (first call → true, second call → false). 171 tests passing in the suite.
+
+### Downstream Consumption (Tree.N is fully migrated)
+
+`swift-tree-primitives/Sources/Tree Primitives Core/Tree.N.swift`:
+
+- Line 12: `public import Buffer_Arena_Primitives`
+- Line 127: `var _arena: Buffer<Node>.Arena` — single field, Option A from
+  `tree-primitives-buffer-arena-migration.md` Q1.
+- Line 192: arena `Position` integration.
+- Line 713: `_arena.ensureUnique()` — Tree.N CoW delegates directly.
+- Line 774: `extension Tree.N: Copyable where Element: Copyable {}` — the
+  downstream conditional-Copyable conformance that v1.1.0 identified as
+  blocked is no longer blocked. It has shipped.
+
+This closes `tree-primitives-buffer-arena-migration.md` Q6 (CoW strategy):
+neither boxed-Arena (Option A of that doc) nor delegated-Storage (Option D)
+was needed — the Copyable-Arena substrate made Tree.N's CoW trivially
+delegable via `_arena.ensureUnique()`.
+
+### Empirical Validation Spike
+
+Sandbox spike at
+`swift-primitives/swift-buffer-primitives/Experiments/buffer-arena-conditional-copyable-spike/`:
+
+- Mirrors `[EXP-003]` template (Package.swift + Sources/main.swift).
+- Depends on swift-buffer-primitives via path: `../..`.
+- Builds clean under Swift 6.2 strict memory safety.
+- Run output (2026-05-20):
+
+```
+CONFIRMED: Buffer.Arena<Int> is Copyable + CoW correct
+  - struct copy shares storage (verified: ensureUnique returns true on first call)
+  - ensureUnique() performs deep copy preserving slot indices
+  - subsequent mutations on either copy are isolated
+  - slot indices p0..p2 remain valid in both arenas after CoW
+```
+
+Seven preconditions asserted:
+
+1. `Buffer<Int>.Arena.occupied == 3` after three inserts.
+2. `var arenaB = arenaA` carries occupied count, preserves all three Positions.
+3. First `ensureUnique()` returns `true` (storage was shared).
+4. Second `ensureUnique()` returns `false` (now unique).
+5. Mutating `arenaB` (insert 400) does NOT change `arenaA` (CoW isolation).
+6. Slot indices p0..p2 remain valid in BOTH arenas post-CoW (index-preserving copy).
+7. Removal from `arenaB` is isolated from `arenaA`.
+
+All preconditions passed. Build artifacts in `Experiments/buffer-arena-conditional-copyable-spike/.build/`.
+
+### Implications for Canada-perf (Path A)
+
+The canada-perf next-arc decision-space question was: "can we structure tree-emit
+phase storage around arena-backed CoW tree nodes, with a Copyable public Value
+type?" The structural prerequisite — `Buffer.Arena: Copyable where Element: Copyable`
+— is **satisfied today**. No buffer-primitives or storage-primitives work is
+required.
+
+The remaining canada-perf work (Path A) is therefore consumer-side in
+swift-foundations/swift-json:
+
+1. Replace the current recursive `[(String, Value)]` / `[Value]` tree-emit
+   path with `Tree.N`-backed (or `Tree.Unbounded`-backed) storage.
+2. Define an arena-backed JSON.Value wrapper that holds `Tree.Unbounded<JSON.Node>`
+   (or equivalent), Copyable via the arena's CoW.
+3. Validate against the `value-tree-redesign-v2.md` v1.1.0 SUPERSEDED-BY-EVIDENCE
+   finding: Copyable wrappers + multi-buffer hash storage = refcount-per-copy
+   cost. Arena-backed storage has a SINGLE heap-backed component (the
+   `Storage.Arena` class), so the wrapper-copy refcount cost is exactly 1
+   per copy — at the floor of the cost model in `cross-cutting-refcount-cost-model-for-copyable-wrapper-multi-buffer-storage.md`.
+   This is the structural argument for Path A vs. alternatives.
+
+Note: this v1.2.0 update **does NOT** propose or schedule the swift-json
+adoption work. Per class-(c) discipline, that is a swift-json arc-scoping
+decision, not a primitives-layer finding. v1.2.0 closes the question "is the
+primitive ready?" — answer: yes, has been ready since at least 2026-03 based
+on the production state observed today.
+
+### Status Update
+
+| Aspect | v1.1.0 (2026-02-11) | v1.2.0 (2026-05-20) |
+|--------|---------------------|---------------------|
+| `Buffer.Arena: Copyable where Element: Copyable` | RECOMMENDED | SHIPPED |
+| `Storage<Element>.Arena` class with SoA + deinit | RECOMMENDED | SHIPPED |
+| `Buffer.Arena.ensureUnique()` + `.copy()` CoW | RECOMMENDED | SHIPPED |
+| `Tree.N: Copyable where Element: Copyable` | BLOCKED on Arena | SHIPPED |
+| Spike empirical validation | (no spike) | CONFIRMED (7/7 preconditions) |
+| Slab conditional-Copyable (SQ7) | Deferred | Still deferred (no consumer) |
+| Document status | RECOMMENDATION | IMPLEMENTED |
+
+### Open Questions (rolled forward)
+
+1. **`Buffer.Slab` Copyable (SQ7).** Unchanged from v1.1.0 — no known downstream
+   blocker; defer until a consumer requires it.
+2. **`Buffer.Arena.Inline` / `Buffer.Arena.Small` Copyable.** Both still
+   unconditionally `~Copyable` due to `@_rawLayout` constraint per
+   `Buffer.Arena.swift:106-174` and `Buffer.Arena.Small.swift:71` (commented-out
+   conformance). This is orthogonal to the canada-perf forcing function (heap-
+   backed Arena is the relevant one for tree-emit) and tracked separately under
+   the `@_rawLayout` Swift language-evolution dependency.
+3. **Header synchronization strategy.** v1.1.0 listed write-through vs.
+   write-on-release as an open implementation question. The shipped code uses
+   write-through (`storage.highWater = header.highWater` after each mutation
+   in `Buffer.Arena.swift:43, 56`). Decision settled by the implementation.
+
+### Provenance
+
+- Trigger: 2026-05-20 canada-perf microbench landing (swift-json commit 590f38c).
+- Spike: `swift-primitives/swift-buffer-primitives/Experiments/buffer-arena-conditional-copyable-spike/`
+  — build green, run output verified above.
+- Prior-research grep [HANDOFF-013a]: this document is the canonical research
+  for `Buffer.Arena` conditional-Copyable; no parallel doc exists. Adjacent
+  research: `tree-primitives-buffer-arena-migration.md` (which v1.2.0 closes
+  forward on Q6) and `cross-cutting-refcount-cost-model-for-copyable-wrapper-multi-buffer-storage.md`
+  v1.0.1 (which references v1.1.0 of this doc as load-bearing prior art).
 
 ## References
 
