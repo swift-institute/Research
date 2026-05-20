@@ -1292,14 +1292,15 @@ it — consistent with `feedback_clean_build_before_compiler_limitation_claim.md
 
 - **Validation result**: 2 TP firings; rules correctly silent
   elsewhere in cascade-finished state.
-- **Rule refinements**: none (no FP/FN classifications surfaced).
-- **Skill / outcome record amendments**: none (no statement changes).
+- **Rule refinements**: none initially (no FP/FN classifications
+  surfaced); Phase 7 addendum (below) landed the coverage extension.
+- **Skill / outcome record amendments**: Phase 7 addendum updated
+  [API-BYTE-003] Statement + per-shape examples + Arc G provenance.
 - **Deferred items** (separate arcs):
   - API-BYTE-005 TP — pre-existing Wave-4 ASCII-wrapper phase-out (in scope of W2 Wave 4).
   - API-BYTE-007 TP — parallel-session WIP; the WIP arc dispositions.
-- **Coverage observation queued** (class-c): API-BYTE-003 gate
-  extension to default-impl-extension shape — future-prevention
-  only; principal disposition.
+- **Coverage observation resolved**: API-BYTE-003 default-impl-
+  extension gate extension landed in Phase 7 addendum.
 
 ### Artifacts
 
@@ -1308,6 +1309,63 @@ it — consistent with `feedback_clean_build_before_compiler_limitation_claim.md
 | Validation harness (temporary) | `swift-foundations/swift-institute-linter-rules/Tests/Institute Linter Rule Byte Tests/Lint.Rule.Byte.ArcG.Validation.swift` |
 | Per-run finding stamp | `/tmp/byte-lint-validation-arc-g.md` |
 | Existing per-rule validation receipts (authoring baseline; this arc EXTENDS with real-world findings, does not replace) | `swift-foundations/swift-linter/Research/promote-API-BYTE-001..007-validation-2026-05-{19,20}.md` |
+
+### Phase 7 addendum — [API-BYTE-003] coverage extension (2026-05-20)
+
+Authorized inline single-focused follow-up: extend
+`Lint.Rule.Byte.BinarySerializableUInt8Witness` to cover the
+**default-impl-extension shape** identified as a class-c structural
+reveal during the initial Arc G classification (above).
+
+**Scope landed**:
+
+1. **Rule source** — `extensionConformsToSerializableLike` now accepts
+   EITHER (a) inheritance-clause-names-protocol (existing path; covers
+   `extension Foo: Binary.Serializable { ... }`) OR (b)
+   extended-type-IS-protocol (new path; covers
+   `extension Binary.Serializable { ... }` AND
+   `extension Binary.Serializable where Self: ... { ... }`). The
+   per-function `@_disfavoredOverload` exemption applies unchanged.
+2. **Fixtures** — 3 new Unit cases (bare default-impl on
+   Binary.Serializable, bare default-impl on Binary.Parseable,
+   conditional `where Self: RawRepresentable` default-impl) + 3 new
+   Edge Case cases (Byte-typed default-impl, `@_disfavoredOverload`
+   UInt8 default-impl, Byte-typed Binary.Parseable default-impl).
+   Test sub-suite "binary serializable uint8 witness Tests": 7 → 13
+   tests. All green.
+3. **Validation harness re-run** — 0 new firings. The 4 known
+   default-impl-extension sites in swift-binary-primitives all
+   classify as non-violations.
+4. **Artifact updates** — validation receipt amendment, outcome
+   record amendment, skill Statement amendment, plan doc bump to
+   v1.2.0.
+
+**Verification of zero-FN claim post-extension**:
+
+| Site | Where-clause | `@_disfavoredOverload`? | Disposition |
+|---|---|---|---|
+| `swift-binary-primitives/.../Binary.Serializable.swift` (primary, default-impl) | `Byte` | n/a | not flagged — Byte-typed |
+| `swift-binary-primitives/.../Binary.Parseable+FixedWidthIntegerRaw.swift` (primary, default-impl) | `Byte` | n/a | not flagged — Byte-typed |
+| `swift-binary-primitives/.../Binary.Serializable+UInt8.swift` (SLI, default-impl) | `UInt8` | yes | not flagged — exempt |
+| `swift-binary-primitives/.../Binary.Parseable+UInt8.swift` (SLI, default-impl) | `UInt8` | yes | not flagged — exempt |
+
+Coverage extension is **future-prevention only** — closes the gate
+so future `extension Binary.Serializable { ... where Buffer.Element ==
+UInt8 ... }` without `@_disfavoredOverload` will fire.
+
+**Findings classification (Arc G overall, post-Phase-7)**: unchanged —
+2 TP (deferred), 0 FP, 0 FN, 0 ambiguous. Phase 7 closed the coverage
+gap without changing the finding set.
+
+**Per-commit landings (no push)**:
+
+| Repo | Artifact | Notes |
+|---|---|---|
+| `swift-foundations/swift-institute-linter-rules` | Rule source extension + 6 new tests | Single commit |
+| `swift-foundations/swift-linter` | Validation receipt amendment | Single commit |
+| `swift-institute/Audits` | Outcome record amendment | Single commit |
+| `swift-institute/Skills` | Skill Statement amendment | Single commit |
+| `swift-institute/Research` | Plan doc Arc G v1.1.0 + v1.2.0 | Single combined commit |
 
 ## References
 
@@ -1322,4 +1380,5 @@ it — consistent with `feedback_clean_build_before_compiler_limitation_claim.md
 
 - **v1.0.0 (2026-05-19)** — Initial investigation outcome + plan. Pre-split into 7 per-wave handoff files at workspace root per [HANDOFF-007] program-shape exception. Per-wave outcome stamps pending execution.
 - **v1.1.0 (2026-05-20)** — Arc G stamp: swift-primitives byte-lint validation across 150 packages × 7 rules. 2 TP firings (API-BYTE-005 ASCII wrapper, API-BYTE-007 Binary.swift `init(_:Span<UInt8>)`), 0 FP, 0 FN. Coverage observation surfaced: API-BYTE-003 gate misses default-impl-extension shape (current state: 0 latent violations of the gap).
+- **v1.2.0 (2026-05-20)** — Arc G Phase 7 addendum: [API-BYTE-003] coverage extension landed. Gate now accepts default-impl-extension shape (`extension Binary.Serializable { ... }` etc.) in addition to conformer-extension shape. Re-validation: 0 new firings on the 4 known default-impl sites in swift-binary-primitives (all classify as non-violations: 2 Byte-typed + 2 `@_disfavoredOverload`-exempt). Future-prevention. Skill Statement + outcome record + validation receipt amended.
 - **v1.2.0 (2026-05-20)** — Arc B-continuation stamp: closes rfc-1035 baseline (4 `Byte == ASCII.Code` sites @ `977655e`) and downstream cascade rfc-3596 (`fa3af14`) + rfc-6891 (`227fca3`). 3 packages cleared from Arc B's deferred table; 51 tests pass across the active arc. No new discrimination refinements — patterns reaffirmed.
