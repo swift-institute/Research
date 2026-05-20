@@ -835,6 +835,10 @@ Same `Byte == ASCII.Code` shape as the rfc-1035 sites — candidates for a futur
 - Opaque-byte-domain public payload `[UInt8]` → `[Byte]` retype + `@_disfavoredOverload` `[UInt8]` forwarder lives in primary module on initial cascade; Arc F relocates to SLI.
 - Stale `.build` cache can masquerade as missing-symbol error on downstream packages after upstream type-surface changes — `rm -rf .build` before concluding a structural issue.
 
+### CLI-chain verification (2026-05-20)
+
+- `swift-foundations/swift-linter` `swift build`: STILL RED. Broken link is **NOT** rfc-3986 — it is `swift-incits-4-1986` at `Sources/INCITS 4 1986/INCITS_4_1986.ASCII.swift` and `Set+INCITS_4_1986.ASCII.swift` (46 errors, all `UInt8` vs `ASCII.Code` equivalence failures on `isAllWhitespace` / `isAllDigits` / `isAllLetters` / etc.). Queue for a future small-tail cleanup arc alongside the 4 out-of-arc residual `Byte == ASCII.Code` sites (rfc-9557 Suffix.swift:149, SuffixTag.swift:188; rfc-5321 EmailAddress.LocalPart.swift:129/130).
+
 ## Post-W2 Arc D — `swift-rfc-7519` JWT retype (2026-05-20)
 
 > Bounded focused arc per `HANDOFF-rfc-7519-jwt-byte-retype.md`. Mechanical
