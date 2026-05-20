@@ -693,7 +693,7 @@ rfc-6455:               0  (✓ done)
 rfc-6531:               0  (no Buffer.Element pattern in source)
 rfc-6891:               2  (DEFERRED: blocked on rfc-1035 baseline)
 rfc-7301:               0  (✓ done)
-rfc-7519:               1  (DEFERRED: gated on rfc-4648 Base64URL.encode)
+rfc-7519:               0  (✓ done — Arc D 2026-05-20 @ 5a4995b; RFC_4648 bridged via .underlying + BSLI staging locals)
 rfc-8200:               0  (✓ done)
 rfc-8446:               0  (✓ done)
 rfc-9293:               0  (✓ done)
@@ -712,7 +712,7 @@ ascii-primitives:       1  (forwarder; effectively done)
 | `swift-rfc-1035` baseline broken at `f4925e9` | Outside arc cohort per pinned plan; parallel-session WIP | 4 `Byte == ASCII.Code` sites in Domain*.swift; needs accessor-style fix |
 | `swift-rfc-3596`, `swift-rfc-6891` | Transitive dep on rfc-1035 | Unblocks once rfc-1035 fixed; each is mechanical retype (1 + 2 files) |
 | `swift-rfc-4648` | Codec split design (encoded ASCII.Code vs decoded Byte per file/method) | 6 source files; per-direction discrimination is meaningful design work, not mechanical |
-| `swift-rfc-5952`, `swift-rfc-7519` | Gated on rfc-4648 (`Base16.encode`/`Base64URL.encode` calls) | 1 file each; mechanical after rfc-4648 lands |
+| `swift-rfc-5952` | Gated on rfc-4648 (`Base16.encode` call) | 1 file; mechanical after rfc-4648 lands. (rfc-7519 cleared 2026-05-20 by Arc D — see "Post-W2 Arc D" below) |
 | `swift-iso-32000` | 9 files (more than plan's 6); 1000+ line ContentStream/Writer with intricate PDF serialize bodies | Substantive per-file design work; needs focused arc |
 | `swift-incits-4-1986` (OQ-1) | File rename + workspace-wide consumer migration coordinated with W4 wrapper deletion | Best done as part of W4 arc rather than W3 |
 | `swift-rfc-6068`, `swift-rfc-6531` | Different pattern (no `Buffer.Element == UInt8` per source grep); deps on out-of-arc rfc-3986/5322/1123/5321 | Need pattern-by-pattern audit; out of obvious mechanical scope |
@@ -729,6 +729,74 @@ ascii-primitives:       1  (forwarder; effectively done)
 - Test sweep: `[UInt8]` → `[Byte]` for serialize-buffer comparisons; `Byte(value)` bridge in UInt8-iteration test loops (Byte not Strideable per Q3).
 - Stdlib idioms (`String(ascii:)`, `String(decoding:as:UTF8.self)`, MaskingKey.apply that takes UInt8) bridged via `.underlying` at consumer call site rather than retyping the stdlib-shaped API.
 - Package.swift dep gap surfaced for iso-21320: `Standard_Library_Extensions` does NOT re-export `Byte`; packages without transitive byte-primitives must add it as direct dep.
+
+## Post-W2 Arc D — `swift-rfc-7519` JWT retype (2026-05-20)
+
+> Bounded focused arc per `HANDOFF-rfc-7519-jwt-byte-retype.md`. Mechanical
+> execution of the W2 Q3 disposition (2026-05-19) refined by Arc B as the
+> "opaque byte-domain payload" pattern in `byte-discipline` skill
+> ([API-BYTE-004], Arc B 2026-05-20 refinement row).
+>
+> Pinned to plan doc `0fbc860` + `byte-discipline@891e097`. Reference pattern:
+> `swift-rfc-791@cde98cb` Flags (storage retype) + `swift-rfc-791@cde98cb` TTL
+> (witness-only retype). JWT discrimination is the third axis: opaque
+> byte-domain payload (post-decode JSON/signature bytes).
+
+### Outcome
+
+**Commit**: `swift-rfc-7519@5a4995b` (1 commit, no push per program rule).
+
+**Files modified**: 2 (1 source + 1 test).
+
+| File | Change |
+|---|---|
+| `Sources/RFC 7519/RFC_7519.JWT.swift` | 5× storage retype + primary `[Byte]` init + `@_disfavoredOverload` `[UInt8]` forwarder init + `signingInput` returns `[Byte]` + serialize/parse body bridges |
+| `Tests/RFC 7519 Tests/RFC_7519.JWT Tests.swift` | Full test migration: `[UInt8]` fixtures → `[Byte]`; `init(ascii: <s>.utf8)` → `init(<s>)` (protocol-level StringProtocol init); `String(decoding: jwt.header, …)` → `.underlying` bridge; +1 new `createJWTViaUInt8Forwarder` test |
+
+**Test outcome**: 26/26 pass (25 pre-existing + 1 new forwarder coverage). Pre-existing tests were broken at baseline from prior W4 deprecation cohort (`init(ascii: <s>.utf8)` no longer satisfied `Bytes.Element == Byte` after `Binary.ASCII.Serializable` retype at `swift-rfc-7519@8ba9cb4`); test migration repaired them.
+
+**Package.swift dep delta**: **none**. `Byte_Primitives` and `Byte_Primitives_Standard_Library_Integration` reach rfc-7519 transitively via `Binary_Primitives @_exported public import`s. The iso-21320 dep-gap surfaced under Arc B does NOT generalize: it specifically affected packages whose only byte route was `Standard_Library_Extensions` (which does not re-export Byte). rfc-7519 imports Binary_Primitives + ASCII_Serializer_Primitives, both of which re-export the Byte chain.
+
+### Discrimination axis (third pattern after Flags / TTL)
+
+| Pattern | Reference | Disposition |
+|---|---|---|
+| Bit-field / kind-tag storage (`rawValue: UInt8` pure bitwise) | rfc-791 Flags (`cde98cb`) | retype `rawValue` storage to `Byte` |
+| Arithmetic storage (`- 1` decrement, `× 4` multiplier) | rfc-791 TTL (`cde98cb`) | witness-only retype; storage stays UInt8; body bridges via `.underlying` |
+| **Opaque byte-domain payload** (`[UInt8]` public storage of decoded application bytes) | **rfc-7519 JWT (`5a4995b`)** | **storage to `[Byte]` + `@_disfavoredOverload` `[UInt8]` forwarder** for stdlib-interop callers |
+
+The opaque-payload pattern is the third reference exemplar mechanically applicable when `Binary.Serializable` / `Binary.ASCII.Serializable` conformers expose opaque application-layer byte arrays (JSON, signatures, application data) publicly. Distinguished from kind-tag / arithmetic disposition by:
+
+1. Storage is `[UInt8]` (array, not scalar `rawValue`)
+2. Bytes are opaque — no bitwise, no arithmetic, no enumeration
+3. Public API surface (callers may hold stdlib `[UInt8]` from network frames, base64 decoders, etc.)
+
+### Bridges used
+
+- **Primary** + **`@_disfavoredOverload` forwarder**: both `init(header:payload:signature:)` overloads available; mixed-type sites continue to resolve via the UInt8 forwarder (verified by new test).
+- **`signingInput`**: returns `[Byte]` primary; callers needing `[UInt8]` go through `.underlying`.
+- **RFC_4648 deferred-cohort bridges** (rfc-4648 is in the deferred substantive-design queue per Arc B; remains UInt8-typed):
+  - Encode: `jwt.signature.underlying` → RFC_4648.Base64.URL.encode(...); result `[UInt8]` wrapped via BSLI `[Byte](result)` for storage.
+  - Decode: extract slices as `Array<UInt8>(arr[..<i])` local staging for the RFC_4648 hand-off; decoded `[UInt8]?` bridged via BSLI `[Byte](source)` when assigning to `[Byte]` storage at the `__unchecked` init.
+- **`ASCII.Code.period`** appended to `[Byte]` sink via BSLI cross-byte-domain `append(_:X where X: Byte.\`Protocol\`)`.
+
+### Verified-now grep (post-commit)
+
+```
+$ grep -c "UInt8" "Sources/RFC 7519/RFC_7519.JWT.swift"
+14   # all intentional: forwarder init signatures (3), comments (4), RFC_4648
+     # staging locals (4), variable suffixes (3)
+$ grep -c "Buffer.Element == UInt8" "Sources/RFC 7519/RFC_7519.JWT.swift"
+0
+```
+
+JWT.swift no longer fires `[API-BYTE-003]` (witness `Buffer.Element == Byte`) and joins the cohort of consumers whose public byte-domain surface uses `Byte` primary + `UInt8` forwarder.
+
+### Discrimination patterns (Arc D update to Arc B's list)
+
+The opaque-byte-domain row in [API-BYTE-004] rubric (Arc B 2026-05-20 refinement) is now backed by two reference commits — rfc-7301 ALPN (`3736b6c`) for opaque kind-tagged rawValue, and rfc-7519 JWT (`5a4995b`) for opaque public storage arrays. Both apply the same `[Byte]` primary + `@_disfavoredOverload` `[UInt8]` forwarder discipline.
+
+**Deferred-items table update**: rfc-7519 deferred row (line ~715) is **CLEARED by this arc**. rfc-5952 (also gated on rfc-4648) remains DEFERRED since rfc-7519 carried its own RFC_4648 staging-local bridges, whereas rfc-5952 may require similar judgment per-site (not pre-mechanically known).
 
 ## Post-W2 L1 byte-domain cleanup (parallel arc C)
 
