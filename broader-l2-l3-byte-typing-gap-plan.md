@@ -730,6 +730,111 @@ ascii-primitives:       1  (forwarder; effectively done)
 - Stdlib idioms (`String(ascii:)`, `String(decoding:as:UTF8.self)`, MaskingKey.apply that takes UInt8) bridged via `.underlying` at consumer call site rather than retyping the stdlib-shaped API.
 - Package.swift dep gap surfaced for iso-21320: `Standard_Library_Extensions` does NOT re-export `Byte`; packages without transitive byte-primitives must add it as direct dep.
 
+## Post-W2 Arc B-continuation — rfc-1035 baseline + downstream (2026-05-20)
+
+> Closes the rfc-1035 / rfc-3596 / rfc-6891 deferred items from Arc B's
+> Checkpoint 2 deferred table (lines 712–713). Pinned to plan doc
+> `0fbc860` + `byte-discipline@891e097/4d0b49f/7e3045a`. Per
+> `HANDOFF-rfc-1035-baseline-and-cascade.md` (2026-05-20).
+
+### Phase 1 — diagnosis of the 4 errors at `f4925e9`
+
+Parallel-session WIP at `swift-rfc-1035@f4925e9 refactor: retype ASCII
+Buffer.Element to Byte` correctly retyped the `Binary.ASCII.Serializable`
+witness signatures (`Buffer.Element == UInt8` → `Byte`) and lifted
+`byte.ascii.isLetter/isDigit` predicates via `ASCII.Code(byte)`, but
+missed symmetric lift on 4 comparison sites where a `Byte`-typed loop /
+subscript value is compared against an `ASCII.Code` constant:
+
+| Site | LHS | RHS | Disposition |
+|---|---|---|---|
+| `RFC_1035.Domain.Label.swift:142` | `byte` (Byte, loop var) | `ASCII.Code.hyphen` | Use already-defined `code = ASCII.Code(byte)` (line 141) |
+| `RFC_1035.Domain.Label.swift:161` | `firstByte` (Byte) | `ASCII.Code.hyphen` | Use already-defined `firstCode = ASCII.Code(firstByte)` (line 158) |
+| `RFC_1035.Domain.Label.swift:177` | `lastByte` (Byte) | `ASCII.Code.hyphen` | Use already-defined `lastCode = ASCII.Code(lastByte)` (line 174) |
+| `RFC_1035.Domain.swift:145` | `bytes[currentIndex]` (Byte, subscript) | `ASCII.Code.period` | Bridge inline: `ASCII.Code(bytes[currentIndex])` |
+
+**Rubric application**: Per [API-BYTE-005] + W2 rubric, RFC 1035 §2.3.1
+domain labels are ASCII-strict (LDH: Letters/Digits/Hyphen). Canonical
+substrate for ASCII comparisons is `ASCII.Code`. UInt8/Byte/ASCII.Code
+are sibling-form per [API-BYTE-001]; `==` between siblings requires
+explicit bridge. The raw `byte`/`firstByte`/`lastByte` locals stay as
+`Byte` (carrier of the `Error.invalidCharacters(byte: Byte)` payload
+retyped by `f4925e9`).
+
+No rubric ambiguity — the per-site disposition was mechanical given
+RFC 1035's ASCII-strict semantics and the existing bridge variables
+defined by the parallel session.
+
+### Phase 2 — rfc-1035 baseline repair
+
+**Landed**: `swift-rfc-1035@977655e fix: bridge Byte to ASCII.Code at remaining 4 comparison sites`.
+2 source files modified (Domain.Label.swift 3 sites, Domain.swift 1 site), 4 insertions / 4 deletions. Supersedes `f4925e9`.
+
+**Tests**: 25/25 in 2 suites pass.
+
+### Phase 3 — downstream cascade
+
+**rfc-3596** (DNS AAAA records): `swift-rfc-3596@fa3af14 W2 cascade: RFC 3596 AAAA per discrimination rubric`.
+
+| Site | Disposition |
+|---|---|
+| `RFC_3596.AAAA.serialize` witness | Buffer.Element retype to Byte per [API-BYTE-003] (witness-only; delegates to RFC_4291.IPv6.Address.serialize already W2-cascaded at `b6b95f8`) |
+| `RFC_3596.AAAA.init(binary:)` | Bytes.Element retype to Byte per [API-BYTE-003] |
+| Test fixtures (4 `[UInt8]` sites) | Migrated to `[Byte]` per [API-BYTE-004] test-sweep convention |
+
+**Tests**: 11/11 in 4 suites pass.
+
+**rfc-6891** (EDNS OPT): `swift-rfc-6891@227fca3 W2 cascade: RFC 6891 EDNS OPT per discrimination rubric`.
+
+| Site | Disposition |
+|---|---|
+| `RFC_6891.OPT.serialize` witness | Buffer.Element retype to Byte; body rewritten to use `.bytes(endianness: .big)` for UInt16 fields (udpPayloadSize, flags, RDLENGTH) per rfc-4291 pattern |
+| `RFC_6891.Option.serialize` witness | Buffer.Element retype to Byte; body rewritten to use `.bytes(endianness: .big)` for UInt16 fields (code.rawValue, length) |
+| `RFC_6891.Option.data` storage | `[UInt8]` → `[Byte]` per [API-BYTE-004] opaque-byte-domain-public-payload disposition (matches rfc-768 Datagram, rfc-9293 Segment, rfc-7301 ALPN patterns) |
+| `RFC_6891.Option.init(code:data:)` | `[Byte]` primary + `[UInt8]` `@_disfavoredOverload` forwarder via `Array<Byte>(data)` BSLI (in primary module per rfc-768 ba16b6d initial cascade; Arc F can relocate to SLI per [API-BYTE-007] later) |
+| `ExtendedRcode.rawValue` (UInt8) | STAYS UInt8 — participates in UInt16 arithmetic in `fullRcode(headerRcode:)` helper (`UInt16(rawValue) << 4`); bridged via `Byte(rawValue)` at witness boundary per [API-BYTE-004] arithmetic-domain row |
+| `Version.rawValue` (UInt8) | STAYS UInt8 (minimal scope — comparison-only usage, no arithmetic; bridged via `Byte(rawValue)` at witness boundary) |
+| Test fixtures (3 `[UInt8]` buffer sites + `Array("test".utf8)`) | Migrated to `[Byte]` / `Array<Byte>("test".utf8)` per [API-BYTE-004] test-sweep convention |
+
+**Tests**: 15/15 in 6 suites pass.
+
+### Phase 4 — verification
+
+**Workspace grep** (`Byte == ASCII.Code` / `ASCII.Code == Byte` outside legitimate bridge sites) for the active arc:
+
+```
+swift-rfc-1035/Sources/:   0  (✓ done)
+swift-rfc-3596/Sources/:   0  (✓ done)
+swift-rfc-6891/Sources/:   0  (✓ done)
+```
+
+**Out-of-arc residuals** (not in scope; surfaced for awareness):
+
+- `swift-rfc-9557/Sources/RFC 9557/RFC_9557.Suffix.swift:149` (`firstByte == ASCII.Code.exclamationPoint`)
+- `swift-rfc-9557/Sources/RFC 9557/RFC_9557.SuffixTag.swift:188` (same)
+- `swift-rfc-5321/Sources/RFC 5321/RFC_5321.EmailAddress.LocalPart.swift:129/130` (`firstByte`/`lastByte == ASCII.Code.quotationMark`)
+
+Same `Byte == ASCII.Code` shape as the rfc-1035 sites — candidates for a future cascade arc when those packages enter scope.
+
+**Ecosystem-build outcome**: rfc-1035 / rfc-3596 / rfc-6891 each build clean with `rm -rf .build && swift build && swift test`. Stale `.build` cache observed for rfc-3596 during initial probe; resolved per `feedback_clean_build_before_compiler_limitation_claim.md`.
+
+### Cleared from Arc B Checkpoint 2 deferred table
+
+| Package | Old disposition | New disposition |
+|---|---|---|
+| `swift-rfc-1035` baseline at `f4925e9` | DEFERRED (parallel-session WIP, class-c surface) | CLEARED @ `977655e` |
+| `swift-rfc-3596` | DEFERRED (blocked on rfc-1035) | CLEARED @ `fa3af14` |
+| `swift-rfc-6891` | DEFERRED (blocked on rfc-1035) | CLEARED @ `227fca3` |
+
+**Total**: 3 packages cleared, 4 baseline errors fixed, 3 cascade sites retyped, 51 tests pass across active arc.
+
+**Discrimination patterns reaffirmed (no new refinements)**:
+
+- Sibling-type `==` requires explicit lift to ASCII.Code at the comparison site (already-defined bridge variable preferred over re-bridging).
+- Delegating witnesses (rfc-3596 AAAA → rfc-4291 IPv6.Address) are witness-only retypes — no body changes when delegation target is already cascaded.
+- Opaque-byte-domain public payload `[UInt8]` → `[Byte]` retype + `@_disfavoredOverload` `[UInt8]` forwarder lives in primary module on initial cascade; Arc F relocates to SLI.
+- Stale `.build` cache can masquerade as missing-symbol error on downstream packages after upstream type-surface changes — `rm -rf .build` before concluding a structural issue.
+
 ## Post-W2 Arc D — `swift-rfc-7519` JWT retype (2026-05-20)
 
 > Bounded focused arc per `HANDOFF-rfc-7519-jwt-byte-retype.md`. Mechanical
@@ -1067,6 +1172,143 @@ Validator source commit: `swift-foundations/swift-institute-linter-rules@f86e3ff
 | byte-discipline [API-BYTE-007] (compressed) | `4d0b49f` | `swift-institute/Skills` |
 | Outcome record stamp (Phase 6 + Phase 7) | `f3a0c65` | `swift-institute/Audits` |
 
+## Post-W2 Arc G — swift-primitives byte-lint validation (2026-05-20)
+
+> Feedback-loop validation: run the 7 [API-BYTE-*] rules against all
+> public swift-primitives packages, classify findings, surface
+> coverage observations. CLI restoration NOT required per Arc A
+> Phase 1 deferral; validation via test-target harness per
+> `lint-rule-promotion` Phase 6 §Detection method default
+> (FileManager enumerator over `Sources/` + SwiftParser walk).
+> Per `HANDOFF-swift-primitives-byte-lint-validation.md`; principal
+> direction 2026-05-20. No auto-fix of TPs (deferred per scope);
+> no push.
+
+### Detection method
+
+Temporary test-target harness at
+`swift-foundations/swift-institute-linter-rules/Tests/Institute Linter Rule Byte Tests/Lint.Rule.Byte.ArcG.Validation.swift`:
+walks each package's `Sources/` via `FileManager.default.enumerator(at:)`,
+parses each `.swift` file with `SwiftParser.Parser.parse`, runs each of
+the 7 rules' `findings` closure on `Lint.Source.Parsed`, accumulates
+per-rule per-package findings with typed `Text.Line.Number` /
+`Text.Line.Column` locations from text-primitives (the typed forms
+preserve identity through to the formatter; stringification only at
+render). Output written to `/tmp/byte-lint-validation-arc-g.md`.
+
+Skips: `.build/` artifacts, `.claude/worktrees/`.
+
+### Scope
+
+| Dimension | Count |
+|---|---|
+| Public swift-primitives packages enumerated | 150 |
+| Excluded (no `Sources/` directory) | 1 (`swift-primitives.org`) |
+| Rules run | 7 (`[API-BYTE-001..007]`) |
+
+### Summary
+
+| Rule | Findings | Packages |
+|------|----------|----------|
+| API-BYTE-001 | 0 | 0 |
+| API-BYTE-002 | 0 | 0 |
+| API-BYTE-003 | 0 | 0 |
+| API-BYTE-004 | 0 | 0 |
+| API-BYTE-005 | 1 | 1 |
+| API-BYTE-006 | 0 | 0 |
+| API-BYTE-007 | 1 | 1 |
+| **Total** | **2** | **2** |
+
+### Findings classification
+
+| # | Rule | File:line:col | Class | Disposition |
+|---|---|---|---|---|
+| 1 | API-BYTE-005 | `swift-ascii-primitives/Sources/ASCII Primitives/UInt8+ASCII.swift:6:1` | **TP** | Known Wave-4 deferred phase-out. `extension UInt8 { static var ascii: ASCII.Code.Type; var ascii: ASCII.Code }` — canonical wrapper the rule was designed to phase out; consumers migrate to `ASCII.Code` substrate. No auto-fix per arc constraint. |
+| 2 | API-BYTE-007 | `swift-binary-primitives/Sources/Binary Namespace/Binary.swift:154:12` | **TP** | `@_disfavoredOverload public init(_ span: Span<UInt8>)` on `Binary` in the byte-domain primary module. Migration target: move to `Binary Primitives Standard Library Integration`. Surfaced by parallel-session edit at 09:31:39 (file mtime); not present in the first validation run at 09:14. No auto-fix per arc constraint. |
+
+**Class breakdown**: 2 TP, 0 FP, 0 FN, 0 ambiguous.
+
+### Per-rule fire patterns (silence interpretation)
+
+| Rule | Why silent (where silent) |
+|------|---------------------------|
+| API-BYTE-001 (UInt8 ≢ Byte.`Protocol`) | Future-prevention. Sibling-form refactor at `swift-byte-primitives@fbccde4` removed the historical precedent before the rule landed. |
+| API-BYTE-002 (Byte ≢ stdlib arithmetic) | Future-prevention. Q3 ratification of `Byte`'s non-arithmetic identity. |
+| API-BYTE-003 (Binary.Serializable witness ≠ Buffer.Element == UInt8) | Cascade-finished. All conformer-extension witnesses migrated to Byte-typed where-clauses; the 6 SLI-resident UInt8 forwarders carry `@_disfavoredOverload` and are exempt. **Coverage observation surfaced below.** |
+| API-BYTE-004 (rawValue:UInt8 disposition) | Cascade-finished in L1 scope. No remaining `rawValue: UInt8` + `Binary.Serializable`/`Parseable` conformer pairs in swift-primitives (W2 Phase 4 + Arc B + Arc D + Arc F dispositions retyped, kept-as-arithmetic, or split per the rubric). |
+| API-BYTE-005 (`extension UInt8 { .ascii ... }`) | 1 TP — `swift-ascii-primitives/UInt8+ASCII.swift` (the Wave-4 phase-out target). |
+| API-BYTE-006 (UInt8 forwarder in byte-domain extension missing `@_disfavoredOverload`) | All byte-domain stdlib-collection extensions correctly carry `@_disfavoredOverload` on UInt8 forwarders. |
+| API-BYTE-007 (stdlib forwarder outside SLI) | 1 TP — `swift-binary-primitives/Binary.swift:154` (parallel-session edit 2026-05-20 09:31). Arc F's 47-forwarder sweep covered `init`/`func serialize`/`func parse` shapes at the `Binary.Serializable`/`Binary.Parseable` surface; the newer `init(_ span: Span<UInt8>)` on the **`Binary` nominal** sits outside the swept categories and the rule correctly catches it. |
+
+### Coverage observation (class-c structural reveal)
+
+**API-BYTE-003 gate scope vs Statement scope**:
+
+The rule's `extensionConformsToSerializableLike` checks only the
+**inheritance clause** — fires on conformer-extension shape
+`extension Foo: Binary.Serializable { ... where Buffer.Element ==
+UInt8 ... }`, but NOT on **default-impl-extension** shape
+`extension Binary.Serializable { ... where Buffer.Element == UInt8 ... }`
+(no inheritance clause; the extended type IS the protocol).
+
+The skill's [API-BYTE-003] **Statement** reads *"witness
+implementations MUST use `Buffer.Element == Byte`"* — by semantic
+intent default impls ARE witness implementations (they witness for
+any conformer without an explicit override).
+
+**Current state**: 4 default-impl-extension sites exist across
+swift-binary-primitives (`Binary.Serializable.swift`,
+`Binary.Parseable+FixedWidthIntegerRaw.swift`,
+`Binary.Serializable+UInt8.swift`, `Binary.Parseable+UInt8.swift`).
+The two in primary modules use Byte-typed where-clauses; the two
+in SLI modules carry `@_disfavoredOverload`. So extending the gate
+to default-impl shape would surface **0 additional findings on
+current state** — no live FN.
+
+**Recommendation**: future-prevention coverage extension is a
+defensible refinement (the rule's Statement is broader than its
+implementation), but not driven by a current FN classification. Surface
+for principal disposition; not blocking Arc G closeout.
+
+### Parallel-session interference notice
+
+Between Arc G's first run (09:14) and clean-rebuild re-run (09:31),
+parallel session(s) modified 21 source files in `swift-primitives/`
+including `swift-binary-primitives/Sources/Binary Namespace/Binary.swift`
+(09:31:39, surfaced finding #2 above) and
+`Binary+Ownership.Borrow.Protocol.swift` (post-second-run). Per
+`feedback_do_not_interfere_with_parallel_churn.md`: left untouched.
+Finding #2 is the parallel author's WIP surface — disposition belongs
+to that arc.
+
+The first validation run also flagged a SwiftPM-resolution failure
+on re-run (umbrella `swift-primitives` Package.swift references
+`Range Primitives Core` product not exported by current
+`swift-range-primitives`). `rm -rf .build Package.resolved` cleared
+it — consistent with `feedback_clean_build_before_compiler_limitation_claim.md`
+2026-05-20 discipline. Surfaced and noted; not in scope.
+
+### Outcome
+
+- **Validation result**: 2 TP firings; rules correctly silent
+  elsewhere in cascade-finished state.
+- **Rule refinements**: none (no FP/FN classifications surfaced).
+- **Skill / outcome record amendments**: none (no statement changes).
+- **Deferred items** (separate arcs):
+  - API-BYTE-005 TP — pre-existing Wave-4 ASCII-wrapper phase-out (in scope of W2 Wave 4).
+  - API-BYTE-007 TP — parallel-session WIP; the WIP arc dispositions.
+- **Coverage observation queued** (class-c): API-BYTE-003 gate
+  extension to default-impl-extension shape — future-prevention
+  only; principal disposition.
+
+### Artifacts
+
+| Artifact | Path |
+|---|---|
+| Validation harness (temporary) | `swift-foundations/swift-institute-linter-rules/Tests/Institute Linter Rule Byte Tests/Lint.Rule.Byte.ArcG.Validation.swift` |
+| Per-run finding stamp | `/tmp/byte-lint-validation-arc-g.md` |
+| Existing per-rule validation receipts (authoring baseline; this arc EXTENDS with real-world findings, does not replace) | `swift-foundations/swift-linter/Research/promote-API-BYTE-001..007-validation-2026-05-{19,20}.md` |
+
 ## References
 
 - Parent arc: `/Users/coen/Developer/HANDOFF-ascii-domain-retyping.md` (Phase-2 execution sections + principal direction 2026-05-19)
@@ -1079,3 +1321,5 @@ Validator source commit: `swift-foundations/swift-institute-linter-rules@f86e3ff
 ## Changelog
 
 - **v1.0.0 (2026-05-19)** — Initial investigation outcome + plan. Pre-split into 7 per-wave handoff files at workspace root per [HANDOFF-007] program-shape exception. Per-wave outcome stamps pending execution.
+- **v1.1.0 (2026-05-20)** — Arc G stamp: swift-primitives byte-lint validation across 150 packages × 7 rules. 2 TP firings (API-BYTE-005 ASCII wrapper, API-BYTE-007 Binary.swift `init(_:Span<UInt8>)`), 0 FP, 0 FN. Coverage observation surfaced: API-BYTE-003 gate misses default-impl-extension shape (current state: 0 latent violations of the gap).
+- **v1.2.0 (2026-05-20)** — Arc B-continuation stamp: closes rfc-1035 baseline (4 `Byte == ASCII.Code` sites @ `977655e`) and downstream cascade rfc-3596 (`fa3af14`) + rfc-6891 (`227fca3`). 3 packages cleared from Arc B's deferred table; 51 tests pass across the active arc. No new discrimination refinements — patterns reaffirmed.
