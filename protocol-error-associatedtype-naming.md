@@ -2,10 +2,24 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-21
 status: RECOMMENDATION
 ---
+-->
+
+<!--
+## Changelog
+
+- v1.1.0 (2026-05-21): Added Option E (@_implements escape hatch)
+  inspired by `Blog/Published/2026-04-20-associated-type-trap.md`.
+  Empirically tested in `/tmp/at-implements-test/` and REFUTED — the
+  blog's two-stamp pattern solves the two-protocol AT-unification case
+  (HTML.Document conforming to both Rendering.View and SwiftUI.View),
+  not the single-protocol nested-type default-override case (Ordinal/
+  Color). Recommendation unchanged: Option A.1.
+- v1.0.0 (2026-05-21): Initial research opening the AT-naming question
+  after Arc 1 execution attempt surfaced the structural blocker.
 -->
 
 ## Context
@@ -319,19 +333,88 @@ case-by-case.
 
 **Verdict**: Rejected.
 
+#### Option E — `@_implements` escape hatch (EMPIRICALLY REFUTED 2026-05-21)
+
+**Hypothesis** (sourced from `Blog/Published/2026-04-20-associated-type-trap.md`):
+the blog's lesson — "keep the idiomatic protocol-AT name; handle the
+collision locally at the conforming type via `@_implements`" — might
+generalize from the two-protocol AT-unification case to the
+one-protocol nested-type-default-override case. If it did, the shape
+would be:
+
+```swift
+extension Ordinal: Ordinal.`Protocol` {
+    @_implements(Ordinal.`Protocol`, Error)
+    public typealias _OrdinalProtocolError = Swift.Never
+
+    public var ordinal: Ordinal { self }
+    public init(_ ordinal: Ordinal) { self = ordinal }
+}
+```
+
+The pre-existing nested `Ordinal.Error` enum would remain intact for
+operation-domain failures; the AT witness would be `Never`; no
+ecosystem renames needed.
+
+**Empirical test** (2026-05-21, `/tmp/at-implements-test/`):
+
+Reproduced the original Ordinal collision with a minimal package, then
+added the `@_implements` stamp. **Result**: the stamp does not
+override the default name lookup. Compiler output:
+
+```text
+error: type 'Ordinal' does not conform to protocol 'Ordinal.`Protocol`'
+note: multiple matching types named 'Error'
+error: static property 'zero' requires the types 'Ordinal.Error' and
+       'Never' be equivalent
+note: where 'Self.Error' = 'Ordinal.Error'
+```
+
+The compiler resolved `Self.Error` to the pre-existing nested enum
+`Ordinal.Error`, NOT to the stamp's `_OrdinalProtocolError = Never`.
+
+**Why the blog's pattern doesn't generalize**: the blog's case is
+two-protocol AT *unification* — two protocols each demand a `Body`
+binding, and Swift's anchor mechanism merges them into one. The
+`@_implements` stamps split the unified binding back into two distinct
+witnesses, one per protocol. The mechanism gives explicit per-protocol
+witness control because there are two protocols to dispatch over.
+
+The single-protocol nested-type-override case has one protocol and one
+witness slot. The `@_implements` stamp adds a *second* candidate
+typealias for that slot; it does not remove the default name-lookup
+candidate (the nested enum). Swift then sees two candidates and
+reports "multiple matching types" while still picking the nested enum
+under the default lookup order.
+
+The blog's "if `@_implements` produces 'multiple matching types,'
+suspect another unpinned protocol requirement before you start
+narrowing names" meta-lesson assumes a second protocol to pin. In the
+single-protocol case there's nothing to pin — the second candidate IS
+the nested enum that the stamp was trying to dodge.
+
+**Verdict**: REFUTED. The blog post is excellent prior art on
+`@_implements` as a tool, but the specific pattern (one stamp on a
+self-conformer with a same-named nested type) is not solvable by it.
+
+**Recovery from this exploration**: the empirical test stayed in
+`/tmp/at-implements-test/`, isolated from the workspace. Cleaned up
+after verification.
+
 ### Comparison table
 
-| Criterion | A (rename AT to Failure) | B (rename nested enums) | C (accept nested as AT) | D (bifurcate) |
-|---|---|---|---|---|
-| Aligns with Swift stdlib | YES (Result/AsyncSequence) | NO (diverges) | NO (diverges) | mixed |
-| Aligns with institute Parser/Serializer family | YES (7 protocols already use Failure) | NO (would diverge) | NO | mixed |
-| Compatible with byte-discipline arc's Error naming | NO (A.1 renames; A.2 bifurcates) | YES | YES | mixed |
-| Cost on Ordinal arc | ~5 files (A.1) | ~80 sites | massive | varies |
-| Cost on Color arc | ~3 files (A.1) | ~20 sites | substantial | varies |
-| Sustainability for future capability-markers | excellent (no collision shape) | poor (rediscovered per package) | n/a | none |
-| Preserves universal-conformer ergonomics | YES | YES | NO | depends |
-| Single ecosystem-wide convention | YES (A.1) / NO (A.2) | YES | YES | NO |
-| Reusable by future agents without case analysis | YES (A.1) | NO | NO | NO |
+| Criterion | A (rename AT to Failure) | B (rename nested enums) | C (accept nested as AT) | D (bifurcate) | E (@_implements stamp) |
+|---|---|---|---|---|---|
+| Aligns with Swift stdlib | YES (Result/AsyncSequence) | NO (diverges) | NO (diverges) | mixed | YES (keeps Error name) |
+| Aligns with institute Parser/Serializer family | YES (7 protocols already use Failure) | NO (would diverge) | NO | mixed | NO (Error name, not Failure) |
+| Compatible with byte-discipline arc's Error naming | NO (A.1 renames; A.2 bifurcates) | YES | YES | mixed | YES |
+| Cost on Ordinal arc | ~5 files (A.1) | ~80 sites | massive | varies | n/a — empirically refuted |
+| Cost on Color arc | ~3 files (A.1) | ~20 sites | substantial | varies | n/a — empirically refuted |
+| Sustainability for future capability-markers | excellent (no collision shape) | poor (rediscovered per package) | n/a | none | n/a — empirically refuted |
+| Preserves universal-conformer ergonomics | YES | YES | NO | depends | n/a — empirically refuted |
+| Single ecosystem-wide convention | YES (A.1) / NO (A.2) | YES | YES | NO | n/a — empirically refuted |
+| Reusable by future agents without case analysis | YES (A.1) | NO | NO | NO | n/a — empirically refuted |
+| Empirically verified | Pattern matches Parser/Serializer (already shipped) | Verified mechanical pattern | n/a (rejected on cost grounds) | n/a | REFUTED 2026-05-21 |
 
 ## Constraints
 
@@ -414,6 +497,12 @@ Parser/Serializer/Coder pattern that's already established.
 
 **Alternative path if A.1 is rejected**: B is the next-best option.
 Bifurcation (A.2 / D) and accepting-nested-as-AT (C) are rejected.
+Option E (@_implements escape hatch from the
+`2026-04-20-associated-type-trap` blog) was hypothesized as a viable
+fourth option (preserve names; stamp locally) but empirically refuted
+2026-05-21 — the blog's two-stamp pattern handles two-protocol AT
+unification, not the single-protocol nested-type default-override
+this arc faces.
 
 ## Open questions
 
@@ -457,6 +546,13 @@ selected.
 
 - Originating arc commits: `swift-byte-primitives@3f3b44a`,
   `swift-ascii-primitives@68605eb`
+- Blog: `swift-institute/Blog/Published/2026-04-20-associated-type-trap.md`
+  — primary prior art on `@_implements`; established the
+  "handle the collision at the conforming type, not at the protocol"
+  meta-lesson. The blog's two-stamp pattern solves the
+  two-protocol AT unification case; this research empirically
+  established that the pattern does not generalize to the
+  single-protocol nested-type default-override case (Option E above).
 - Prior research:
   - `byte-protocol-capability-marker.md` v1.1.0 (Q1 sibling-form
     anchor; doesn't address AT name choice)
