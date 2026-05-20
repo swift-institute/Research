@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-05-21
 status: RECOMMENDATION
 ---
@@ -11,6 +11,18 @@ status: RECOMMENDATION
 <!--
 ## Changelog
 
+- v1.2.0 (2026-05-21): Arc 1 execution attempt surfaced a structural
+  blocker the v1.1.0 deep-dive missed — both Ordinal and Color have
+  pre-existing nested `.Error` enums that Swift resolves as the
+  protocol's associated-type witness, NOT the default `Never`. The
+  byte-discipline arc avoided this by Byte happening not to have a
+  nested Error enum (contingent, not structural). Both Arc 1 and Arc 2
+  are BLOCKED pending resolution of the AT-naming question. Spun off
+  a Tier 2 research doc: `protocol-error-associatedtype-naming.md`
+  (RECOMMENDATION: rename the AT to `Failure` ecosystem-wide,
+  including back-porting the byte-discipline arc). Arc 1 execution
+  reverted; clean baseline preserved. Q1 (Ordinal) and Q2 (Color) are
+  now subordinate to the AT-naming RECOMMENDATION.
 - v1.1.0 (2026-05-21): Deep-dive on the two FITS candidates (Ordinal /
   Color) replaces speculative framing with verified file:line evidence.
   Pre-existing infrastructure surfaced for both arcs: Cyclic.Group.Static
@@ -22,6 +34,34 @@ status: RECOMMENDATION
   to reflect verified state.
 - v1.0.0 (2026-05-20): Initial inventory + triage.
 -->
+
+## v1.2.0 Blocker Notice
+
+**Arc 1 execution attempt on 2026-05-21 surfaced a structural blocker
+this doc did not anticipate.** When `Ordinal: Ordinal.\`Protocol\`` (or
+`Color: Color.\`Protocol\``) is declared with `associatedtype Error: Swift
+.Error = Never`, Swift's name lookup resolves `Ordinal.Error` /
+`Color.Error` to the **pre-existing nested enum at that namespace**,
+NOT to the default `Never`. The byte-discipline arc avoided this only
+because `Byte` happened not to have a nested `Byte.Error` enum
+(contingent, not structural). The pattern does not generalize as-is to
+the broader capability-marker family.
+
+The AT-naming question — `Error` (byte-discipline precedent) vs `Failure`
+(Parser/Serializer/Coder/Command/Result/AsyncSequence precedent) vs
+rename pre-existing nested enums — is now the gating decision for ALL
+remaining FITS candidates (Ordinal, Color, and every future
+capability-marker protocol).
+
+**See**: `protocol-error-associatedtype-naming.md` v1.0.0 (RECOMMENDATION:
+rename the AT to `Failure` across the capability-marker family,
+including back-porting the byte-discipline arc).
+
+Both Arc 1 and Arc 2 in this doc are BLOCKED pending principal
+disposition on that research. The reverted Arc 1 baseline is clean;
+nothing landed.
+
+---
 
 ## Context
 
@@ -679,7 +719,37 @@ extension Color.LAB: Color.`Protocol` {
 
 ## Open questions for principal
 
-### Q1 — Confirm Ordinal.\`Protocol\` arc execution (v1.1.0: refined-conformer verified)
+### Q0 (v1.2.0 — supersedes Q1 and Q2 below) — AT name: `Error` vs `Failure`?
+
+The structural blocker surfaced at Arc 1 execution time makes the AT
+naming choice the gating question for every remaining FITS candidate.
+Both Q1 (Ordinal) and Q2 (Color) below are subordinate to this
+decision: their execution sketches assume `Error` as the AT name (per
+the byte-discipline precedent), but neither arc can land without
+resolving the nested-Error collision.
+
+The full options analysis lives in
+`protocol-error-associatedtype-naming.md` v1.0.0 (RECOMMENDATION:
+**Option A.1 — rename the AT to `Failure` ecosystem-wide, including
+back-porting the byte-discipline arc**). Summary of options:
+
+- **A.1**: Rename AT to `Failure` everywhere (including the published
+  Byte.`Protocol`). Aligns institute with Parser/Serializer/Coder family
+  + stdlib Result/AsyncSequence. Cost: ~5-8 files in byte-primitives /
+  ascii-primitives. **Recommended.**
+- **B**: Rename each conformer's pre-existing nested `Error` enum (e.g.,
+  `Ordinal.Error` → `Ordinal.OperationError`). Preserves byte-discipline
+  naming but cascades per-protocol (~80 sites Ordinal alone). Doesn't
+  generalize — every future arc rediscovers the issue.
+- **C**: Accept nested Error as the AT witness. Loses
+  universal-conformer ergonomics. Rejected.
+- **D**: Bifurcate per-protocol. Convention drift. Rejected.
+
+Principal disposition needed before either Arc 1 or Arc 2 can proceed.
+
+---
+
+### Q1 — Confirm Ordinal.\`Protocol\` arc execution (v1.1.0: refined-conformer verified) — SUBORDINATE TO Q0
 
 **v1.0.0 framing**: hypothetical refined conformer ("wait for the first
 one"). **v1.1.0 update**: the refined conformer (`Cyclic.Group.Static
@@ -702,7 +772,7 @@ Two sub-questions for execution:
   Tagged and queue the rest as follow-up? The minimal scope recommendation
   is the latter.
 
-### Q2 — Confirm Color.\`Protocol\` arc execution (v1.1.0: cascade fully in-scope)
+### Q2 — Confirm Color.\`Protocol\` arc execution (v1.1.0: cascade fully in-scope) — SUBORDINATE TO Q0
 
 **v1.0.0 framing**: cascade spans IEC/ISO spec packages (out-of-scope
 fear). **v1.1.0 update**: all 7 Color.\`Protocol\` conformers are declared
