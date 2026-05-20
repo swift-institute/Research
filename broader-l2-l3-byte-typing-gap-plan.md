@@ -961,6 +961,112 @@ Migration was fully deterministic per the W2 discrimination rubric; no class-c r
 
 **Surface for principal awareness (NOT class-c)**: The "8 baseline test-target failures" enumerated above are expected per the Do Not Touch list. Their resolution is queued under broader W4 / post-W2 deferred items (rfc-1035 baseline, rfc-4007 Binary.ASCII.Serializable UInt8 overload reconciliation, swift-ascii Input.Slice test fixtures, terminal-primitives Parser test fixtures).
 
+## Post-W2 Arc F — SLI consolidation (2026-05-20)
+
+> Bounded systemic cleanup: stdlib-interop `@_disfavoredOverload` UInt8
+> forwarders move from byte-domain primary modules to per-package
+> `* Standard Library Integration` (SLI) targets. Companion to
+> `/promote-rule [API-BYTE-007]` (refines [API-BYTE-003]'s
+> attribute-presence allowlist to a module-location rule).
+> Per `HANDOFF-byte-sli-consolidation.md`; principal direction 2026-05-20.
+> No push (program rule).
+
+### Phase 1 — Audit + classify
+
+Workspace grep across `swift-primitives/`, `swift-standards/`, `swift-foundations/`, `swift-ietf/`, `swift-iso/`, `swift-incits/` for `@_disfavoredOverload` near UInt8 / [UInt8] / `Buffer.Element == UInt8` / `Source.Element == UInt8` / `Bytes.Element == UInt8`.
+
+| Class | Count | Disposition |
+|---|---|---|
+| **MOVE** — stdlib-interop forwarder in primary module | 47 | Move to SLI |
+| **SLI-OK** — already in SLI module | ~14 | Verify; keep |
+| **ARITH-STAY** — genuine arithmetic UInt8 | several | Stays primary per [API-BYTE-004] |
+| **PROTO-STAY** — stdlib protocol witness requires UInt8 | n/a | Stays primary per [API-BYTE-002] corollary |
+| **FFI-STAY** — UnsafePointer<UInt8>, syscall boundary | ~6 (iso-9945) | Stays primary |
+| **NOT-BYTE** — out of scope (rendering, DSL builders) | ~10 | Out of scope |
+
+Under [API-BYTE-007] the 6-forwarder allowlist from [API-BYTE-003] is superseded by module-location: those 6 entries move to `Binary Primitives Standard Library Integration`.
+
+### Phase 2 — SLI infrastructure
+
+12 of 13 affected packages lacked an SLI target. 10 new SLI targets created (1 per affected package), following the swift-byte-primitives canonical shape: library product `<X> Standard Library Integration`, target with deps on primary + `Byte Primitives Standard Library Integration`, dedicated test target.
+
+### Phase 3 — Migrate forwarders (per-package commits)
+
+| # | Package | Commit | Forwarders | Notes |
+|---|---|---|---|---|
+| 1 | swift-iso-21320 | `3eae04c` | 1 | **Pilot** — CRC-32 forwarder; Archive.swift internal caller bridged inline |
+| 2 | swift-rfc-7519 | `29d0703` | 1 | **Arc D re-sweep** — JWT init; forwarder-subject test moved to SLI |
+| 3 | swift-rfc-7301 | `ea6b20a` | 1 | ALPN ProtocolIdentifier init |
+| 4 | swift-rfc-768 | `90c5c0c` + `15bcd7d` | 2 | UDP Datagram inits; follow-up fix for nested-type lookup |
+| 5 | swift-rfc-6455 | `d38b989` | 2 | WebSocket Frame init + binary helper |
+| 6 | swift-rfc-8446 | `a63b374` | 3 | TLS Extension.Data + Handshake.Message + Record inits |
+| 7 | swift-rfc-9293 | `d21b22b` | 2 | TCP Segment + Header inits |
+| 8 | swift-rfc-791 | `1e61e2b` | 6 | IPv4 Array<UInt8> conversions + Address 4-octet init; ascii parser internal caller bridged inline |
+| 9 | swift-ascii-primitives | `1ef1dbc` | 13 | 11 Classification predicates + 2 Serialization decimal forwarders; Classification primaries are ASCII.Code-typed (Arc C retype) so bridge via `.lazy.map(ASCII.Code.init)` |
+| 10 | swift-binary-primitives | `e27edff` | 16 | Binary.Serializable (8 — supersedes [API-BYTE-003] allowlist) + Binary.Parseable (1) + FixedWidthInteger (4) + RangeReplaceableCollection (3). FWI init impl swap: byte-primary now carries the canonical `withUnsafeBytes`+`load(as:)` impl; SLI bridges UInt8→Byte |
+
+**Total: 47 forwarders moved across 10 packages.**
+
+### Phase 4 — Codify [API-BYTE-007]
+
+`swift-institute/Skills/byte-discipline/SKILL.md` commit `7e3045a` added the rule in pre-mechanization shape; commit `4d0b49f` compressed it per [PROMOTE-006] atomic Phase-7 transaction. Full discipline lives in `Audits/PROMOTE-API-BYTE-007-2026-05-20.md`.
+
+### Phase 5 — Lint rule (`Lint.Rule.Byte.StdlibForwarderOutsideSLI`)
+
+Per `lint-rule-promotion` 8-phase pipeline:
+
+- **Triage (P1)**: MECHANIZE — Pass A/B/C all PASS; ground truth available (47 MOVE instances); detection mechanizable on SwiftSyntax.
+- **Placement (P2)**: institute tier, `Institute Linter Rule Byte` pack (alongside [API-BYTE-001..006]).
+- **Implementation (P3)**: 218-line AST visitor; detection = `@_disfavoredOverload` attribute + UInt8 surface (params, return type, generic where-clauses). Module gate via filepath: source files under `Sources/<X> Standard Library Integration/` are allowlisted.
+- **Fixtures + Tests (P4-5)**: 13 inline-source-string tests (4 Unit / 4 Edge Case / 2 Integration / 1 Performance). All pass.
+- **Validation (P6)**: 0 findings across 7-package graduated ladder + 0 residual across all 10 Arc-F-touched packages.
+- **Atomic landing (P7)**: bundle entry (`6441934`) + skill compression (`4d0b49f`) + outcome record migration (`f3a0c65`).
+- **Outcome record (P8)**: `swift-institute/Audits/PROMOTE-API-BYTE-007-2026-05-20.md` (initial `385f755`, stamped `f3a0c65`).
+
+Validator source commit: `swift-foundations/swift-institute-linter-rules@f86e3ff`.
+
+### Phase 6 — Re-audit + verify (final)
+
+| Probe | Result |
+|---|---|
+| Residual `@_disfavoredOverload` UInt8 in any migrated primary module | **0** |
+| Per-package `swift build` clean | 10/10 |
+| Per-package `swift test` pass | 10/10 (>770 tests; rfc-9293 has unrelated known runner crash) |
+| Bundle entry activates without breaking institute consumers | yes |
+| Lint-rule false-positive risk on the 3 retained byte-primary `@_disfavoredOverload` sites in binary-primitives | none — rule's UInt8-surface gate correctly skips byte-domain `@_disfavoredOverload` |
+
+### Discrimination patterns established (Arc F refinements)
+
+| Pattern | Where applies | Bridge form |
+|---|---|---|
+| Generic `Sequence<UInt8>` param | iso-21320 CRC; binary-primitives generic forwarders | `.lazy.map(Byte.init)` — no allocation |
+| Concrete `[UInt8]` param | rfc-7519 JWT, rfc-768 Datagram, rfc-6455/8446/9293 inits | `[Byte](data)` — BSLI inbound bridge |
+| `[UInt8]` return type | rfc-791 Array conversions | `[Byte]` materialize + `.underlying` outbound |
+| Per-element UInt8 init | rfc-791 IPv4.Address 4-octet | Per-element `Byte(octet)` bridge |
+| ASCII.Code-typed primary (post-Arc-C retype) | ascii-primitives Classification | `.lazy.map(ASCII.Code.init)` |
+| Internal caller in primary needs the moved forwarder | iso-21320 Archive.swift, rfc-791 IPv4.Address.swift, binary-primitives multi-site | Bridge **inline** at call site (no primary→SLI dep — would be cyclic) |
+| Impl swap required when byte-primary previously delegated to UInt8 | binary-primitives FixedWidthInteger init | Move canonical `withUnsafeBytes`+`load(as:)` impl to byte-primary; SLI becomes the bridge |
+
+### Class-c reveals (documented, all resolved or queued)
+
+1. **Nested-type lookup at SLI extension boundary** — cross-module `extension X.Y` on nested types requires fully-qualified parameter / return / throws types. Surfaced by rfc-8446 agent during run; confirmed and fixed in rfc-768 follow-up `15bcd7d`. Documented as cross-reference in [API-BYTE-007]. Skill-promotion candidate for modularization skill.
+2. **`Standard_Library_Extensions` import becomes unused** after forwarder removal in several RFC primaries (rfc-9293 flagged explicitly; likely others). Mild noise; cleanup deferred since import was pre-existing form.
+3. **Parallel-workspace WIP** in `.github/metadata.yaml` across multiple RFC repos. All agents respected this via `[feedback_do_not_interfere_with_parallel_churn.md]` — left unstaged.
+4. **3 byte-primary `@_disfavoredOverload` cases** in binary-primitives — Phase 1 audit initially flagged as MOVE; agent re-classified as stdlib-precedence (no UInt8 in surface, `S: Binary.Serializable` only). Stay in primary; lint rule correctly skips them.
+5. **FWI init impl swap** in binary-primitives — byte-primary `init?(bytes:[Byte])` previously delegated to UInt8 init; after move would be circular. Resolved by swapping: byte-primary carries the real impl, SLI is the bridge.
+6. **Primary test target → SLI test-only dep** in binary-primitives — mass-migrating all `[UInt8]` test fixtures to `[Byte]` was too churnful; primary test target now depends on SLI (test-scope only). Umbrella `Binary Primitives` library product still does NOT re-export SLI (consumer opt-in preserved at public boundary).
+
+### Skill / rule / outcome artifacts (commits)
+
+| Artifact | Commit | Repo |
+|---|---|---|
+| byte-discipline [API-BYTE-007] (pre-mech) | `7e3045a` | `swift-institute/Skills` |
+| Lint.Rule.Byte.StdlibForwarderOutsideSLI source + 13 tests | `f86e3ff` | `swift-foundations/swift-institute-linter-rules` |
+| PROMOTE outcome record (pre-Phase-6/7) | `385f755` | `swift-institute/Audits` |
+| Bundle entry activation | `6441934` | `swift-foundations/swift-institute-linter-rules` |
+| byte-discipline [API-BYTE-007] (compressed) | `4d0b49f` | `swift-institute/Skills` |
+| Outcome record stamp (Phase 6 + Phase 7) | `f3a0c65` | `swift-institute/Audits` |
+
 ## References
 
 - Parent arc: `/Users/coen/Developer/HANDOFF-ascii-domain-retyping.md` (Phase-2 execution sections + principal direction 2026-05-19)
