@@ -1371,6 +1371,86 @@ gap without changing the finding set.
 | `swift-institute/Skills` | Skill Statement amendment | Single commit |
 | `swift-institute/Research` | Plan doc Arc G v1.1.0 + v1.2.0 | Single combined commit |
 
+## Post-W2 Arc C-continuation — rfc-4648 codec-split (2026-05-20)
+
+> Bounded focused arc per `HANDOFF-rfc-4648-codec-split.md`. Substantive
+> per-direction design (deferred by Arc B as "not mechanical") +
+> mechanical function-signature sweep + downstream consumer cascade.
+> Pinned to plan doc `0fbc860` + `byte-discipline@891e097/4d0b49f/7e3045a`.
+> No push (program rule).
+
+### Outcome
+
+**Commits**: 4 across 3 packages (no push).
+
+| # | Package | Commit | Files | Note |
+|---|---|---|---|---|
+| 1 | swift-rfc-4648 | `b06ab98` | 30 source + 10 tests + 1 Research doc | Per-direction codec split (encoded `[ASCII.Code]`, decoded `[Byte]`); design stamped at `swift-rfc-4648/Research/codec-split-design.md` |
+| 2 | swift-rfc-4648 | `22956bb` | 2 source (Base32, Base64) | Doc-comment example refresh — stale `[UInt8]` array literals → `[Byte]` |
+| 3 | swift-rfc-7519 | `dab112b` | 1 source (JWT.swift) | Remove rfc-4648 staging-local `[UInt8]` bridges (storage was already `[Byte]` per Arc D) |
+| 4 | swift-rfc-5952 | `590e8ec` | 1 source (RFC_4291.IPv6.Address+RFC_5952.swift) | Cascade serialize `Buffer.Element` UInt8 → ASCII.Code; `.ascii.colon` → `.colon` per [API-BYTE-005] |
+
+**Phase 0 verification**: rfc-7519 storage was already `[Byte]` per Arc D (`5a4995b` 2026-05-20); Phase 3 work on rfc-7519 reduced to bridge-cleanup (no storage migration needed).
+
+**Tests**: 185 (rfc-4648) + 18 (rfc-5952) + 26 (rfc-7519) = **229/229 pass**.
+
+### Per-codec design decision (uniform)
+
+All 5 codecs (Base16, Base32, Base32Hex, Base64, Base64URL) make the same call — `EncodingTable.encode: [ASCII.Code]`, `EncodingTable.decode: [UInt8?]` (Optional; nil = invalid; sextet/quintet/nibble values 0-63/0-31/0-15 STAY arithmetic-domain UInt8 per Q3). No per-codec variation surfaced. Design recorded at `swift-rfc-4648/Research/codec-split-design.md` (DECISION). The decoding lookup substrate explicitly moved from `[UInt8]` (sentinel `255`) to `[UInt8?]` (Optional) per the HANDOFF Recommended Default — types validity at the type-system level instead of magic-value sentinel.
+
+### Surface changes
+
+| Surface | Before | After |
+|---|---|---|
+| `encode(_:into:padding:)` | `Bytes.Element == UInt8`, `Buffer.Element == UInt8` | `Bytes.Element == Byte`, `Buffer.Element == ASCII.Code` |
+| `encode(_:padding:) -> [UInt8]` | `Bytes.Element == UInt8` | `Bytes.Element == Byte`, returns `[ASCII.Code]` |
+| `decode(_:into:) -> Bool` | `Bytes.Element == UInt8`, `Buffer.Element == UInt8` | `Bytes.Element == ASCII.Code`, `Buffer.Element == Byte` |
+| `decode(_:) -> [UInt8]?` | `Bytes.Element == UInt8` | `Bytes.Element == ASCII.Code`, returns `[Byte]?` |
+| `decode(_ string:) -> [UInt8]?` | StringProtocol | Returns `[Byte]?`; body lifts `string.utf8` → `Array<ASCII.Code>` |
+| `decode(sextet/quintet/nibble: UInt8) -> UInt8?` | UInt8 param | `ASCII.Code` param; return STAYS `UInt8?` (arithmetic-domain per Q3) |
+| `RFC_4648.padding: UInt8 = .init(ascii: "=")` | UInt8 | `ASCII.Code = .equalsSign` |
+| `EncodingTable.encode: [UInt8]` | UInt8 | `[ASCII.Code]` |
+| `EncodingTable.decode: [UInt8]` (sentinel `255`) | UInt8 sentinel | `[UInt8?]` (Optional; nil = invalid) |
+| `Base16.hexDecodeTable: [UInt8]` (private) | UInt8 sentinel | `[UInt8?]` |
+| Wrapper extensions | `Wrapped.Element == UInt8` (handled both directions) | Split by direction: `Wrapped.Element == Byte` for encode, `Wrapped.Element == ASCII.Code` for decode |
+| `Span where Element == UInt8` accessors | UInt8 | `Element == Byte` |
+| `SpanWrapper.span: Span<UInt8>` | UInt8 | `Span<Byte>` |
+| Foundation `Data` ↔ rfc-4648 bridge | `Array(self)` / `[UInt8](base64Encoded:)` | `Array<Byte>(self)` / `[Byte](base64Encoded:)` + `.underlying` at Data boundary |
+
+### Bridges used inside bodies
+
+- **Iterator-boundary Byte→UInt8 bridge** (encode path arithmetic): `let b1 = b1Byte.underlying` immediately at iterator unpacking, since Byte has no arithmetic by design per [API-BYTE-002].
+- **Buffer-boundary UInt8→Byte bridge** (decode path emission): `buffer.append(Byte((values[0] << 2) | (values[1] >> 4)))` — UInt8 byte assembly wraps to Byte at the conformance boundary.
+- **String entry boundary**: `Array<ASCII.Code>(string.utf8)` lifts stdlib UTF-8 view to ASCII.Code substrate at the decode entry point (BSLI cross-byte-domain init).
+- **String emission boundary**: `String(decoding: encodedAsciiCodes, as: UTF8.self)` works via `Byte_Primitives_Standard_Library_Integration.String(decoding:as:)` — accepts any `Sequence<X: Byte.\`Protocol\`>`.
+- **Decode table sentinel→Optional**: `guard let value = decodeTable[Int(code.underlying)] else { return false }` — Optional propagation replaces `guard value != 255`.
+
+### Discrimination patterns established / refined
+
+- **Per-direction asymmetric substrate** (codec-family): same operation on a codec carries different element types on input vs output. The W2 rubric's "byte-vs-arithmetic-domain axis" applies independently to each direction — encode's input is opaque binary (Byte) producing ASCII alphabet (ASCII.Code); decode's input is ASCII alphabet (ASCII.Code) producing opaque binary (Byte). This is structurally distinct from the witness-only retype pattern (rfc-791 TTL) and the opaque-payload-with-forwarder pattern (rfc-7519 JWT) — the codec-split pattern is the third reference exemplar for codec-shaped types.
+- **Decoding lookup `[UInt8]` sentinel → `[UInt8?]` Optional**: the rubric's substrate question (UInt8 vs Byte) is independent of the representation question (Optional vs sentinel). Once arithmetic-domain UInt8 is locked, the typed-Optional form is strictly cleaner — same memory cost (Swift folds nil into the 8th bit when range fits), no magic-value collision risk, propagates naturally through `guard let`. Future codec-shaped types should default to `[UInt8?]` for sparse digit-value lookup tables.
+- **Wrapper-extension split by direction**: a single `Wrapper<Wrapped>` type can carry both encode and decode method families if its `where` clauses partition by direction (`Wrapped.Element == Byte` for encode, `Wrapped.Element == ASCII.Code` for decode). The wrapper TYPE is reused; the directional constraint differentiates. Sibling `Wrapped: StringProtocol` extension covers the string-entry path with `wrapped.utf8` lift to ASCII.Code at the body's entry.
+- **Iterator-boundary arithmetic bridge**: when the conformer's element type is Byte (no arithmetic) but the algorithm requires arithmetic (bit shifts, masks), bridging at the iterator boundary (`let b1 = b1Byte.underlying`) is the canonical shape — once per loop iteration, scoped tightly. Beats per-operation `.underlying` chains scattered through the body.
+- **`.ascii.colon` → `.colon` dot-shorthand on ASCII.Code buffer** ([API-BYTE-005] migration during cascade): when retyping `Buffer.Element` from UInt8 to ASCII.Code, the `.ascii.colon` form (forbidden per [API-BYTE-005]) doesn't simply migrate to `.ascii.colon` on the new element type — it migrates to direct `.colon` dot-shorthand because ASCII.Code carries the constants directly (no nested `.ascii` subspace). Pattern recurs whenever a consumer retypes from UInt8 buffer to ASCII.Code buffer.
+
+### Class-c surface for principal (none)
+
+Migration was fully deterministic per the W2 discrimination rubric; no class-c rubric ambiguity surfaced. The substrate decisions (encode/decode element types, decode table Optional shape, padding constant type) flowed mechanically from the rubric + the [UInt8?] Recommended Default. The "stdlib-interop UInt8 forwarders" question (whether to add an SLI target for rfc-4648 mirroring Arc F's rfc-7519 pattern) was deferred to a follow-up arc by design — the HANDOFF's Phase 4 "zero residual [UInt8] in primary surface" goal would be violated by adding forwarders in primary modules.
+
+### Deferred items table update
+
+The deferred-items table at line ~714 (Post-W2 consumer cascade Arc B closeout) has two rows now CLEARED by this arc:
+
+- `swift-rfc-4648` — Codec split design: **CLEARED by Arc C-continuation 2026-05-20** (`b06ab98` per-direction split + `22956bb` doc-comment refresh).
+- `swift-rfc-5952` — Gated on rfc-4648 Base16.encode: **CLEARED by Arc C-continuation 2026-05-20** (`590e8ec` buffer substrate cascade).
+
+rfc-7519 was cleared by Arc D (2026-05-20); the Arc C-continuation's rfc-7519 work was bridge-cleanup only, not storage migration.
+
+### Follow-up arcs (not in this scope)
+
+- **rfc-4648 SLI consolidation**: add `RFC 4648 Standard Library Integration` target hosting `@_disfavoredOverload` UInt8 forwarders for stdlib-interop callers (mirrors Arc F's rfc-7519 SLI pattern). Currently callers holding `[UInt8]` bridge at the call site via `[Byte](bytes)` / `[ASCII.Code](bytes)`. Deferred per HANDOFF Phase 4 zero-residual-UInt8 invariant + minimal-scope discipline.
+- **Decode lookup `[UInt8?]` substrate adoption**: the `[UInt8?]` shape with Optional-typed validity is a code-cleanup pattern other codec-family packages can adopt as they migrate (no other in-progress codec arcs identified). Not blocking.
+
 ## References
 
 - Parent arc: `/Users/coen/Developer/HANDOFF-ascii-domain-retyping.md` (Phase-2 execution sections + principal direction 2026-05-19)
@@ -1386,3 +1466,4 @@ gap without changing the finding set.
 - **v1.1.0 (2026-05-20)** — Arc G stamp: swift-primitives byte-lint validation across 150 packages × 7 rules. 2 TP firings (API-BYTE-005 ASCII wrapper, API-BYTE-007 Binary.swift `init(_:Span<UInt8>)`), 0 FP, 0 FN. Coverage observation surfaced: API-BYTE-003 gate misses default-impl-extension shape (current state: 0 latent violations of the gap).
 - **v1.2.0 (2026-05-20)** — Arc G Phase 7 addendum: [API-BYTE-003] coverage extension landed. Gate now accepts default-impl-extension shape (`extension Binary.Serializable { ... }` etc.) in addition to conformer-extension shape. Re-validation: 0 new firings on the 4 known default-impl sites in swift-binary-primitives (all classify as non-violations: 2 Byte-typed + 2 `@_disfavoredOverload`-exempt). Future-prevention. Skill Statement + outcome record + validation receipt amended.
 - **v1.2.0 (2026-05-20)** — Arc B-continuation stamp: closes rfc-1035 baseline (4 `Byte == ASCII.Code` sites @ `977655e`) and downstream cascade rfc-3596 (`fa3af14`) + rfc-6891 (`227fca3`). 3 packages cleared from Arc B's deferred table; 51 tests pass across the active arc. No new discrimination refinements — patterns reaffirmed.
+- **v1.3.0 (2026-05-20)** — Arc C-continuation stamp: closes rfc-4648 codec-split (`b06ab98` per-direction `[ASCII.Code]`/`[Byte]` substrates + `22956bb` doc refresh) and downstream cascade rfc-5952 (`590e8ec`) + rfc-7519 (`dab112b` bridge-cleanup; storage was already `[Byte]` per Arc D). 2 packages cleared from Arc B's deferred table (rfc-4648, rfc-5952); rfc-7519 reaffirmed clear. 229 tests pass across the active arc (185 + 18 + 26). Decode lookup substrate `[UInt8]` (sentinel `255`) → `[UInt8?]` (Optional) per HANDOFF Recommended Default. Three new discrimination patterns recorded: per-direction asymmetric substrate (codec family), Wrapper-extension split by direction, iterator-boundary arithmetic bridge.
