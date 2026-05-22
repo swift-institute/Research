@@ -1,10 +1,28 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-18",
+  "generatedAt": "2026-05-22",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-05-22-multi-sli-tier-expansion-and-package-resolved-misdiagnosis.md",
+      "date": "2026-05-22",
+      "title": "Multi-SLI Tier expansion + Package.resolved misdiagnosis + lint rule REVERT",
+      "packages": [
+        "swift-primitives/swift-cardinal-primitives",
+        "swift-primitives/swift-ordinal-primitives",
+        "swift-primitives/swift-affine-primitives",
+        "swift-primitives/swift-sequence-primitives",
+        "swift-primitives/swift-buffer-primitives",
+        "swift-primitives/swift-storage-primitives",
+        "swift-primitives/swift-hash-table-primitives",
+        "swift-primitives/swift-primitives-linter-rules",
+        "swift-institute/Skills",
+        "swift-institute/Audits"
+      ],
+      "status": "pending"
+    },
     {
       "file": "2026-05-18-orchestrator-continuation-d8-cascade-and-item-3c-investigation.md",
       "date": "2026-05-18",
