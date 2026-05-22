@@ -106,6 +106,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | A6 | WMO + CopyToBorrowOptimization actor-state miscompile | 6.3.1 (still broken) | `guard state == .running` constant-folded to `true` after shutdown; 6 trigger conditions required |
 | A7 | SIL EarlyPerfInliner crash on ~Copyable value-type `_read` yield | 6.3.1 (still broken) | "Cannot initialize a nonCopyable type with a guaranteed value" at SILPerformanceInlinerPass |
 | A8 | Parameterized-typealias × parameterized-protocol opaque-return ICE | 6.3.2 (FIXED 6.4-dev) | `public typealias X = Generic<Concrete>` OR `extension Generic where Base == Concrete` in imported module triggers "failed to produce diagnostic" at test-target opaque returns |
+| A9 | `Atomic<Tagged<…>>` and `Dictionary<Tagged<…>, ~Copyable>` runtime metadata-lookup defect | 6.3.2 (still broken; evergreen wrapper fix landed) | `swift_getTypeByMangledName` returns `TypeLookupError("unknown error")` for institute-Tagged inside generic stdlib/institute containers needing full metadata; downstream loads of null metadata fault at `0x10` (advance) or `0xfffffffffffffff8` (deinit) |
 | B1 | `Property.View ~Copyable` extension constraint placement | 6.3.x (lang spec) | All constraints MUST be at extension level, not method level — implicit `Base: Copyable` else |
 | B2 | `Property.View` rejected on `Copyable` types (~Copyable + ~Escapable result from mutating method) | 6.3.x (lang spec) | Use `Property<Tag, Base>` for `@CoW` Copyable types instead |
 | B3 | Tagged constrained-extension nested-type ambiguity | 6.3.1 (still broken) | `extension Tagged where Tag == X, RawValue == Y { typealias Foo = ... }` causes cross-instantiation ambiguity |
@@ -115,7 +116,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | C2 | Typed throws — Swift 6.2.4 stdlib support matrix | 6.2.4 / 6.3.x (lang spec) | Some stdlib `rethrows` APIs propagate `throws(E)`; many erase to `any Error` |
 | C3 | Typed throws — catch blocks preserve concrete typed error | 6.3.x (lang spec) | `error` in catch IS the concrete typed error, NOT `any Error` |
 
-**Total entries: 17** (16 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
+**Total entries: 18** (17 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
 
 ---
 
@@ -393,6 +394,83 @@ The bug is fixed in Swift 6.4-dev (snapshot `swift-DEVELOPMENT-SNAPSHOT-2026-05-
 **Sunset condition — when this workaround is removed**: when the workspace migrates default toolchain to Swift 6.4+ (currently 6.4-dev only). Remove the `exclude:` clause from `swift-ascii-parser-primitives/Package.swift`; the file's content is already at canonical `Parser.Test.*` names. No content change required.
 
 **Source: `swift-institute/Issues/swift-issue-parameterized-typealias-opaque-return-ice/{INVESTIGATION-ARC.md, README.md}` — investigation arc 2026-05-16.**
+
+---
+
+### A9. `Atomic<Tagged<…>>` and `Dictionary_Primitives.Dictionary<Tagged<…>, ~Copyable>` runtime metadata-lookup defect
+
+**Swift versions**: 6.3.2 (`swiftlang-6.3.2.1.108`), Xcode 26.4.1; macOS 26.2 (build 25C56) arm64. Dev-toolchain (6.4-dev nightly) check blocked by the unrelated DeinitDevirtualizer SIL assertion on `swift-array-primitives` (see Master Fix-Status Table → Swift 6.4-dev Regressions).
+
+**Symptom**: Any generic stdlib or institute container that requires `Tagged_Primitives.Tagged<…>`'s **full type metadata** at runtime crashes with `EXC_BAD_ACCESS (code=1, address=0x10)` or `(code=1, address=0xfffffffffffffff8)`. Specifically:
+
+| Site | Trigger | Faulting load |
+|---|---|---|
+| `Atomic<Tagged<Tag, Ordinal>>.advance(within:)` | generic-method dispatch on the `@inlinable` `advance` extension in `Atomic+Ordinal.swift` | `ldr x2, [x1, #0x10]` — generic-arg[0] off null metadata |
+| `Atomic<Tagged<Tag, Underlying>>` synthesized `~Copyable` deinit | scope-end destroy of even a discarded `let _ = Atomic<Tagged<…>>(.zero)` | `ldur x8, [x1, #-0x8]` — VWT pointer off null metadata |
+| `Dictionary_Primitives.Dictionary<Tagged<Tag, U>, ~CopyableValue>.set(_:_:)` | hash-table insert/lookup that needs Tagged's value-witness table | `Dictionary<>.set+108` — same null-metadata pattern |
+| `Dictionary_Primitives.Dictionary<Tagged<Tag, U>, ~CopyableValue>.remove(_:)` | identical | identical |
+
+The runtime helper `__swift_instantiateConcreteTypeFromMangledNameV2` returns a default-constructed `TypeLookupError("unknown error")` for the symbolic mangled name representing `Atomic<Tagged<…>>` / `Dictionary<Tagged<…>, …>`. Verified via lldb breakpoint inside `libswiftCore.dylib!swift_getTypeByMangledNameInContextImpl + 192`, inspecting the `TypeLookupErrorOr` result struct: `tag = 1`, `message = "unknown error"`, `invoke vtable = TypeLookupError::TypeLookupError(char const*)::__invoke`. Reachable observationally via `SWIFT_DEBUG_FAILED_TYPE_LOOKUP=1` (the runtime warns before the SIGSEGV).
+
+None of the high-level metadata / witness / conformance runtime entry points are reached — the failure originates in the demangling-resolution stage of `swift_getTypeByMangledName` before any of `swift_getCanonicalSpecializedMetadata*`, `swift_conformsToProtocol*`, `swift_getAssociatedTypeWitness`, `swift_lookUpProtocolConformance`, or even `swift::ResolveAsSymbolicReference::operator()` dispatches. The conformance descriptor IS present in the binary (verified at `_$s17Tagged_Primitives0A0Vyxq_G15Synchronization19AtomicRepresentable…Mc`); the runtime simply can't materialize the wrapping metadata.
+
+**Variable isolation result** (per `[ISSUE-013]`):
+
+| Variant | Result |
+|---|---|
+| `Atomic<UInt>` lifecycle / ops | PASS |
+| `Atomic<Ordinal>` (no Tagged) lifecycle / advance / all ops | PASS |
+| `Tagged<Tag, Ordinal>` arithmetic with `Synchronization` imported | PASS |
+| `Atomic<Tagged<Tag, U>>` create+drop (lifecycle only) | **CRASH** |
+| `Atomic<Tagged<Tag, U>>.load(ordering:)` | PASS (specialized fast path, no metadata fetch) |
+| `Atomic<Tagged<Tag, U>>.advance(within:)` (generic extension) | **CRASH** |
+| Local `Wrapper<Tag, U>: ~Copyable & ~Escapable + AtomicRepresentable` mirroring Tagged's shape | PASS (proves it's `Tagged_Primitives.Tagged` specifically, not the shape pattern) |
+| Hoisting Tagged's AtomicRepresentable conformance from `Tagged_Primitives_Standard_Library_Integration` into the main `Tagged_Primitives` module | Does NOT fix the crash |
+| Dropping `Tag: ~Copyable` from `Tagged: AtomicRepresentable` where-clause | Does NOT fix the crash |
+| Tag identity (SimpleTag local enum / Int / String / class / `POSIX.Kernel.Thread` extension-nested enum) | All crash identically |
+| Underlying identity (UInt / Int / Ordinal) | All crash identically |
+| `Dictionary<Tagged<Tag, UInt>, Int>` (stdlib Dictionary, Copyable value) | PASS |
+| `Dictionary_Primitives.Dictionary<Tagged<Tag, UInt>, ~CopyableStruct>` (institute Dictionary, ~Copyable value) | **CRASH** |
+
+The trigger is specific to `Tagged_Primitives.Tagged` materialized inside a generic container that wants its full type metadata (value-witness table, layout, generic-arg vector). Whatever the actual runtime defect is, it lives in the runtime's resolution of that specific Tagged's mangled name — local replicas of Tagged's shape do not reproduce. Cross-module conformance lookup was ruled out as the trigger (hoist had no effect).
+
+**Reproducer**: `swift-foundations/swift-executors/Experiments/sigsegv-repro/` — 3 path: dependencies (`swift-tagged-primitives`, `swift-ordinal-primitives`, `swift-cardinal-primitives`), single `main.swift`, ~10 lines exercising `Atomic<Tagged<SimpleTag, Ordinal>>.advance(within: Tagged<SimpleTag, Cardinal>)`. Build + run → exit 139 before the fix; `result = 0` + exit 0 with the fix applied. Pre-`swift package update` rules out stale-resolved-revision.
+
+**Evergreen fix shape** (no workarounds; survives a future runtime fix as a useful named primitive):
+
+Replace `Atomic<Tagged<…>>` and `Dictionary_Primitives.Dictionary<Tagged<…>, …>` storage with the **raw-Underlying-storage + typed-surface wrapper** pattern. The container holds the bare-`UInt`/`UInt64` (the Tagged's `underlying.rawValue`); the public surface accepts/returns `Tagged<Tag, …>` values so the phantom-Tag domain discipline carries through every API. Three landed instances of this pattern:
+
+| Component | Wrapper / refactor | Commit |
+|---|---|---|
+| `Atomic<Tagged<Tag, Ordinal>>` round-robin cursor | New `Ordinal.AtomicPosition<Tag>` in `swift-ordinal-primitives` (holds `Atomic<UInt>` internally; typed `Tagged<Tag, Ordinal>` load + advance API) | swift-primitives/swift-ordinal-primitives **88780ee** |
+| `Atomic<Index<Kernel.Thread>>` in `Stealing.cursor` / `Sharded.cursor` | Replaced with `Ordinal.AtomicPosition<Kernel.Thread>` (call sites unchanged) | swift-foundations/swift-executors **dd34b04** |
+| `Dictionary_Primitives.Dictionary<Kernel.Event.ID, Registration>` in `Kernel.Event.Driver.init` | Inline refactor: key is bare `UInt`, conversion at every method boundary | swift-foundations/swift-kernel **a79ca49** |
+| `Dictionary_Primitives.Dictionary<Kernel.Completion.Token, Completion.Entry>` in `Completion.Actor.entries` | Inline refactor: key is bare `UInt64`, conversion at every method boundary | swift-foundations/swift-io **7c3c6207** |
+
+Each fix preserves the typed surface (callers pass and receive `Kernel.Event.ID` / `Kernel.Completion.Token` / `Tagged<Kernel.Thread, Ordinal>` unchanged); only the internal storage uses the bare-Underlying raw value. The pattern remains useful as a named abstraction even when the underlying runtime defect is fixed upstream — `Ordinal.AtomicPosition<Tag>` is also a clearer API than ad-hoc `Atomic<Index<Tag>>` regardless of the bug.
+
+**Revalidation procedure**:
+
+```bash
+# Reproducer-side
+cd /Users/coen/Developer/swift-foundations/swift-executors/Experiments/sigsegv-repro
+rm -rf .build && swift build && ./.build/arm64-apple-macosx/debug/sigsegv-repro
+# expect: "advanced -> 0,1,2,0,1" and "PASSED"; exit 0
+
+# Consumer-side, all three packages must complete without signal 11
+( cd /Users/coen/Developer/swift-foundations/swift-executors && rm -rf .build && swift test )
+( cd /Users/coen/Developer/swift-foundations/swift-threads && rm -rf .build && swift test )
+( cd /Users/coen/Developer/swift-foundations/swift-io && rm -rf .build && swift test )
+# expect: each prints a final "Test run with N tests in M suites passed" line.
+```
+
+Confirmed 2026-05-22: swift-executors 33/33 in 27 suites, swift-threads 22/22 in 16 suites, swift-io 61/61 in 26 suites. Zero `exited with unexpected signal code` across all three.
+
+**Discovery & investigation arc**: `HANDOFF-test-sigsegv-post-cycle-break.md` in the workspace root. Investigation 2026-05-22 narrowed from "swift test exits with signal 11 in three packages" to a 5-line `@main` reproducer, then to the runtime null-metadata return, then ruled out the Tag suppression and the cross-module-conformance hypotheses, then identified that the bug surfaces broadly across containers needing Tagged's full metadata (not just `Atomic`). The evergreen wrapper pattern (raw storage + typed surface) is the structural fix.
+
+**Cross-references**: §A1, §A2 (other Tagged + cross-module-inline interactions on 6.3.x). Closest related entries in spirit are §A6 (CopyToBorrowOptimization actor-state miscompile) and §A7 (~Copyable value-type `_read` yield SILPerfInliner crash) — different defects, same "runtime can't materialize this type metadata for a specific institute-Tagged shape" family.
+
+**Upstream filing status**: NOT YET FILED. The bare-`swiftc` standalone reproducer per `[ISSUE-002]` has not been achieved — the failure depends on the `Tagged_Primitives.Tagged` definition + its full conformance set, which is heavy to inline into a single file. The SwiftPM reproducer at `Experiments/sigsegv-repro/` is the current minimum; upstream filing should wait for a bare-`swiftc` reduction or for an opportunistic dev-toolchain check once `swift-array-primitives` compiles on 6.4-dev.
 
 ---
 
