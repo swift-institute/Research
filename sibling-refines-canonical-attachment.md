@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-05-22
 status: RECOMMENDATION
 tier: 2
@@ -25,6 +25,23 @@ Changelog:
   [RES-020]); semantic axis (canonical attachment meaning, [FAM-002])
   deferred to successor arc HANDOFF-canonical-semantic-axis-b.md.
   §10 [FAM-010] body unchanged.
+- v1.2.0 (2026-05-22): axis B RESOLVED via successor arc
+  `swift-institute/Research/canonical-attachment-semantic.md` v1.0.0.
+  Recommendation: path (c) sanctioned-but-deferred — additive
+  `Common.Codable` peer reserved as [FAM-011] alongside the existing
+  canonical attachment trio; [FAM-002]'s type-commitment semantic
+  retained unchanged; new peer's authoring deferred until empirical
+  pull (consumer-driven currency-type need OR Apple New Codable
+  proposal reaches formal Swift Evolution pitch). The successor doc's
+  tipping-question enumeration (§4) settled "can a sufficiently-rich
+  canonical absorb every format's native concerns without translation
+  loss" as NO (categorical mismatches for protobuf field numbers + XML
+  attribute-vs-element + plist Data/Date; format-shape-leak costs for
+  CBOR tags + MessagePack ext types + JSON null-vs-missing-key),
+  ruling out path (b)'s effective rich-canonical reframing. §10a
+  Disposition updated to `RESOLVED-VIA-PATH-(c)-DEFERRED`. §10
+  [FAM-010] body unchanged; v1.2.0 carries forward [FAM-010] for
+  axis A and resolves axis B via path (c).
 -->
 
 ## Context
@@ -1022,25 +1039,77 @@ similar to Apple's New Codable prototype while preserving the institute's pre-ex
 #### Disposition
 
 **Axis A**: REINFORCED. [FAM-010]'s structural rule and §10's recommendation stand
-unchanged. v1.1.0 carries the rule forward without modification.
+unchanged. v1.1.0 carries the rule forward without modification; v1.2.0 leaves it
+unchanged.
 
-**Axis B**: **DEFERRED-PENDING-SUCCESSOR-ARC.** The structural reinforcement of [FAM-010]
-(axis A) is immediate and applies to v1.1.0; the axis-B reframing question is referred to
-a follow-on Tier 2 ecosystem-wide investigation per [RES-020]. The successor arc —
-dispatched as `HANDOFF-canonical-semantic-axis-b.md` — will:
+**Axis B (v1.2.0)**: **RESOLVED-VIA-PATH-(c)-DEFERRED.** The successor arc
+`swift-institute/Research/canonical-attachment-semantic.md` v1.0.0 (2026-05-22)
+recommends **path (c)** — an additive `Common.Codable` peer alongside the existing
+canonical attachment trio, sanctioned-but-deferred until empirical pull surfaces
+(consumer-driven currency-type need OR Apple New Codable proposal reaches a formal
+Swift Evolution pitch). The recommendation is codified as [FAM-011] (sanctioned-but-
+deferred). [FAM-002]'s type-commitment semantic is retained UNCHANGED for the
+existing canonical attachment trio; the new peer carries author-choice-with-fallback
+semantic for currency types (Range, CGRect, UUID, etc.).
 
-- Inventory the institute's existing canonical-attachment conformances (start with
-  `RFC_8259.Value`'s canonical conformance to characterize how today's spec-value-type
-  conformances align with each of the three semantic readings).
-- Survey the live state of Apple's New Codable prototype against the three resolution
-  paths, including any forum movement on the `CommonCodable` vs format-specialized
-  protocol semantics since 2025-03.
-- Recommend one of paths (a), (b), or (c) — or a hybrid — with structural and migration
-  analysis.
+**Key findings from the successor arc**:
+
+1. **Workspace-wide canonical-attachment conformer inventory** (per [HANDOFF-021]
+   live output): Class I spec-value-type commitments (`RFC_8259.Value`,
+   `Version.Semantic`, `Version.Tools`, `Version.Calendar`, `Glob.Pattern`) — exactly
+   match [FAM-002] type-commitment semantic; Class II generic-instantiated
+   delegations (`Tagged`, `Optional`) — semantically neutral lifting pattern;
+   Class III legacy stdlib pins (10 `FixedWidthInteger` integers) — RECOMMENDED-FOR-
+   MIGRATION per Φ.3, treated as defects to remove under both paths (a) and (c).
+   The operational state already aligns with type-commitment-scoped-to-spec-value-
+   types; path (a) is not aspirational, it is operationally correct today.
+
+2. **Apple New Codable live state** (verified 2026-05-22 against forums.swift.org
+   per [RES-031]): t/78585 has 178 posts, last reply 2026-03-06; t/85186 has 71
+   posts, last reply 2026-05-22 (active). Prototype IS structurally path (c) —
+   additive `CommonEncodable`/`CommonDecodable` peer alongside
+   `JSONEncodable`/`JSONDecodable` siblings. Perry's verbatim opening-post quote:
+   *"these format-specialized protocols are expected to be entirely distinct from
+   the format-agnostic one, but they should share the same basic structure and
+   patterns."* — confirms peer relationship, not refinement. Data/Date strategy
+   handling remains open in the prototype design conversation.
+
+3. **Tipping question settled NO** (per §4 enumeration of CBOR tags / protobuf
+   field numbers / plist Data/Date / JSON null-vs-missing-key / MessagePack ext
+   types / XML attribute-vs-element against any sufficiently-rich canonical):
+   protobuf field numbers and XML attribute-vs-element are categorically distinct
+   from key-value formats and have no canonical analog without distorting other
+   formats; CBOR tags / MessagePack ext / plist Data/Date can be absorbed only at
+   the cost of format-shape leak; JSON null-vs-missing-key is asymmetrically
+   absorbable. Implication: the canonical CANNOT be a rich primary surface
+   (path (b)'s effective shape). Must be either narrow type-commitment (a) or
+   thin floor (c's new peer).
+
+4. **[FAM-011] sanctioned-but-deferred** is the recommended resolution: pre-codify
+   the design-space reservation without authoring the protocol family today. Per
+   [RES-027] no premise carried forward without empirical pull; the deferral
+   discipline itself is the mechanism by which future empirical needs (currency-
+   type consumer friction OR Apple formal pitch) surface explicitly.
+
+**Migration cost under v1.2.0**: zero source-code changes; zero existing-rule
+rewrites; one new rule reservation ([FAM-011]) added at the convention level. The
+existing canonical attachment trio continues unchanged; Class I conformers retain
+their [FAM-003] justifications; Φ.3 stdlib-pin removal continues. The new
+`Common.Codable` peer is not authored at this revision.
+
+**Cross-monitoring trigger**: when Apple's New Codable proposal reaches a formal
+swift-evolution pitch, the institute SHOULD re-audit BOTH [FAM-010] (axis A) AND
+[FAM-011] (axis B) against the formal-pitch shape. Current expectation per
+Perry's prototype framing through 2026-05-22: siblings remain peers of the
+common protocol (corroborates [FAM-010]); the common protocol carries author-
+choice-with-fallback semantic (corroborates [FAM-011] path c). The pitch's
+formal text governs the institute's adoption decision.
 
 Findings destination for the successor arc:
-`swift-institute/Research/canonical-attachment-semantic.md`. v1.1.0 of this doc tracks
-the question's open status; the successor arc carries the resolution.
+`swift-institute/Research/canonical-attachment-semantic.md` v1.0.0 (RECOMMENDATION,
+Tier 2 ecosystem-wide). v1.2.0 of this doc cites the successor's outcome and
+forwards [FAM-011] alongside [FAM-010] as the convention's axis A + axis B
+resolutions.
 
 ### 11. Loose ends (per [RES-027])
 
