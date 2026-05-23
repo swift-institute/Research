@@ -55,6 +55,7 @@ Verification anchor: 215 first-pass + 32 anchor-add second pass per `[EXP-007a]`
 | CopyPropagation try_apply borrow scope shortening | Not filed | Replace `do/catch` with `try?` on ~Copyable access | swift-io full release build clean on 6.3.1 — workaround still in place, bug presence not independently verified. See § A5. |
 | SIL EarlyPerfInliner crash on ~Copyable value-type yield through `_read` coroutine ("Cannot initialize a nonCopyable type with a guaranteed value") | Not filed | `@_optimize(none)` on any accessor whose `_read` yields a cross-module ~Copyable value-type. swift-property-primitives DID NOT adopt Option C (value-type State) because the workaround would distribute to every consumer accessor site — ergonomics too hostile for a published API. Kept Option A (conditional `@unchecked Sendable` on the class-based State). Revisit Option C when this crash is fixed upstream. | Primary reproducer: `swift-property-primitives/Experiments/property-consuming-value-state/` crashes on `swift build -c release` at SILPerformanceInlinerPass. Additional reproducers surfaced during 2026-04-30 Phase 7a sweep — same crash signature: `swift-property-primitives/Experiments/language-semantic-property-typed-replacement`, `swift-property-primitives/Experiments/language-semantic-property-replacement`, `swift-render-primitives/Experiments/body-getter-stack-overflow`, `swift-pdf/Experiments/result-builder-stack-overflow`. All five crash in the same pass; the bug is broader than originally scoped (any cross-module ~Copyable value-type yield through `_read`). Companion perf benchmark `swift-property-primitives/Experiments/property-consuming-state-allocation-benchmark` showed no runtime upside for Option C. Revalidate by rebuilding any of the four experiments `-c release` — when they stop crashing, Option C becomes viable. |
 | Constrained-extension nested-type lookup ignores where-clause | Not filed (gap candidate for SE-discussion) | At ecosystem scale, do NOT use `extension Tagged where Tag == X, RawValue == Y { typealias Foo = ... }` as a layer-discrimination pattern when other libraries declare same-name nested typealiases on disjoint Tagged instantiations. Use fresh nominal types at L3 (`Path β` shape) instead of `Tagged<L3-Tag, L2-Type>` variants. Plain typealias chains still fine where no L3 policy substance applies. | `swift-institute/Experiments/tagged-cross-instantiation-nested-type-ambiguity/` — 4-target minimal repro, CONFIRMED 2026-05-02 on Apple Swift 6.3.1. See § B3. |
+| Unconditional protocol-conformance extension on a `~Copyable`-generic nested type leaks `Element: Copyable` constraint back to the primary declaration | Not filed | **Workaround D** — add `where Element: ~Copyable` to the conformance extension. One-line fix: `extension Storage.Inline: SomeProtocol { … }` → `extension Storage.Inline: SomeProtocol where Element: ~Copyable { … }`. The constraint is INCLUSIVE (allows both Copyable and ~Copyable Element); no body change. | `swift-institute/Issues/swift-issue-rawlayout-noncopyable-extension-rejection/` — 17-variant variable-isolation table; minimum reproducer is single-module / single-file / 13 lines / no `@_rawLayout` / no `deinit` / no `let-capacity`. Production blocker: swift-storage-primitives@ee86ee0 `Storage Inline Primitives` target (Cohort III Pilot 1 [MOD-031] restructure). See § A10. |
 ### Fixed upstream on 6.4-dev nightly-main (awaiting backport or 6.4 release)
 
 | Bug | Upstream ID | Workaround for shipped 6.3.x | Evidence |
@@ -107,6 +108,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | A7 | SIL EarlyPerfInliner crash on ~Copyable value-type `_read` yield | 6.3.1 (still broken) | "Cannot initialize a nonCopyable type with a guaranteed value" at SILPerformanceInlinerPass |
 | A8 | Parameterized-typealias × parameterized-protocol opaque-return ICE | 6.3.2 (FIXED 6.4-dev) | `public typealias X = Generic<Concrete>` OR `extension Generic where Base == Concrete` in imported module triggers "failed to produce diagnostic" at test-target opaque returns |
 | A9 | `Atomic<Tagged<…>>` and `Dictionary<Tagged<…>, ~Copyable>` runtime metadata-lookup defect | 6.3.2 (still broken; evergreen wrapper fix landed) | `swift_getTypeByMangledName` returns `TypeLookupError("unknown error")` for institute-Tagged inside generic stdlib/institute containers needing full metadata; downstream loads of null metadata fault at `0x10` (advance) or `0xfffffffffffffff8` (deinit) |
+| A10 | Unconditional protocol-conformance extension leaks `Element: Copyable` to primary declaration of `~Copyable`-generic nested type | 6.3.2 / 6.4-dev (still broken) | `extension Storage.Inline: SomeProtocol { … }` (no `where Element: ~Copyable`) causes `type 'Element' does not conform to protocol 'Copyable'` at every Element reference in a sibling `extension Storage where Element: ~Copyable`-scoped declaration |
 | B1 | `Property.View ~Copyable` extension constraint placement | 6.3.x (lang spec) | All constraints MUST be at extension level, not method level — implicit `Base: Copyable` else |
 | B2 | `Property.View` rejected on `Copyable` types (~Copyable + ~Escapable result from mutating method) | 6.3.x (lang spec) | Use `Property<Tag, Base>` for `@CoW` Copyable types instead |
 | B3 | Tagged constrained-extension nested-type ambiguity | 6.3.1 (still broken) | `extension Tagged where Tag == X, RawValue == Y { typealias Foo = ... }` causes cross-instantiation ambiguity |
@@ -116,7 +118,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | C2 | Typed throws — Swift 6.2.4 stdlib support matrix | 6.2.4 / 6.3.x (lang spec) | Some stdlib `rethrows` APIs propagate `throws(E)`; many erase to `any Error` |
 | C3 | Typed throws — catch blocks preserve concrete typed error | 6.3.x (lang spec) | `error` in catch IS the concrete typed error, NOT `any Error` |
 
-**Total entries: 18** (17 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
+**Total entries: 19** (18 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
 
 ---
 
@@ -562,6 +564,64 @@ No exact-shape duplicate for cross-module conditional `AtomicRepresentable` conf
 | C. Value-side suppression — `~Copyable Value` required, or does Copyable Value also crash? | LIKELY LOAD-BEARING — swift-linter's `[Lint.Rule.ID: Lint.Rule]` (stdlib Dict, Copyable Value) PASSES; ecosystem sites with `~Copyable` Value CRASH. Untested: institute Dictionary + Copyable Value. |
 
 The collapsed signal: `~Copyable` somewhere in the type's full mangled name (Atomic's own `~Copyable Self` or Dictionary's `~Copyable Value`) + Tagged_Primitives.Tagged in a generic-arg slot + generic-method dispatch needing full type metadata = trigger. Pinpointing further requires upstream-side bisection out of scope for Arc 4 per `[ISSUE-022]`.
+
+---
+
+### A10. Unconditional protocol-conformance extension leaks `Copyable` to primary declaration of `~Copyable`-generic nested type
+
+**Swift versions**: 6.3.2 (Xcode 26.4.1 default, `swiftlang-6.3.2.1.108`) and 6.4-dev nightly (`swift-latest.xctoolchain`) — STILL BROKEN on both. Investigation 2026-05-23.
+
+**Pattern**:
+
+```swift
+public enum Storage<Element: ~Copyable> {}
+public protocol Marker: ~Copyable {
+    associatedtype Element: ~Copyable
+}
+
+extension Storage where Element: ~Copyable {
+    public struct Inline: ~Copyable {
+        public init() {}
+        public func foo() {
+            _ = Element.self   // ← error: type 'Element' does not conform to protocol 'Copyable'
+        }
+    }
+}
+
+extension Storage.Inline: Marker {}   // ← THE TRIGGER (no `where Element: ~Copyable`)
+```
+
+**Symptom**: `error: type 'Element' does not conform to protocol 'Copyable'` fires at every reference to `Element` inside the nested type's body, even though the body's enclosing extension correctly declares `where Element: ~Copyable`.
+
+**Mechanism (hypothesized)**: per SE-0427 Noncopyable Generics, "An extension of a concrete type must introduce a default `T: Copyable` requirement on every generic parameter of the extended type." The unconditional `extension Storage.Inline: Marker { … }` adds an implicit `Element: Copyable` requirement, which the implementation propagates beyond the extension's scope — back to the type's primary declaration and any sibling extensions. Expected behavior is for the constraint to apply only within the extension's body.
+
+**Trigger conditions (all required)**:
+
+1. `enum Storage<Element: ~Copyable>` root namespace.
+2. Nested type declared in `extension Storage where Element: ~Copyable { struct Inline: ~Copyable { … } }`.
+3. At least one reference to `Element` inside Inline's body (`@_rawLayout(likeArrayOf: Element, …)`, `Element.self`, `Index<Element>.…`, etc.).
+4. **Unconditional** protocol-conformance extension `extension Storage.Inline: SomeProtocol { … }` (no `where Element: ~Copyable`), where `SomeProtocol` has an `associatedtype Element: ~Copyable` requirement OR is implicitly Copyable.
+
+**Bug fires regardless of**: cross-module vs same-module split (V10 / V16 / V17 all fail in same module), file separation (V7 / V17 fail in single file), `@_rawLayout` presence (V4 / V12 / V14 / V15 / V17 fail without it), `deinit` presence (V3 / V13 / V14 / V17 fail without it), access level (V9 with `package` still fails), and inner-type repeated `where` clause (V8 fails).
+
+**Workaround (verified)**: **Workaround D** — add `where Element: ~Copyable` to the conformance extension:
+
+```diff
+- extension Storage.Inline: Marker {
++ extension Storage.Inline: Marker where Element: ~Copyable {
+      // body unchanged
+  }
+```
+
+The constraint is INCLUSIVE — it allows the conformance for both Copyable and ~Copyable Element types. Verified on production source: `swift-storage-primitives/Sources/Storage Inline Primitives/Storage.Inline+Memory.Contiguous.Protocol.swift` line 69, single-character change, full target builds clean.
+
+**Reproducer**: `swift-institute/Issues/swift-issue-rawlayout-noncopyable-extension-rejection/` — 17-variant variable-isolation table; minimum reproducer is **single file, single module, 13 lines, no `@_rawLayout`, no `deinit`, no `let-capacity`** (V17). The `@_rawLayout` / cross-module / deinit structure of the production blocker are NOT load-bearing for the trigger.
+
+**Production blocker**: `swift-primitives/swift-storage-primitives@ee86ee0` (Cohort III Pilot 1 [MOD-031] restructure) — `Storage Inline Primitives` target. Error sites at `Sources/Storage Inline Primitives/Storage.Inline.swift` lines 97, 139, 142, 143; trigger at `Storage.Inline+Memory.Contiguous.Protocol.swift` line 69.
+
+**Upstream filing**: NOT YET FILED. Pending principal authorization. No exact-shape duplicate found in `swiftlang/swift` issues via the keyword combinations searched (see `INVESTIGATION-ARC.md` §8). SE-0427 documents the implicit `Copyable` rule but not the cross-sibling leak; the leak appears to be an implementation defect against the proposal's documented scope.
+
+**Cross-references**: related but DISTINCT — § (master fix-status table) entry for `swiftlang/swift#86652` (~Copyable nested-deinit / `@_rawLayout` ELEMENT DESTRUCTION) is a runtime bug. § A10 is compile-time. § B3 (Tagged constrained-extension nested-type ambiguity) is also type-checker but on Tagged-instantiation typealiases, different mechanism. Memory entry `feedback_extension_implies_copyable.md` documents the implicit-Copyable rule on bare extensions; the LEAK behavior across sibling declarations is what § A10 newly identifies.
 
 ---
 
