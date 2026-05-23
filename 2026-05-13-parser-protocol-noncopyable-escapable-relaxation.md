@@ -1134,7 +1134,7 @@ extension to preserve `parser.error.map { ... }` fluent syntax under
 combinator cascade) was tested via `/experiment-process` at
 `swift-parser-primitives/Experiments/owned-consuming-get-on-protocol-extension/`:
 
-| Variant | Swift 6.3.1 | Swift 6.3.2 | 6.4-dev 2026-05-07 | 6.4-dev 2026-05-12 |
+| Variant | Swift 6.3.1 | Swift 6.3.2 | 6.4-dev 2026-05-07 | 6.5-dev 2026-05-12 |
 |---|---|---|---|---|
 | V1 non-generic struct | FAIL: unknown attr `_owned` | FAIL: unknown attr `_owned` | PASS | PASS |
 | V2 generic struct | FAIL | FAIL | PASS | PASS |

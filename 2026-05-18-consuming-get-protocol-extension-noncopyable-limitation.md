@@ -37,7 +37,7 @@ to cascade to `~Copyable`.
 - **`swift-primitives/swift-parser-primitives/Experiments/owned-consuming-get-on-protocol-extension/EXPERIMENT.md`** (v1.0.0, 2026-05-14)
   — Direct empirical evidence: `@_owned consuming get` on protocol-extension generic `~Copyable Self`
   compiles and runs cleanly on Swift 6.4-dev nightlies **only when wrapped in a consuming-parameter helper function**.
-  Direct call-site shape (V5) fails with "borrowed by non-Escapable type" on both 6.4-dev nightlies (2026-05-07-a, 2026-05-12-a).
+  Direct call-site shape (V5) fails with "borrowed by non-Escapable type" on the 6.4-dev nightly (2026-05-07-a) and the 6.5-dev nightly (2026-05-12-a).
   Swift 6.3.1/6.3.2 reject `@_owned` entirely as an unknown attribute (not yet in Sema table).
   SIL verifier crash discovered on `consume c` keyword variant (MemoryLifetimeVerifier.cpp:263 "store-borrow location cannot be written").
 
@@ -149,7 +149,7 @@ wrap: `extractError(parser).map { ... }`. This is ergonomically worse than the r
 migration (e.g., `parser.error()` method), which the principal explicitly rejected because it disrupts
 combinator chains.
 
-**Status**: CONFIRMED WORKING on Swift 6.4-dev nightlies 2026-05-07-a and 2026-05-12-a (V1-V4 in experiment).
+**Status**: CONFIRMED WORKING on Swift 6.4-dev nightly 2026-05-07-a and 6.5-dev nightly 2026-05-12-a (V1-V4 in experiment).
 
 ### Workaround B: Method-form migration (rejected by principal)
 
