@@ -520,6 +520,17 @@ Per `[ISSUE-026]` coverage-scope discipline, the truthful conclusion from this e
 
 The canonical reproducer preserves `import Tagged_Primitives` (with `Ordinal_Primitives` / `Cardinal_Primitives` for the `.advance(within:)` extension and the `Cardinal` Underlying) per `[ISSUE-002]`'s "If the issue requires SwiftPM" branch — *accommodating* the SwiftPM dependency, not *proving* SwiftPM is required.
 
+**v1 retry update (2026-05-23)**: v1 was subsequently retried with the four-flag scaffolding (`swiftc -O -package-name v1pkg -enable-experimental-feature Lifetimes -enable-experimental-feature SuppressedAssociatedTypes`). Two triggers exercised:
+
+- **Trigger A** — `Atomic<Tagged<SimpleTag, Int>>.load(ordering: .relaxed)` (production-verbatim Tagged declaration with `@_lifetime(copy underlying)`, `package(set)`, `~Escapable` storage, full conditional Copyable/Escapable/Sendable/BitwiseCopyable/Equatable/Hashable/Comparable conformance chain, `modify` extension, inline `AtomicRepresentable` conformance). Result: **PASS** (compile + run + exit 0).
+- **Trigger B** — `Atomic<Tagged<SimpleTag, UInt>>.bumpZero(within:)` with a generic-extension whose where-clause chain (`Value.AtomicRepresentation == UInt.AtomicRepresentation` + `C.AtomicRepresentation == UInt.AtomicRepresentation`) mirrors production `.advance(within:)`'s metadata-forcing same-type-constraint shape. Result: **PASS** (compile + run + exit 0).
+
+Files at `/tmp/sigsegv-v1/v1_trigger_a.swift` (123 lines) and `/tmp/sigsegv-v1/v1_trigger_b.swift` (164 lines), not committed (empirical scratch).
+
+With v1 added, the empirical record now reads: all five bare-`swiftc` reduction shapes (v1 full-attribute single-file + v2 simplified single-file + v3 two-module split + v4 three-module retroactive-conformance split + v5 four-module split with generic Atomic extension) PASS on 6.3.2 — none of the five reproduces. Combined with Arc 3's nine-candidate `Tagged.swift` single-file bisection (also fails to fix the crash) and Arc 1's local-wrapper-shape non-reproduction, the production `Tagged_Primitives.Tagged` symbol with its production module structure is **strongly supported** as the load-bearing trigger — not just consistent with prior evidence but empirically tested against the strongest single-file approximation that fits the bare-`swiftc` budget.
+
+**Remaining caveat** (per `[ISSUE-026]` coverage-scope discipline): v1's Trigger B captures the same-type-constraint *shape* used by production `.advance(within:)` but drops the specific protocol identities (`Ordinal.\`Protocol\`` / `Carrier.\`Protocol\`<Cardinal>` / `Cardinal`) because inlining them would exceed a reasonable single-file budget (~200 lines). If the bug is gated by those specific protocol identities rather than the constraint shape, that cell remains untested. A Trigger C with full protocol-identity scaffolding was orchestrator-decided 2026-05-23 to be diminishing returns — per `[ISSUE-008]` resolution path ("Fixed on dev toolchain, not in Xcode → wait for release"), further reduction is not load-bearing for the resolution decision.
+
 **Issues directory staged** (resolves the `NOT YET FILED` paragraph's filing-prep half):
 
 `swift-institute/Issues/swift-issue-tagged-noncopyable-atomic-metadata-crash/` is now the canonical public-facing reproducer + record. Contains:
