@@ -565,6 +565,18 @@ No exact-shape duplicate for cross-module conditional `AtomicRepresentable` conf
 
 The collapsed signal: `~Copyable` somewhere in the type's full mangled name (Atomic's own `~Copyable Self` or Dictionary's `~Copyable Value`) + Tagged_Primitives.Tagged in a generic-arg slot + generic-method dispatch needing full type metadata = trigger. Pinpointing further requires upstream-side bisection out of scope for Arc 4 per `[ISSUE-022]`.
 
+#### §A9 Correction (2026-05-23) — Snapshot version labels
+
+The toolchain tables in §A9 Update (Arc 4) and §v1 retry update label three snapshots uniformly as "Swift 6.5-dev". Empirical `swift --version` shows the first two are actually **6.4-dev**; only the third is **6.5-dev**:
+
+| Bundle ID | Snapshot date | Empirically-reported version |
+|-----------|---------------|------------------------------|
+| `org.swift.64202603161a` | 2026-03-16-a | `Apple Swift version 6.4-dev` (LLVM `a3655ee8d8c4d74`, Swift `d13cbbfd336f246`) |
+| `org.swift.64202605071a` | 2026-05-07-a | `Apple Swift version 6.4-dev` (LLVM `d2079213f1d4451`, Swift `82b7720768ba875`) |
+| `org.swift.64202605121a` | 2026-05-12-a | `Apple Swift version 6.5-dev` (LLVM `7c86461e21cca7e`, Swift `6da4da7153e8252`) |
+
+The bug-status conclusion is unchanged — all three nightlies PASS; the fix landed in main on or before `2026-03-16-a` (commit `d13cbbfd336f246` cut). The version-label discrepancy is naming only.
+
 ---
 
 ### A10. Unconditional protocol-conformance extension leaks `Copyable` to primary declaration of `~Copyable`-generic nested type
