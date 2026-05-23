@@ -472,6 +472,81 @@ Confirmed 2026-05-22: swift-executors 33/33 in 27 suites, swift-threads 22/22 in
 
 **Upstream filing status**: NOT YET FILED. The bare-`swiftc` standalone reproducer per `[ISSUE-002]` has not been achieved — the failure depends on the `Tagged_Primitives.Tagged` definition + its full conformance set, which is heavy to inline into a single file. The SwiftPM reproducer at `Experiments/sigsegv-repro/` is the current minimum; upstream filing should wait for a bare-`swiftc` reduction or for an opportunistic dev-toolchain check once `swift-array-primitives` compiles on 6.4-dev.
 
+#### §A9 Update (2026-05-23 Arc 4) — Bug fixed on Swift 6.5-dev; Issues entry staged; workaround commits reverted
+
+This subsection appends Arc 4 findings without rewriting the original §A9 body.
+
+**Dev-toolchain status — FIXED on 6.5-dev** (resolves the prior "blocked" claim in this entry's `Swift versions` header):
+
+| Toolchain | Bundle ID | Build | Run |
+|-----------|-----------|-------|-----|
+| Apple Swift 6.3.2 RELEASE (default Xcode 26.4.1) | `swiftlang-6.3.2.1.108` | OK | **CRASH** (exit 139) |
+| Swift 6.5-dev nightly `2026-03-16-a` | `org.swift.64202603161a` | OK | **PASS** (exit 0) |
+| Swift 6.5-dev nightly `2026-05-07-a` | `org.swift.64202605071a` | OK | **PASS** (exit 0) |
+| Swift 6.5-dev nightly `2026-05-12-a` | `org.swift.64202605121a` | OK (debug + release) | **PASS** (exit 0) |
+
+The standalone reproducer at `swift-foundations/swift-executors/Experiments/sigsegv-repro/` PASSES on every 6.5-dev nightly sampled. The `swift-array-primitives` DeinitDevirtualizer SIL assertion still affects a full `swift-executors swift test` run on 6.5-dev (because that package's transitive dep graph includes `swift-array-primitives`), but does NOT block the standalone reproducer, whose direct deps (`swift-tagged-primitives` / `swift-ordinal-primitives` / `swift-cardinal-primitives`) bypass `swift-array-primitives`. The bug is therefore distinct from and independent of the DeinitDevirtualizer regression, and is genuinely fixed in the 6.4-dev → 6.5-dev nightly stream (exact commit window not yet pinpointed).
+
+**Workaround commits — REVERTED** (resolves the prior "Evergreen fix shape" claim in this entry):
+
+The four typed-surface-wrapper-over-raw-storage commits listed in this entry's `Evergreen fix shape` table were REVERTED on 2026-05-23 by orchestrator decision (per `feedback_correctness_and_evergreen.md` — degrading typed storage discipline for an unblock is not acceptable on correctness grounds):
+
+| Original workaround commit | Revert commit | Repo |
+|---------------------------|---------------|------|
+| `88780ee` (Ordinal.AtomicPosition<Tag>) | `e46b3b7` | swift-primitives/swift-ordinal-primitives |
+| `dd34b04` (Stealing/Sharded cursor switch) | `106d914` | swift-foundations/swift-executors |
+| `a79ca49` (Kernel.Event.Driver registry) | `44ab1f8` | swift-foundations/swift-kernel |
+| `7c3c6207` (Completion.Actor.entries) | `b77a4f03` | swift-foundations/swift-io |
+
+The three handoff-flagged packages (swift-executors, swift-threads, swift-io) currently SIGSEGV on Apple Swift 6.3.2 with no landed Institute-side workaround. Resolution path per `[ISSUE-008]`: wait for the Swift 6.5 release, which carries the upstream fix.
+
+**Bare-`swiftc` reduction — NOT ACHIEVABLE on this defect class** (resolves the `Upstream filing status: NOT YET FILED` paragraph's "should wait for a bare-`swiftc` reduction" note):
+
+Arc 4 attempted bare-`swiftc` reduction across four shapes (full source in `/tmp/sigsegv-bare/`, not committed):
+
+| Shape | Description | Result on 6.3.2 |
+|-------|-------------|-----------------|
+| v2 single-file simplified Tagged + inline `AtomicRepresentable` + `Atomic<Tagged>.load + compareExchange` | local-copy Tagged without `package(set)` / `@_lifetime` / `~Escapable` (which require `-package-name` / `-enable-experimental-feature Lifetimes` / cascading-file edits) | **PASS** |
+| v3 two-module split (Tagged + inline conformance in module A; consumer in B) | tests whether cross-module is the trigger | **PASS** |
+| v4 three-module split (Tagged / `@retroactive AtomicRepresentable` conformance / consumer) | tests whether sibling-submodule conformance is the trigger | **PASS** |
+| v5 four-module split with generic Atomic extension | Tagged / Conformance / Atomic extension `bumpZero` / consumer | **PASS** |
+
+None of the local-copy bare-`swiftc` shapes reproduces. Combined with the prior arc's evidence (Tagged.swift single-file declaration changes don't fix the bug + a local wrapper mirroring Tagged's exact shape doesn't reproduce), the conclusion is empirically stable:
+
+> The bug requires the production `Tagged_Primitives.Tagged` symbol with its production module structure. A bare-`swiftc` reduction that strips out `Tagged_Primitives` is fundamentally unable to reproduce. Per `[ISSUE-002]`'s "If the issue requires SwiftPM" branch, the canonical reproducer preserves `import Tagged_Primitives` (with `Ordinal_Primitives` / `Cardinal_Primitives` for the `.advance(within:)` extension and the `Cardinal` Underlying).
+
+**Issues directory staged** (resolves the `NOT YET FILED` paragraph's filing-prep half):
+
+`swift-institute/Issues/swift-issue-tagged-noncopyable-atomic-metadata-crash/` is now the canonical public-facing reproducer + record. Contains:
+
+- `README.md` — bug summary, toolchain matrix, crash signature, trigger characterization, workaround status (no landed workaround)
+- `INVESTIGATION-ARC.md` — full 4-arc convergence record including ecosystem blast radius (4 confirmed crash sites + 1 possibly-affected) + 3-axis bisection matrix (Atomic / Dictionary container / Value-side suppression)
+- `PRE-FILING-BUG-REPORT.md` — staged upstream backport-request draft for `swiftlang/swift`; pending orchestrator authorization
+- `Sources/Reproducer/main.swift` — SwiftPM executable; on 6.3.2 exits 139, on 6.5-dev prints `result = 0` exit 0
+- `Tests/Reproducer.swift` — `withKnownIssue("…", when: { #if compiler(<6.5) … })` harness
+
+The Issues `Package.swift` adds three external deps (`swift-tagged-primitives` / `swift-ordinal-primitives` / `swift-cardinal-primitives`) — the only Issues entry to require external deps, documented in the package manifest as the per-issue accommodation for the SwiftPM-only-reproducer case. Issues repo HEAD as of Arc 4 commit: `336cbe8`.
+
+**Upstream-duplicate search result** (per `[ISSUE-007]`):
+
+`gh search issues` against `swiftlang/swift`:
+
+- [`#74303`](https://github.com/swiftlang/swift/issues/74303) — OPEN — DiscordBM `IntBitField<Flag>?` Codable+Optional. Same family (`__swift_instantiateConcreteTypeFromMangledName` null return), different domain.
+- [`#69615`](https://github.com/swiftlang/swift/issues/69615) — OPEN — Kubrick `@JobBuilder buildBlock` opaque-return-type metadata (`getTypeByMangledNameInContext` TypeLookupError). Same family, different domain.
+- `#74333` — CLOSED — dupe of `#74303`.
+
+No exact-shape duplicate for cross-module conditional `AtomicRepresentable` conformance with `~Copyable` Tag suppression. The two open issues confirm `swift_getTypeByMangledName → TypeLookupError("unknown error")` is a broader runtime defect class with distinct domain instances; our entry is a new sibling.
+
+**Three-axis bisection matrix** (orchestrator 2026-05-23 ecosystem mapping):
+
+| Axis | Status |
+|------|--------|
+| A. Does plain `Atomic<Tagged<Copyable_X, Copyable_U>>` crash by itself, or are Tag/Underlying suppressions load-bearing? | PARTIAL — Atomic<Tagged<>>.load PASSES; only `.advance(within:)` generic extension crashes. Tag/Underlying suppression on the conformance side ruled out (Shape A1 refuted). OPEN: whether a generic extension method without Ordinal.Protocol constraints still triggers on `Tagged_Primitives.Tagged<X, UInt>`. |
+| B. Container choice — stdlib `Swift.Dictionary` vs institute `Dictionary_Primitives.Dictionary`? | RULED OUT as discriminator — site 3 (kernel, institute Dict) and site 4 (io, stdlib Dict) both crash; both have `~Copyable` Value. |
+| C. Value-side suppression — `~Copyable Value` required, or does Copyable Value also crash? | LIKELY LOAD-BEARING — swift-linter's `[Lint.Rule.ID: Lint.Rule]` (stdlib Dict, Copyable Value) PASSES; ecosystem sites with `~Copyable` Value CRASH. Untested: institute Dictionary + Copyable Value. |
+
+The collapsed signal: `~Copyable` somewhere in the type's full mangled name (Atomic's own `~Copyable Self` or Dictionary's `~Copyable Value`) + Tagged_Primitives.Tagged in a generic-arg slot + generic-method dispatch needing full type metadata = trigger. Pinpointing further requires upstream-side bisection out of scope for Arc 4 per `[ISSUE-022]`.
+
 ---
 
 ## B. Type-System Pitfalls and Language-Spec Constraints
