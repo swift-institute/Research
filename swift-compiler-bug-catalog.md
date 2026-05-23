@@ -500,20 +500,25 @@ The four typed-surface-wrapper-over-raw-storage commits listed in this entry's `
 
 The three handoff-flagged packages (swift-executors, swift-threads, swift-io) currently SIGSEGV on Apple Swift 6.3.2 with no landed Institute-side workaround. Resolution path per `[ISSUE-008]`: wait for the Swift 6.5 release, which carries the upstream fix.
 
-**Bare-`swiftc` reduction — NOT ACHIEVABLE on this defect class** (resolves the `Upstream filing status: NOT YET FILED` paragraph's "should wait for a bare-`swiftc` reduction" note):
+**Bare-`swiftc` reduction — five-shape attempt; v1 untested** (refines the `Upstream filing status: NOT YET FILED` paragraph's "should wait for a bare-`swiftc` reduction" note):
 
-Arc 4 attempted bare-`swiftc` reduction across four shapes (full source in `/tmp/sigsegv-bare/`, not committed):
+Arc 4 attempted bare-`swiftc` reduction across five shapes (full source in `/tmp/sigsegv-bare/`, not committed):
 
 | Shape | Description | Result on 6.3.2 |
 |-------|-------------|-----------------|
-| v2 single-file simplified Tagged + inline `AtomicRepresentable` + `Atomic<Tagged>.load + compareExchange` | local-copy Tagged without `package(set)` / `@_lifetime` / `~Escapable` (which require `-package-name` / `-enable-experimental-feature Lifetimes` / cascading-file edits) | **PASS** |
+| **v1** single-file with full Tagged | `@frozen`, `package(set)`, `@_lifetime`, `~Escapable` storage, all conformances | **NOT TESTED** — compile-errored at the unflagged `swiftc` invocation; the errors (`-package-name` / `-enable-experimental-feature Lifetimes` / `~Escapable`-storage ergonomics) are resolvable with the required flag scaffolding, but the retry was not performed |
+| v2 single-file simplified Tagged + inline `AtomicRepresentable` + `Atomic<Tagged>.load + compareExchange` | local-copy Tagged without `package(set)` / `@_lifetime` / `~Escapable` | **PASS** |
 | v3 two-module split (Tagged + inline conformance in module A; consumer in B) | tests whether cross-module is the trigger | **PASS** |
 | v4 three-module split (Tagged / `@retroactive AtomicRepresentable` conformance / consumer) | tests whether sibling-submodule conformance is the trigger | **PASS** |
 | v5 four-module split with generic Atomic extension | Tagged / Conformance / Atomic extension `bumpZero` / consumer | **PASS** |
 
-None of the local-copy bare-`swiftc` shapes reproduces. Combined with the prior arc's evidence (Tagged.swift single-file declaration changes don't fix the bug + a local wrapper mirroring Tagged's exact shape doesn't reproduce), the conclusion is empirically stable:
+Per `[ISSUE-026]` coverage-scope discipline, the truthful conclusion from this experiment is:
 
-> The bug requires the production `Tagged_Primitives.Tagged` symbol with its production module structure. A bare-`swiftc` reduction that strips out `Tagged_Primitives` is fundamentally unable to reproduce. Per `[ISSUE-002]`'s "If the issue requires SwiftPM" branch, the canonical reproducer preserves `import Tagged_Primitives` (with `Ordinal_Primitives` / `Cardinal_Primitives` for the `.advance(within:)` extension and the `Cardinal` Underlying).
+> v2–v5 (four simplified-Tagged shapes) all PASS on 6.3.2 — none of the simplified bare-`swiftc` shapes reproduces. Combined with Arc 3's nine-candidate Tagged.swift single-file bisection and Arc 1's local-wrapper-shape non-reproduction, the *conditional* conclusion is consistent: the production `Tagged_Primitives.Tagged` symbol with its production module structure appears to be load-bearing.
+>
+> The v1 hypothesis (full-attribute single-file with the required flag scaffolding) is **UNTESTED**. It may reproduce in isolation; it may not. The four-shape attempt does NOT empirically close that question. Pursuing v1 is deferred — per `[ISSUE-008]` resolution path ("Fixed on dev toolchain, not in Xcode → apply workaround, document, wait for release"), further reduction effort is not load-bearing for the resolution decision.
+
+The canonical reproducer preserves `import Tagged_Primitives` (with `Ordinal_Primitives` / `Cardinal_Primitives` for the `.advance(within:)` extension and the `Cardinal` Underlying) per `[ISSUE-002]`'s "If the issue requires SwiftPM" branch — *accommodating* the SwiftPM dependency, not *proving* SwiftPM is required.
 
 **Issues directory staged** (resolves the `NOT YET FILED` paragraph's filing-prep half):
 
@@ -521,7 +526,7 @@ None of the local-copy bare-`swiftc` shapes reproduces. Combined with the prior 
 
 - `README.md` — bug summary, toolchain matrix, crash signature, trigger characterization, workaround status (no landed workaround)
 - `INVESTIGATION-ARC.md` — full 4-arc convergence record including ecosystem blast radius (4 confirmed crash sites + 1 possibly-affected) + 3-axis bisection matrix (Atomic / Dictionary container / Value-side suppression)
-- `PRE-FILING-BUG-REPORT.md` — staged upstream backport-request draft for `swiftlang/swift`; pending orchestrator authorization
+- `SIBLING-COMMENT-DRAFT.md` — staged data-point comment for posting on [`swiftlang/swift#74303`](https://github.com/swiftlang/swift/issues/74303) (the existing open `__swift_instantiateConcreteTypeFromMangledName`-null-return issue with DiscordBM Codable+Optional reproducer); NOT a new issue and NOT a 6.3.x-backport request. Pending orchestrator authorization to post.
 - `Sources/Reproducer/main.swift` — SwiftPM executable; on 6.3.2 exits 139, on 6.5-dev prints `result = 0` exit 0
 - `Tests/Reproducer.swift` — `withKnownIssue("…", when: { #if compiler(<6.5) … })` harness
 
