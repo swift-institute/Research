@@ -4,10 +4,11 @@ tier: 2
 scope: cross-package
 status: REFERENCE
 created: 2026-05-10
-last_reviewed: 2026-05-10
-last_verified: 2026-04-30
+last_reviewed: 2026-05-24
+last_verified: 2026-05-24
 toolchains:
   - Swift 6.3.1 (Xcode 26.4.1, swiftlang-6.3.1.1.2)
+  - Swift 6.3.2 (swiftlang-6.3.2.1.108, SDK MacOSX26.5) — § A11
   - Swift 6.4-dev nightly
 ---
 
@@ -109,6 +110,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | A8 | Parameterized-typealias × parameterized-protocol opaque-return ICE | 6.3.2 (FIXED 6.4-dev) | `public typealias X = Generic<Concrete>` OR `extension Generic where Base == Concrete` in imported module triggers "failed to produce diagnostic" at test-target opaque returns |
 | A9 | `Atomic<Tagged<…>>` and `Dictionary<Tagged<…>, ~Copyable>` runtime metadata-lookup defect | 6.3.2 (still broken; evergreen wrapper fix landed) | `swift_getTypeByMangledName` returns `TypeLookupError("unknown error")` for institute-Tagged inside generic stdlib/institute containers needing full metadata; downstream loads of null metadata fault at `0x10` (advance) or `0xfffffffffffffff8` (deinit) |
 | A10 | Unconditional protocol-conformance extension leaks `Element: Copyable` to primary declaration of `~Copyable`-generic nested type | 6.3.2 / 6.4-dev (still broken) | `extension Storage.Inline: SomeProtocol { … }` (no `where Element: ~Copyable`) causes `type 'Element' does not conform to protocol 'Copyable'` at every Element reference in a sibling `extension Storage where Element: ~Copyable`-scoped declaration |
+| A11 | `DiagnoseStaticExclusivity` SIGSEGV on a borrow returned through a `~Copyable` enum payload | 6.3.2 (still broken) | `@inlinable` getter returning `Span`/`MutableSpan`/`_read`-view from a `switch` over a `~Copyable` enum payload crashes emit-module; workaround is non-`@inlinable` + package window. Context-sensitive (no standalone reducer yet) |
 | B1 | `Property.View ~Copyable` extension constraint placement | 6.3.x (lang spec) | All constraints MUST be at extension level, not method level — implicit `Base: Copyable` else |
 | B2 | `Property.View` rejected on `Copyable` types (~Copyable + ~Escapable result from mutating method) | 6.3.x (lang spec) | Use `Property<Tag, Base>` for `@CoW` Copyable types instead |
 | B3 | Tagged constrained-extension nested-type ambiguity | 6.3.1 (still broken) | `extension Tagged where Tag == X, RawValue == Y { typealias Foo = ... }` causes cross-instantiation ambiguity |
@@ -118,7 +120,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | C2 | Typed throws — Swift 6.2.4 stdlib support matrix | 6.2.4 / 6.3.x (lang spec) | Some stdlib `rethrows` APIs propagate `throws(E)`; many erase to `any Error` |
 | C3 | Typed throws — catch blocks preserve concrete typed error | 6.3.x (lang spec) | `error` in catch IS the concrete typed error, NOT `any Error` |
 
-**Total entries: 19** (18 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
+**Total entries: 20** (19 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
 
 ---
 
@@ -637,6 +639,37 @@ The constraint is INCLUSIVE — it allows the conformance for both Copyable and 
 
 ---
 
+### A11. `DiagnoseStaticExclusivity` SIGSEGV on a borrow returned through a `~Copyable` enum payload
+
+**Pattern**: An `@inlinable` accessor returns a borrow — a `Span`, a `MutableSpan`, or a `_read`/borrow-view projection — obtained from a payload bound inside a `switch` over a `~Copyable` enum:
+
+```swift
+var span: Span<Element> {
+    @_lifetime(borrow self) @inlinable borrowing get {
+        switch _storage {
+        case .heap(let inner):  return inner.span        // SIGSEGV
+        case .inline(let inner): return inner.span
+        }
+    }
+}
+// Also fires through a `_read` borrow-view whose result is a COPY:
+//   case .heap(let inner): return inner.peek.front      // SIGSEGV (peek is `_read { yield View(self) }`)
+```
+
+**Symptom**: `emit-module command failed due to signal 11` → `While running pass #N SILModuleTransform "DiagnoseStaticExclusivity"` → `DiagnoseStaticExclusivity::run() + 5000`. Fires only for `@inlinable` accessors (the emit-module path processes inlinable bodies); the identical body marked **non-`@inlinable`** compiles.
+
+**Swift version**: 6.3.2 (swiftlang-6.3.2.1.108), Xcode default toolchain, SDK MacOSX26.5, macOS 26 arm64. **Still broken.**
+
+**Workaround**: source the inner base pointer via a package-scoped window, build the `Span`/`MutableSpan`/element **outside** the `switch`, and mark the op **non-`@inlinable`** (the `package` window is not cross-package-inlinable). Consumers reach the op via a static call — **no `witness_method`**, so the SIL acceptance bar is preserved; the only cost is a non-inlined call boundary. Mark each site with `// TODO(C):` to restore `@inlinable` + the elegant `.span` delegation when fixed.
+
+**Evidence**: verified in-package in `swift-buffer-linear-primitives` (`Buffer.Linear.Small` refined-C arc, 2026-05-24). **Context-sensitive**: a standalone `~Copyable` enum + Span-delegation shape does NOT reproduce even with generics + `@inlinable` + `deinit` (3 clean reduction variants). Candidate missing triggers: class-backed `~Copyable` storage handle, `@_rawLayout` storage, the inner `.span`'s `_overrideLifetime`, two-level delegation. Reproducer + ingredient list: `swift-buffer-linear-primitives/Experiments/small-span-diagnose-static-exclusivity-crash/`.
+
+**Upstream filing**: NOT YET FILED (DRAFT at the experiment dir, pending principal authorization + standalone-reducer isolation per [ISSUE-013]/[EXP-021]).
+
+**Source**: 2026-05-24 refined-C Small (A) execution on swift-buffer-linear-primitives.
+
+---
+
 ## B. Type-System Pitfalls and Language-Spec Constraints
 
 ### B1. `Property.View ~Copyable` extension constraint placement
@@ -790,6 +823,16 @@ The namespace enum gives:
 **Reference**: `swift-institute/Experiments/parameter-pack-concrete-extension/` (verified empirically).
 
 **Source: `pack-concrete-same-type.md` (deleted 2026-05-10 in Wave 6).**
+
+---
+
+### B6. `var → let` false positive on `~Copyable` enum-payload binding
+
+**Symptom**: the compiler's "variable was never mutated; consider changing to 'let'" warning fires on `case .x(var buf):` bindings where `buf` is a `~Copyable` payload, even when `buf` is never mutated. **Following the warning breaks the build**: `case .x(let buf)` only *borrows* the payload, but the code path *consumes* it (moves it out — hands it to a `consuming` API, returns it, reinitializes the enum). `var` is required for the consuming move-out; `let` grants only a borrow.
+
+**Rule**: do NOT apply the "consider let" cleanup on `~Copyable` enum-payload bindings (`switch` / `if case` over a `~Copyable` enum). Treat the warning as a false positive there. An incremental build can mask the breakage — only a clean build surfaces it.
+
+**Provenance**: 2026-05-24 buffer refined-C arc (`swift-buffer-linear-primitives`, `Buffer.Linear.Small._Representation`); a var→let "tidy" on 7 sites broke the clean build. Composes with [MOD-037] and the `~Copyable` satellite work.
 
 ---
 
