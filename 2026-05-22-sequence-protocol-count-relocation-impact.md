@@ -2,13 +2,22 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-05-22
-status: RECOMMENDATION
+version: 1.1.0
+last_updated: 2026-05-25
+status: ACCEPTED — Phases 1–2 landed; Phases 3–4 pending
 tier: 2
 scope: ecosystem-wide
 ---
 -->
+
+## Update — disposition (2026-05-25)
+
+This RECOMMENDATION has been accepted and partially executed.
+
+- **Phase 1 (relocate total `count` to `Collection.\`Protocol\``)** — **LANDED** (prior session): removed `var count: Cardinal { consuming get }` from `Sequence.\`Protocol\`` (`swift-sequence-primitives` `31bbb42`); added `var count: Index<Element>.Count { borrowing get }` to `Collection.\`Protocol\`` (`swift-collection-primitives` `a1d2de9`).
+- **Phase 2 (supersede the fluent `Collection.Count.View`)** — **LANDED** 2026-05-25 (`swift-collection-primitives` `0360762`). The `.count.all` / `.count.where` fluent shape was deleted (target + product + umbrella re-export removed); `Collection.\`Protocol\`` now exposes exactly one `count`. This closed a live `ambiguous use of 'count'` defect — the direct `count` (Phase 1) and the View `count` were both `@_exported` by the umbrella, so any **mutable** `Collection.\`Protocol\`` conformer used **without type context** hit the ambiguity (immutable/type-pinned/`.all` uses resolved fine, which is why it stayed latent). Verified: clean build + 16 tests; the 10 L1 Collection-conformer consumers (set, dictionary, heap, queue, stack, list, array, buffer-linear, slab, cache) clean-rebuilt green against `0360762`, with the deleted `Collection_Count_Primitives` module absent from every consumer `.build`. Pre-flight confirmed zero ecosystem callers of `.count.all` / `.count.where` and zero external importers of the `Collection Count Primitives` product.
+- **`count(where:)` placement** — **CONFIRMED on `Sequence.\`Protocol\``** (this doc's RECOMMENDATION refinement, §RECOMMENDATION, upheld). Re-derived from first principles: `count(where:)` is a single-pass value-fold whose minimal required capability is single-pass iteration (`Sequence`'s essence), in the family of `reduce` / `contains` / `first(where:)` / `satisfies`. An additive `borrowing count(where:)` on `Collection.\`Protocol\`` was implemented and then **backed out** — it re-creates dual-conformer shadowing (a `Sequence`+`Collection` conformer gets two `count(where:)`: consuming→`Cardinal` vs borrowing→`Index<Element>.Count`, ambiguous on a bare call; confirmed via `swiftc` probe), and that population is the entire pending Phase 4 cohort. Governing principle established: **structural queries (size, position) live on `Collection`; element-value folds (predicate over contents) live on `Sequence`.** (Total `count` is a non-destructive repeatable *property* → Collection; `count(where:)` is a single-pass fold *method* → Sequence — they are different kinds of member, so different homes is correct, not inconsistent.) Candidate for codification in the `code-surface` / `implementation` skill.
+- **Phase 3 (detach `Sequence.\`Protocol\`` from affected Buffer types) and Phase 4 (Group A cohort → `Collection.\`Protocol\`` migration, ~36 types)** — **PENDING** (separate arc). Phase-4 note: migrated types become `Sequence`+`Collection` dual-conformers, so every count-style operation must stay single-homed per the principle above, or the shadowing returns across the whole cohort.
 
 ## Background & motivation
 
