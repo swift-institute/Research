@@ -2,12 +2,16 @@
 
 <!--
 ---
-version: 1.2.0
+version: 1.2.1
 last_updated: 2026-05-25
 status: RECOMMENDATION
 tier: 3
 scope: ecosystem-wide
 changelog:
+  - "1.2.1 (2026-05-25): Renamed Iterator.Borrowing → Iterator.Borrow and
+     package → swift-iterator-borrow-primitives — the World-A bulk-tier rename
+     to Iterator.Span freed the Iterator.Borrow name for its correct meaning
+     (yields an Ownership.Borrow; sibling to Iterator.Span which yields a Span)."
   - "1.2.0 (2026-05-25): CONCEPTUAL COLLAPSE of the implicit-position scalar
      World-B protocol. The give-away vs keep-and-lend DUALITY (§2) is unchanged
      and remains the load-bearing claim; what collapses is only the v1.0.0/v1.1.0
@@ -24,8 +28,8 @@ changelog:
      end-to-end against the REAL `Iterator.\`Protocol\``/`Iterable` on Apple
      Swift 6.3.2 (move-only element, conformance to the real protocols,
      generic-through-protocol drive, multipass — all green). SHIPPED as a thin
-     naming refinement, not a new protocol-world: `swift-borrowing-iterator-primitives`
-     (commit `0565cd6`) provides `Iterator.Borrowing.\`Protocol\`<Borrowed>:
+     naming refinement, not a new protocol-world: `swift-iterator-borrow-primitives`
+     (commit `0565cd6`) provides `Iterator.Borrow.\`Protocol\`<Borrowed>:
      Iterator.\`Protocol\`` where `Element == Ownership.Borrow<Borrowed>`,
      depending on `swift-iterator-primitives` + `swift-ownership-primitives` (a
      composition/integration package per §7), adding NO new attachable. This
@@ -106,8 +110,8 @@ changelog:
 > Apple Swift 6.3.2 (a move-only element, conformance to the real protocols, a
 > generic-through-protocol drive, and multipass — all green), and is **shipped**
 > as a thin naming refinement rather than a new protocol-world:
-> `swift-borrowing-iterator-primitives` (commit `0565cd6`) provides
-> `Iterator.Borrowing.`Protocol`` = `Iterator.`Protocol`` with an
+> `swift-iterator-borrow-primitives` (commit `0565cd6`) provides
+> `Iterator.Borrow.`Protocol`` = `Iterator.`Protocol`` with an
 > `Ownership.Borrow` element (§4.5). OQ-1 is therefore **dissolved** for the
 > implicit-position scalar case (the abstraction already existed; no new protocol
 > was needed); only the `~Escapable`-*element* axis remains language-blocked, and
@@ -156,8 +160,8 @@ a borrowing iterator is the *existing* `Iterator.`Protocol`` with
 `Element = Ownership.Borrow<T>`, and multipass is the *existing* `Iterable` — no
 new protocol hierarchy, no new attachable (§4.5). Validated against the real
 protocols on Apple Swift 6.3.2 and shipped as the thin naming refinement
-`swift-borrowing-iterator-primitives` (commit `0565cd6`, providing
-`Iterator.Borrowing.`Protocol``), dissolving OQ-1 for the scalar case. In the
+`swift-iterator-borrow-primitives` (commit `0565cd6`, providing
+`Iterator.Borrow.`Protocol``), dissolving OQ-1 for the scalar case. In the
 same arc the World-A bulk tier was renamed `Iterator.Borrow` → `Iterator.Span`
 (commit `3cb430a`, plus namespace-doc fix `a95e711`), resolving the OQ-4 naming
 hazard. The give-away vs keep-and-lend *duality* of §2 is untouched — only the
@@ -279,7 +283,7 @@ cannot express partial reinitialization after consume; `swap` requires
 > `Iterator.Span.`Protocol``** (commit `3cb430a`), named for *what it yields* (a
 > `Span`) rather than the ownership of the yield, removing the hazard. The irony
 > worth recording: "borrow" is now used *correctly* under `Iterator` — for the
-> v1.2.0 `Iterator.Borrowing.`Protocol`` (§4.5), which genuinely yields an
+> v1.2.0 `Iterator.Borrow.`Protocol`` (§4.5), which genuinely yields an
 > `Ownership.Borrow` (keep-and-lend), a payload-named sibling of `Iterator.Span`
 > (yields `Span`). See OQ-4.
 
@@ -293,7 +297,7 @@ implicit-scalar), plus one concrete byte-stream-specialized citizen:
 |----------------|---------------|--------|
 | **explicit** (caller holds an `Index`, borrowing subscript) | `Collection` | **Exists** (`swift-collection-primitives` family) |
 | **implicit, span/bulk** (the traversal carries its own position and lends a `Span<Element>` per step) | `Sequence.Borrowing.Protocol` | **Exists** (`swift-sequence-primitives`); `Escapable`-element-narrowed by the `Span` ceiling (see §4.3) |
-| **implicit, scalar** (the traversal carries its own position and lends one `borrowing Element` per step — the dual of World-A's `Iterator.`Protocol``) | `Iterator.Borrowing.`Protocol`` (= `Iterator.`Protocol`` with `Element == Ownership.Borrow<Borrowed>`) | **Shipped** (`swift-borrowing-iterator-primitives`, `0565cd6`). v1.2.0: this is *not* a new protocol hierarchy — it is the existing `Iterator.`Protocol`` instantiated with a `Borrow` element, plus the existing `Iterable` for multipass (§4.5; OQ-1 dissolved). The `~Escapable`-*element* axis remains language-blocked (§4.3, §6). |
+| **implicit, scalar** (the traversal carries its own position and lends one `borrowing Element` per step — the dual of World-A's `Iterator.`Protocol``) | `Iterator.Borrow.`Protocol`` (= `Iterator.`Protocol`` with `Element == Ownership.Borrow<Borrowed>`) | **Shipped** (`swift-iterator-borrow-primitives`, `0565cd6`). v1.2.0: this is *not* a new protocol hierarchy — it is the existing `Iterator.`Protocol`` instantiated with a `Borrow` element, plus the existing `Iterable` for multipass (§4.5; OQ-1 dissolved). The `~Escapable`-*element* axis remains language-blocked (§4.3, §6). |
 | concrete, byte-stream-specialized | `Cursor<DomainTag>` | **Exists** (`swift-cursor-primitives`); generic generalization deferred; rides `Ownership.Borrow.`Protocol`` for its borrowed-view storage (see §4.4) |
 
 ##### 4.1 The explicit-position shape: `Collection`
@@ -432,7 +436,7 @@ narrower than v1.0.0 stated:
    keep-and-lend* protocol over arbitrary element domains had been promoted from
    the spike — an **unbuilt** gap, not a language gap. **v1.2.0 retires this
    gap**: the production scalar keep-and-lend protocol shipped as
-   `Iterator.Borrowing.`Protocol`` (`swift-borrowing-iterator-primitives`,
+   `Iterator.Borrow.`Protocol`` (`swift-iterator-borrow-primitives`,
    `0565cd6`), and the §4.5 collapse shows it required *no new protocol* — it is
    the existing `Iterator.`Protocol`` with an `Ownership.Borrow` element. The
    spikes below validated the *shape*; §4.5 then proved the abstraction already
@@ -492,7 +496,7 @@ two axes a generic implicit-position World-B protocol decomposes into:
 | World-B implicit-position protocol needs… | Supplied by | Status |
 |---|---|---|
 | **a borrowed, `~Escapable`-tolerant view of the element being lent** (the "keep-and-lend" object) | `Ownership.Borrow.`Protocol`` (the `Borrowed` associated type) | **Exists** — `Ownership.Borrow.swift`, `__Ownership_Borrow_Protocol.swift` |
-| **a stateful implicit position that walks kept storage and lends that view per step** (the "traversal" object) | the *existing* `Iterator.`Protocol`` — its `next()` already lends per step (§4.5) | **Exists / Shipped.** v1.2.0: this axis was never missing — it is `Iterator.Protocol.next()`, and binding `Element = Ownership.Borrow<Borrowed>` *combines* this row with the row above. Shipped as `Iterator.Borrowing.`Protocol`` (`0565cd6`). |
+| **a stateful implicit position that walks kept storage and lends that view per step** (the "traversal" object) | the *existing* `Iterator.`Protocol`` — its `next()` already lends per step (§4.5) | **Exists / Shipped.** v1.2.0: this axis was never missing — it is `Iterator.Protocol.next()`, and binding `Element = Ownership.Borrow<Borrowed>` *combines* this row with the row above. Shipped as `Iterator.Borrow.`Protocol`` (`0565cd6`). |
 
 **What it does NOT provide — and the Pattern-1-vs-3 boundary that keeps it
 honest.** `Ownership.Borrow.`Protocol`` is a **passive borrow-view capability,
@@ -514,8 +518,8 @@ and reveals the residue was smaller than it looked: the implicit-position-traver
 axis is *already* supplied by `Iterator.Protocol.next()` (§4.5), so the "promote
 the shape" residue was satisfied not by building a new protocol but by binding
 `Iterator.`Protocol``'s `Element` to `Ownership.Borrow.`Protocol``'s `Borrowed`
-view — which is exactly what `Iterator.Borrowing.`Protocol``
-(`swift-borrowing-iterator-primitives`, `0565cd6`) declares. After v1.2.0 the
+view — which is exactly what `Iterator.Borrow.`Protocol``
+(`swift-iterator-borrow-primitives`, `0565cd6`) declares. After v1.2.0 the
 `~Escapable`-element axis is the only language-gated remainder.
 
 ##### 4.5 The scalar World-B protocol is `Iterator.`Protocol`` with a `Borrow` element — OQ-1 dissolved
@@ -565,12 +569,12 @@ element type, a conformance to the *actual* protocols with
 compile and run green. `Verified: 2026-05-25`.
 
 **Shipped as a thin naming refinement, not a new protocol-world.** The result is
-`swift-borrowing-iterator-primitives` (commit `0565cd6`,
-`/Users/coen/Developer/swift-primitives/swift-borrowing-iterator-primitives`),
+`swift-iterator-borrow-primitives` (commit `0565cd6`,
+`/Users/coen/Developer/swift-primitives/swift-iterator-borrow-primitives`),
 which declares exactly one protocol and no concrete types:
 
 ```swift
-extension Iterator.Borrowing {
+extension Iterator.Borrow {
     public protocol `Protocol`<Borrowed>: Iterator.`Protocol`, ~Copyable, ~Escapable
     where Element == Ownership.Borrow<Borrowed> {
         associatedtype Borrowed: ~Copyable & ~Escapable
@@ -578,16 +582,22 @@ extension Iterator.Borrowing {
 }
 ```
 
-(`Iterator.Borrowing.Protocol.swift:60–68`, `Verified: 2026-05-25`.) It is a
+(`Iterator.Borrow.Protocol.swift:60–68`, `Verified: 2026-05-25`.) It is a
 **composition / integration package** per the §7 deterministic rule: it depends
 on `swift-iterator-primitives` *and* `swift-ownership-primitives` and bridges
 them, owning neither `Iterator.`Protocol`` nor `Ownership.Borrow`
-(`Package.swift:21–30`, `Verified: 2026-05-25`). `Iterator.Borrowing.`Protocol``
+(`Package.swift:21–30`, `Verified: 2026-05-25`). `Iterator.Borrow.`Protocol``
 adds *no* new traversal mechanism — it is `Iterator.`Protocol`` with the element
 pinned to `Ownership.Borrow<Borrowed>`, plus a `Borrowed` associated type that
 *names* the underlying element being lent. It adds **no new attachable**:
 multipass containers conform to the existing `Iterable` (README and
-`Iterator.Borrowing.Protocol.swift:38–44`, `Verified: 2026-05-25`).
+`Iterator.Borrow.Protocol.swift:38–44`, `Verified: 2026-05-25`).
+`Iterator.Borrow.`Protocol`` is a **NAMED REFINEMENT / opt-in sugar** over the
+bare `Iterator.`Protocol`<Ownership.Borrow<Element>, Never>` — directly usable
+via `Iterator.`Protocol``'s primary associated types without the refinement at
+all; the refinement's only value is the named `Borrowed` associated type (which
+surfaces the underlying element type explicitly) and the declared intent, not new
+capability.
 
 **The v1.1.0 `withNext` (internal-iteration) shape is superseded.** A subagent
 had recommended an internal-iteration `withNext` shape on the grounds that the
@@ -769,7 +779,7 @@ it.
 The §5 findings are DECIDED facts (landed; experiment + commits cited inline). As
 of v1.2.0, OQ-1 is DISSOLVED (the scalar World-B protocol was the existing
 `Iterator.`Protocol`` with a `Borrow` element, shipped as
-`Iterator.Borrowing.`Protocol``, `0565cd6`; §4.5) and OQ-4 is RESOLVED (the
+`Iterator.Borrow.`Protocol``, `0565cd6`; §4.5) and OQ-4 is RESOLVED (the
 `Iterator.Borrow` → `Iterator.Span` rename, `3cb430a`; §3). The only parked
 *direction* remaining is OQ-2 (explicit-position `Collection` reconciliation);
 the only *language-gated* remainder is the `~Escapable`-element axis (§4.3b, §4.5).
@@ -787,9 +797,9 @@ the only *language-gated* remainder is the `~Escapable`-element axis (§4.3b, §
    explicit-position `Collection` (exists) + implicit-position *span/bulk*
    `Sequence.Borrowing.Protocol` (exists, `Escapable`-element-narrowed by the
    `Span` ceiling; §4.3a) + implicit-position *scalar* keep-and-lend
-   `Iterator.Borrowing.`Protocol`` — which v1.2.0 shows is simply
+   `Iterator.Borrow.`Protocol`` — which v1.2.0 shows is simply
    `Iterator.`Protocol`` with `Element == Ownership.Borrow<T>`, **shipped** as
-   `swift-borrowing-iterator-primitives` `0565cd6` (no new protocol hierarchy,
+   `swift-iterator-borrow-primitives` `0565cd6` (no new protocol hierarchy,
    no new attachable; OQ-1 dissolved; only its `~Escapable`-element axis is
    language-blocked; §4.5) + the borrowed-element-view capability
    `Ownership.Borrow.`Protocol`` it lends (exists; §4.4) + the byte-stream
@@ -807,7 +817,7 @@ framework proposes *no new top-level primitive*. It is a classification of
 sharper for the implicit-position scalar World-B case (formerly the one parked
 *type*, OQ-1): it required **no new primitive at all** — the scalar World-B
 "protocol" turned out to be the *existing* `Iterator.`Protocol`` with an
-`Ownership.Borrow` element, so what shipped (`swift-borrowing-iterator-primitives`,
+`Ownership.Borrow` element, so what shipped (`swift-iterator-borrow-primitives`,
 `0565cd6`) is a thin **composition / integration package** (case (c) /
 [ARCH-LAYER-001] composition over two existing L1 packages, §7), naming the
 composition rather than introducing a new family. The [RES-018] cross-domain-fit
@@ -836,8 +846,8 @@ flagged premise vs direction.
   (`@_lifetime(borrow self) makeIterator()`), not a new attachable (§4.5). The
   abstraction the question was reaching for already existed; the perceived gap
   was a missing *name*, not a missing protocol. It shipped as the thin naming
-  refinement `Iterator.Borrowing.`Protocol``
-  (`swift-borrowing-iterator-primitives`, commit `0565cd6`) — a composition /
+  refinement `Iterator.Borrow.`Protocol``
+  (`swift-iterator-borrow-primitives`, commit `0565cd6`) — a composition /
   integration package over `swift-iterator-primitives` +
   `swift-ownership-primitives` (§7), adding no new traversal mechanism and no new
   attachable. Validated end-to-end against the *real* `Iterator.`Protocol``/`Iterable`
@@ -917,7 +927,7 @@ flagged premise vs direction.
   `swift-iterator-primitives` `3cb430a`), naming the tier for *what it yields* (a
   `Span`) rather than the ownership of the yield, which removes the hazard. The
   rename also frees the "borrow" stem under `Iterator` for its *correct* use: the
-  v1.2.0 `Iterator.Borrowing.`Protocol`` (§4.5), which genuinely yields an
+  v1.2.0 `Iterator.Borrow.`Protocol`` (§4.5), which genuinely yields an
   `Ownership.Borrow` (keep-and-lend), is a payload-named sibling of
   `Iterator.Span` (yields `Span`). `Verified: 2026-05-25`: the source directory
   is now `Sources/Iterator Span Primitives/`, the protocol is
@@ -928,7 +938,7 @@ flagged premise vs direction.
 
 - The implicit-position scalar World-B "protocol" needed no authoring — it was
   the existing `Iterator.`Protocol`` with an `Ownership.Borrow` element, shipped
-  as `Iterator.Borrowing.`Protocol`` (`0565cd6`); OQ-1 is dissolved (§4.5). The
+  as `Iterator.Borrow.`Protocol`` (`0565cd6`); OQ-1 is dissolved (§4.5). The
   `~Escapable`-*element* axis remains language-blocked and out of scope here.
 - It does not build the `Collection` conformances or their packages (OQ-2).
 - The `Iterator.Borrow` → `Iterator.Span` rename is **done** (`3cb430a`); OQ-4 is
@@ -977,9 +987,9 @@ flagged premise vs direction.
 
 - `swift-iterator-primitives/Sources/Iterator Protocol/Iterator.Protocol.swift:31` — `Iterator.`Protocol`` (World-A foundation).
 - `swift-iterator-primitives/Sources/Iterator Span Primitives/Iterator.Span.Protocol.swift:20` — World-A bulk tier; Element narrowed to `Escapable`. Renamed from `Iterator.Borrow.`Protocol`` in commit `3cb430a` (OQ-4 resolved; §3 hazard callout).
-- `swift-borrowing-iterator-primitives/Sources/Borrowing Iterator Primitives/Iterator.Borrowing.Protocol.swift:60-68` — `Iterator.Borrowing.`Protocol`<Borrowed>` = `Iterator.`Protocol`` with `Element == Ownership.Borrow<Borrowed>`; the implicit-position scalar World-B protocol (no new hierarchy; OQ-1 dissolved; §4.5).
-- `swift-borrowing-iterator-primitives/Sources/Borrowing Iterator Primitives/Iterator.Borrowing.swift:6-13` — `Iterator.Borrowing` namespace (hosts the refinement protocol; no concrete types; §4.5).
-- `swift-borrowing-iterator-primitives/Package.swift:21-30` — composition / integration-package deps (`swift-iterator-primitives` + `swift-ownership-primitives`; §7 / §4.5); adds no new attachable.
+- `swift-iterator-borrow-primitives/Sources/Iterator Borrow Primitives/Iterator.Borrow.Protocol.swift` — `Iterator.Borrow.`Protocol`<Borrowed>` = `Iterator.`Protocol`` with `Element == Ownership.Borrow<Borrowed>`; the implicit-position scalar World-B protocol (no new hierarchy; OQ-1 dissolved; §4.5). (Package created as `swift-borrowing-iterator-primitives` in commit `0565cd6`, then renamed to `swift-iterator-borrow-primitives`; line numbers may have shifted with the rename.)
+- `swift-iterator-borrow-primitives/Sources/Iterator Borrow Primitives/Iterator.Borrow.swift` — `Iterator.Borrow` namespace (hosts the refinement protocol; no concrete types; §4.5).
+- `swift-iterator-borrow-primitives/Package.swift:21-30` — composition / integration-package deps (`swift-iterator-primitives` + `swift-ownership-primitives`; §7 / §4.5); adds no new attachable.
 - `swift-iterator-primitives/Sources/Iterable/Iterable.swift:19,31,41` — attachable; suppressed associatedtype (Finding 1); `@_lifetime(borrow self)` (Finding 2).
 - `swift-iterator-primitives/Sources/Once Primitives/Once.swift:24` — give-away one-element iterator.
 - `swift-empty-iterator-primitives/Sources/Empty Iterator Primitives/Empty+Iterator.Protocol.swift:20` — Empty's `@retroactive Iterator.`Protocol`` conformance, now in its own bridge package (OQ-3 RESOLVED; moved out of iterator-primitives by `ccf061d`).
@@ -1019,7 +1029,7 @@ flagged premise vs direction.
 | swift-iterator-primitives | `ccf061d` | Extract Empty's iterator conformance to swift-empty-iterator-primitives (removes the fold + empty-primitives dep + umbrella re-export; OQ-3 RESOLVED) |
 | swift-iterator-primitives | `3cb430a` | Rename Iterator.Borrow → Iterator.Span (World-A bulk tier named for what it yields, a Span; "Borrow" misread as World-B keep-and-lend) — OQ-4 RESOLVED |
 | swift-iterator-primitives | `a95e711` | Fix stale Iterator namespace doc: Empty conformance now lives in swift-empty-iterator-primitives (post-ccf061d), no longer re-exported here |
-| swift-borrowing-iterator-primitives | `0565cd6` | Create swift-borrowing-iterator-primitives: Iterator.Borrowing.`Protocol` — a borrowing iterator is Iterator.`Protocol` with an Ownership.Borrow element (composition of swift-iterator-primitives + swift-ownership-primitives) — OQ-1 DISSOLVED |
+| swift-iterator-borrow-primitives | `0565cd6` | Create swift-iterator-borrow-primitives (created under prior name swift-borrowing-iterator-primitives, then renamed): Iterator.Borrow.`Protocol` — a borrowing iterator is Iterator.`Protocol` with an Ownership.Borrow element (composition of swift-iterator-primitives + swift-ownership-primitives) — OQ-1 DISSOLVED |
 
 ### Swift Evolution (background on the ownership model that forces §2)
 
