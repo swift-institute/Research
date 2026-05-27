@@ -2,13 +2,15 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-04-21
-status: RECOMMENDATION
+version: 1.1.0
+last_updated: 2026-05-26
+status: SUPERSEDED
 tier: 2
 scope: ecosystem-wide
 ---
 -->
+
+> **SUPERSEDED 2026-05-26** by [`operation-domain-naming-and-organization.md`](operation-domain-naming-and-organization.md), the definitive operation-domain naming/organizing convention.
 
 ## Context
 

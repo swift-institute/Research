@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.1
-last_updated: 2026-05-15
-status: DECISION
+version: 1.1.1
+last_updated: 2026-05-26
+status: SUPERSEDED
 tier: 2
 # Tier bumped 1 → 2: this doc lands an ecosystem-wide naming rule via skill
 # promotion ([API-NAME-001b]), not a package-specific decision. [RES-020]
@@ -15,6 +15,8 @@ scope: ecosystem-wide
 supersedes: HANDOFF-byte-extraction-arc.md (2026-05-15, deleted on landing)
 ---
 -->
+
+> **SUPERSEDED 2026-05-26** by [`operation-domain-naming-and-organization.md`](operation-domain-naming-and-organization.md), the definitive operation-domain naming/organizing convention. Naming content ([API-NAME-001b] subject-first) is absorbed there; the byte→L1 extraction decision in this doc is executed and remains the record for that decision.
 
 ## Context
 

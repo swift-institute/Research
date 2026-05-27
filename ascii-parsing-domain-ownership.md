@@ -8,12 +8,14 @@
 
 <!--
 ---
-version: 4.2.0
-last_updated: 2026-03-04
-status: RECOMMENDATION (architecture) / SUPERSEDED (Category B phasing)
+version: 4.3.0
+last_updated: 2026-05-26
+status: SUPERSEDED
 tier: 2
 ---
 -->
+
+> **SUPERSEDED 2026-05-26** by [`operation-domain-naming-and-organization.md`](operation-domain-naming-and-organization.md), the definitive operation-domain naming/organizing convention. The subject-first ordering content is absorbed there; the ASCII domain-ownership decisions in this doc remain as executed.
 
 ## Context
 

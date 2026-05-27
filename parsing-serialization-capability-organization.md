@@ -2,13 +2,15 @@
 
 <!--
 ---
-version: 1.4.0
-last_updated: 2026-03-15
+version: 1.5.0
+last_updated: 2026-05-26
 status: SUPERSEDED
 tier: 2
 superseded_by: transformation-domain-architecture.md (DECISION incorporating this analysis)
 ---
 -->
+
+> **SUPERSEDED 2026-05-26** by [`operation-domain-naming-and-organization.md`](operation-domain-naming-and-organization.md), the definitive operation-domain naming/organizing convention. Its capability-organization content is consolidated there.
 
 ## Context
 

@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-05-22
-status: RECOMMENDATION
+version: 1.1.0
+last_updated: 2026-05-26
+status: SUPERSEDED
 tier: 2
 scope: ecosystem-wide
 ---
@@ -21,6 +21,8 @@ Changelog:
   guarded-use rule continues scoping conformance to spec-value types.
   Pre-codified as [FAM-011] pending principal authorization.
 -->
+
+> **SUPERSEDED 2026-05-26** by [`operation-domain-naming-and-organization.md`](operation-domain-naming-and-organization.md), the definitive operation-domain naming/organizing convention.
 
 ## Context
 

@@ -2,15 +2,17 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-04-25
-status: REFERENCE
+version: 1.1.0
+last_updated: 2026-05-26
+status: SUPERSEDED
 tier: 1
 scope: ecosystem-wide
 relocated_from: swift-mutator-primitives/Research/naming-mutator-protocol-and-mutable-typealias.md
 relocation_date: 2026-04-25
 ---
 -->
+
+> **SUPERSEDED 2026-05-26** by [`operation-domain-naming-and-organization.md`](operation-domain-naming-and-organization.md), the definitive operation-domain naming/organizing convention.
 
 > Reframed from DECISION to REFERENCE on 2026-04-25. The naming spine
 > remains valid for any future ecosystem package occupying mutation-
