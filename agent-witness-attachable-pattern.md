@@ -1,8 +1,12 @@
 # The Agent-Witness-Attachable Pattern for Codec Primitives
 
-**Status**: Proposed convention, awaiting pilot application
+**Status**: SUPERSEDED
+**Version**: 1.1.0
+**Last Updated**: 2026-05-26
 **Scope**: All codec-shaped primitive domains (Parser, Serializer, Coder, Formatter, Sequencer, and future analogues such as Validator, Decoder, Encoder, Transformer)
 **Audience**: An agent dispatched to apply this pattern to a pilot package.
+
+> **SUPERSEDED 2026-05-26** by [`operation-domain-naming-and-organization.md`](operation-domain-naming-and-organization.md), the definitive operation-domain naming/organizing convention.
 
 ---
 
@@ -43,6 +47,30 @@ The receiving agent should be familiar with:
 - `swift-institute/Skills/modularization/` — per-target organization, cross-package conformances
 - `swift-institute/Blog/Published/2026-05-11-introducing-pair-either-product-primitives.md` — Pair/Either/Product
 - `swift-institute/Blog/Published/2026-05-12-the-missing-fourth-corner.md` — deferred Coproduct
+
+---
+
+## 1.5 Shape Subsetting
+
+The triple is a *template*, not a uniform shape. Domain protocols implement the *subset* of features that fits their semantics. Five features are optional facets, not universal requirements:
+
+| Feature | Opt-in criterion | Domains that adopt |
+|---|---|---|
+| `~Copyable` on the protocol self | Domain participates in affine resource discipline (cursor state, owned buffer) | Parser, Serializer |
+| `Input: ~Copyable & ~Escapable` | Input represents a move-only / non-escaping cursor | Parser, Serializer |
+| `Body` associated type + result builder | Domain supports declarative composition (`body { … }`) | Parser, Serializer |
+| `borrowing` modifier on the method | Always alongside `~Copyable` protocol self | Parser, Serializer |
+| `inout` first parameter | Method mutates a cursor / output buffer (consuming/advancing) | Parser, Serializer |
+
+**Examples by domain:**
+
+- **Parser**: all five facets (cursor-style, declarative, move-only).
+- **Serializer**: all five facets (mutates output buffer, declarative).
+- **Coder**: leaf — none of the declarative facets; `Body == Never` always.
+- **Formatter**: none of the facets — plain `func format(_ value: Input) throws(Failure) -> Output`, no Body, no Builder, no `~Copyable`.
+- **Sequencer (proposed)**: TBD per pilot.
+
+**Pilot agents**: identify the shape subset *first* (Phase A.0 in §11), then strike non-applicable items from the migration checklist. Do not add facets just to match the pattern doc's parser-shaped examples in §5/§6 — those examples are the *richest* form; subsetting down is normal.
 
 ---
 
@@ -115,7 +143,7 @@ A type T conforms to the attachable when it has a canonical instance of the agen
 | Parsing/Decoding from raw bytes — capability lives on the *type* | `static var parser: Parser` | Parseable, Decodable |
 | Serializing/Encoding *a specific value* — capability lives on the *instance* | `var serializer: Serializer` (or `static var serializer: Serializer` if value-independent) | Serializable, Encodable |
 | Iterating *a specific value* — capability lives on the *instance* | `var sequence: Sequence { borrowing get }` | Sequenceable |
-| Formatting *a specific value* — capability lives on the *instance* | `var format: Format { borrowing get }` | Formattable |
+| Formatting — capability lives on the *type* (formatter for type `T` is the same regardless of which `T` instance you have; the value is the *input* to the formatter, not the configuration) | `static var formatter: Formatter` | Formattable |
 
 When in doubt, ask: "is the canonical X dependent on a specific value of T, or is it the same for every value of T?" — instance accessor for value-dependent, static accessor for type-dependent.
 
@@ -138,6 +166,18 @@ When in doubt, ask: "is the canonical X dependent on a specific value of T, or i
 > The witness's identifier echoes the protocol's method identifier. If the method is `verb(_:)`, the witness is `Verb<…>`. If the bare `Verb` is severely overloaded in software English, use an established domain term and document the exception.
 
 This is the test to apply for any new domain. Do not relitigate per-domain.
+
+### Witness identifier rule — method-stem divergence
+
+When the agent's canonical method name doesn't share a stem with the agent name, the witness takes the verb form of the *agent name*, not the method.
+
+| Agent | Method | Witness (correct) | Witness (would-be wrong) |
+|---|---|---|---|
+| Parser | `parse(_:)` | `Parse<…>` | (stems agree) |
+| Formatter | `format(_:)` | `Format<…>` | (stems agree) |
+| Iterator | `next() -> Element?` | `Iterate<Element>` | `Next<Element>` |
+
+Document as a per-domain exception in the package README. Currently applies to Iterator; future domains where the method's idiomatic name diverges from the agent (e.g., `Hasher.combine(_:)`, `Builder.build()`) follow the same rule.
 
 ---
 
@@ -314,6 +354,12 @@ This is the type-erasure constructor — wrap any specific agent into the witnes
 
 Specialization-friendly use sites should prefer `some <Agent>.\`Protocol\`<I, O>` instead of the witness; the witness is for cases where specialization isn't possible or wanted.
 
+### 6.x Top-level witness name collisions
+
+The witness lives at module top level, named after the bare verb. This can collide with existing top-level types in other institute packages (e.g., a `Format<…>` witness in `swift-formatter-primitives` collides by name with a pre-existing `Format` empty-enum namespace in `swift-format-primitives` that hosts concrete formatter types like `Format.Case`, `Format.Decimal`, `Format.Numeric`). Per §12.8, the resolution depends on whether the existing type is a value-shape consumer of the agent (in which case rename it to free the witness name), a sibling namespace (in which case module-qualified coexistence), or genuinely unrelated (rename one or the other).
+
+When adding a new top-level witness, grep `/Users/coen/Developer/swift-primitives/` for `struct <Verb>`, `enum <Verb>`, and `typealias <Verb>` first. Surface any collision to the principal before committing the witness.
+
 ---
 
 ## 7. Composition via Shape Primitives
@@ -357,6 +403,8 @@ where First: <Agent>.`Protocol`,
 ```
 
 This is the pattern. Validated for `Parser.\`Protocol\`` in `swift-parser-primitives` — see `Sources/Parser Pair Primitives/Pair+Parser.Protocol.swift`.
+
+**Type-inference quirk when Output is Pair-shaped**: if you choose `Output = Pair<First.Output, Second.Output>` (as opposed to a tuple), the bare `Pair(o0, o1)` constructor inside the conformance fails to type-check — Swift resolves it against `Self`'s outer generic parameters (`First`, `Second`) rather than re-inferring from the value types. Workaround: qualify explicitly as `Pair<First.Output, Second.Output>(o0, o1)`. Parser-primitives doesn't hit this because its Output is a tuple `(First.Output, Second.Output)`, not a Pair. Domains that choose Pair-shaped Output (e.g., Formatter) need the explicit qualification — see `swift-formatter-primitives/Sources/Formatter Pair Primitives/Pair+Formatter.Protocol.swift`.
 
 ### 7.3 Alternation (binary)
 
@@ -403,6 +451,18 @@ extension <Agent> {
 ### 7.6 Variance-sensitive combinators (Map, FlatMap)
 
 Map and FlatMap are *variance-sensitive*: they covariate in different positions across Parser, Serializer, Coder. They do **not** generalize across domains. Keep them as per-domain concrete types: `Parser.Map`, `Serializer.Map`, etc. Do not try to extract into shared primitives.
+
+### 7.7 Explicit non-targets — shape primitives in value-shape roles
+
+Not every shape primitive earns its own integration target. Pair is integrated because it's the canonical *storage* for sequential composition. **Either is intentionally not integrated** as an agent conformance, because Either's role in the pattern is value-shape — Output of alternation, Failure of binary combinators — not formatter-shape.
+
+The general rule: a shape primitive is conformed to an agent protocol when it serves as composition *storage* (Pair, Product). Shape primitives that play value-shape roles (Either as Output, Either as Failure, Coproduct as Output) are *used by* combinators in their type signatures but are not themselves conformed.
+
+If a real consumer surfaces a use case requiring structural type preservation that the witness can't provide (e.g., needing to pattern-match on `Either<F0, F1>` to recover which concrete agent is held), add the conformance then. Until that consumer appears, the conformance is speculative and adds cognitive surface without payoff.
+
+This applies to:
+- `Either: <Agent>.\`Protocol\`` — non-target. Use the witness for dynamic dispatch.
+- Coproduct integration as alternation Output is the canonical n-ary alternation pattern (when Coproduct lands); Coproduct itself is not conformed as an agent.
 
 ---
 
@@ -479,6 +539,10 @@ extension <Type>Tests.Unit {
 
 One test target per combinator target. Test file naming: `<Type or Area> Tests.swift`. See `swift-institute/Skills/testing-institute/` for nested-package and snapshot patterns.
 
+**Generic-type test suite shape**: if the type under test is generic (e.g., `Pair`, `Either`, `Product`), per `[SWIFT-TEST-003]` you cannot use the canonical `extension Pair { @Suite struct Test }` form — `@Suite` cannot appear in a generic context. Use the parallel-namespace pattern instead: a top-level `@Suite struct \`Pair as <Agent> Tests\`` with single-token `Unit` / `EdgeCase` sub-suites.
+
+**Typed-throws test idiom**: when the body throws a typed error (e.g., `Either<…>`), `catch let error as Either<…>` triggers the `'as' test is always true` warning — typed-throws already narrows the error binding. Use bare `catch { switch error { … } }` with a `// error is Either<…>` comment if the inferred type would otherwise be unclear to a reader.
+
 For shape-primitive integration targets (e.g., `<Agent> Pair Primitives Tests`), include **parity tests** that compare the shape-primitive conformance against any pre-existing per-domain combinator it replaces. Example:
 
 ```swift
@@ -500,18 +564,30 @@ func `Pair as Agent matches <Agent>.Take.Two on identical input`() throws(any Sw
 
 For migrating an existing package to this pattern:
 
+### Phase A.0 — shape subset audit (REQUIRED — do first)
+
+Per §1.5, identify which optional facets this agent needs *before* applying any other checklist item. For each facet (`~Copyable` self, `~Copyable & ~Escapable` Input, Body + Builder, `borrowing` method, `inout` first parameter), answer yes/no based on the domain's semantics. **Strike non-applicable items from subsequent checklist steps before applying.** Do not add facets just to match the pattern doc's parser-shaped examples.
+
+If the agent currently has a facet the audit says it doesn't need, surface to the principal — removal is a breaking change.
+
 ### Phase A — establish the triple
 
 - [ ] **Verify agent name** conforms to verb-er noun form (`Parser`, `Sequencer`, …). Rename package if needed.
 - [ ] **Verify agent enum** exists as `enum <Agent> {}`. Empty namespace.
-- [ ] **Verify agent protocol** exists at `<Agent>.\`Protocol\`<Input, Output, Failure>` with primary associated types, `Body: ~Copyable`, typed throws.
+- [ ] **Verify agent protocol** exists at `<Agent>.\`Protocol\`<Input, Output, Failure>` with primary associated types and typed throws. Additional facets per Phase A.0 audit: `~Copyable` protocol self, `Body: ~Copyable` + result builder, `borrowing` method modifier, `inout` first parameter.
+- [ ] **Witness name-collision check** (per §6.x and §12.8): before promoting the witness to top level, grep `/Users/coen/Developer/swift-primitives/` for existing `struct <Verb>` / `enum <Verb>` / `typealias <Verb>` declarations. If a collision exists, surface to the principal — choose between renaming the existing type (if subordinate), module-qualified-only coexistence (no umbrella re-export), or — last resort — renaming the witness.
 - [ ] **Promote witness to top level** if currently nested as `<Agent>.Witness`. New file: `Sources/<Agent> Primitives Core/<Verb>.swift`. Old nested name can stay as deprecated typealias for source compat during migration.
 - [ ] **Verify attachable protocol** exists at top level as `<Verb>able` with the appropriate static/instance accessor.
 
 ### Phase B — apply shape primitives
 
-- [ ] **Add `Pair: <Agent>.\`Protocol\`` conformance** in a new `<Agent> Pair Primitives` target. Mirror the pattern from `swift-parser-primitives/Sources/Parser Pair Primitives/`.
-- [ ] **Write parity tests** in `<Agent> Pair Primitives Tests` comparing `Pair`-based composition against the pre-existing sequential combinator.
+- [ ] **Design Pair semantics** for this domain. Two canonical options:
+  - **Typed routing**: `Input = Pair<First.Input, Second.Input>`, `Output = Pair<First.Output, Second.Output>`. Each sub-agent handles its arm; outputs combine. More general; matches Parser-primitives' Pair conformance shape (tuple Output is the parser variant; Pair-typed Output is the formatter variant).
+  - **Same-input concat**: `Input = First.Input == Second.Input`, `Output = First.Output == Second.Output` (with concat-shape constraint). Matches stdlib's "format-piece + format-piece" idiom.
+  These are different conformances; Pair can only have one. Propose with rationale and STOP for principal approval before implementing.
+- [ ] **Cross-package conformance cycle pre-flight** (per `[MOD-032]/[MOD-033]/[MOD-034]`): verify no back-dependency from `swift-pair-primitives` or `swift-either-primitives` to this package. The integration target should be a leaf consumer of both.
+- [ ] **Add `Pair: <Agent>.\`Protocol\`` conformance** in a new `<Agent> Pair Primitives` target. Mirror the pattern from `swift-parser-primitives/Sources/Parser Pair Primitives/` (cursor-style variant: `~Copyable` self, `inout` Input, tuple Output) or `swift-formatter-primitives/Sources/Formatter Pair Primitives/` (value-style variant: plain `func`, by-value Input, Pair-typed Output).
+- [ ] **Write parity tests** in `<Agent> Pair Primitives Tests` comparing `Pair`-based composition against the pre-existing sequential combinator. If no pre-existing combinator exists (as in formatter), write behavior-only tests covering success path + per-arm failure routing.
 - [ ] **(Optional) Migrate callers** from the old per-domain sequential combinator to `Pair`-based form. Keep the old combinator as alias or deprecated.
 - [ ] **(Optional) Add `Pair: <Agent>.Printer` conformance** if the domain has a printer/round-trip pair. The Printer extension's `where` clause must restate the agent protocol constraint: `where First: <Agent>.\`Protocol\` & <Agent>.Printer, …`. Reason: typealiases declared in the Protocol extension are only in scope where that conformance's constraints hold.
 
@@ -523,10 +599,11 @@ For migrating an existing package to this pattern:
 
 ### Phase D — verify and ratify
 
-- [ ] **`swift build`** passes clean.
+- [ ] **`swift build`** passes clean. If linker errors mention packages other than this one, ASK BEFORE `rm -rf .build` (parallel-work signal).
 - [ ] **`swift test`** passes all suites including the new parity tests.
+- [ ] **Run lint pass** on the new files (per the package's `Lint.swift`, if present).
 - [ ] **Update package README** noting the witness type promotion and shape-primitive integration.
-- [ ] **Document any domain exceptions** (e.g., `Codec` for the Coder domain).
+- [ ] **Document any domain exceptions** (e.g., `Codec` for the Coder domain; intentional non-targets like Either-as-agent for value-shape domains; resolution chosen for any witness name collisions per §12.8).
 
 ---
 
@@ -576,11 +653,33 @@ For migrating an existing package to this pattern:
 
 **Resolution**: both are `<Agent>.\`Protocol\``-conforming; the builder doesn't care about Body. The returned shape (e.g., `Pair<P0, P1>`) carries whatever Body the parent context wants — usually `Never` for the composition itself.
 
+### 12.8 Top-level witness name collides with an existing institute package
+
+**Diagnostic**: the new top-level witness identifier matches an existing top-level type in another institute package (e.g., new `Format<I, O, F>` witness in `swift-formatter-primitives` collides with `Format` empty-enum namespace in `swift-format-primitives` that hosts concrete formatter types `Format.Case`, `Format.Decimal`, `Format.Numeric`). The umbrella re-export of one masks the other; one consumer-import resolves ambiguously.
+
+**Resolution**: classify the collision by what the *existing* type is, then choose the corresponding remedy:
+
+1. **Existing type is a value-shape consumer of the new agent** (e.g., a configuration value type passed to extensions like `.formatted(_:)`). Rename the existing type to free the witness name. The witness rule (verb form, matching method name) is the canonical one; subordinate value-shape types should yield.
+
+2. **Existing type is a sibling namespace hosting concrete agent implementations** (the formatter case: `Format.Case` etc. are themselves `Formatter.\`Protocol\``-conforming types). *Module-qualified-only coexistence*: don't re-export the witness at the umbrella; consumers import `<Verb>` (the witness's specific module) explicitly, or use full module-qualified access (`Formatter_Primitives.Format` vs `Format_Primitives.Format`). The existing namespace's contents remain reachable via their existing path. Trade-off: small UX cost at use sites, but no rename of either side. The umbrella `Formatter Primitives` should explicitly *exclude* the witness's re-export and document why in the package README.
+
+3. **Existing type is genuinely unrelated** (e.g., a value type in an unrelated domain whose name happens to clash). Module-qualified coexistence as in (2), or rename one side per project context.
+
+4. **Last resort — rename the witness.** The witness identifier rule is canonical; deviation should require a strong justification (e.g., the existing type has very wide consumer adoption *and* the codec witness can find a non-conflicting domain-term alternative). Document the exception in the package README and as a new row in Section 3's naming table.
+
+5. **Existing top-level name is itself a separate agent with its own codec-triple in its own package.** The existing name's contents form a coherent foundation-layer concept that the new agent *depends on*, not the other way around. The right shape is **peer packages** with appropriate dependency direction; don't collapse, don't coexist, don't rename. Diagnostic: ask "what depends on what, conceptually?" If the existing namespace is foundation-below and the new agent is derivative-above, the existing name keeps its package and identity, and the new agent's package depends on it. Each gets its own codec-triple application.
+
+Example: `Sequencer.Iterator.\`Protocol\`` (nesting iterator under sequencer) would invert the real dependency — Sequence is built on top of Iterator, not the other way. The right shape is `swift-iterator-primitives` (atomic, hosts `Iterator.\`Protocol\``, `Iterate<E>` witness, `Iterable` attachable) and `swift-sequencer-primitives` (depends on iterator-primitives, hosts `Sequencer.\`Protocol\`` which refines `Iterable`, `Sequence<E>` witness, `Sequenceable` attachable) as peer packages.
+
+**Diagnostic discipline**: surface the collision to the principal before committing the witness. The decision affects vocabulary across the ecosystem.
+
+**Known collision and its resolution**: `Formatter_Primitives.Format` (witness) vs `Format_Primitives.Format` (namespace for concrete formatters). Resolved via module-qualified coexistence (option 2) — the Formatter Primitives umbrella does not re-export the witness; consumers `import Format` explicitly or qualify per-use.
+
 ---
 
-## 13. Worked Example: swift-parser-primitives
+## 13. Worked Examples
 
-The pattern is partially implemented in `swift-parser-primitives` as of 2026-05-22:
+### 13.1 swift-parser-primitives — partial implementation
 
 | Pattern element | Location | Status |
 |---|---|---|
@@ -591,16 +690,36 @@ The pattern is partially implemented in `swift-parser-primitives` as of 2026-05-
 | Result builder | `Sources/Parser Primitives Core/Parser.Builder.swift:19` | ✅ |
 | Pair conformance | `Sources/Parser Pair Primitives/Pair+Parser.Protocol.swift` | ✅ (added 2026-05-22) |
 | Pair printer conformance | `Sources/Parser Pair Primitives/Pair+Parser.Printer.swift` | ✅ (added 2026-05-22) |
-| Parity test | `Tests/Parser Pair Primitives Tests/Pair as Parser Tests.swift` | ✅ (passing 2026-05-22) |
+| Parity test | `Tests/Parser Pair Primitives Tests/Pair as Parser Tests.swift` | ✅ passing 2026-05-22 (stylistic update queued — use the canonical generic-type suite shape per `[SWIFT-TEST-003]`; current file uses the older `PairAsParserTests` compound-name form) |
 | Witness promotion to top-level `Parse` | — | ❌ not yet done |
 
-The remaining migration for parser-primitives:
+Remaining migration for parser-primitives:
 1. Add `Sources/Parser Primitives Core/Parse.swift` with the top-level witness.
 2. Make `Parser.Witness` a deprecated typealias to `Parse` for source compat.
 3. Update consumer call sites incrementally.
 4. After soak period, delete `Parser.Witness` typealias.
 
-For a new pilot package (e.g., `swift-sequencer-primitives`), apply the full pattern fresh per the Migration Checklist.
+### 13.2 swift-formatter-primitives — pilot complete (commit `a210acd`, 2026-05-22)
+
+The cleanest possible application of the pattern — formatter has *none* of the parser-shape facets (no `~Copyable`, no Body, no `inout`). The pilot established the *shape subsetting* axis (§1.5) and validated the triple on a domain that subsets out every optional facet.
+
+| Pattern element | Location | Status |
+|---|---|---|
+| Agent enum | `Sources/Formatter Primitive/Formatter.swift:10` | ✅ |
+| Agent protocol | `Sources/Formatter Protocol/Formatter.Protocol.swift:52–78` (plain `protocol`, no `~Copyable`; `func format(_ value: Input) throws(Failure) -> Output`; no Body) | ✅ |
+| Witness | `Sources/Format/Format.swift` (top-level `Format<Input, Output, Failure>` Copyable struct; closure-backed; type-erasure init from any conforming formatter) | ✅ |
+| Attachable | `Sources/Formattable/Formattable.swift:28–34` (static accessor — matches §2.3 rubric) | ✅ |
+| Result builder | — (not applicable; formatter is not declarative) | n/a |
+| Pair conformance (typed routing) | `Sources/Formatter Pair Primitives/Pair+Formatter.Protocol.swift` (51 LOC; `Output = Pair<First.Output, Second.Output>`, `Failure = Either<…>`) | ✅ |
+| Behavior tests (no parity baseline) | `Tests/Formatter Pair Primitives Tests/Pair as Formatter Tests.swift` (151 LOC; 6 tests, 3 Unit + 3 EdgeCase; uses the canonical generic-type suite shape per §10) | ✅ |
+| `Format` Sendable / Equatable conditional conformances | — | ❌ open follow-up |
+| `Format` vs `Format_Primitives.Format` collision resolution | `Formatter Primitives` umbrella does not re-export `Format` | ✅ resolved via §12.8 option 2 (module-qualified coexistence) |
+
+The pilot is the empirical source for §1.5 (shape subsetting), the §2.3 attachable-table fix, §6.x naming collision section, §7.2 Pair-init type-inference note, §7.7 explicit non-targets, §10 generic-suite + typed-throws idioms, §11 Phase A.0 + Pair-semantics design step + lint pass items, and §12.8 witness collision edge case.
+
+### 13.3 New pilot packages
+
+For a fresh codec-domain package (e.g., `swift-validator-primitives`, the renamed `swift-sequencer-primitives`), apply the full pattern per the Migration Checklist — starting with Phase A.0 to identify the shape subset.
 
 ---
 
@@ -673,3 +792,16 @@ Existing implementations:
 ## 16. Changelog
 
 - **2026-05-22**: Initial draft. Captures the agent-witness-attachable triple, naming rule (verb form with domain-term exception), shape-primitive composition (Pair/Either/Product/Coproduct), and parser-primitives partial-implementation reference.
+- **2026-05-24**: Patch from formatter pilot (commit `swift-formatter-primitives@a210acd`):
+  - New §1.5 "Shape Subsetting" — parser-shape facets (`~Copyable` self, `~Copyable & ~Escapable` Input, Body, Builder, `borrowing`, `inout`) are *optional* per-domain, not universal.
+  - §2.3 attachable table — Formattable row corrected from instance to static accessor (matches its own decision rubric; matches the existing Formattable implementation).
+  - §6.x added — top-level witness name-collision check + cross-package grep instruction.
+  - §7.2 added — Pair-init type-inference quirk when Output is Pair-shaped (workaround: explicit qualification).
+  - §7.7 added — Explicit non-targets: shape primitives in value-shape roles (e.g., Either-as-agent) are not integrated.
+  - §10 updated — generic-type test suite shape (parallel-namespace pattern per `[SWIFT-TEST-003]`) and typed-throws test idiom (`catch { switch … }`, no `as` cast).
+  - §11 migration checklist — added Phase A.0 shape-subset audit, witness-collision check in Phase A, Pair-semantics design step + cross-package cycle pre-flight in Phase B, lint pass in Phase D.
+  - §12.8 added — Top-level witness name collision with existing institute package, with the known `Format` collision and its module-qualified-coexistence resolution.
+  - §13 split into 13.1 (parser-primitives partial), 13.2 (formatter-primitives pilot complete), 13.3 (new pilots).
+- **2026-05-25**: Refinements from the iterator-package decision (per `/tmp/handoff-vector-sequence-map-iterator.md` §C):
+  - §3 added a witness-identifier sub-rule for **method-stem divergence** — when the agent's canonical method name doesn't share a stem with the agent name (Iterator's `next()`), the witness takes the verb form of the *agent name* (`Iterate`), not the method (`Next`).
+  - §12.8 added a fifth classification — **existing top-level name is itself a separate agent with its own codec-triple in its own package**. Resolution is peer packages with appropriate dependency direction, not collision-resolution. Example: iterator-primitives + sequencer-primitives as peer atomic packages rather than `Sequencer.Iterator` nesting (which would invert the real dependency).

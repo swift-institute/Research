@@ -2,12 +2,14 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-13
-status: DECISION
+version: 1.1.0
+last_updated: 2026-05-26
+status: SUPERSEDED
 tier: 3
 ---
 -->
+
+> **SUPERSEDED 2026-05-26** by [`operation-domain-naming-and-organization.md`](operation-domain-naming-and-organization.md), the definitive operation-domain naming/organizing convention. The hoisting mechanism is absorbed there (§6); the compiler-limitation finding in this doc remains valid as reference.
 
 ## Context
 

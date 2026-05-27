@@ -117,7 +117,9 @@ changelog:
 > was needed); only the `~Escapable`-*element* axis remains language-blocked, and
 > the explicit-position `Collection` reconciliation (OQ-2) stays parked. In the
 > same arc the World-A bulk tier `Iterator.Borrow` was **renamed** to
-> `Iterator.Span` (commit `3cb430a`), resolving the §3 naming hazard (OQ-4).
+> `Iterator.Span` (commit `3cb430a`), resolving the §3 naming hazard (OQ-4); it
+> was subsequently renamed again to `Iterator.Chunk` (the final bulk-tier manner
+> name; `swift-iterator-primitives cbc7636`), which this doc uses below.
 
 ## Context
 
@@ -164,7 +166,9 @@ protocols on Apple Swift 6.3.2 and shipped as the thin naming refinement
 `Iterator.Borrow.`Protocol``), dissolving OQ-1 for the scalar case. In the
 same arc the World-A bulk tier was renamed `Iterator.Borrow` → `Iterator.Span`
 (commit `3cb430a`, plus namespace-doc fix `a95e711`), resolving the OQ-4 naming
-hazard. The give-away vs keep-and-lend *duality* of §2 is untouched — only the
+hazard; it was later renamed `Iterator.Span` → `Iterator.Chunk` (the final
+bulk-tier manner name; `cbc7636`), used below. The give-away vs keep-and-lend
+*duality* of §2 is untouched — only the
 v1.0.0/v1.1.0 claim that World B needs its own protocol hierarchy collapses.
 
 **Trigger**: [RES-001] architecture choice + [RES-016] rationale documentation
@@ -258,7 +262,7 @@ It is the iterator world.
 | Tier | Type | File:line | Notes |
 |------|------|-----------|-------|
 | Foundation protocol | `Iterator.`Protocol`` | `swift-iterator-primitives/Sources/Iterator Protocol/Iterator.Protocol.swift:31` | `~Copyable, ~Escapable`; `associatedtype Element: ~Copyable & ~Escapable`; `mutating func next() throws(Failure) -> Element?` annotated `@_lifetime(&self)` |
-| Bulk tier | `Iterator.Span.`Protocol`` | `swift-iterator-primitives/Sources/Iterator Span Primitives/Iterator.Span.Protocol.swift:20` | refines `Iterator.`Protocol``; **narrows `Element` to `Escapable`** (because `Span<Element>` has no `~Escapable` form); `nextSpan(maximumCount:) -> Span<Element>` annotated `@_lifetime(&self)`. *Renamed from `Iterator.Borrow.`Protocol`` in commit `3cb430a` (OQ-4 resolved; see hazard callout).* |
+| Bulk tier | `Iterator.Chunk.`Protocol`` | `swift-iterator-primitives/Sources/Iterator Chunk Primitives/Iterator.Chunk.Protocol.swift` | refines `Iterator.`Protocol``; **narrows `Element` to `Escapable`** (because `Span<Element>` has no `~Escapable` form); `next(maximumCount:) -> Span<Element>` annotated `@_lifetime(&self)`. *Renamed `Iterator.Borrow.`Protocol`` → `Iterator.Span.`Protocol`` (commit `3cb430a`, OQ-4 resolved) → `Iterator.Chunk.`Protocol`` (final bulk-tier manner name; `cbc7636`); see hazard callout.* |
 | Attachable | `Iterable` | `swift-iterator-primitives/Sources/Iterable/Iterable.swift:19` | a type that *has* an iterator; `associatedtype Iterator: …, ~Copyable, ~Escapable`; `makeIterator()` annotated `@_lifetime(borrow self)` |
 | Concrete: one owned element | `Once<Element>` | `swift-iterator-primitives/Sources/Once Primitives/Once.swift:24` | enum `.pending(Element)` / `.done`; `~Copyable, ~Escapable`; *moves* the element out on first `next()` |
 | Concrete: zero elements | `Empty<Element>` (+ iterator conformance) | bare type: `swift-empty-primitives/.../Empty.swift:20`; conformance: `swift-iterator-primitives/Sources/Empty Iterator Primitives/Empty+Iterator.Protocol.swift:16` | `next()` always `nil` |
@@ -273,7 +277,7 @@ cannot express partial reinitialization after consume; `swap` requires
 `Escapable`).
 
 > **Naming hazard — RESOLVED in v1.2.0 by renaming `Iterator.Borrow` →
-> `Iterator.Span`.** The bulk tier is still an **owned** (World-A) iterator: each
+> `Iterator.Span`, since renamed to `Iterator.Chunk`.** The bulk tier is still an **owned** (World-A) iterator: each
 > step gives away a `Span` that borrows the *iterator* (`@_lifetime(&self)`),
 > single-pass — *not* World-B keep-and-lend traversal. Under the old name
 > `Iterator.Borrow.`Protocol``, the "Borrow" stem read as the keep-and-lend

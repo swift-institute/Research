@@ -3,6 +3,11 @@
 **Companion to**: `agent-witness-attachable-pattern.md`
 **Date**: 2026-05-22
 **Total packages surveyed**: 175
+**Status**: SUPERSEDED
+**Version**: 1.1.0
+**Last Updated**: 2026-05-26
+
+> **SUPERSEDED 2026-05-26** by [`operation-domain-naming-and-organization.md`](operation-domain-naming-and-organization.md), the definitive operation-domain naming/organizing convention.
 
 ## Categories
 

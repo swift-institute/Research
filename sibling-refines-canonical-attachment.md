@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.2.0
-last_updated: 2026-05-22
-status: RECOMMENDATION
+version: 1.3.0
+last_updated: 2026-05-26
+status: SUPERSEDED
 tier: 2
 scope: ecosystem-wide
 ---
@@ -43,6 +43,8 @@ Changelog:
   [FAM-010] body unchanged; v1.2.0 carries forward [FAM-010] for
   axis A and resolves axis B via path (c).
 -->
+
+> **SUPERSEDED 2026-05-26** by [`operation-domain-naming-and-organization.md`](operation-domain-naming-and-organization.md), the definitive operation-domain naming/organizing convention.
 
 ## Context
 

@@ -2,12 +2,14 @@
 
 <!--
 ---
-version: 1.2.0
-last_updated: 2026-03-04
-status: DECISION
+version: 1.3.0
+last_updated: 2026-05-26
+status: SUPERSEDED
 tier: 2
 ---
 -->
+
+> **SUPERSEDED 2026-05-26** by [`operation-domain-naming-and-organization.md`](operation-domain-naming-and-organization.md), the definitive operation-domain naming/organizing convention.
 
 ## Context
 
