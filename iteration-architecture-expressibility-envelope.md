@@ -1,6 +1,6 @@
 # Iteration Architecture — Expressibility Envelope (current Swift)
 
-> **RECOMMENDATION (v1.1.0, 2026-05-28)** — Tier 2, cross-package.
+> **RECOMMENDATION (v1.2.0, 2026-05-28)** — Tier 2, cross-package.
 > Empirically maps what the three-route iteration architecture
 > (`Iterable` / `Sequenceable` / `Iterator.Borrow`) **+ the family-protocol-with-`Backing`
 > shape** can and cannot express in **Apple Swift 6.3.2** (`swiftlang-6.3.2.1.108`,
@@ -14,14 +14,23 @@
 > Companion to [memory-contiguous-iteration-bridge.md](memory-contiguous-iteration-bridge.md)
 > (the substrate bridges + OQ-1/OQ-2) and `HANDOFF-iteration-architecture-probe.md` (the arc).
 >
-> **v1.1.0 correction (do not skip):** v1.0.0 reported makeIterator delegation through `Backing`
+> **v1.2.0 addition (do not skip):** v1.1.0 proved D1 only for the **contiguous** (single-`Span`)
+> case and explicitly deferred cross-module. v1.2.0 closes three gating gaps for the
+> ~18-data-structure-package decision (§7): **(a) piecewise** (ring/deque, two segments, no single
+> span) — D1 **CONFIRMED**; **(b) non-contiguous** (tree/hash, no span at all) — D1 **REFUTED**, a
+> plain Escapable `makeIterator` and route-3 `forEach` survive instead; **(c) cross-module** — D1,
+> `forEach` (C), and route-2 **CONFIRMED** across a real library→executable module boundary in
+> debug **and** release. The §5 single-module caveat is lifted for D1/C/route-2.
+>
+> **v1.1.0 correction (retained):** v1.0.0 reported makeIterator delegation through `Backing`
 > as flatly REFUTED. That was wrong — it is refuted only for a **borrow-self** backing. With a
 > **`~Escapable` view backing whose makeIterator is `@_lifetime(copy self)`**, delegation
 > compiles checker-clean **and runs** (shape **D1**). The handoff's goal — "a `Backing` carries
 > makeIterator delegation once" — **is achievable.** Headline rewritten accordingly.
 >
 > **This is an empirical probe for principal architecture confirmation. It does NOT touch the
-> real packages.** §4 implications are recommendations, not landed work.
+> real packages.** §4 and §7 implications are recommendations, not landed work — the choice
+> between the D1-family lean and per-variant shape-b is the principal's/supervisor's to make.
 
 ## 1. The question
 
@@ -56,6 +65,9 @@ protocol that all conformers inherit.
 | **D2** | rescue B via `_overrideLifetime(view.makeIterator(), borrowing: self)` at the family-default level | **REFUTED** (compile) | Through a family default the backing is a **computed `view` getter** (a temporary). Inline → `lifetime-dependent value escapes its scope`; bound to a local → `'self.view' is borrowed and cannot be consumed`. `_overrideLifetime` works for a *stored* projection (the `span` getter uses it) but not a borrow-self makeIterator through a computed view. **D1 (copy-self) is the clean rescue.** |
 | **D3** | add `where Element: ~Copyable` / `~Escapable` to the extension (the literal suggestion to "narrow Element") | **REFUTED** (compile) | `error: cannot suppress '~Copyable' on generic parameter 'Self.Element' defined in outer scope`. You cannot re-suppress an inherited associated type in an extension where-clause — and it would not help: the escape is about the **iterator's** lifetime, not the element's. |
 | **boundary** | an **Escapable OWNED** container conforming the copy-self protocol *directly* (by constructing its own `~Escapable` iterator) | **REFUTED** (compile) | `error: lifetime-dependent value escapes its scope`. `@_lifetime(borrow self)` does not satisfy a `@_lifetime(copy self)` requirement (the `~Escapable` iterator escapes the copy-self "immortal" contract); `@_lifetime(copy self)` is invalid on an Escapable self. Owned containers **expose** a copy-self view; they don't conform copy-self. |
+| **a (v1.2.0)** | **Piecewise**: D1 over a **two-segment** ring/deque view holding two spans (no single span) | **CONFIRMED** (compiles + runs, debug+release) | The iterator and the view each hold two spans; declaring `@_lifetime(copy a, copy b)` flattens **both** borrow-self dependencies. Runs in logical order `[50, 60, 10, 20, 30]`. The only delta from contiguous D1: a single-arg `@_lifetime(copy a)` on a two-span init gives `error: lifetime-dependent variable 'self' escapes its scope … it depends on the lifetime of argument 'b'`; adding `copy b` clears it. **Piecewise stays inside the D1 envelope.** |
+| **b (v1.2.0)** | **Non-contiguous**: D1 over a tree (boxed nodes) / hash (array-of-buckets) view with **no span at all** | **REFUTED** (compile) | `error: invalid lifetime dependence on an Escapable result` on the view's `@_lifetime(copy self)` makeIterator. A node-/bucket-walking iterator holds ARC refs / value arrays — it borrows no memory region, so it is **Escapable**, and `@_lifetime` is invalid on it. **Surviving routes:** a **plain** (non-lifetime) `Sequence`-style `makeIterator` (a *different* protocol from D1) and route-3 `forEach` (C). Both run (tree in-order `[1..7]`; hash chains `[10,11,22,30,31,32]`; tree `forEach` sum=28). **Non-contiguous falls outside the D1 envelope.** |
+| **c (v1.2.0)** | **Cross-module**: D1, `forEach` (C), route-2 across a library→executable module boundary | **CONFIRMED** (compiles + runs, debug+release, cross-module) | Downstream conformers (executable target) inherit family-default bodies defined in the upstream library target. Runs `[14,25,36]` / sum=600 / total=10. Only cross-module deltas (routine import discipline, **not** mechanics): the consumer must `import` the library (`#MemberImportVisibility`: `instance method 'makeIteratorD1()' is not available due to missing import…`), and a leaf executable's conformers stay `internal` (a `public` conformance to an internally-imported protocol needs `public import`). **Lifts the §5 single-module caveat for D1/C/route-2.** |
 
 ### 2.1 Substrate-level envelope findings (Phase 1)
 
@@ -87,6 +99,20 @@ This single principle explains the whole table:
 
 Internal iteration (`forEach`/`withBacking`/witness, shapes **C/a/c**) sidesteps the issue
 entirely: returning `Void`, there is no lifetime-dependent value to compose.
+
+**Corollary (v1.2.0) — the two directions the principle generalises:**
+
+- **Out to N segments (piecewise, gap a):** the `copy`-flatten composes per *field*, not per *type*.
+  A view/iterator holding K lifetime-dependent spans declares `@_lifetime(copy a, copy b, …)` for
+  each; the merged dependency flattens into the result exactly as the single-span case does.
+  Ring/deque-shaped containers therefore ride the **same** D1 family default as contiguous ones.
+- **But only where there is a lifetime to copy (non-contiguous, gap b):** `@_lifetime(copy self)`
+  requires a **`~Escapable`** (lifetime-dependent) result. An iterator that walks boxed nodes or
+  hash buckets holds ARC references / value arrays — it borrows no memory region, so it is
+  **Escapable**, and the compiler rejects `@_lifetime` on it (`invalid lifetime dependence on an
+  Escapable result`). With no span to borrow, there is no dependency to copy, and **D1 is
+  structurally inapplicable.** Such structures use a plain (non-lifetime) `makeIterator` or
+  route-3 `forEach` instead — neither returns a lifetime-dependent value, so neither needs D1.
 
 ## 4. The positive architecture (compiles + runs end-to-end)
 
@@ -124,11 +150,17 @@ Mapping the handoff lean onto the verdicts:
 
 ### 4.1 Recommended fan-out template
 
-For each data-structure variant:
+> **v1.2.0 scope note:** this template applies to **span-projecting** variants (contiguous **and**
+> piecewise ring/deque — gap (a)). **Traversal-only** variants (tree/hash/graph — gap (b)) are
+> **outside the D1 family** and take a plain Escapable `makeIterator` and/or route-3 `forEach`
+> instead (see §6). Decide which family each of the ~18 packages belongs to before applying this.
+
+For each **span-projecting** data-structure variant:
 
 - Expose a **`~Escapable` `Backing` view** with a **`@_lifetime(copy self)` makeIterator** (route 1)
   and a borrowing **`forEach`** (route 3). Inherit BOTH from single family-protocol defaults
-  (D1 + C) — the bodies live once.
+  (D1 + C) — the bodies live once. For **piecewise** (ring/deque) backings the view holds K
+  segment spans and lists `@_lifetime(copy s1, copy s2, …)` per segment — same default, gap (a).
 - Declare `: Iterable` / `: Sequenceable` **per-variant** (one line each; `@_implements` split).
   Conformance is per-variant; bodies are inherited.
 - `~Copyable`-element variants use **route-3 `forEach`** (the memory→Iterable copy bridge needs
@@ -136,6 +168,12 @@ For each data-structure variant:
   copyability split for internal iteration**.
 - Alternative (no view indirection): conform the substrate (`Memory.Contiguous`) and take the
   borrow-self direct makeIterator (shape b) — the existing bridge. Choose per family.
+
+For each **traversal-only** variant (no span — tree/hash/graph, gap (b)):
+
+- D1 is inapplicable (`@_lifetime(copy self)` is invalid on the Escapable node/bucket iterator).
+- Take a **plain Escapable `makeIterator`** on an ordinary `Sequence`-style protocol (no lifetime
+  regime) and/or a route-3 **`forEach`** that walks nodes/buckets. Both can be family defaults.
 
 ### 4.2 Answers to the handoff's open questions
 
@@ -149,9 +187,13 @@ For each data-structure variant:
 
 ## 5. Caveats & scope
 
-- **Single-module** (`[EXP-017]`). Refutations (A, B, D2, D3, boundary) are module-independent
-  (compile errors). The positive D1/C delegations mirror the production bridge's already-cross-
-  module shape; **cross-module re-validation is deferred to the real-package fan-out.**
+- **Cross-module validated for D1/C/route-2 (v1.2.0, `[EXP-017]`).** Gap (c) exercises the D1
+  copy-self makeIterator, route-3 `forEach` (C), and route-2 consuming drain across a real
+  library→executable module boundary in debug **and** release — the single-module caveat is
+  **lifted** for those three. Refutations (A, B, D2, D3, boundary, non-contiguous-D1) are
+  module-independent (compile errors). Piecewise (a) and the non-contiguous surviving routes (b)
+  are validated single-module debug+release; their mechanics are the same plain/forEach shapes
+  proven cross-module in (c).
 - **Decision required from the principal:** adopting D1 means the institute's **backing-view**
   iteration protocol must use **`@_lifetime(copy self)`** makeIterator (distinct from the current
   borrow-self `Iterable`/`Sequence.Borrowing.Protocol`, which stays for substrate-direct). This is
@@ -162,9 +204,45 @@ For each data-structure variant:
 - The toy is faithful in **shape** and **build settings** (full ecosystem flags, warning-clean),
   but minimal. It is an **expressibility** probe, not a performance or ABI probe.
 
-## 6. Cross-references
+## 6. Gating verdicts for the ~18-package decision (v1.2.0)
 
-- Experiment: `swift-institute/Experiments/iteration-architecture-toy` (this note's evidence).
+The architecture choice this note feeds — adopt the **ambitious D1 family-protocol lean** across
+~18 data-structure packages, or fall back to **per-variant shape-b** (`@_lifetime(borrow self)`
+directly over `self.span`) — could not be made on v1.1.0 evidence, because D1 was proven only for
+the **contiguous** case and the ~18 packages are not all contiguous. v1.2.0 adds the three missing
+verdicts. **They are evidence for the decision, not the decision** (which is the principal's /
+supervisor's).
+
+| Gap | Structure class | D1 family default? | Surviving route(s) | Toolchain / mode |
+|-----|-----------------|--------------------|--------------------|------------------|
+| **(a) Piecewise** | ring / deque (two segments, no single span) | **CONFIRMED** — same D1 default, with `@_lifetime(copy a, copy b)` per segment | D1 (and forEach/route-2 as for contiguous) | Swift 6.3.2, debug + release |
+| **(b) Non-contiguous** | tree (boxed nodes), hash (array-of-buckets); no span | **REFUTED** — `invalid lifetime dependence on an Escapable result` | a **plain** Escapable `makeIterator` (different protocol) and/or route-3 `forEach` (C) | Swift 6.3.2, debug + release |
+| **(c) Cross-module** | contiguous D1 + C + route-2 across a module boundary | **CONFIRMED** — downstream conformers inherit upstream lib defaults | D1, forEach (C), route-2 — all survive | Swift 6.3.2, debug + release, lib→exe |
+
+### 6.1 What this means for the decision (not a decision)
+
+- **A single D1 family default does NOT cover all ~18 packages.** It covers **contiguous +
+  piecewise** (array/buffer/ring/deque-shaped) variants — those with a span (or a fixed set of
+  spans) to project. It does **not** cover **tree/hash/graph** variants, which have no span: those
+  need a structurally **different** iteration shape (a plain Escapable `makeIterator`, and/or
+  route-3 `forEach`). So the lean is not "one default everywhere"; it is "one D1 default for the
+  span-projecting family, a second plain/`forEach` shape for the traversal-only family."
+- **Piecewise is a free extension of D1**, not a new shape — the only delta is enumerating each
+  segment's lifetime in the `@_lifetime(copy …)` list. This *strengthens* the D1 lean for the
+  span-projecting family (it scales past simple contiguity at zero protocol cost).
+- **Cross-module + release hold** for D1/C/route-2 — the production fan-out shape is validated, so
+  the "deferred to real-package fan-out" risk in v1.1.0 §5 is discharged for these mechanics.
+- **The crux for the decision** is therefore *not* "does D1 work" (it does, including piecewise,
+  cross-module, release) but *how many of the ~18 packages are span-projecting vs traversal-only*.
+  The span-projecting subset can take the D1 family default (or shape-b, per-family choice); the
+  traversal-only subset is **outside D1 either way** and takes plain `makeIterator` / `forEach`.
+  Per Ground Rule 6, this "non-contiguous needs a second shape" finding is itself gating evidence.
+
+## 7. Cross-references
+
+- Experiment: `swift-institute/Experiments/iteration-architecture-toy` (this note's evidence;
+  v1.2.0 gaps in `Phase5Piecewise.swift`, `Phase6NonContiguous.swift`, `Phase7CrossModule.swift`
+  + the `iteration-architecture-toy-lib` second target).
 - [memory-contiguous-iteration-bridge.md](memory-contiguous-iteration-bridge.md) — the substrate
   bridges, OQ-1, OQ-2 (generic demangle). Shape b here = that doc's memory→Iterable bridge.
 - `HANDOFF-iteration-architecture-probe.md` — the arc; the three routes; the family-protocol lean.
