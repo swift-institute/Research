@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.2.0
+version: 1.3.0
 last_updated: 2026-05-28
 status: APPROVED
 tier: 2
@@ -14,6 +14,7 @@ builds_on:
   - "swift-iterator-borrow-primitives (the ~Copyable pull-style, since 2026-05-25; 5/5 green debug)"
   - "swift-set-ordered-primitives/Audits/mod-036-type-ops-boundary.md (the type/ops recipe + consume()/takeBuffer interim)"
 changelog:
+  - "1.3.0 (2026-05-28): Supervisor ~Copyable directive on GATE-2. Verified the ConsumeState wart: Sequence.Consume.View admits ~Copyable State but Sequence.Consume.`Protocol`.ConsumeState is Copyable-constrained, so the 7 conformers use heap-class ConsumeState gated `where Element: Copyable`. Determination (arc mandate): set-ordered's consume() needs ~Copyable coverage. Evergreen = widen Protocol.ConsumeState to ~Copyable (non-breaking, [IMPL-078]) + per-conformer struct migration — ESCALATED as a SEPARATE change (new §6.4), NOT folded into §5, NOT caved to Copyable-gated. §2.7 records the wart. GATE-2 delegation shape leans (b)."
   - "1.2.0 (2026-05-28): Supervisor APPROVED (v1.1.0 passed D1–D5); §5 rework AUTHORIZED. §2.7/§6.1 corrected per supervisor directive — Consumable witness role is ALREADY served by the EXISTING Sequence.Consume.`Protocol` (verified: `consuming func consume() -> View<Element, ConsumeState>`; set-ordered already conforms); NO new sibling (same check-existing-before-inventing lesson as Iterator.Borrow). takeBuffer elimination is a delegation-shape choice, settled-in-rework + sign-off. Added §5 stale-comment reconciliation row (set-primitives Set.Protocol.swift:22-39 pre-victory-pessimism comment + dead cite). Status → APPROVED."
   - "1.1.0 (2026-05-28): Supervisor review iteration #1. GATE-1 false-premise CORRECTED — Iterator.Borrow EXISTS (swift-iterator-borrow-primitives) and is proven (5 tests/5 suites green debug, verified); ~Copyable pull-style is solved by composition (Iterator.Protocol ∘ Ownership.Borrow), no B1/B2 invention, no validation spike, no forEach fallback. §1.2/§2.5/§3/§4/§5/§6/§7 rewritten: Iterator.Borrow is adopt+verify (integration step, not an architecture gate). GATE-2 reframed (sibling Consumable witness, not makeIterator overload; settled-from-semantics + brought back for sign-off). §2.9 committed to sentinel-empty as the sole correct shape (delete the take-and-put-back workaround; escalate-don't-retreat if walled). #3/#4/#5 confirmed by supervisor."
   - "1.0.0 (2026-05-28): Initial design note (the nine integrated elements + ×16 recipe + set-ordered rework delta)."
@@ -225,8 +226,22 @@ Each sub-section states **(decided)** the locked element, **(realize)** the conc
   base/Fixed/Static. **The fan-out MUST NOT replicate `takeBuffer`** (recipe note is explicit).
 - **(open — net-new *delegation default* = sign-off)** The settled delegation shape (a vs b), grounded in
   `Sequence.Consume.View`'s actual surface during the reference rework, is **brought back to the supervisor
-  for sign-off** before it templates. The witness *protocol* is existing; only the chosen delegation
-  default is net-new.
+  for sign-off** before it templates (lean **(b)** per supervisor). The witness *protocol* is existing;
+  only the chosen delegation default is net-new.
+- **(`~Copyable` wart — a SEPARATE escalated change, NOT folded into §5)** Verified asymmetry:
+  `Sequence.Consume.View<Element: ~Copyable, State: ~Copyable>` admits a `~Copyable` state, but
+  `Sequence.Consume.\`Protocol\`.ConsumeState` is **Copyable-constrained** (no suppression). The 7
+  conformers work around it with a heap **`final class ConsumeState`** + conformance gated `where Element:
+  Copyable` (verbatim comment: *"Class-based because ConsumeState must be Copyable"*). So `consume()` is
+  Copyable-gated **through the backing**. **Determination (arc mandate = maximum `~Copyable`):** set-ordered's
+  `consume()` **needs `~Copyable` coverage** — it is a distinct owning-composable-drain capability not
+  substitutable by `drain()`/`forEach`/`Iterator.Borrow`. **Evergreen:** suppress `~Copyable` on
+  `Protocol.ConsumeState` to match the `View` (`associatedtype ConsumeState: ~Copyable`) — a **widening**
+  ([IMPL-078]; existing Copyable class conformers still satisfy it → **non-breaking** protocol change),
+  then per-conformer migrate the heap-class `ConsumeState` → `~Copyable` struct + drop the `where Element:
+  Copyable` gating. This is a **sequence-primitives protocol reshape cascading to the 7 conformers** —
+  **ESCALATED to the supervisor**, scoped as a **separate change from the §5 rework** (do NOT fold; do NOT
+  leave `consume()` Copyable-gated as a silent cave). Tracked in §6.4.
 
 ### 2.8 `Swift.Sequence`-where-Copyable bridge (re-add)
 
@@ -381,6 +396,18 @@ not regress.
   fan-out option, not in production, name pending [API-NAME-001].
 - **(#5) A2 release bug / Small SIL crash / `#86652`** are `/issue-investigation` + release-readiness
   items, **not design gates** (flat-pool + sentinel-empty mitigate the first two; `#86652` is ambient).
+
+### 6.4 ESCALATED — `ConsumeState` `~Copyable`-suppression reshape (SEPARATE change, supervisor decision)
+
+- **What:** widen `Sequence.Consume.\`Protocol\`.ConsumeState` from Copyable-constrained to
+  `: ~Copyable` (matching `Sequence.Consume.View<…, State: ~Copyable>`), then per-conformer migrate the 7
+  buffers' heap-`class ConsumeState` → `~Copyable` struct + drop the `where Element: Copyable` gating.
+- **Why:** the arc mandate (maximum `~Copyable`) + `consume()`'s distinct owning-composable-drain
+  capability ⇒ set-ordered's `consume()` needs `~Copyable` coverage (§2.7 determination). The protocol
+  widening is **non-breaking** ([IMPL-078]); the per-conformer struct migration is what unlocks `~Copyable`.
+- **Scope:** sequence-primitives protocol reshape cascading to 7 conformers — **separate from the §5
+  set-ordered rework** (do NOT fold; do NOT leave `consume()` Copyable-gated as a cave). **Awaiting
+  supervisor decision** before any sequence-primitives change.
 
 ---
 
