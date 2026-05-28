@@ -580,6 +580,24 @@ The toolchain tables in §A9 Update (Arc 4) and §v1 retry update label three sn
 
 The bug-status conclusion is unchanged — all three nightlies PASS; the fix landed in main on or before `2026-03-16-a` (commit `d13cbbfd336f246` cut). The version-label discrepancy is naming only.
 
+#### §A9 Correction (2026-05-28) — Root cause is codegen, NOT the demangler; bc44d42f11 is not the fix
+
+The Arc 5 conclusion (and the resulting filings) attributed this defect to a missing demangler case — PR #87066 / `bc44d42f11`, the `'j'`/`'J'` inverse-assoc additions to `Demangler::demangleGenericRequirement()` — and asked release-management to cherry-pick it to `release/6.3`. **That diagnosis was wrong.** It was a code-search heuristic (commit in the right branch window + touches the demangler + PR acknowledges runtime breakage), never an empirical test.
+
+A controlled compiler/runtime swap of the same reproducer (2026-05-28) refutes it:
+
+| Binary built by | Runtime (`libswiftCore`) | Result |
+|-----------------|--------------------------|--------|
+| 6.3.2 | 6.3.2 (OS) | CRASH (139) |
+| 6.3.2 | 6.4-dev nightly `2026-03-16-a` (fixed demangler present, confirmed via `DYLD_PRINT_LIBRARIES`) | **CRASH (139)** — same null-metadata deref at `advance` |
+| 6.4-dev nightly `2026-03-16-a` | 6.3.2 (OS) | **PASS (`result = 0`)** |
+
+The fix travels with the **binary**, not the runtime: the shipping 6.3.2 runtime resolves the type fine once a 6.4-dev compiler emitted it, and the newer demangler cannot rescue a 6.3.2-emitted binary. The symbolic mangled name emitted for `Atomic<Tagged<…>>` differs structurally between the two compilers (6.3.2 emits a spurious `_` after the 46-char SLI identifier and collapses `HC_HCg` → `HCHCg`) — a malformed name no demangler version can resolve. So the locus is **compiler emission**, not the runtime demangler.
+
+This is the incomplete-on-6.3 `SuppressedAssociatedTypes` feature, exactly as @kavon stated on #89389: the production path enables `-enable-experimental-feature SuppressedAssociatedTypes` (swift-tagged-primitives + swift-ordinal-primitives), and the crashing `Atomic<Tagged<…>>.advance(within:)` is constrained on a suppressed associated type (`Ordinal.Domain: ~Copyable`, Ordinal.Protocol.swift:65). The feature's codegen is incomplete on 6.3 and complete by 6.4-dev — the same statement as "fixed by 6.4-dev." Exact fixing commit not bisected (would require a from-source compiler build).
+
+**Disposition**: backport-request #89389 withdrawn; #74303 sibling note corrected (both 2026-05-28). Resolution for consumers is to require Swift 6.4+ for these paths.
+
 ---
 
 ### A10. Unconditional protocol-conformance extension leaks `Copyable` to primary declaration of `~Copyable`-generic nested type
