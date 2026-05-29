@@ -2,14 +2,15 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-05-28
+version: 1.2.0
+last_updated: 2026-05-29
 status: RECOMMENDATION
 approved: 2026-05-28 (supervisor)
 tier: 3
 scope: ecosystem-wide
 type: investigation/architecture
 changelog:
+  - "1.2.0 (2026-05-29): EXECUTION LANDED (held for push) + §8 Decision #3 REFINED. The §4 reduction + in-place algebra rehome landed on the real types — set-primitives 0fa1334 (core = {contains,count} + isEmpty; predicates `where Self: Iterable`; constructive `where Self: Set.Buildable.Protocol & Iterable` returning Self; subtract→subtracting; the three-location `.algebra` fragmentation deleted), set-ordered c10e05e (Set.Ordered + .Small adopt Set.Buildable.Protocol; bounded Fixed/Static predicates-only). Builder-for-free follow-on: family `Set.Builder` @resultBuilder hoisted + free `init(@Set.Builder)` default for growable; bounded keep one-line per-variant THROWING inits and remain NOT Set.Buildable.Protocol (§4.2 preserved) — set-primitives f40f5d3, set-ordered 01de92c. In-package SIL on the REAL Set.Ordered: 0 witness_method on the algebra + DSL hot path (release, cross-module; 2 residuals = off-path stdlib Comparable.>= generic). Still deferred: ~Copyable-predicate slice, lattice/Boolean substrate, swift-set-algebra-primitives extraction, ×16 fan-out."
   - "1.1.0 (2026-05-28): Supervisor APPROVED (SIL receipt verified against the real file — hot-path 0-witness confirmed; sequencer-refactor landing + Buffer.Protocol-extended-not-superseded confirmed). §3 normal form + Set.Protocol elevation approved as the ×16 fan-out template foundation. Decisions #1/#3/#4 approved as recommended. Decision #2's substrate condition RESOLVED: the principal authorizes a bounded-lattice package (swift-algebra-lattice = existing semilattice + absorption) + a Boolean-algebra package (on Swift.Bool + the algebra family; name per [PKG-NAME-*]), so the swift-set-algebra-primitives bridge witnesses ∪=join/∩=meet/∁=complement over REAL packaged structures, not prose (§4.2/§8). Research phase concluded. Execution sequenced by the principal — NOT begun."
   - "1.0.0 (2026-05-28): Initial RECOMMENDATION + Set.Ordered pilot + SIL receipt; corrected mid-investigation per the principal (algebra is a THIRD orthogonal concern, decomposed into the set-algebra-primitives bridge)."
 ---
@@ -442,9 +443,28 @@ principal and has not begun.**
      `swift-set-algebra-primitives` bridge witnesses `∪`=join / `∩`=meet / `∁`=complement over these real
      structures (§4.2). These packages do not yet exist; **creating them is execution, sequenced by the
      principal — not begun here.**
-3. **`BuildableSet` naming/placement — APPROVED as recommended.** Hoisted `__SetBuildableProtocol` +
-   `Set.Buildable.\`Protocol\`` alias in a `Set Buildable Protocol Primitives` target, mirroring
-   `Buffer Protocol Primitives` ([API-NAME-001]/[MOD-031]).
+3. **`BuildableSet` naming/placement — APPROVED as recommended; REFINED 2026-05-29 (builder-for-free).**
+   Hoisted `__SetBuildableProtocol` + `Set.Buildable.\`Protocol\`` alias in a `Set Buildable Protocol
+   Primitives` target, mirroring `Buffer Protocol Primitives` ([API-NAME-001]/[MOD-031]).
+   **Builder-for-free refinement (landed: set-primitives `f40f5d3`, set-ordered `01de92c`).** The declarative
+   DSL is a two-layer, free shape:
+   - **`Set.Builder`** — ONE family-level `@resultBuilder` on `Set<Element>` (`where Element: Copyable`),
+     hoisted from the former per-variant `Set.Ordered.Builder` so `@Set.Builder` reads right for every variant;
+     pure syntax, accumulates into `[Element]`.
+   - **Free DSL init** — `init(@Set.Builder _ content:)`, a NON-throwing protocol-extension default on
+     `Set.Buildable.\`Protocol\`` (`self.init(); for e in content() { insert(e) }`). Every **growable**
+     conformer (`Set.Ordered`, `Set.Ordered.Small`) inherits the `X { 1; 2; if … }` DSL for free.
+   - **Bounded variants stay NOT `Set.Buildable.\`Protocol\`` conformers** (preserves §4.2 — a bounded
+     `Self`-returning finalize can overflow). `Set.Ordered.Static`/`.Fixed` instead carry a one-line per-variant
+     **throwing** `init(@Set.Builder …)`, so overflow is explicit at the `try Set.Static { … }` call site;
+     `Fixed` keeps its runtime `capacity:` param (the one non-free case). This is the validated fallback
+     (the single all-variants default does not lift on the real types: bounded `insert` throws AND returns a
+     distinct `Index<Element>.Bounded<capacity>`, so it cannot witness the growable `insert` without a
+     non-additive associated-type reshape that would reverse §4.2).
+   - `Set.Buildable.\`Protocol\``'s `{init, insert}` requirements, the reduced `{contains,count}` core, and the
+     rehomed algebra are UNCHANGED by this refinement. In-package SIL on the real `Set.Ordered`: the DSL +
+     algebra hot path is **0 `witness_method`** (release, cross-module; the 2 residuals are the off-path stdlib
+     `Comparable.>=` generic default).
 4. **`.algebra` accessor fate — APPROVED as recommended.** Delete; the inherited ops are the surface.
 
 **Rejected alternative — `Set.Protocol: Iterable` (refinement).** Viable for `~Copyable` (`Iterable` is
