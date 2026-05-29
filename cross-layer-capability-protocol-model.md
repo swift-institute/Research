@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.2.0
+version: 1.3.0
 last_updated: 2026-05-29
 status: RECOMMENDATION
 approved: 2026-05-28 (supervisor)
@@ -10,6 +10,7 @@ tier: 3
 scope: ecosystem-wide
 type: investigation/architecture
 changelog:
+  - "1.3.0 (2026-05-29): SUBSTRATE LANDED (local/unpushed) — with a design PIVOT from the §4.2/§8 approved plan. (a) `Algebra.Lattice` landed IN swift-algebra-primitives (the consolidated tower's `Algebra Lattice Primitives` target: join+meet semilattices + absorption + bounds; `.minMax` for Comparable), NOT a standalone `swift-algebra-lattice` package — a lattice is not a Boolean/Bool type. (b) NO `Algebra.Boolean` type and NO Boolean-algebra package: `Swift.Bool` IS the Boolean algebra, extended directly in `swift-bool-algebra-primitives` (`Algebra.Lattice<Bool>()` + `Algebra.Semiring<Bool>.Commutative()` as plain init()s; native `!` is the complement). (c) `swift-set-algebra-primitives`: `someUniverse.powerset() -> Algebra.Lattice<Self>` (join=union, meet=intersection, ⊥=∅, ⊤=self); relative complement = the package's own native `subtracting` (U∖A), no Boolean witness. Also landed: a tower-wide Sendable-requirement sweep across swift-algebra-primitives (region-based isolation over Sendable per [MEM-SEND-012]/[MEM-SEND-013] — witnesses CONFORM but no longer REQUIRE Sendable); set-algebra `powerset()` dropped its `where Self: Sendable` workaround. Ecosystem build-check clean — no consumer breaks from de-Sendable-requiring (4 unrelated pre-existing failures: field/group incomplete-consolidation target collisions, pool missing array product, tensor vector-primitives typed-throws). Still deferred: ~Copyable-predicate slice, ×16 fan-out, set-ordered SIL re-proof."
   - "1.2.0 (2026-05-29): EXECUTION LANDED (held for push) + §8 Decision #3 REFINED. The §4 reduction + in-place algebra rehome landed on the real types — set-primitives 0fa1334 (core = {contains,count} + isEmpty; predicates `where Self: Iterable`; constructive `where Self: Set.Buildable.Protocol & Iterable` returning Self; subtract→subtracting; the three-location `.algebra` fragmentation deleted), set-ordered c10e05e (Set.Ordered + .Small adopt Set.Buildable.Protocol; bounded Fixed/Static predicates-only). Builder-for-free follow-on: family `Set.Builder` @resultBuilder hoisted + free `init(@Set.Builder)` default for growable; bounded keep one-line per-variant THROWING inits and remain NOT Set.Buildable.Protocol (§4.2 preserved) — set-primitives f40f5d3, set-ordered 01de92c. In-package SIL on the REAL Set.Ordered: 0 witness_method on the algebra + DSL hot path (release, cross-module; 2 residuals = off-path stdlib Comparable.>= generic). Still deferred: ~Copyable-predicate slice, lattice/Boolean substrate, swift-set-algebra-primitives extraction, ×16 fan-out."
   - "1.1.0 (2026-05-28): Supervisor APPROVED (SIL receipt verified against the real file — hot-path 0-witness confirmed; sequencer-refactor landing + Buffer.Protocol-extended-not-superseded confirmed). §3 normal form + Set.Protocol elevation approved as the ×16 fan-out template foundation. Decisions #1/#3/#4 approved as recommended. Decision #2's substrate condition RESOLVED: the principal authorizes a bounded-lattice package (swift-algebra-lattice = existing semilattice + absorption) + a Boolean-algebra package (on Swift.Bool + the algebra family; name per [PKG-NAME-*]), so the swift-set-algebra-primitives bridge witnesses ∪=join/∩=meet/∁=complement over REAL packaged structures, not prose (§4.2/§8). Research phase concluded. Execution sequenced by the principal — NOT begun."
   - "1.0.0 (2026-05-28): Initial RECOMMENDATION + Set.Ordered pilot + SIL receipt; corrected mid-investigation per the principal (algebra is a THIRD orthogonal concern, decomposed into the set-algebra-primitives bridge)."
@@ -261,6 +262,11 @@ out as a third orthogonal concern:
   family-consistent form being `swift-algebra-boolean-primitives`) supplies `complement` (and `⊆` as the
   lattice partial order). `swift-set-algebra-primitives` then *witnesses* the powerset Boolean algebra over
   the `Set.Protocol` core. (Exact package names finalized by the principal per [PKG-NAME-*] at execution.)
+  **[LANDED 2026-05-29 — design PIVOTED; see changelog 1.3.0 + §8 #2.]** Not separate `swift-algebra-lattice`
+  / Boolean-algebra packages: `Algebra.Lattice` landed IN swift-algebra-primitives; `Swift.Bool` is the
+  Boolean algebra (`swift-bool-algebra-primitives`, NO `Algebra.Boolean` type); the bridge's
+  `powerset() -> Algebra.Lattice<Self>` uses ∪=join / ∩=meet / ⊥=∅ / ⊤=self with native `subtracting` as the
+  relative complement.
 - **Result-type fix.** Constructive ops return **`Self`** (on the `BuildableSet` refinement: `init` +
   `insert`), not the hard-coded `Set<Element>.Ordered` — so they are general, total only on growable sets
   (why they live on `BuildableSet`), and need no downstream home. Bounded variants (`Fixed`/`Static`)
@@ -441,8 +447,12 @@ principal and has not begun.**
      `swift-algebra-lattice` (existing `swift-algebra-semilattice-primitives` + the **absorption** law) and
      a **Boolean-algebra package** (on `Swift.Bool` + the algebra family; name per [PKG-NAME-*]). The
      `swift-set-algebra-primitives` bridge witnesses `∪`=join / `∩`=meet / `∁`=complement over these real
-     structures (§4.2). These packages do not yet exist; **creating them is execution, sequenced by the
-     principal — not begun here.**
+     structures (§4.2). **LANDED 2026-05-29 (local/unpushed) — design PIVOTED from this approved plan (see
+     changelog 1.3.0):** `Algebra.Lattice` landed IN swift-algebra-primitives (not a standalone
+     `swift-algebra-lattice` package); there is NO `Algebra.Boolean` type and no Boolean-algebra package —
+     `Swift.Bool` IS the Boolean algebra (`swift-bool-algebra-primitives`, native `!` = complement);
+     `swift-set-algebra-primitives` `powerset() -> Algebra.Lattice<Self>` with native `subtracting` as the
+     relative complement.
 3. **`BuildableSet` naming/placement — APPROVED as recommended; REFINED 2026-05-29 (builder-for-free).**
    Hoisted `__SetBuildableProtocol` + `Set.Buildable.\`Protocol\`` alias in a `Set Buildable Protocol
    Primitives` target, mirroring `Buffer Protocol Primitives` ([API-NAME-001]/[MOD-031]).
