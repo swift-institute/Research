@@ -2,18 +2,19 @@
 
 <!--
 ---
-version: 2.1.0
+version: 2.1.1
 last_updated: 2026-05-30
 status: APPROVED
 tier: 2
 scope: cross-package
-supervises_gate: "Re-scoped 2026-05-30 (user-authorized) to OPTION C — land ~Copyable borrow-iteration at the Storage/Buffer cores (Buffer.Linear: Storage.Protocol public + a Storage&Buffer→Iterable-borrow bridge; Set.Ordered the validating consumer). Other buffer-backed containers INHERIT the capability; their active migration is the gated ×16 fan-out (§4), NOT authorized. Per-action YES still required for: publish · visibility flip · tag · starting the fan-out. Execution coordination: HANDOFF-data-structure-iteration-arc.md."
+supervises_gate: "Re-scoped 2026-05-30 (user-authorized) to OPTION C (composition) — each Buffer.Linear variant vends Iterator.Borrow.Scalar via a thin per-variant makeIterator (the buffer composes its storage and vends the iterator; NO Buffer.Linear:Storage.Protocol conformance [category error], NO public base, NO separate bridge); Set.Ordered the validating consumer delegating to its buffer. Other buffer-backed containers INHERIT the capability; their active migration is the gated ×16 fan-out (§4), NOT authorized. Per-action YES still required for: publish · visibility flip · tag · starting the fan-out. Execution coordination: HANDOFF-data-structure-iteration-arc.md."
 consolidates: "This doc is the SINGLE design authority for the iteration arc (2026-05-30). It folds in and REPLACES (the originals removed to stop drift): iteration-architecture-expressibility-envelope.md (Angles A/B/C), two-world-traversal-decomposition.md (World A/B), world-b-span-decomposition.md (World-B decomposition), memory-contiguous-iteration-bridge.md (the bridge + Memory.Cursor + withdrawn Iterator.Walk), sequencer-primitives-reconciliation-refactor.md (terminal relocation + Sequencer naming), swift-iterator-primitives/Research/iterable-iteration-terminal-surface.md (the borrowing-func surface decision). Empirical evidence is retained in Experiments/iteration-architecture-toy + Experiments/memory-cursor-generic-witness-demangle (NOT removed)."
 builds_on:
   - "Experiments/iteration-architecture-toy 8ae35fb (the Angle A/B/C empirical proof, debug+release, full ecosystem flags)"
   - "memory-cursor-generic-witness-demangle-reshape.md v1.0.0 (the consuming-iterator reshape — KEPT)"
   - "swift-iterator-borrow-primitives (the ~Copyable pull-style; concrete Iterator.Borrow.Scalar shipped f31ce11; composes over Storage+Buffer cores per §2.5)"
 changelog:
+  - "2.1.1 (2026-05-30): CORRECTED the v2.1.0 mechanism — `Buffer.Linear: Storage.Protocol` is a CATEGORY ERROR (subordinate + user caught it; supervisor accepted). Buffer is the logical capability (count/isEmpty), storage the physical (pointer(at:)/capacity); the chain is storage→buffer, so conforming buffer→storage inverts the layer and is the refinement-stacking §1 forbids — and the codebase already composes (linear ops are Storage.Protocol statics taking storage:+count:; Small's two-armed _Representation has no single Storage to surface). REVISED to OPTION C (composition): each Buffer.Linear variant conforms Iterable (~Copyable) with a thin per-variant makeIterator constructing Iterator.Borrow.Scalar(base: storage.pointer(at:.zero), count:, borrowing: self) (Small switches); storage stays @usableFromInline internal — NO public base, NO Buffer.Linear:Storage.Protocol, NO separate bridge (better encapsulation than v2.1.0, [MOD-031] preserved; gate-de-risked via the InlineBag shape). Set.Ordered delegates. §2.5/§1.2/§3/§4/§5/§6.3/§7 corrected."
   - "2.1.0 (2026-05-30): LOCKED Option C (user-authorized) for the ~Copyable borrow-iteration home. Iterator.Borrow.Scalar shipped (iterator-borrow f31ce11). DECISION: borrow-iteration composes over the Storage.Protocol (pointer(at:)→escaping base) + Buffer.Protocol (count) cores — NOT Swift.Span (verified wall: Span<~Copyable> has no escaping element address) and NOT the Memory.Contiguous bridge. Buffer.Linear conforms Storage.Protocol publicly, dissolving the per-type _iteratorBase() window ([ARCH-LAYER-011] hand-rolled duplicate); an `extension Iterable where Self: Storage.Protocol & Buffer.Protocol` bridge vends it; buffer-backed containers delegate. REJECTED Option A (escaping base on Memory.Contiguous — pollutes the safe-view core) + Option B′ (widen _iteratorBase() — perpetuates the duplicate). §2.5 + §1.2 rewritten. Open: the @_rawLayout inline variants' Storage.Protocol escaping-pointer(at:) soundness (build-verify gate)."
   - "2.0.0 (2026-05-30): CONSOLIDATION. Promoted to the single design authority; folded in the six iteration Research docs (Angles/World/bridge/terminal-relocation/terminal-surface) + their Dead-Ends + the D1–D5 rubric (§6). RECONCILED TO DISK on two axes the prior version got wrong: (1) CONSUME — Sequence.Consume.Protocol/View/ConsumeState was DELETED (sequence-primitives 309c1b9), NOT kept-and-widened; the consuming drain is now the closure terminal Sequenceable.consume(_:) (Sequenceable+Consume.swift:35/:59); §2.7 rewritten, §6.4 ConsumeState-widening escalation REMOVED (dead — the type was deleted), takeBuffer deleted (set-ordered 13ab89f). (2) RELEASE — set-ordered now builds RELEASE-clean via field-reorder (buffer-linear 2b82466, buffer-ring e103122); the #86652/debug-green caveats are removed. The A2 boxed-tree release SIL crash is separate and still stands."
   - "1.3.0–1.0.0 (2026-05-28): prior versions (recoverable via git). 1.3.0 escalated a ConsumeState ~Copyable widening that reality overtook by deleting the type."
@@ -173,19 +174,22 @@ Each sub-section states **(decided)** the locked element, **(realize)** the conc
   Its `base + count` are **NOT** derivable from `Swift.Span` (verified wall: `Span<~Copyable>` exposes no
   escaping element address — `_unsafeAddressOfElement` is `internal`). They **are the existing minimal cores**:
   `base = Storage.Protocol.pointer(at: .zero)` (escaping `UnsafeMutablePointer`, ~Copyable-capable, public) +
-  `count = Buffer.Protocol.count`. So **borrow-iteration composes over the Storage + Buffer cores**, not the
-  `Memory.Contiguous` span: `Buffer.Linear` conforms **`Storage.Protocol` publicly** (forwarding `pointer(at:)`
-  / `capacity` to its internal storage — the SBO enum-switch the inline variants need is exactly what the
-  per-type `_iteratorBase()` window already does, so `_iteratorBase()` **dissolves** into the canonical
-  conformance — it was a hand-rolled per-type duplicate of `pointer(at:)+count`, [ARCH-LAYER-011]); a single
-  **`extension Iterable where Self: Storage.Protocol & Buffer.Protocol`** bridge vends
-  `makeIterator() -> Iterator.Borrow.Scalar`; `Set.Ordered` and the whole buffer-backed family **delegate**
-  `makeIterator { buffer.makeIterator() }`. **`Memory.Contiguous`'s safe `span` surface is untouched** — the
-  escaping base belongs on the *addressable* `Storage` core, never the *safe-view* `Memory.Contiguous` core.
-  - **Rejected:** **Option A** (a base accessor on `Memory.Contiguous.Protocol`) — pollutes the safe core with
-    an unsafe escaping capability + forces every L1 conformer to witness it ([MOD-031]'s "NOT Option A" was the
-    right instinct). **Option B′** (widen the per-type `_iteratorBase()` window to `@_spi public`) — perpetuates
-    the hand-rolled duplicate instead of dissolving it into the `Storage.Protocol` core.
+  `count = Buffer.Protocol.count` — but **the buffer COMPOSES (has-a) its storage and VENDS the iterator; it
+  does NOT conform `Storage.Protocol`.** Each `Buffer.Linear` variant conforms `Iterable` (~Copyable) with a
+  thin per-variant `makeIterator` in its type module:
+  `Iterator.Borrow.Scalar(base: storage.pointer(at: .zero), count: count, borrowing: self)` (`Small` switches
+  its `_Representation` enum) — **storage stays `@usableFromInline internal`; no public base.** `Set.Ordered`
+  and the buffer-backed family **delegate** `makeIterator { buffer.makeIterator() }`. The iteration body is
+  unified in `Iterator.Borrow.Scalar`; the per-variant `makeIterator`s are thin composition glue (the existing
+  internal `_iteratorBase()` window can back them — it stays internal, NOT promoted to public).
+  - **Rejected (category errors / leaks), corrected 2026-05-30:** **`Buffer.Linear: Storage.Protocol`** — the
+    buffer is the *logical* capability (`count`/`isEmpty`), storage the *physical* (`pointer(at:)`/`capacity`);
+    the chain is **storage→buffer**, so conforming buffer→storage **inverts the layer** and is the
+    refinement-stacking §1 forbids (the codebase already composes — linear ops are `Storage.Protocol` statics
+    taking `storage:`+`count:`; `Small`'s two-armed `_Representation` has no single `Storage` to surface).
+    **Option A** (escaping base on `Memory.Contiguous.Protocol`) — pollutes the safe-view core ([MOD-031]'s
+    "NOT Option A"). **Option B′** (`_iteratorBase()` → `@_spi public`) — leaks the base + perpetuates the
+    per-type duplicate. The composition shape avoids all three: no inversion, no public base, body unified in Scalar.
 - **(soundness gate — PASSED 2026-05-30, debug+release)** Driving a borrow iterator over the **real
   `@_rawLayout` `Storage.Inline`** (escaping base via `withUnsafePointer(to: _storage)` / `pointer(at:)`,
   computed on-demand) compiles, reads correctly, and is multipass-sound in **debug AND release** with no
@@ -280,8 +284,8 @@ Sequenceable (sequence-primitives)  : ~Copyable, ~Escapable   [orthogonal siblin
 
 Iterator.Borrow.`Protocol` + Iterator.Borrow.Scalar (iterator-borrow-primitives)   ◄ §2.5  ~Copyable PULL-style;
   Scalar(base,count) SHIPPED. base = Storage.pointer(at:.zero) + count = Buffer.count → composes over the
-  Storage + Buffer cores (Buffer.Linear: Storage.Protocol public; _iteratorBase() dissolved). NOT Swift.Span,
-  NOT Memory.Contiguous. A `Iterable where Self: Storage.Protocol & Buffer.Protocol` bridge vends it; containers DELEGATE.
+  Storage + Buffer cores. The buffer COMPOSES storage (has-a) + vends it via a per-variant makeIterator
+  (NO Buffer.Linear:Storage.Protocol — category error; NO public base; NO bridge); containers DELEGATE.
 
 Swift.Sequence  (stdlib)  where Element: Copyable     ◄ §2.8  re-add; stdlib bridge, institute primary
 ```
@@ -315,10 +319,10 @@ re-verifies it (the fan-out is NOT pre-authorized; the per-action YES gate stand
    hand-written `.Scalar`; the consuming drain is the inherited `Sequenceable.consume(_:)` closure terminal —
    **no `takeBuffer`, no `Sequence.Consume.Protocol`**. Use `Memory.Snapshot.Cursor` only if a package needs
    a generic contiguous bridge, its backing trips the demangle, and it has no hand-written scalar.
-5. **`~Copyable` pull-style** (§2.5, Option C): the backing conforms `Storage.Protocol` (public) + `Buffer.Protocol`;
-   the `Iterable where Self: Storage.Protocol & Buffer.Protocol` bridge vends `Iterator.Borrow.Scalar`; the
-   container **delegates** `makeIterator { backing.makeIterator() }`. `~Copyable` variants get **both** `forEach`
-   (push) and the delegated `Iterator.Borrow.Scalar` (pull) — no per-type `_iteratorBase()`, no fallback.
+5. **`~Copyable` pull-style** (§2.5, Option C composition): the backing **vends** `Iterator.Borrow.Scalar` via a
+   thin per-variant `makeIterator` (the buffer composes its internal storage; **no `Buffer.Linear:Storage.Protocol`,
+   no public base, no bridge**); the container **delegates** `makeIterator { backing.makeIterator() }`. `~Copyable`
+   variants get **both** `forEach` (push) and the delegated `Iterator.Borrow.Scalar` (pull) — no fallback.
 6. **`Swift.Sequence` bridge** (§2.8): re-add `where Element: Copyable` once the iterator shape is settled.
 7. **`Collection` refinement cascade** (§2.2): for `Collection.\`Protocol\`` conformers, drop
    `Collection.ForEach` for the inherited floor — workspace-enumerate first ([HANDOFF-050]).
@@ -348,7 +352,7 @@ re-verified.
 | 2 | borrowing `makeIterator` | only consuming exists | add gated borrowing `Iterable.makeIterator` via copy-self view; `@_implements` split | §2.3 |
 | 3 | consuming drain | `Sequenceable.consume(_:)` closure terminal — **DONE** (`13ab89f`; Sequence.Consume + takeBuffer deleted) | no change needed | §2.7 |
 | 4 | consuming iterator | backing `.Scalar` (hand-written) | **keep** | §2.6 |
-| 5 | `~Copyable` pull-style + `Iterable`(~Copyable) | not vended; `Iterable` is `where Element: Copyable` | **Option C**: `Iterator.Borrow.Scalar` SHIPPED (`f31ce11`) · `Buffer.Linear: Storage.Protocol` public (dissolve `_iteratorBase()`) · `Storage&Buffer→Iterable-borrow` bridge vends it · `Set.Ordered: Iterable` ~Copyable **delegates** `makeIterator { buffer.makeIterator() }`. Open: inline-variant `pointer(at:)` soundness (build-verify gate) | §2.5 |
+| 5 | `~Copyable` pull-style + `Iterable`(~Copyable) | not vended; `Iterable` is `where Element: Copyable` | **Option C (composition)**: `Iterator.Borrow.Scalar` SHIPPED (`f31ce11`) · each `Buffer.Linear` variant **vends** it via a thin per-variant `makeIterator` (storage internal; **NO `Buffer.Linear:Storage.Protocol`, NO public base, NO bridge**) · `Set.Ordered: Iterable` ~Copyable **delegates** `makeIterator { buffer.makeIterator() }`. Open: literal inline-variant build-verify | §2.5 |
 | 6 | `Swift.Sequence` | not conformed (input-only) | **re-add** `where Element: Copyable` | §2.8 |
 | 7 | Small `drain()` evergreen | take-and-put-back workaround (~ll.139–141) | non-optional + sentinel-empty; **delete the workaround**; escalate-don't-retreat if walled | §2.9 |
 | 8 | promote recipe note | gitignored at `swift-set-ordered-primitives/Audits/mod-036-type-ops-boundary.md` | promote to tracked `swift-institute/Research/` | recipe note |
@@ -402,8 +406,11 @@ its own) + the span-lending `forEach` floor. The bridge's `makeIterator`/`Iterat
 **Decomposition principle (Option C, the truly-correct home):** the escaping base address belongs to the
 *addressable* `Storage.Protocol` core (`pointer(at:)`), **never** the *safe-view* `Memory.Contiguous` core
 (`span`) — so an escaping-base accessor on `Memory.Contiguous.Protocol` (Option A) pollutes the safe core, and
-a per-type `_iteratorBase()` window (Option B′) is a hand-rolled duplicate of `Storage.pointer(at:) +
-Buffer.count` ([ARCH-LAYER-011]) that dissolves into `Buffer.Linear`'s public `Storage.Protocol` conformance.
+a per-type `_iteratorBase()` window promoted to public (Option B′) leaks the base. The **buffer is NOT a
+storage** (Buffer.Protocol = logical `count`; Storage.Protocol = physical `pointer(at:)`; the chain is
+storage→buffer) — so `Buffer.Linear: Storage.Protocol` is a **category error**. The buffer instead **composes**
+its (internal) storage and **vends** `Iterator.Borrow.Scalar` via a per-variant `makeIterator` — the base
+stays internal (`_iteratorBase()` may back it, un-promoted), no conformance inversion, no public base.
 A v1.0.0 `Iterator.Walk` (a new owning iterator type) was
 **withdrawn**: the owning iterator is the deferred owned-`Cursor` sibling (`Memory.Cursor`, homed in the
 existing `swift-memory-cursor-primitives`), not a new type — and a borrowed-view cursor + an owned cursor are
@@ -454,7 +461,7 @@ as `Sequencer.Span.Protocol`) — open (D-2). **Pending rename (A7, unexecuted):
 one genuinely-open build item is the **@_rawLayout inline variants conforming `Storage.Protocol`'s escaping
 `pointer(at:)`** soundly — the build-verify gate at the heart of the reference rework. The consuming drain
 (`Sequenceable.consume(_:)`) and release-cleanliness are **done**. Sequence: **set-ordered reference rework
-(§5: Buffer.Linear:Storage.Protocol public → bridge → Set.Ordered delegates) → re-verify → promote the recipe
+(§5: each Buffer.Linear variant vends Iterator.Borrow.Scalar per-variant by composition → Set.Ordered delegates) → re-verify → promote the recipe
 → ×16 fan-out (§4)** — each gate per-action.
 
 ---
