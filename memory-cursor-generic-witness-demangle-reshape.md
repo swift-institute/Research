@@ -7,14 +7,14 @@ last_updated: 2026-05-28
 status: RECOMMENDATION
 tier: 2
 scope: cross-package
-supersedes_note: "Extends memory-contiguous-iteration-bridge.md Outcome OQ-2 (the DORMANT verdict) with a literal-topology reproduction + a validated reshape. Does not supersede that doc; it resolves its open /issue-investigation."
+supersedes_note: "Extends unified-iteration-design.md Outcome OQ-2 (the DORMANT verdict) with a literal-topology reproduction + a validated reshape. Does not supersede that doc; it resolves its open /issue-investigation."
 changelog:
   - "1.0.0 (2026-05-28): Literal-topology REPRODUCED (target F, principal-authorized transient-restore of the crashing Memory.Cursor<Self> form on the real Buffer.Linear.Inline; fully reverted). 3-module synthetic reconstruction (target E) still PASSES. Three reshape directions tested against F: unconditional-conformance (FAIL), @frozen-removal (FAIL), element-only-generic erased witness Memory.Snapshot.Cursor<Element> (PASS). Root cause triangulated to the deep generic instantiation in the associated-type-witness mangled name (same compiler-emission class as compiler-bug-catalog §A9). Reshape lives in swift-memory-cursor-primitives + swift-memory-sequence-primitives; validated debug + release-with-verify-off. Ambient buffer-linear release LLVM-verifier ICE identified as a DISTINCT, pre-existing bug (fires with the production scalar iterator at HEAD)."
 ---
 -->
 
 > **Status**: RECOMMENDATION. Resolves the `/issue-investigation` that
-> `memory-contiguous-iteration-bridge.md` (Outcome OQ-2) left open by marking the
+> `unified-iteration-design.md` (Outcome OQ-2) left open by marking the
 > `Memory.Cursor → Sequenceable` bridge **DORMANT**. A working reshape now exists; whether to
 > **adopt** it (and how) is a principal decision. All transient production edits used to
 > reproduce were fully reverted; no package was left altered; no commits were made.
@@ -150,7 +150,7 @@ item. (The reshape's release codegen is sound — confirmed with `-disable-llvm-
 
 - `swift-institute/Experiments/memory-cursor-generic-witness-demangle` — reproduction (targets A–F),
   Outputs, EXPERIMENT.md.
-- `swift-institute/Research/memory-contiguous-iteration-bridge.md` — Outcome OQ-2 (the DORMANT verdict
+- `swift-institute/Research/unified-iteration-design.md` — Outcome OQ-2 (the DORMANT verdict
   this note resolves).
 - `swift-institute/Research/swift-compiler-bug-catalog.md` — § A12 (this bug), § A9 (sibling
   corrupt-mangled-name-emission class), § A11 (same buffer-linear `@_rawLayout`/Span context),

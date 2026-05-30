@@ -32,7 +32,7 @@ The commit's rationale (in-message + `Experiments/collection-index-escapable-lif
 
 **The fallout is real:** the *default* is unchanged (so **conformers** that adopt `Collection.Protocol` with the default `Index<Element>` are source-compatible — `collection-primitives` itself builds green), but the *bound* is now weaker. **Generic consumers** over `Base: Collection.Protocol` see `Base.Index` as only `Comparison.Protocol & ~Escapable`, losing the concrete `Index<Element>` API (`init`, `init(bitPattern:)`, `+`, `Index<Element>.Count(_)` conversion) and the `Escapable` / `Sendable` guarantee.
 
-**This arc is independent of the World-B / Sequence.Protocol→Sequenceable rename (W1) arc** (`HANDOFF-world-b-span-decomposition.md`). They are two distinct breakages on `main`. This doc quantifies and disentangles them; it does NOT address the Sequence rename. W1 holds the `Collection`-consuming packages pending this decision.
+**This arc is independent of the World-B / Sequence.Protocol→Sequenceable rename (W1) arc** (`HANDOFF-data-structure-iteration-arc.md`). They are two distinct breakages on `main`. This doc quantifies and disentangles them; it does NOT address the Sequence rename. W1 holds the `Collection`-consuming packages pending this decision.
 
 ## Question
 
