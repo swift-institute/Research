@@ -441,6 +441,17 @@ as `Sequencer.Span.Protocol`) — open (D-2). **Pending rename (A7, unexecuted):
   floor lives on `Iterable`; conformance is **per-variant** (bodies inherit).
 - A by-value `next() -> Element?` for raw `~Copyable` multipass (A4): SILGen crash → use `forEach` (push) +
   `Iterator.Borrow` (pull) instead.
+- **`associatedtype Storage: Storage.Protocol` on `Buffer.Protocol`** (the "maximum-for-free via one generic
+  extension" instinct): **rejected** — it is **anti-precedented** (cross-language survey
+  `buffer-storage-associatedtype-prior-art.md`: Swift SE-0256 *ContiguousCollection* rejected + SE-0447 *deferred*
+  `ContiguousStorage` → shipped `Span`; Rust T2 allocator + T4 deref-to-slice, its lone storage-as-type attempt
+  unstable 2+ yrs; C++ `contiguous_range` is a *concept* not a type; Python `Py_buffer` is a scoped accessor —
+  **nobody exposes storage as a member type**) AND it contradicts the APPROVED
+  `cross-layer-capability-protocol-model.md` ("Buffer.Protocol … no `Storage` refinement … has-a"). The universal
+  shape is contiguity-as-a-**capability** + per-conformer provision; the borrow iterator is vended by each
+  buffer's thin per-variant `makeIterator` over its **internal** storage (the construction shared via a
+  generic-over-`some Storage.Protocol` helper / `Iterator.Borrow.Scalar`) — "for free" lands at container
+  delegation, not by exposing the storage core.
 
 ### 6.6 D1–D5 design-acceptance rubric (for fan-out re-review against any future model)
 - **D1** — the shape is proven on the real ecosystem flags (debug+release), not just the toy.
