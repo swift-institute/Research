@@ -186,11 +186,19 @@ Each sub-section states **(decided)** the locked element, **(realize)** the conc
     an unsafe escaping capability + forces every L1 conformer to witness it ([MOD-031]'s "NOT Option A" was the
     right instinct). **Option B′** (widen the per-type `_iteratorBase()` window to `@_spi public`) — perpetuates
     the hand-rolled duplicate instead of dissolving it into the `Storage.Protocol` core.
-- **(open — build-verify; the one fragile spot)** The **@_rawLayout inline variants**
-  (`Buffer.Linear.Inline`/`.Small`, backing `Set.Ordered.Small`/`.Static`) conforming `Storage.Protocol`'s
-  escaping `pointer(at:)` is the soundness-fragile case: a pointer into *embedded* storage is valid only under
-  the container borrow — the iterator's `@_lifetime(borrow base)` / `@_lifetime(&self)` is what makes it sound.
-  Build-verify before the full rework; if it walls → escalate (architecture-shape call), do not retreat to A/B′.
+- **(soundness gate — PASSED 2026-05-30, debug+release)** Driving a borrow iterator over the **real
+  `@_rawLayout` `Storage.Inline`** (escaping base via `withUnsafePointer(to: _storage)` / `pointer(at:)`,
+  computed on-demand) compiles, reads correctly, and is multipass-sound in **debug AND release** with no
+  miscompile/warning — a pointer into *embedded* storage is valid under the container borrow, and the
+  iterator's `@_lifetime` is what enforces it. So the inline/SBO case is **not** a wall.
+- **(construction refinement — ratified)** The shipped `Iterator.Borrow.Scalar.init(base:count:)` is
+  `@_lifetime(borrow base)` (correct for an independently-stable base, e.g. a stored heap pointer), but an
+  inline/embedded base is **computed** — anchoring a `~Escapable` iterator to that temporary escapes. So the
+  Scalar gains an **additive owner-anchored** `init(base:count:, borrowing owner:)` `@_lifetime(borrow owner)`
+  — anchoring to the keep-and-lend container (the true lifetime source), mirroring
+  `Ownership.Borrow(unsafeRawAddress:borrowing:owner:)`. The base-only init stays; the bridge/delegation
+  construct via the owner-anchored one. **Remaining build-verify:** the *literal* `Buffer.Linear.Inline:
+  Storage.Protocol` conformance on the real package (the gate proved the pattern; step 2 proves the conformance).
 - **(explicitly NOT doing)** No B1 coroutine-yield `next(_ body:)` (strictly more restrictive than pull-style
   `next()`); no B2 `~Escapable`-cursor invention; **no `forEach` fallback for the pull side** (that would be
   a cave — and unnecessary, pull-style works).
