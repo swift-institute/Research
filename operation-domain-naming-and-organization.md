@@ -26,7 +26,7 @@ supersedes:
 not_superseded_different_subtopic:
   - value-generic-parameter-naming-convention.md     # value-generic PARAMETER naming — a different axis
   - stdlib-naming-beats-ecosystem-naming.md          # shadowed-API naming (the swapAt question) — different, and IN_PROGRESS
-  - sequencer-primitives-reconciliation-refactor.md  # witness decision overridden (§5.1); Sequence/Sequencer classification deferred to the protocol-architecture piece
+  - unified-iteration-design.md  # witness decision overridden (§5.1); Sequence/Sequencer classification deferred to the protocol-architecture piece
 ---
 -->
 

@@ -90,7 +90,7 @@ be added so the generic surface accepts sibling-conformers automatically?
 
 This Research arc resolves the question.
 
-**Trigger**: parent session's `HANDOFF-sibling-refines-canonical-attachment.md`
+**Trigger**: parent session's dispatch handoff (removed in the 2026-05-30 iteration-arc consolidation)
 dispatch (2026-05-21) following closure of the binary-primitives modularization
 arc. The parent session continues separate work; files listed under "Do Not Touch"
 in the handoff (binary-primitives / binary-parser-primitives / binary-serializer-
