@@ -33,9 +33,10 @@ not_superseded_different_subtopic:
 > **This is the definitive, final statement of how the Swift Institute names and
 > organizes operation-domain packages.** It supersedes every prior document in
 > the naming/organizing corpus (see frontmatter). Where those documents
-> conflicted, this document governs. The prior documents' detailed analyses are
-> preserved in git history and `_archived/` per `[META-005]`; nothing below
-> needs them to be read.
+> conflicted, this document governs. The prior documents are retained in place
+> and marked `status: SUPERSEDED` per `[META-005]` (no `_archived/`; the
+> `_index.json` filter hides them from the active view); nothing below needs
+> them to be read.
 >
 > **Out of scope** (a different axis — the protocol's *contract*, not its
 > *name*): `collection-sequence-protocol-detachment`, `iterator-protocol-hierarchy`,
@@ -575,4 +576,4 @@ reverse it.
 - `code-surface` skill — `[API-NAME-*]`, `[API-IMPL-009]` (hoisted-protocol pattern)
 - `[Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)`
 - pointfree `swift-parsing` (`Parsing` module — the gerund-module counter-example)
-- Superseded sources (git history / `_archived/`): see frontmatter `supersedes`.
+- Superseded sources (retained in place, `status: SUPERSEDED` per `[META-005]`): see frontmatter `supersedes`.

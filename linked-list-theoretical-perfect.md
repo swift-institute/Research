@@ -34,7 +34,7 @@ Tier 2 — cross-package, precedent-setting for buffer discipline architecture, 
 | `HANDOFF-timer-wheel-intrusive-list.md` | Timer wheel investigation; full findings |
 | `list-discipline-boundary-analysis.md` | Cursor API as #1 gap; STL/Rust prior art |
 | `list-operations-audit.md` | 3 fundamental gaps: insert_after, delete, splice |
-| `_archived/memory-pool-arena-buffer-usage-analysis.md` | Pool vs Arena semantic boundary |
+| `memory-pool-arena-buffer-usage-analysis.md` | Pool vs Arena semantic boundary |
 | `storage-arena-architecture.md` | Storage.Arena structure and Meta composition |
 
 ### Prior Art (External)
@@ -571,7 +571,7 @@ For future multi-list-membership use cases (one element in N independent lists),
 - `swift-async-primitives/HANDOFF-timer-wheel-intrusive-list.md` — Timer wheel investigation
 - `swift-list-primitives/Research/list-discipline-boundary-analysis.md` — Cursor API gap analysis, STL/Rust prior art
 - `swift-list-primitives/Research/list-operations-audit.md` — Three fundamental gaps
-- `_archived/memory-pool-arena-buffer-usage-analysis.md` — Pool/Arena distinction
+- `memory-pool-arena-buffer-usage-analysis.md` — Pool/Arena distinction
 - Buffer.Linked implementation: `swift-buffer-primitives-modularization/Sources/Buffer Linked Primitives/Buffer.Linked+Pool ~Copyable.swift`
 - Buffer.Linked.Node: `swift-buffer-primitives-modularization/Sources/Buffer Linked Primitives Core/Buffer.Linked.Node.swift`
 - Timer wheel: `swift-async-primitives/Sources/Async Timer Primitives/Async.Timer.Wheel+Slot.swift`
