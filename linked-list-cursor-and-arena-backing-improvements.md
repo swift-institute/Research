@@ -37,7 +37,7 @@ Tier 2 — Cross-package, significant API implications, informed by existing res
 |----------|----------|-----------|
 | List Discipline Boundary Analysis | `swift-list-primitives/Research/list-discipline-boundary-analysis.md` | Identifies cursor API as #1 missing feature; surveys STL and Rust RFC 2570 |
 | List Operations Audit | `swift-list-primitives/Research/list-operations-audit.md` | Catalogs `delete(node)` and `insert_after` as high-priority gaps |
-| Memory-Pool-Arena-Buffer Usage Analysis | `_archived/memory-pool-arena-buffer-usage-analysis.md` | Establishes Pool vs Arena semantic distinction |
+| Memory-Pool-Arena-Buffer Usage Analysis | `memory-pool-arena-buffer-usage-analysis.md` | Establishes Pool vs Arena semantic distinction |
 | Memory-Storage Composition Feasibility | `swift-primitives/Research/memory-storage-composition-feasibility.md` | Evaluates composability of Memory.Pool/Arena with Storage layer |
 | Storage Arena Architecture | `swift-primitives/Research/storage-arena-architecture.md` | Reconciles Memory.Arena composition with Buffer.Arena conditional Copyable |
 | Timer Wheel Investigation | `swift-async-primitives/HANDOFF-timer-wheel-intrusive-list.md` | Source investigation with full findings |
@@ -291,7 +291,7 @@ The ~120 lines of manual list management remain justified.
 - `swift-list-primitives/Research/list-discipline-boundary-analysis.md` — STL and Rust RFC 2570 prior art for cursor API
 - `swift-list-primitives/Research/list-operations-audit.md` — Gap analysis identifying delete(node) as high priority
 - `swift-async-primitives/HANDOFF-timer-wheel-intrusive-list.md` — Source investigation with complete findings
-- `_archived/memory-pool-arena-buffer-usage-analysis.md` — Pool vs Arena semantic distinction
+- `memory-pool-arena-buffer-usage-analysis.md` — Pool vs Arena semantic distinction
 - `swift-primitives/Research/storage-arena-architecture.md` — Storage.Arena architecture and Memory.Arena composition
 - C++ STL `std::list::erase(iterator)` — positional removal as core list API
 - Rust RFC 2570 (Linked List Cursors) — cursor API design for doubly-linked lists

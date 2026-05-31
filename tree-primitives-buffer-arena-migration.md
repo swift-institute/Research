@@ -57,7 +57,7 @@ The use of arena/pool allocators for tree storage is well-established:
 
 The `storage-pool-architecture.md` research (DECISION) previously chose independent implementation for `Storage.Pool` over composing `Memory.Pool`, due to fundamental mismatches in ownership model, pointer types, and API surface. However, `Buffer.Arena` was specifically designed as a higher-level discipline intended for composition — its API (insert/remove/isValid/Position) matches the operations Tree.N needs.
 
-The `_archived/memory-pool-arena-buffer-usage-analysis.md` research (RECOMMENDATION) found that Memory.Pool and Memory.Arena have zero consumers outside their own tests, while Buffer-layer types are the intended consumer interface.
+The `memory-pool-arena-buffer-usage-analysis.md` research (RECOMMENDATION) found that Memory.Pool and Memory.Arena have zero consumers outside their own tests, while Buffer-layer types are the intended consumer interface.
 
 ### Theoretical Grounding [RES-022]
 
@@ -590,5 +590,5 @@ All sub-questions analyzed except Q6 (CoW strategy), which requires an architect
 - Hanson, D. R. (1990). Fast Allocation and Deallocation of Memory Based on Object Lifetimes. *Software: Practice and Experience*, 20(1):5-12.
 - Bonwick, J. (1994). The Slab Allocator: An Object-Caching Kernel Memory Allocator. *USENIX Summer 1994*.
 - `primitives-taxonomy-naming-layering-audit.md` — DECISION — canonical naming for arena vs pool.
-- `_archived/memory-pool-arena-buffer-usage-analysis.md` — RECOMMENDATION — Memory.Pool/Arena usage findings.
+- `memory-pool-arena-buffer-usage-analysis.md` — RECOMMENDATION — Memory.Pool/Arena usage findings.
 - `storage-pool-architecture.md` — DECISION — independent implementation vs composition precedent.

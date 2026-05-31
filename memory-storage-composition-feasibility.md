@@ -13,7 +13,7 @@ normative: false
 
 ## Context
 
-The previous research (`_archived/memory-pool-arena-buffer-usage-analysis.md`) recommended
+The previous research (`memory-pool-arena-buffer-usage-analysis.md`) recommended
 removing Memory.Pool, Memory.Arena, and Memory.Buffer based on zero consumers.
 The `storage-pool-architecture.md` research chose independent implementation for
 Storage.Pool, citing fundamental mismatches with Memory.Pool.
@@ -625,7 +625,7 @@ implementation.
 
 ### Internal
 - `swift-storage-primitives/Research/storage-pool-architecture.md` (DECISION) — original composition vs independence analysis
-- `_archived/memory-pool-arena-buffer-usage-analysis.md` (RECOMMENDATION) — usage analysis and disposition
+- `memory-pool-arena-buffer-usage-analysis.md` (RECOMMENDATION) — usage analysis and disposition
 - `swift-primitives/Research/storage-primitives-comparative-analysis.md` (RECOMMENDATION) — state of the art evaluation
 
 ### Swift Evolution
