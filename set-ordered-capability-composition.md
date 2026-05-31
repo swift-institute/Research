@@ -153,7 +153,7 @@ Signal-6 `swift_getAssociatedTypeWitness`).
 
 | Package | File-org fixes applied | Tests (debug=release) |
 |---|---|---|
-| memory | misnamed `+Cardinal.Protocol` → `+Carrier.Protocol` (the conformed protocol); stale headers | library green¹ |
+| memory | misnamed `+Cardinal.Protocol` → `+Carrier.Protocol` (the conformed protocol); stale headers; **test target repaired**¹ | **46** |
 | iterator | clean (0) | — |
 | buffer | clean (0) | — |
 | sequence | `Sequence.Drain.Protocol` extracted ([API-IMPL-005]); `Sequenceable+Swift.Sequence` → `+first` (no such conformance present) | 160 |
@@ -164,8 +164,11 @@ Signal-6 `swift_getAssociatedTypeWitness`).
 | memory-iterator | clean (0 — exemplary bridge) | — |
 | **set-ordered** | the exemplar (above): iteration split ×4, Error 3-way split, Hash.Protocol extraction (base/Fixed), Small Drain import | **108** |
 
-¹ memory's test TARGET carries a PRE-EXISTING break (~151 stale `Memory.Arena`/`Pool`/`Buffer`
-refs to extracted siblings) — out of file-org scope; the library builds green debug+release.
+¹ memory's test target had a pre-existing break (its arithmetic tests used the extracted
+`Memory.Arena`/`Buffer` as scratch-allocation scaffolding). Repaired 2026-05-31: re-pointed at
+memory's own `Memory.Allocator` (re-adding the siblings would form a package cycle [MOD-032]); the
+one test of the extracted `Buffer.Mutable` itself was removed (coverage lives in the sibling).
+46 tests green debug+release. (The nested `Tests/Testing` perf package was already correct.)
 
 Out-of-closure siblings audited for template completeness (NOT fixed, by direction): set-algebra
 (a test-support fixture grab-bag), memory-sequence (dormant bridge — leave).
