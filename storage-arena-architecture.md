@@ -349,7 +349,7 @@ Our Memory.Arena → Storage.Arena composition follows this exact pattern.
   conditional Copyable problem and proposes Option A (arena-aware storage class)
 - `storage-pool-architecture.md` (DECISION, superseded) — original independence
   analysis for Storage.Pool
-- `memory-pool-arena-buffer-usage-analysis.md` (RECOMMENDATION) — zero-consumer
+- `_archived/memory-pool-arena-buffer-usage-analysis.md` (RECOMMENDATION) — zero-consumer
   analysis for Memory types
 - `primitives-taxonomy-naming-layering-audit.md` (DECISION) — four-layer stack
   validation (Memory → Storage → Buffer → Data Structure)
