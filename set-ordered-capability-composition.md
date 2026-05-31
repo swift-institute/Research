@@ -129,6 +129,26 @@ Realized on the exemplar:
 | One type per file ([API-IMPL-005]) | hoisted error enums, nested helper types → one declaration per file |
 | Import hygiene | per-file imports trimmed to what's used; dead imports dropped. The ACTIVE `Memory_Iterator_Primitives` bridge (vends `Iterable.makeIterator`) is load-bearing and STAYS — it is NOT the dormant `memory-sequence` bridge |
 
+### Module-placement formula (type-module = as minimal as possible)
+
+The deterministic rule for which module a declaration `D` on type `T` belongs to — `T Primitive`
+(lean type, SINGULAR) vs `T Primitives` (ops, PLURAL):
+
+> **`D` ∈ `T Primitive` IFF** it is one of: (a) the stored state / canonical `init` / `deinit`; or
+> (b) an `@inlinable` op whose body **names `T`'s `@usableFromInline internal` / `package` storage**
+> — welded there by [MOD-036] (an ops-module `@inlinable` body cannot reference another module's
+> internal storage). **Otherwise `D` ∈ `T Primitives`** — every Copyable-imposing conformance
+> ([MOD-004]) plus every op/conformance whose body uses only `T`'s public surface.
+
+One-line test for any member: *does its `@inlinable` body name the type's internal storage?*
+**yes → `Primitive`, no → `Primitives`.** The type module ends up = `{storage, init, deinit}` ∪
+`{inlinable ops welded to storage}` and nothing else.
+
+This explains the (correct, principled) divergence between exemplars: Set.Ordered's `makeIterator`
+witness reads the internal `buffer` (`buffer.makeIterator()`), so it is welded to the type module;
+buffer-linear's `makeIterator` hands `self` to a public `Scalar(self)` init, touches no internals,
+so it lives in the ops module with its conformance. Same rule, different bodies.
+
 ### Realized per-variant conformance-file layout (Set.Ordered ×4)
 
 TYPE module `{Domain} {Variant} Primitive` (SINGULAR):
