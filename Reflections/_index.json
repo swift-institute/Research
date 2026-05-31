@@ -21,7 +21,7 @@
         "swift-institute/Skills",
         "swift-institute/Audits"
       ],
-      "status": "pending"
+      "status": "processed"
     },
     {
       "file": "2026-05-18-orchestrator-continuation-d8-cascade-and-item-3c-investigation.md",
@@ -45,7 +45,7 @@
         "swift-institute/Audits",
         "swift-institute/Research"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     },
     {
@@ -63,7 +63,7 @@
         "swift-institute/Research",
         "swift-institute/Experiments"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     },
     {
@@ -78,7 +78,7 @@
         "swift-primitives/swift-ascii-parser-primitives",
         "swift-primitives/swift-ascii-primitives"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     },
     {
@@ -94,7 +94,7 @@
         "swift-institute/Skills",
         "swift-institute/Audits"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     },
     {
@@ -107,7 +107,7 @@
         "swift-institute/Audits",
         "swift-institute/Research"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     },
     {
@@ -151,7 +151,7 @@
         "swift-primitives/swift-ownership-primitives",
         "swift-institute"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     },
     {
@@ -166,7 +166,7 @@
         "swift-primitives/swift-standard-library-extensions",
         "swift-institute"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     },
     {
@@ -178,7 +178,7 @@
         "swift-foundations/swift-linter-rules",
         "swift-foundations/swift-institute-linter-rules"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     },
     {
@@ -189,7 +189,7 @@
         "swift-primitives/swift-affine-primitives",
         "swift-institute/Issues"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     },
     {
@@ -5717,7 +5717,7 @@
         "swift-foundations/swift-linter-rules",
         "swift-institute"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     },
     {
@@ -5728,7 +5728,7 @@
         "swift-institute/Issues",
         "swift-institute/Experiments"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     },
     {
@@ -5742,7 +5742,7 @@
         "swift-institute/Experiments",
         "swift-institute/Research"
       ],
-      "status": "pending",
+      "status": "processed",
       "statusRaw": "pending"
     }
   ]
