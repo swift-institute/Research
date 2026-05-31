@@ -2,15 +2,18 @@
 
 <!--
 ---
-version: 1.1.0
-last_updated: 2026-03-15
-status: RECOMMENDATION
+version: 1.2.0
+last_updated: 2026-05-31
+status: SUPERSEDED
 research_tier: 2
 applies_to: [swift-memory-primitives, swift-storage-primitives]
 normative: false
+supersededBy: memory-buffer-allocator-institute-vs-apple-comparative.md
 ---
 -->
 
+> **SUPERSEDED & ARCHIVED (2026-05-31, per principal).** Retained only as an audit trail — **do not act on the Option-C "remove the types" recommendation below.** Verified current source contradicts its central premise: `Storage.Pool` composes `Memory.Pool` and `Storage.Arena` composes `Memory.Arena`, both with real cross-package consumers (Tree.\*, the machines, the timer wheel). Disposition is governed by [RES-020a] (total-taxonomy: L1 types are justified by lattice position, not consumer count). See `memory-buffer-allocator-institute-vs-apple-comparative.md` (Appendix B).
+>
 > **Update (2026-03-15)**: This document's framing — evaluating types by consumer count — is architecturally incorrect. Layer 1 primitives exist because they belong to their scoped domain, not because something currently imports them. Memory.Pool, Memory.Arena, and Memory.Buffer are valid memory-primitives types regardless of downstream adoption. The question is whether each type is theoretically complete within its domain, not whether it has consumers. Storage.Pool's composition of Memory.Pool (per `memory-storage-composition-feasibility.md`) validates the design, but is not the reason Memory.Pool should exist.
 
 ## Context
