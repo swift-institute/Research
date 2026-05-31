@@ -2,19 +2,22 @@
 
 <!--
 ---
-version: 2.1.1
+version: 2.2.0
 last_updated: 2026-05-30
 status: APPROVED
 tier: 2
 scope: cross-package
-supervises_gate: "Re-scoped 2026-05-30 (user-authorized) to OPTION C (composition) — each Buffer.Linear variant vends Iterator.Borrow.Scalar via a thin per-variant makeIterator (the buffer composes its storage and vends the iterator; NO Buffer.Linear:Storage.Protocol conformance [category error], NO public base, NO separate bridge); Set.Ordered the validating consumer delegating to its buffer. Other buffer-backed containers INHERIT the capability; their active migration is the gated ×16 fan-out (§4), NOT authorized. Per-action YES still required for: publish · visibility flip · tag · starting the fan-out. Execution coordination: HANDOFF-data-structure-iteration-arc.md."
+supervises_gate: "RE-ALIGNED 2026-05-30 (user-ratified) to the SPAN-PRIMITIVE shape per SE-0516 (`iterable-se0516-alignment.md`, RECOMMENDATION, principal-verified from disk + the stdlib clone). `Iterable`'s iterator is now the SPAN protocol (`__IteratorChunkProtocol`, element bound relaxed Escapable→~Copyable, scalar-protocol refinement dropped), NOT the scalar `Iterator.Protocol`. ONE span iterator (`Iterator.Chunk` over `span`) serves BOTH element kinds (`span[i]` is a borrowing addressor — never a move-out). Set.Ordered + the buffer family get `Iterable` (~Copyable) FOR FREE via the memory→Iterable bridge relaxed Copyable→~Copyable over `span` — no per-variant makeIterator, no Storage composition, no public base, no Iterator.Borrow.Scalar vend. `Iterator.Borrow.Scalar`'s ITERATION role is WITHDRAWN; the package is PARKED (not reverted — [ARCH-LAYER-009]). The ×16 fan-out (§4) is still GATED. Per-action YES still required for: publish · visibility flip · tag · starting the fan-out. Execution coordination: HANDOFF-data-structure-iteration-arc.md. NEXT STEP: a verify-plan agent re-verifies this plan, assesses ground-state, and produces the implementation plan."
 consolidates: "This doc is the SINGLE design authority for the iteration arc (2026-05-30). It folds in and REPLACES (the originals removed to stop drift): iteration-architecture-expressibility-envelope.md (Angles A/B/C), two-world-traversal-decomposition.md (World A/B), world-b-span-decomposition.md (World-B decomposition), memory-contiguous-iteration-bridge.md (the bridge + Memory.Cursor + withdrawn Iterator.Walk), sequencer-primitives-reconciliation-refactor.md (terminal relocation + Sequencer naming), swift-iterator-primitives/Research/iterable-iteration-terminal-surface.md (the borrowing-func surface decision). Empirical evidence is retained in Experiments/iteration-architecture-toy + Experiments/memory-cursor-generic-witness-demangle (NOT removed)."
 builds_on:
+  - "iterable-se0516-alignment.md (Tier 2, RECOMMENDATION, principal-ratified 2026-05-30) — the span-primitive realignment; the SE-0516 ↔ institute mapping, the delta D1–D8, the Iterator.Borrow disposition. THIS is the superseding source for §2.1/§2.3/§2.5/§3/§6."
+  - "bulk-span-iteration-fold-vs-separate.md (Tier 3, RECOMMENDATION) — the Span<~Copyable> crux verified against the stdlib clone; SE-0516's rejection of element-wrapping. Its SEPARATE-vs-FOLD recommendation is NARROWED, not overturned (it governs ~Escapable-element scalar iteration, which stays on Iterator.Protocol)."
   - "Experiments/iteration-architecture-toy 8ae35fb (the Angle A/B/C empirical proof, debug+release, full ecosystem flags)"
   - "memory-cursor-generic-witness-demangle-reshape.md v1.0.0 (the consuming-iterator reshape — KEPT)"
-  - "swift-iterator-borrow-primitives (the ~Copyable pull-style; concrete Iterator.Borrow.Scalar shipped f31ce11; composes over Storage+Buffer cores per §2.5)"
+  - "swift-iterator-borrow-primitives (Iterator.Borrow.Scalar shipped f31ce11/dd60699; iteration role WITHDRAWN under the span realignment — PARKED, not reverted, for a possible non-iteration scalar keep-and-lend cursor role)"
 changelog:
-  - "2.1.1 (2026-05-30): CORRECTED the v2.1.0 mechanism — `Buffer.Linear: Storage.Protocol` is a CATEGORY ERROR (subordinate + user caught it; supervisor accepted). Buffer is the logical capability (count/isEmpty), storage the physical (pointer(at:)/capacity); the chain is storage→buffer, so conforming buffer→storage inverts the layer and is the refinement-stacking §1 forbids — and the codebase already composes (linear ops are Storage.Protocol statics taking storage:+count:; Small's two-armed _Representation has no single Storage to surface). REVISED to OPTION C (composition): each Buffer.Linear variant conforms Iterable (~Copyable) with a thin per-variant makeIterator constructing Iterator.Borrow.Scalar(base: storage.pointer(at:.zero), count:, borrowing: self) (Small switches); storage stays @usableFromInline internal — NO public base, NO Buffer.Linear:Storage.Protocol, NO separate bridge (better encapsulation than v2.1.0, [MOD-031] preserved; gate-de-risked via the InlineBag shape). Set.Ordered delegates. §2.5/§1.2/§3/§4/§5/§6.3/§7 corrected."
+  - "2.2.0 (2026-05-30): SPAN-PRIMITIVE RE-ALIGNMENT (user-ratified; supersedes the v2.1.x Option-C keystone). Root cause of the week-long iteration knot, found via the user's SE-0516 anchor + verified from disk: the institute `Iterable` was SCALAR-primitive (its iterator = the move-out `Iterator.Protocol.next() -> Element?`, Iterable.swift:45 / Iterator.Protocol.swift:46), which is the ~Copyable move-out wall — the entire Iterator.Borrow detour was solving a problem SE-0516 designs away. SE-0516 is SPAN-primitive: the iterator's sole element-access is `nextSpan(maximumCount:) -> Span<Element>` (no scalar next()); `Span<Element: ~Copyable>` (Span.swift:29) + the borrowing-addressor subscript make ONE span iterator serve both kinds (span[i] borrows, never moves out). The institute ALREADY ships the machinery — `Iterator.Chunk` ≅ SpanIterator, `__IteratorChunkProtocol` ≅ BorrowingIteratorProtocol — so alignment is RE-POINTING + RELAXATION, not invention: (D2) re-point `Iterable.Iterator` from the scalar protocol to `__IteratorChunkProtocol`; (D1) relax that protocol's element bound Escapable→~Copyable AND drop its `: Iterator.\\`Protocol\\`` refinement (verified __IteratorChunkProtocol.swift:34-35 — the Escapable bound + the scalar refinement; the Chunk struct itself has no bound, Iterator.Chunk.swift:26); (D3) rebuild `forEach` on the span loop (subsumes the bespoke Memory.Contiguous floor; drops the Copyable gate; both kinds); (D4) relax the memory→Iterable bridge Copyable→~Copyable; (D5) Set.Ordered + buffers get `Iterable` (~Copyable) via the bridge over `span` — ONE conformance, the dual-element-kind split DISSOLVES, NO per-variant makeIterator / NO Storage composition / NO public base / NO Iterator.Borrow.Scalar vend; (D6) Iterator.Borrow.Scalar iteration role WITHDRAWN — PARK, do NOT revert f31ce11/dd60699 ([ARCH-LAYER-009]). The scalar `Iterator.Protocol` STAYS as the consuming/give-away foundation for `Sequenceable` (World A) and the ~Escapable-element ceiling. T1 (associatedtype Storage on Buffer.Protocol) stays rejected. One open build-verify gate: Iterator.Chunk(span) over inline @_rawLayout storage for ~Copyable. §1.2/§2.1/§2.3/§2.5/§3/§4/§5/§6.1/§6.3/§6.5/§7 re-aligned."
+  - "2.1.1 (2026-05-30): CORRECTED the v2.1.0 mechanism — `Buffer.Linear: Storage.Protocol` is a CATEGORY ERROR (subordinate + user caught it; supervisor accepted). Buffer is the logical capability (count/isEmpty), storage the physical (pointer(at:)/capacity); the chain is storage→buffer, so conforming buffer→storage inverts the layer and is the refinement-stacking §1 forbids — and the codebase already composes (linear ops are Storage.Protocol statics taking storage:+count:; Small's two-armed _Representation has no single Storage to surface). REVISED to OPTION C (composition): each Buffer.Linear variant conforms Iterable (~Copyable) with a thin per-variant makeIterator constructing Iterator.Borrow.Scalar(base: storage.pointer(at:.zero), count:, borrowing: self) (Small switches); storage stays @usableFromInline internal — NO public base, NO Buffer.Linear:Storage.Protocol, NO separate bridge (better encapsulation than v2.1.0, [MOD-031] preserved; gate-de-risked via the InlineBag shape). Set.Ordered delegates. §2.5/§1.2/§3/§4/§5/§6.3/§7 corrected. [SUPERSEDED by 2.2.0 — Option C is replaced by the span-primitive shape; Iterator.Borrow.Scalar is parked.]"
   - "2.1.0 (2026-05-30): LOCKED Option C (user-authorized) for the ~Copyable borrow-iteration home. Iterator.Borrow.Scalar shipped (iterator-borrow f31ce11). DECISION: borrow-iteration composes over the Storage.Protocol (pointer(at:)→escaping base) + Buffer.Protocol (count) cores — NOT Swift.Span (verified wall: Span<~Copyable> has no escaping element address) and NOT the Memory.Contiguous bridge. Buffer.Linear conforms Storage.Protocol publicly, dissolving the per-type _iteratorBase() window ([ARCH-LAYER-011] hand-rolled duplicate); an `extension Iterable where Self: Storage.Protocol & Buffer.Protocol` bridge vends it; buffer-backed containers delegate. REJECTED Option A (escaping base on Memory.Contiguous — pollutes the safe-view core) + Option B′ (widen _iteratorBase() — perpetuates the duplicate). §2.5 + §1.2 rewritten. Open: the @_rawLayout inline variants' Storage.Protocol escaping-pointer(at:) soundness (build-verify gate)."
   - "2.0.0 (2026-05-30): CONSOLIDATION. Promoted to the single design authority; folded in the six iteration Research docs (Angles/World/bridge/terminal-relocation/terminal-surface) + their Dead-Ends + the D1–D5 rubric (§6). RECONCILED TO DISK on two axes the prior version got wrong: (1) CONSUME — Sequence.Consume.Protocol/View/ConsumeState was DELETED (sequence-primitives 309c1b9), NOT kept-and-widened; the consuming drain is now the closure terminal Sequenceable.consume(_:) (Sequenceable+Consume.swift:35/:59); §2.7 rewritten, §6.4 ConsumeState-widening escalation REMOVED (dead — the type was deleted), takeBuffer deleted (set-ordered 13ab89f). (2) RELEASE — set-ordered now builds RELEASE-clean via field-reorder (buffer-linear 2b82466, buffer-ring e103122); the #86652/debug-green caveats are removed. The A2 boxed-tree release SIL crash is separate and still stands."
   - "1.3.0–1.0.0 (2026-05-28): prior versions (recoverable via git). 1.3.0 escalated a ConsumeState ~Copyable widening that reality overtook by deleting the type."
@@ -32,6 +35,21 @@ changelog:
 > `Sequenceable.consume(_:)` (the `Sequence.Consume.Protocol`/`View`/`ConsumeState` module was *deleted*,
 > not kept); set-ordered builds **release-clean** (the `#86652` caveats are gone; the A2 boxed-tree release
 > crash is separate and still stands).
+>
+> **⚑ SPAN-PRIMITIVE RE-ALIGNMENT 2026-05-30 (v2.2.0, user-ratified) — read this first.** The v2.1.x
+> Option-C keystone (§2.5: `~Copyable` pull-style via `Iterator.Borrow.Scalar` composed over the
+> Storage+Buffer cores) is **SUPERSEDED**. The institute `Iterable` is realigned to **SE-0516's
+> span-primitive shape**: its iterator is the **span** protocol (`__IteratorChunkProtocol`, element bound
+> relaxed `Escapable → ~Copyable`, scalar-protocol refinement dropped), **not** the scalar
+> `Iterator.\`Protocol\``. Because `Span<Element: ~Copyable>` exists and `Span`'s subscript is a *borrowing
+> addressor* (never a move-out), **one span iterator (`Iterator.Chunk` over `span`) serves both element
+> kinds** — which dissolves the move-out wall, the dual-element-kind split, AND the entire `Iterator.Borrow`
+> detour. Set.Ordered + the buffer family get `Iterable` (~Copyable) **for free via the memory→Iterable
+> bridge relaxed to `~Copyable`** — no per-variant `makeIterator`, no `Storage` composition, no public base.
+> **The full WHY + the SE-0516 mapping + the delta (D1–D8) is `iterable-se0516-alignment.md`** (Tier 2,
+> RECOMMENDATION, principal-ratified). The sections below are re-aligned to it; `Iterator.Borrow.Scalar` is
+> **parked, not reverted** ([ARCH-LAYER-009]). One build-verify gate remains: `Iterator.Chunk(span)` over
+> inline `@_rawLayout` storage for `~Copyable`.
 
 ---
 
@@ -75,11 +93,11 @@ Per-variant iteration conformances today — `Iterable`/`Memory.Contiguous` gate
 
 | Concept | Real type | Package |
 |---|---|---|
-| Element-iteration floor (borrow-style) — **ground home for the terminal suite** | `Iterable` | swift-iterator-primitives |
-| Scalar foundation iterator (`next()` `@_lifetime(&self)`, extraction → `Escapable`) | `Iterator.\`Protocol\`` | swift-iterator-primitives |
-| Bulk span iterator (`Span` ceiling, `Escapable`-narrowed; scalar `next()` Copyable-gated) | `Iterator.Chunk.\`Protocol\`` | swift-iterator-primitives |
-| `~Copyable` **borrow-yielding pull-style** — `Element == Ownership.Borrow<Borrowed>`; concrete `Iterator.Borrow.Scalar` **shipped** (`f31ce11`); base+count compose over the **Storage + Buffer cores** (§2.5) | `Iterator.Borrow.\`Protocol\`` + `Iterator.Borrow.Scalar` | swift-iterator-borrow-primitives |
-| Addressable storage core (`pointer(at:)` → escaping base, `capacity`) — the home of the escaping base, NOT `Memory.Contiguous` | `Storage.\`Protocol\`` | swift-storage-primitives |
+| Element-iteration floor (borrow-style) — **ground home for the terminal suite**; iterator is now **span-primitive** (§2.3) | `Iterable` | swift-iterator-primitives |
+| Scalar foundation iterator (`next() -> Element?`, `@_lifetime(&self)`, move-out, extraction → `Escapable`) — **the consuming/give-away foundation for `Sequenceable` (World A) and the `~Escapable`-element ceiling; NO LONGER `Iterable`'s iterator** | `Iterator.\`Protocol\`` | swift-iterator-primitives |
+| **Span-primitive bulk iterator** — `next(maximumCount:) -> Span<Element>` (the SE-0516 `nextSpan`); **now `Iterable`'s iterator** (§2.3). Element bound relaxes `Escapable → ~Copyable`; the `: Iterator.\`Protocol\`` refinement is dropped; **`Iterator.Chunk` over `span` serves BOTH element kinds** (`span[i]` borrows, never moves out) | `Iterator.Chunk` / `__IteratorChunkProtocol` | swift-iterator-primitives |
+| `~Copyable` borrow-yielding **scalar** pull-style — `Element == Ownership.Borrow<Borrowed>`; `Iterator.Borrow.Scalar` shipped (`f31ce11`/`dd60699`). **ITERATION ROLE WITHDRAWN** under the span realignment (SE-0516 rejected this element-wrapping design); **PARKED, not reverted** ([ARCH-LAYER-009]); possible future non-iteration scalar keep-and-lend cursor | `Iterator.Borrow.\`Protocol\`` + `Iterator.Borrow.Scalar` | swift-iterator-borrow-primitives |
+| Addressable storage core (`pointer(at:)` → escaping base, `capacity`) — composed (has-a) by buffers; **NOT the iteration vehicle** under the span realignment (the buffer exposes `span`, the bridge vends `Iterator.Chunk`) | `Storage.\`Protocol\`` | swift-storage-primitives |
 | Sized core (`count`) | `Buffer.\`Protocol\`` | swift-buffer-primitives |
 | Copyable + `~Escapable` borrow handle (the lent element) | `Ownership.Borrow<Value: ~Copyable & ~Escapable>: ~Escapable` | swift-ownership-primitives |
 | Consuming / single-pass sibling (`~Copyable & ~Escapable`) — orthogonal, **NOT** refining `Iterable` | `Sequenceable` | swift-sequence-primitives |
@@ -101,10 +119,16 @@ Each sub-section states **(decided)** the locked element, **(realize)** the conc
 ### 2.1 `forEach` floor on `Iterable` — the universal vehicle (Angle C); plain `borrowing func`
 
 - **(decided)** `forEach` is the universal floor on `Iterable`: **every** structure gets it, including
-  `~Copyable` (borrowing closure). Angle C (§6) is the most complete unification — one `forEach` default for
-  span-projecting + traversal-only + `~Copyable`, debug+release. `forEach` returns `Void`, so there is no
-  lifetime-dependent return and the closure receives `(borrowing Element)` **directly** (NOT an
-  `Ownership.Borrow` handle — that handle is the *pull-style* element, §2.5).
+  `~Copyable` (borrowing closure). The closure receives `(borrowing Element)` **directly** (NOT an
+  `Ownership.Borrow` handle). `forEach` returns `Void`, so there is no lifetime-dependent return.
+- **(RE-ALIGNED v2.2.0 — mechanism)** `forEach` is now built on the **span loop** over `Iterable`'s
+  span-primitive iterator (§2.3), NOT the scalar `next()`: `var it = makeIterator(); while true { let span =
+  it.next(maximumCount: .max); if span.isEmpty { break }; for i in span.indices { body(span[i]) } }`. Because
+  `Span`'s subscript is a **borrowing addressor** (`span[i]` borrows, never moves out — `Span.swift:455-461`),
+  this carries `(borrowing Element)` for **both** element kinds with **no Copyable gate**. This **subsumes the
+  bespoke `Memory.Contiguous` span-lending `forEach` floor** (which already did exactly this loop) — the
+  duplication dissolves. Angle C's insight (Void return → no lifetime-dependent return → no move-out wall) is
+  preserved and now realized by the span primitive rather than a backing-delegating scalar default.
 - **(decided — surface)** The terminal suite (`forEach`, `contains`, `first`, `reduce`, `satisfies`) is a
   plain **`borrowing func`** on `Iterable`, **NOT** a `Property.View` accessor. The Property surface cannot
   hold an iterator across the loop on a production compiler (≤6.3.2): `Property.Borrow`'s base is a `_read`
@@ -114,10 +138,16 @@ Each sub-section states **(decided)** the locked element, **(realize)** the conc
   **Revisit when SE-0507 `BorrowAndMutateAccessors` reaches a production compiler** (validated on 6.4/6.5-dev;
   gated out of ≤6.3.2). This DIVERGES from the ecosystem's Property-tag terminal surface — accepted, because
   no Property flavor can host iteration on a production compiler.
-- **(realize)** `func forEach<E: Swift.Error>(_ body: (borrowing Element) throws(E) -> Void) throws(E)`.
-  set-ordered already has exactly this signature per-variant → hoist the body to the `Iterable` default; the
-  per-variant methods inherit it. `contains`/`first`/`reduce`/`allSatisfy` compose **from** `forEach`.
-- **(open)** None on the floor itself — the realization is the hoist + the ~Copyable extension (§2.5).
+- **(realize)** `func forEach<E: Swift.Error>(_ body: (borrowing Element) throws(E) -> Void) throws(E)` —
+  same signature as today, new body (the span loop above). The per-variant hand-written `forEach`s inherit it.
+  `contains`/`first`/`reduce`/`allSatisfy` continue to compose **from** `forEach` (or directly from the span
+  loop). The extraction terminals that *return an element by value* (`first`/`reduce` collecting) keep their
+  `Iterator.Element: Copyable & Escapable` gate (`Iterable+First.swift:10-11`) — that gate is intrinsic to
+  *extracting past the borrow*, NOT to iteration, and is correct/unchanged.
+- **(open)** The one build-verify gate: `Iterator.Chunk(span)` over **inline `@_rawLayout` storage** for
+  `~Copyable` (§2.5 / `iterable-se0516-alignment.md` §6) — the span path borrows through the safe `span` view
+  (weaker than the old escaping-base path), so it should be at least as sound, but it is a gate, not a settled
+  claim.
 
 ### 2.2 `Collection` refines `Iterable` — DEFERRED to fan-out
 
@@ -132,20 +162,29 @@ Each sub-section states **(decided)** the locked element, **(realize)** the conc
 - **(status)** Collection.Protocol is currently **standalone** on disk (does not refine Iterable) — correct
   for this phase.
 
-### 2.3 Gated `makeIterator` — one protocol, two escapability-gated defaults (Angle B)
+### 2.3 `makeIterator` — the span-primitive iterator, vended by the bridge (RE-ALIGNED v2.2.0)
 
-- **(decided)** Copyable **pull-style** `makeIterator` is **one** requirement with **two** same-named
-  conditional defaults dispatched by the backing iterator's escapability: **copy-self**
-  (`@_lifetime(copy …)` through a `~Escapable` view) for span-projecting backings, **plain** (no
-  `@_lifetime`) for non-span. Angle B (§6) CONFIRMED per-conformer dispatch, debug+release.
-- **(realize)** Governing principle: a lifetime-dependent iterator composes through `@_lifetime(copy …)`,
-  **never** `@_lifetime(borrow <local>)` — the default delegates through a copy-self `~Escapable` view; the
-  variant exposes that view. **Correctness invariant:** omit `@_lifetime` on any **Escapable** result/target
-  (the compiler *rejects* it); only `~Escapable` yields carry `@_lifetime`.
-- **(open)** set-ordered's current `makeIterator()` is consuming (the `Sequenceable` route); the borrowing
-  `Iterable.makeIterator` is added and disambiguated from the consuming one via `@_implements(Iterable,
-  Iterator)` / `@_implements(Sequenceable, Iterator)` (the associated-type-trap escape hatch; already live
-  on the 4 variants).
+- **(decided — RE-ALIGNED)** `Iterable.makeIterator()` returns the **span-primitive** iterator
+  `Iterator.Chunk` (`__IteratorChunkProtocol`: `next(maximumCount:) -> Span<Element>`), **not** the scalar
+  `Iterator.\`Protocol\``. `Iterable.Iterator` is re-pointed to `__IteratorChunkProtocol` (D2); that protocol's
+  element bound relaxes `Escapable → ~Copyable` and **drops its `: Iterator.\`Protocol\`` refinement** (D1 —
+  otherwise a `~Copyable` `Iterator.Chunk` would still owe the scalar move-out `next() -> Element?`). **One
+  iterator serves both element kinds.**
+- **(realize)** For span-projecting backings (the **whole `Memory.Contiguous` family** — buffers, Set.Ordered,
+  storage-backed containers) the **memory→Iterable bridge** vends `makeIterator() -> Iterator.Chunk(span)`
+  **for free**, relaxed to `Element: ~Copyable` (§6.3). The lifetime composes through the safe view:
+  `Memory.Contiguous.span` is `@_lifetime(borrow self)` and `Iterator.Chunk` is `@_lifetime(copy span)`, so the
+  iterator is tied to the container borrow — **no escaping base, no `@_lifetime(borrow <local>)`.** Non-span
+  backings either project a span directly or use a one-element-span adapter (the SE-0516 `IterableIteratorAdapter`
+  analog — optional, D8). **The v2.1.x Angle-B "one requirement, two escapability-gated defaults (copy-self vs
+  plain)" is superseded:** there is one span iterator; per-conformer escapability juggling is no longer the
+  mechanism.
+- **(correctness invariant — retained)** Omit `@_lifetime` on any **Escapable** result/target (the compiler
+  *rejects* it); only `~Escapable` yields carry `@_lifetime`.
+- **(open)** The `@_implements(Iterable, Iterator)` / `@_implements(Sequenceable, Iterator)` dual-conformer
+  split **persists** — `Iterable` now binds `Iterator = Iterator.Chunk` (span) while `Sequenceable` binds the
+  scalar consuming iterator, so a type conforming to both still splits the shared `associatedtype Iterator`
+  via `@_implements` (already live on the 4 variants).
 
 ### 2.4 Flat-pool representation — trees/hashes become span-projecting (Angle A)
 
@@ -158,54 +197,51 @@ Each sub-section states **(decided)** the locked element, **(realize)** the conc
   the **A2 release SIL crash** (`forwardToInit`; §6). Flat-pool **is** the dodge (a real borrowed region =
   A2b happy case). `/issue-investigation` + upstream candidate; not a design gate.
 
-### 2.5 `Iterator.Borrow` — the `~Copyable` pull-style (the keystone to build)
+### 2.5 `~Copyable` iteration — the span iterator (RE-ALIGNED v2.2.0; `Iterator.Borrow` PARKED)
 
-- **(decided)** `~Copyable` pull-style iteration is borrow-yielding — past the by-value move-out wall.
-  `Iterator.Borrow.\`Protocol\`<Borrowed>: Iterator.\`Protocol\`` where `Element == Ownership.Borrow<Borrowed>`.
-  Because `Ownership.Borrow<Value: ~Copyable & ~Escapable>` is **Copyable + `~Escapable`**,
-  `next() -> Ownership.Borrow<Borrowed>?` returns a Copyable handle — the `~Copyable`-ness lives in
-  `Borrowed`, never moved out by value. This is composition (`Iterator.\`Protocol\` ∘ Ownership.Borrow`), not
-  invention; the abstraction exists in `swift-iterator-borrow-primitives` (5/5 green debug).
-- **(realize — Option C, the evergreen home; DECIDED 2026-05-30)** The concrete conformer is **shipped**:
-  `Iterator.Borrow.Scalar<Borrowed: ~Copyable>` (`base: UnsafePointer<Borrowed>` + count + index) in
-  `swift-iterator-borrow-primitives/Sources` (`f31ce11`; the test `TokenIterator` dissolved into it, 5/5 green;
-  named for its *manner* — scalar/element-at-a-time, the borrow analog of bulk `Iterator.Chunk`, [API-NAME-001b];
-  `Borrowed: ~Copyable` is necessarily Escapable since `UnsafePointer<Pointee>` requires it — the §6.1 ceiling).
-  Its `base + count` are **NOT** derivable from `Swift.Span` (verified wall: `Span<~Copyable>` exposes no
-  escaping element address — `_unsafeAddressOfElement` is `internal`). They **are the existing minimal cores**:
-  `base = Storage.Protocol.pointer(at: .zero)` (escaping `UnsafeMutablePointer`, ~Copyable-capable, public) +
-  `count = Buffer.Protocol.count` — but **the buffer COMPOSES (has-a) its storage and VENDS the iterator; it
-  does NOT conform `Storage.Protocol`.** Each `Buffer.Linear` variant conforms `Iterable` (~Copyable) with a
-  thin per-variant `makeIterator` in its type module:
-  `Iterator.Borrow.Scalar(base: storage.pointer(at: .zero), count: count, borrowing: self)` (`Small` switches
-  its `_Representation` enum) — **storage stays `@usableFromInline internal`; no public base.** `Set.Ordered`
-  and the buffer-backed family **delegate** `makeIterator { buffer.makeIterator() }`. The iteration body is
-  unified in `Iterator.Borrow.Scalar`; the per-variant `makeIterator`s are thin composition glue (the existing
-  internal `_iteratorBase()` window can back them — it stays internal, NOT promoted to public).
-  - **Rejected (category errors / leaks), corrected 2026-05-30:** **`Buffer.Linear: Storage.Protocol`** — the
-    buffer is the *logical* capability (`count`/`isEmpty`), storage the *physical* (`pointer(at:)`/`capacity`);
-    the chain is **storage→buffer**, so conforming buffer→storage **inverts the layer** and is the
-    refinement-stacking §1 forbids (the codebase already composes — linear ops are `Storage.Protocol` statics
-    taking `storage:`+`count:`; `Small`'s two-armed `_Representation` has no single `Storage` to surface).
-    **Option A** (escaping base on `Memory.Contiguous.Protocol`) — pollutes the safe-view core ([MOD-031]'s
-    "NOT Option A"). **Option B′** (`_iteratorBase()` → `@_spi public`) — leaks the base + perpetuates the
-    per-type duplicate. The composition shape avoids all three: no inversion, no public base, body unified in Scalar.
-- **(soundness gate — PASSED 2026-05-30, debug+release)** Driving a borrow iterator over the **real
-  `@_rawLayout` `Storage.Inline`** (escaping base via `withUnsafePointer(to: _storage)` / `pointer(at:)`,
-  computed on-demand) compiles, reads correctly, and is multipass-sound in **debug AND release** with no
-  miscompile/warning — a pointer into *embedded* storage is valid under the container borrow, and the
-  iterator's `@_lifetime` is what enforces it. So the inline/SBO case is **not** a wall.
-- **(construction refinement — ratified)** The shipped `Iterator.Borrow.Scalar.init(base:count:)` is
-  `@_lifetime(borrow base)` (correct for an independently-stable base, e.g. a stored heap pointer), but an
-  inline/embedded base is **computed** — anchoring a `~Escapable` iterator to that temporary escapes. So the
-  Scalar gains an **additive owner-anchored** `init(base:count:, borrowing owner:)` `@_lifetime(borrow owner)`
-  — anchoring to the keep-and-lend container (the true lifetime source), mirroring
-  `Ownership.Borrow(unsafeRawAddress:borrowing:owner:)`. The base-only init stays; the bridge/delegation
-  construct via the owner-anchored one. **Remaining build-verify:** the *literal* `Buffer.Linear.Inline:
-  Storage.Protocol` conformance on the real package (the gate proved the pattern; step 2 proves the conformance).
-- **(explicitly NOT doing)** No B1 coroutine-yield `next(_ body:)` (strictly more restrictive than pull-style
-  `next()`); no B2 `~Escapable`-cursor invention; **no `forEach` fallback for the pull side** (that would be
-  a cave — and unnecessary, pull-style works).
+> **This section is RE-ALIGNED.** The v2.1.x keystone — `~Copyable` pull-style via `Iterator.Borrow.Scalar`
+> composed over the Storage+Buffer cores (Option C) — is **SUPERSEDED** by the span-primitive shape. Full WHY +
+> SE-0516 mapping: `iterable-se0516-alignment.md` §5/§6.
+
+- **(decided — RE-ALIGNED)** `~Copyable` iteration is **not** a separate pull-style mechanism — it is the
+  **same span iterator** (`Iterator.Chunk` over `span`, §2.3) that serves Copyable elements. `Iterator.Chunk`'s
+  primitive is `next(maximumCount:) -> Span<Element>` with `Element: ~Copyable` (D1); the consumer reads
+  elements via `span[i]`, which is a **borrowing addressor** (`Span.swift:455-461`) — the element is **borrowed
+  in place, never moved out by value**. So the move-out wall that motivated a `~Copyable`-specific iterator
+  simply **does not arise** under the span primitive. `Span<Element: ~Copyable>` (`Span.swift:29`) is the
+  keep-and-lend mechanism; no `Ownership.Borrow` wrapper, no escaping base, no `Storage` composition.
+- **(realize — span-primitive; DECIDED 2026-05-30, user-ratified)** `Set.Ordered` and **every** `Buffer.Linear`
+  variant get their `Iterable` (~Copyable) conformance **for free from the memory→Iterable bridge over `span`**
+  (§6.3, D4/D5). `Memory.Contiguous.span` is already `~Copyable`-capable (`Memory.ContiguousProtocol.swift:90-101`;
+  `Set.Ordered.span` is `where Element: ~Copyable`); once the bridge relaxes `Copyable → ~Copyable`, it vends
+  `Iterator.Chunk(span)` for both kinds. So this is **ONE conformance** — the dual-element-kind split
+  **dissolves** — with **NO per-variant `makeIterator`, NO `Buffer.Linear: Storage.Protocol`, NO public base,
+  NO escaping `pointer(at:)`, NO `Iterator.Borrow.Scalar` vend, NO separate bridge package.** The buffer just
+  exposes `span` (which it already does) and the existing bridge does the rest. This is **strictly simpler**
+  than v2.1.x Option C.
+  - **The Option-C-era rejections are now moot for iteration** (the bridge-over-`span` sidesteps all of them):
+    the `Buffer.Linear: Storage.Protocol` **category error**, **Option A** (escaping base on `Memory.Contiguous`),
+    and **Option B′** (`_iteratorBase()` → public) were all about routing an *escaping base* to a borrow iterator;
+    the span primitive never needs an escaping base. **T1** (`associatedtype Storage` on `Buffer.Protocol`)
+    **stays rejected** (§6.5) — independent of this realignment.
+- **(`Iterator.Borrow` disposition — PARKED, not reverted)** `Iterator.Borrow.\`Protocol\`` /
+  `Iterator.Borrow.Scalar` exist solely to give `~Copyable` **scalar** pull-style via an
+  `Element == Ownership.Borrow<Borrowed>` wrapper past the move-out wall. Under the span primitive that wall
+  never arises, so the **iteration role is WITHDRAWN.** **SE-0516 explicitly rejected this exact design**
+  ("Basing `~Copyable` iteration on `IteratorProtocol`" with a `Borrow<Element>`-returning `next()`) on
+  call-site-ergonomics grounds — predicates would be written over `(borrowing Borrow<T>)` instead of the
+  element type. Per [ARCH-LAYER-009] (no pre-1.0 deletion): **PARK `f31ce11`/`dd60699` on disk, do NOT revert
+  or delete.** The package may retain a *non-iteration* scalar keep-and-lend cursor role (cheap `peek`/`zip`/
+  early-exit — affordances a span `forEach` lacks); re-evaluate at 1.0 against whether a consumer needs it.
+  `Ownership.Borrow<Value>` itself (a general borrow handle) is **untouched**.
+- **(build-verify gate — the one open item)** `Iterator.Chunk(span)` over **inline `@_rawLayout` storage**
+  (the `.Inline`/`.Small`/`.Static` variants) for `~Copyable` elements must compile + iterate correctly in
+  **debug AND release**. The span path borrows through the **safe `span` view** (`@_lifetime(borrow self)`) —
+  strictly *weaker* than the old escaping-base path the v2.1.x soundness gate already passed — so it should be
+  **at least as sound**; but it is a gate, not a settled claim ([RES-021]/[RES-027]). This gate replaces the
+  v2.1.x "literal `Buffer.Linear.Inline: Storage.Protocol`" gate (which no longer exists — no Storage conformance).
+- **(no cave — retained discipline)** No Copyable-gated fallback for `~Copyable` iteration; no degrade to
+  `[Swift.String]`. If the build-verify gate walls → escalate (architecture-shape call), do not retreat.
 
 ### 2.6 The consuming-iterator choice (`Sequenceable.makeIterator`, consuming)
 
@@ -266,11 +302,16 @@ Each sub-section states **(decided)** the locked element, **(realize)** the conc
 
 ```
 Iterable  (iterator-primitives)        ── element-iteration floor, GROUND HOME for the terminal suite
-  ├─ forEach (plain borrowing func, UNIVERSAL incl. ~Copyable)  ◄ §2.1  the floor every structure inherits
-  ├─ contains / first / reduce / satisfies                      ◄ compose from forEach
-  └─ makeIterator (borrowing pull-style, Copyable)              ◄ §2.3  ONE requirement, TWO escapability-gated
-        ├─ copy-self default  (span-projecting backing)               defaults (Angle B); through a
-        └─ plain default      (non-span backing)                      ~Escapable copy-self view (Angle A/D1)
+  ├─ forEach (plain borrowing func, UNIVERSAL incl. ~Copyable)  ◄ §2.1  span-loop body; (borrowing Element)
+  ├─ contains / first / reduce / satisfies                      ◄ compose from forEach (span loop)
+  └─ makeIterator (borrowing) -> Iterator.Chunk  [SPAN-PRIMITIVE] ◄ §2.3  ONE span iterator, BOTH element kinds
+        next(maximumCount:) -> Span<Element>                          (the SE-0516 nextSpan); span[i] borrows.
+        Element bound ~Copyable; NOT : Iterator.`Protocol`.           Memory.Contiguous family: vended FREE
+                                                                      by the memory→Iterable bridge over span.
+
+Iterator.`Protocol` (iterator-primitives)  next() -> Element?   ── scalar/move-out FOUNDATION
+  └─ the consuming/give-away iterator for Sequenceable (World A) + the ~Escapable-element ceiling.
+     NO LONGER Iterable's iterator (the move-out wall lived here).
 
 Collection.`Protocol` (collection-primitives)   [standalone now; : Iterable at FAN-OUT]   ◄ §2.2
   └─ subscript / Range / Slice / firstIndex (index-specific only)
@@ -278,14 +319,14 @@ Collection.`Protocol` (collection-primitives)   [standalone now; : Iterable at F
 Sequenceable (sequence-primitives)  : ~Copyable, ~Escapable   [orthogonal sibling — does NOT refine Iterable]
   ├─ forEach borrow-terminals → admit ~Escapable; + the @inline(always) Swift.Sequence dual-conformer bridge
   ├─ collect / first extraction-terminals → Element: Escapable
-  ├─ makeIterator (CONSUMING, owning drain)            ◄ §2.6  hand-written scalar (set-ordered)
+  ├─ makeIterator (CONSUMING, owning drain) -> scalar Iterator.`Protocol`  ◄ §2.6  hand-written scalar
   └─ consume(_: (consuming Element) throws(E)->Void)   ◄ §2.7  CLOSURE terminal (Sequence.Consume DELETED;
                                                                symmetric to forEach; no View/ConsumeState/takeBuffer)
 
-Iterator.Borrow.`Protocol` + Iterator.Borrow.Scalar (iterator-borrow-primitives)   ◄ §2.5  ~Copyable PULL-style;
-  Scalar(base,count) SHIPPED. base = Storage.pointer(at:.zero) + count = Buffer.count → composes over the
-  Storage + Buffer cores. The buffer COMPOSES storage (has-a) + vends it via a per-variant makeIterator
-  (NO Buffer.Linear:Storage.Protocol — category error; NO public base; NO bridge); containers DELEGATE.
+Iterator.Borrow.`Protocol` + Iterator.Borrow.Scalar (iterator-borrow-primitives)   ◄ §2.5  PARKED
+  Element == Ownership.Borrow<T> scalar pull-style. ITERATION ROLE WITHDRAWN under the span realignment
+  (SE-0516 rejected this element-wrapping). f31ce11/dd60699 stay on disk ([ARCH-LAYER-009]); possible
+  future non-iteration scalar keep-and-lend cursor. NOT vended by any container.
 
 Swift.Sequence  (stdlib)  where Element: Copyable     ◄ §2.8  re-add; stdlib bridge, institute primary
 ```
@@ -294,12 +335,15 @@ Swift.Sequence  (stdlib)  where Element: Copyable     ◄ §2.8  re-add; stdlib 
 
 | Element kind | Push-style (internal) | Pull-style (external) |
 |---|---|---|
-| `Copyable` | `Iterable.forEach` (floor) | `Iterable.makeIterator` (borrow) + `Sequenceable.makeIterator` (consuming) + `Swift.Sequence` bridge |
-| **`~Copyable`** | `Iterable.forEach` (floor — `(borrowing Element)`) | **`Iterator.Borrow.Scalar`** over the `Storage.pointer(at:)` + `Buffer.count` cores (Option C, §2.5); containers delegate to the backing |
-| `~Escapable` | `forEach` borrow-terminal | copy-self view (`@_lifetime(copy self)`) |
+| `Copyable` | `Iterable.forEach` (floor, span loop) | `Iterable.makeIterator` → `Iterator.Chunk` (span) + `Sequenceable.makeIterator` (consuming) + `Swift.Sequence` bridge |
+| **`~Copyable`** | `Iterable.forEach` (floor — `(borrowing Element)`, span loop) | **`Iterable.makeIterator` → `Iterator.Chunk` (span)** — the **same** span iterator; `span[i]` borrows, never moves out (§2.5). Vended by the bridge over `span`; **no `Iterator.Borrow`** |
+| `~Escapable` **element** | scalar `Iterator.\`Protocol\`` / `Sequenceable` borrow-terminals (language-blocked at the `Span` ceiling — span cannot carry `~Escapable`) | scalar `Iterator.\`Protocol\`` (the `~Escapable`-element foundation) |
 
-`forEach` is the **floor covering every cell**; the pull-style rows are affordances layered on top. The
-consuming drain `consume(_:)` (§2.7) is the consuming sibling of `forEach`.
+`forEach` is the **floor covering every cell**; the pull-style is now the **same span iterator** for both
+Copyable and `~Copyable` (not a separate borrow mechanism). The consuming drain `consume(_:)` (§2.7) is the
+consuming sibling of `forEach`. **`~Escapable`-*element* iteration** (lending a view of a genuinely
+non-escaping element) stays on the scalar `Iterator.\`Protocol\`` — `Span` excludes `~Escapable` (`Span.swift:29`),
+so the span primitive cannot carry it; this is the same language-blocked ceiling SE-0516 hits (§6.1).
 
 ---
 
@@ -313,24 +357,28 @@ re-verifies it (the fan-out is NOT pre-authorized; the per-action YES gate stand
    is per-variant).
 2. **Choose the representation** (§2.4): contiguous/piecewise → span-projecting directly; tree/hash/graph →
    **flat-pool**. Avoid pure-pointer boxed nodes through generic defaults (A2 release bug); flat-pool is the dodge.
-3. **Expose a `~Escapable` copy-self view** for the borrowing pull-style `Iterable.makeIterator` (§2.3);
-   inherit the gated default. Piecewise (ring/deque) views list `@_lifetime(copy s1, copy s2, …)` per segment.
+3. **Expose `span` (`Memory.Contiguous.\`Protocol\``)** so the memory→Iterable bridge vends the span-primitive
+   `Iterable.makeIterator() -> Iterator.Chunk(span)` for free (§2.3/§6.3) — for **both** element kinds. Piecewise
+   backings (ring/deque) that project more than one span need a multi-span iterator or per-segment handling
+   (**open** at fan-out — surface it, do not assume one span).
 4. **Consuming route** (§2.6/§2.7): delegate `Sequenceable.makeIterator` (consuming) to the backing's
    hand-written `.Scalar`; the consuming drain is the inherited `Sequenceable.consume(_:)` closure terminal —
    **no `takeBuffer`, no `Sequence.Consume.Protocol`**. Use `Memory.Snapshot.Cursor` only if a package needs
    a generic contiguous bridge, its backing trips the demangle, and it has no hand-written scalar.
-5. **`~Copyable` pull-style** (§2.5, Option C composition): the backing **vends** `Iterator.Borrow.Scalar` via a
-   thin per-variant `makeIterator` (the buffer composes its internal storage; **no `Buffer.Linear:Storage.Protocol`,
-   no public base, no bridge**); the container **delegates** `makeIterator { backing.makeIterator() }`. `~Copyable`
-   variants get **both** `forEach` (push) and the delegated `Iterator.Borrow.Scalar` (pull) — no fallback.
+5. **`~Copyable` iteration** (§2.5, span-primitive): there is **no separate pull-style mechanism** — the same
+   span iterator (`Iterator.Chunk` over `span`, vended by the bridge relaxed to `~Copyable`) serves `~Copyable`
+   elements via `span[i]` borrowing access. `~Copyable` variants get **both** `forEach` (push) and
+   `makeIterator → Iterator.Chunk` (pull) from the one bridge conformance — **no `Iterator.Borrow.Scalar`, no
+   per-variant `makeIterator`, no `Storage` conformance, no public base, no fallback.**
 6. **`Swift.Sequence` bridge** (§2.8): re-add `where Element: Copyable` once the iterator shape is settled.
 7. **`Collection` refinement cascade** (§2.2): for `Collection.\`Protocol\`` conformers, drop
    `Collection.ForEach` for the inherited floor — workspace-enumerate first ([HANDOFF-050]).
 8. **MOD-036 type/ops boundary**: apply the windowless-interim recipe. **Do NOT replicate `takeBuffer`** (gone).
 
-**The recipe is data-shaped-vs-resource-shaped aware** ([DS-021]): `Copyable` (data-shaped) variants get the
-by-value pull-style routes; `~Copyable` (resource-shaped) variants get `forEach` (push) + `Iterator.Borrow`
-(pull). Institute containers pass `~Copyable` through — no `[Swift.String]` fallbacks.
+**The recipe is data-shaped-vs-resource-shaped aware** ([DS-021]): `Copyable` (data-shaped) variants
+additionally get the consuming `Sequenceable` route + the `Swift.Sequence` bridge; `~Copyable`
+(resource-shaped) variants get `forEach` (push) + the span iterator (pull) from the one bridge conformance.
+Institute containers pass `~Copyable` through — no `[Swift.String]` fallbacks.
 
 **Per-container iteration-order gate:** for ordered-set / ordered-dict, **halt-and-surface if iteration
 order is index-maintained rather than in-storage** (the span-direct floor walks storage order). **Cascade
@@ -348,11 +396,11 @@ re-verified.
 
 | # | Change | Current | Target | Element |
 |---|---|---|---|---|
-| 1 | `forEach` → inherited floor | per-variant method (Copyable; ~Copyable hand-written) | inherited from `Iterable` default; works for both element kinds via §2.5 | §2.1 |
-| 2 | borrowing `makeIterator` | only consuming exists | add gated borrowing `Iterable.makeIterator` via copy-self view; `@_implements` split | §2.3 |
+| 1 | `forEach` → inherited floor | per-variant method (Copyable; ~Copyable hand-written) | inherited from the `Iterable` **span-loop** default; works for both element kinds, no Copyable gate; subsumes the bespoke `Memory.Contiguous` floor | §2.1 |
+| 2 | borrowing `makeIterator` | only consuming exists | `Iterable.makeIterator() -> Iterator.Chunk(span)` (span-primitive) **vended by the bridge** (relaxed `~Copyable`); `@_implements` split vs `Sequenceable`'s consuming scalar iterator | §2.3 |
 | 3 | consuming drain | `Sequenceable.consume(_:)` closure terminal — **DONE** (`13ab89f`; Sequence.Consume + takeBuffer deleted) | no change needed | §2.7 |
 | 4 | consuming iterator | backing `.Scalar` (hand-written) | **keep** | §2.6 |
-| 5 | `~Copyable` pull-style + `Iterable`(~Copyable) | not vended; `Iterable` is `where Element: Copyable` | **Option C (composition)**: `Iterator.Borrow.Scalar` SHIPPED (`f31ce11`) · each `Buffer.Linear` variant **vends** it via a thin per-variant `makeIterator` (storage internal; **NO `Buffer.Linear:Storage.Protocol`, NO public base, NO bridge**) · `Set.Ordered: Iterable` ~Copyable **delegates** `makeIterator { buffer.makeIterator() }`. Open: literal inline-variant build-verify | §2.5 |
+| 5 | `~Copyable` `Iterable` | not vended; `Iterable` is `where Element: Copyable` | **span-primitive (D4/D5)**: relax the memory→Iterable bridge `Copyable → ~Copyable`; `Set.Ordered` + buffers get **ONE** `Iterable` conformance via the bridge over `span` — the dual-element-kind split **dissolves**. **NO `Iterator.Borrow.Scalar`, NO per-variant `makeIterator`, NO `Buffer.Linear:Storage.Protocol`, NO public base.** Open: the `Iterator.Chunk(span)`-over-inline-`@_rawLayout` build-verify gate | §2.5 |
 | 6 | `Swift.Sequence` | not conformed (input-only) | **re-add** `where Element: Copyable` | §2.8 |
 | 7 | Small `drain()` evergreen | take-and-put-back workaround (~ll.139–141) | non-optional + sentinel-empty; **delete the workaround**; escalate-don't-retreat if walled | §2.9 |
 | 8 | promote recipe note | gitignored at `swift-set-ordered-primitives/Audits/mod-036-type-ops-boundary.md` | promote to tracked `swift-institute/Research/` | recipe note |
@@ -368,16 +416,27 @@ must not regress.
 The decisions above rest on these results, proven in `Experiments/iteration-architecture-toy` (`8ae35fb`,
 Phases 8–11; debug+release, full ecosystem flags) and the consuming-iterator reshape doc (KEPT).
 
+> **Note (v2.2.0):** §6.2's Angle-A/B framing (the `~Escapable` copy-self walker + the "two escapability-gated
+> `makeIterator` defaults") predates the span-primitive realignment and is **retained as empirical evidence**
+> of what the toy proved. Where it differs from §2.3/§2.5 (RE-ALIGNED), those sections govern: `Iterable`'s
+> iterator is the span `Iterator.Chunk` (one iterator, both kinds, vended by the bridge), not a per-conformer
+> copy-self/plain default. Angle C (the `forEach` floor) carries through unchanged — now realized by the span
+> loop. §6.1 (two-world) and §6.3 (bridge) are RE-ALIGNED in place.
+
 ### 6.1 The two-world duality (load-bearing claim)
 **give-away vs keep-and-lend.** For move-only elements, `owned ⇒ single-pass` and `borrowed ⇒ multipass`.
 - **World A — owned iteration (give-away, single-pass):** the iterator world. `Iterator.\`Protocol\`` +
   `Sequenceable` (consuming `makeIterator`). A World-A step gives an element away.
 - **World B — borrowing traversal (keep-and-lend, multipass):** `Iterable` (borrowing `makeIterator`, already
   `@_lifetime(borrow self)`). The container survives and re-vends. **Multipass comes from the EXISTING
-  `Iterable` — no new attachable.** `~Copyable` multipass is `Iterator.\`Protocol\`` instantiated with
-  `Element == Ownership.Borrow<T>` (= `Iterator.Borrow`); the world is chosen by the element binding, not a
-  distinct protocol. (The `~Escapable`-*element* axis — lending a view of a genuinely non-escaping element —
-  stays language-blocked at the `Swift.Span` ceiling; revisit when the language matures.)
+  `Iterable` — no new attachable.** **(RE-ALIGNED v2.2.0)** `~Copyable` multipass is the **span iterator**
+  (`Iterator.Chunk` over `span`): `next(maximumCount:) -> Span<Element>` lends a borrowed span and `span[i]`
+  borrows each element in place — keep-and-lend **without** moving the element out and **without** an
+  `Ownership.Borrow<T>` wrapper. (The earlier framing — `Iterator.\`Protocol\`` with
+  `Element == Ownership.Borrow<T>` = `Iterator.Borrow` — is superseded; SE-0516 rejected element-wrapping, §2.5.)
+  The `~Escapable`-*element* axis — lending a view of a genuinely non-escaping element — stays language-blocked
+  at the `Swift.Span` ceiling (`Span` excludes `~Escapable`) and lives on the scalar `Iterator.\`Protocol\``;
+  revisit when the language matures.
 
 ### 6.2 The expressibility angles (the decided shape)
 - **Angle A — `~Escapable` self-tied walker via a copy-self family default.** Flat trees, hashes, and boxed
@@ -396,26 +455,31 @@ Phases 8–11; debug+release, full ecosystem flags) and the consuming-iterator r
   `~Copyable` carried natively. **Cost:** internal iteration only — no pull-style `next()`, lazy, `zip`,
   `peek`, cheap early-exit (those are the pull-style affordances, §2.3/§2.5). §2.1.
 
-### 6.3 The memory→Iterable bridge + the withdrawn `Iterator.Walk`
-`Memory.Contiguous.\`Protocol\`` (`var span: Span<Element>`) is the span-projecting substrate. The
-memory→Iterable bridge is **witness-only**: a constrained extension supplying
-`borrowing func makeIterator() -> Iterator.Chunk(span)` (reusing the canonical bulk iterator; no iterator of
-its own) + the span-lending `forEach` floor. The bridge's `makeIterator`/`Iterator.Chunk` scalar path is
-**Copyable-gated** (the move-out wall) — which is exactly why the ~Copyable PULL path goes through
-`Iterator.Borrow.Scalar` (§2.5), composed over the **Storage + Buffer cores**, NOT the Memory.Contiguous span.
-**Decomposition principle (Option C, the truly-correct home):** the escaping base address belongs to the
-*addressable* `Storage.Protocol` core (`pointer(at:)`), **never** the *safe-view* `Memory.Contiguous` core
-(`span`) — so an escaping-base accessor on `Memory.Contiguous.Protocol` (Option A) pollutes the safe core, and
-a per-type `_iteratorBase()` window promoted to public (Option B′) leaks the base. The **buffer is NOT a
-storage** (Buffer.Protocol = logical `count`; Storage.Protocol = physical `pointer(at:)`; the chain is
-storage→buffer) — so `Buffer.Linear: Storage.Protocol` is a **category error**. The buffer instead **composes**
-its (internal) storage and **vends** `Iterator.Borrow.Scalar` via a per-variant `makeIterator` — the base
-stays internal (`_iteratorBase()` may back it, un-promoted), no conformance inversion, no public base.
-A v1.0.0 `Iterator.Walk` (a new owning iterator type) was
-**withdrawn**: the owning iterator is the deferred owned-`Cursor` sibling (`Memory.Cursor`, homed in the
-existing `swift-memory-cursor-primitives`), not a new type — and a borrowed-view cursor + an owned cursor are
-two types because escapability is fixed at declaration. `Ownership.Borrow`'s typed-pointer init refused
-`@_lifetime` on an Escapable result (OQ-2 V1 refuted: "invalid lifetime dependence on an Escapable result").
+### 6.3 The memory→Iterable bridge — the load-bearing vehicle (RE-ALIGNED v2.2.0)
+`Memory.Contiguous.\`Protocol\`` (`var span: Span<Element>`, `Element: ~Copyable`) is the span-projecting
+substrate. The memory→Iterable bridge is **witness-only**: a constrained extension supplying
+`borrowing func makeIterator() -> Iterator.Chunk(span)` (reusing the canonical span iterator; no iterator of
+its own) + the span-lending `forEach` floor. **The realignment turns on this bridge:**
+- **(D4) Relax the bridge `Element: Copyable → ~Copyable`.** Today it is `Copyable`-gated only because
+  `Iterator.Chunk`'s *conformance* was `Escapable`-narrowed (`__IteratorChunkProtocol.swift:35`) and `Iterable`
+  consumed the scalar move-out. Once `Iterator.Chunk`'s bound relaxes to `~Copyable` (D1) and `Iterable`'s
+  primitive is the span (D2), the bridge vends `Iterator.Chunk(span)` for **both** element kinds —
+  `Memory.Contiguous.span` is already `~Copyable`-capable (`Memory.ContiguousProtocol.swift:90-101`).
+- **(D3) The bridge's span-lending `forEach` floor becomes the GENERAL `Iterable.forEach`** (§2.1) — the
+  bespoke `Memory.Contiguous+Iterable.swift:55-67` floor and the general floor converge on the same span loop;
+  the duplication dissolves.
+- **No escaping base anywhere.** The bridge borrows through the **safe `span` view** (`@_lifetime(borrow self)`),
+  not an escaping `pointer(at:)`. So the entire v2.1.x escaping-base decomposition — the `Buffer.Linear:
+  Storage.Protocol` **category error**, **Option A** (escaping base on `Memory.Contiguous`), **Option B′**
+  (`_iteratorBase()` → public) — is **moot for iteration** (it was solving where the escaping base lives; the
+  span primitive needs none). `Buffer.Protocol` (logical `count`) **has-a** `Storage.Protocol` (physical
+  `pointer(at:)`) as before — the chain is storage→buffer — but storage is **not** the iteration vehicle now.
+
+A v1.0.0 `Iterator.Walk` (a new owning iterator type) was **withdrawn**: the owning iterator is the deferred
+owned-`Cursor` sibling (`Memory.Cursor`, homed in the existing `swift-memory-cursor-primitives`), not a new
+type — and a borrowed-view cursor + an owned cursor are two types because escapability is fixed at declaration.
+`Ownership.Borrow`'s typed-pointer init refused `@_lifetime` on an Escapable result (OQ-2 V1 refuted: "invalid
+lifetime dependence on an Escapable result").
 
 ### 6.4 Terminal relocation + the `Sequencer` rename (folded from the sequencer-reconciliation DRAFT)
 The non-destructive terminal suite (`forEach`, `contains`, `first`, `satisfies`, observing `reduce`) is
@@ -439,8 +503,20 @@ as `Sequencer.Span.Protocol`) — open (D-2). **Pending rename (A7, unexecuted):
 - Family-protocol `Backing`-lift via a generic `var backing` accessor / `extension Family.Protocol: Iterable
   where Backing: Iterable`: lifetime-escape / "extension of protocol cannot have an inheritance clause" → the
   floor lives on `Iterable`; conformance is **per-variant** (bodies inherit).
-- A by-value `next() -> Element?` for raw `~Copyable` multipass (A4): SILGen crash → use `forEach` (push) +
-  `Iterator.Borrow` (pull) instead.
+- A by-value `next() -> Element?` for raw `~Copyable` multipass (A4): SILGen crash (move-out) → the
+  span-primitive `Iterable` (RE-ALIGNED v2.2.0) **never does this** — its iterator yields `Span<Element>`
+  and `span[i]` borrows in place. So `~Copyable` uses the span iterator (`Iterator.Chunk` over `span`) for
+  **both** push (`forEach`) and pull (`makeIterator`); no by-value scalar `next()` on `Iterable`.
+- **Scalar-primitive `Iterable`** (`Iterable.Iterator = scalar Iterator.\`Protocol\``, `next() -> Element?`):
+  this **was** the institute's shape (`Iterable.swift:45` pre-realignment) and is the **root** of the
+  week-long `~Copyable` move-out wall. **Superseded v2.2.0** by the span-primitive `Iterable` (D2) per SE-0516.
+  The scalar `Iterator.\`Protocol\`` stays — but as `Sequenceable`'s consuming foundation, not `Iterable`'s iterator.
+- **`Iterator.Borrow.Scalar` as `Iterable`'s `~Copyable` iterator** (the v2.1.x Option C: `Element ==
+  Ownership.Borrow<Borrowed>` scalar pull-style over the Storage+Buffer cores): **superseded v2.2.0.** The span
+  iterator covers `~Copyable` without the wrapper, and **SE-0516 explicitly rejected this element-wrapping
+  design** on call-site ergonomics (`iterable-se0516-alignment.md` §5). `Iterator.Borrow` is parked, not
+  reverted ([ARCH-LAYER-009]). Do NOT re-derive an `Ownership.Borrow`-yielding iterator as the `~Copyable`
+  iteration path.
 - **`associatedtype Storage: Storage.Protocol` on `Buffer.Protocol`** (the "maximum-for-free via one generic
   extension" instinct): **rejected** — it is **anti-precedented** (cross-language survey
   `buffer-storage-associatedtype-prior-art.md`: Swift SE-0256 *ContiguousCollection* rejected + SE-0447 *deferred*
@@ -448,10 +524,11 @@ as `Sequencer.Span.Protocol`) — open (D-2). **Pending rename (A7, unexecuted):
   unstable 2+ yrs; C++ `contiguous_range` is a *concept* not a type; Python `Py_buffer` is a scoped accessor —
   **nobody exposes storage as a member type**) AND it contradicts the APPROVED
   `cross-layer-capability-protocol-model.md` ("Buffer.Protocol … no `Storage` refinement … has-a"). The universal
-  shape is contiguity-as-a-**capability** + per-conformer provision; the borrow iterator is vended by each
-  buffer's thin per-variant `makeIterator` over its **internal** storage (the construction shared via a
-  generic-over-`some Storage.Protocol` helper / `Iterator.Borrow.Scalar`) — "for free" lands at container
-  delegation, not by exposing the storage core.
+  shape is contiguity-as-a-**capability** + per-conformer provision. **(RE-ALIGNED v2.2.0)** Under the
+  span-primitive shape, "for free" lands even more cleanly: the iterator is `Iterator.Chunk` over `span`, vended
+  by the **memory→Iterable bridge** (relaxed to `~Copyable`) — buffers expose only `span` (the safe-view
+  capability they already provide), not storage, not an escaping base, not a per-variant `makeIterator`. T1's
+  rejection stands independently of the realignment.
 
 ### 6.6 D1–D5 design-acceptance rubric (for fan-out re-review against any future model)
 - **D1** — the shape is proven on the real ecosystem flags (debug+release), not just the toy.
@@ -467,13 +544,19 @@ as `Sequencer.Span.Protocol`) — open (D-2). **Pending rename (A7, unexecuted):
 
 ## 7. Outcome
 
-**Status: APPROVED** (reconciled to disk, v2.1.0; Option C locked). `Iterator.Borrow.Scalar` is **shipped**
-(`f31ce11`); the rework composes ~Copyable borrow-iteration over the **Storage + Buffer cores** (§2.5). The
-one genuinely-open build item is the **@_rawLayout inline variants conforming `Storage.Protocol`'s escaping
-`pointer(at:)`** soundly — the build-verify gate at the heart of the reference rework. The consuming drain
-(`Sequenceable.consume(_:)`) and release-cleanliness are **done**. Sequence: **set-ordered reference rework
-(§5: each Buffer.Linear variant vends Iterator.Borrow.Scalar per-variant by composition → Set.Ordered delegates) → re-verify → promote the recipe
-→ ×16 fan-out (§4)** — each gate per-action.
+**Status: APPROVED** (re-aligned to disk + SE-0516, v2.2.0; span-primitive). The institute `Iterable` is
+realigned to SE-0516's span-primitive shape: re-point `Iterable.Iterator` to the span `__IteratorChunkProtocol`
+(D2) + relax its element bound `Escapable → ~Copyable` and drop the scalar-protocol refinement (D1). ONE span
+iterator (`Iterator.Chunk` over `span`) serves both element kinds; the memory→Iterable bridge relaxed to
+`~Copyable` (D4) gives Set.Ordered + buffers their `Iterable` (~Copyable) conformance **for free**, dissolving
+the dual-element-kind split (D5) and retiring the `Iterator.Borrow` detour (D6 — **PARKED, not reverted**;
+`f31ce11`/`dd60699` stay on disk). The one open build item is the **build-verify gate: `Iterator.Chunk(span)`
+over inline `@_rawLayout` storage for `~Copyable`** (debug+release). The consuming drain
+(`Sequenceable.consume(_:)`) and release-cleanliness are **done**. T1 (`associatedtype Storage` on
+`Buffer.Protocol`) stays rejected. **Next: a verify-plan agent (1) re-verifies this realignment, (2) assesses
+ground-state vs the plan, (3) produces the implementation plan** (delta D1–D8 + the `: Iterable` blast-radius
+enumeration); then implement → re-verify → promote the recipe → ×16 fan-out (§4) — each gate per-action. Full
+WHY + SE-0516 mapping + delta: **`iterable-se0516-alignment.md`**.
 
 ---
 
@@ -481,6 +564,10 @@ one genuinely-open build item is the **@_rawLayout inline variants conforming `S
 
 - **Execution / coordination:** `HANDOFF-data-structure-iteration-arc.md` (the single working doc — current
   state, gates, queue, loose ends).
+- **Span-primitive realignment (the superseding WHY for §2.1/§2.3/§2.5/§3/§6, v2.2.0):**
+  `iterable-se0516-alignment.md` (Tier 2, RECOMMENDATION, principal-ratified 2026-05-30) — the SE-0516 ↔
+  institute mapping, the delta D1–D8, the `Iterator.Borrow` disposition; `bulk-span-iteration-fold-vs-separate.md`
+  (Tier 3) — the `Span<~Copyable>` crux verified against the stdlib clone + SE-0516's rejection of element-wrapping.
 - **Empirical evidence (KEPT):** `Experiments/iteration-architecture-toy` `8ae35fb` (Angle A/B/C, Phases
   8–11); `Experiments/memory-cursor-generic-witness-demangle` (the demangle repro);
   `memory-cursor-generic-witness-demangle-reshape.md` v1.0.0 (the consuming-iterator reshape).
