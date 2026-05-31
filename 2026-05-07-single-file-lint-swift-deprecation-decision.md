@@ -1,16 +1,19 @@
 ---
 title: Single-File Lint.swift Consumer Form — Keep, Deprecate, or Remove?
-version: 0.1.0
-status: IN_PROGRESS
+version: 0.2.0
+status: SUPERSEDED
+supersededBy: 2026-05-12-swift-linter-unified-consumer-manifest.md
 tier: 2
 created: 2026-05-07
-last_updated: 2026-05-07
+last_updated: 2026-05-31
 applies_to:
   - swift-foundations/swift-linter
   - swift-foundations/swift-linter-rules
   - swift-foundations/swift-manifests
   - all consumer packages adopting swift-linter
 ---
+
+> **SUPERSEDED (2026-05-31, per [META-002]).** This doc's open keep/deprecate/remove question (Options A/B/C; Outcome was "Pending investigation") is resolved by [`2026-05-12-swift-linter-unified-consumer-manifest.md`](2026-05-12-swift-linter-unified-consumer-manifest.md), which adds **Option D** (unify deps + activations in a single `Lint.swift` = Shape γ) and states "A/B/C all collapse." Retained in place per [META-005] as historical rationale.
 
 # Context
 

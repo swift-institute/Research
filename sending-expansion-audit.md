@@ -1,9 +1,11 @@
 ---
 title: "sending Annotation Expansion Audit"
-version: 2.0.0
-status: ALL COMPLETE (v1.0 + v2.0)
-last_updated: 2026-03-31
+version: 2.0.1
+status: SUPERSEDED
+superseded_by: ownership-transfer-conventions.md
+last_updated: 2026-05-31
 ---
+<!-- status reconciled 2026-05-31 per [META-002]: canonical frontmatter now matches the SUPERSEDED banner below (was the stale "ALL COMPLETE"). -->
 
 # `sending` Annotation Expansion Audit
 
