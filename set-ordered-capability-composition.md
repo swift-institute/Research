@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-05-31
 status: RECOMMENDATION
 tier: 2
@@ -110,3 +110,68 @@ Realized on the exemplar:
   probe builds release `-O` green; the disambiguator's forEach path is formally 0-witness (spike). Direct
   `-emit-sil` on the real probe is SwiftPM-tooling-blocked (as the cascade documented).
 - **Out of scope, untouched**: no ×16 fan-out; `iterator-borrow` stays deleted; nothing pushed.
+
+## 6. File-Organization Template (companion to the composition template, added v1.1.0)
+
+> The file-org pass (2026-05-31, LOCAL/unpushed) over set-ordered's dependency closure,
+> **bottom-up**. **Behavior-preserving only** — renames / splits / witness relocation; no
+> API, logic, or test-count change. This is the organization half of the ×16 template
+> (composition = §1–4; organization = this section).
+
+### The convention (one protocol per conformance file)
+
+| Rule | Shape |
+|---|---|
+| Conformance-file naming | `Type+Protocol.swift` — named for the protocol it satisfies, never a concept (`+Iteration` ✗) nor the conforming type alone (`.Iterator.swift` for a non-iterator ✗) |
+| One protocol per file | grab-bags (e.g. Iterable+Sequenceable in one file) split per protocol |
+| Witness co-location | each witness sits with the conformance it satisfies (`span` in `+Memory.Contiguous.Protocol.swift`, not a concept file) |
+| Type/ops split ([MOD-004]/[MOD-036]) | cold/Copyable-gated conformances (Iterable, Sequenceable, Sequence.Drain, Clearable) in the OPS module (PLURAL); the lean `~Copyable` type + its hot witnesses (refined-C: `makeIterator`, `span`) in the TYPE module (SINGULAR) |
+| One type per file ([API-IMPL-005]) | hoisted error enums, nested helper types → one declaration per file |
+| Import hygiene | per-file imports trimmed to what's used; dead imports dropped. The ACTIVE `Memory_Iterator_Primitives` bridge (vends `Iterable.makeIterator`) is load-bearing and STAYS — it is NOT the dormant `memory-sequence` bridge |
+
+### Realized per-variant conformance-file layout (Set.Ordered ×4)
+
+TYPE module `{Domain} {Variant} Primitive` (SINGULAR):
+- `X+Set.Protocol.swift` — Set.Protocol conformance + count/contains/index witnesses
+- `X+Memory.Contiguous.Protocol.swift` — conformance + the `span` witness (co-located)
+- `X+Sequenceable.swift` — the consuming `makeIterator()` witness (refined-C hot member)
+- `X+Hash.Protocol.swift` — Hash.Protocol conformance (`==`/`hash` over the span)
+
+OPS module `{Domain} {Variant} Primitives` (PLURAL):
+- `X+Iterable.swift` — Iterable conformance (bridge-vended `Iterator.Chunk`; imports the active memory→Iterable bridge)
+- `X+Sequenceable.swift` — Sequenceable conformance (thin: `SequenceableIterator` typealias + `underestimatedCount`)
+- `X+Sequence.Clearable.swift`, `X+Sequence.Drain.swift` — clear/drain conformances + the `.drain` accessor
+- `X+ExpressibleByArrayLiteral.swift`, `X+Buildable.swift` (Buildable variants)
+
+**Demangle constraint.** Where a Sequenceable witness is a HAND-WRITTEN scalar iterator
+(`Buffer.Linear.*.Scalar` in buffer-linear; absent in set-ordered, which forwards), it is
+IRREDUCIBLE — it stays in its `+Sequenceable.swift` / `.Scalar.swift` file and is NOT deduped
+via the dormant `memory-sequence` bridge (the generic `Memory.Cursor` witness demangle-crashes,
+Signal-6 `swift_getAssociatedTypeWitness`).
+
+### Per-package inventory (bottom-up; the fan-out checklist)
+
+| Package | File-org fixes applied | Tests (debug=release) |
+|---|---|---|
+| memory | misnamed `+Cardinal.Protocol` → `+Carrier.Protocol` (the conformed protocol); stale headers | library green¹ |
+| iterator | clean (0) | — |
+| buffer | clean (0) | — |
+| sequence | `Sequence.Drain.Protocol` extracted ([API-IMPL-005]); `Sequenceable+Swift.Sequence` → `+first` (no such conformance present) | 160 |
+| collection | `Collection.Remove.View` + `Collection.Access` extracted ([API-IMPL-005]) | 21 |
+| buffer-linear | grab-bag `+Sequence.Protocol` → `+Iterable` + `+Sequenceable` ×4; Drain/Clearable split ×4; dead Collection imports | 184 |
+| set | clean (0) | — |
+| hash-table | 3-conformance grab-bag `+Sequence.Protocol` → `+Iterator.Protocol` + `+Iterable` + `+Swift.Sequence` ×2; stale exports comments | 27 |
+| memory-iterator | clean (0 — exemplary bridge) | — |
+| **set-ordered** | the exemplar (above): iteration split ×4, Error 3-way split, Hash.Protocol extraction (base/Fixed), Small Drain import | **108** |
+
+¹ memory's test TARGET carries a PRE-EXISTING break (~151 stale `Memory.Arena`/`Pool`/`Buffer`
+refs to extracted siblings) — out of file-org scope; the library builds green debug+release.
+
+Out-of-closure siblings audited for template completeness (NOT fixed, by direction): set-algebra
+(a test-support fixture grab-bag), memory-sequence (dormant bridge — leave).
+
+### Deliberately left (not file-org violations)
+- `Set.Ordered.Variants+Builder.swift` — bundles the two bounded variants' throwing `@Builder`
+  inits in the umbrella; NOT a strict [API-IMPL-005] violation (extensions, not type decls).
+- Pre-existing warnings, out of file-org scope: hash-table `Hash.Occupied.View+Iterable`
+  #StrictMemorySafety (byte-identical to its pre-split source); one set-ordered test-file `try`.
