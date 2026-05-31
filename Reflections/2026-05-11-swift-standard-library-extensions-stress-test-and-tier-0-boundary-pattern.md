@@ -5,7 +5,11 @@ packages:
   - swift-standard-library-extensions
   - swift-linter-rules
   - swift-institute-linter-rules
-status: pending
+status: processed
+processed_date: 2026-05-31
+triage_outcomes:
+  - type: no_action
+    description: "Action items are arc-specific process-discipline tweaks (handoff/supervise/issue-investigation/reflect-session/lint-rule-promotion) already substantially covered by existing rules, point-in-time/stale, or better preserved in this reflection than promoted. Not promoted per the 2026-05-31 institute leanness program (de-bloat triage) to avoid further [PREFIX-*] proliferation in an oversized corpus; research items deferred (spawn via /research-process when scheduled). Learning retained here; re-promote individually if a pattern recurs."
 ---
 
 # swift-standard-library-extensions stress test and the Tier-0 boundary pattern
