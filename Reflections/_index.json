@@ -1,10 +1,30 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-05-22",
+  "generatedAt": "2026-06-01",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-06-01-finish-the-fan-out-collection-iterable-refine-edge.md",
+      "date": "2026-06-01",
+      "title": "Finish the Fan-Out — Collection.Protocol: Iterable refine edge + duplicate-iterator drop + .Indexed wrapper removal",
+      "packages": [
+        "swift-primitives/swift-array-primitives",
+        "swift-primitives/swift-collection-primitives",
+        "swift-primitives/swift-sequence-primitives",
+        "swift-primitives/swift-tree-keyed-primitives",
+        "swift-primitives/swift-tree-n-primitives",
+        "swift-primitives/swift-tree-unbounded-primitives",
+        "swift-primitives/swift-graph-primitives",
+        "swift-primitives/swift-pool-primitives",
+        "swift-primitives/swift-byte-parser-primitives",
+        "swift-primitives/swift-input-primitives",
+        "swift-primitives/swift-parser-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-05-22-multi-sli-tier-expansion-and-package-resolved-misdiagnosis.md",
       "date": "2026-05-22",
