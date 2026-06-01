@@ -110,7 +110,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | A6 | WMO + CopyToBorrowOptimization actor-state miscompile | 6.3.1 (still broken) | `guard state == .running` constant-folded to `true` after shutdown; 6 trigger conditions required |
 | A7 | SIL EarlyPerfInliner crash on ~Copyable value-type `_read` yield | 6.3.1 (still broken) | "Cannot initialize a nonCopyable type with a guaranteed value" at SILPerformanceInlinerPass |
 | A8 | Parameterized-typealias × parameterized-protocol opaque-return ICE | 6.3.2 (FIXED 6.4-dev) | `public typealias X = Generic<Concrete>` OR `extension Generic where Base == Concrete` in imported module triggers "failed to produce diagnostic" at test-target opaque returns |
-| A9 | `Atomic<Tagged<…>>` and `Dictionary<Tagged<…>, ~Copyable>` runtime metadata-lookup defect | 6.3.2 (still broken; evergreen wrapper fix landed) | `swift_getTypeByMangledName` returns `TypeLookupError("unknown error")` for institute-Tagged inside generic stdlib/institute containers needing full metadata; downstream loads of null metadata fault at `0x10` (advance) or `0xfffffffffffffff8` (deinit) |
+| A9 | `Atomic<Tagged<…>>`, `Dictionary<Tagged<…>, ~Copyable>`, and `Set<Tagged/Index>.Ordered.insert` runtime metadata-lookup defect | 6.3.x broken / fixed on 6.4-dev+ (wrapper workaround reverted 2026-05-23; require Swift 6.4+) | `swift_getTypeByMangledName` returns `TypeLookupError("unknown error")` for institute-Tagged inside generic stdlib/institute containers needing full metadata; downstream loads of null metadata fault at `0x10` (advance), `0xfffffffffffffff8` (deinit), or in `Hash.Table` insert (Set.Ordered) |
 | A10 | Unconditional protocol-conformance extension leaks `Element: Copyable` to primary declaration of `~Copyable`-generic nested type | 6.3.2 / 6.4-dev (still broken) | `extension Storage.Inline: SomeProtocol { … }` (no `where Element: ~Copyable`) causes `type 'Element' does not conform to protocol 'Copyable'` at every Element reference in a sibling `extension Storage where Element: ~Copyable`-scoped declaration |
 | A11 | `DiagnoseStaticExclusivity` SIGSEGV on a borrow returned through a `~Copyable` enum payload | 6.3.2 (still broken) | `@inlinable` getter returning `Span`/`MutableSpan`/`_read`-view from a `switch` over a `~Copyable` enum payload crashes emit-module; workaround is non-`@inlinable` + package window. Context-sensitive (no standalone reducer yet) |
 | B1 | `Property.View ~Copyable` extension constraint placement | 6.3.x (lang spec) | All constraints MUST be at extension level, not method level — implicit `Base: Copyable` else |
@@ -598,6 +598,47 @@ The fix travels with the **binary**, not the runtime: the shipping 6.3.2 runtime
 This is the incomplete-on-6.3 `SuppressedAssociatedTypes` feature, exactly as @kavon stated on #89389: the production path enables `-enable-experimental-feature SuppressedAssociatedTypes` (swift-tagged-primitives + swift-ordinal-primitives), and the crashing `Atomic<Tagged<…>>.advance(within:)` is constrained on a suppressed associated type (`Ordinal.Domain: ~Copyable`, Ordinal.Protocol.swift:65). The feature's codegen is incomplete on 6.3 and complete by 6.4-dev — the same statement as "fixed by 6.4-dev." Exact fixing commit not bisected (would require a from-source compiler build).
 
 **Disposition**: backport-request #89389 withdrawn; #74303 sibling note corrected (both 2026-05-28). Resolution for consumers is to require Swift 6.4+ for these paths.
+
+#### §A9 New Site (2026-06-01) — `Set.Ordered<Tagged>.insert` / `Set<Index>.Ordered.insert` (Hash.Table value-witness-table forcing)
+
+A new site of the same family was found during the queue dissolve-Core cascade while greening `swift-graph-primitives`: `swift-graph-primitives` builds green (debug + release) but `swift test` SIGSEGVs. Confirmed §A9 by **both** type identity and the canonical failed-type-lookup signature — this is *not* a new bug, it is the `swift_getTypeByMangledName`-null-metadata family surfacing in a new container.
+
+| Site | Trigger | Faulting path |
+|---|---|---|
+| `Set_Primitives.Set<Tagged<Tag, Ordinal>>.Ordered.insert(_:)` | `Hash.Table` insert/lookup that needs the element's **value-witness table** | `swift_getTypeByMangledName` → `TypeLookupError("unknown error")` → null-metadata deref → SIGSEGV |
+
+`Index_Primitives.Index<Element> = Tagged_Primitives.Tagged<Element, Ordinal>` (`swift-index-primitives/Sources/Index Primitives/Index.swift:38`), and `Graph.Node<Tag> = Index<Tag>` (`swift-graph-primitives/Sources/Graph Primitives Core/Graph.Node.swift:16`). So graph's `Set<Graph.Node<Tag>>.Ordered.insert` *is* `Set<Tagged<…>>.Ordered.insert` via two typealias hops — which is why a literal `Set<Tagged…>`/`Set<Index…>` grep does not find it.
+
+**Empirical crash confirmation (2026-06-01, Apple Swift 6.3.2 `swiftlang-6.3.2.1.108`)**: a minimal **3-package** reproducer with **zero graph code** — `swift-set-ordered-primitives` + `swift-set-primitives` + `swift-index-primitives` — crashes identically:
+
+```swift
+import Set_Ordered_Primitives; import Set_Primitives; import Index_Primitives
+enum SimpleTag {}
+var set = Set<Index<SimpleTag>>.Ordered()
+set.insert(Index<SimpleTag>.zero)   // ← SIGSEGV here
+```
+
+```
+$ SWIFT_DEBUG_FAILED_TYPE_LOOKUP=1 .build/debug/repro
+failed type lookup for �$: unknown error
+[exit 139]
+```
+
+The `failed type lookup … unknown error` warning is the exact §A9 `swift_getTypeByMangledName` → `TypeLookupError("unknown error")` signature; exit 139 is the SIGSEGV. (Reproducer kept at `/tmp/setord-tagged-repro/`, not committed — empirical scratch.)
+
+**Dev-toolchain status (PASS-on-dev — inherited, not re-run)**: no 6.4-dev+ snapshot is currently installed (only 6.3.1-RELEASE / 6.3.2). This site inherits the §A9 family fix established in the §A9 Update (2026-05-23 Arc 4) toolchain matrix and the §A9 Correction (2026-05-28) controlled compiler/runtime swap: the defect is incomplete `SuppressedAssociatedTypes` codegen on 6.3 (the insert path is constrained on the suppressed `Ordinal.Domain: ~Copyable`, `Ordinal.Protocol.swift:65`), the fix travels with the **binary**, and the feature's codegen is complete by 6.4-dev. §A9 axis-B already established the trigger is container-agnostic (stdlib `Swift.Dictionary` and institute `Dictionary` both crash), so `Hash.Table`-backed `Set.Ordered` is a predicted new surface, not new ground. A per-container 6.4-dev re-confirm was deemed low marginal value (orchestrator decision 2026-06-01); the accurate version gate for this family is `compiler(<6.4)`, not `<6.5` (the `<6.5` gate used in older §A9 records predates the 2026-05-23 version-label correction that pinned `2026-03-16-a` as 6.4-dev).
+
+**Ecosystem blast radius** (grep'd 2026-06-01 across swift-primitives / swift-foundations / swift-standards):
+
+| Kind | Site | Status on 6.3.2 |
+|---|---|---|
+| Direct (concrete Tagged element via typealias) | `swift-graph-primitives` — `Set<Graph.Node<Tag>>.Ordered` in `Graph.Sequential.Analyze.Reachable`, `…Analyze.Dead`, `…Reverse.Reachable` (3 source constructors) + `…Transform.Subgraph` (consumes one) | CRASH |
+| Generic carrier (latent; crashes only at a Tagged-key instantiation) | `swift-dictionary-ordered-primitives` `Dictionary.Ordered.Keys._keys: Set<Key>.Ordered` and `swift-dictionary-primitives` `Dictionary._keys: Set<Key>.Ordered` | CRASH iff `Key` is `Index`/`Tagged` |
+| Candidate (untested 2026-06-01) | plain `Set<Index<Int>>` (non-`.Ordered`, same `Hash.Table` family) — appears in `swift-index-primitives` tests | LIKELY CRASH (same VWT-forcing path) |
+
+**Consumer mitigation (graph)**: graph's four uniformly-affected test suites (`Graph.Sequential.Transform.Subgraph`, `Graph.Sequential.Analyze.Dead`, `Graph.Reachability`, `Graph.Sequential.Reverse.Reachable`) were guarded 2026-06-01 with a suite-level `.disabled(if: Toolchain.hasTaggedMetadataSIGSEGV, …)` trait gated on `compiler(<6.4)`. A `.disabled(if:)` trait (not `withKnownIssue`) is required: a SIGSEGV kills the test runner before swift-testing can register a known issue, so `withKnownIssue` cannot make a crashing suite report clean — only *skipping the body* yields a clean 6.3.2 run, and the guard auto-recovers (runs normally) on 6.4+. No raw-storage wrapper was introduced (the §A9 wrapper was reverted on correctness grounds 2026-05-23).
+
+**Disposition**: same as §A9 — no Institute-side code fix; require Swift 6.4+ for `Set<Tagged>.Ordered` / `Set<Index>.Ordered` / `Dictionary.Ordered<Tagged-key>` paths; wait for the Swift 6.5 release.
 
 ---
 

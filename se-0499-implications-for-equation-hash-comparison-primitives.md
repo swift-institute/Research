@@ -247,3 +247,53 @@ Sequence:
 - `feedback_no_public_or_tag_without_explicit_yes` — none of the deprecation actions are authorized by this research.
 
 [SE-0499]: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0499-support-non-copyable-simple-protocols.md
+
+---
+
+## Addendum (2026-06-01) — Option C as implemented is NOT source-compatible; validated fix is a refining protocol, not a typealias
+
+The Option-C migration was applied to `swift-hash-primitives` (`Hash.Protocol.swift`: `#if swift(>=6.4)` → `typealias \`Protocol\` = Swift.Hashable`; `#else` → the fork protocol + the `var hashValue: Hash.Value` default extension). Discovered 2026-06-01 (via the §A9 graph-crash investigation): **this breaks the hash-container family on Swift 6.4-dev/6.5-dev.** The "Source-compatible — no consumer migration needed" / "Preserves Hash.Value typed wrapper ✓" claims (Step 3/Step 4, Option C) are **empirically refuted.**
+
+**Mechanism.** The typed accessor `var hashValue: Hash.Value` lives *inside the `#else` (<6.4) branch* of `Hash.Protocol.swift` (lines 82–93). Under `#if swift(>=6.4)`, `Hash.\`Protocol\`` is merely `= Swift.Hashable`, so that accessor **ceases to exist**, and `element.hashValue` (for `element: some Hash.Protocol`) resolves to `Swift.Hashable.hashValue: **Int**`. Every generic consumer that wrote `hashTable.position(forHash: element.hashValue)` against `Hash.Value` now fails: `cannot convert 'Int' to 'Hash.Value' (aka Tagged<Hash, Int>)`. The 2026-05-03 verification spike only exercised *the typealias adoption shape building clean* — it never exercised existing consumers of the fork's typed accessors, so the "source-compatible" conclusion exceeded the spike's coverage scope ([ISSUE-026]). Option C kept the `Hash.Value` *type* but silently dropped the `hashValue: Hash.Value` *accessor*.
+
+**Blast radius (6.4+):** the whole hashing-container family — `swift-set-ordered-primitives`, `swift-dictionary-primitives`, `swift-dictionary-ordered-primitives` (every `element.hashValue: Hash.Value` consumer). A sibling Equation-package gap surfaces as `binary operator '==' cannot be applied to two 'Span<Element>' operands` (the `Span: Equation.Protocol`/Equatable operator was similarly `#else`-gated).
+
+**Validated fix — refining protocol with a defaulted typed accessor (NOT a bare typealias).** Empirically verified on 6.4-dev (`2026-03-16-a`), reproducer `/tmp/impl-probe/`:
+
+```swift
+// 6.4+ branch — keep Hash.`Protocol` a DISTINCT protocol that refines the stdlib one:
+public protocol `Protocol`: Swift.Hashable, ~Copyable {
+    borrowing func hash(into hasher: inout Hasher)
+    var hashValue: Hash.Value { get }          // same NAME, different TYPE than Swift.Hashable's Int
+}
+extension `Protocol` where Self: ~Copyable {
+    public var hashValue: Hash.Value {          // default — conformers don't write it
+        var h = Hasher(); hash(into: &h); return Hash.Value(_unchecked: h.finalize())
+    }
+}
+```
+
+Verified outcomes on 6.4-dev (Copyable, default-extension, and `~Copyable` + `SuppressedAssociatedTypes` variants all PASS):
+- Generic `<E: Hash.Protocol>` resolves `e.hashValue` → `Hash.Value` (the refining protocol's requirement, not the inherited `Int`). ✓
+- `Swift.Hashable` is still satisfied (stdlib default `hashValue: Int` from `hash(into:)`), so `Swift.Set`/`Swift.Dictionary` interop works. ✓
+- Conformers implement only `hash(into:)`/`==` — **no per-conformer cost, no `@_implements` needed** in the default case. ✓
+
+`@_implements(Swift.Hashable, hashValue)` (BLOG-IDEA-031, `Blog/Published/2026-04-20-associated-type-trap.md`) is the per-conformer escape hatch when a concrete type needs a *custom* typed `hashValue` distinct from its `Int` witness — also verified working — but the default-extension shape above avoids needing it.
+
+**Consequence for the Outcome plan**: Option C ("typealias to the stdlib protocol") is the wrong shape for `Hash.Protocol` (and, by the `Span ==` evidence, for `Equation.Protocol`/`Comparison.Protocol` wherever a *typed accessor/operator* rather than just the protocol bound is load-bearing). The corrected shape is **Option B-refined**: keep `*.Protocol` as a thin protocol *refining* the stdlib counterpart, re-declaring the typed surface (`hashValue: Hash.Value`, the typed `==`/compare) with default impls. This preserves both the typed surface and stdlib interop. **Status (2026-06-01): APPROVED by principal — execute hash chain first (Equation/Comparison siblings follow). In progress.**
+
+### Minimal-conformer template (validated 2026-06-01 on 6.5-dev `2026-05-12-a`)
+
+The refining protocol re-declares `var hashValue: Hash.Value` with a **default extension** (computed from `hash(into:)`), so **no conformer ever writes the typed accessor**. The only migration cost is the Swift language rule that a *conditional* conformance to a refining protocol must explicitly declare the inherited stdlib conformance (`Swift.Hashable`/`Equatable`). The compiler emits the exact bounds (`note: did you mean … 'where A: Hashable, B: Hashable'?`). Per-conformer cost:
+
+| Conformer kind | Required code (6.4+ branch) |
+|---|---|
+| **Concrete** (e.g. `Bit`, `Cardinal`, `Ordinal`) | **None.** An *unconditional* `extension X: Hash.Protocol { hash(into:); == }` auto-implies the inherited `Swift.Hashable`; the typed `hashValue` is defaulted. |
+| **Conditional + Copyable** | Three **empty, compiler-synthesized** extensions:<br>`extension X: Equatable where <relaxed bounds> {}`<br>`extension X: Hashable where <relaxed bounds> {}`<br>`extension X: Hash.Protocol where <Hash.Protocol bounds> {}` |
+| **Conditional + ~Copyable** (e.g. `Pair`, `Either`) | Write `==` and `borrowing hash(into:)` **once** (in the `Equatable`/`Hashable` extensions — the conformer already has the `hash(into:)`), plus an **empty** `extension X: Hash.Protocol where <bounds> {}`. |
+
+Validation reproducers: `/tmp/impl-probe/min1.swift` (concrete free + minimal conditional), `min2.swift` (Copyable all-empty synthesized), `min3.swift` (~Copyable one-impl). All compile + run on 6.5-dev, returning the typed `Hash.Value`.
+
+**Toolchain note**: dev verification requires nightly `2026-05-07-a` (6.4-dev) or newer — `Swift.Hashable: ~Escapable` (SE-0499 `~Escapable` companion, impl PRs #85854/#85891/#86039) reached the bundled stdlib by 2026-05-07; the earlier `2026-03-16-a` nightly still required `Escapable` and rejects the `~Escapable` refinement.
+
+**Mechanics**: URL+mirror deps mean each package must be **committed** before its downstream resolves the change. Execute bottom-up (hash-primitives → leaf conditional conformers → containers → consumers), committing each, verifying on 6.5-dev *and* 6.3.2.
