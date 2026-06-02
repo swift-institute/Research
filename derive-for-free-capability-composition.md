@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.3.0
 last_updated: 2026-06-02
 status: RECOMMENDATION
 tier: 3
@@ -11,6 +11,8 @@ type: investigation/architecture
 generalizes: cross-layer-capability-protocol-model.md (v1.3.0)
 toolchain_of_record: Apple Swift 6.3.2 (swiftlang-6.3.2.1.108), arm64-apple-macosx26.0
 changelog:
+  - "1.3.0 (2026-06-02): GAP-A LANDED — Array + Stack (and span-bearing variants) derive Equation.Protocol/Hash.Protocol over span, ~Copyable-maximal (178 array / 143 stack tests green). GAP-A surfaced + fixed a latent [MEM-COPY-004] foundation bug: the Span Equation/Hash SLI bridges silently required Copyable; fixed by a non-breaking `& ~Copyable` widening at the bridge ([ARCH-LAYER-011]) — verified pure-widening by diff, foundation packages green. So GAP-A was composition-over-existing-bridges + one foundation correction, no new primitive. §8 ledger updated. (Also: executor flagged an unrelated Collection.Slice.Protocol ~Escapable-Index bug on 6.5-dev blocking collection-primitives there — not yet captured.)"
+  - "1.2.0 (2026-06-02): Implementation status added to §8 — GAP-J (delete Collection.Indexed), GAP-K (align Collection docs), and GAP-L (hoist Array index witnesses onto Array.Protocol) all LANDED on main (verified: clean trees, green builds, 173 array tests). GAP-L is a NEW gap surfaced 2026-06-02 (the ADT-family derive-for-free instance — count-derived witnesses vended once by the family protocol) and is now formally cataloged; its STEP-0 spike retired the SE-0335-conditional-conformance hypothesis (the loose Index associatedtype was the real blocker, fixed by `where Index == Index<Element>`). Follow-ons recorded: Deque/Set.Ordered witness-hoist generalization; custom-index-variant boundary."
   - "1.1.0 (2026-06-02): GAP-J RESOLVED to DELETE Collection.Indexed — verified first-hand (Collection.Protocol.swift:58-75 supports ~Copyable via _read + the D4 span bridge; Bidirectional refines Collection.Protocol not Indexed; all 6 Indexed conformers also conform Bidirectional → 0 orphaned; 0 generic-constraint/refiner/external-dep consumers; swift-array-primitives builds green at HEAD confirming the ~Copyable Collection.Protocol path). The Collection.Indexed docstring's reason-to-exist ('Collection.Protocol forces Copyable') is stale (pre-detachment). GAP-J is now a pure-subtraction cleanup, independent of GAP-I. §7.1.1, §8 GAP-J, banner, Outcome §0 updated."
   - "1.0.0 (2026-06-02): Initial RECOMMENDATION. Generalizes the cross-layer capability-protocol model from the single iteration concern to the WHOLE Memory.Contiguous / Storage / Buffer / ADT.`Protocol` stack, and reconciles the container tier (HAS-A composition) with the scalar tier (Tagged-forwarding capability-lift, [API-NAME-001c]) as two faces of ONE derive-for-free law. Inventory + derive-for-free map + warranted-refinement test + gap catalog. Critical stance added (§7.1) — evaluates the design, does NOT assume the current code is correct/complete; Deque (Queue.DoubleEnded, swift-deque-primitives) factual correction. DESIGN/RATIONALE only — no package edits."
 ---
@@ -483,6 +485,27 @@ Every recommendation below is gated: per [DS-020] the data-structure catalog was
 composition-over-existing-primitives was attempted *first*; per [RES-018] no new cross-cutting primitive is
 proposed without demonstrating composition cannot cover the case. The cleanest gaps need **no new primitive at
 all**.
+
+### Implementation status (landed 2026-06-02 — verified: clean trees, green builds)
+
+| Gap | What landed | Commits |
+|-----|-------------|---------|
+| **GAP-J** (delete `Collection.Indexed`) | protocol + target/product/umbrella-export removed; 6 redundant conformances dropped (spine witnesses preserved); 3 packages green | swift-collection-primitives `9f48e63`, swift-array-primitives `6cc4791`, swift-deque-primitives `5485bcd` |
+| **GAP-K** (align Collection docs) | README single-root rewrite + 3 stdlib-bridge doc files; array Research annotated; a false `Sequence_Primitives` re-export claim corrected | swift-collection-primitives `ae8efab`, swift-array-primitives `c25df6a` |
+| **GAP-L** (hoist Array index witnesses) — *new gap, surfaced 2026-06-02* | the four count-derived index witnesses (`startIndex`/`endIndex`/`index(after:)`/`index(before:)`) hoisted from each Array variant onto one default set on `extension Array.\`Protocol\` where Self: ~Copyable, Index == Index<Element>` (`count` added as an `Array.\`Protocol\`` requirement); net −21 lines; 0 `witness_method` on the index hot path; 173 tests green | swift-array-primitives `1d65de0` |
+| **GAP-A** (Array/Stack `Equatable`/`Hashable` over span) | Array + Static/Small/Fixed and Stack + Bounded/Static/Small conform `Equation.\`Protocol\`` + `Hash.\`Protocol\`` derived over `span` (no hand-rolled loops), covering `~Copyable` elements; 178 array / 143 stack tests green. **Surfaced + fixed a latent `[MEM-COPY-004]` foundation bug**: the `Span` `Equation`/`Hash` SLI bridges silently required `Copyable` (bare `where Element: …Protocol`) — fixed by a non-breaking `& ~Copyable` widening at the bridge ([ARCH-LAYER-011]), so the gap was *composition over existing bridges* + one foundation correction, **no new primitive** | swift-equation-primitives `baf4849`, swift-hash-primitives `5f4258d`, swift-array-primitives `8f83e6d`, swift-stack-primitives `7e40930` |
+
+**GAP-L is the ADT-family instance of the derive-for-free thesis** — a per-variant re-implementation of a
+storage-*independent* (count-derived) witness, vended once by the family protocol's default; each variant keeps
+only its storage-*specific* witnesses (`count`, `subscript`, `span`, mutation) plus the SE-0335-forced conformance
+*declarations*. Two follow-ons it opens: (a) the **same count-derived-witness duplication exists across the Deque
+(`Queue.DoubleEnded`) and `Set.Ordered` variant families** via their own family protocols — the ecosystem-wide
+generalization, not yet done; (b) the `where Index == Index<Element>` constraint scopes the defaults to
+standard-typed-index variants — a future custom-index variant must satisfy the constraint or restate (an
+intentional, documented boundary). GAP-L's STEP-0 spike also retired a false hypothesis: the SE-0335
+conditional-conformance interaction was *not* the blocker (the loose `Index` associatedtype was); once `Index` is
+pinned by the same-type constraint, the witness-less conditional `Collection.Bidirectional` conformances are
+satisfied by the defaults.
 
 ### Prerequisite — resolve the §7.1 open questions / defects (these GATE the wins; they are not wins themselves)
 
