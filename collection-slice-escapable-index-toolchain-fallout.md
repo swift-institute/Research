@@ -2,10 +2,10 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-06-02
 status: DECISION
-changelog: "v1.1.0 (2026-06-02) — DECISION: Option A adopted + implemented. swift-collection-primitives 4042d2c spells out `where Index: Swift.Comparable & Swift.Escapable` on Collection.Slice.Protocol; verified green on BOTH 6.3.2 and 6.5-dev; unblocks GAP-A's 6.5-dev downstream. Executes collection-index-escapable-consumer-fallout.md v1.3.0; Option B rejected (proven-degenerate self-slice storage; Tier-3 reopening). v1.0.0 RECOMMENDATION analysis preserved below."
+changelog: "v1.2.0 (2026-06-02) — Residual section added per [RES-027], backed by a new experiment (swift-institute/Experiments/escapable-scoped-slice-view): the ~Escapable scoped-VIEW frontier (consumer-fallout v1.3.0 steelman #4 / §Foreclosed 'scoped view') is empirically CONFIRMED VIABLE on BOTH 6.3.2 and 6.5-dev — a slice that is ITSELF ~Escapable CAN store two ~Escapable bound indices + a base borrow (no stored Range), offer within-scope indexed sub-access, and is escape-rejected; producer must be a func not a subscript. This REFINES Option B's 'degenerate' verdict: the degeneracy was specific to the SELF-slice (SubSequence==Self) model (an Escapable Self cannot hold ~Escapable bounds); a SEPARATE ~Escapable view type sidesteps it. The Option-A DECISION for the shipped Collection.Slice.Protocol is UNCHANGED (the view is a distinct future API, not a replacement). v1.1.0 (2026-06-02) — DECISION: Option A adopted + implemented. swift-collection-primitives 4042d2c spells out `where Index: Swift.Comparable & Swift.Escapable` on Collection.Slice.Protocol; verified green on BOTH 6.3.2 and 6.5-dev; unblocks GAP-A's 6.5-dev downstream. Executes collection-index-escapable-consumer-fallout.md v1.3.0; Option B rejected (proven-degenerate self-slice storage; Tier-3 reopening). v1.0.0 RECOMMENDATION analysis preserved below."
 tier: 2
 scope: cross-package
 trigger: "swift-collection-primitives fails to build on Swift 6.5-dev (toolchain org.swift.64202605121a) at HEAD ad59898; green on Swift 6.3.2. All errors are Collection.Slice.Protocol's Range<Index> requirement + its PartialRange default subscripts: `type 'Self.Index' does not conform to protocol 'Escapable'` and `'..<' on 'Comparable' requires 'Self.Index' conform to 'Escapable'`. Investigation dispatched via HANDOFF-collection-slice-escapable-index.md to decide, from first principles, how Collection.Slice.Protocol should reconcile range-based slicing with the institute's ~Escapable-support principle — validated on BOTH toolchains."
@@ -182,8 +182,33 @@ The two disclosed priors are adjudicated, not inherited:
 - Independent of `collection-slice-stdlib-subscript-ambiguity.md` (the `& Swift.Collection` ambiguity) and of the GAP-A Equatable/Hashable work; this single token unblocks the **6.5-dev** builds the slice protocol gates.
 - Verify after applying per the standard discipline: `rm -rf .build && swift build` on 6.3.2 **and** `TOOLCHAINS=org.swift.64202605121a` on 6.5-dev (both already validated for the target here).
 
+## Residual — the ~Escapable scoped-view frontier (`[Verified: 2026-06-02]`)
+
+Option A pins `Escapable` on the **shipped, range-based** `Collection.Slice.Protocol`; by construction it leaves a **residual**: a `~Escapable`-index collection (admitted by the base `Collection.Protocol.Index` per the v1.3.0 DECISION) gets *traversal* but **no slicing**. The Analysis above rejected Option B (relax the *existing* `Range`-based `-> Self` slice protocol) as degenerate. That rejection rested on a **premise** (load-bearing, in the `[RES-027]` sense — downstream design reasons from it): *no holdable slice can carry `~Escapable` bounds*, because a self-slice (`SubSequence == Self`) is an Escapable value and an Escapable struct cannot store a `~Escapable` field.
+
+A **separate, narrower shape** was left untested: a slice that is **itself `~Escapable`** — a borrow-scoped *view* (not `Self`, not `SubSequence == Self`) storing its two `~Escapable` bound indices directly (no `Range`) plus a borrow of the base. This is exactly the *"scoped view that vends an … index into a snapshot/borrow"* that `collection-index-escapable-consumer-fallout.md` v1.3.0 §Foreclosed names as the honest model for within-scope random access, and the subject of its **steelman #4** (*"a borrowed/handle/scoped-cursor index … could offer full within-scope indexed random access … while being `~Escapable`"*).
+
+**This premise is now backed by an experiment** (per `[RES-027]`): **`swift-institute/Experiments/escapable-scoped-slice-view/`** — a refute-first viability spike, validated on **BOTH** Swift 6.3.2 (`swiftlang-6.3.2.1.108`) and 6.5-dev (`org.swift.64202605121a`), debug + release, cross-module (`[EXP-017]`).
+
+**Finding — VIABLE (frontier confirmed)**:
+
+| Claim | Verdict (both toolchains, `[Verified: 2026-06-02]`) |
+|---|---|
+| A `~Escapable` struct CAN store two `~Escapable` bound indices + a base borrow (`@_lifetime(copy lower, copy upper)`) | ✅ compiles + runs (consumer sums a sub-range = 90) |
+| Within-scope indexed sub-access (offset-keyed *and* `~Escapable`-cursor-keyed subscript) | ✅ works within the borrow |
+| The `[MEM-LIFE-004]` `@_lifetime` 6.3.2-vs-6.5-dev version skew | did **NOT** fire — identical annotations compile on both |
+| Escape is rejected (store the view in an Escapable struct; return it without `@_lifetime`) | ✅ both rejected — the symmetric counterpart of Option B's obstruction, so the `~Escapable` guarantee is **real**, not vacuous |
+| The bounds **producer** as a **subscript** | ❌ REFUTED — `borrowing` is rejected on subscript params, and a `~Escapable`-returning subscript getter cannot thread the bounds' lifetimes; the producer must be a **`func`** |
+
+**What this refines (and does NOT reopen)**: Option B's degeneracy verdict was correct **for the self-slice (`SubSequence == Self`) model it analyzed** — an *Escapable* `Self` genuinely cannot store `~Escapable` bounds (the experiment's `EscapableHolder` control reproduces that exact error, `stored property … of 'Escapable'-conforming struct … has non-Escapable type`, with the compiler suggesting *"consider adding '~Escapable'"*). The residual escape is a **distinct type**: a *separate* `~Escapable` view, orthogonal to the shipped self-slicing protocol. **The Option-A DECISION for `Collection.Slice.Protocol` is UNCHANGED** — this is not a non-`Range` redesign of the shipped protocol (the rejected Option B), but a different, additive API surface that would coexist with it. A scoped `~Escapable` view is **not** `SubSequence == Self` and does not interoperate with stdlib `Range`/`Sequence` slicing.
+
+**Disposition (premise vs direction, per `[RES-027]`)**:
+- *Premise* (now closed): "no viable `~Escapable`-slicing shape exists." **Refuted** — a `~Escapable` scoped view is viable today on both toolchains. The frontier is real.
+- *Direction* (open, not load-bearing): whether to **productize** a `Collection.Slice.Scoped.Protocol` (or similar). This stays a **future-work direction**, gated by a materializing consumer and the usual `[ARCH-LAYER-008]`/`[RES-018]` correctness-and-fit checks — there is still **zero realized `~Escapable`-index supply** (the fallout grep), so there is nothing to slice yet. **Design when a consumer materializes**, taking from the experiment: the producer is a `func` (not a subscript), the view stores the two `~Escapable` bounds under `@_lifetime(copy …)`, and within-scope access is sound.
+
 ## References
 
+- **The frontier experiment (this Residual's `[RES-027]` backing)**: `swift-institute/Experiments/escapable-scoped-slice-view/` — VIABLE on 6.3.2 + 6.5-dev (debug + release, cross-module); producer-must-be-a-func + escape-rejection captured verbatim in its headers. crossRefs the priors (`pointer-nonescapable-storage`, `escapable-output-borrow-lend`, `collection-index-escapable-lifetime`).
 - **The breakage**: `swift-collection-primitives@ad59898` — `Sources/Collection Slice Primitives/Collection.Slice.Protocol.swift:32,39`; `…/Collection.Slice.Protocol+defaults.swift:27,29,38,40,54,55,63,64`; base `…/Collection Protocol Primitives/Collection.Protocol.swift:65`.
 - **The mechanism**: `swift-comparison-primitives/Sources/Comparison Protocol Primitives/Comparison.Protocol.swift:62` (`~Copyable, ~Escapable` fork); `Comparison Primitives.docc:53` (typealias-to-`Swift.Comparable` on 6.4+) `[Verified: 2026-06-02]`.
 - **Standing DECISION (executed by this doc)**: `swift-institute/Research/collection-index-escapable-consumer-fallout.md` (DECISION v1.3.0) — escape-operation migration pattern; KEEP `~Escapable` on the base Index.
