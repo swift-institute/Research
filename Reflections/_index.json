@@ -5764,6 +5764,20 @@
       ],
       "status": "processed",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-06-02-span-equatable-hashable-bridge-noncopyable-bug-and-skill-consultation-gap.md",
+      "date": "2026-06-02",
+      "title": "Span Equation/Hash bridges were silently Copyable-gated — a [MEM-COPY-004] bug the skill named and the user's ~Copyable-maximally push surfaced",
+      "packages": [
+        "swift-array-primitives",
+        "swift-stack-primitives",
+        "swift-equation-primitives",
+        "swift-hash-primitives",
+        "swift-collection-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
