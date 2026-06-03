@@ -3,13 +3,24 @@
 <!--
 ---
 version: 2.0.0
-last_updated: 2026-02-26
-status: DECISION
+last_updated: 2026-06-02
+status: SUPERSEDED
+supersededBy: versioning-and-release-strategy.md
 research_tier: 2
 applies_to: [institute, primitives, standards, foundations]
 normative: false
 ---
 -->
+
+> **SUPERSEDED 2026-06-02** by
+> [`versioning-and-release-strategy.md`](versioning-and-release-strategy.md): the
+> release-branch publication mechanism specified here is obviated by the completed
+> in-place path→URL conversion (`main` carries `url:` + `branch:"main"`, 0 `path:`
+> deps; the residual switch is `branch:"main"` → `from:`), and the version-strategy
+> question this doc explicitly deferred is answered there. The "git-subtree N/A —
+> repos already separate" finding survives (see also
+> [`spm-nested-package-publication.md`](spm-nested-package-publication.md)).
+> Original analysis preserved below as historical rationale. See [META-004].
 
 ## Context
 
