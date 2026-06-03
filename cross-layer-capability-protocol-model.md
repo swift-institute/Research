@@ -2,14 +2,15 @@
 
 <!--
 ---
-version: 1.3.0
-last_updated: 2026-05-29
+version: 1.4.0
+last_updated: 2026-06-03
 status: RECOMMENDATION
-approved: 2026-05-28 (supervisor)
+approved: 2026-05-28 (supervisor); §3.4 amendment (1.4.0) RE-APPROVED 2026-06-03 (principal)
 tier: 3
 scope: ecosystem-wide
 type: investigation/architecture
 changelog:
+  - "1.4.0 (2026-06-03): §3.4 AMENDMENT (RECOMMENDATION; awaits supervisor re-approval) — the Memory.Contiguous.Protocol `span` requirement is LIFTED into a namespace-neutral Span capability in swift-span-primitives (principal-authorized 2026-06-03): Span.`Protocol` (owned, @_lifetime(borrow self)) + Span.Borrowed.`Protocol` (~Escapable, @_lifetime(copy self)) + Span.Mutable.`Protocol` (refines Span.`Protocol`). Memory.Contiguous(.Borrowed) CONFORMS to Span(.Borrowed).`Protocol` rather than owning a Memory-named protocol; §3.4's 'Storage provides span' becomes a Span.`Protocol` conformance composed over the Storage core. This is the same don't-bake-a-cross-cutting-concern-into-a-core move (§3.1) applied to span. Dissolves the byte/binary→memory coupling (Byte.Borrowed/Binary.Borrowed conform to the namespace-neutral capability in their own packages) and retires __Memory_Contiguous_Borrowed_Protocol. Derived + verified in swift-institute/Research/memory-byte-bit-domain-orthogonality.md v1.0.0. See §12. swift-span-primitives authored via a separate dispatch, not from this doc; execution sequenced by the principal."
   - "1.3.0 (2026-05-29): SUBSTRATE LANDED (local/unpushed) — with a design PIVOT from the §4.2/§8 approved plan. (a) `Algebra.Lattice` landed IN swift-algebra-primitives (the consolidated tower's `Algebra Lattice Primitives` target: join+meet semilattices + absorption + bounds; `.minMax` for Comparable), NOT a standalone `swift-algebra-lattice` package — a lattice is not a Boolean/Bool type. (b) NO `Algebra.Boolean` type and NO Boolean-algebra package: `Swift.Bool` IS the Boolean algebra, extended directly in `swift-bool-algebra-primitives` (`Algebra.Lattice<Bool>()` + `Algebra.Semiring<Bool>.Commutative()` as plain init()s; native `!` is the complement). (c) `swift-set-algebra-primitives`: `someUniverse.powerset() -> Algebra.Lattice<Self>` (join=union, meet=intersection, ⊥=∅, ⊤=self); relative complement = the package's own native `subtracting` (U∖A), no Boolean witness. Also landed: a tower-wide Sendable-requirement sweep across swift-algebra-primitives (region-based isolation over Sendable per [MEM-SEND-012]/[MEM-SEND-013] — witnesses CONFORM but no longer REQUIRE Sendable); set-algebra `powerset()` dropped its `where Self: Sendable` workaround. Ecosystem build-check clean — no consumer breaks from de-Sendable-requiring (4 unrelated pre-existing failures: field/group incomplete-consolidation target collisions, pool missing array product, tensor vector-primitives typed-throws). Still deferred: ~Copyable-predicate slice, ×16 fan-out, set-ordered SIL re-proof."
   - "1.2.0 (2026-05-29): EXECUTION LANDED (held for push) + §8 Decision #3 REFINED. The §4 reduction + in-place algebra rehome landed on the real types — set-primitives 0fa1334 (core = {contains,count} + isEmpty; predicates `where Self: Iterable`; constructive `where Self: Set.Buildable.Protocol & Iterable` returning Self; subtract→subtracting; the three-location `.algebra` fragmentation deleted), set-ordered c10e05e (Set.Ordered + .Small adopt Set.Buildable.Protocol; bounded Fixed/Static predicates-only). Builder-for-free follow-on: family `Set.Builder` @resultBuilder hoisted + free `init(@Set.Builder)` default for growable; bounded keep one-line per-variant THROWING inits and remain NOT Set.Buildable.Protocol (§4.2 preserved) — set-primitives f40f5d3, set-ordered 01de92c. In-package SIL on the REAL Set.Ordered: 0 witness_method on the algebra + DSL hot path (release, cross-module; 2 residuals = off-path stdlib Comparable.>= generic). Still deferred: ~Copyable-predicate slice, lattice/Boolean substrate, swift-set-algebra-primitives extraction, ×16 fan-out."
   - "1.1.0 (2026-05-28): Supervisor APPROVED (SIL receipt verified against the real file — hot-path 0-witness confirmed; sequencer-refactor landing + Buffer.Protocol-extended-not-superseded confirmed). §3 normal form + Set.Protocol elevation approved as the ×16 fan-out template foundation. Decisions #1/#3/#4 approved as recommended. Decision #2's substrate condition RESOLVED: the principal authorizes a bounded-lattice package (swift-algebra-lattice = existing semilattice + absorption) + a Boolean-algebra package (on Swift.Bool + the algebra family; name per [PKG-NAME-*]), so the swift-set-algebra-primitives bridge witnesses ∪=join/∩=meet/∁=complement over REAL packaged structures, not prose (§4.2/§8). Research phase concluded. Execution sequenced by the principal — NOT begun."
@@ -604,3 +605,93 @@ is landed; no live package or worktree edited; execution is sequenced by the pri
   stdlib `SetAlgebra`/`Collection`; Haskell `Data.Set`/`Foldable`.
 - Skills: [DS-001], [DS-020], [DS-021]; [RES-018], [RES-020]–[RES-029]; [SUPER-042];
   [PRP-001], [PRP-008]; [MOD-031], [MOD-035]; [API-NAME-001]; [IMPL-078].
+
+---
+
+## 12. v1.4.0 Amendment — `span` is a cross-cutting `Span` capability, not the Memory core's primitive
+
+**Status: RE-APPROVED 2026-06-03 (principal/supervisor).** Evidence base: the W0 `/tmp` 0-`witness_method` spikes — span H1–H7 incl. the H6 HARD gate, and the element-store cross-module seam (3-deep generic tower), both PASS — plus the W2 reconform proven green on real packages (swift-memory/storage/byte/binary/memory-cursor-primitives + consumers; 0 retired-protocol references; byte↔memory edge dissolved). The span lift + the element-level mutate seam are RATIFIED for production. The element-store package/protocol name is FROZEN: package swift-store-primitives, protocol Store.Protocol (hoisted __StoreProtocol) = the four element-store ops over typed Index. Execution: W1+W2 landed (worktree-local, unpushed); W3 (tower re-layering) sequenced via HANDOFF-msb-tower-w3.md; merge/push principal-gated.
+
+### Trigger
+
+Principal + ChatGPT, 2026-06-03, derived and empirically verified in
+`swift-institute/Research/memory-byte-bit-domain-orthogonality.md` v1.0.0 (Tier 3). That investigation,
+asking "is Memory tied to byte/bit," found that the *only* byte edge in the memory core is the
+span-vending protocol — and that this protocol is **mis-located in the Memory namespace**.
+
+### What §1/§3.4 said, and what this refines
+
+§1 dispositioned `Memory.ContiguousProtocol` as **EXTEND — no change to requirements** ("the contiguous-read
+surface (`span`) is the Memory-layer capability"). §3.4 then had **Storage *provide*** that `span`
+(`where Self: …` default from `pointer(at:.zero)`+`capacity`). The two together already imply what this
+amendment makes explicit: **`span`-vending is not Memory's exclusive core primitive — it is a cross-cutting
+*capability* multiple cores supply.** Per §3.1's own principle ("conflating a core with a cross-cutting
+concern is the root of the incoherence"), `span` should therefore be lifted out of the Memory namespace
+into a namespace-neutral capability, exactly as the set *algebra* was lifted out of `Set.Protocol`.
+
+### The empirical proof that it is cross-cutting
+
+`__Memory_Contiguous_Borrowed_Protocol.swift:20-35` documents **three conformers from three domains** —
+`Memory.Contiguous.Borrowed`, `Byte.Borrowed` (swift-byte-primitives), `Binary.Borrowed`
+(swift-binary-primitives) — and states the owned/borrowed split is **structural**: *"a single protocol
+cannot polymorphically express both — the witness-table contract for `var span` differs across the two
+lifetime regimes."* Naming a protocol with byte- and binary-domain conformers `Memory.Contiguous.Borrowed.Protocol`
+**is** the byte/binary→memory coupling. [Verified: 2026-06-03]
+
+### The amendment
+
+Author **`swift-span-primitives`** (principal-authorized; build via a *separate* dispatch, not from this doc)
+owning the namespace-neutral capability — preserving the structural owned/borrowed split:
+
+```swift
+public enum Span {
+    public protocol `Protocol`: ~Copyable {                       // OWNED (Escapable Self)
+        associatedtype Element: ~Copyable
+        var span: Swift.Span<Element> { @_lifetime(borrow self) get }
+    }
+    public enum Borrowed { public protocol `Protocol`: ~Copyable, ~Escapable {   // BORROWED (~Escapable Self)
+        associatedtype Element: ~Copyable
+        var span: Swift.Span<Element> { @_lifetime(copy self) get }
+    } }
+    public enum Mutable { public protocol `Protocol`: Span.`Protocol` {          // refine, NOT a precomposed conjunction
+        var mutableSpan: Swift.MutableSpan<Element> { mutating get }
+    } }
+    // Span.Raw[.Mutable], Span.Output[.Raw] follow the same Nest.Name shape; ship as needed.
+}
+```
+
+Then, across the stack:
+
+- `Memory.Contiguous` **conforms to** `Span.Protocol`; `Memory.Contiguous.Borrowed` **conforms to**
+  `Span.Borrowed.Protocol`. `Memory.ContiguousProtocol` / `__Memory_Contiguous_Borrowed_Protocol` are
+  **retired** (the struct stays; only the protocol it declared moves out and is renamed). The `__`-mangled
+  sibling-resolution workaround is retired with it.
+- §3.4's **Storage span-provision becomes a `Span.Protocol` conformance** composed over the Storage core
+  (`where Self: Storage.Protocol & contiguous-discipline`), not a provision of a Memory-named protocol.
+- `Byte.Borrowed` / `Binary.Borrowed` conform to `Span.Borrowed.Protocol` **in their own packages**
+  (downward dep on `swift-span-primitives`); the byte/binary→**memory** edge is dissolved at the root, not
+  relocated to a bridge.
+- Cursor operations generalize from `where DomainTag.Borrowed: Memory.Contiguous<Byte>.Borrowed.Protocol`
+  to `where DomainTag.Borrowed: Span.Borrowed.Protocol, …Element == Byte` — decoupling the cursor surface
+  from Memory.
+- **Compose, do not precompose** ([API-NAME-002]): requirements read `M: Memory.* & Span.Mutable.Protocol`,
+  never a nested `Memory.Contiguous.Mutable.Protocol` conjunction.
+
+### What this does NOT change
+
+The §3 normal form, the three edge kinds, the specialization boundary, the Set.Protocol elevation, and the
+Storage/Buffer cores are unchanged. This amendment only **relocates and renames** the `span` capability
+(Memory.Contiguous core primitive → cross-cutting `Span` capability) and is consistent with §3.1's
+core-vs-cross-cutting decision rule. Byte-domain operations on borrowed byte spans are best attached to
+`extension Span.Borrowed.Protocol where Element == Byte` (covering every byte-span uniformly), which makes
+each domain's nominal `.Borrowed` a thin storage+identity type — see the follow-on in the companion doc.
+
+### Specialization (the HARD constraint, §3.3) — to verify before execution
+
+A `/tmp` 0-`witness_method` spike (build `swift-span-primitives`; reconform `Byte.Borrowed` +
+`Memory.Contiguous.Borrowed`; run the cursor peek/advance/consume hot path cross-module, `-O`) is required
+before this amendment reaches DECISION, replicating the §6 harness. Renaming a protocol does not change
+witnesses, so the expectation is the existing 0-witness result holds; the spike confirms it.
+
+**Cross-reference:** `swift-institute/Research/memory-byte-bit-domain-orthogonality.md` v1.0.0 (the
+derivation, the byte/bit decoupling, and the bit-axis `Bit.Index.Count` re-typing of `Memory.Shift`).
