@@ -3,13 +3,22 @@
 <!--
 ---
 version: 2.0.0
-last_updated: 2026-02-26
-status: RECOMMENDATION
+last_updated: 2026-06-02
+status: SUPERSEDED
+supersededBy: versioning-and-release-strategy.md
 research_tier: 2
 applies_to: [institute, primitives, standards, foundations]
 normative: false
 ---
 -->
+
+> **SUPERSEDED 2026-06-02** by
+> [`versioning-and-release-strategy.md`](versioning-and-release-strategy.md): both
+> recommendations in this doc are replaced — layer-lockstep versioning → independent
+> per-package semver, and the release-branch `path:`→`url:` transform → obviated by
+> the completed in-place path→URL conversion (0 `path:` deps remain; the only
+> residual switch at tag time is `branch:"main"` → `from:`). Original analysis
+> preserved below as historical rationale. See [META-004].
 
 ## Context
 

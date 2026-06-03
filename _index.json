@@ -6,6 +6,30 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "buffer-namespace-membership-occupancy-vs-region.md",
+      "displayName": "Buffer-Namespace Membership: Occupancy Disciplines vs Raw Byte Regions",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-06-02): Tier 2 cross-layer. GAP-O of derive-for-free-capability-composition.md: which Buffer.* members are genuine LOGICAL occupancy disciplines (count distinct from capacity, over a physical storage) vs raw byte regions / raw slot regions that belong at the PHYSICAL layer (Memory or Storage). Governed by principal directives (2026-06-02): (1) 'Buffer should be the logical layer over physical storage primitives'; (2) 'cannot ignore the storage primitives packages'. CLASSIFICATION TEST: a Buffer member tracks occupancy (count) distinct from allocation (capacity); a raw region has count == capacity; raw slots have no logical count. INVENTORY (18 Buffer.Protocol conformers + Slots, verified on disk file:line 2026-06-02): the 5 families Linear/Ring/Slab/Arena/Linked all track count != capacity (occupancy stored/computed separately, each composing a Storage.* primitive) -> STAY. THREE MISCLASSIFIED: Buffer.Aligned (count == allocated bytes, no separate capacity; already conforms Memory.Contiguous.Protocol; allocates aligned via UnsafeMutableRawPointer) -> RELOCATE to Memory layer as Memory.Aligned (sibling of Memory.Contiguous/Buffer; Memory.Contiguous is adopt-only so aligned-allocation is a genuine gap, [DS-020] satisfied); Buffer.Unbounded (count and capacity are byte-identical expressions _storage.count.retag; occupancy delegated to Binary.Cursor.writerIndex; 0 consumers) -> RELOCATE to Memory (Memory.Aligned.Resizable / Memory.Unbounded); Buffer.Slots (non-conformer; no count; 'same contract as Storage.Split'; backed by Storage.Split; Header 'trivial -- just capacity. Unlike Linear (count)' redundant with Storage.Split's own Header(capacity)) -> RELOCATE to Storage layer (fold into / beside Storage.Split; sole consumer Hash.Table). BLAST RADIUS: tiny -- Unbounded 0 dependents, Aligned 1 (Unbounded), Slots 1 (Hash.Table->Dictionary/Set). [RES-023] CORRECTION: brief's 'Binary.Cursor uses Unbounded' REFUTED on disk -- Binary.Cursor is generic over Memory.Contiguous.Protocol, not Buffer.Unbounded (reinforces Memory relocation). SEQUENCING: GAP-O first (makes Buffer.Protocol.count unambiguously occupancy, removes the 2 vacuous-fullness byte buffers) -> then GAP-N revivable (the {capacity,isFull,availableCapacity} surface becomes coherent). Identity-driven not adoption-driven ([RES-029]/[ARCH-LAYER-006/008]). Extends + governed by the APPROVED cross-layer-capability-protocol-model (logical Buffer.Protocol vs physical Memory.Contiguous.Protocol/Storage.Protocol) and storage-buffer-abstraction-analysis (Aligned/Unbounded historically a SEPARATE Tier-16 byte-buffer package, excluded from the 6-discipline inventory). DESIGN/RATIONALE ONLY -- no package edits; class-(c), principal decides.",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0 (2026-06-02). Tier 2 per [RES-020], cross-layer. GAP-O investigation requested by derive-for-free-capability-composition.md (co-architect-owned; this is the separate note, not an edit to that doc). All empirical claims verified on disk at file:line [Verified: 2026-06-02] per [RES-023]; brief's 'Binary.Cursor uses Unbounded' claim refuted. Recommendation only -- no relocation, no protocol change, no package edit. Per-member GO/STAY + Memory-vs-Storage home + blast radius + GAP-N sequencing. Open items for principal: Memory.Aligned distinct-vs-fold-into-Memory.Contiguous; Slots fold-into-vs-beside Storage.Split.",
+      "statusRaw": "RECOMMENDATION (v1.0.0)",
+      "tier": 2,
+      "scope": "cross-layer",
+      "date": "2026-06-02",
+      "supersededBy": null
+    },
+    {
+      "file": "versioning-and-release-strategy.md",
+      "displayName": "Versioning and Release Strategy",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-06-02): Tier 3 ecosystem-wide. The institute's versioning + release strategy and the concrete bottom-up path from today's state (all deps URL-form, ~99% branch:\"main\" vs ~1% from:, 0 path; ~400 mostly-private layered packages; INVERTED frontier where L2 specs are public+tagged atop a mostly-private post-modularization L1) to genuine outsider-buildable releases. RECOMMENDS independent per-package semver (Model B), NOT a synchronized universal version -- dispositive evidence: ~68 independent standards tag lines already exist (rfc-3986@0.3.6 ... rfc-5322@0.7.4), lockstep is unreachable without regressing real releases, SwiftPM has no lockstep primitive. First tag 0.1.0 (not 0.0.1): empirically verified SwiftPM 0.x semantics (Swift 6.3.2) -- from:/upToNextMajor on 0.x spans the ENTIRE 0.x line to <1.0.0 (NOT a Cargo/npm 0.x caret), and .upToNextMinor(from:0.0.1) is a degenerate empty band; disciplined pre-1.0 pin is .upToNextMinor(from:0.Y.0). Two bottom-up passes: visibility back-fill (private->public on rolling branch:\"main\", gated by clean-room no-token/no-mirror resolve) THEN per-package tagging campaign with atomic branch:\"main\"->from: switch -- one-form-per-package invariant (branch-req silently overrides version-req for the same package; verified Swift 6.3.2). Keep existing standards tags; continue each line (don't reset). Reframes principal's 'universal first tag' as a coordinated campaign (timing) with independent version numbers.",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0 (2026-06-02). Tier 3 ecosystem-wide per [RES-020]; empirical claims verified [Verified: 2026-06-02] (pin-form census, visibility/tag landscape, rfc-3986 tag-vs-Release per [PKG-NAME-010], SwiftPM 0.x resolution on Swift 6.3.2, external first-tag norms via gh api). SUPERSEDES dual-mode-package-publication.md (layer-lockstep + release-branch path->URL transform) and the release-branch mechanism in git-subtree-publication-pattern.md per [META-003]; affirms release-roadmap-swift-file-system.md (independent releases). Recommendation only -- no tag/flip/pin changes executed.",
+      "statusRaw": "RECOMMENDATION (v1.0.0)",
+      "tier": 3,
+      "scope": "ecosystem-wide",
+      "date": "2026-06-02",
+      "supersededBy": null
+    },
+    {
       "file": "bit-algebraic-structure-witness-placement.md",
       "displayName": "Bit Algebraic-Structure Witness Placement",
       "topic": "RECOMMENDATION (v1.0.0, 2026-05-31): Tier 2 cross-package. Where Bit's algebraic structure (Boolean algebra -- lattice/semiring/monoid; the Z/2Z field) should live, and which of swift-bit-primitives' hand-rolled operations are redundant under the institute's established structure-as-witness-in-a-bridge pattern. FINDING (verified 2026-05-31 against source): swift-bit-primitives hand-rolls algebraic structure that the institute already models as composable inline witnesses in extracted {element}-algebra bridges -- Swift.Bool has its full tower witnessed in swift-bool-algebra-primitives (Algebra.{Lattice,Monoid,Semilattice,Semiring}+Bool, built from &&/||/!), whereas Bit has ONLY its Z/2Z field witnessed (swift-bit-algebra-primitives Bit+Z2.swift, inline from ^/&) and hand-rolls everything else in Bit Boolean Primitives + a Bit Z2 Field op-layer whose adding/multiplying are ORPHANED (no caller; Bit.z2 re-derives ^/& itself). RECONCILES with order-cluster-decomposition-and-modernization.md (Tier 3, plan-only): its C1-C5 placement law (Finite.Enumerable is a CAPABILITY not a home -- C2) and its generic swift-finite-algebra-primitives bridge (generic over Finite.Enumerable = Z/NZ cyclic via ordinal) mean Bit (count 2, Finite.Enumerable) gets Z/2Z for free once that bridge lands -- subsuming the per-type Bit.z2 to optional sugar. ANSWER to the framing question 'refactor Bit Boolean to use bool-algebra?': NOT depend on bool-algebra (Bool-specific; Bit is a distinct bit-domain type -- Option D rejected), but MIRROR bool-algebra's witness pattern for Bit in bit-algebra. RECOMMENDED Option C (staged toward B): (1) retire the orphaned Bit Z2 Field adding/multiplying; (2) author Bit's Algebra.{Lattice,Semilattice,Monoid,Semiring} witnesses inline in swift-bit-algebra-primitives, mirroring bool-algebra; (3) keep generators (^&|~) + ergonomic gates native in Bit Boolean (Bit is a hardware-logic type -- gates are domain vocabulary); (4) coordinate the Z/2Z FIELD subsumption + the Bit:Finite.Enumerable conformance placement with order-cluster Phase 1. bit->finite (the memory-readiness blocker) is governed by order-cluster's capability-placement: the conformance is incidental (C2), currently the SOLE reason bit depends on finite; it moves (to finite reaching down, or a bit-finite bridge) and finite leaves bit's -- and memory's -- transitive closure. [MOD-034]: Bit's Hash/Equation/Comparison conformances are FOUNDATIONAL and STAY in bit; only the incidental Boolean-algebra + Z/2Z structure goes to the bridge. Plan-only: no source changed; multi-package program surfaced for the principal to sequence per feedback_class_c_ecosystem_stop_not_dispatch.",
@@ -1497,11 +1521,12 @@
       "file": "dual-mode-package-publication.md",
       "displayName": "dual-mode-package-publication.md",
       "topic": "Dual-mode Package.swift for development + publication (Tier 2) — cross-ecosystem survey (Rust/pnpm/Go/Haskell), 4 SPM options evaluated. Recommends env-var conditional (`getenv`, Foundation-free, Apple-pattern `SWIFTCI_USE_LOCAL_DEPS`) + layer-level lockstep versioning.",
-      "status": "RECOMMENDATION",
-      "statusDetail": null,
-      "statusRaw": "RECOMMENDATION",
+      "status": "SUPERSEDED",
+      "statusDetail": "v2.0.0 (2026-02-26) SUPERSEDED 2026-06-02 by versioning-and-release-strategy.md per [META-004]. Both load-bearing recommendations are replaced: (1) layer-lockstep versioning -> independent per-package semver (the ecosystem already carries ~68 divergent standards tag lines; lockstep is unreachable without regressing real releases); (2) the release-branch path->URL transform mechanism -> obviated by the completed in-place path->URL conversion (0 path deps remain; the only residual switch at tag time is branch:\"main\" -> from:).",
+      "statusRaw": "SUPERSEDED (v2.0.0; was RECOMMENDATION)",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "versioning-and-release-strategy.md"
     },
     {
       "file": "ecosystem-associatedtype-error-inventory.md",
@@ -1725,11 +1750,12 @@
       "file": "git-subtree-publication-pattern.md",
       "displayName": "git-subtree-publication-pattern.md",
       "topic": "Git subtree (Apollo pattern) publication evaluation (Tier 2, v2.0) — Apollo iOS production analysis, splitsh-lite. **Not applicable**: repos are already separate (git submodules, not monorepo). Actual problem: path→URL manifest transformation + version coordination across 348 repos. CI manifest rewriting or release branch recommended.",
-      "status": "DECISION",
-      "statusDetail": null,
-      "statusRaw": "DECISION",
+      "status": "SUPERSEDED",
+      "statusDetail": "v2.0.0 (2026-02-26) SUPERSEDED 2026-06-02 by versioning-and-release-strategy.md per [META-004]. Its primary recommendation -- the release-branch model (dev main keeps path: deps; a publish tool creates release/<version> branches with url: deps, validates, tags) -- is obviated by the completed in-place path->URL conversion (0 path deps remain; the residual switch is branch:\"main\" -> from:), and the version-strategy question it explicitly deferred is answered by the successor. Residual finding that survives: git-subtree is N/A because the repos are already separate (also captured by spm-nested-package-publication.md).",
+      "statusRaw": "SUPERSEDED (v2.0.0; was DECISION)",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "versioning-and-release-strategy.md"
     },
     {
       "file": "github-metadata-harmonization.md",
