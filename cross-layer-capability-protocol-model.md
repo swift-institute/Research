@@ -2,14 +2,15 @@
 
 <!--
 ---
-version: 1.4.0
-last_updated: 2026-06-03
+version: 1.5.0
+last_updated: 2026-06-04
 status: RECOMMENDATION
 approved: 2026-05-28 (supervisor); §3.4 amendment (1.4.0) RE-APPROVED 2026-06-03 (principal)
 tier: 3
 scope: ecosystem-wide
 type: investigation/architecture
 changelog:
+  - "1.5.0 (2026-06-04): §13 AMENDMENT (RATIFIED 2026-06-04, seat — authored inside the storage/memory-split W-C per the packet's ratified ask-6; commit rides that arc's merge window). (a) §3.4's `Storage.Protocol` row refreshed to the post-split stack: `Store.Protocol` (FROZEN) ⊂ `Store.Tracked.Protocol` (NEW — the split's initialization-ledger tier; the (b′) sanction wording lives there verbatim) ⊂ `Storage.Protocol` (pure marker refinement). The dense-discipline gate: `Storage.Contiguous<M>` is Tracked/Storage exactly when `M: Store.Tracked.Protocol` — untracked substrates unrepresentable under dense disciplines; the discipline-side inert `.empty` witness deleted. The cleanup oracle lives in the LEAF's class (`Memory.Heap<E>` backing `deinit` walks the header ledger; the bd04f32 wall); `Storage<E>.Heap = Storage<E>.Contiguous<Memory.Heap<E>>` (typealias, the sanctioned intermediate per #5a(i)); the mutable span leg stays PINNED concrete (the form-G wall). (b) §12 currency note: the Unify span collapse (swift-span-primitives f2c0c4f) — Span.Borrowed.`Protocol` DELETED; ONE Span.`Protocol`: ~Copyable, ~Escapable with the single @_lifetime(borrow self) requirement carries both lifetime regimes; §12's LIFT decision + Span.Mutable.`Protocol` stand unchanged. Evidence: the split packet's P1/P2 probes + W-A/W-B/W-C receipts (20/6 · 15/5 · 144/26 true-clean; 0-witness_method drivers per wave)."
   - "1.4.0 (2026-06-03): §3.4 AMENDMENT (RECOMMENDATION; awaits supervisor re-approval) — the Memory.Contiguous.Protocol `span` requirement is LIFTED into a namespace-neutral Span capability in swift-span-primitives (principal-authorized 2026-06-03): Span.`Protocol` (owned, @_lifetime(borrow self)) + Span.Borrowed.`Protocol` (~Escapable, @_lifetime(copy self)) + Span.Mutable.`Protocol` (refines Span.`Protocol`). Memory.Contiguous(.Borrowed) CONFORMS to Span(.Borrowed).`Protocol` rather than owning a Memory-named protocol; §3.4's 'Storage provides span' becomes a Span.`Protocol` conformance composed over the Storage core. This is the same don't-bake-a-cross-cutting-concern-into-a-core move (§3.1) applied to span. Dissolves the byte/binary→memory coupling (Byte.Borrowed/Binary.Borrowed conform to the namespace-neutral capability in their own packages) and retires __Memory_Contiguous_Borrowed_Protocol. Derived + verified in swift-institute/Research/memory-byte-bit-domain-orthogonality.md v1.0.0. See §12. swift-span-primitives authored via a separate dispatch, not from this doc; execution sequenced by the principal."
   - "1.3.0 (2026-05-29): SUBSTRATE LANDED (local/unpushed) — with a design PIVOT from the §4.2/§8 approved plan. (a) `Algebra.Lattice` landed IN swift-algebra-primitives (the consolidated tower's `Algebra Lattice Primitives` target: join+meet semilattices + absorption + bounds; `.minMax` for Comparable), NOT a standalone `swift-algebra-lattice` package — a lattice is not a Boolean/Bool type. (b) NO `Algebra.Boolean` type and NO Boolean-algebra package: `Swift.Bool` IS the Boolean algebra, extended directly in `swift-bool-algebra-primitives` (`Algebra.Lattice<Bool>()` + `Algebra.Semiring<Bool>.Commutative()` as plain init()s; native `!` is the complement). (c) `swift-set-algebra-primitives`: `someUniverse.powerset() -> Algebra.Lattice<Self>` (join=union, meet=intersection, ⊥=∅, ⊤=self); relative complement = the package's own native `subtracting` (U∖A), no Boolean witness. Also landed: a tower-wide Sendable-requirement sweep across swift-algebra-primitives (region-based isolation over Sendable per [MEM-SEND-012]/[MEM-SEND-013] — witnesses CONFORM but no longer REQUIRE Sendable); set-algebra `powerset()` dropped its `where Self: Sendable` workaround. Ecosystem build-check clean — no consumer breaks from de-Sendable-requiring (4 unrelated pre-existing failures: field/group incomplete-consolidation target collisions, pool missing array product, tensor vector-primitives typed-throws). Still deferred: ~Copyable-predicate slice, ×16 fan-out, set-ordered SIL re-proof."
   - "1.2.0 (2026-05-29): EXECUTION LANDED (held for push) + §8 Decision #3 REFINED. The §4 reduction + in-place algebra rehome landed on the real types — set-primitives 0fa1334 (core = {contains,count} + isEmpty; predicates `where Self: Iterable`; constructive `where Self: Set.Buildable.Protocol & Iterable` returning Self; subtract→subtracting; the three-location `.algebra` fragmentation deleted), set-ordered c10e05e (Set.Ordered + .Small adopt Set.Buildable.Protocol; bounded Fixed/Static predicates-only). Builder-for-free follow-on: family `Set.Builder` @resultBuilder hoisted + free `init(@Set.Builder)` default for growable; bounded keep one-line per-variant THROWING inits and remain NOT Set.Buildable.Protocol (§4.2 preserved) — set-primitives f40f5d3, set-ordered 01de92c. In-package SIL on the REAL Set.Ordered: 0 witness_method on the algebra + DSL hot path (release, cross-module; 2 residuals = off-path stdlib Comparable.>= generic). Still deferred: ~Copyable-predicate slice, lattice/Boolean substrate, swift-set-algebra-primitives extraction, ×16 fan-out."
@@ -695,3 +696,73 @@ witnesses, so the expectation is the existing 0-witness result holds; the spike 
 
 **Cross-reference:** `swift-institute/Research/memory-byte-bit-domain-orthogonality.md` v1.0.0 (the
 derivation, the byte/bit decoupling, and the bit-axis `Bit.Index.Count` re-typing of `Memory.Shift`).
+
+## 13. v1.5.0 Amendment (RATIFIED 2026-06-04, seat) — §3.4's `Storage.Protocol` spec refreshed to the post-split stack + the §12 currency note (the Unify span collapse)
+
+**Status: RATIFIED 2026-06-04** (seat ruling at the storage/memory-split W-C close; authored
+inside W-C per the ratified ask-6 of `storage-memory-split.md` v1.1.0; the doc commit rides that
+arc's gates). This v1.5.0 entry covers BOTH fold-backs: (a) the §3.4 `Storage.Protocol` refresh
+below, and (b) the §12 currency note. Evidence base: the split packet's P1/P2 probes + the
+W-A/W-B/W-C wave receipts (store 20/6 · memory-heap 15/5 · storage 144/26 on true-clean builds;
+0-`witness_method` concrete drivers per wave).
+
+### §12 currency note (the Unify collapse, 2026-06-04)
+
+§12's span lattice describes a TWO-protocol shape (owned `Span.Protocol` + `Span.Borrowed.Protocol`,
+"the owned/borrowed split is structural"). That description is SUPERSEDED by the 2026-06-04 Unify
+collapse (follow-up #1; swift-span-primitives `f2c0c4f`): `Span.Borrowed.Protocol` is DELETED and
+ONE `Span.Protocol: ~Copyable, ~Escapable` with the single `@_lifetime(borrow self)` requirement
+carries both lifetime regimes — an owned conformer borrows itself; a borrowed view's `self` IS the
+borrow it forwards (`borrow self` is the unique unifier; `copy self` is owned-unsatisfiable). The
+old "witness-table contract differs across the two regimes" claim is REFUTED for the borrow-self
+form; escapability is an orthogonal property of the conformer, not a fork in the capability.
+§12's LIFT (span out of the Memory namespace) and `Span.Mutable.Protocol` (refining the unified
+protocol, `~Copyable` restated) stand unchanged.
+
+### Trigger
+
+§3.4's `Storage.Protocol` row predates two ratified arcs: (a) the W3 element-level seam
+(`Store.Protocol`, §12's companion decision — the four element-store ops over typed `Index`
+replaced `capacity + @unsafe pointer(at:)` as the seam; `pointer(at:)` survives only as a
+documented concrete escape hatch on the heap composition, not a requirement) and (b) the ASK-1
+(b′) `initialization` lift, since relocated one tier further by the storage/memory split.
+
+### The refreshed stack (replaces §3.4's `Storage.Protocol` row)
+
+```
+Store.Protocol             (swift-store-primitives — FROZEN per §12)
+  Requires: Element (~Copyable) · capacity · subscript {get set} (_read/_modify)
+            · initialize(at:to:) · move(at:)
+  ⊂ Store.Tracked.Protocol   (swift-store-primitives — NEW, the split)
+      Requires: + initialization: Store.Initialization<Element> { get set }
+      (the range ledger a tracked store's OWN teardown honors; non-range
+       oracles vend .empty — the (b′) sanction wording lives here verbatim)
+      ⊂ Storage.Protocol       (swift-storage-primitives — pure MARKER refinement)
+          Requires: nothing new — the single-region slot-topology identity.
+```
+
+- **The dense-discipline gate**: `Storage.Contiguous<M>` (the #2-renamed `Storage.Flat`) is
+  `Store.Protocol` unconditionally, and `Store.Tracked.Protocol`/`Storage.Protocol` exactly when
+  `M: Store.Tracked.Protocol` — an untracked substrate cannot enter `S: Storage.Protocol` dense
+  disciplines (whose ledger-sync teardown contract it cannot honor); the silent-leak path is
+  unrepresentable. The discipline-side inert `.empty` witness is deleted.
+- **The cleanup oracle lives in the LEAF's class** (`Memory.Heap<E>`'s backing `deinit` walks the
+  header ledger — the `bd04f32` wall: conditionally-Copyable generic structs cannot carry
+  `deinit`). `Storage<E>.Heap = Storage<E>.Contiguous<Memory.Heap<E>>` (typealias; the fused
+  spelling stays the sanctioned intermediate per #5a(i)).
+- §3.4's old "Provides: a `where Self:` span default" is superseded as §12 stated: span is the
+  cross-cutting `Span` capability; `Storage.Contiguous` forwards it conditionally
+  (`Substrate: Span.Protocol`), and the mutable leg stays concrete-only (the structural
+  no-generic-`mutableSpan` gate — the composed Heap's `Span.Mutable.Protocol` conformance is
+  PINNED `Substrate == Memory.Heap<Element>`, never `Substrate:`-generic).
+
+### What this does NOT change
+
+§3.1's normal form, the three edge kinds, §3.3's boundary (re-receipted on the split's waves),
+the Buffer/Set rows of §3.4, and §12's LIFT decision (span as a namespace-neutral cross-cutting
+capability). §12's two-protocol DESCRIPTION is updated by the currency note above (the Unify
+collapse); this amendment otherwise only refreshes the `Storage.Protocol` row's
+REQUIRES/PROVIDES to the shipped stack and records the Tracked insertion + the gate.
+
+**Cross-reference:** `swift-institute/Research/storage-memory-split.md` v1.1.0 (DECISION; the
+design packet whose §1–§5 this amendment folds back).
