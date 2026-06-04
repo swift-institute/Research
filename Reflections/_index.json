@@ -6,6 +6,20 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-06-04-porter-ci-private-dep-access-arc.md",
+      "date": "2026-06-04",
+      "title": "Porter arc: private-dep CI resolution, the cross-org secret-transport discovery, and the silent startup-failure class",
+      "packages": [
+        "swift-institute/.github",
+        "swift-primitives/.github",
+        "swift-standards/.github",
+        "swift-foundations/.github",
+        "swift-institute/Skills"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-06-04-msb-capability-tower-w3-endgame.md",
       "date": "2026-06-04",
       "title": "MSB capability-tower W3 endgame: the bd04f32 deinit wall makes cleanup oracles irreducibly class-bound; canonical-basename worktrees, mirror-first HOLD designs, and pin-assert are the only honest local clean-rooms",
