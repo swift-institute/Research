@@ -5864,6 +5864,16 @@
    ],
    "status": "pending",
    "statusRaw": "pending"
+  },
+  {
+   "file": "2026-06-04-assay-independent-verification-issue-89684.md",
+   "date": "2026-06-04",
+   "title": "Assay: sealed-records independent verification of swiftlang/swift#89684 confirmed 11/11 from the public body alone; snapshot directory names lied about toolchain identity; rejects-valid joined the out-of-process reproducer-harness family",
+   "packages": [
+    "Issues"
+   ],
+   "status": "pending",
+   "statusRaw": "pending"
   }
  ]
 }
