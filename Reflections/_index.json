@@ -27,8 +27,8 @@
     "swift-primitives/swift-memory-aligned-primitives",
     "swift-primitives/swift-memory-unbounded-primitives"
    ],
-   "status": "pending",
-   "statusRaw": "pending"
+   "status": "processed",
+   "statusRaw": "processed (2026-06-04, reflections-processing session Scribe — 3 capped skill-update items + 3 principal addenda; 9 new/amended rules across 7 skills + 1 Tier-2 DECISION research note)"
   },
   {
    "file": "2026-06-01-finish-the-fan-out-collection-iterable-refine-edge.md",
