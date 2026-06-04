@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.1.1
 last_updated: 2026-06-04
 status: DECISION
 tier: 3
@@ -314,14 +314,16 @@ pressure now; (iii) feasibility is banked (P2), so deferral loses nothing and av
 
 | Probe | Where | Verdict |
 |---|---|---|
-| P1 — composed shape, layered conditional conformances, oracle placement, generic ledger sync, CoW chain, typealias + 209-pin class, 0-witness | `/tmp/split-probe` (4 modules mirroring the package boundaries + exe) · `Outputs/SIL-RECEIPT.md`, `run-{debug,release}.txt`, `consumer.sil` (1905 lines; hot driver = 0 `witness_method`), `negative-copy.log` (SIL-level move-only rejection) | **ALL PASS** (21 runtime checks, debug + release) + C6 wall documented (unbound `extension Storage.Heap` rejected → pinned spelling; zero consumer impact) |
+| P1 — composed shape, layered conditional conformances, oracle placement, generic ledger sync, CoW chain, typealias + 209-pin class, 0-witness | `/tmp/split-probe` (4 modules mirroring the package boundaries + exe) · `Outputs/SIL-RECEIPT.md`, `run-{debug,release}.txt`, `consumer.sil` (1905 lines; hot driver = 0 `witness_method`), `negative-copy.log` (SIL-level move-only rejection) | **ALL PASS** (21 runtime checks, debug + release) + C6 wall documented (unbound `extension Storage.Heap` rejected → pinned spelling; zero consumer impact *[superseded v1.1.1: exactly 2 consumer files — see Changelog]*) |
 | P2 — open (b): tracked value leaf, @_rawLayout, value-generic typealias, release | `/tmp/split-probe-inline` · `Outputs/RECEIPT.md`, `run-{debug,release}.txt` | **ALL PASS** (6 checks, debug + release) |
 
 ## Outcome
 
-**Status: RECOMMENDATION** — the seat ratifies the six `ask:` items; Phase E then executes W-A…W-E
-under the dispatch's standing ground rules (worktree-local, per-step commits, suites + 0-witness
-receipts per wave, zone exclusions, no push/tag; publication is its own later principal gate).
+**Status: DECISION** *(ratified v1.1.0, 2026-06-04 — the original v1.0.0 line read
+"RECOMMENDATION"; coherence fix at v1.1.1 per [RES-025])* — the seat ratified the six `ask:`
+items; Phase E executed W-A…W-E under the dispatch's standing ground rules (worktree-local,
+per-step commits, suites + 0-witness receipts per wave, zone exclusions, no push/tag;
+publication is its own later principal gate).
 
 ## References
 
@@ -335,8 +337,82 @@ receipts per wave, zone exclusions, no push/tag; publication is its own later pr
 - Probes: `/tmp/split-probe`, `/tmp/split-probe-inline` (receipts inside)
 - Cross-language: Rust `RawVec`/`Vec`, C++ `std::vector<T, A>`, Swift `_ContiguousArrayStorage` ([DS-022])
 
+## Appendix (W-E close, 2026-06-04)
+
+### §1 — Relation to prior art (the landed design)
+
+> *Provenance (honest record)*: the seat's original §1 relay text did not reach session 2 (it
+> lived in session 1's chat); this section is re-authored at the W-E close from the packet's own
+> [RES-021] survey + the landed design facts. The seat diffs against the original at close
+> verification (flag standing; principal-acknowledged 2026-06-04).
+
+- **Swift stdlib (`Array` / `_ContiguousArrayStorage`)**: the landed leaf preserves the stdlib's
+  value-façade-over-class-storage pattern exactly — relocated, not re-invented. `Memory.Heap<E>`'s
+  backing class carries the allocation AND the cleanup oracle (its `deinit` walks the header
+  ledger); the value layer above it is a *discipline* (`Storage.Contiguous<M>`), not a fused
+  storage type. `ManagedBuffer` remains the sanctioned mechanics ([DS-022]).
+- **Rust (`Vec<T>` = `RawVec<T>` + `len`)**: `Storage.Contiguous<M>` / `Memory.Heap<E>` sits on
+  the same discipline/leaf axis as `Vec`/`RawVec`. The pre-design divergence HELD post-landing:
+  BOTH element and memory teardown live in the leaf — (i) the `bd04f32` wall forbids
+  discipline-side `deinit` under conditional Copyability; (ii) CoW sharing makes element
+  ownership a property of the backing, not of any one façade copy. Rust's discipline-side
+  element drop (`Vec::drop`) is exactly the shape the wall forbids here.
+- **C++ (`std::vector<T, Allocator>`)**: allocation-strategy-as-parameter maps to
+  substrate-as-parameter (`Contiguous<M>`), typed — with one step past the allocator model: the
+  dense-discipline gate (`M: Store.Tracked.Protocol` required for `Storage.Protocol` entry)
+  makes an untracked substrate *unrepresentable* in dense disciplines rather than
+  undefined-at-runtime.
+- **No direct analog**: the Tracked tier itself (`Store.Tracked.Protocol` — the initialization
+  ledger as a protocol requirement between the element-store seam and the slot-topology marker)
+  is the institute-specific contribution. It exists because the `bd04f32` wall + the tower's
+  substitution model force the ledger to be visible to the *type system*, where the surveyed
+  ecosystems keep it a private field.
+
+### §2 — Perfect-world delta (the five gaps)
+
+The landed design is the best shape expressible on today's toolchain (6.3 / 6.4-dev). Five gaps
+separate it from the perfect-world design. This section is their claim spec; the probe set is
+follow-up #27 (`/experiment-process`, gated on this arc's landing; text relayed by the seat
+2026-06-04):
+
+1. **G1 — the elementwise-deinit wall.** Perfect world: a generic composer can own elementwise
+   `~Copyable` deinit. Today the `bd04f32` wall forces the cleanup oracle behind the leaf's
+   class boundary (`Memory.Heap`'s backing `deinit`). Probe: re-test the wall on current/next
+   toolchains (6.4/6.5-dev); if it falls, Pool/Arena dissolution unlocks.
+2. **G2 — the type-level initialization index.** Perfect world: value generics carry a
+   `Storage<E, let n>`-style type-level initialization index and the dynamic ledger dissolves
+   into the type. Today `Store.Initialization` is that idea's dynamic residue. Probe: boundary
+   doc — how close value generics can get before the dynamic ledger is forced.
+3. **G3 — the form-G wall.** Perfect world: `Ref`/`MutableRef` (SE-0519) make generic
+   `mutableSpan` forwarding expressible. Today the mutable leg is PINNED concrete
+   (`Substrate == Memory.Heap<Element>`; the `Substrate:`-generic form deliberately NOT
+   declared). Probe: G3 re-probe on SE-0519 arrival; re-opens #12b.
+4. **G4 — the 0-witness quantification.** Perfect world: devirtualization is guaranteed (or at
+   least quantified) by the toolchain. Today the 0-witness property is receipt-maintained per
+   wave. Probe: benchmark witness-dispatch vs devirtualized paths to quantify what the
+   0-witness apparatus buys.
+5. **G5 — the algebra check.** Perfect world: the decomposition is validated independently of
+   Swift. Probe: model the tower as ML functors (signature/functor sketch) to validate the
+   decomposition algebraically.
+
 ## Changelog
 
+- **v1.1.1** (2026-06-04): **W-E close — honest-record corrections + the appendix.** (a) C6
+  consumer impact corrected: "zero consumer impact" → exactly **2 consumer files** (the
+  grep-enumerated helper set: buffer-linear instance 1/2 inside `7b27219` · buffer-ring
+  instance 2/2 = `f5e18ed`); P1 row annotated in place. (b) `7b27219` arithmetic reconciled:
+  **8 files** (1 C6 helper + 7 Finding-2 qualified) — the in-flight table's "9" and the commit
+  body's "9 files" were the same miscount. (c) Appendix added: §1 relation to prior art (landed
+  design; re-authored — the seat's relay text did not reach session 2; seat diffs at close
+  verification) + §2 perfect-world delta (the five gaps; verbatim-class from the seat's
+  follow-up-#27 text). (d) Outcome line refreshed RECOMMENDATION → DECISION (stale since the
+  v1.1.0 ratification; [RES-025] coherence fix). (e) W-D close state: the held async-primitives
+  cell resolved definitively in-mesh (cold **204/41 FULL GREEN**, 140.9s+86.0s+3.0s; Broadcast
+  stop-class did NOT fire; no F2 — the raw receipt row's "+F2sweep" was a mis-annotation); L3
+  swift-async **DEFERRED-TO-MAIN** (principal ruling 2026-06-04, [SUPER-021] weakening
+  revision: post-merge one build+test on its main; expected green − exactly #22 Isolation,
+  `Async.Sequence.Isolation Tests.swift:111` class); set-ordered's evidenced-but-uncommitted
+  F2 committed at the W-E close (`5d26d2c`, 3 files).
 - **v1.1.0** (2026-06-04): **RATIFIED — status → DECISION.** Seat ruling (relay 2026-06-04): all
   six asks ratified (A3′ stack · conditional `Storage.Protocol` + inert-witness deletion, the
   (b′) discipline-side sanction formally superseded · `swift-memory-heap-primitives` per-action
