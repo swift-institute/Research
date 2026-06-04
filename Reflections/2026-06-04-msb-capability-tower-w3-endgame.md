@@ -18,7 +18,39 @@ packages:
   - swift-primitives/swift-growth-primitives
   - swift-primitives/swift-memory-aligned-primitives
   - swift-primitives/swift-memory-unbounded-primitives
-status: pending
+status: processed
+processed_date: 2026-06-04
+triage_outcomes:
+  - type: skill_update
+    target: memory-safety
+    description: "[MEM-COPY-016] added (advanced-ownership.md) — conditional-Copyable cleanup triangle (bd04f32 wall; Box-relocation; exactly-one-cleanup-truth-holder); [MEM-COPY-004] extended (ownership.md) — suppression-restatement family (refinements + conformances + multi-param; existence-gated conformances; S.Element projection asymmetry; move-only test masking)"
+  - type: skill_update
+    target: swift-package-build
+    description: "[PKG-BUILD-013] shared cache survives .build removal — pin-assert clean-room; [PKG-BUILD-014] identity = dir basename — canonical-basename worktree overrides; [PKG-BUILD-015] mirror-first publication — url-resolved packages cannot carry path: deps. Publication-sequence ownership noted as release-readiness/ci-cd-workflows territory in [PKG-BUILD-015]'s provenance (mechanics routed here per principal dispatch)."
+  - type: skill_update
+    target: audit
+    description: "[AUDIT-036] gate-grep width-check (scope axis + character-class axis) before declaring EMPTY. NOTE: [AUDIT-035] slot deliberately skipped — its 2026-05-15 changelog line claims a four-disposition rule whose body never landed (ghost surfaced for the owning arc)."
+  - type: skill_update
+    target: handoff
+    description: "[HANDOFF-040] amended — character-class⊇value-domain axis (the G5 digit gap); [HANDOFF-041] amended — scope-width dual axis (the G5 'code AND docs/comments' vs --include=*.swift miss)"
+  - type: skill_update
+    target: supervise
+    description: "[SUPER-052] push-set membership is set-membership against the enumerated window, never ahead>0 (Stage-6 7-repo over-inclusion)"
+  - type: skill_update
+    target: reflect-session
+    description: "[REFL-011] extended with the tool-reach axis — a verification tool's green is a state claim bounded by the tool's reach (stale cache / narrow grep / reduced probe = one class); operational instances [PKG-BUILD-013]/[AUDIT-036]/[TEST-035]"
+  - type: skill_update
+    target: supervise
+    description: "ADDENDUM (post-d55b6b0, principal dispatch 2026-06-04): [SUPER-053] named gates are never absorbed by pre-authorization classes (the P-1 declared seat GO-gate skip; deviation even under covered substance)"
+  - type: skill_update
+    target: memory-safety
+    description: "ADDENDUM (post-d55b6b0): [MEM-SPAN-004] (span.md) — match the addressing seam to the index domain; ring-topology consumers address via the per-slot Store.Protocol seam, never the count-bounded span (swift-buffer-ring-primitives b5ca83d + 9a37bd6)"
+  - type: skill_update
+    target: testing
+    description: "ADDENDUM (post-d55b6b0): [TEST-035] non-default-state coverage — wrap/head-offset states for ring-family suites; move-only-element instantiations for ~Copyable-generic suites"
+  - type: research_topic
+    target: swift-institute/Research/iterable-chunk-witness-selection.md
+    description: "ADDENDUM (post-d55b6b0): chunk-witness decision banked as a Tier-2 DECISION note (previously lived only in the consumed drift handoff's Findings; derived from swift-collection-primitives c78c349 + iterator-primitives' conformers; all anchors re-verified on disk)"
 ---
 
 # MSB capability-tower W3 endgame: the bd04f32 deinit wall makes cleanup oracles irreducibly class-bound; canonical-basename worktrees, mirror-first HOLD designs, and pin-assert are the only honest local clean-rooms
