@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 1.1.1
-last_updated: 2026-06-04
+version: 1.1.2
+last_updated: 2026-06-05
 status: DECISION
 tier: 3
 scope: ecosystem-wide
@@ -368,6 +368,34 @@ publication is its own later principal gate).
   substitution model force the ledger to be visible to the *type system*, where the surveyed
   ecosystems keep it a private field.
 
+### §1b — Academic lineage + divergence register (seat-relayed original)
+
+**Convergent:**
+- Memory strategy family = std::pmr resource family (BDE lineage) + Tofte–Talpin regions +
+  Bonwick slab (USENIX '94; the naming divergence is flagged at follow-up #5a(ii)).
+- Provisioning / typed-access / tracking separation = the corrective lesson of the C++
+  allocator saga (Alexandrescu critique → pmr; `construct`/`destroy` deprecated C++17,
+  removed C++20).
+- "Store" = the PL-semantics store σ: Location → Value — finite, typed, with explicit
+  uninitialized-location handling (the concern RustBelt formalizes via `MaybeUninit`).
+- Discipline-over-substrate = database storage-manager / access-method orthodoxy (System R;
+  Gray & Reuter).
+- Seam method = Stepanov / *Elements of Programming*: minimal operations derived from the
+  consuming discipline; frozen core (A2′); semantic charter (`Store.swift:12–19`).
+- The initialization ledger = typestate lineage (Strom–Yemini 1986; Plaid; Mezzo; Vault)
+  realized dynamically — the RefCell compromise class.
+
+**Divergence register (each bounded):**
+- Leaf-side element teardown vs Rust's discipline-side drop (G1-forced; RAII-orthodox locally;
+  the CoW-ownership argument per §1).
+- The requirements-empty `Storage.Protocol` marker rung (semantic-marker precedent:
+  `std::ranges::borrowed_range`; re-examined when #5 lands a second composed substrate).
+- Ledger algebra capped at ≤2 ranges (covers Contiguous + Split; bitmap disciplines carry
+  their own oracle per the wall).
+- N=1 production composition until #5/#10 land (Parnas anticipated-change justification; the
+  queue itself is the mitigation).
+- No collection-tier allocator parameter (pluggability lives at `Buffer<S>`, one tier down).
+
 ### §2 — Perfect-world delta (the five gaps)
 
 The landed design is the best shape expressible on today's toolchain (6.3 / 6.4-dev). Five gaps
@@ -397,6 +425,12 @@ follow-up #27 (`/experiment-process`, gated on this arc's landing; text relayed 
 
 ## Changelog
 
+- **v1.1.2** (2026-06-05): **Appendix §1b — academic lineage + divergence register.** The
+  seat-relayed ORIGINAL §1 material lands verbatim as §1b (the standing §1-re-authoring flag's
+  resolution: the re-authored landed-design half stands as §1; the academic-lineage half +
+  divergence register arrive as relayed). Rider (c) of the merge window (2026-06-05);
+  consumption scaffold `.handoffs/split-packet-s1b-content.md` consumed + deleted per
+  [HANDOFF-008a].
 - **v1.1.1** (2026-06-04): **W-E close — honest-record corrections + the appendix.** (a) C6
   consumer impact corrected: "zero consumer impact" → exactly **2 consumer files** (the
   grep-enumerated helper set: buffer-linear instance 1/2 inside `7b27219` · buffer-ring
