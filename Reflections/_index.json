@@ -5889,6 +5889,21 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-06-04-supervisor-seat-msb-endgame-multi-arc-board.md",
+      "date": "2026-06-04",
+      "title": "The Supervisor Seat: MSB Endgame Through the Multi-Arc Board",
+      "packages": [
+        "swift-span-primitives",
+        "swift-store-primitives",
+        "swift-storage-primitives",
+        "swift-memory-heap-primitives",
+        "swift-buffer-ring-primitives",
+        "swift-institute/.github"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
