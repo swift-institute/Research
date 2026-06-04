@@ -6,6 +6,31 @@
  "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
  "reflections": [
   {
+   "file": "2026-06-04-msb-capability-tower-w3-endgame.md",
+   "date": "2026-06-04",
+   "title": "MSB capability-tower W3 endgame: the bd04f32 deinit wall makes cleanup oracles irreducibly class-bound; canonical-basename worktrees, mirror-first HOLD designs, and pin-assert are the only honest local clean-rooms",
+   "packages": [
+    "swift-primitives/swift-span-primitives",
+    "swift-primitives/swift-store-primitives",
+    "swift-primitives/swift-memory-primitives",
+    "swift-primitives/swift-storage-primitives",
+    "swift-primitives/swift-storage-split-primitives",
+    "swift-primitives/swift-buffer-primitives",
+    "swift-primitives/swift-buffer-ring-primitives",
+    "swift-primitives/swift-buffer-linear-primitives",
+    "swift-primitives/swift-buffer-slab-primitives",
+    "swift-primitives/swift-buffer-slots-primitives",
+    "swift-primitives/swift-buffer-arena-primitives",
+    "swift-primitives/swift-buffer-linked-primitives",
+    "swift-primitives/swift-hash-table-primitives",
+    "swift-primitives/swift-growth-primitives",
+    "swift-primitives/swift-memory-aligned-primitives",
+    "swift-primitives/swift-memory-unbounded-primitives"
+   ],
+   "status": "pending",
+   "statusRaw": "pending"
+  },
+  {
    "file": "2026-06-01-finish-the-fan-out-collection-iterable-refine-edge.md",
    "date": "2026-06-01",
    "title": "Finish the Fan-Out — Collection.Protocol: Iterable refine edge + duplicate-iterator drop + .Indexed wrapper removal",
