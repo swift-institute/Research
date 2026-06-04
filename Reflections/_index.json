@@ -6,6 +6,25 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "date": "2026-06-05",
+      "file": "2026-06-05-storage-memory-split-cleave-2-termination.md",
+      "packages": [
+        "swift-storage-primitives",
+        "swift-store-primitives",
+        "swift-memory-heap-primitives",
+        "swift-buffer-linear-primitives",
+        "swift-buffer-ring-primitives",
+        "swift-hash-table-primitives",
+        "swift-array-primitives",
+        "swift-storage-split-primitives",
+        "swift-set-ordered-primitives",
+        "swift-async"
+      ],
+      "status": "pending",
+      "statusRaw": "pending",
+      "title": "Storage/Memory Split — Cleave-2 Termination (the close tail through merge + push)"
+    },
+    {
       "file": "2026-06-04-porter-ci-private-dep-access-arc.md",
       "date": "2026-06-04",
       "title": "Porter arc: private-dep CI resolution, the cross-org secret-transport discovery, and the silent startup-failure class",
