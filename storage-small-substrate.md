@@ -2,10 +2,12 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.0.1
 last_updated: 2026-06-05
 status: DECISION (self-ratified — Cleave-3, principal-authorized addendum 2026-06-05; the Phase-D
-        seat-ratification gate was removed; receipt-backed per [SUPER-009a])
+        seat-ratification gate was removed; receipt-backed per [SUPER-009a]).
+        v1.0.1: mitigation REVISED Route 2 → ~Copyable-only on E1 in-package seam-integration evidence
+        (see "REVISION v1.0.1" — the conditional-Copyable unlock is deferred, not regressed).
 tier: 3
 scope: ecosystem-wide (the MSB capability tower)
 normative: true
@@ -31,6 +33,48 @@ receipts: ~/Developer/.probe-bank/cleave-3/ (G1-wall-reprobe/, Small-mitigations
 > consumer spells `Storage<E>.Contiguous<Memory.Heap<E>>`-class forms; the `Storage<E>.Heap` alias is
 > the in-cascade bridge ONLY and retires at the end (E4). Builds directly on the #3 packet (landed).
 > **Self-ratified per the principal-authorized ADDENDUM (2026-06-05): no seat round-trip D→E.**
+
+## REVISION v1.0.1 (E1 in-package integration, 2026-06-05) — mitigation Route 2 → ~Copyable-only
+
+**The §2.2 wall-mitigation DECISION is REVISED on in-package evidence: from Route 2 (Optional-slot
+`InlineArray`, conditionally Copyable) to the ~Copyable-only path (the packet's documented fallback).**
+Transparency note: this revises the packet's headline ("conditional Copyability achievable today"). It is
+NOT a STOP-class (the wall does not survive — the ~Copyable-only mitigation works; not a new wall; no naming).
+It is an evidence-driven, packet-decided mitigation choice within the bounded mitigation space.
+
+**Why (decisive, E1 build evidence — receipts below):** Route 2's `/tmp` probes validated the wall-mitigation,
+teardown, and 0-witness against a *simplified value-return seam*. The REAL `Store.Protocol` seam is built on
+typed `Index<Element>` + **raw-pointer + `Offset` arithmetic** (`$0 + Index<Element>.Offset(fromZero: slot)`;
+`_modify` yields a STABLE element pointer — sound only because the backing is class/`@_rawLayout`). The
+Optional-slot `InlineArray` arm fights this on three confirmed counts: (a) a `~Copyable` `subscript` MUST be
+`_read`/`_modify` (compiler: "noncopyable subscript cannot provide a read and set accessor" — the `_read`+`set`
+sidestep is illegal); (b) `_modify` cannot project a stable mutable element pointer through a value-inline arm
+inside an enum (the documented limitation, Storage.Inline+Storage.Protocol.swift:110); (c) there is **no
+`Index<Element>`→`Int` conversion** in the ecosystem (the seam never Int-indexes — it is pointer-based), and
+**zero precedent** for `InlineArray`-as-mutable-element-storage. Forcing Route 2 would require novel,
+unsafe-heavy, grain-fighting plumbing in load-bearing infrastructure — failing the timeless-infrastructure bar.
+
+**The revised shape (proven, seam-fitting):**
+```swift
+public struct Small<let inlineCapacity: Int>: ~Copyable {           // ~Copyable (INV-INLINE-004a retained)
+    @frozen enum _Representation: ~Copyable {
+        case inline(Storage<Element>.Inline<inlineCapacity>)        // the proven @_rawLayout+bitmap arm
+        case heap(Memory.Heap<Element>)                             // the tower's #3 leaf (spill arm)
+    }
+    var _storage: _Representation
+}
+```
+Both arms are seam-proven (Storage.Inline ships; Memory.Heap is the #3 leaf, P1-proven); the seam witnesses
+delegate to the active arm; the spill (`reserveCapacity`/`create`/`_spillToHeap`) relocates the proven
+`Buffer.Linear.Small` machinery down to the storage tier. This is the per-container generalization of the
+existing `_Representation` shape into ONE substrate.
+
+**Impact = NO regression, deferral only.** The 12+ absorbed variants are ALL `~Copyable` today (INV-INLINE-004a);
+a `~Copyable`-only unified `Storage.Small` matches their current capability EXACTLY — the #5 unification goal is
+fully achieved. The conditional-`Copyable` UNLOCK (Route 2) becomes a documented FUTURE enhancement, tied to the
+`INV-INLINE-004a` lift (follow-up #27 / `InlineArray.init(unsafeUninitializedCapacity:)` arrival + a typed-seam
+value-`_modify` story). Route 2's banked receipts (`Small-mitigations/`) stand as that future arc's evidence.
+G1 is unaffected (§0 — wall HOLDS, recorded). §2.2 below records the original Route-2 analysis for the record.
 
 ## 0. The G1 outcome — RECORDED (the MUST-record gate)
 
