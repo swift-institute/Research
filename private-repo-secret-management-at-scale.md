@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 0.1.0
-last_updated: 2026-05-06
+version: 0.2.0
+last_updated: 2026-06-04
 status: IN_PROGRESS
 research_tier: 2
 scope: ecosystem-wide
@@ -232,10 +232,75 @@ Per `[RES-021]` Tier 2 prior-art survey requirement:
 - step-security/harden-runner egress-policy patterns (relevant to Vault
   egress in Option E if pursued).
 
+## Executed State (2026-06-04 — Option B live for CI dependency resolution)
+
+Option B is no longer a sketch: the α arc (HANDOFF-ci-private-dep-access,
+principal-ruled) executed it for the `swift package resolve` path. The
+`configure-private-repos` composite mints per-job installation tokens
+(contents:read, auto-expiring, auto-revoked) for the three dependency-owning
+layer orgs via `actions/create-github-app-token@v3` and applies env-scoped
+org-prefixed insteadOf rules; `PRIVATE_REPO_TOKEN` remains the github.com-wide
+fallback. Chain commits: swift-institute/.github `5a776e9`+`d5c4b8e`,
+layer wrappers `828ff44`/`be64e20` (L1), `ba0a229` (L2), `a1f4b58` (L3);
+docs-path secret-transport wrappers per [CI-004a] v2 + [CI-109]; sub-org
+pattern (ii) per the [CI-059] caveat (validator `d56e36a`). Both ID-name
+eras are accepted ([CI-*] dual-name contract): `SWIFT_INSTITUTE_BOT_APP_CLIENT_ID`
+preferred, legacy `SWIFT_INSTITUTE_BOT_APP_ID` fallback.
+
+Option B's open sub-question is now answered empirically: there is NO way to
+authorize only swift-institute/.github to mint without distributing App
+credentials — and stronger, `secrets: inherit` does not deliver org secrets
+across an org boundary at all ([CI-109], byte-primitives run 26959288611:
+"Configured 0" cross-org-inherit vs "Configured 4" explicit-forward).
+
+**Legacy-tier degradation finding (strengthens deprovision-after-soak)**:
+two orgs so far (swift-primitives, swift-ietf) carry a `PRIVATE_REPO_TOKEN`
+that is axis-2-extant but DELIVERS empty/invisible to public-repo runs —
+the exists-but-doesn't-deliver class. The legacy tier is degraded across
+orgs, not one; the App route obsoletes it for resolution.
+
+### Provisioning runbook (per org; web UI per [CI-098])
+
+1. Org → Settings → Secrets and variables → **Actions** (NOT Dependabot).
+2. Create **two** org secrets, visibility **"Public repositories"**:
+   - `SWIFT_INSTITUTE_BOT_APP_CLIENT_ID` — the swift-institute-bot App's
+     Client ID (preferred name; the legacy numeric-App-ID era name
+     `SWIFT_INSTITUTE_BOT_APP_ID` also works — client-id wins if both exist).
+   - `SWIFT_INSTITUTE_BOT_APP_PRIVATE_KEY` — a PEM private key of the App.
+3. **PEM handling**: GitHub Apps support multiple active private keys —
+   generating a fresh key for a new org does NOT invalidate keys already in
+   use elsewhere (revocation is only by explicit deletion on the App page).
+   Reusing the existing PEM and generating a new one are both safe.
+4. **Sub-orgs need the SECRETS only — no App installation step**: mints
+   target the dependency-OWNING layer orgs (`owner:` =
+   swift-primitives/standards/foundations, where the App is installed);
+   the consumer org's installation state is never consulted by the mint.
+5. **No code change**: the tolerant contract picks the secrets up on the
+   next run.
+6. **Verify** via the composite's echo in any public consumer's next run:
+   - `Configured 4` — three mints + a delivering legacy token.
+   - `Configured 3` — three mints; the org's legacy token is empty/dead
+     (expected on degraded-legacy orgs; NOT a partial failure).
+   - `Configured 1` — no App secrets delivered (wrong section, wrong
+     visibility class, or name typo); legacy only.
+   - `Configured 0` — nothing delivers (pre-provisioning state).
+7. **Visibility note (free plan)**: org secrets cannot reach private repos
+   at all, and never need to — [CI-032] gates CI off on private repos.
+   Never request all-repositories visibility.
+
+Provisioned 2026-06-04: swift-primitives (pre-existing, legacy-era name),
+swift-institute (pre-existing), swift-standards, swift-foundations,
+swift-ietf, swift-iso, swift-w3c, swift-whatwg, swift-incits, swift-ieee,
+swift-iec. The six zero-public sub-orgs (swift-ecma, swift-arm-ltd,
+swift-intel, swift-riscv, swift-linux-foundation, swift-microsoft) use this
+runbook when they first gain a public package.
+
 ## Outcome
 
-**Status**: IN_PROGRESS (seed). Outcome deferred to dedicated investigation
-session. Resume in a separate chat.
+**Status**: IN_PROGRESS (seed; § Executed State records Option B live for
+CI resolution as of 2026-06-04 — the Option C/D/E evaluation and the
+PRIVATE_REPO_TOKEN deprovision decision remain open). Outcome deferred to
+dedicated investigation session. Resume in a separate chat.
 
 When that session opens, the agent should:
 
