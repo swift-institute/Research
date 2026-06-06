@@ -4,8 +4,8 @@ tier: 2
 scope: cross-package
 status: REFERENCE
 created: 2026-05-10
-last_reviewed: 2026-05-24
-last_verified: 2026-05-24
+last_reviewed: 2026-06-06
+last_verified: 2026-06-06
 toolchains:
   - Swift 6.3.1 (Xcode 26.4.1, swiftlang-6.3.1.1.2)
   - Swift 6.3.2 (swiftlang-6.3.2.1.108, SDK MacOSX26.5) — § A11
@@ -50,7 +50,7 @@ Verification anchor: 215 first-pass + 32 anchor-add second pass per `[EXP-007a]`
 | Bug | Upstream ID | Workaround | Evidence |
 |-----|-------------|------------|----------|
 | SIL CopyPropagation crash on ~Copyable enum switch consume | `swiftlang/swift#85743` | `@_optimize(none)` on ~8 functions | `Experiments/copypropagation-noncopyable-switch-consume` crashes MoveOnlyChecker pass #214 on 6.3.1. Earlier claim ("fix in compiler, waiting on Xcode") was incorrect — the fix was NOT in 6.3.1's cherry-pick set. |
-| `@_rawLayout` element destruction LLVM IR domination | `swiftlang/swift#86652` | `_deinitWorkaround: AnyObject?` + field-ordering | 36 inline storage types across 9 packages |
+| `@_rawLayout` element destruction LLVM IR domination | `swiftlang/swift#86652` | `_deinitWorkaround: AnyObject?` + field-ordering — **works for DIRECT `@_rawLayout` only; composed/nested (`Storage.Contiguous<Memory.Inline>`) is unrecoverable, see § A14** | 36 inline storage types across 9 packages |
 | WMO + CopyToBorrowOptimization miscompiles actor enum state | Not filed | Removed `Mutex<Token?>` from `IO.Event.Selector.Scope` (commit `6dad19ba`) OR `-sil-disable-pass=copy-to-borrow-optimization` | Standalone 87-line repro at `Experiments/copytoborrow-actor-state-mutex-miscompile/` still fails 100/100 on 6.3.1. See § A6. |
 | SendNonSendable SILFunctionTransform abort on cross-module ~Copyable/~Escapable borrowing init inside IIFE | Not filed | Bind the view at the outer function scope — do NOT wrap construction in `_ = { _ = View(base) }()` | `swift-institute/Experiments/sendnonsendable-iife-borrowing-init-crash/` — 10-line cross-module reducer aborts `swift build` with signal 6 in `SendNonSendable::run()`. Surfaced 2026-04-21 during swift-property-primitives test coverage work. |
 | CopyPropagation try_apply borrow scope shortening | Not filed | Replace `do/catch` with `try?` on ~Copyable access | swift-io full release build clean on 6.3.1 — workaround still in place, bug presence not independently verified. See § A5. |
@@ -792,6 +792,33 @@ public func run<T>(_ x: T) -> UInt8 { do { return try parse(x) } catch { return 
 **Upstream filing**: **FILED as `swiftlang/swift#89617`** (2026-06-02; reducer was filing-ready per [ISSUE-002]/[ISSUE-017]). Duplicate search ([ISSUE-007]): no exact match. Closest, all **distinct**: `swiftlang/swift#73345` (assertion `signature || !origType->hasTypeParameter()` but in **SILGen** `AbstractionPattern.h:529`, different pass); `swiftlang/swift#81317` (typed-throws + `-enable-testing`; this reducer needs neither); `#83597` / `#84899` (release-mode **OwnershipModelEliminator** verifier crashes — load-borrow and parameter-packs respectively, not FSO); `#83744` (`-enable-sil-opaque-values`, a different `SILArgument` assertion). **Explicitly distinct from our own `swiftlang/swift#87030`** (the IRGen `getMutableErrorResult`/`Types.h:5174` crash — closure field + `extension … where T == Concrete`; **clean on 6.3.2**, only crashes on 6.5-dev) **and its fix `#88931`** (changes `SILGenProlog.cpp` / `SILVerifier.cpp` / `IRGenSIL.cpp` — **not** FunctionSignatureOpts): #87030/#88931 are a **different bug** and do **NOT** cover this FSO crash (this one crashes on 6.3.2 where #87030 is clean; #88931 does not touch the FSO code path, and the FSO crash still reproduces on 6.5-dev). **Disposition**: filed upstream as #89617 (2026-06-02) after two independent fresh-eyes reviews + a live duplicate re-check (which added #88959 [closest relative — `-Onone` protocol-associatedtype crash], #80732, #77612 to the dup-search — all distinct; full list in the Issues entry / #89617). The source-side fix to `swift-parser-primitives` remains owned by that package's session.
 
 **Source**: 2026-06-01 parser release-config SIL-crash investigation (`/issue-investigation`).
+
+---
+
+### A14. `swift#86652` cross-package deinit fires ONLY for DIRECT `@_rawLayout` — composed/nested `@_rawLayout` is unrecoverable by any workaround
+
+**Swift versions**: 6.3.2 (empirically; the master `swiftlang/swift#86652` row is the parent bug).
+
+**Statement (Cleave-7 refinement of the `#86652` workaround)**: The canonical `_deinitWorkaround: AnyObject? = nil` + manual-cleanup workaround makes a `~Copyable` buffer's `deinit` fire during cross-package member-destruction **iff the buffer's `@_rawLayout` storage is a DIRECT field whose `@_rawLayout`-bearing TYPE is declared in the SAME module as the buffer** (e.g. `Buffer.Arena.Inline`'s nested `_Elements`). When the `@_rawLayout` is reached through a **cross-module generic composition** — `Storage.Contiguous<Memory.Inline<E,n>>`, where `Memory.Inline._Raw` (`@_rawLayout`) lives in a different package — the buffer's value-witness is misclassified **trivial** cross-package and its `deinit` is **skipped**, and the `AnyObject?` workaround is **inert**: it neither makes the deinit fire cross-package nor compiles safely same-package.
+
+**Empirical matrix (faithful production bed; list-linked consuming buffer-linked, member-destruction)**:
+
+| Config | substrate `Memory.Inline` | buffer-local WA | same-pkg | cross-pkg |
+|---|---|---|---|---|
+| composed (current prod) | `AnyObject?` | none | works | **LEAK** (deinit skipped) |
+| composed + double WA | `AnyObject?` | `AnyObject?` | — | **SIGSEGV** |
+| composed + single buffer WA (H1) | **clean** | `AnyObject?` | **SIGSEGV** | **LEAK** (deinit skipped) |
+| DIRECT `@_rawLayout` (Arena.Inline) | n/a (direct `_Elements`, same module) | `AnyObject?` | works | **works** |
+
+**Consequence for the MSB tower**: "compose `Storage.Contiguous<Memory.Inline>` AND tear down leak-free cross-package AND no direct `@_rawLayout`" is **simultaneously unsatisfiable** on 6.3.2 — composition makes the `@_rawLayout` cross-module by construction. The inline-sparse buffers (`Buffer.{Slab,Linked,Arena}.Inline`) therefore require EITHER a direct-`@_rawLayout` carve-out (Cleave-6 Option A) OR an upstream `#86652` fix. **Do NOT re-run the H1 spike** (single buffer WA + clean composed substrate) — it is refuted here (cross-package leak + same-package SIGSEGV).
+
+**What an upstream fix must do**: classify a struct whose value-witness transitively contains a cross-module `@_rawLayout` member as **non-trivially destructible** cross-package (so member-destruction + the buffer `deinit` fire), and stop the buffer-`AnyObject?` + nested-`@_rawLayout` same-package miscompile.
+
+**NOT synthetically reproducible** — a faithful 5-package /tmp model (Element→MemLeaf→StoreSeam→BufTier→Holder→consumer) does NOT reproduce the deinit-skip in debug (passes where prod fails) and release-ICEs on the `@_rawLayout`+deinit LLVM verifier ("Instruction does not dominate all uses"). Consistent with §A9/§A11/§A12: this bug class is context-sensitive; the **production tree is the only faithful bed**.
+
+**Evidence**: Cleave-7 session 2026-06-06; spike + restoration receipts (commit SHAs, deinit-entry-print diagnostic confirming the body is skipped) in `~/Developer/.handoffs/cleave-7-PROGRESS.md`. Production reproduction: `swift-list-linked-primitives` "List - Deinit" (6 inline-mode leaks, `deinitCount → 0`).
+
+**Source**: 2026-06-06 Cleave-7 family-2 cross-package seam-fix investigation (`/goal`; DESIGN-FIRST; surfaced to the seat as a genuine wall).
 
 ---
 
