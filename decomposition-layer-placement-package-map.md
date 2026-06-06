@@ -282,9 +282,17 @@ compiler facts, kept separate:
   for `~Copyable` — **LOW horizon**.
 - **Wall 2 (IRGen, `swiftlang/swift#86652`).** Even the unconditionally-`~Copyable` composed buffer's `deinit`
   is *skipped cross-package* (its `@_rawLayout` is reached cross-module via `Storage.Contiguous<Memory.Inline>`).
-  This is a **codegen bug, not a design leak** — same-package teardown is correct; the affected family-2
-  cross-package deinit tests are guarded `.disabled(swift#86652)`. **Removal gate:** the upstream `#86652` fix
-  (a parked ready-option — *not* this arc; it makes the existing composed buffers leak-free cross-package).
+  This is a **codegen bug, not a design leak** — same-package teardown is correct (the buffer-tier canaries
+  pass). **Phase-2 reconciliation (2026-06-06):** the in-tower cross-package deinit *consumers*
+  (`List.Linked.{Inline,Small}`, the `Queue.Linked` pass-throughs, `Tree.N.{Inline,Small}`, `Bitset.Small`) were
+  **DISSOLVED** in §C.1 — so the #86652 cross-package deinit-skip **no longer manifests in the tower** (no
+  in-tower ADT composes the kept inline buffers cross-package). The 6 family-2 tests were `.disabled(swift#86652)`
+  only for the **Phase-1→Phase-2 interim**, then dissolved with `List.Linked.Inline`/`.Small` — they are **NOT**
+  preserved-disabled. **Removal-gate tripwire (recommended, optional):** keep one preserved
+  `.disabled(swift#86652)` cross-package deinit canary over a kept inline buffer so a future #86652 fix is
+  detected (re-enable → it passes → remove the §C.3 KEEP-exception's Wall-2 framing). **Removal gate:** the
+  upstream `#86652` fix (a parked ready-option — *not* this arc; it makes the kept composed inline buffers
+  leak-free again whenever they ARE consumed cross-package).
 
 `Memory.Inline._deinitWorkaround` is the SOLE `#86652` workaround in the nesting and is load-bearing (do NOT
 remove; do NOT add a second buffer-level workaround — the double SIGSEGV-miscompiles on the nested substrate).

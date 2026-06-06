@@ -816,7 +816,7 @@ public func run<T>(_ x: T) -> UInt8 { do { return try parse(x) } catch { return 
 
 **NOT synthetically reproducible** — a faithful 5-package /tmp model (Element→MemLeaf→StoreSeam→BufTier→Holder→consumer) does NOT reproduce the deinit-skip in debug (passes where prod fails) and release-ICEs on the `@_rawLayout`+deinit LLVM verifier ("Instruction does not dominate all uses"). Consistent with §A9/§A11/§A12: this bug class is context-sensitive; the **production tree is the only faithful bed**.
 
-**Evidence**: Cleave-7 session 2026-06-06; spike + restoration receipts (commit SHAs, deinit-entry-print diagnostic confirming the body is skipped) in `~/Developer/.handoffs/cleave-7-PROGRESS.md`. Production reproduction: `swift-list-linked-primitives` "List - Deinit" (6 inline-mode leaks, `deinitCount → 0`).
+**Evidence**: Cleave-7 session 2026-06-06; spike + restoration receipts (commit SHAs, deinit-entry-print diagnostic confirming the body is skipped) in `~/Developer/.handoffs/cleave-7-PROGRESS.md`. Original production reproduction: `swift-list-linked-primitives` "List - Deinit" (6 inline-mode leaks, `deinitCount → 0`) — **NOTE: those tests were dissolved with `List.Linked.Inline`/`.Small` in Cleave-7 §C.1** (the in-tower cross-package consumers were removed, so the skip no longer manifests in the tower). The bug remains reproducible by ANY cross-package consumer of a kept `Buffer.{Slab,Linked,Arena}.Inline` (a `.disabled(swift#86652)` canary is the recommended removal-gate tripwire).
 
 **Source**: 2026-06-06 Cleave-7 family-2 cross-package seam-fix investigation (`/goal`; DESIGN-FIRST; surfaced to the seat as a genuine wall).
 
