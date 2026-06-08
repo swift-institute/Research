@@ -105,7 +105,7 @@ it impossible.
 | Concept | End-state form | Change |
 |---|---|---|
 | **Dense leaves** | `Memory.Heap` (class, cond-Copyable) · `Memory.Inline` (`@_rawLayout`, move-only) · `Memory.Small` — range-ledger + teardown in the leaf | keep |
-| **Sparse leaves** | single-allocation leaf carrying per-slot occupancy + teardown, conforming `Store.\`Protocol\`` **+ an orthogonal `Occupancy` capability** (conjunction, *not* a refinement): bitmap (Slab) · generation (Arena) · free-list (Pool/Linked); backing heap class-backed → cond-`Copyable`, inline → `InlineArray<n, Slot<E>>` (value-semantics, niche-dense) or `@_rawLayout`+bitmap (move-only, bit-dense) | `Storage.Arena` keep (the model); Slab-leaf relocate bitmap **out of the buffer**; Pool/free-list leaf **restore** (the lawful form `PoolStorage` was faking) |
+| **Sparse leaves** | single-allocation leaf carrying per-slot occupancy + teardown, conforming the existing `Store.\`Protocol\``; occupancy is **concrete leaf state** (not a protocol): bitmap (Slab) · generation (Arena) · free-list (Pool/Linked); backing heap class-backed → cond-`Copyable`, inline → `InlineArray<n, Slot<E>>` (value-semantics, niche-dense) or `@_rawLayout`+bitmap (move-only, bit-dense) | `Storage.Arena` keep (the model); Slab-leaf relocate bitmap **out of the buffer**; Pool/free-list leaf **restore** (the lawful form `PoolStorage` was faking) |
 | **Buffers** `Slab`/`Linked`/`Arena` | one generic each over the sparse leaf; **no `deinit`**; discipline only (links/index/cursor) | **dissolve `.Inline`/`.Small` types** (keep `.Bounded` — capacity axis); delete `PoolStorage`/`NodeStorage` + the D2 raw-`Memory.Pool`-in-buffer |
 | **Buffers** `Linear`/`Ring` | already lawful (dense leaf, thin generic) | keep |
 | **`Storage.Contiguous<Memory.X>`** | lifts dense **and** sparse leaves uniformly | keep / extend |
@@ -122,21 +122,25 @@ value-semantics + inline simultaneously* — the tombstone (`Element?`) form buy
 density. That trilemma is the real irreducible core: one corner's copyability, **not** a type explosion — and the
 5-angle panel proved it **vacuous in practice** (no real consumer inhabits it; see Composition below).
 
-## Composition: capability conjunction, not refinement (5-angle panel, 2026-06-08)
+## Composition: one protocol; occupancy is concrete leaf state (revised 2026-06-08)
 
-A five-angle research panel (`occupancy-encoding-{1..5}-*.md`, all spiked on Swift 6.3.2) sharpened the seam and
-proved the boundary. Headline: **a `Store.Sparse.Protocol` refinement is unnecessary** — positing one was a
-quantifier error (the *concrete leaf* has a richer surface, but that does not force the *generic buffer* to
-dispatch through a protocol refining `Store`).
+A five-angle research panel (`occupancy-encoding-{1..5}-*.md`, all spiked on Swift 6.3.2) explored the encoding and
+proved the boundary. The conclusion — after a wrong turn through a `Store.Sparse.Protocol` *refinement*, then a
+`Store ⊗ Occupancy` *capability-conjunction protocol* (both **withdrawn** 2026-06-08): **add no occupancy protocol
+at all.** The shipping system never used one.
 
-- **The seam is a product, not a refinement: `Store ⊗ Occupancy`.** `Occupancy` (allocate / free / liveness) is an
-  **orthogonal capability**, not a refinement of `Store.\`Protocol\``. A sparse leaf conforms **both**; the buffer
-  stays `Buffer<S: Store.\`Protocol\`>` and attaches allocation by **conjunction** (`where S: Occupancy`). The
-  corpus's own warranted-refinement test (C1–C4) *fails* for "Occupancy refines Store" (dense leaves are Store-only,
-  sparse are both → sibling conformers, not nested). **Verified already shipping:** `Storage.Arena: Store.\`Protocol\``
-  (plain 4-op, `Storage.Arena+Store.Protocol.swift:109`); `Buffer.Arena` attaches via 53 `where S == Storage<E>.Arena`
-  call-sites; `Storage.Split<Lanes, Elements>: ~Copyable` is the bespoke `~Copyable` dual-plane product conforming
-  `Store.\`Protocol\``. So single `Store.\`Protocol\`` and bit-density coexist with **zero wart**.
+- **One protocol — the existing `Store.\`Protocol\`` — and occupancy is concrete leaf state, not a capability.** A
+  sparse leaf is a **concrete type** that *holds* its occupancy (a `Bit.Vector` bitmap / in-band free-list /
+  generation tokens) plus the teardown `deinit`, and conforms the **existing** 4-op `Store.\`Protocol\``.
+  `allocate`/`free`/`isOccupied` are **concrete methods** on the leaf, not protocol requirements. `Buffer<S:
+  Store.\`Protocol\`>` is the one generic buffer (no element `deinit`); its occupancy ops **pin the concrete leaf**
+  (`where S == Storage<E>.Slab`). **Verified shipping:** `Buffer.Arena` already does exactly this —
+  `Storage.Arena: Store.\`Protocol\`` (`Storage.Arena+Store.Protocol.swift:109`) + 53 `where S == Storage<E>.Arena`
+  call-sites, **zero occupancy protocol**. So the carve-out dissolves with **one protocol total** and **no new
+  namespace**. *Why no protocol:* a second protocol meaning "this leaf is sparse" is abstraction the shipping system
+  does not use; namespace-nesting a non-`Store` capability under `Store` was a smell; and nothing generic dispatches
+  over "any sparse leaf" (each buffer pins its concrete leaf — YAGNI). Shared occupancy logic, where any, is a
+  **concrete component** (`Bit.Vector`, a free-list helper), never a protocol.
 - **Value-level composition uses the *binary* product/coproduct (both `~Copyable`-capable):** `Pair<First: ~Copyable…,
   Second: ~Copyable…>` and `Either<Left: ~Copyable…, Right: ~Copyable…>` carry `~Copyable` (conditional `Copyable`
   when both are) — use them, plus the bespoke `Storage.Split` (dual-plane) and a `Memory.Small`-style enum (SBO), for
@@ -161,10 +165,10 @@ residual is provably vacuous.**
 
 ## Implementation (bottom-to-top; active-prune)
 
-1. **Leaves (bottom).** An **`Occupancy` capability** in `swift-store-primitives` — `allocate`/`deallocate`/liveness,
-   **orthogonal** to `Store.\`Protocol\`` (a sparse leaf conforms *both*; the buffer attaches allocation via
-   `where S: Occupancy`; **not** a `Store` refinement — `Storage.Arena` already conforms plain `Store.\`Protocol\``
-   and is the model). Sparse leaves following the `Storage.Arena` precedent. The **inline**
+1. **Leaves (bottom).** **No new protocol.** Sparse leaves conform the **existing** `Store.\`Protocol\``; occupancy
+   is **concrete leaf state** (bitmap / free-list / generation + the teardown `deinit`), exactly the `Storage.Arena`
+   shape. Buffers pin the concrete leaf (`where S == Storage<E>.Slab`) for occupancy ops — the shipping `Buffer.Arena`
+   pattern, zero occupancy protocol. The **inline**
    sparse leaf is the gating build — confirm it compiles + tears down (incl. cross-module, with the
    `[MEM-SAFE-027]` `_deinitWorkaround` for Wall-2/`#86652`) on **Swift 6.3.2**; STOP + minimal repro on
    any wall (no wall claim without a repro).
