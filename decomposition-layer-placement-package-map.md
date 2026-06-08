@@ -89,7 +89,7 @@ forced-keep (an apparent smell the wall forces; KEPT) · **OOS** = capacity axis
 |---|---|---|---|---|
 | **swift-store-primitives** | Seam · `Store.Protocol` (FROZEN 4-op) + `Store.Initialization` (ledger vocab) | **KEEP** | the canonical Store seam + ledger vocabulary; the *universal* `Store.Tracked.Protocol` is **eliminated** (leaf-private `Memory.Tracked`) | — |
 | **swift-span-primitives** | Cross-cutting · `Span.Protocol` (vend a contiguous view) | **KEEP** (+ delete `My*` scratch types) | the namespace-neutral Span capability; the home `Memory.Buffer`'s raw view migrates toward | — (clean; `My*` is debris) |
-| **swift-index-primitives** | Sibling axis · `Index<Element>` (typed slot) | **KEEP** | the typed-Index package; end-state **adds `Index<Element>.Bounded<N>`** | **gap**: `Index.Bounded<N>` is **absent** — the §5.3 typed-bounded-index home (the only reason `Array.Bounded<N>` carries `<N>`) |
+| **swift-index-primitives** | Sibling axis · `Index<Element>` (typed slot) | **KEEP** | the typed-Index package; `Index<Element>.Bounded<N>` **already canonical in finite-primitives** | **reconciled (Cleave-8, 2026-06-07)**: NOT a gap — `Index.Bounded<N>` = `Tagged<Tag, Ordinal.Finite<N>>` (`swift-finite-primitives/Sources/Finite Bounded Primitives/Index.Bounded.swift:35`, 8+ tower consumers); Cleave-7's added duplicate struct collided + broke storage at index HEAD, removed in `ee9aa41` |
 | **swift-growth-primitives** | Memory-sub-axis (hoisted) · `Growth.Policy` | **KEEP** (+ add the `Growable` marker) | the Growth-policy package + a `Growable` leaf-marker | **gap**: the `Growable` *marker* the calculus posits (§5.3) is **absent** — only the `Policy` value exists |
 
 ### A.3 — Storage tier (Region-Topology ⊥ init-Tracking)
@@ -226,7 +226,7 @@ already dispositioned **DISSOLVE/deferred-arc** in §A.
 | `memory-buffer` **RELOCATE → span** | its raw-view role + inbound edges move under `swift-span-primitives`. |
 | `memory-aligned` **MERGE → Memory.Heap** (option) | folds the aligned-allocation leaf into Heap (alignment param); else stays as an explicit sibling leaf. |
 | `slab` ADT **RELOCATE/MERGE** (low-pri) | its single consumer composes `Buffer.Slab` directly; the façade folds. |
-| **gaps realized** | `index` gains `Index.Bounded<N>`; `growth` gains the `Growable` marker; `memory-arena`/`memory-pool` gain `Memory.Allocator.Protocol` conformance. |
+| **gaps realized (Cleave-7/8)** | `Index.Bounded<N>` was **already** canonical in finite-primitives (Cleave-7's index duplicate removed, `ee9aa41`); `growth` gained the `Growable` marker (Cleave-7 11a); `memory-arena`/`memory-pool` gained `Memory.Allocator.Protocol` (Cleave-7 5a). |
 
 ---
 
@@ -259,14 +259,24 @@ no design decision. **Design-needed** = a forced-exception adjudication or a cal
 8. **`memory-buffer`**: RELOCATE the integer-address raw view into `swift-span-primitives`.
 9. **`slab` ADT**: RELOCATE/MERGE the near-empty façade into `Buffer.Slab` or its sole consumer.
 10. **`slice`**: reserve the namespace vs DISSOLVE the empty package.
-11. **Realize the calculus end-state gaps**: `Index<Element>.Bounded<N>` (index); the `Growable` leaf-marker
-    (growth). These are the §5.3 capacity-axis homes the map proves are currently unbuilt.
+11. **Realize the calculus end-state gaps** — **RECONCILED (Cleave-7/8, 2026-06-07)**: `Index<Element>.Bounded<N>`
+    was a **misdiagnosis** (already canonical in finite-primitives as `Tagged<Tag, Ordinal.Finite<N>>`; Cleave-7's
+    added duplicate removed in `ee9aa41`); the `Growable` leaf-marker landed (Cleave-7 11a). The §5.3
+    capacity-axis homes are realized, not unbuilt.
 
-### C.3 — The hard-floor line (KEPT — never "cleaned up")
+### C.3 — ~~The hard-floor line~~ → DISSOLVES (SUPERSEDED 2026-06-07)
 
-| Forced exception | The wall that forces it |
+> **⚠ SUPERSEDED by `occupancy-lives-in-the-leaf.md` (ratified 2026-06-07).** The sparse-inline carve-out is
+> **not** a hard-floor. It existed only because the occupancy oracle was held in the *buffer* (e.g. `Bit.Vector`
+> in `Buffer.Slab`'s header). Move the oracle into a single-allocation *leaf* (the dense `Memory.Inline` pattern;
+> the shipping `Storage.Arena` pattern) and the buffer has no `deinit`, so `Buffer.{Slab,Linked,Arena}` dissolve
+> to one generic each. The Wall-1 *law* (a conditionally-`Copyable` generic cannot carry a `deinit`) is correct
+> but no longer forces a carve-out — because the buffer no longer carries the `deinit`. Wall-2 ([MEM-SAFE-027])
+> is unaffected. The table below is retained for history.
+
+| ~~Forced exception~~ | The wall that *forced* it (only while occupancy sat in the buffer) |
 |---|---|
-| `Buffer.{Slab,Linked,Arena}.{Inline,Small}` KEPT as concrete variants (not pure-generic) | **Wall 1** — SE-0427 `deinit ⟹ unconditionally ~Copyable`: a conditionally-`Copyable` generic buffer cannot host the buffer-level `deinit` the sparse occupancy teardown needs (`copyable_illegal_deinit`). A **converged design equilibrium** (Apple's `Box`; Rust's hoist-the-bound), NOT debt. |
+| ~~`Buffer.{Slab,Linked,Arena}.{Inline,Small}` KEPT as concrete variants~~ → **DISSOLVE** (occupancy → leaf) | **Wall 1** — applied only while the buffer held the occupancy + `deinit`; see the banner above. |
 | `Memory.Heap` teardown oracle in the leaf's backing `class` | bd04f32 — a conditionally-`Copyable` generic struct cannot carry `deinit` |
 | `Memory.Inline` carries `Memory.Tracked` | D1 — a conditionally-`Copyable` inline struct can't self-deinit → the consumer needs the leaf's live-extent |
 | `.Bounded`/`.Fixed`/`.Static`(capacity) KEPT this arc | capacity axis is Prism's; `Hash.Table.Static` independent per [DS-002] |
@@ -322,10 +332,14 @@ variant source header; the `_deinitWorkaround` comments (`Memory.Inline`, `Buffe
    structurally distinct from the dissolved **dense** `Buffer.{Linear,Ring}.Inline`. This is the hard-floor
    column's spine and the answer to the open `Buffer.Linked.Inline` naming question.
 4. **Four calculus-vs-reality gaps** (per ground rule 4 — surfaced, not silently patched; these are
-   *implementation* deltas from the calculus end-state, **not** flaws in the calculus): (a) `Memory.Arena/Pool`
-   don't conform `Memory.Allocator.Protocol`; (b) `Index.Bounded<N>` unrealized; (c) the `Growable` leaf-marker
-   unrealized; (d) `Allocator`(calculus) vs `Allocatable`(live) naming drift. Each is an end-state-form entry in
-   §A and a delta in §C.2.
+   *implementation* deltas from the calculus end-state, **not** flaws in the calculus). **RECONCILED 2026-06-07
+   (Cleave-7/8):** (a) `Memory.Arena/Pool` **now conform** `Memory.Allocator.Protocol` (Cleave-7 5a); (b)
+   ~~`Index.Bounded<N>` unrealized~~ — **a MISDIAGNOSIS: `Index.Bounded<N>` is already canonical in
+   finite-primitives (`Tagged<Tag, Ordinal.Finite<N>>`, `swift-finite-primitives/Sources/Finite Bounded
+   Primitives/Index.Bounded.swift:35`, 8+ tower consumers). Cleave-7's added `Index.Bounded` struct was a
+   DUPLICATE that collided + broke storage at index HEAD; removed in `ee9aa41`; no consumer references the
+   removed dup**; (c) the `Growable` leaf-marker **landed** (Cleave-7 11a); (d) `Allocator`/`Allocatable`
+   retained as distinct seams. Each was an end-state-form entry in §A and a delta in §C.2.
 
 ---
 
