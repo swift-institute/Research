@@ -4411,6 +4411,18 @@
       "scope": "cross-package",
       "date": "2026-06-09",
       "supersededBy": null
+    },
+    {
+      "file": "stdlib-array-family-source-archaeology.md",
+      "displayName": "Stdlib Array Family Source Archaeology (6.3.2 → 6.4.x → main)",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-06-10): Tier 2 ecosystem-wide. Read-only multi-ref archaeology of swiftlang/swift (pinned: swift-6.3.2-RELEASE cd8d8ad0019, swift-6.4.x-DEVELOPMENT-SNAPSHOT-2026-06-07-a 0b7717dc5b6, main 6f5d855aedf; release/6.5 does NOT exist — main is the 6.5-dev trunk) answering the ratified tower's eight questions. Headlines: (Q2) stdlib Array/ContiguousArray/ArraySlice are Copyable-element-only on ALL refs (zero ~Copyable mentions, negative grep proof); the conditional-copyability precedent is InlineArray (EAGER copy, no CoW); SE-0527 explicitly considered-and-rejected a conditionally-copyable Array — retires the 'stdlib Array posture' phrasing in PROPOSAL-tower-perfected-design §0. (Q7) NO conditionally-Copyable CoW container exists anywhere (stdlib, swift-collections @ af174fe, Swift Evolution) — upstream's direction is sibling families (CoW-copyable vs Unique/Rigid move-only), convergent with the ratified two-column design; nearest artifact is swift-collections' staged-disabled Shared<Storage: ~Copyable> (unconditionally-Copyable CoW box, #if false, zero consumers), which validates the Shared mechanism; the façade stays shelved with SE-0527's runtime-copyability-dispatch objection named. (Q3) R-5 drain-box CONFIRMED stdlib-convergent: _ContiguousArrayStorage.deinit drains elements + _fixLifetime(self) (idiom to adopt in Box.deinit). (Q4) single-alloc template documented: allocWithTailElems_1 + projectTailElems + malloc-size capacity reclaim; ManagedBuffer admits Element: ~Copyable INCLUDING on 6.3.2 — the fusion door exists today (stays future/internal per ratification). (Q5) span-canonical validated; mutableSpan is a CoW boundary (_makeMutableAndUnique before vend); stdlib itself uses _overrideLifetime; lifetime spelling is @_lifetime on 6.3.2 → @lifetime on 6.4.x+ (pin until the gate bump). (Q6) InlineArray = Builtin.FixedArray managed aggregate (no deinit → conditional Copyable legal); the userland @_rawLayout analogue is unmanaged → Wall 1 — confirms occupancy-lives-in-the-leaf. (Q8) the R-6 miscompile shape is UNEXERCISED by stdlib (no guarding idiom to copy; no upstream issue exists). Trajectory: CoW/teardown stable 632→main; @unsafe wave, borrow/mutate accessor migration, SE-0499, SE-0527 merged-then-reverted (CMake) 2026-06-04 — UniqueArray/RigidArray re-land imminent. Errata: OutputSpan is SE-0485 (store-inline doc says SE-0527; se-0527-alignment doc says SE-0506 — both wrong).",
+      "status": "RECOMMENDATION",
+      "statusDetail": "All load-bearing claims [RES-020] parallel-verified 2026-06-10 (two verifier agents; 34/37 confirmed, 3 corrected and incorporated). Research-only: no tower source edited. Outcome: posture correction + W4 implementation notes (ensureUnique before mutable-span vend, unique-grow moves not copies, _fixLifetime closing the drain, @exclusivity(unchecked) to measure) + single-alloc fusion dossier + corpus errata + watch items (SE-0527 re-land, SE-0516 review closes 2026-06-18, /tmp/cow-skip-repro → Experiments/ pending per R-6).",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide",
+      "date": "2026-06-10",
+      "supersededBy": null
     }
   ],
   "narrativeSections": [
