@@ -4399,6 +4399,18 @@
       "scope": "ecosystem-wide",
       "date": "2026-06-08",
       "supersededBy": null
+    },
+    {
+      "file": "store-inline-span-vs-in-place-pointer.md",
+      "displayName": "Store.Inline: Span-Based Access vs the In-Place Raw Pointer",
+      "topic": "ACCEPTED (v1.1.0, 2026-06-09 — span-canonical-public, keep per-slot seam, no type unification, consumer-driven W3/W4): Tier 2 cross-package. Does the Span/~Escapable approach let Store.Inline's @_rawLayout inline storage be accessed move-safely WITHOUT raw pointers, replacing the in-place withUnsafePointer approach? Probe (Swift 6.3.2): a yielded MutableSpan/Span over @_rawLayout storage compiles, is move-safe (consume-move-then-reuse PASS debug+release), is genuinely lifetime-bound (escape rejected), and enforces exclusivity (overlap rejected) — so the move-dangle IS resolved as a safety property. BUT it does NOT make Store.Inline pointer-free: @_rawLayout typed access is irreducibly pointer-mediated on 6.3.2 (Swift.Span is built from an UnsafePointer); the internal withUnsafePointer remains. Unification (b): a uniform accessor surface via Span.Protocol/Span.Mutable.Protocol is attainable, but TYPE-level collapse of Store.Inline and Storage.Contiguous is blocked by the documented mutableSpan-property generic-forwarding wall AND occupancy-lives-in-the-leaf.md's placement law. RECOMMENDATION: adopt the additive Span accessors on Store.Inline (consumer-driven), conforming the capability protocols to match the heap path; do NOT pursue type-level unification; prefer yielding _read/_modify (no _overrideLifetime debt) where the access pattern allows. Flags explicitly that Store.Inline is committed (de84968 W3-pre) so this revisits committed code — recommendation only, needs principal authorization; no source edited.",
+      "status": "ACCEPTED",
+      "statusDetail": "ACCEPTED 2026-06-09 (v1.1.0; was RECOMMENDATION v1.0.0). Principal ruling on ChatGPT+seat+research convergence: add Span/MutableSpan accessors to Store.Inline (additive, object-local) matching the heap Storage.Contiguous surface; Span = canonical public contiguous-region surface (raw-pointer coroutines internal); keep the per-slot typed seam public (region-view vs element-lifecycle are distinct concerns); NO type unification of Store.Inline/Storage.Contiguous; consumer-driven in W3/W4. Pointer-freedom is a surface invariant (leaf pointer irreducible on 6.3.2, auto-improves at SE-0465). Empirical probe Swift 6.3.2, scratch-only. Extends nonescapable-support-memory-storage-buffer.md (Candidate B / §4.2) + the 2026-06-02 depointer reflection. Implementation pending in the W3/W4 migration.",
+      "statusRaw": "ACCEPTED (v1.1.0)",
+      "tier": 2,
+      "scope": "cross-package",
+      "date": "2026-06-09",
+      "supersededBy": null
     }
   ],
   "narrativeSections": [
