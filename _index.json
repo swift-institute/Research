@@ -4423,6 +4423,18 @@
       "scope": "ecosystem-wide",
       "date": "2026-06-10",
       "supersededBy": null
+    },
+    {
+      "file": "hashed-container-substrate-archaeology.md",
+      "displayName": "Hashed-Container Substrate Archaeology (stdlib · swift-collections · the sparse hashed leaf)",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-06-10): Tier 2 ecosystem-wide. R1 of the post-archaeology arc — feeds the ADT-families executor's set/dict halt (GOAL-tower-adt-families.md:50-51, 'the hashing column discipline'). Verified findings: stdlib _DictionaryStorage/_SetStorage = ONE Builtin.allocWithTailElems_3/2 allocation [bitmap words | keys | values] whose class deinit walks ONLY occupied bits (POD-skipped, _fixLifetime close) — occupancy-lives-in-the-leaf shipped at industrial scale, byte-identical 632→main; linear probing FCFS, NO tombstones (backward-shift chain repair), 3/4 load factor, per-instance address seed re-seeded on resize, copy() preserves seed+scale (no rehash). swift-collections BasicContainers previews (UnstableHashedContainers trait, source-unstable, 6.4-gated) are the ONLY move-only hashed precedent: RigidSet/RigidDictionary = parallel allocations + struct deinit + Robin-Hood-default linear probing + bitmap, keys bound Hashable & ~Copyable via SE-0499 (Implemented Swift 6.4 — NOT on the 6.3.2 gate ⇒ institute Hash.Protocol stays the key bound until the bump). SE-0527 Future directions names the Rigid/Unique hashed family as the stdlib trajectory. Swiss-table: ZERO Swift precedent anywhere (stdlib FIXME names Robin Hood as the alternative). PRESCRIPTION: ordered family keeps dense-elements + POD position-index (Hash.Table re-spell at W5; evaluate backward-shift vs its tombstone sentinels); unordered move-only family REQUIRES the sparse hashed LEAF (single-allocation SoA bitmap+slots, Store.Protocol, leaf-owned drain) — Buffer.Slots/Store.Split is leak-by-construction for owned scattered elements (untracked-elements rule × Wall-1: S5 ADTs cannot deinit); hash policy lives in the family's table engine pinning the concrete leaf (Buffer.Arena pattern), never in the leaf or seam.",
+      "status": "RECOMMENDATION",
+      "statusDetail": "All load-bearing claims [RES-020] parallel-verified 2026-06-10 (17/17 confirmed). Research-only. Companion to stdlib-array-family-source-archaeology.md; answers the executor's set/dict ratification question; flags the tombstone divergence and the SE-0499 gate-bump key-bound swap.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide",
+      "date": "2026-06-10",
+      "supersededBy": null
     }
   ],
   "narrativeSections": [
