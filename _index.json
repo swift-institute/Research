@@ -4435,6 +4435,18 @@
       "scope": "ecosystem-wide",
       "date": "2026-06-10",
       "supersededBy": null
+    },
+    {
+      "file": "container-protocol-lattice-borrowing-iteration.md",
+      "displayName": "Container-Protocol Lattice & Borrowing Iteration — the Audit-#5 Root Cause",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-06-10): Tier 2 ecosystem-wide. R2 of the post-archaeology arc — root-causes Audit #5 (REPORT-W4:121, move-only-element columns lost Collection/Iterable membership) instead of record-and-accept. THREE-LAYER root cause: (1) conformance-bundling accident — the lattice protocols ALL admit Element: ~Copyable; the gate is Buffer.Linear's Span.Protocol CONFORMANCE bound S.Element: Copyable (bundled with the withUnsafeBufferPointer C-interop hatch) while the raw span accessor is unbounded — mechanically re-relaxable; (2) the suspected structural wall is NOT a wall — PROBE (6.3.2, debug+-O, preserved at .handoffs/probes-2026-06-10/r2-lattice-probe/): generic borrow-through-call reads via a value-{ get } subscript requirement over ~Copyable Element COMPILE AND RUN; consume-out (let v = t[0]) is compiler-rejected — so Collection.Protocol membership can extend to move-only-element columns, with element-RETURNING conveniences staying Copyable-gated (the SE-0516 restriction split); (3) upstream is mid-churn — SE-0516 Iterable in active review to June 18 with author-floated renames (post #25 SpanIterator), Container = future-directions draft only, lorentey: 'no project- or team-wide consensus'. The fork is false: re-relax AND the borrowing-iteration layer already exists (__IteratorChunkProtocol matches SE-0516's revised shape incl. Failure; institute divergence = typed maximumCount). DISCOVERY with arc-wide consequence: the whole lattice's ~Copyable associated types ride the EXPERIMENTAL SuppressedAssociatedTypes flag (bare 6.3.2 rejects the spelling) — gate-bump dossier item (SE-0503 spelling check). SE-0527's accepted shape (UniqueArray in principle, Swift module, span-first + BorrowingSequence only) matches the tower's post-fix posture.",
+      "status": "RECOMMENDATION",
+      "statusDetail": "12/12 claims [RES-020]-verified 2026-06-10 (one location correction: __IteratorChunkProtocol lives in swift-iterator-primitives); probe run twice debug+release. Research-only — the verified change-shapes belong to the executor/W5 owner. Watch: SE-0516 review closes 2026-06-18.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide",
+      "date": "2026-06-10",
+      "supersededBy": null
     }
   ],
   "narrativeSections": [
