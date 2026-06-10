@@ -4483,6 +4483,18 @@
       "scope": "ecosystem-wide",
       "date": "2026-06-10",
       "supersededBy": null
+    },
+    {
+      "file": "tower-research-arc-riders-2026-06-10.md",
+      "displayName": "Tower Research-Arc Riders (2026-06-10)",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-06-10): Tier 2 ecosystem-wide. The five riders of the post-archaeology arc, live-verified. (1) SE-0527 re-land watch: NOT re-landed — re-land PR swiftlang/swift#89698 is OPEN with CI churning 2026-06-10 (Windows smoke); UniqueArray/RigidArray dirs absent at main HEAD 81b9ead; institute shadow pre-check CLEAN (zero bare identifiers); re-check rides the merge. (2) R-6 filing dossier HELD (fresh YES required): draft issue skeleton assembled over the durable Experiments/cow-box-deinit-omission-miscompile repro (MinimalRepro + mitigation matrix incl. Q8 shapes 11-12 both-negative; drain-in-class-deinit = positive control; sibling-of-#86652 framing; no upstream duplicate exists). (3) Gate-bump 6.3.2→6.4 readiness: @_lifetime sweep = 194 files/436 occurrences; SuppressedAssociatedTypes → SE-0503 Accepted with a TWO-FLAG nuance (SuppressedAssociatedTypesWithDefaults Features.def:289 vs the older flag :464); SE-0499 key-bound swap; SE-0474 = Yielding accessors (Accepted, but impl partial behind CoroutineAccessors — verify 6.4-stable ships it); @unsafe wave hits 5 ManagedBuffer-consumer packages; SE-0516 closes 06-18. (4) Fusion scoping: the upstream single-allocation trio is complete (_ContiguousArrayStorage/_DictionaryStorage/_DequeBuffer); fused-box R-6 interaction hypothesis recorded UNVERIFIED with a mandatory ≤1h shape-13 spike recipe before any fusion design reliance; 2-alloc ratification + layer-collapse tension unchanged. (5) Consume-into-escaping-closure: the wall is SE-0390-NORMATIVE; SE-0528 Continuation is the sanctioned adjacent pattern (quotes our exact diagnostic); once-closures unpitched (SE-0073 Rejected 2016) — the W4 structured-consuming-sending ruling stands; watch = a FnOnce-style pitch.",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Sweep agent verified all four external watch items against primary sources (PR API, raw proposals, Features.def, forums) 2026-06-10; local counts + Experiments state re-derived first-hand. R-6 filing remains gated on a fresh principal YES.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide",
+      "date": "2026-06-10",
+      "supersededBy": null
     }
   ],
   "narrativeSections": [
