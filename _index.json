@@ -4447,6 +4447,18 @@
       "scope": "ecosystem-wide",
       "date": "2026-06-10",
       "supersededBy": null
+    },
+    {
+      "file": "slot-map-prior-art-and-the-generational-seam.md",
+      "displayName": "Slot-Map Prior Art & the Generational Seam",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-06-10): Tier 2 ecosystem-wide. R3 of the post-archaeology arc — settles the executor's halt item 'slot-map vs the deliberately-deferred Storage.Generational seam'. VERDICT: never conform the 4-op seam as-is — three independent reasons: (1) the seam's ledger is linear-prefix-shaped vs scattered generational occupancy (the R1 non-prefix-ledger argument, second application); (2) raw Index access bypasses generation validation — the leaf's entire purpose; prior art is unanimous (slotmap exposes NO positional access; generational-arena/thunderdome gate raw tiers as loud, occupancy-checked accessors returning the true handle); (3) the shipped reference (Buffer.Linked) drives the handle API exclusively (insert→Handle / validated subscript / remove; zero seam calls, grep-verified). The Handle API IS the generational seam; SlotMap composes as a PINNED-COLUMN family (Buffer.Arena occupancy-pin pattern; target naming Buffer.SlotMap per the DESIGN doc). Iteration: slot-scan now, occupied-region chunk iterator for future Iterable (s-c RigidSet precedent), dense-mirror consumer-evidence-gated, hop is DEAD upstream (HopSlotMap deprecated 1.1.0). Generation mechanics already exceed consensus (64-bit vs Rust's 32-bit + documented 2^31 wraparound). FLAGGED TO SEAT: Storage.Generational keeps per-slot state in two stdlib-Array side allocations (_generations/_occupied, verified :66/:70) — diverges from the occupancy law's single-allocation SoA Arena model (alignment candidate, not a blocker). Swift ecosystem census: ZERO slot maps anywhere (stdlib/s-c/SE/forums) — open field.",
+      "status": "RECOMMENDATION",
+      "statusDetail": "12/12 claims [RES-020]-verified 2026-06-10 (5 web-primary re-fetched, 7 local re-read; one wording precision folded in). Research-only; feeds the ADT-families executor's surface-first halt and the seat's ratification moment.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide",
+      "date": "2026-06-10",
+      "supersededBy": null
     }
   ],
   "narrativeSections": [
