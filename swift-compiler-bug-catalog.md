@@ -116,6 +116,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | A11 | `DiagnoseStaticExclusivity` SIGSEGV on a borrow returned through a `~Copyable` enum payload | 6.3.2 (still broken) | `@inlinable` getter returning `Span`/`MutableSpan`/`_read`-view from a `switch` over a `~Copyable` enum payload crashes emit-module; workaround is non-`@inlinable` + package window. Context-sensitive (no standalone reducer yet) |
 | A12 | Corrupt associated-type-witness mangled name for a deep generic instantiation as a `Sequenceable.Iterator` witness | 6.3.1 (still broken; no standalone reducer) | Deep `Memory.Cursor<Buffer.Linear.Inline>` witness emits a malformed mangled name (`'}'`); same emission class as §A9. Workaround: flatten the witness to element-only-generic |
 | A13 | `FunctionSignatureOpts` `SILArgument.cpp:40` assertion on a generic fn with a generic typed-throws error | 6.2 → 6.5-dev CRASH (NOT a 6.3 regression; verifier-caught 6.2/6.2.3, assertion-caught 6.3+; unfixed) | `func f<T>() throws(E<T>)` + same-module caller + `-O` aborts FunctionSignatureOpts creating a `SILArgument` whose type still has a type parameter |
+| A15 | Runtime cannot verify a conditional conformance whose same-type RHS is `~Copyable` → null-metadata SIGSEGV at `-Onone` + silent wrong dynamic casts | 6.2 → 6.5-dev compiler AND runtime, ALL broken (NOT a regression; distinct from §A9 despite identical 0x10 signature) | `extension Gen: P where A == Pool` (`Pool: ~Copyable`) + a generic wrapper `W<S: P>` storing `S`: any member access at `-Onone` derefs null metadata at `+0x10`; `(Gen<Pool>() as Any) is any P` returns false; runtime says `subject type x does not conform to protocol P`. 8-declaration bare-swiftc repro, no feature flags. Tower trigger: the ecosystem's only same-type conditional conformance, `Storage.Generational: Store.Protocol where Allocation == Memory.Allocator<Memory.Heap>.Pool` (the LEG-7 slotmap DEBUG wall) |
 | B1 | `Property.View ~Copyable` extension constraint placement | 6.3.x (lang spec) | All constraints MUST be at extension level, not method level — implicit `Base: Copyable` else |
 | B2 | `Property.View` rejected on `Copyable` types (~Copyable + ~Escapable result from mutating method) | 6.3.x (lang spec) | Use `Property<Tag, Base>` for `@CoW` Copyable types instead |
 | B3 | Tagged constrained-extension nested-type ambiguity | 6.3.1 (still broken) | `extension Tagged where Tag == X, RawValue == Y { typealias Foo = ... }` causes cross-instantiation ambiguity |
@@ -819,6 +820,38 @@ public func run<T>(_ x: T) -> UInt8 { do { return try parse(x) } catch { return 
 **Evidence**: Cleave-7 session 2026-06-06; spike + restoration receipts (commit SHAs, deinit-entry-print diagnostic confirming the body is skipped) in `~/Developer/.handoffs/cleave-7-PROGRESS.md`. Original production reproduction: `swift-list-linked-primitives` "List - Deinit" (6 inline-mode leaks, `deinitCount → 0`) — **NOTE: those tests were dissolved with `List.Linked.Inline`/`.Small` in Cleave-7 §C.1** (the in-tower cross-package consumers were removed, so the skip no longer manifests in the tower). The bug remains reproducible by ANY cross-package consumer of a kept `Buffer.{Slab,Linked,Arena}.Inline` (a `.disabled(swift#86652)` canary is the recommended removal-gate tripwire).
 
 **Source**: 2026-06-06 Cleave-7 family-2 cross-package seam-fix investigation (`/goal`; DESIGN-FIRST; surfaced to the seat as a genuine wall).
+
+---
+
+### A15. Runtime cannot verify a conditional conformance whose same-type RHS is a `~Copyable` type (null-metadata SIGSEGV + silent wrong dynamic casts)
+
+**Swift versions**: ALL — compilers 6.2, 6.2.3, 6.3.1, 6.3.2, 6.5-dev (2026-05-27 snapshot) × runtimes macOS 26.2 OS `libswiftCore` AND the 6.5-dev toolchain runtime (which exports `swift_runtimeSupportsNoncopyableTypes`). NOT a regression; NOT fixed upstream as of swiftlang/swift `6f5d855aedf` (2026-06-10). Investigation 2026-06-10 (`/issue-investigation`, the LEG-7 slotmap wall).
+
+**Minimal reproducer** (8 declarations, single file, bare `swiftc`, NO feature flags; preserved at `.handoffs/probes-2026-06-10/noncopyable-sametype-conformance-crash/m20.swift`):
+
+```swift
+protocol P {}
+struct Pool: ~Copyable {}
+struct Gen<A: ~Copyable> {}
+extension Gen: P where A == Pool {}          // ← same-type conditional conformance, ~Copyable RHS
+struct W<S: P> { var s: S; var c: Int { 42 } }
+let w = W<Gen<Pool>>(s: .init())             // construction OK
+print(w.c)                                   // ← SIGSEGV at -Onone: EXC_BAD_ACCESS (code=1, address=0x10)
+```
+
+**Two symptoms**: (1) at `-Onone`, any computed-member access on `W<Gen<Pool>>` (class wrapper: even instantiation) dereferences null metadata at `+0x10`; (2) crash-free and silent — `(Gen<Pool>() as Any) is any P` returns **false** (should be true). `SWIFT_DEBUG_FAILED_TYPE_LOOKUP=1` prints `subject type x does not conform to protocol P` before the fault.
+
+**Constraint model** (each independently verified): requires same-type conditional conformance (inverse-only condition passes) + `~Copyable` RHS (Copyable RHS passes) + wrapper generic bound on the protocol (unbounded passes) + a stored field of the bound param (phantom-only passes) + `-Onone` member access (`-O` statically specializes — but `_mangledTypeName(W<Gen<Pool>>.self)` crashes even at `-O`). NOT required: any protocol requirement, associated types, `SuppressedAssociatedTypes`, Tagged, `~Copyable` on the conforming/wrapper types, nesting, module boundaries, SwiftPM.
+
+**Mechanism** (lldb-traced; sources @ `6f5d855aedf`): `__swift_instantiateConcreteTypeFromMangledName` → `_gatherGenericParameters` → `_checkGenericRequirements(S: P)` → `Gen: P` conditional → `TargetProtocolConformanceDescriptor::getWitnessTable` → SameType case (`stdlib/public/runtime/ProtocolConformance.cpp:1843`) — BOTH sides of `A == Pool` resolve (Pool's metadata accessor fires from inside the check) yet the check fails; error swallowed; lookup returns null; IRGen's stub has no null check. Related runtime property: noncopyable nominals are invisible to textual by-name lookup on EVERY runtime — records segregated into `__swift5_types2` (`lib/IRGen/GenDecl.cpp:977`) which no runtime scans (`ImageInspectionCommon.h:35` is the sole mention); `_typeByName` on any noncopyable nominal returns nil.
+
+**Distinct from §A9** (which has the same observable 0x10 family): §A9 = malformed `SuppressedAssociatedTypes` mangling emitted by 6.3.x ("unknown error"; fix travels with the 6.4-dev+ compiler). §A15 = runtime conditional-conformance logic ("does not conform to protocol"; broken everywhere incl. 6.5-dev). The LEG-7 slotmap DEBUG wall carries the §A15 signature (`subject type x does not conform to protocol __StoreProtocol`), NOT §A9's — the "§A9 family" label in the 2026-06-10 handoff conflated two distinct bugs. The recorded Set.Ordered/Graph crashes remain §A9 (correctly gated `compiler(<6.4)`); they are NOT §A15 (no same-type-noncopyable conformance on those paths — ecosystem grep finds exactly one such conformance, Generational's).
+
+**Tower trigger**: `Storage.Generational: Store.Protocol where Allocation == Memory.Allocator<Memory.Heap>.Pool` (`swift-storage-arena-primitives/…/Storage.Generational+Store.Protocol.swift:39-40`) — the ecosystem's ONLY same-type conditional conformance. Any generic wrapper bounded on `Store.Protocol` (& anything) storing a `Generational` column crashes on first member access in DEBUG.
+
+**Mitigation (verified shape, NOT applied — proposal only)**: respell as a marker-protocol conditional: `protocol Marker: ~Copyable {}` + `extension Pool: Marker {}` + `extension Gen: P where A: Marker, A: ~Copyable {}` — passes 3/3 (`m31.swift`). The explicit `, A: ~Copyable` is load-bearing (bare `A: Marker` re-defaults Copyable per SE-0427 — compile error). In the tower the marker would need to carry the pool ops (`allocateSlot`/`deallocate`) used by the witness bodies.
+
+**Reproducer + dossier**: probes at `.handoffs/probes-2026-06-10/noncopyable-sametype-conformance-crash/` (FINDINGS.md = full bisect record); upstream dossier STAGED (not filed — needs principal YES) at `swift-institute/Issues/swift-issue-noncopyable-sametype-conditional-conformance/`.
 
 ---
 
