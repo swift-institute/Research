@@ -4471,6 +4471,18 @@
       "scope": "ecosystem-wide",
       "date": "2026-06-10",
       "supersededBy": null
+    },
+    {
+      "file": "deque-ring-bounded-queue-archaeology.md",
+      "displayName": "Deque / Ring / Bounded-Queue Archaeology",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-06-10): Tier 2 ecosystem-wide. R5 of the post-archaeology arc — ring/bounded-queue prior art mapped onto the shipped Buffer.Ring + the queue family the executor landed mid-arc (validation + gap analysis). Findings: (1) layout consensus — s-c both generations use header{capacity,count,startSlot}+≤2 lazy segments; our Ring is the same family with runs carried in the typed initialization ledger; NIO CircularBuffer is the divergent ContiguousArray<Element?>+power-of-two-mask form (the tombstone trade, correctly not taken). (2) Teardown converges on ledger-driven two-region exactly-once at three owners — s-c CoW class deinit (_DequeBuffer IS a ManagedBuffer subclass: the ring-column FUSION TEMPLATE, completing the upstream single-allocation trio with _ContiguousArrayStorage and _DictionaryStorage), RigidDeque struct deinit→dispose(), our no-deinit-at-the-buffer + leaf oracle (strictest). (3) Bounded policy census {grow 1.5×/2×, trap, reject}: our rejection-first + typed capacityExceeded inverts s-c's trap-first — deliberate [API-ERR-001] divergence now documented. (4) Drop-oldest/overwrite ring semantics absent ECOSYSTEM-WIDE (verified searches) — open variant cell, consumer-gated. (5) Follow-ups: buffer-ring-consumer-api-boundary.md's DEFERRED trigger has FIRED (queue now composes Ring) — delta revisit due; queue _Package-Insights carries a stale pre-reshape nested-type claim to retire.",
+      "status": "RECOMMENDATION",
+      "statusDetail": "8/8 upstream claims [RES-020]-verified (permalinked at s-c af174fe + nio 7586225b); local claims spot-checked first-hand. Research-only; family already shipped — findings land as docs guidance + two seat flags.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide",
+      "date": "2026-06-10",
+      "supersededBy": null
     }
   ],
   "narrativeSections": [
