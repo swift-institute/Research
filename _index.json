@@ -4459,6 +4459,18 @@
       "scope": "ecosystem-wide",
       "date": "2026-06-10",
       "supersededBy": null
+    },
+    {
+      "file": "column-spelling-ergonomics-alias-vocabulary.md",
+      "displayName": "Column Spelling Ergonomics — the Alias Vocabulary & the Gate Cost",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-06-10): Tier 2 ecosystem-wide. R4 of the post-archaeology arc, two halves. NEAR-TERM (W5-blocking): the column-alias vocabulary. Demand proven — test suites privately re-derive the same aliases (HeapColumn/SharedColumn/MoveArray, Array Surface Tests.swift:18-28) while the public surface ships zero; construction is already spell-free (split pinned constructors) — the gap is TYPE POSITION. Mechanism verdict (first-hand probes + stdlib precedent): generic typealiases on 6.3.2 are fully capable — generic params, ENFORCED constraints both forms, ~Copyable suppression, and namespace-enum-nested aliases with own params (the lawful shape under [API-NAME-001/002]; top-level compound NIO-style aliases are unlawful here; 'CoW' is never an identifier). Default generic args: dead (PR #591 closed 2017, no successor) AND SE-0527 argues against the pattern itself (viral type pollution, stack traces). Macros: closed named lists only (global_arbitrary_name). RECOMMEND Option A: a Column-style namespace vocabulary module (Array<Column.Shared<Int>>), Audit-#9-aligned; seat names it. LONG-TAIL: SE-0527's runtime-dispatch objection QUANTIFIED in the tower's shape — microprobe (-O, 6.3.2): always-unique per-element gate = 5.1 vs 0.8 ns/op ungated ⇒ ~4.3 ns worst case; 0 on move-only columns (static column choice voids objection #1); amortized to ~0 by the sanctioned span-first bulk factoring. Façade watch: s-c Shared unchanged (#if false @ af174fe); triggers recorded (un-gating commit or copyable-Box pitch).",
+      "status": "RECOMMENDATION",
+      "statusDetail": "6/6 web claims [RES-020]-verified; typealias capabilities + gate cost re-derived first-hand; probe artifacts preserved at .handoffs/probes-2026-06-10/r4-alias-gate-probe/. Naming is the seat's permanent-API call; two-column design unchanged.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide",
+      "date": "2026-06-10",
+      "supersededBy": null
     }
   ],
   "narrativeSections": [
