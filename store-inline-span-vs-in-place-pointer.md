@@ -347,4 +347,4 @@ deliberate, consumer-driven decision, not an automatic follow-on.
 - `swift-institute/Research/Reflections/2026-04-06-unsafe-pointer-audit-span-migration.md` — Span as the ecosystem's safe view type; migration is pulling an existing API up the stack.
 - `/Users/coen/Developer/.handoffs/HANDOFF-tower-cross-module-spike.md` (probe 5) and `HANDOFF-tower-rich-fidelity-spike.md` (B-finding) — the inline move-dangle empirical record this doc builds on.
 - Probe repro: `/tmp/inline-span-probe/{probe.swift, escape.swift, excl.swift}` (Swift 6.3.2, `org.swift.632202605101a`).
-- SE-0446 (Nonescapable Types); SE-0465 (Nonescapable Standard Library Primitives — pointer-pointee deferral); SE-0527 (OutputSpan).
+- SE-0446 (Nonescapable Types); SE-0465 (Nonescapable Standard Library Primitives — pointer-pointee deferral); SE-0485 (OutputSpan).
