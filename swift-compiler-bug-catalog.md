@@ -1025,6 +1025,18 @@ The namespace enum gives:
 
 ---
 
+### B7. Mangling collision: struct-body member vs `where Element: Copyable` extension member when the constraint is redundant-with-default (6.3.2 — CANDIDATE, single occurrence)
+
+**Symptom**: an initializer (or member) declared in the PRIMARY BODY of an extension-nested generic type and an overload of the same signature declared in a `where Element: Copyable` extension mangle to the SAME symbol — the redundant-with-default requirement (`Element` defaults to Copyable in the body's context) is dropped from the mangling — producing a duplicate-symbol/link-or-IRGen failure on the [MEM-COPY-017] constructing-twin pattern (`init(capacity:)` ×2 lanes).
+
+**Workaround (structural, proven)**: home BOTH twin lanes in extensions (`extension T where Element: ~Copyable { init… }` + `extension T where Element: Copyable { init… }`) — the suppression-vs-default asymmetry then mangles distinctly. The `withMutableSpan`-coexistence spelling.
+
+**Status**: CANDIDATE — one occurrence (`Stack<Element>.Bounded.init(capacity:)`, the W5 A-1 reshape, stack `7e4200a`, 2026-06-11); seat-adjudicated as catalog-record-only; `/issue-investigation` only if it recurs; any upstream filing stays principal-YES. Not yet reduced to a bare-swiftc repro.
+
+**Provenance**: Lane A′ deviation 2, W5 Wave-2 (stack A-1 completion); workaround documented in-file at the collision site.
+
+---
+
 ## C. Patterns and Reference Tables
 
 ### C1. Actor isolation — three mechanisms model
