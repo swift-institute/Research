@@ -1043,6 +1043,50 @@ The namespace enum gives:
 
 ---
 
+### B8. TSan × LifetimeDependence: `-sanitize=thread` falsely rejects mutating calls through `_modify`/address-accessor projections on `~Copyable & ~Escapable` lifetime-dependent self (6.3.2 — VERIFIED, carve ratified)
+
+**Symptom**: with `-sanitize=thread`, 6.3.2 rejects code that is GREEN unsanitized at identical pins: `error: lifetime-dependent variable 'self' escapes its scope` (+ "depends on the lifetime of argument 'self'"). First site: sequence-primitives `Sequence.Drain+Property.Inout.swift:23` (`base.value.drain(body)`), failing dependents' whole TSan builds at dep-compile time.
+
+**Isolated trigger** (single-file reduction + R/V/E matrix, probe corpus `.handoffs/probes-2026-06-11/tsan-spike/reduction/`): a mutating member call through a `nonmutating _modify` (or address-accessor) projection whose `self` is `~Copyable & ~Escapable` lifetime-dependent (`@_lifetime(&base)` init over a stored pointer — the `Ownership.Inout` shape). Ruled out: stale pins, fresh-scratch artifacts, emit-module-specificity, `@inlinable`, consuming-closure arguments. Borrowing/`_read` paths are CLEAN; `-enforce-exclusivity=unchecked` does NOT avoid it.
+
+**Blast radius**: the projection idiom is the CANONICAL `Property.Inout` pattern — same-class sites in buffer-ring, buffer-linear, hash-table, bit-vector (~6 packages); uncarved, the wall blocks every tower TSan build.
+
+**Workarounds (both verified)**: (1) source-level — the scoped-door respell (`withBase { $0.drain(body) }` over raw-pointer mutation; V2); (2) invocation-level — `-Xllvm -sil-disable-pass=lifetime-dependence-diagnostics`, RATIFIED 2026-06-11 as the arc-1 TSan-gate carve under conditions: sanitized legs only, never in manifests/sources, unsanitized legs remain the lifetime-diagnostics gate of record, and a seeded-race positive control rides every TSan gate (signal proven to survive the carve: 6/6 warnings).
+
+**Status**: VERIFIED (TSan-conditional class — distinct from §A9/§A15, which are sanitizer-independent). 6.3.2; upstream state unknown — re-probe at the 6.4 canon bump. Terminal-record policy: no upstream filing.
+
+**Provenance**: arc-1 W1 TSan feasibility spike (`REPORT-arc-shared-soundness-W1.md` §2–3), 2026-06-11; seat re-ran the positive control independently same day.
+
+---
+
+### B9. `-O` CopyPropagation crash: Bool-flow closures over `Span<class-element>` from a generic `throws(Failure)` scoped accessor (6.3.2 — VERIFIED, repro preserved)
+
+**Symptom**: swift-frontend signal 6 at `-O` — `While running pass … "CopyPropagation" … Error! Found a leaked owned value that was never consumed. Value: %81 = copy_value %2 : $Span<Payload>` — compiling a TEST module whose closure does `guard count else { return false }` + `&&`-accumulation over the `Span<Payload>` (class element) vended by `Shared.withSpan`, inside nested async `@Sendable` closures.
+
+**Boundary**: debug fine; `Span<Int>` (trivial element) fine; tsan-release WITH the B8 carve does not crash (instrumentation changes the SIL). A bare-Array single-file reduction did NOT reproduce — the wall needs the `withSpan` generic `throws(Failure)` hop context; the deterministic repro is the snapshotted pre-respell suite at `.handoffs/probes-2026-06-11/tsan-spike/w2-release-wall/` (crash log + the non-reproducing reduction attempt, preserved).
+
+**Workaround (lawful, test-spelling)**: extract-then-assert — pull `[Int]` values out inside the borrow, assert OUTSIDE the closure. Tower relevance: any consumer writing the natural Bool-verification shape over a class-element span hits this at `-O`.
+
+**Status**: VERIFIED with preserved deterministic repro (not single-file-reduced). 6.3.2; re-probe at the 6.4 bump. No upstream filing (standing policy).
+
+**Provenance**: arc-1 W2 (`REPORT-arc-shared-soundness-W2.md` §3), 2026-06-11.
+
+---
+
+### B10. `-Onone` MovedAsyncVarDebugInfoPropagator: superlinear/non-terminating SIL pass on monolithic move-dense function bodies (6.3.2 — CANDIDATE, mitigated)
+
+**Symptom**: the 6.3.2 frontend spins 1h19m+ at 100% CPU compiling a test module at `-Onone`; stack samples put 100% of time inside single `MovedAsyncVarDebugInfoPropagatorTransform::run()` invocations.
+
+**Trigger shape**: ONE large function body dense with moves — an op loop + 10-case switch + move-only traffic + nested functions borrow-capturing `~Copyable` locals.
+
+**Mitigation (one-variable flip, confirmed)**: identical semantics restructured as small per-op `mutating` methods on `~Copyable` stream structs → the same module compiles in ~6s. Binding shape constraint for arc-2's model-suite code: no monolithic stream bodies; no nested functions borrow-capturing `~Copyable` locals.
+
+**Status**: CANDIDATE — not reduced to a minimal repro; the hanging variant is preserved verbatim as the seed at `.handoffs/probes-2026-06-11/arc2-w1-silhang/` (with frontend stack samples). 6.3.2 `-Onone`; re-probe at the 6.4 bump. No upstream filing (standing policy).
+
+**Provenance**: arc-2 W1 incident (`REPORT-arc-model-tests-W1.md` Entry 2.5), 2026-06-11.
+
+---
+
 ## C. Patterns and Reference Tables
 
 ### C1. Actor isolation — three mechanisms model
