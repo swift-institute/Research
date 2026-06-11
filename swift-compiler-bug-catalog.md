@@ -1031,7 +1031,7 @@ The namespace enum gives:
 
 **Workaround (structural, proven)**: home BOTH twin lanes in extensions (`extension T where Element: ~Copyable { init… }` + `extension T where Element: Copyable { init… }`) — the suppression-vs-default asymmetry then mangles distinctly. The `withMutableSpan`-coexistence spelling.
 
-**Status**: CANDIDATE — one occurrence (`Stack<Element>.Bounded.init(capacity:)`, the W5 A-1 reshape, stack `7e4200a`, 2026-06-11); seat-adjudicated as catalog-record-only; `/issue-investigation` only if it recurs; any upstream filing stays principal-YES. Not yet reduced to a bare-swiftc repro.
+**Status**: RECURRED (variant) — now TWO occurrences, `/issue-investigation` QUEUED per the seat's adjudication. (1) `Stack<Element>.Bounded.init(capacity:)` (stack `7e4200a`): body-vs-extension twins collided; extension-homing both resolved it. (2) The trees round (`7137543`/`d116555`/`c6f9888`, 2026-06-11): on a NESTED-IN-EXTENSION inverse-generic type even EXTENSION-HOMED twins collide — the extension signature canonicalizes the Copyable requirement away and both inits mangle identically (verified via swift-demangle of the collision); member-level `where Element: Copyable` clauses (SE-0267) mangle distinctly and are the working resolution there; the method-level structural pin (the Queue/SlotMap dodge) is unavailable (param-to-param same-type rejected). RESOLUTION LADDER: member-level where-clause (always works) → extension-homed twins (top-level generic types only). Not yet reduced to a bare-swiftc repro; upstream filing stays principal-YES.
 
 **Provenance**: Lane A′ deviation 2, W5 Wave-2 (stack A-1 completion); workaround documented in-file at the collision site.
 
