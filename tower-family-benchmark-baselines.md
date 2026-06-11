@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 0.2.0
+version: 0.3.0
 last_updated: 2026-06-11
 status: IN_PROGRESS
 tier: 2
@@ -89,7 +89,7 @@ targets but has no `.timed()`. The instrument therefore generalizes the **R4 mic
 | Config | `-c release`, `swiftLanguageModes: [.v6]`, strict memory safety + ecosystem feature flags (family manifests' exact block); build of record clean, zero warnings by full grep |
 | Run conditions (W1) | Interactive dev machine with parallel executor arcs active. Stable background during the recorded runs: ONE sibling single-threaded `swift-frontend` at 100% of one core (arc-2's hash-table test build; bracketing `ps` checks + load averages recorded per run). Run-set acceptance is BY CROSS-RUN AGREEMENT: runs 1–3 primary (≤~7% pairwise on nearly all cases), run 4 (~25 min later) corroborates within ±10%; runs 5–6 caught a multi-process load burst (5-min load 7.5), inflated 25–55% uniformly across ALL subjects, and are EXCLUDED by that criterion (preserved in the W1 log sidecar). |
 
-| Run conditions (W2 batch-1) | Recorded 23:11–23:22 after a 60s-clear sustained-quiet gate; EVERY per-run bracket read procs=0 (the only fully-clean session of the arc). Caveat: the window followed a 33-process build storm on the fanless machine — thermal drain is visible as a quality gradient across the session (set-ordered first/hottest: 55/60 cases >10% cross-run spread; dictionary-ordered last/coolest: 11/60). The array drift-canary in this window read median Δ 10.8% vs W1 (p90 19%) — ABOVE W1's stated spreads; the cooler 22:40 opportunistic canary read 3.0%, so the excess is attributed to thermal state, not drift. Within-session family comparisons are unaffected; cross-referencing W2 absolute numbers against W1's carries the ~10% caveat. Re-confirmation in a cool window is queued as a W3 item. |
+| Run conditions (W2 batch-1) | Recorded 23:11–23:22 after a 60s-clear sustained-quiet gate; EVERY per-run bracket read procs=0 (the only fully-clean session of the arc). Caveat: the window followed a 33-process build storm on the fanless machine — thermal drain is visible as a quality gradient across the session (set-ordered first/hottest: 55/60 cases >10% cross-run spread; dictionary-ordered last/coolest: 11/60). The array drift-canary in this window read median Δ 10.8% vs W1 (p90 19%) — ABOVE W1's stated spreads; the cooler 22:40 opportunistic canary read 3.0%, so the excess is attributed to thermal state, not drift. Within-session family comparisons are unaffected; cross-referencing W2 absolute numbers against W1's carries the ~10% caveat. W3 cool-window re-confirmation (23:27, procs=0, 20 min idle): **median Δ 1.9%, p90 5.6%, 2/74 cases >10%** — thermal attribution CONFIRMED (hot 10.8% → cooler 3.0% → cool 1.9%); no drift. |
 
 No cross-machine comparisons: every number in this document is from the machine identified above.
 
@@ -423,11 +423,38 @@ seeds — trees themselves are NOT in this arc's edit scope).
 | B-8 | **Ordered-family READS through `Shared` pay ~+10–16 ns/lookup** (dict lookup.hit: cow 24.4–34.8 vs direct 11.2–19.0; set mirrors) — array's read rows showed cow≈direct parity, so the tax is NOT the box hop itself but how `Hash.Indexed`'s probe loop re-enters the box per access instead of borrowing the dense span once. | set-ordered/dict-ordered contains/withValue paths over `Shared<…, Hash.Indexed<…>>` | Family-round candidate (span-first probe loop); cheap relative to B-7 but on every keyed read. |
 | B-1′ | (evidence update for B-1) The ~7–9 ns `Shared` per-mutation tax is **cross-family invariant**: array set.indexed Δ≈7.5, queue cycle Δ≈6.8–7.4, deque pairs Δ≈+7–11, ordered insert Δ≈+5–11. One shared fix, not N family fixes. | shared / mutation gate chain | Strengthens B-1's "quantify across families first" disposition — done; the fix is singular. |
 
-Standing arc-5 inputs called out by the GOAL (to be quantified in W2/W3):
-- **SoA re-cut**: what the current `_generations: [Int]` / `_occupied: [Bool]` stdlib-Array
-  layout costs (Storage.Generational.swift:36–48) — slot-map / arena benches carry this.
-- **Tree.Position re-cut**: the ~16 B/slot position side-table (trees' `Memory layout sizes`
-  suite is the seed; read-only this arc).
+## Arc-5 gate inputs (W3 — called out explicitly; quantification rows = batch-2)
+
+1. **Generational SoA re-cut.** Current layout: `_generations: [Int]` and `_occupied:
+   [Bool]` are stdlib Arrays inside the tower's own storage tier
+   (`Storage.Generational.swift:36–48` — the self-hosting debt, weakness-sweep §2 #5).
+   The cost question arc-5 must answer empirically: per validated access, the slot-map
+   pays TWO independent stdlib-Array paths (refcount-stable but bounds-checked, separately
+   allocated, separately cached) vs a fused SoA block's one. Quantification rows (batch-2,
+   slot-map + arena grants): handle-validation ns/access · insert/remove (occupancy
+   writes) · iterate-occupied · arena `grow(to:)` relocation vs capacity. Until then this
+   input is STRUCTURAL, not yet a number.
+2. **Tree.Position re-cut.** The ~16 B/slot position side-table is already explicit in the
+   read-only seed: trees' `Performance Tests.swift:413–422` accounts bytes/slot = node
+   stride + 9 B column ledger (8 generation + 1 occupancy) + 16 B
+   `Store.Generational.Handle?` side table. The BYTE cost is settled by the seed; the
+   ACCESS cost rides the same batch-2 slot-map/arena rows. Trees stay out of this arc's
+   edit scope.
+3. **Sequencing input from W2**: B-7 (the Θ(capacity) `Hash.Indexed` remove + its
+   back>front inversion) dominates any SoA-layout effect by 3–4 orders of magnitude in the
+   ordered families. If arc-5 budgets one structural change first, B-7 is it; the SoA
+   re-cut's win is bounded by ns-scale per-access effects.
+
+## Residual at W3 (grant-blocked rows; the only outstanding inventory items)
+
+| Family | Inventory measures pending | Blocking grant |
+|---|---|---|
+| set / dict (flat) | insert / lookup-hit / lookup-miss / remove / iterate vs stdlib | arc-2 owns through their W3 |
+| hash-table (engine) | per-instance seed cost (init + first-insert), grow/re-seed spike | arc-2 (their W1 package; tip moved to `2eae321` mid-W2) |
+| slot-map | handle-validation per access; insert/remove/iterate vs array | arc-2 W2 |
+| arena | `grow(to:)` relocation vs capacity | arc-2 W2 |
+| shared | detach vs in-place; gate overhead isolated (R4 methodology through the real box) | arc-1 (tip moved to `827b2f0`) |
+| stack | push/pop vs stdlib | seat re-grant after the Sendable fix (was `7e4200a` → `1359c17` → moving) |
 
 ## References
 
