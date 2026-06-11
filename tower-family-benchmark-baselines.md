@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 0.1.0
+version: 0.2.0
 last_updated: 2026-06-11
 status: IN_PROGRESS
 tier: 2
@@ -89,6 +89,8 @@ targets but has no `.timed()`. The instrument therefore generalizes the **R4 mic
 | Config | `-c release`, `swiftLanguageModes: [.v6]`, strict memory safety + ecosystem feature flags (family manifests' exact block); build of record clean, zero warnings by full grep |
 | Run conditions (W1) | Interactive dev machine with parallel executor arcs active. Stable background during the recorded runs: ONE sibling single-threaded `swift-frontend` at 100% of one core (arc-2's hash-table test build; bracketing `ps` checks + load averages recorded per run). Run-set acceptance is BY CROSS-RUN AGREEMENT: runs 1–3 primary (≤~7% pairwise on nearly all cases), run 4 (~25 min later) corroborates within ±10%; runs 5–6 caught a multi-process load burst (5-min load 7.5), inflated 25–55% uniformly across ALL subjects, and are EXCLUDED by that criterion (preserved in the W1 log sidecar). |
 
+| Run conditions (W2 batch-1) | Recorded 23:11–23:22 after a 60s-clear sustained-quiet gate; EVERY per-run bracket read procs=0 (the only fully-clean session of the arc). Caveat: the window followed a 33-process build storm on the fanless machine — thermal drain is visible as a quality gradient across the session (set-ordered first/hottest: 55/60 cases >10% cross-run spread; dictionary-ordered last/coolest: 11/60). The array drift-canary in this window read median Δ 10.8% vs W1 (p90 19%) — ABOVE W1's stated spreads; the cooler 22:40 opportunistic canary read 3.0%, so the excess is attributed to thermal state, not drift. Within-session family comparisons are unaffected; cross-referencing W2 absolute numbers against W1's carries the ~10% caveat. Re-confirmation in a cool window is queued as a W3 item. |
+
 No cross-machine comparisons: every number in this document is from the machine identified above.
 
 ## Baselines
@@ -152,13 +154,98 @@ shape, 16k span re-entries per pass; DVFS-sensitive) — its qualitative conclus
 bulk) is robust, its point estimate is not. `append.*`/`pushPop` rows include array
 init+teardown per rep, amortized over n ops (dominant at n=16 — see the n=16 vs n=1k drop).
 
-### Set / Dictionary — W2
+### Set / Dictionary — HELD (batch-2; arc-2 owns the packages through their W3)
 
-PENDING (vs stdlib `Set`/`Dictionary`: insert / lookup-hit / lookup-miss / remove / iterate).
+### Set.Ordered — W2 batch-1, bench beside tip `3e44537` (commit `3f76acf`)
 
-### Set.Ordered / Dictionary.Ordered — W2
+Recorded 2026-06-11 ~23:11–23:22 in a bracketed clean window (procs=0 at EVERY
+bracket; post-storm thermal drain noted — set-ordered ran first/hottest and carries the
+widest spreads, dictionary-ordered last/coolest and the tightest; magnitudes agree across
+both). Primary = median of 3 run-medians; ± = max pairwise run spread; cv = worst within-run
+CV. Pins at the build of record are in REPORT-arc-bench-W2 (hash-table at `2eae321` for the
+ordered families).
 
-PENDING (the O(n) order-preserving remove CURVE, iteration-order overhead vs unordered).
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **102.31** ±61.9% (cv 11.6%) | **107.32** ±42.9% (cv 22.5%) | **28.48** ±25.3% (cv 7.2%) |
+| lookup.hit | 16 | **11.47** ±69.6% (cv 17.4%) | **21.04** ±92.5% (cv 15.9%) | **5.51** ±72.8% (cv 28.6%) |
+| lookup.miss | 16 | **12.50** ±30.3% (cv 8.9%) | **20.91** ±36.7% (cv 23.0%) | **5.69** ±29.0% (cv 2.8%) |
+| iterate.sum | 16 | **0.40** ±24.9% (cv 1.0%) | **0.49** ±25.1% (cv 5.6%) | **0.45** ±15.1% (cv 15.7%) |
+| insert.zero | 1,024 | **44.24** ±48.1% (cv 17.8%) | **62.12** ±20.1% (cv 8.5%) | **19.82** ±26.7% (cv 2.9%) |
+| lookup.hit | 1,024 | **14.04** ±17.9% (cv 21.8%) | **24.70** ±15.6% (cv 1.2%) | **6.03** ±20.2% (cv 9.3%) |
+| lookup.miss | 1,024 | **13.93** ±36.2% (cv 25.8%) | **33.76** ±36.1% (cv 14.6%) | **6.24** ±10.9% (cv 55.2%) |
+| iterate.sum | 1,024 | **0.07** ±13.9% (cv 31.4%) | **0.08** ±15.1% (cv 20.3%) | **0.75** ±9.1% (cv 4.6%) |
+| insert.zero | 65,536 | **51.15** ±12.0% (cv 3.3%) | **63.74** ±11.0% (cv 20.2%) | **28.38** ±12.1% (cv 2.7%) |
+| lookup.hit | 65,536 | **19.64** ±17.9% (cv 1.9%) | **35.88** ±171.6% (cv 80.7%) | **13.71** ±63.8% (cv 29.6%) |
+| lookup.miss | 65,536 | **36.77** ±36.1% (cv 16.1%) | **42.91** ±10.3% (cv 3.9%) | **15.86** ±16.2% (cv 1.1%) |
+| iterate.sum | 65,536 | **0.07** ±15.3% (cv 2.7%) | **0.07** ±13.7% (cv 3.5%) | **0.74** ±5.9% (cv 0.7%) |
+| frontEvict.steady | 16 | **175.14** ±12.6% (cv 4.9%) | **193.97** ±18.3% (cv 4.9%) | **56.38** ±25.6% (cv 2.4%) |
+| backEvict.steady | 16 | **96.73** ±28.8% (cv 16.3%) | **107.19** ±30.8% (cv 2.1%) | **37.48** ±37.0% (cv 4.2%) |
+| frontEvict.steady | 256 | **498.38** ±12.8% (cv 0.9%) | **507.12** ±12.7% (cv 1.3%) | **63.54** ±20.5% (cv 9.9%) |
+| backEvict.steady | 256 | **377.90** ±31.4% (cv 5.3%) | **403.16** ±29.0% (cv 2.8%) | **40.90** ±18.1% (cv 3.0%) |
+| frontEvict.steady | 4,096 | **5,204.67** ±21.4% (cv 7.1%) | **5,048.34** ±14.1% (cv 0.7%) | **63.46** ±42.3% (cv 5.1%) |
+| backEvict.steady | 4,096 | **6,178.35** ±36.6% (cv 4.5%) | **5,870.57** ±62.4% (cv 24.7%) | **42.11** ±46.3% (cv 20.9%) |
+| frontEvict.steady | 65,536 | **141,044.92** ±10.6% (cv 13.2%) | **154,896.48** ±50.7% (cv 34.8%) | **65.51** ±0.2% (cv 1.7%) |
+| backEvict.steady | 65,536 | **238,039.75** ±3.9% (cv 14.4%) | **236,280.13** ±12.9% (cv 15.1%) | **41.99** ±3.0% (cv 1.9%) |
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **120.48** ±3.8% (cv 3.1%) | **116.69** ±3.8% (cv 7.1%) | **32.11** ±4.8% (cv 1.2%) |
+| lookup.hit | 16 | **11.17** ±13.0% (cv 2.9%) | **27.50** ±6.2% (cv 3.6%) | **6.32** ±7.4% (cv 1.0%) |
+| lookup.miss | 16 | **11.27** ±4.2% (cv 1.2%) | **15.20** ±20.0% (cv 1.6%) | **6.50** ±15.0% (cv 0.8%) |
+| iterate.sum | 16 | **0.49** ±0.8% (cv 0.8%) | **0.58** ±2.1% (cv 1.4%) | **0.44** ±1.8% (cv 3.1%) |
+| insert.zero | 1,024 | **60.24** ±11.0% (cv 2.8%) | **71.30** ±4.6% (cv 5.8%) | **20.38** ±5.7% (cv 38.6%) |
+| lookup.hit | 1,024 | **14.20** ±13.1% (cv 1.8%) | **24.38** ±10.5% (cv 2.6%) | **7.26** ±1.0% (cv 1.2%) |
+| lookup.miss | 1,024 | **12.96** ±6.4% (cv 4.6%) | **30.98** ±7.6% (cv 1.6%) | **6.85** ±5.0% (cv 3.5%) |
+| iterate.sum | 1,024 | **0.17** ±1.2% (cv 3.9%) | **0.17** ±4.0% (cv 2.7%) | **0.71** ±3.0% (cv 2.0%) |
+| insert.zero | 65,536 | **62.75** ±1.2% (cv 1.4%) | **68.90** ±1.2% (cv 0.8%) | **29.41** ±4.8% (cv 4.9%) |
+| lookup.hit | 65,536 | **19.01** ±7.9% (cv 4.4%) | **34.79** ±5.0% (cv 3.6%) | **12.00** ±2.1% (cv 3.6%) |
+| lookup.miss | 65,536 | **32.79** ±1.9% (cv 1.2%) | **39.62** ±1.0% (cv 1.6%) | **17.05** ±3.5% (cv 1.9%) |
+| iterate.sum | 65,536 | **0.17** ±0.0% (cv 1.4%) | **0.17** ±0.0% (cv 1.4%) | **0.73** ±1.0% (cv 0.7%) |
+| frontEvict.steady | 16 | **186.58** ±0.2% (cv 0.3%) | **197.90** ±1.6% (cv 0.5%) | **57.23** ±0.4% (cv 0.6%) |
+| backEvict.steady | 16 | **105.22** ±1.8% (cv 1.0%) | **120.37** ±2.1% (cv 0.7%) | **40.45** ±5.5% (cv 1.0%) |
+| frontEvict.steady | 256 | **523.65** ±2.3% (cv 0.8%) | **526.72** ±2.4% (cv 1.6%) | **64.43** ±1.1% (cv 2.3%) |
+| backEvict.steady | 256 | **382.71** ±7.9% (cv 4.2%) | **406.83** ±10.7% (cv 3.0%) | **42.09** ±7.2% (cv 2.0%) |
+| frontEvict.steady | 4,096 | **5,352.86** ±1.2% (cv 2.0%) | **5,346.15** ±1.6% (cv 1.5%) | **64.79** ±1.1% (cv 7.1%) |
+| backEvict.steady | 4,096 | **5,585.55** ±9.6% (cv 3.5%) | **5,916.08** ±9.2% (cv 7.1%) | **42.25** ±2.7% (cv 1.0%) |
+| frontEvict.steady | 65,536 | **157,851.56** ±21.3% (cv 9.5%) | **157,326.17** ±22.8% (cv 19.3%) | **67.76** ±2.3% (cv 1.1%) |
+| backEvict.steady | 65,536 | **198,922.23** ±10.9% (cv 6.9%) | **187,134.26** ±21.9% (cv 8.4%) | **43.06** ±1.0% (cv 0.7%) |
+
+### Dictionary.Ordered — W2 batch-1, bench beside tip `10153d2` (commit `eee4ae5`)
+
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **120.48** ±3.8% (cv 3.1%) | **116.69** ±3.8% (cv 7.1%) | **32.11** ±4.8% (cv 1.2%) |
+| lookup.hit | 16 | **11.17** ±13.0% (cv 2.9%) | **27.50** ±6.2% (cv 3.6%) | **6.32** ±7.4% (cv 1.0%) |
+| lookup.miss | 16 | **11.27** ±4.2% (cv 1.2%) | **15.20** ±20.0% (cv 1.6%) | **6.50** ±15.0% (cv 0.8%) |
+| iterate.sum | 16 | **0.49** ±0.8% (cv 0.8%) | **0.58** ±2.1% (cv 1.4%) | **0.44** ±1.8% (cv 3.1%) |
+| insert.zero | 1,024 | **60.24** ±11.0% (cv 2.8%) | **71.30** ±4.6% (cv 5.8%) | **20.38** ±5.7% (cv 38.6%) |
+| lookup.hit | 1,024 | **14.20** ±13.1% (cv 1.8%) | **24.38** ±10.5% (cv 2.6%) | **7.26** ±1.0% (cv 1.2%) |
+| lookup.miss | 1,024 | **12.96** ±6.4% (cv 4.6%) | **30.98** ±7.6% (cv 1.6%) | **6.85** ±5.0% (cv 3.5%) |
+| iterate.sum | 1,024 | **0.17** ±1.2% (cv 3.9%) | **0.17** ±4.0% (cv 2.7%) | **0.71** ±3.0% (cv 2.0%) |
+| insert.zero | 65,536 | **62.75** ±1.2% (cv 1.4%) | **68.90** ±1.2% (cv 0.8%) | **29.41** ±4.8% (cv 4.9%) |
+| lookup.hit | 65,536 | **19.01** ±7.9% (cv 4.4%) | **34.79** ±5.0% (cv 3.6%) | **12.00** ±2.1% (cv 3.6%) |
+| lookup.miss | 65,536 | **32.79** ±1.9% (cv 1.2%) | **39.62** ±1.0% (cv 1.6%) | **17.05** ±3.5% (cv 1.9%) |
+| iterate.sum | 65,536 | **0.17** ±0.0% (cv 1.4%) | **0.17** ±0.0% (cv 1.4%) | **0.73** ±1.0% (cv 0.7%) |
+| frontEvict.steady | 16 | **186.58** ±0.2% (cv 0.3%) | **197.90** ±1.6% (cv 0.5%) | **57.23** ±0.4% (cv 0.6%) |
+| backEvict.steady | 16 | **105.22** ±1.8% (cv 1.0%) | **120.37** ±2.1% (cv 0.7%) | **40.45** ±5.5% (cv 1.0%) |
+| frontEvict.steady | 256 | **523.65** ±2.3% (cv 0.8%) | **526.72** ±2.4% (cv 1.6%) | **64.43** ±1.1% (cv 2.3%) |
+| backEvict.steady | 256 | **382.71** ±7.9% (cv 4.2%) | **406.83** ±10.7% (cv 3.0%) | **42.09** ±7.2% (cv 2.0%) |
+| frontEvict.steady | 4,096 | **5,352.86** ±1.2% (cv 2.0%) | **5,346.15** ±1.6% (cv 1.5%) | **64.79** ±1.1% (cv 7.1%) |
+| backEvict.steady | 4,096 | **5,585.55** ±9.6% (cv 3.5%) | **5,916.08** ±9.2% (cv 7.1%) | **42.25** ±2.7% (cv 1.0%) |
+| frontEvict.steady | 65,536 | **157,851.56** ±21.3% (cv 9.5%) | **157,326.17** ±22.8% (cv 19.3%) | **67.76** ±2.3% (cv 1.1%) |
+| backEvict.steady | 65,536 | **198,922.23** ±10.9% (cv 6.9%) | **187,134.26** ±21.9% (cv 8.4%) | **43.06** ±1.0% (cv 0.7%) |
+
+**The order-preserving remove curve (the inventory's target), both families**: one op = one
+remove+insert pair at steady occupancy n. Against stdlib's flat ~40–68 ns, the tower pair
+cost grows super-linearly to ~141–238 µs at n=64k (≈3,000–5,600×). Two distinct facets:
+(1) the documented dense shift is NOT the dominant term — see banked B-7 (the Θ(capacity)
+bucket sweep on every remove, `Hash.Table+PositionUpdates.swift:45–57`); (2) an INVERSION at
+n ≥ 4k: removing the NEWEST element (zero shift, zero fixups) costs MORE than removing the
+oldest (dict @64k: 199 µs back vs 158 µs front, spreads ≤ ~11%) — unexplained by the sweep
+alone; banked as B-7's anomaly facet. `iterate.sum` is the counterweight strength: the dense
+buffer scans 4–11× FASTER than stdlib's buckets (set 0.07 vs 0.74; dict 0.17 vs 0.73 ns/elem).
+Reads through the `Shared` column pay ~+10–16 ns/lookup that array's reads did NOT show —
+banked B-8.
 
 ### Hash engine — W2
 
@@ -173,9 +260,145 @@ PENDING (handle-validation overhead per access; insert/remove/iterate vs array b
 PENDING (detach cost vs in-place mutation; gate overhead on the hot read/write path — R4
 methodology, measured through the real box rather than a synthetic one).
 
-### Queue / Deque — W2
+### Queue — W2 batch-1, bench beside tip `131a0be` (commit `86fd9e4`)
 
-PENDING (ring ops vs stdlib `Array`-as-queue/deque).
+Recorded 2026-06-11 ~23:11–23:22 in a bracketed clean window (procs=0 at EVERY
+bracket; post-storm thermal drain noted — set-ordered ran first/hottest and carries the
+widest spreads, dictionary-ordered last/coolest and the tightest; magnitudes agree across
+both). Primary = median of 3 run-medians; ± = max pairwise run spread; cv = worst within-run
+CV.
+
+| shape | n | tower.direct | tower.cow | tower.bounded | stdlib.shift |
+|---|---|---|---|---|---|
+| cycle.steady | 16 | **2.62** ±0.8% (cv 1.8%) | **10.02** ±5.3% (cv 0.9%) | **2.91** ±0.6% (cv 0.6%) | **2.12** ±14.0% (cv 1.5%) |
+| enqueue.zero | 16 | **25.87** ±3.0% (cv 1.6%) | **25.91** ±4.9% (cv 2.0%) | — | **8.78** ±2.3% (cv 4.0%) |
+| cycle.steady | 1,024 | **2.60** ±0.5% (cv 0.4%) | **9.70** ±6.2% (cv 2.0%) | **2.95** ±0.7% (cv 0.7%) | **45.32** ±0.0% (cv 1.4%) |
+| enqueue.zero | 1,024 | **2.70** ±1.5% (cv 1.2%) | **11.75** ±0.2% (cv 0.9%) | — | **0.85** ±2.5% (cv 2.6%) |
+| cycle.steady | 65,536 | **2.61** ±1.3% (cv 1.1%) | **9.41** ±3.9% (cv 1.5%) | **2.95** ±1.0% (cv 0.9%) | **4,345.05** ±1.1% (cv 1.2%) |
+| enqueue.zero | 65,536 | **2.10** ±0.7% (cv 0.8%) | **11.16** ±1.4% (cv 1.0%) | — | **1.06** ±1.7% (cv 2.5%) |
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| backBack.steady | 16 | **1.57** ±14.6% (cv 3.8%) | **12.40** ±14.2% (cv 3.3%) | **1.43** ±54.0% (cv 23.1%) |
+| frontFront.steady | 16 | **4.08** ±9.3% (cv 3.0%) | **8.80** ±13.5% (cv 2.4%) | **4.15** ±56.8% (cv 31.8%) |
+| rotate.steady | 16 | **2.60** ±6.3% (cv 2.6%) | **9.77** ±10.6% (cv 1.6%) | **2.33** ±29.5% (cv 6.6%) |
+| backBack.steady | 1,024 | **1.55** ±9.2% (cv 3.8%) | **12.46** ±12.3% (cv 4.2%) | **1.95** ±55.1% (cv 9.9%) |
+| frontFront.steady | 1,024 | **4.08** ±1.9% (cv 0.4%) | **8.80** ±8.6% (cv 1.8%) | **100.09** ±7.2% (cv 1.7%) |
+| rotate.steady | 1,024 | **2.60** ±1.9% (cv 0.4%) | **9.30** ±8.5% (cv 1.8%) | **50.06** ±6.3% (cv 4.5%) |
+| backBack.steady | 65,536 | **1.47** ±15.3% (cv 1.4%) | **12.67** ±7.7% (cv 2.1%) | **1.32** ±31.6% (cv 18.2%) |
+| frontFront.steady | 65,536 | **4.16** ±18.9% (cv 10.2%) | **9.37** ±29.2% (cv 19.0%) | **9,056.64** ±251.5% (cv 30.4%) |
+| rotate.steady | 65,536 | **2.78** ±57.8% (cv 34.8%) | **9.90** ±11.8% (cv 2.9%) | **4,815.11** ±4.5% (cv 0.2%) |
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **102.31** ±61.9% (cv 11.6%) | **107.32** ±42.9% (cv 22.5%) | **28.48** ±25.3% (cv 7.2%) |
+| lookup.hit | 16 | **11.47** ±69.6% (cv 17.4%) | **21.04** ±92.5% (cv 15.9%) | **5.51** ±72.8% (cv 28.6%) |
+| lookup.miss | 16 | **12.50** ±30.3% (cv 8.9%) | **20.91** ±36.7% (cv 23.0%) | **5.69** ±29.0% (cv 2.8%) |
+| iterate.sum | 16 | **0.40** ±24.9% (cv 1.0%) | **0.49** ±25.1% (cv 5.6%) | **0.45** ±15.1% (cv 15.7%) |
+| insert.zero | 1,024 | **44.24** ±48.1% (cv 17.8%) | **62.12** ±20.1% (cv 8.5%) | **19.82** ±26.7% (cv 2.9%) |
+| lookup.hit | 1,024 | **14.04** ±17.9% (cv 21.8%) | **24.70** ±15.6% (cv 1.2%) | **6.03** ±20.2% (cv 9.3%) |
+| lookup.miss | 1,024 | **13.93** ±36.2% (cv 25.8%) | **33.76** ±36.1% (cv 14.6%) | **6.24** ±10.9% (cv 55.2%) |
+| iterate.sum | 1,024 | **0.07** ±13.9% (cv 31.4%) | **0.08** ±15.1% (cv 20.3%) | **0.75** ±9.1% (cv 4.6%) |
+| insert.zero | 65,536 | **51.15** ±12.0% (cv 3.3%) | **63.74** ±11.0% (cv 20.2%) | **28.38** ±12.1% (cv 2.7%) |
+| lookup.hit | 65,536 | **19.64** ±17.9% (cv 1.9%) | **35.88** ±171.6% (cv 80.7%) | **13.71** ±63.8% (cv 29.6%) |
+| lookup.miss | 65,536 | **36.77** ±36.1% (cv 16.1%) | **42.91** ±10.3% (cv 3.9%) | **15.86** ±16.2% (cv 1.1%) |
+| iterate.sum | 65,536 | **0.07** ±15.3% (cv 2.7%) | **0.07** ±13.7% (cv 3.5%) | **0.74** ±5.9% (cv 0.7%) |
+| frontEvict.steady | 16 | **175.14** ±12.6% (cv 4.9%) | **193.97** ±18.3% (cv 4.9%) | **56.38** ±25.6% (cv 2.4%) |
+| backEvict.steady | 16 | **96.73** ±28.8% (cv 16.3%) | **107.19** ±30.8% (cv 2.1%) | **37.48** ±37.0% (cv 4.2%) |
+| frontEvict.steady | 256 | **498.38** ±12.8% (cv 0.9%) | **507.12** ±12.7% (cv 1.3%) | **63.54** ±20.5% (cv 9.9%) |
+| backEvict.steady | 256 | **377.90** ±31.4% (cv 5.3%) | **403.16** ±29.0% (cv 2.8%) | **40.90** ±18.1% (cv 3.0%) |
+| frontEvict.steady | 4,096 | **5,204.67** ±21.4% (cv 7.1%) | **5,048.34** ±14.1% (cv 0.7%) | **63.46** ±42.3% (cv 5.1%) |
+| backEvict.steady | 4,096 | **6,178.35** ±36.6% (cv 4.5%) | **5,870.57** ±62.4% (cv 24.7%) | **42.11** ±46.3% (cv 20.9%) |
+| frontEvict.steady | 65,536 | **141,044.92** ±10.6% (cv 13.2%) | **154,896.48** ±50.7% (cv 34.8%) | **65.51** ±0.2% (cv 1.7%) |
+| backEvict.steady | 65,536 | **238,039.75** ±3.9% (cv 14.4%) | **236,280.13** ±12.9% (cv 15.1%) | **41.99** ±3.0% (cv 1.9%) |
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **120.48** ±3.8% (cv 3.1%) | **116.69** ±3.8% (cv 7.1%) | **32.11** ±4.8% (cv 1.2%) |
+| lookup.hit | 16 | **11.17** ±13.0% (cv 2.9%) | **27.50** ±6.2% (cv 3.6%) | **6.32** ±7.4% (cv 1.0%) |
+| lookup.miss | 16 | **11.27** ±4.2% (cv 1.2%) | **15.20** ±20.0% (cv 1.6%) | **6.50** ±15.0% (cv 0.8%) |
+| iterate.sum | 16 | **0.49** ±0.8% (cv 0.8%) | **0.58** ±2.1% (cv 1.4%) | **0.44** ±1.8% (cv 3.1%) |
+| insert.zero | 1,024 | **60.24** ±11.0% (cv 2.8%) | **71.30** ±4.6% (cv 5.8%) | **20.38** ±5.7% (cv 38.6%) |
+| lookup.hit | 1,024 | **14.20** ±13.1% (cv 1.8%) | **24.38** ±10.5% (cv 2.6%) | **7.26** ±1.0% (cv 1.2%) |
+| lookup.miss | 1,024 | **12.96** ±6.4% (cv 4.6%) | **30.98** ±7.6% (cv 1.6%) | **6.85** ±5.0% (cv 3.5%) |
+| iterate.sum | 1,024 | **0.17** ±1.2% (cv 3.9%) | **0.17** ±4.0% (cv 2.7%) | **0.71** ±3.0% (cv 2.0%) |
+| insert.zero | 65,536 | **62.75** ±1.2% (cv 1.4%) | **68.90** ±1.2% (cv 0.8%) | **29.41** ±4.8% (cv 4.9%) |
+| lookup.hit | 65,536 | **19.01** ±7.9% (cv 4.4%) | **34.79** ±5.0% (cv 3.6%) | **12.00** ±2.1% (cv 3.6%) |
+| lookup.miss | 65,536 | **32.79** ±1.9% (cv 1.2%) | **39.62** ±1.0% (cv 1.6%) | **17.05** ±3.5% (cv 1.9%) |
+| iterate.sum | 65,536 | **0.17** ±0.0% (cv 1.4%) | **0.17** ±0.0% (cv 1.4%) | **0.73** ±1.0% (cv 0.7%) |
+| frontEvict.steady | 16 | **186.58** ±0.2% (cv 0.3%) | **197.90** ±1.6% (cv 0.5%) | **57.23** ±0.4% (cv 0.6%) |
+| backEvict.steady | 16 | **105.22** ±1.8% (cv 1.0%) | **120.37** ±2.1% (cv 0.7%) | **40.45** ±5.5% (cv 1.0%) |
+| frontEvict.steady | 256 | **523.65** ±2.3% (cv 0.8%) | **526.72** ±2.4% (cv 1.6%) | **64.43** ±1.1% (cv 2.3%) |
+| backEvict.steady | 256 | **382.71** ±7.9% (cv 4.2%) | **406.83** ±10.7% (cv 3.0%) | **42.09** ±7.2% (cv 2.0%) |
+| frontEvict.steady | 4,096 | **5,352.86** ±1.2% (cv 2.0%) | **5,346.15** ±1.6% (cv 1.5%) | **64.79** ±1.1% (cv 7.1%) |
+| backEvict.steady | 4,096 | **5,585.55** ±9.6% (cv 3.5%) | **5,916.08** ±9.2% (cv 7.1%) | **42.25** ±2.7% (cv 1.0%) |
+| frontEvict.steady | 65,536 | **157,851.56** ±21.3% (cv 9.5%) | **157,326.17** ±22.8% (cv 19.3%) | **67.76** ±2.3% (cv 1.1%) |
+| backEvict.steady | 65,536 | **198,922.23** ±10.9% (cv 6.9%) | **187,134.26** ±21.9% (cv 8.4%) | **43.06** ±1.0% (cv 0.7%) |
+
+The ring holds FLAT ~2.6 ns/op (bounded 2.9) across three decades of occupancy while
+stdlib-as-queue's O(n) `removeFirst` curve runs 2.1 → 45.3 → 4,345 ns (ring wins ≥17× from
+n=1k). The `Shared` column's ~7 ns mutation tax reappears unchanged (cycle cow ≈ 9.4–10.0 vs
+direct 2.6) — the third family confirming B-1's cross-family invariance.
+
+### Deque — W2 batch-1, bench beside tip `2ed1691` (commit `f7d4c46`)
+
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| backBack.steady | 16 | **1.57** ±14.6% (cv 3.8%) | **12.40** ±14.2% (cv 3.3%) | **1.43** ±54.0% (cv 23.1%) |
+| frontFront.steady | 16 | **4.08** ±9.3% (cv 3.0%) | **8.80** ±13.5% (cv 2.4%) | **4.15** ±56.8% (cv 31.8%) |
+| rotate.steady | 16 | **2.60** ±6.3% (cv 2.6%) | **9.77** ±10.6% (cv 1.6%) | **2.33** ±29.5% (cv 6.6%) |
+| backBack.steady | 1,024 | **1.55** ±9.2% (cv 3.8%) | **12.46** ±12.3% (cv 4.2%) | **1.95** ±55.1% (cv 9.9%) |
+| frontFront.steady | 1,024 | **4.08** ±1.9% (cv 0.4%) | **8.80** ±8.6% (cv 1.8%) | **100.09** ±7.2% (cv 1.7%) |
+| rotate.steady | 1,024 | **2.60** ±1.9% (cv 0.4%) | **9.30** ±8.5% (cv 1.8%) | **50.06** ±6.3% (cv 4.5%) |
+| backBack.steady | 65,536 | **1.47** ±15.3% (cv 1.4%) | **12.67** ±7.7% (cv 2.1%) | **1.32** ±31.6% (cv 18.2%) |
+| frontFront.steady | 65,536 | **4.16** ±18.9% (cv 10.2%) | **9.37** ±29.2% (cv 19.0%) | **9,056.64** ±251.5% (cv 30.4%) |
+| rotate.steady | 65,536 | **2.78** ±57.8% (cv 34.8%) | **9.90** ±11.8% (cv 2.9%) | **4,815.11** ±4.5% (cv 0.2%) |
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **102.31** ±61.9% (cv 11.6%) | **107.32** ±42.9% (cv 22.5%) | **28.48** ±25.3% (cv 7.2%) |
+| lookup.hit | 16 | **11.47** ±69.6% (cv 17.4%) | **21.04** ±92.5% (cv 15.9%) | **5.51** ±72.8% (cv 28.6%) |
+| lookup.miss | 16 | **12.50** ±30.3% (cv 8.9%) | **20.91** ±36.7% (cv 23.0%) | **5.69** ±29.0% (cv 2.8%) |
+| iterate.sum | 16 | **0.40** ±24.9% (cv 1.0%) | **0.49** ±25.1% (cv 5.6%) | **0.45** ±15.1% (cv 15.7%) |
+| insert.zero | 1,024 | **44.24** ±48.1% (cv 17.8%) | **62.12** ±20.1% (cv 8.5%) | **19.82** ±26.7% (cv 2.9%) |
+| lookup.hit | 1,024 | **14.04** ±17.9% (cv 21.8%) | **24.70** ±15.6% (cv 1.2%) | **6.03** ±20.2% (cv 9.3%) |
+| lookup.miss | 1,024 | **13.93** ±36.2% (cv 25.8%) | **33.76** ±36.1% (cv 14.6%) | **6.24** ±10.9% (cv 55.2%) |
+| iterate.sum | 1,024 | **0.07** ±13.9% (cv 31.4%) | **0.08** ±15.1% (cv 20.3%) | **0.75** ±9.1% (cv 4.6%) |
+| insert.zero | 65,536 | **51.15** ±12.0% (cv 3.3%) | **63.74** ±11.0% (cv 20.2%) | **28.38** ±12.1% (cv 2.7%) |
+| lookup.hit | 65,536 | **19.64** ±17.9% (cv 1.9%) | **35.88** ±171.6% (cv 80.7%) | **13.71** ±63.8% (cv 29.6%) |
+| lookup.miss | 65,536 | **36.77** ±36.1% (cv 16.1%) | **42.91** ±10.3% (cv 3.9%) | **15.86** ±16.2% (cv 1.1%) |
+| iterate.sum | 65,536 | **0.07** ±15.3% (cv 2.7%) | **0.07** ±13.7% (cv 3.5%) | **0.74** ±5.9% (cv 0.7%) |
+| frontEvict.steady | 16 | **175.14** ±12.6% (cv 4.9%) | **193.97** ±18.3% (cv 4.9%) | **56.38** ±25.6% (cv 2.4%) |
+| backEvict.steady | 16 | **96.73** ±28.8% (cv 16.3%) | **107.19** ±30.8% (cv 2.1%) | **37.48** ±37.0% (cv 4.2%) |
+| frontEvict.steady | 256 | **498.38** ±12.8% (cv 0.9%) | **507.12** ±12.7% (cv 1.3%) | **63.54** ±20.5% (cv 9.9%) |
+| backEvict.steady | 256 | **377.90** ±31.4% (cv 5.3%) | **403.16** ±29.0% (cv 2.8%) | **40.90** ±18.1% (cv 3.0%) |
+| frontEvict.steady | 4,096 | **5,204.67** ±21.4% (cv 7.1%) | **5,048.34** ±14.1% (cv 0.7%) | **63.46** ±42.3% (cv 5.1%) |
+| backEvict.steady | 4,096 | **6,178.35** ±36.6% (cv 4.5%) | **5,870.57** ±62.4% (cv 24.7%) | **42.11** ±46.3% (cv 20.9%) |
+| frontEvict.steady | 65,536 | **141,044.92** ±10.6% (cv 13.2%) | **154,896.48** ±50.7% (cv 34.8%) | **65.51** ±0.2% (cv 1.7%) |
+| backEvict.steady | 65,536 | **238,039.75** ±3.9% (cv 14.4%) | **236,280.13** ±12.9% (cv 15.1%) | **41.99** ±3.0% (cv 1.9%) |
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **120.48** ±3.8% (cv 3.1%) | **116.69** ±3.8% (cv 7.1%) | **32.11** ±4.8% (cv 1.2%) |
+| lookup.hit | 16 | **11.17** ±13.0% (cv 2.9%) | **27.50** ±6.2% (cv 3.6%) | **6.32** ±7.4% (cv 1.0%) |
+| lookup.miss | 16 | **11.27** ±4.2% (cv 1.2%) | **15.20** ±20.0% (cv 1.6%) | **6.50** ±15.0% (cv 0.8%) |
+| iterate.sum | 16 | **0.49** ±0.8% (cv 0.8%) | **0.58** ±2.1% (cv 1.4%) | **0.44** ±1.8% (cv 3.1%) |
+| insert.zero | 1,024 | **60.24** ±11.0% (cv 2.8%) | **71.30** ±4.6% (cv 5.8%) | **20.38** ±5.7% (cv 38.6%) |
+| lookup.hit | 1,024 | **14.20** ±13.1% (cv 1.8%) | **24.38** ±10.5% (cv 2.6%) | **7.26** ±1.0% (cv 1.2%) |
+| lookup.miss | 1,024 | **12.96** ±6.4% (cv 4.6%) | **30.98** ±7.6% (cv 1.6%) | **6.85** ±5.0% (cv 3.5%) |
+| iterate.sum | 1,024 | **0.17** ±1.2% (cv 3.9%) | **0.17** ±4.0% (cv 2.7%) | **0.71** ±3.0% (cv 2.0%) |
+| insert.zero | 65,536 | **62.75** ±1.2% (cv 1.4%) | **68.90** ±1.2% (cv 0.8%) | **29.41** ±4.8% (cv 4.9%) |
+| lookup.hit | 65,536 | **19.01** ±7.9% (cv 4.4%) | **34.79** ±5.0% (cv 3.6%) | **12.00** ±2.1% (cv 3.6%) |
+| lookup.miss | 65,536 | **32.79** ±1.9% (cv 1.2%) | **39.62** ±1.0% (cv 1.6%) | **17.05** ±3.5% (cv 1.9%) |
+| iterate.sum | 65,536 | **0.17** ±0.0% (cv 1.4%) | **0.17** ±0.0% (cv 1.4%) | **0.73** ±1.0% (cv 0.7%) |
+| frontEvict.steady | 16 | **186.58** ±0.2% (cv 0.3%) | **197.90** ±1.6% (cv 0.5%) | **57.23** ±0.4% (cv 0.6%) |
+| backEvict.steady | 16 | **105.22** ±1.8% (cv 1.0%) | **120.37** ±2.1% (cv 0.7%) | **40.45** ±5.5% (cv 1.0%) |
+| frontEvict.steady | 256 | **523.65** ±2.3% (cv 0.8%) | **526.72** ±2.4% (cv 1.6%) | **64.43** ±1.1% (cv 2.3%) |
+| backEvict.steady | 256 | **382.71** ±7.9% (cv 4.2%) | **406.83** ±10.7% (cv 3.0%) | **42.09** ±7.2% (cv 2.0%) |
+| frontEvict.steady | 4,096 | **5,352.86** ±1.2% (cv 2.0%) | **5,346.15** ±1.6% (cv 1.5%) | **64.79** ±1.1% (cv 7.1%) |
+| backEvict.steady | 4,096 | **5,585.55** ±9.6% (cv 3.5%) | **5,916.08** ±9.2% (cv 7.1%) | **42.25** ±2.7% (cv 1.0%) |
+| frontEvict.steady | 65,536 | **157,851.56** ±21.3% (cv 9.5%) | **157,326.17** ±22.8% (cv 19.3%) | **67.76** ±2.3% (cv 1.1%) |
+| backEvict.steady | 65,536 | **198,922.23** ±10.9% (cv 6.9%) | **187,134.26** ±21.9% (cv 8.4%) | **43.06** ±1.0% (cv 0.7%) |
+
+Both-ends parity with stdlib where stdlib is O(1) (`backBack` 1.5 vs 1.4–1.9 ns, sub-2 ns
+rows carry B-5-class spreads), and the designed blowout where it is not: `frontFront` direct
+4.1 ns flat vs stdlib 100 ns @1k / ~9.1 µs @64k; `rotate` 2.6–2.8 ns flat vs 50 ns / 4.8 µs.
+The cow tax shows as ~+7–11 ns; deque's gate fires per push AND per pop.
 
 ### Stack — W2
 
@@ -196,6 +419,9 @@ seeds — trees themselves are NOT in this arc's edit scope).
 | B-4 | **Tiny-array build cost**: append.zero @16 ≈ 24.7 ns/op tower vs 8.6 stdlib — first-allocation policy difference dominates (stdlib's empty singleton + first-growth heuristics vs the column's immediate allocate). | array+buffer-linear / zero-capacity init + first growth | Ergonomics/policy datum for the family round; n=16 rows are init+teardown-dominated by design (documented). |
 | B-5 | **Harness lesson — sub-0.1 ns/op bulk shapes need ≥16M-op batches AND still carry 25–30% spread at mid-n** (`set.span` @1k); at 64k the larger target stabilized them to ≤7.5%. | bench harness (`spanOpsTarget`) | W2 families should put bulk-span rows at large n or report them qualitative-only at mid n. |
 | B-6 | (strength, not defect) **Payload detach inversion**: `Shared` detach 1.66× faster than stdlib for class elements @1k. | shared / detach retain loop | Record only — corroborates that B-2 is about the trivial-element fast path specifically, not copy machinery generally. |
+| B-7 | **Every `Hash.Indexed` remove is Θ(bucketCapacity)**: `decrement(after:)` sweeps the ENTIRE bucket table unconditionally (`Hash.Table+PositionUpdates.swift:45–57`, called from `Hash.Indexed+Engine.swift:110`) — the documented O(n−rank) dense shift is the cheaper half. Quantified (hash-table pin `2eae321`): evict pairs at n=64k cost 141–238 µs vs stdlib's flat 42–68 ns (≈3,000–5,600×); the curve is super-linear through {16, 256, 4k, 64k} in BOTH ordered families. **Anomaly facet**: at n ≥ 4k, back-eviction (zero shift, zero fixups, read-only sweep) costs MORE than front-eviction (dict @64k: 199 µs vs 158 µs, spreads ≤ ~11%) — inverted vs any sweep-only model; unexplained. | hash-table / `Hash.Table+PositionUpdates.swift:45` + `Hash.Indexed+Engine.swift:110` (both ordered families ride it) | The arc's largest find; an arc-5-class fix inside arc-2's package (last-rank fast path · early-exit · rank→bucket back-pointers · epoch-offset). [BENCH-011] dual-mode gates any fix; the inversion facet needs its own minimal probe first. |
+| B-8 | **Ordered-family READS through `Shared` pay ~+10–16 ns/lookup** (dict lookup.hit: cow 24.4–34.8 vs direct 11.2–19.0; set mirrors) — array's read rows showed cow≈direct parity, so the tax is NOT the box hop itself but how `Hash.Indexed`'s probe loop re-enters the box per access instead of borrowing the dense span once. | set-ordered/dict-ordered contains/withValue paths over `Shared<…, Hash.Indexed<…>>` | Family-round candidate (span-first probe loop); cheap relative to B-7 but on every keyed read. |
+| B-1′ | (evidence update for B-1) The ~7–9 ns `Shared` per-mutation tax is **cross-family invariant**: array set.indexed Δ≈7.5, queue cycle Δ≈6.8–7.4, deque pairs Δ≈+7–11, ordered insert Δ≈+5–11. One shared fix, not N family fixes. | shared / mutation gate chain | Strengthens B-1's "quantify across families first" disposition — done; the fix is singular. |
 
 Standing arc-5 inputs called out by the GOAL (to be quantified in W2/W3):
 - **SoA re-cut**: what the current `_generations: [Int]` / `_occupied: [Bool]` stdlib-Array
