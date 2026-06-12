@@ -1087,6 +1087,20 @@ The namespace enum gives:
 
 ---
 
+### B11. `-O` counted-loop-only "pool exhausted" trap on per-rep move-only arena creates (6.3.2 — CANDIDATE, mechanism unproven)
+
+**Symptom**: a counted loop performing per-rep `Memory.Allocator<…>.Arena`/`Storage.Generational` create-fill-destroy cycles traps "pool exhausted" under `-O`, while the IDENTICAL straight-line sequence succeeds. Bisect: exact-fill 4 ✓, 256 ✓, fill-200 ✓; the FIRST in-loop repetition traps.
+
+**Workaround (verified, bench-side)**: make the per-rep capacity loop-variant (`n &+ (r & 1)`) — the benches are immunized this way.
+
+**Status**: CANDIDATE — NO wall-claim; the mechanism is unproven. Suspicion class: R-6-adjacent (`-O` move-only lifecycle mishandling, cf. swiftlang/swift#89832 — the deinit-omission family). Distillation to a minimal repro is /issue-investigation material; per standing policy any record is a swift-institute/Issues terminal dossier, never an upstream filing. Re-probe at the 6.4 canon bump.
+
+**Evidence**: the bisect table + workaround in `REPORT-arc-bench-W4.md`; bench-side observation against arena `52537ef`.
+
+**Provenance**: arc-3 batch-2 (2026-06-12), banked B-10 in `tower-family-benchmark-baselines.md`; catalog triage per the Round-W wrap-up.
+
+---
+
 ## C. Patterns and Reference Tables
 
 ### C1. Actor isolation — three mechanisms model
