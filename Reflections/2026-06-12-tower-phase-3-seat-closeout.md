@@ -36,6 +36,16 @@ staged. Records were rebuilt (fresh-boot seat handoff; the 581-line accreted pre
 archived; plain OVERVIEW rewritten); the Research bundle (baselines v1.0.0, catalog B7–B11)
 was published with principal authorization.
 
+Session close (same day, post-entry): the seat role handed over live — the successor booted
+from the fresh-boot doc and immediately corrected the tips of record (array `d05ad97`; tree-core
+added), confirming the handover doc carries enough to supervise from cold. Two late principal
+rulings landed: the SE-0516 arc completes via a dedicated side lane
+(`HANDOFF-se0516-iteration-rename.md` — draft-then-principal-posts, deadline-driven), bundled
+with a NEW package-naming direction: `swift-iterator-primitives` → `swift-iteration-primitives`,
+the package name emphasizing the DOMAIN (iteration) over the object (iterator) — single-package
+scope now, the ecosystem generalization explicitly deferred as a future naming pass and a
+[PKG-NAME] skill-amendment candidate.
+
 HANDOFF scan per [REFL-009]: `.handoffs/` holds ~40 HANDOFF-*.md files; 3 are in this
 session's authority — `HANDOFF-tower-SEAT.md` (live, rewritten as the phase-4 fresh-boot doc),
 `HANDOFF-tower-SEAT-archive-2026-06-12.md` (deliberate history preserve), and
