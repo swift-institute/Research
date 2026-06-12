@@ -1,10 +1,30 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-06-01",
+  "generatedAt": "2026-06-13",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "date": "2026-06-13",
+      "file": "2026-06-13-tower-phase-4-seat-round-m-supervision.md",
+      "title": "Tower Phase 4 — the Round M Seat: Supervision at Multi-Lane Scale",
+      "packages": [
+        "swift-memory-allocation-primitives",
+        "swift-storage-arena-primitives",
+        "swift-tree-n-primitives",
+        "swift-tree-keyed-primitives",
+        "swift-tree-unbounded-primitives",
+        "swift-slot-map-primitives",
+        "swift-buffer-linked-primitives",
+        "swift-async-primitives",
+        "swift-iterator-primitives",
+        "swift-kernel",
+        "swift-executors",
+        "swift-memory-map-primitives"
+      ],
+      "status": "pending"
+    },
     {
       "date": "2026-06-12",
       "file": "2026-06-12-memory-foreign-arc-third-ownership-regime.md",
