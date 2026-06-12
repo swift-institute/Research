@@ -6,6 +6,21 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "date": "2026-06-12",
+      "file": "2026-06-12-memory-foreign-arc-third-ownership-regime.md",
+      "title": "Memory.Foreign Arc — the Third Ownership Regime",
+      "packages": [
+        "swift-memory-foreign-primitives",
+        "swift-buffer-ring-primitives",
+        "swift-async-primitives",
+        "swift-span-primitives",
+        "swift-memory-map-primitives",
+        "swift-storage-primitives",
+        "swift-store-primitives"
+      ],
+      "status": "pending"
+    },
+    {
       "date": "2026-06-05",
       "file": "2026-06-05-storage-memory-split-cleave-2-termination.md",
       "packages": [
