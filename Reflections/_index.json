@@ -5971,6 +5971,21 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-06-12-memory-foreign-arc-comparison-to-shipped-regime.md",
+      "date": "2026-06-12",
+      "title": "The Memory.Foreign Arc: From Apple Comparison to Shipped Regime in One Session",
+      "packages": [
+        "swift-memory-foreign-primitives",
+        "swift-memory-map-primitives",
+        "swift-async-primitives",
+        "swift-buffer-ring-primitives",
+        "swift-span-primitives",
+        "swift-sockets"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
