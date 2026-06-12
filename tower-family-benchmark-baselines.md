@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 0.4.0
+version: 1.0.0
 last_updated: 2026-06-11
-status: IN_PROGRESS
+status: RECORDED
 tier: 2
 scope: ecosystem-wide
 ---
@@ -93,6 +93,8 @@ targets but has no `.timed()`. The instrument therefore generalizes the **R4 mic
 
 | Run conditions (batch-2, W4) | Quiet-gated 06:31–06:40 (06-12); procs=0 at every bracket; canary median Δ 2.0% vs W1. Zero flagged cases in slot-map (33) and arena (18); 2/22 minor in hash-table. The cleanest session of the arc. |
 
+| Run conditions (terminal wave) | Shared leg recorded in the arc's coolest window (procs=0, load 2.4); stack/set/dict session procs=0 at every bracket; canary median Δ 1.8% (the arc's best). |
+
 No cross-machine comparisons: every number in this document is from the machine identified above.
 
 ## Baselines
@@ -156,7 +158,110 @@ shape, 16k span re-entries per pass; DVFS-sensitive) — its qualitative conclus
 bulk) is robust, its point estimate is not. `append.*`/`pushPop` rows include array
 init+teardown per rep, amortized over n ops (dominant at n=16 — see the n=16 vs n=1k drop).
 
-### Set / Dictionary — HELD (batch-2; arc-2 owns the packages through their W3)
+### Set (flat) — terminal wave, bench beside tip `2bb62d2` (commit `ac7a1a9`)
+
+Recorded 2026-06-12 (terminal session; procs=0 at every bracket; in-window canary vs W1:
+median Δ 1.8%, p90 6.2% — the arc's best conditions). The flat family composes the SAME `Hash.Indexed`
+combinator as Set.Ordered — B-7 applies here too:
+
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **100.09** ±3.1% (cv 0.9%) | **101.95** ±3.9% (cv 0.9%) | **29.12** ±2.7% (cv 0.5%) |
+| lookup.hit | 16 | **10.74** ±19.8% (cv 2.2%) | **18.66** ±9.7% (cv 0.8%) | **5.45** ±3.8% (cv 0.7%) |
+| lookup.miss | 16 | **10.09** ±9.0% (cv 1.7%) | **20.42** ±1.5% (cv 1.3%) | **5.55** ±4.3% (cv 0.8%) |
+| iterate.sum | 16 | **0.40** ±1.5% (cv 0.8%) | **0.49** ±0.4% (cv 1.6%) | **0.44** ±3.2% (cv 1.4%) |
+| insert.zero | 1,024 | **42.52** ±5.4% (cv 0.8%) | **57.39** ±4.5% (cv 0.5%) | **19.67** ±2.5% (cv 0.6%) |
+| lookup.hit | 1,024 | **13.46** ±5.3% (cv 1.7%) | **23.56** ±1.5% (cv 0.8%) | **5.78** ±4.8% (cv 0.6%) |
+| lookup.miss | 1,024 | **14.04** ±4.1% (cv 0.7%) | **32.49** ±1.1% (cv 1.1%) | **5.95** ±6.6% (cv 0.4%) |
+| iterate.sum | 1,024 | **0.07** ±0.0% (cv 2.8%) | **0.07** ±0.0% (cv 2.5%) | **0.71** ±1.4% (cv 1.1%) |
+| insert.zero | 65,536 | **48.92** ±2.0% (cv 1.9%) | **62.21** ±3.0% (cv 0.7%) | **28.19** ±1.2% (cv 0.5%) |
+| lookup.hit | 65,536 | **18.95** ±2.5% (cv 0.8%) | **28.94** ±2.2% (cv 1.5%) | **10.53** ±1.8% (cv 1.0%) |
+| lookup.miss | 65,536 | **31.93** ±2.2% (cv 0.7%) | **41.54** ±1.4% (cv 0.6%) | **14.78** ±1.3% (cv 2.9%) |
+| iterate.sum | 65,536 | **0.07** ±4.2% (cv 2.9%) | **0.07** ±4.2% (cv 0.4%) | **0.73** ±0.4% (cv 0.7%) |
+| churn.steady | 16 | **174.68** ±0.1% (cv 0.6%) | **186.34** ±1.2% (cv 0.8%) | **55.50** ±1.5% (cv 1.3%) |
+| churn.steady | 256 | **482.88** ±0.2% (cv 1.0%) | **493.98** ±1.1% (cv 0.6%) | **62.71** ±0.6% (cv 1.0%) |
+| churn.steady | 4,096 | **4,947.23** ±1.3% (cv 0.7%) | **5,007.16** ±2.3% (cv 0.9%) | **63.64** ±2.5% (cv 1.0%) |
+| churn.steady | 65,536 | **143,427.08** ±5.1% (cv 17.1%) | **143,393.23** ±7.5% (cv 22.0%) | **65.50** ±2.1% (cv 0.7%) |
+| buildWipe.keep | 1,024 | **21.55** ±30.0% (cv 10.8%) | **32.60** ±3.8% (cv 2.0%) | **10.46** ±5.4% (cv 2.4%) |
+| buildWipe.keep | 65,536 | **28.88** ±23.3% (cv 4.3%) | **35.60** ±1.6% (cv 0.3%) | **11.76** ±0.8% (cv 0.4%) |
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **119.04** ±4.0% (cv 0.5%) | **114.76** ±4.2% (cv 0.4%) | **34.06** ±3.7% (cv 0.6%) |
+| lookup.hit | 16 | **11.16** ±11.8% (cv 0.5%) | **26.95** ±3.1% (cv 3.4%) | **6.06** ±6.2% (cv 0.8%) |
+| lookup.miss | 16 | **11.13** ±6.8% (cv 1.0%) | **18.45** ±11.4% (cv 2.5%) | **6.13** ±8.4% (cv 1.2%) |
+| iterate.sum | 16 | **0.49** ±0.4% (cv 0.4%) | **0.58** ±0.0% (cv 0.4%) | **0.44** ±0.0% (cv 1.2%) |
+| insert.zero | 1,024 | **60.84** ±4.1% (cv 1.0%) | **66.17** ±2.5% (cv 0.9%) | **19.30** ±2.3% (cv 2.0%) |
+| lookup.hit | 1,024 | **13.34** ±3.6% (cv 2.2%) | **22.97** ±4.0% (cv 0.8%) | **7.16** ±3.2% (cv 0.7%) |
+| lookup.miss | 1,024 | **12.51** ±3.0% (cv 1.2%) | **31.00** ±3.2% (cv 1.3%) | **6.71** ±2.3% (cv 1.1%) |
+| iterate.sum | 1,024 | **0.17** ±0.6% (cv 4.3%) | **0.17** ±0.0% (cv 1.9%) | **0.72** ±1.7% (cv 0.1%) |
+| insert.zero | 65,536 | **62.79** ±6.8% (cv 1.0%) | **68.30** ±3.8% (cv 0.9%) | **28.88** ±1.3% (cv 0.3%) |
+| lookup.hit | 65,536 | **19.52** ±0.2% (cv 1.4%) | **35.31** ±0.9% (cv 1.6%) | **11.83** ±1.2% (cv 1.5%) |
+| lookup.miss | 65,536 | **32.74** ±0.8% (cv 1.0%) | **39.93** ±1.1% (cv 0.4%) | **15.06** ±0.6% (cv 4.3%) |
+| iterate.sum | 65,536 | **0.17** ±0.0% (cv 1.6%) | **0.17** ±0.0% (cv 0.1%) | **0.73** ±0.3% (cv 1.1%) |
+| churn.steady | 16 | **184.98** ±0.5% (cv 0.2%) | **196.65** ±1.7% (cv 0.3%) | **56.88** ±1.4% (cv 3.0%) |
+| churn.steady | 256 | **502.85** ±1.3% (cv 0.4%) | **513.78** ±0.6% (cv 0.2%) | **63.87** ±0.6% (cv 1.1%) |
+| churn.steady | 4,096 | **5,177.69** ±0.5% (cv 0.4%) | **5,172.85** ±0.7% (cv 0.4%) | **64.27** ±0.4% (cv 0.6%) |
+| churn.steady | 65,536 | **118,640.62** ±3.8% (cv 14.9%) | **119,244.80** ±5.2% (cv 14.1%) | **67.58** ±1.8% (cv 0.5%) |
+| buildWipe.keep | 1,024 | **35.89** ±4.8% (cv 1.4%) | **42.63** ±3.8% (cv 0.7%) | **10.63** ±2.4% (cv 0.7%) |
+| buildWipe.keep | 65,536 | **40.11** ±8.0% (cv 2.0%) | **46.43** ±1.0% (cv 1.0%) | **12.28** ±0.4% (cv 0.4%) |
+| shape | n | flat | ordered |
+|---|---|---|---|
+| insert.zero | 1,024 | 42.515 | 44.236 |
+| lookup.hit | 1,024 | 13.463 | 14.037 |
+| iterate.sum | 1,024 | 0.071 | 0.074 |
+| iterate.sum | 65,536 | 0.072 | 0.072 |
+
+### Dictionary (flat) — terminal wave, bench beside tip `c51d879` (commit `76cc9b9`)
+
+(Same session. The `buildWipe.keep` rows measure the FIXED `removeAll` Shared door —
+the c51d879 grant note; CoW wipes are uniform-cost, ±≤4.8%.)
+
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **119.04** ±4.0% (cv 0.5%) | **114.76** ±4.2% (cv 0.4%) | **34.06** ±3.7% (cv 0.6%) |
+| lookup.hit | 16 | **11.16** ±11.8% (cv 0.5%) | **26.95** ±3.1% (cv 3.4%) | **6.06** ±6.2% (cv 0.8%) |
+| lookup.miss | 16 | **11.13** ±6.8% (cv 1.0%) | **18.45** ±11.4% (cv 2.5%) | **6.13** ±8.4% (cv 1.2%) |
+| iterate.sum | 16 | **0.49** ±0.4% (cv 0.4%) | **0.58** ±0.0% (cv 0.4%) | **0.44** ±0.0% (cv 1.2%) |
+| insert.zero | 1,024 | **60.84** ±4.1% (cv 1.0%) | **66.17** ±2.5% (cv 0.9%) | **19.30** ±2.3% (cv 2.0%) |
+| lookup.hit | 1,024 | **13.34** ±3.6% (cv 2.2%) | **22.97** ±4.0% (cv 0.8%) | **7.16** ±3.2% (cv 0.7%) |
+| lookup.miss | 1,024 | **12.51** ±3.0% (cv 1.2%) | **31.00** ±3.2% (cv 1.3%) | **6.71** ±2.3% (cv 1.1%) |
+| iterate.sum | 1,024 | **0.17** ±0.6% (cv 4.3%) | **0.17** ±0.0% (cv 1.9%) | **0.72** ±1.7% (cv 0.1%) |
+| insert.zero | 65,536 | **62.79** ±6.8% (cv 1.0%) | **68.30** ±3.8% (cv 0.9%) | **28.88** ±1.3% (cv 0.3%) |
+| lookup.hit | 65,536 | **19.52** ±0.2% (cv 1.4%) | **35.31** ±0.9% (cv 1.6%) | **11.83** ±1.2% (cv 1.5%) |
+| lookup.miss | 65,536 | **32.74** ±0.8% (cv 1.0%) | **39.93** ±1.1% (cv 0.4%) | **15.06** ±0.6% (cv 4.3%) |
+| iterate.sum | 65,536 | **0.17** ±0.0% (cv 1.6%) | **0.17** ±0.0% (cv 0.1%) | **0.73** ±0.3% (cv 1.1%) |
+| churn.steady | 16 | **184.98** ±0.5% (cv 0.2%) | **196.65** ±1.7% (cv 0.3%) | **56.88** ±1.4% (cv 3.0%) |
+| churn.steady | 256 | **502.85** ±1.3% (cv 0.4%) | **513.78** ±0.6% (cv 0.2%) | **63.87** ±0.6% (cv 1.1%) |
+| churn.steady | 4,096 | **5,177.69** ±0.5% (cv 0.4%) | **5,172.85** ±0.7% (cv 0.4%) | **64.27** ±0.4% (cv 0.6%) |
+| churn.steady | 65,536 | **118,640.62** ±3.8% (cv 14.9%) | **119,244.80** ±5.2% (cv 14.1%) | **67.58** ±1.8% (cv 0.5%) |
+| buildWipe.keep | 1,024 | **35.89** ±4.8% (cv 1.4%) | **42.63** ±3.8% (cv 0.7%) | **10.63** ±2.4% (cv 0.7%) |
+| buildWipe.keep | 65,536 | **40.11** ±8.0% (cv 2.0%) | **46.43** ±1.0% (cv 1.0%) | **12.28** ±0.4% (cv 0.4%) |
+| shape | n | flat | ordered |
+|---|---|---|---|
+| insert.zero | 1,024 | 42.515 | 44.236 |
+| lookup.hit | 1,024 | 13.463 | 14.037 |
+| iterate.sum | 1,024 | 0.071 | 0.074 |
+| iterate.sum | 65,536 | 0.072 | 0.072 |
+
+**B-7's blast radius extended as predicted**: flat-family `churn.steady` @64k runs
+143 µs (set) / 119 µs (dict) per pair vs stdlib's flat 66–68 ns (**≈2,100×**) — the
+Θ(capacity) sweep fires identically without any rank surface. **Flat vs Ordered (the
+inventory's "iteration-order overhead vs unordered", answered in-tower at identical
+combinator):**
+
+| shape | n | flat | ordered |
+|---|---|---|---|
+| insert.zero | 1,024 | 42.515 | 44.236 |
+| lookup.hit | 1,024 | 13.463 | 14.037 |
+| iterate.sum | 1,024 | 0.071 | 0.074 |
+| iterate.sum | 65,536 | 0.072 | 0.072 |
+
+The rank surface costs ≈4% on insert/lookup and **zero on iteration** — order is nearly
+free where it is not being removed; B-7 is the entire ordered-family penalty story.
+Wipe-row caveat: `buildWipe.keep` builds pre-sized while `insert.zero` builds from zero —
+the wipe delta is not directly subtractable (recorded as the consumer-grade build+wipe
+cycle; the set-direct rows carry ±23–30% from wipe-phase variance, the FIXED CoW door is
+stable).
 
 ### Set.Ordered — W2 batch-1, bench beside tip `3e44537` (commit `3f76acf`)
 
@@ -356,10 +461,93 @@ same as a hit (0.81 ns — the generation compare is the whole check). The CoW b
 +2.5 ns/read here (single hop) — sharpening B-8: the ordered families' +10–16 ns is
 per-PROBE re-entry, not the hop itself.
 
-### Shared — W2
+### Shared — terminal wave, bench beside tip `b652394` (commit `1e6dfde`)
 
-PENDING (detach cost vs in-place mutation; gate overhead on the hot read/write path — R4
-methodology, measured through the real box rather than a synthetic one).
+Recorded 2026-06-12 (terminal session; procs=0 at every bracket; in-window canary vs W1:
+median Δ 1.8%, p90 6.2% — the arc's best conditions). The gate decomposition (every gated door vs its
+`AssumingUnique` twin vs the bare Linear column at identical substrate; boxes unique
+throughout the gated rows — R4's worst case):
+
+| shape | n | shared.unique | column.direct | shared.sibling |
+|---|---|---|---|---|
+| gate.prepareForMutation | 1,024 | **1.06** ±5.0% (cv 2.6%) | — | — |
+| gate.ensureUnique | 1,024 | **1.06** ±3.8% (cv 3.1%) | — | — |
+| appendPop.gated | 1,024 | **6.21** ±0.1% (cv 0.3%) | — | — |
+| appendPop.assumingUnique | 1,024 | **5.15** ±0.1% (cv 0.5%) | — | — |
+| appendPop.bareColumn | 1,024 | — | **1.19** ±2.7% (cv 7.1%) | — |
+| write.subscript | 1,024 | **3.73** ±0.1% (cv 0.6%) | — | — |
+| write.span | 1,024 | **0.07** ±22.9% (cv 5.1%) | — | — |
+| write.spanAssumingUnique | 1,024 | **0.07** ±24.6% (cv 2.1%) | — | — |
+| read.subscript | 1,024 | **0.17** ±0.6% (cv 0.7%) | **0.16** ±0.6% (cv 0.5%) | — |
+| read.span | 1,024 | **0.07** ±2.8% (cv 2.2%) | — | — |
+| detach.firstMutation | 1,024 | — | — | **1,321.63** ±4.5% (cv 3.3%) |
+| detach.firstMutation | 65,536 | — | — | **76,402.34** ±7.9% (cv 2.4%) |
+| shape | n | tower.stack | stdlib |
+|---|---|---|---|
+| pushPop.cycle | 16 | **7.72** ±4.9% (cv 1.0%) | **1.94** ±53.2% (cv 19.8%) |
+| build.zero | 16 | **23.22** ±2.5% (cv 0.8%) | **8.49** ±1.6% (cv 1.1%) |
+| pushPop.cycle | 1,024 | **7.71** ±0.2% (cv 0.4%) | **1.95** ±52.0% (cv 15.0%) |
+| build.zero | 1,024 | **9.38** ±0.3% (cv 0.8%) | **0.89** ±5.4% (cv 1.3%) |
+| pushPop.cycle | 65,536 | **7.72** ±0.2% (cv 0.4%) | **1.95** ±0.5% (cv 0.5%) |
+| build.zero | 65,536 | **8.87** ±0.8% (cv 0.6%) | **1.08** ±2.0% (cv 1.9%) |
+| detach.firstMutation | 1,024 | **2,368.40** ±0.1% (cv 0.5%) | **155.03** ±6.9% (cv 10.4%) |
+| detach.firstMutation | 65,536 | **142,660.80** ±0.4% (cv 0.5%) | **6,236.33** ±10.9% (cv 4.5%) |
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **100.09** ±3.1% (cv 0.9%) | **101.95** ±3.9% (cv 0.9%) | **29.12** ±2.7% (cv 0.5%) |
+| lookup.hit | 16 | **10.74** ±19.8% (cv 2.2%) | **18.66** ±9.7% (cv 0.8%) | **5.45** ±3.8% (cv 0.7%) |
+| lookup.miss | 16 | **10.09** ±9.0% (cv 1.7%) | **20.42** ±1.5% (cv 1.3%) | **5.55** ±4.3% (cv 0.8%) |
+| iterate.sum | 16 | **0.40** ±1.5% (cv 0.8%) | **0.49** ±0.4% (cv 1.6%) | **0.44** ±3.2% (cv 1.4%) |
+| insert.zero | 1,024 | **42.52** ±5.4% (cv 0.8%) | **57.39** ±4.5% (cv 0.5%) | **19.67** ±2.5% (cv 0.6%) |
+| lookup.hit | 1,024 | **13.46** ±5.3% (cv 1.7%) | **23.56** ±1.5% (cv 0.8%) | **5.78** ±4.8% (cv 0.6%) |
+| lookup.miss | 1,024 | **14.04** ±4.1% (cv 0.7%) | **32.49** ±1.1% (cv 1.1%) | **5.95** ±6.6% (cv 0.4%) |
+| iterate.sum | 1,024 | **0.07** ±0.0% (cv 2.8%) | **0.07** ±0.0% (cv 2.5%) | **0.71** ±1.4% (cv 1.1%) |
+| insert.zero | 65,536 | **48.92** ±2.0% (cv 1.9%) | **62.21** ±3.0% (cv 0.7%) | **28.19** ±1.2% (cv 0.5%) |
+| lookup.hit | 65,536 | **18.95** ±2.5% (cv 0.8%) | **28.94** ±2.2% (cv 1.5%) | **10.53** ±1.8% (cv 1.0%) |
+| lookup.miss | 65,536 | **31.93** ±2.2% (cv 0.7%) | **41.54** ±1.4% (cv 0.6%) | **14.78** ±1.3% (cv 2.9%) |
+| iterate.sum | 65,536 | **0.07** ±4.2% (cv 2.9%) | **0.07** ±4.2% (cv 0.4%) | **0.73** ±0.4% (cv 0.7%) |
+| churn.steady | 16 | **174.68** ±0.1% (cv 0.6%) | **186.34** ±1.2% (cv 0.8%) | **55.50** ±1.5% (cv 1.3%) |
+| churn.steady | 256 | **482.88** ±0.2% (cv 1.0%) | **493.98** ±1.1% (cv 0.6%) | **62.71** ±0.6% (cv 1.0%) |
+| churn.steady | 4,096 | **4,947.23** ±1.3% (cv 0.7%) | **5,007.16** ±2.3% (cv 0.9%) | **63.64** ±2.5% (cv 1.0%) |
+| churn.steady | 65,536 | **143,427.08** ±5.1% (cv 17.1%) | **143,393.23** ±7.5% (cv 22.0%) | **65.50** ±2.1% (cv 0.7%) |
+| buildWipe.keep | 1,024 | **21.55** ±30.0% (cv 10.8%) | **32.60** ±3.8% (cv 2.0%) | **10.46** ±5.4% (cv 2.4%) |
+| buildWipe.keep | 65,536 | **28.88** ±23.3% (cv 4.3%) | **35.60** ±1.6% (cv 0.3%) | **11.76** ±0.8% (cv 0.4%) |
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **119.04** ±4.0% (cv 0.5%) | **114.76** ±4.2% (cv 0.4%) | **34.06** ±3.7% (cv 0.6%) |
+| lookup.hit | 16 | **11.16** ±11.8% (cv 0.5%) | **26.95** ±3.1% (cv 3.4%) | **6.06** ±6.2% (cv 0.8%) |
+| lookup.miss | 16 | **11.13** ±6.8% (cv 1.0%) | **18.45** ±11.4% (cv 2.5%) | **6.13** ±8.4% (cv 1.2%) |
+| iterate.sum | 16 | **0.49** ±0.4% (cv 0.4%) | **0.58** ±0.0% (cv 0.4%) | **0.44** ±0.0% (cv 1.2%) |
+| insert.zero | 1,024 | **60.84** ±4.1% (cv 1.0%) | **66.17** ±2.5% (cv 0.9%) | **19.30** ±2.3% (cv 2.0%) |
+| lookup.hit | 1,024 | **13.34** ±3.6% (cv 2.2%) | **22.97** ±4.0% (cv 0.8%) | **7.16** ±3.2% (cv 0.7%) |
+| lookup.miss | 1,024 | **12.51** ±3.0% (cv 1.2%) | **31.00** ±3.2% (cv 1.3%) | **6.71** ±2.3% (cv 1.1%) |
+| iterate.sum | 1,024 | **0.17** ±0.6% (cv 4.3%) | **0.17** ±0.0% (cv 1.9%) | **0.72** ±1.7% (cv 0.1%) |
+| insert.zero | 65,536 | **62.79** ±6.8% (cv 1.0%) | **68.30** ±3.8% (cv 0.9%) | **28.88** ±1.3% (cv 0.3%) |
+| lookup.hit | 65,536 | **19.52** ±0.2% (cv 1.4%) | **35.31** ±0.9% (cv 1.6%) | **11.83** ±1.2% (cv 1.5%) |
+| lookup.miss | 65,536 | **32.74** ±0.8% (cv 1.0%) | **39.93** ±1.1% (cv 0.4%) | **15.06** ±0.6% (cv 4.3%) |
+| iterate.sum | 65,536 | **0.17** ±0.0% (cv 1.6%) | **0.17** ±0.0% (cv 0.1%) | **0.73** ±0.3% (cv 1.1%) |
+| churn.steady | 16 | **184.98** ±0.5% (cv 0.2%) | **196.65** ±1.7% (cv 0.3%) | **56.88** ±1.4% (cv 3.0%) |
+| churn.steady | 256 | **502.85** ±1.3% (cv 0.4%) | **513.78** ±0.6% (cv 0.2%) | **63.87** ±0.6% (cv 1.1%) |
+| churn.steady | 4,096 | **5,177.69** ±0.5% (cv 0.4%) | **5,172.85** ±0.7% (cv 0.4%) | **64.27** ±0.4% (cv 0.6%) |
+| churn.steady | 65,536 | **118,640.62** ±3.8% (cv 14.9%) | **119,244.80** ±5.2% (cv 14.1%) | **67.58** ±1.8% (cv 0.5%) |
+| buildWipe.keep | 1,024 | **35.89** ±4.8% (cv 1.4%) | **42.63** ±3.8% (cv 0.7%) | **10.63** ±2.4% (cv 0.7%) |
+| buildWipe.keep | 65,536 | **40.11** ±8.0% (cv 2.0%) | **46.43** ±1.0% (cv 1.0%) | **12.28** ±0.4% (cv 0.4%) |
+| shape | n | flat | ordered |
+|---|---|---|---|
+| insert.zero | 1,024 | 42.515 | 44.236 |
+| lookup.hit | 1,024 | 13.463 | 14.037 |
+| iterate.sum | 1,024 | 0.071 | 0.074 |
+| iterate.sum | 65,536 | 0.072 | 0.072 |
+
+**The B-1′ re-attribution (the engine-fix arc's target map):** the uniqueness gate ALONE
+costs **1.06 ns** — three-way agreement (isolated prepareForMutation; ensureUnique; the
+gated−assumingUnique pair difference 6.21−5.15). The dominant term is the **box ≈3.9 ns**
+(assumingUnique 5.15 vs bare column 1.19); family seams add ≈2–3 ns more to the ~7 ns
+family-level tax. Reads through the box are free on the subscript path (0.17 vs 0.16);
+bulk spans amortize everything (0.07). Detach: 1,322 ns @1k / 76.4 µs @64k (**1.17–1.29
+ns/slot** — B-2's element-wise copy confirmed at box level). R4's ~4.3 ns synthetic bound
+was the gate + an @inline(never) work boundary; the shipped inlinable gate on a
+predicted-true branch runs ~1 ns.
 
 ### Queue — W2 batch-1, bench beside tip `131a0be` (commit `86fd9e4`)
 
@@ -501,9 +689,74 @@ rows carry B-5-class spreads), and the designed blowout where it is not: `frontF
 4.1 ns flat vs stdlib 100 ns @1k / ~9.1 µs @64k; `rotate` 2.6–2.8 ns flat vs 50 ns / 4.8 µs.
 The cow tax shows as ~+7–11 ns; deque's gate fires per push AND per pop.
 
-### Stack — W2
+### Stack — terminal wave, bench beside tip `f648181` (commit `f024ded`)
 
-PENDING (push/pop vs stdlib `Array`).
+Recorded 2026-06-12 (terminal session; procs=0 at every bracket; in-window canary vs W1:
+median Δ 1.8%, p90 6.2% — the arc's best conditions). The pre-reshape element-generic ADT (hand-rolled
+CoW), measured as shipped — the before-picture for its eventual column respell:
+
+| shape | n | tower.stack | stdlib |
+|---|---|---|---|
+| pushPop.cycle | 16 | **7.72** ±4.9% (cv 1.0%) | **1.94** ±53.2% (cv 19.8%) |
+| build.zero | 16 | **23.22** ±2.5% (cv 0.8%) | **8.49** ±1.6% (cv 1.1%) |
+| pushPop.cycle | 1,024 | **7.71** ±0.2% (cv 0.4%) | **1.95** ±52.0% (cv 15.0%) |
+| build.zero | 1,024 | **9.38** ±0.3% (cv 0.8%) | **0.89** ±5.4% (cv 1.3%) |
+| pushPop.cycle | 65,536 | **7.72** ±0.2% (cv 0.4%) | **1.95** ±0.5% (cv 0.5%) |
+| build.zero | 65,536 | **8.87** ±0.8% (cv 0.6%) | **1.08** ±2.0% (cv 1.9%) |
+| detach.firstMutation | 1,024 | **2,368.40** ±0.1% (cv 0.5%) | **155.03** ±6.9% (cv 10.4%) |
+| detach.firstMutation | 65,536 | **142,660.80** ±0.4% (cv 0.5%) | **6,236.33** ±10.9% (cv 4.5%) |
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **100.09** ±3.1% (cv 0.9%) | **101.95** ±3.9% (cv 0.9%) | **29.12** ±2.7% (cv 0.5%) |
+| lookup.hit | 16 | **10.74** ±19.8% (cv 2.2%) | **18.66** ±9.7% (cv 0.8%) | **5.45** ±3.8% (cv 0.7%) |
+| lookup.miss | 16 | **10.09** ±9.0% (cv 1.7%) | **20.42** ±1.5% (cv 1.3%) | **5.55** ±4.3% (cv 0.8%) |
+| iterate.sum | 16 | **0.40** ±1.5% (cv 0.8%) | **0.49** ±0.4% (cv 1.6%) | **0.44** ±3.2% (cv 1.4%) |
+| insert.zero | 1,024 | **42.52** ±5.4% (cv 0.8%) | **57.39** ±4.5% (cv 0.5%) | **19.67** ±2.5% (cv 0.6%) |
+| lookup.hit | 1,024 | **13.46** ±5.3% (cv 1.7%) | **23.56** ±1.5% (cv 0.8%) | **5.78** ±4.8% (cv 0.6%) |
+| lookup.miss | 1,024 | **14.04** ±4.1% (cv 0.7%) | **32.49** ±1.1% (cv 1.1%) | **5.95** ±6.6% (cv 0.4%) |
+| iterate.sum | 1,024 | **0.07** ±0.0% (cv 2.8%) | **0.07** ±0.0% (cv 2.5%) | **0.71** ±1.4% (cv 1.1%) |
+| insert.zero | 65,536 | **48.92** ±2.0% (cv 1.9%) | **62.21** ±3.0% (cv 0.7%) | **28.19** ±1.2% (cv 0.5%) |
+| lookup.hit | 65,536 | **18.95** ±2.5% (cv 0.8%) | **28.94** ±2.2% (cv 1.5%) | **10.53** ±1.8% (cv 1.0%) |
+| lookup.miss | 65,536 | **31.93** ±2.2% (cv 0.7%) | **41.54** ±1.4% (cv 0.6%) | **14.78** ±1.3% (cv 2.9%) |
+| iterate.sum | 65,536 | **0.07** ±4.2% (cv 2.9%) | **0.07** ±4.2% (cv 0.4%) | **0.73** ±0.4% (cv 0.7%) |
+| churn.steady | 16 | **174.68** ±0.1% (cv 0.6%) | **186.34** ±1.2% (cv 0.8%) | **55.50** ±1.5% (cv 1.3%) |
+| churn.steady | 256 | **482.88** ±0.2% (cv 1.0%) | **493.98** ±1.1% (cv 0.6%) | **62.71** ±0.6% (cv 1.0%) |
+| churn.steady | 4,096 | **4,947.23** ±1.3% (cv 0.7%) | **5,007.16** ±2.3% (cv 0.9%) | **63.64** ±2.5% (cv 1.0%) |
+| churn.steady | 65,536 | **143,427.08** ±5.1% (cv 17.1%) | **143,393.23** ±7.5% (cv 22.0%) | **65.50** ±2.1% (cv 0.7%) |
+| buildWipe.keep | 1,024 | **21.55** ±30.0% (cv 10.8%) | **32.60** ±3.8% (cv 2.0%) | **10.46** ±5.4% (cv 2.4%) |
+| buildWipe.keep | 65,536 | **28.88** ±23.3% (cv 4.3%) | **35.60** ±1.6% (cv 0.3%) | **11.76** ±0.8% (cv 0.4%) |
+| shape | n | tower.direct | tower.cow | stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **119.04** ±4.0% (cv 0.5%) | **114.76** ±4.2% (cv 0.4%) | **34.06** ±3.7% (cv 0.6%) |
+| lookup.hit | 16 | **11.16** ±11.8% (cv 0.5%) | **26.95** ±3.1% (cv 3.4%) | **6.06** ±6.2% (cv 0.8%) |
+| lookup.miss | 16 | **11.13** ±6.8% (cv 1.0%) | **18.45** ±11.4% (cv 2.5%) | **6.13** ±8.4% (cv 1.2%) |
+| iterate.sum | 16 | **0.49** ±0.4% (cv 0.4%) | **0.58** ±0.0% (cv 0.4%) | **0.44** ±0.0% (cv 1.2%) |
+| insert.zero | 1,024 | **60.84** ±4.1% (cv 1.0%) | **66.17** ±2.5% (cv 0.9%) | **19.30** ±2.3% (cv 2.0%) |
+| lookup.hit | 1,024 | **13.34** ±3.6% (cv 2.2%) | **22.97** ±4.0% (cv 0.8%) | **7.16** ±3.2% (cv 0.7%) |
+| lookup.miss | 1,024 | **12.51** ±3.0% (cv 1.2%) | **31.00** ±3.2% (cv 1.3%) | **6.71** ±2.3% (cv 1.1%) |
+| iterate.sum | 1,024 | **0.17** ±0.6% (cv 4.3%) | **0.17** ±0.0% (cv 1.9%) | **0.72** ±1.7% (cv 0.1%) |
+| insert.zero | 65,536 | **62.79** ±6.8% (cv 1.0%) | **68.30** ±3.8% (cv 0.9%) | **28.88** ±1.3% (cv 0.3%) |
+| lookup.hit | 65,536 | **19.52** ±0.2% (cv 1.4%) | **35.31** ±0.9% (cv 1.6%) | **11.83** ±1.2% (cv 1.5%) |
+| lookup.miss | 65,536 | **32.74** ±0.8% (cv 1.0%) | **39.93** ±1.1% (cv 0.4%) | **15.06** ±0.6% (cv 4.3%) |
+| iterate.sum | 65,536 | **0.17** ±0.0% (cv 1.6%) | **0.17** ±0.0% (cv 0.1%) | **0.73** ±0.3% (cv 1.1%) |
+| churn.steady | 16 | **184.98** ±0.5% (cv 0.2%) | **196.65** ±1.7% (cv 0.3%) | **56.88** ±1.4% (cv 3.0%) |
+| churn.steady | 256 | **502.85** ±1.3% (cv 0.4%) | **513.78** ±0.6% (cv 0.2%) | **63.87** ±0.6% (cv 1.1%) |
+| churn.steady | 4,096 | **5,177.69** ±0.5% (cv 0.4%) | **5,172.85** ±0.7% (cv 0.4%) | **64.27** ±0.4% (cv 0.6%) |
+| churn.steady | 65,536 | **118,640.62** ±3.8% (cv 14.9%) | **119,244.80** ±5.2% (cv 14.1%) | **67.58** ±1.8% (cv 0.5%) |
+| buildWipe.keep | 1,024 | **35.89** ±4.8% (cv 1.4%) | **42.63** ±3.8% (cv 0.7%) | **10.63** ±2.4% (cv 0.7%) |
+| buildWipe.keep | 65,536 | **40.11** ±8.0% (cv 2.0%) | **46.43** ±1.0% (cv 1.0%) | **12.28** ±0.4% (cv 0.4%) |
+| shape | n | flat | ordered |
+|---|---|---|---|
+| insert.zero | 1,024 | 42.515 | 44.236 |
+| lookup.hit | 1,024 | 13.463 | 14.037 |
+| iterate.sum | 1,024 | 0.071 | 0.074 |
+| iterate.sum | 65,536 | 0.072 | 0.072 |
+
+pushPop holds **7.7 ns flat** across three decades vs stdlib's 1.95 (the ~6 ns
+hand-rolled-CoW gate+box per op — the same structure B-1′ decomposes). Its detach runs
+**2.18–2.31 ns/slot** — 1.8× the `Shared` combinator's 1.17–1.29 on identical payloads:
+the hand-rolled copy is measurably worse than the column combinator it predates (a
+respell datum). stdlib's sub-2 ns rows at n ≤ 1k carry the B-5 spread class.
 
 ### Arena (Storage.Generational, the substrate) — batch-2, bench beside tip `52537ef` (commit `b0ac26d`)
 
@@ -610,11 +863,11 @@ LIVE element at half-holes): the SoA re-cut's iterate-side number.
 
 | Family | Inventory measures pending | Blocking grant |
 |---|---|---|
-| set / dict (flat) | insert / lookup-hit / lookup-miss / remove / iterate vs stdlib | arc-2 owns through their W3 |
-| shared | detach vs in-place; gate overhead isolated (R4 methodology through the real box) | arc-1 Phase-2 terminal gate |
-| stack | push/pop vs stdlib | seat re-grant after the Sendable fix |
-
-(hash-table, slot-map, arena: MEASURED at batch-2, 2026-06-12 — sections above.)
+**NONE — the inventory is COMPLETE.** All ten family surfaces measured: array (W1) ·
+queue, deque, set-ordered, dictionary-ordered (W2 batch-1) · slot-map, arena
+(Storage.Generational), hash-table engine (batch-2) · shared (gate decomposition), stack,
+set, dictionary (terminal wave). Hash-table ownership has passed to the engine-fix
+executor; this document's engine rows stand as the before-picture.
 
 ## References
 
