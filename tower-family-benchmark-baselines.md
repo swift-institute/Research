@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 0.3.0
+version: 0.4.0
 last_updated: 2026-06-11
 status: IN_PROGRESS
 tier: 2
@@ -90,6 +90,8 @@ targets but has no `.timed()`. The instrument therefore generalizes the **R4 mic
 | Run conditions (W1) | Interactive dev machine with parallel executor arcs active. Stable background during the recorded runs: ONE sibling single-threaded `swift-frontend` at 100% of one core (arc-2's hash-table test build; bracketing `ps` checks + load averages recorded per run). Run-set acceptance is BY CROSS-RUN AGREEMENT: runs 1–3 primary (≤~7% pairwise on nearly all cases), run 4 (~25 min later) corroborates within ±10%; runs 5–6 caught a multi-process load burst (5-min load 7.5), inflated 25–55% uniformly across ALL subjects, and are EXCLUDED by that criterion (preserved in the W1 log sidecar). |
 
 | Run conditions (W2 batch-1) | Recorded 23:11–23:22 after a 60s-clear sustained-quiet gate; EVERY per-run bracket read procs=0 (the only fully-clean session of the arc). Caveat: the window followed a 33-process build storm on the fanless machine — thermal drain is visible as a quality gradient across the session (set-ordered first/hottest: 55/60 cases >10% cross-run spread; dictionary-ordered last/coolest: 11/60). The array drift-canary in this window read median Δ 10.8% vs W1 (p90 19%) — ABOVE W1's stated spreads; the cooler 22:40 opportunistic canary read 3.0%, so the excess is attributed to thermal state, not drift. Within-session family comparisons are unaffected; cross-referencing W2 absolute numbers against W1's carries the ~10% caveat. W3 cool-window re-confirmation (23:27, procs=0, 20 min idle): **median Δ 1.9%, p90 5.6%, 2/74 cases >10%** — thermal attribution CONFIRMED (hot 10.8% → cooler 3.0% → cool 1.9%); no drift. |
+
+| Run conditions (batch-2, W4) | Quiet-gated 06:31–06:40 (06-12); procs=0 at every bracket; canary median Δ 2.0% vs W1. Zero flagged cases in slot-map (33) and arena (18); 2/22 minor in hash-table. The cleanest session of the arc. |
 
 No cross-machine comparisons: every number in this document is from the machine identified above.
 
@@ -247,13 +249,112 @@ buffer scans 4–11× FASTER than stdlib's buckets (set 0.07 vs 0.74; dict 0.17 
 Reads through the `Shared` column pay ~+10–16 ns/lookup that array's reads did NOT show —
 banked B-8.
 
-### Hash engine — W2
+### Hash engine — batch-2, bench beside tip `7b3052a` (commit `0b807c9`)
 
-PENDING (per-instance seed cost: init + first-insert latency; grow/re-seed cost spike).
+Recorded 2026-06-12 06:31–06:40, quiet-gated (60 s sustained-clear), procs=0 at EVERY
+bracket; in-window array canary vs W1: median Δ 2.0% (p90 6.7%) — recording-grade
+conditions throughout.
 
-### Slot-map — W2
+| shape | n | tower.table | tower.indexed | stdlib |
+|---|---|---|---|---|
+| init.zero | 0 | **273.22** ±1.9% (cv 3.7%) | — | **0.00** ±0.0% (cv 89.5%) |
+| init.sized | 16 | **261.14** ±2.2% (cv 0.4%) | — | **58.24** ±1.3% (cv 2.4%) |
+| init.sized | 1,024 | **1,053.66** ±1.2% (cv 1.3%) | — | **62.13** ±2.5% (cv 1.1%) |
+| init.sized | 65,536 | **54,665.36** ±9.4% (cv 9.1%) | — | **853.52** ±15.5% (cv 1.7%) |
+| init.firstInsert | 1 | — | **503.73** ±3.5% (cv 2.2%) | **42.55** ±2.9% (cv 1.0%) |
+| build.zero | 1,024 | — | **42.77** ±9.6% (cv 0.6%) | **19.70** ±2.9% (cv 0.6%) |
+| build.reserved | 1,024 | — | **20.09** ±15.4% (cv 3.0%) | **9.22** ±3.2% (cv 0.4%) |
+| build.zero | 4,096 | — | **47.24** ±5.1% (cv 0.6%) | **21.07** ±0.6% (cv 0.6%) |
+| build.reserved | 4,096 | — | **22.32** ±6.0% (cv 2.2%) | **9.65** ±1.7% (cv 0.4%) |
+| build.zero | 65,536 | — | **49.76** ±3.3% (cv 1.7%) | **28.11** ±0.6% (cv 0.4%) |
+| build.reserved | 65,536 | — | **24.48** ±3.3% (cv 2.1%) | **10.69** ±1.0% (cv 0.4%) |
+| n | build.control ns/op | growRelocate ns/op | delta ns | delta ns/slot |
+|---|---|---|---|---|
+| 256 | 1,843 | 5,033 | 3,190 | 12.46 |
+| 4,096 | 26,725 | 75,472 | 48,747 | 11.90 |
+| 65,536 | 412,164 | 1,162,214 | 750,050 | 11.44 |
 
-PENDING (handle-validation overhead per access; insert/remove/iterate vs array baseline).
+**Per-instance seeding quantified**: `init.zero` 273 ns vs `Swift.Set`'s ~0 (free empty
+singleton; the institute Table pays `makeSeed()`'s `SystemRandomNumberGenerator` read +
+allocation per instance — `Hash.Table.swift:124`). `init.sized` grows O(capacity) with the
+bucket-metadata fill (~0.83 ns/bucket at 64k: 54.7 µs) where stdlib's sized init stays
+58–854 ns. `init.firstInsert` 504 vs 43 ns (11.8×). Steady inserts: reserved 20–24 vs
+stdlib 9.2–10.7 ns (≈2.2×); the growth tax (zero − reserved) ≈ +23–25 ns/insert vs stdlib's
++10–17. Two rows flagged ~15% (init.sized stdlib @64k; build.reserved @1k) — noted, minor.
+
+### Slot-map — batch-2, bench beside tip `a420d48` (commit `23e6cd5`)
+
+Recorded 2026-06-12 06:31–06:40, quiet-gated (60 s sustained-clear), procs=0 at EVERY
+bracket; in-window array canary vs W1: median Δ 2.0% (p90 6.7%) — recording-grade
+conditions throughout. Pins: the batch-2 tips themselves (arena `52537ef` · slot-map
+`a420d48` · hash-table `7b3052a`, seat-granted post-W3-0).
+
+| shape | n | tower.direct | tower.cow | stdlib.array | stdlib.dictionary |
+|---|---|---|---|---|---|
+| access.valid | 16 | **1.23** ±0.1% (cv 0.8%) | **4.03** ±0.4% (cv 0.3%) | **0.34** ±2.1% (cv 2.9%) | **6.05** ±8.9% (cv 0.4%) |
+| access.stale | 16 | **0.82** ±0.6% (cv 0.5%) | — | — | — |
+| removeInsert.cycle | 16 | **5.10** ±0.9% (cv 0.7%) | **10.81** ±0.3% (cv 0.6%) | — | **19.60** ±7.1% (cv 0.5%) |
+| iterate.full | 16 | **0.81** ±0.9% (cv 0.7%) | — | — | — |
+| iterate.holes | 16 | **1.36** ±1.6% (cv 0.6%) | — | — | — |
+| build.reserved | 16 | **18.74** ±4.0% (cv 0.9%) | — | — | — |
+| access.valid | 1,024 | **1.21** ±2.5% (cv 21.0%) | **3.75** ±3.4% (cv 0.6%) | **0.29** ±3.8% (cv 0.9%) | **7.43** ±2.4% (cv 0.7%) |
+| access.stale | 1,024 | **0.82** ±0.6% (cv 0.9%) | — | — | — |
+| removeInsert.cycle | 1,024 | **5.15** ±1.4% (cv 0.6%) | **10.81** ±0.7% (cv 0.6%) | — | **20.29** ±5.1% (cv 0.6%) |
+| iterate.full | 1,024 | **0.81** ±0.7% (cv 0.9%) | — | — | — |
+| iterate.holes | 1,024 | **1.33** ±0.1% (cv 0.3%) | — | — | — |
+| build.reserved | 1,024 | **6.51** ±0.6% (cv 0.6%) | — | — | — |
+| access.valid | 65,536 | **1.21** ±1.5% (cv 0.8%) | **3.75** ±0.6% (cv 0.5%) | **0.30** ±1.7% (cv 1.4%) | **11.85** ±2.8% (cv 0.5%) |
+| access.stale | 65,536 | **0.81** ±1.2% (cv 0.6%) | — | — | — |
+| removeInsert.cycle | 65,536 | **5.16** ±1.0% (cv 0.4%) | **10.83** ±0.2% (cv 0.4%) | — | **20.96** ±2.0% (cv 0.7%) |
+| iterate.full | 65,536 | **0.80** ±0.9% (cv 0.6%) | — | — | — |
+| iterate.holes | 65,536 | **1.33** ±0.5% (cv 0.9%) | — | — | — |
+| build.reserved | 65,536 | **6.23** ±0.6% (cv 0.4%) | — | — | — |
+| shape | n | tower.direct |
+|---|---|---|
+| build.control | 256 | **1,843.36** ±0.4% (cv 2.3%) |
+| growRelocate.curve | 256 | **5,033.06** ±1.9% (cv 1.1%) |
+| build.control | 4,096 | **26,725.26** ±2.1% (cv 0.7%) |
+| growRelocate.curve | 4,096 | **75,472.49** ±0.2% (cv 0.9%) |
+| build.control | 65,536 | **412,164.06** ±0.8% (cv 0.4%) |
+| growRelocate.curve | 65,536 | **1,162,213.56** ±0.2% (cv 0.5%) |
+| contains.valid | 16 | **0.82** ±0.2% (cv 0.6%) |
+| removeInsert.cycle | 16 | **5.20** ±0.7% (cv 0.3%) |
+| iterate.full | 16 | **0.82** ±0.9% (cv 0.6%) |
+| iterate.holes | 16 | **1.37** ±0.5% (cv 0.7%) |
+| contains.valid | 1,024 | **0.81** ±0.8% (cv 0.7%) |
+| removeInsert.cycle | 1,024 | **5.22** ±1.0% (cv 0.8%) |
+| iterate.full | 1,024 | **0.81** ±1.1% (cv 1.0%) |
+| iterate.holes | 1,024 | **1.35** ±0.7% (cv 0.7%) |
+| contains.valid | 65,536 | **0.80** ±1.0% (cv 1.0%) |
+| removeInsert.cycle | 65,536 | **5.25** ±0.6% (cv 0.2%) |
+| iterate.full | 65,536 | **0.80** ±0.1% (cv 0.6%) |
+| iterate.holes | 65,536 | **1.33** ±0.1% (cv 0.3%) |
+| shape | n | tower.table | tower.indexed | stdlib |
+|---|---|---|---|---|
+| init.zero | 0 | **273.22** ±1.9% (cv 3.7%) | — | **0.00** ±0.0% (cv 89.5%) |
+| init.sized | 16 | **261.14** ±2.2% (cv 0.4%) | — | **58.24** ±1.3% (cv 2.4%) |
+| init.sized | 1,024 | **1,053.66** ±1.2% (cv 1.3%) | — | **62.13** ±2.5% (cv 1.1%) |
+| init.sized | 65,536 | **54,665.36** ±9.4% (cv 9.1%) | — | **853.52** ±15.5% (cv 1.7%) |
+| init.firstInsert | 1 | — | **503.73** ±3.5% (cv 2.2%) | **42.55** ±2.9% (cv 1.0%) |
+| build.zero | 1,024 | — | **42.77** ±9.6% (cv 0.6%) | **19.70** ±2.9% (cv 0.6%) |
+| build.reserved | 1,024 | — | **20.09** ±15.4% (cv 3.0%) | **9.22** ±3.2% (cv 0.4%) |
+| build.zero | 4,096 | — | **47.24** ±5.1% (cv 0.6%) | **21.07** ±0.6% (cv 0.6%) |
+| build.reserved | 4,096 | — | **22.32** ±6.0% (cv 2.2%) | **9.65** ±1.7% (cv 0.4%) |
+| build.zero | 65,536 | — | **49.76** ±3.3% (cv 1.7%) | **28.11** ±0.6% (cv 0.4%) |
+| build.reserved | 65,536 | — | **24.48** ±3.3% (cv 2.1%) | **10.69** ±1.0% (cv 0.4%) |
+| n | build.control ns/op | growRelocate ns/op | delta ns | delta ns/slot |
+|---|---|---|---|---|
+| 256 | 1,843 | 5,033 | 3,190 | 12.46 |
+| 4,096 | 26,725 | 75,472 | 48,747 | 11.90 |
+| 65,536 | 412,164 | 1,162,214 | 750,050 | 11.44 |
+
+**Zero cases flagged** (all spreads ≤ ~9%). Handle-validated access is **1.21 ns flat
+across three decades** of slot count — vs 0.30 ns raw `[Int]` (the ledger+wrapper tax
+≈ 0.9 ns/access) and vs 6.0–11.9 ns `Swift.Dictionary` (the stable-key alternative loses
+5–10× AND degrades with n while the slot-map stays flat). Stale-handle rejection costs the
+same as a hit (0.81 ns — the generation compare is the whole check). The CoW box adds
++2.5 ns/read here (single hop) — sharpening B-8: the ordered families' +10–16 ns is
+per-PROBE re-entry, not the hop itself.
 
 ### Shared — W2
 
@@ -404,10 +505,64 @@ The cow tax shows as ~+7–11 ns; deque's gate fires per push AND per pop.
 
 PENDING (push/pop vs stdlib `Array`).
 
-### Arena — W2
+### Arena (Storage.Generational, the substrate) — batch-2, bench beside tip `52537ef` (commit `b0ac26d`)
 
-PENDING (`grow(to:)` relocation cost vs capacity; the trees' performance suites are read-only
-seeds — trees themselves are NOT in this arc's edit scope).
+Recorded 2026-06-12 06:31–06:40, quiet-gated (60 s sustained-clear), procs=0 at EVERY
+bracket; in-window array canary vs W1: median Δ 2.0% (p90 6.7%) — recording-grade
+conditions throughout.
+
+| shape | n | tower.direct |
+|---|---|---|
+| build.control | 256 | **1,843.36** ±0.4% (cv 2.3%) |
+| growRelocate.curve | 256 | **5,033.06** ±1.9% (cv 1.1%) |
+| build.control | 4,096 | **26,725.26** ±2.1% (cv 0.7%) |
+| growRelocate.curve | 4,096 | **75,472.49** ±0.2% (cv 0.9%) |
+| build.control | 65,536 | **412,164.06** ±0.8% (cv 0.4%) |
+| growRelocate.curve | 65,536 | **1,162,213.56** ±0.2% (cv 0.5%) |
+| contains.valid | 16 | **0.82** ±0.2% (cv 0.6%) |
+| removeInsert.cycle | 16 | **5.20** ±0.7% (cv 0.3%) |
+| iterate.full | 16 | **0.82** ±0.9% (cv 0.6%) |
+| iterate.holes | 16 | **1.37** ±0.5% (cv 0.7%) |
+| contains.valid | 1,024 | **0.81** ±0.8% (cv 0.7%) |
+| removeInsert.cycle | 1,024 | **5.22** ±1.0% (cv 0.8%) |
+| iterate.full | 1,024 | **0.81** ±1.1% (cv 1.0%) |
+| iterate.holes | 1,024 | **1.35** ±0.7% (cv 0.7%) |
+| contains.valid | 65,536 | **0.80** ±1.0% (cv 1.0%) |
+| removeInsert.cycle | 65,536 | **5.25** ±0.6% (cv 0.2%) |
+| iterate.full | 65,536 | **0.80** ±0.1% (cv 0.6%) |
+| iterate.holes | 65,536 | **1.33** ±0.1% (cv 0.3%) |
+| shape | n | tower.table | tower.indexed | stdlib |
+|---|---|---|---|---|
+| init.zero | 0 | **273.22** ±1.9% (cv 3.7%) | — | **0.00** ±0.0% (cv 89.5%) |
+| init.sized | 16 | **261.14** ±2.2% (cv 0.4%) | — | **58.24** ±1.3% (cv 2.4%) |
+| init.sized | 1,024 | **1,053.66** ±1.2% (cv 1.3%) | — | **62.13** ±2.5% (cv 1.1%) |
+| init.sized | 65,536 | **54,665.36** ±9.4% (cv 9.1%) | — | **853.52** ±15.5% (cv 1.7%) |
+| init.firstInsert | 1 | — | **503.73** ±3.5% (cv 2.2%) | **42.55** ±2.9% (cv 1.0%) |
+| build.zero | 1,024 | — | **42.77** ±9.6% (cv 0.6%) | **19.70** ±2.9% (cv 0.6%) |
+| build.reserved | 1,024 | — | **20.09** ±15.4% (cv 3.0%) | **9.22** ±3.2% (cv 0.4%) |
+| build.zero | 4,096 | — | **47.24** ±5.1% (cv 0.6%) | **21.07** ±0.6% (cv 0.6%) |
+| build.reserved | 4,096 | — | **22.32** ±6.0% (cv 2.2%) | **9.65** ±1.7% (cv 0.4%) |
+| build.zero | 65,536 | — | **49.76** ±3.3% (cv 1.7%) | **28.11** ±0.6% (cv 0.4%) |
+| build.reserved | 65,536 | — | **24.48** ±3.3% (cv 2.1%) | **10.69** ±1.0% (cv 0.4%) |
+| n | build.control ns/op | growRelocate ns/op | delta ns | delta ns/slot |
+|---|---|---|---|---|
+| 256 | 1,843 | 5,033 | 3,190 | 12.46 |
+| 4,096 | 26,725 | 75,472 | 48,747 | 11.90 |
+| 65,536 | 412,164 | 1,162,214 | 750,050 | 11.44 |
+
+**The grow door priced** (growRelocate − build.control per op):
+
+| n | build.control ns/op | growRelocate ns/op | delta ns | delta ns/slot |
+|---|---|---|---|---|
+| 256 | 1,843 | 5,033 | 3,190 | 12.46 |
+| 4,096 | 26,725 | 75,472 | 48,747 | 11.90 |
+| 65,536 | 412,164 | 1,162,214 | 750,050 | 11.44 |
+
+**11.4–12.5 ns per relocated slot, linear and stable** across 256 → 64k — the W5
+`grow(to:)` door's cost curve, previously unmeasured. Substrate validation (`contains`)
+is 0.81 ns flat; the slot-map wrapper adds 0.4 ns. `iterate.holes` (50% occupancy) costs
+1.33 vs 0.80 ns full — **the `_occupied` hole-skip ≈ +0.53 ns per visited slot** (≈2× per
+LIVE element at half-holes): the SoA re-cut's iterate-side number.
 
 ## Banked candidates (arc-5 gate inputs; MEASURE-ONLY discipline)
 
@@ -419,8 +574,10 @@ seeds — trees themselves are NOT in this arc's edit scope).
 | B-4 | **Tiny-array build cost**: append.zero @16 ≈ 24.7 ns/op tower vs 8.6 stdlib — first-allocation policy difference dominates (stdlib's empty singleton + first-growth heuristics vs the column's immediate allocate). | array+buffer-linear / zero-capacity init + first growth | Ergonomics/policy datum for the family round; n=16 rows are init+teardown-dominated by design (documented). |
 | B-5 | **Harness lesson — sub-0.1 ns/op bulk shapes need ≥16M-op batches AND still carry 25–30% spread at mid-n** (`set.span` @1k); at 64k the larger target stabilized them to ≤7.5%. | bench harness (`spanOpsTarget`) | W2 families should put bulk-span rows at large n or report them qualitative-only at mid n. |
 | B-6 | (strength, not defect) **Payload detach inversion**: `Shared` detach 1.66× faster than stdlib for class elements @1k. | shared / detach retain loop | Record only — corroborates that B-2 is about the trivial-element fast path specifically, not copy machinery generally. |
-| B-7 | **Every `Hash.Indexed` remove is Θ(bucketCapacity)**: `decrement(after:)` sweeps the ENTIRE bucket table unconditionally (`Hash.Table+PositionUpdates.swift:45–57`, called from `Hash.Indexed+Engine.swift:110`) — the documented O(n−rank) dense shift is the cheaper half. Quantified (hash-table pin `2eae321`): evict pairs at n=64k cost 141–238 µs vs stdlib's flat 42–68 ns (≈3,000–5,600×); the curve is super-linear through {16, 256, 4k, 64k} in BOTH ordered families. **Anomaly facet**: at n ≥ 4k, back-eviction (zero shift, zero fixups, read-only sweep) costs MORE than front-eviction (dict @64k: 199 µs vs 158 µs, spreads ≤ ~11%) — inverted vs any sweep-only model; unexplained. | hash-table / `Hash.Table+PositionUpdates.swift:45` + `Hash.Indexed+Engine.swift:110` (both ordered families ride it) | The arc's largest find; an arc-5-class fix inside arc-2's package (last-rank fast path · early-exit · rank→bucket back-pointers · epoch-offset). [BENCH-011] dual-mode gates any fix; the inversion facet needs its own minimal probe first. |
+| B-7 | **Every `Hash.Indexed` remove is Θ(bucketCapacity)**: `decrement(after:)` sweeps the ENTIRE bucket table unconditionally (`Hash.Table+PositionUpdates.swift:45–57`, called from `Hash.Indexed+Engine.swift:110`) — the documented O(n−rank) dense shift is the cheaper half. Quantified (hash-table pin `2eae321`): evict pairs at n=64k cost 141–238 µs vs stdlib's flat 42–68 ns (≈3,000–5,600×); the curve is super-linear through {16, 256, 4k, 64k} in BOTH ordered families. **Anomaly facet**: at n ≥ 4k, back-eviction (zero shift, zero fixups, read-only sweep) costs MORE than front-eviction (dict @64k: 199 µs vs 158 µs, spreads ≤ ~11%) — inverted vs any sweep-only model; unexplained. | hash-table / `Hash.Table+PositionUpdates.swift:45` + `Hash.Indexed+Engine.swift:110` (both ordered families ride it) | The arc's largest find; an arc-5-class fix inside arc-2's package (last-rank fast path · early-exit · rank→bucket back-pointers · epoch-offset). [BENCH-011] dual-mode gates any fix; the inversion facet needs its own minimal probe first. **PROBE VERDICT (06-12, seat-authorized /tmp probe, read-only)**: the inversion reproduces at the ENGINE level (Hash.Indexed direct, no family wrapper) and is KEY-PATTERN-INDEPENDENT — a bijective key shuffle preserves back/front at 1.15× (64k) and 1.24× (4k) exactly; key-clustering and wrapper effects are ELIMINATED. Remaining suspects are inside the remove path's sweep/insert interaction; the B-7 fix shapes (skip-sweep fast path) would moot the back case regardless. Probe log: `arc-bench-W2-logs/b7-inversion-probe.log`. |
 | B-8 | **Ordered-family READS through `Shared` pay ~+10–16 ns/lookup** (dict lookup.hit: cow 24.4–34.8 vs direct 11.2–19.0; set mirrors) — array's read rows showed cow≈direct parity, so the tax is NOT the box hop itself but how `Hash.Indexed`'s probe loop re-enters the box per access instead of borrowing the dense span once. | set-ordered/dict-ordered contains/withValue paths over `Shared<…, Hash.Indexed<…>>` | Family-round candidate (span-first probe loop); cheap relative to B-7 but on every keyed read. |
+| B-9 | **Per-instance hash seeding + O(capacity) init fill**: Hash.Table init costs 273 ns (seed syscall) where stdlib's empty Set is free, and sized init pays ~0.83 ns/bucket (54.7 µs at 64k) where stdlib defers. Steady inserts ≈2.2× stdlib. | hash-table / `Hash.Table.swift:124` (`makeSeed`), init's `buffer.fill` | Engine-round candidates: lazy seeding (seed at first insert), lazy/incremental bucket fill. The per-instance seed is a deliberate hardening choice — the COST of the choice is now on record (it buys per-instance probe-sequence diversity). |
+| B-10 | **Counted-loop per-rep arena create traps "pool exhausted" under -O** while the IDENTICAL straight-line sequence succeeds (bisect: exact-fill 4 ✓, 256 ✓, fill-200 ✓, then the first in-loop rep traps). Sidestepped in the benches by making the per-rep capacity loop-variant (`n &+ (r & 1)`). | bench-side observation against arena `52537ef`; suspicion class: R-6-adjacent (-O move-only lifecycle mishandling, cf. swiftlang#89832) | NO wall-claim — mechanism unproven; minimal repro is a candidate /issue-investigation (institute Issues only, per standing policy). The bisect evidence + workaround are preserved in the W4 report. |
 | B-1′ | (evidence update for B-1) The ~7–9 ns `Shared` per-mutation tax is **cross-family invariant**: array set.indexed Δ≈7.5, queue cycle Δ≈6.8–7.4, deque pairs Δ≈+7–11, ordered insert Δ≈+5–11. One shared fix, not N family fixes. | shared / mutation gate chain | Strengthens B-1's "quantify across families first" disposition — done; the fix is singular. |
 
 ## Arc-5 gate inputs (W3 — called out explicitly; quantification rows = batch-2)
@@ -432,8 +589,12 @@ seeds — trees themselves are NOT in this arc's edit scope).
    pays TWO independent stdlib-Array paths (refcount-stable but bounds-checked, separately
    allocated, separately cached) vs a fused SoA block's one. Quantification rows (batch-2,
    slot-map + arena grants): handle-validation ns/access · insert/remove (occupancy
-   writes) · iterate-occupied · arena `grow(to:)` relocation vs capacity. Until then this
-   input is STRUCTURAL, not yet a number.
+   writes) · iterate-occupied · arena `grow(to:)` relocation vs capacity. **QUANTIFIED at
+   batch-2 (06-12)**: validation 0.81 ns flat (substrate) / 1.21 ns (wrapper) vs 0.30 ns raw
+   array — the two-stdlib-Array ledger costs ≈ 0.9 ns/access all-in; hole-skip iterate
+   +0.53 ns/visited slot at 50% occupancy; grow(to: 2n) relocation 11.4–12.5 ns/slot,
+   linear 256→64k. The arc-5 SoA re-cut's win is bounded by these sub-ns/access and
+   ~12 ns/slot-relocate terms.
 2. **Tree.Position re-cut.** The ~16 B/slot position side-table is already explicit in the
    read-only seed: trees' `Performance Tests.swift:413–422` accounts bytes/slot = node
    stride + 9 B column ledger (8 generation + 1 occupancy) + 16 B
@@ -450,11 +611,10 @@ seeds — trees themselves are NOT in this arc's edit scope).
 | Family | Inventory measures pending | Blocking grant |
 |---|---|---|
 | set / dict (flat) | insert / lookup-hit / lookup-miss / remove / iterate vs stdlib | arc-2 owns through their W3 |
-| hash-table (engine) | per-instance seed cost (init + first-insert), grow/re-seed spike | arc-2 (their W1 package; tip moved to `2eae321` mid-W2) |
-| slot-map | handle-validation per access; insert/remove/iterate vs array | arc-2 W2 |
-| arena | `grow(to:)` relocation vs capacity | arc-2 W2 |
-| shared | detach vs in-place; gate overhead isolated (R4 methodology through the real box) | arc-1 (tip moved to `827b2f0`) |
-| stack | push/pop vs stdlib | seat re-grant after the Sendable fix (was `7e4200a` → `1359c17` → moving) |
+| shared | detach vs in-place; gate overhead isolated (R4 methodology through the real box) | arc-1 Phase-2 terminal gate |
+| stack | push/pop vs stdlib | seat re-grant after the Sendable fix |
+
+(hash-table, slot-map, arena: MEASURED at batch-2, 2026-06-12 — sections above.)
 
 ## References
 
