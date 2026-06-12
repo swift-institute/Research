@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-06-11
+version: 1.1.0
+last_updated: 2026-06-12
 status: RECORDED
 tier: 2
 scope: ecosystem-wide
@@ -816,6 +816,62 @@ conditions throughout.
 is 0.81 ns flat; the slot-map wrapper adds 0.4 ns. `iterate.holes` (50% occupancy) costs
 1.33 vs 0.80 ns full — **the `_occupied` hole-skip ≈ +0.53 ns per visited slot** (≈2× per
 LIVE element at half-holes): the SoA re-cut's iterate-side number.
+
+### Round M re-record — the fused-plane ledger (2026-06-12), arena tip `5f50bd0`
+
+The [BENCH-011] dual-mode re-record after the B1 plane re-cut (the stdlib `[Int]`/`[Bool]`
+ledger dissolved into ONE `Memory.Heap`-backed parity-token plane; span reads + four documented
+pointer transitions — storage-arena `5f50bd0`, seat ruling R-12/R-13 on REPORT-round-m-W1/W2).
+
+**Substrate (recording-grade: load bracketed 2.68→2.71, cross-run spread ≤3.2%, cv ≤2.1%,
+4 invocations, clean `.build`):**
+
+| shape | n | tower.direct (was → now) |
+|---|---|---|
+| growRelocate.curve | 65,536 | 1,162,214 → **823,293** (−29%) |
+| build.control | 65,536 | 412,164 → **179,789** (−56%) |
+| contains.valid | 1,024 | 0.81 → **0.80** |
+| removeInsert.cycle | 1,024 | 5.22 → **3.86** (−26%) |
+| iterate.full | 1,024 | 0.81 → **0.67** (−17%) |
+| iterate.holes | 1,024 | 1.35 → **0.94** (−30%) |
+
+**The grow door re-priced** (growRelocate − build.control, per slot — the criterion metric):
+
+| n | was | now |
+|---|---|---|
+| 256 | 12.46 | **10.45** |
+| 4,096 | 11.90 | **10.08** |
+| 65,536 | 11.44 | **9.82** |
+
+**−14% on the door @64k — the R-13 criterion (≤12.5 ns/slot) passes outright.** The
+hole-skip is HALVED: holes − full = +0.53 → **+0.27 ns per visited slot**. Validation holds
+0.80–0.81 flat (span reads pay bounds checks; the fused single-load read pays them back).
+
+**Attribution (same-session worktree bisect, quiet window):** pre-R-5 `b0ac26d` re-measures
+raw grow @64k at 17.97 ns/slot vs its recorded 17.73 — 1.4% cross-session replication (the
+calibration anchor); R-5's two-pass release restructure costs +2.3% raw (17.97 → 18.38); the
+plane re-cut takes it to 12.56 raw (−32% vs R-5). Method note of record: the door price is
+the DELTA metric above — raw `growRelocate/n` is NOT comparable to it (a Round-M W2 confusion,
+caught and corrected at this re-record).
+
+**Family tier (slot-map wrapper, corroboration-grade: 12 invocations across a mixed-load
+evening window; stdlib anchors replicate — `stdlib.array` access.valid 0.29–0.31 vs recorded
+0.29–0.34, `stdlib.dictionary` cycle 18.98–21.56 vs recorded 19.60–20.96):**
+
+| shape @1,024 | recorded | now (median-of-12) |
+|---|---|---|
+| access.valid (direct) | 1.21 | **0.82** (−32%; the +0.4 wrapper tax over substrate-contains collapsed) |
+| access.valid (cow) | 3.75 | **1.37** (−64%) |
+| access.stale | 0.82 | **0.82** (parity — one-load fail-fast both shapes) |
+| removeInsert.cycle (direct) | 5.15 | **3.91** (−24%) |
+| removeInsert.cycle (cow) | 10.81 | **5.68** (−47%) |
+| iterate.full | 0.81 | **0.68** (−15%) |
+| iterate.holes | 1.33 | **0.95** (−29%) |
+| build.reserved | 6.51 | **2.78** (−57%) |
+
+The arena rows above this addendum (tip `52537ef`) remain the PRE-plane record; this section
+is the post-plane baseline of record for the substrate. Full run data: REPORT-round-m-W2/W3
+(.handoffs).
 
 ## Banked candidates (arc-5 gate inputs; MEASURE-ONLY discipline)
 
