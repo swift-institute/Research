@@ -644,6 +644,17 @@ The `failed type lookup … unknown error` warning is the exact §A9 `swift_getT
 
 **Disposition**: same as §A9 — no Institute-side code fix; require Swift 6.4+ for `Set<Tagged>.Ordered` / `Set<Index>.Ordered` / `Dictionary.Ordered<Tagged-key>` paths; wait for the Swift 6.5 release.
 
+**Re-probe (2026-06-12, Round M C2 — post-reshape)**: with set-ordered fully reshaped onto
+`Hash.Indexed` (3e44537) and graph on the tower columns (cc97736), the four guards were removed
+on 6.3.2 and the suites re-run from a clean build: **all four SIGSEGV — in the full-suite run
+AND each in isolation**. The vector therefore does NOT depend on the old `Hash.Table`-backed
+set-ordered internals: axis-B container-agnosticism is re-confirmed for the NEW engine — the
+trigger remains forcing `Tagged`'s value-witness metadata for `Set<Graph.Node>.Ordered`
+(= `Set<Tagged>.Ordered`) elements under 6.3's incomplete `SuppressedAssociatedTypes` codegen,
+whatever the container's backing. Guards restored VERBATIM (zero source delta; graph stays at
+its tip); `Toolchain.hasTaggedMetadataSIGSEGV` and the `compiler(<6.4)` gate stand. Retirement
+re-tries at the swift-6.4-RELEASE canon bump (the staged-bump ruling's wall re-probes).
+
 ---
 
 ### A10. Unconditional protocol-conformance extension leaks `Copyable` to primary declaration of `~Copyable`-generic nested type
