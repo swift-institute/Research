@@ -5937,6 +5937,25 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-06-12-tower-phase-3-seat-closeout.md",
+      "date": "2026-06-12",
+      "title": "Tower Phase 3: the Seat's Close-Out — Verify → Measure → Fix in One Phase",
+      "packages": [
+        "swift-shared-primitives",
+        "swift-hash-table-primitives",
+        "swift-dictionary-primitives",
+        "swift-dictionary-ordered-primitives",
+        "swift-storage-primitives",
+        "swift-async-primitives",
+        "swift-stack-primitives",
+        "swift-heap-primitives",
+        "swift-pool-primitives",
+        "swift-buffer-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
