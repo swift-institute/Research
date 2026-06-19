@@ -24,6 +24,13 @@ provenance: tier-3 /research-process applied follow-up (HANDOFF-strata-package-m
 
 **Coen ten Thije Boonkkamp · Swift Institute · June 2026**
 
+> **⚠ STATE-PARTIALLY-STALE — re-verified 2026-06-18 (per [RES-013a]).** This map was file-verified **2026-06-06**; the **W5-1 reshape landed 2026-06-10**, *after*, so several state-claims are now stale against live source:
+> - the §C.2.5 / §D.1 "deferred allocation arc" is **largely COMPLETE** — allocation already moved onto the **pool** (`Storage.Generational` over `Memory.Pooling`), not a pending bump-arena dissolve;
+> - labels are superseded: `Storage.Arena` → `Storage.Generational`; the seam `Memory.Allocator.Protocol` → live `Memory.Allocating` / `Memory.Allocation.Protocol`;
+> - `Buffer.Arena` is **kept-and-orphaned** (broken on the renamed product), not a dissolve target.
+>
+> The **placement LAW** this map applies remains valid — it is now canon in **`Skills/modularization` `[MOD-PLACE]`**. The map's **dated state-inventory** is not ground truth: re-verify any state-claim at source before relying. Always-fresh tracking: **`Scripts/layer-placement-classify.py`** + the forthcoming consolidated stack-state reference. (See also `.handoffs/REPORT-allocation-arc-scout.md`.)
+
 > **What this is.** The FINAL, definitive package/module map + strata dependency DAG for the MSB
 > data-structure tower. The calculus (`decomposition-layer-placement-calculus.md`) established the
 > *principles* (which layer owns which axis); this note applies them **exhaustively and empirically** to
