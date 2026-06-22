@@ -2,8 +2,8 @@
 
 <!--
 ---
-version: 3.1.0
-last_updated: 2026-05-20
+version: 3.2.0
+last_updated: 2026-06-22
 status: IMPLEMENTED
 tier: 3
 scope: ecosystem-wide
@@ -928,8 +928,66 @@ Discipline lesson saved to memory as `feedback_clean_build_before_compiler_limit
 
 `Binary.Bytes.Input.View` (currently in `swift-binary-parser-primitives`) is now a candidate for deprecation — `Cursor<Binary>` is the structurally-equivalent replacement under the unified cursor architecture. Migration plan deferred to a follow-up arc.
 
+## v3.2.0 Amendment — Owned-Storage Dissolved; Binary Reverts to a Dependency-Free Namespace (Truly-Primitive Review)
+
+Supervisor direction 2026-06-22, as part of the bit/byte/binary "truly
+primitive" cleanup: **the owned-storage promotion (Option #8, shipped v3.0.0
+and refined v3.1.0) is SUPERSEDED. `Binary` reverts to a dependency-free
+namespace** — the v1.0.0 Option A shape — carrying only endianness policy and
+the fixed-width-integer ↔ byte codec.
+
+### Why Option #8 is retired
+
+Option #8 promoted `Binary` from a namespace to an owned `~Copyable` struct
+over `Memory.Contiguous<Byte>`, on the premise that the binary-domain wanted a
+String/Path/Byte-style owned-buffer type. The truly-primitive review rejects
+that premise: it conflates two orthogonal concerns this very document already
+separated —
+
+- **`Binary` is a representation *domain*** (Q2/Q6: endianness, encoding rules,
+  the `Binary.*` namespace), not a storage container. Its identity is the
+  *interpretation* of bytes, not their ownership.
+- **Owned byte storage is a *Storage*-layer concern.** The canonical owned byte
+  buffer is `Storage.Contiguous<Byte>` (i.e.
+  `Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Byte>`,
+  swift-storage-primitives) per the `[MOD-PLACE]` layer-placement calculus
+  (Memory ⊏ Storage ⊏ Buffer ⊏ ADT). Binding owned storage onto the `Binary`
+  *namespace* placed a Storage secret at the wrong layer and forced five
+  foundational deps (Byte, Cardinal, Index, Memory, Ownership) onto a namespace
+  that should be a dependency-free anchor.
+
+Empirically, no consumer needed `Binary`'s *ownership*: every owned-`Binary`
+site (the 3 `swift-ascii` `Binary(bytes).parse*` sites, the `binary-parser`
+`extension Binary { parse* }` convenience, and the test suites) parses-then-
+discards — a *borrowed* byte span suffices. The binary-domain parse/serialize
+operations already live on `Span.\`Protocol\` where Element == Byte` (the W3
+prune); the owned struct was a thin, unnecessary wrapper over that seam.
+
+### What landed (v3.2.0)
+
+| Package | Change |
+|---|---|
+| `swift-binary-primitives` | `Binary.swift`: `struct Binary: ~Copyable …` → `public enum Binary {}`. `Binary+Ownership.Borrow.Protocol.swift` deleted. Owned-struct test suite deleted. Stranded duplicate `Bit.Order Tests.swift` deleted + `bit` dep dropped (bit-primitives owns `Bit.Order` + its test). Dead `Tagged_Primitives` re-export dropped from Binary Endianness. `Binary Primitive` target deps → `[]`; **package floor = byte-only** (Cardinal/Index/Memory/Ownership/Bit dropped). Namespace manifest comment amended. |
+| `swift-binary-parser-primitives` | `extension Binary { parse / parsePrefix / parsePrefixUnchecked / parseWhole }` (delegated to `self.view`) removed — the canonical engine on `Span.\`Protocol\`` is unchanged. `Binary.withInput` (static) + the `Binary.*` namespace extensions are unaffected. Parse + LEB128 test suites migrated to the `[Byte].span.parse*` seam. |
+| `swift-foundations/swift-ascii` | The 3 `Binary(bytes).parse*` sites migrated to `bytes.span.parse*`. |
+
+`Binary.Borrowed` was already deleted in the W3 prune; borrowed byte views are
+`Swift.Span<Byte>`. `Cursor<Binary>` (which depended on the now-removed
+`Ownership.Borrow.Protocol` conformance) had no real instantiations — only
+doc-comment mentions — so its removal is inert.
+
+### Verdict table — v3.2.0
+
+| Option | v3.0.0 Verdict | v3.2.0 Verdict |
+|---|---|---|
+| A — Binary/Byte/Bit as three peer namespace domains | PARTIALLY SUPERSEDED (Binary → owned struct) | **RE-ACCEPTED (full)** — Binary is a dependency-free namespace; the canonical shape |
+| #8 — T + T.Borrowed via Ownership.Borrow.Protocol (owned struct) | LANDED | **RETIRED** — owned storage is a Storage-layer concern (`Storage.Contiguous<Byte>`), not a Binary-namespace concern |
+
+[Verified: 2026-06-22] swift-binary-primitives 167 tests / 80 suites; swift-binary-parser-primitives 77 tests / 28 suites; swift-foundations/swift-ascii 501 tests / 151 suites — all pass. Commits: swift-binary-primitives `24e7465`, swift-binary-parser-primitives `076a0a38`, swift-foundations/swift-ascii (this arc).
+
 ## Changelog
 
+- **v3.2.0** (2026-06-22): IMPLEMENTED — Owned-storage SUPERSEDED; `Binary` reverts to a dependency-free namespace (Option A re-accepted, Option #8 retired) per the bit/byte/binary truly-primitive review (supervisor 2026-06-22). `struct Binary` → `enum Binary {}`; `Binary+Ownership.Borrow.Protocol.swift` deleted; binary-primitives floor = byte-only (Cardinal/Index/Memory/Ownership/Bit dropped). Owned byte storage is `Storage.Contiguous<Byte>` (swift-storage-primitives) per `[MOD-PLACE]`; borrowed byte views are `Swift.Span<Byte>`; binary-domain parse/serialize remain on `Span.Protocol where Element == Byte`. binary-parser's `extension Binary { parse* }` convenience removed (canonical Span.Protocol engine unchanged); swift-ascii's 3 `Binary(bytes).parse*` sites + binary-parser parse/LEB128 tests migrated to `[Byte].span.parse*`. Verified: swift-binary-primitives 167/80, swift-binary-parser-primitives 77/28, swift-foundations/swift-ascii 501/151 tests pass. Commits: swift-binary-primitives `24e7465`, swift-binary-parser-primitives `076a0a38`, swift-foundations/swift-ascii (this arc). See §"v3.2.0 Amendment".
 - **v3.1.0** (2026-05-20): IMPLEMENTED — Phase 3 of the byte cascade landed. The `Binary.Bytes` sub-namespace is eliminated: `Binary.Bytes.Machine.*` collapses to `Binary.Machine.*` (12 file renames in `swift-binary-parser-primitives/Sources/Binary Machine Primitives/`); `Binary.Bytes.withBorrowed` static-accessor reframes to instance methods on `Binary` (borrowing) and `Binary.Borrowed`: `parse / parsePrefix / parseWhole / parsePrefixUnchecked`; `Binary.Bytes.withInput` static helpers move to `extension Binary`; the `Binary.Bytes` namespace declaration is deleted. The two original interpreters (array-path + contiguous-path) unify into one engine on `Binary.Borrowed._parsePrefix` — semantically identical to both originals (verified via git-show diff). Supporting infrastructure added: `Binary.init(_ bytes: [Byte])` (canonical byte-domain owned init using `UnsafeMutableBufferPointer.initialize(fromContentsOf:)`), `Binary.Borrowed.init<C: Memory.Contiguous.Protocol>(_ source)` (lifetime-bound via `_overrideLifetime`). No backward-compat shim. Workspace-wide grep zero matches (excluding markdown). Ecosystem build gate green across swift-binary-primitives (377 tests / 120 suites pass — 13 new for owned `struct Binary` API), swift-binary-parser-primitives (93 tests / 30 suites pass — 24 new for the parse instance-method API), swift-binary-coder-primitives (45 tests), swift-lexer-primitives (48 tests). Predecessor `HANDOFF-byte-span-cascade.md` Phase 3 framing of "optional successor arc" retired. The earlier `Binary.Bytes.Input.View` deprecation candidate noted in v3.0.0 §What landed has now landed via this arc's cascade. Source: HANDOFF-binary-bytes-reframe.md Findings § (workspace root). Sister-arc commits (11 across 7 repos): swift-binary-primitives `814f688`, `a75408f`, `1a0e127`, `3f5c846`; swift-binary-parser-primitives `de9a1f52`, `8a041cdd`, `acc7fc2e`; swift-byte-parser-primitives `68f18b5`; swift-coder-primitives `c32aec5`; swift-binary-coder-primitives `3d6c527`; swift-lexer-primitives `f5d94e0`; plus swift-foundations/swift-ascii Wave 2 cascade `01a329d`, `9a05eb3`, `caa70a9` (independent ASCII migration ongoing in parallel session, not blocking).
 - **v3.0.0** (2026-05-20): IMPLEMENTED — Option #8 (T+T.Borrowed via Ownership.Borrow.Protocol) ships as the canonical institute pattern for `Binary`. `struct Binary: ~Copyable` over `Memory.Contiguous<Byte>` with `count: Index<Byte>.Count`; nested `Binary.Borrowed: ~Copyable, ~Escapable` over `Span<Byte>` with matching typed count; `Ownership.Borrow.Protocol` conformance enabling `Cursor<Binary>`. Byte-domain typing throughout (Memory.Contiguous<Byte> storage + Span<Byte> borrowed view); UInt8 reserved for stdlib-interop boundary as `@_disfavoredOverload`. v2.0.0's §"Empirical Finding" RETRACTED — the claimed `MemberImportVisibility` limitation was 100% stale SwiftPM build cache; hard `.build` clean resolves cleanly. Discipline saved to memory `feedback_clean_build_before_compiler_limitation_claim`. Verified: swift-binary-primitives 364/115 + swift-binary-parser-primitives 69/25 tests pass. Companion: cursor-shape-a-vs-three-worlds.md v1.5.0 adds Binary as third Case-B conformer.
 - **v2.0.0** (2026-05-20): Tier 3 ecosystem-wide RECOMMENDATION → IMPLEMENTED. Adds Option #8 (T+T.Borrowed via Ownership.Borrow.Protocol — String/Path/Byte precedent) which v1.0.0 missed. Empirical finding [Verified: 2026-05-20]: Swift's `MemberImportVisibility` treats extensions on struct types more strictly than on empty-enum namespaces, blocking the owned-struct shape across the 25+ binary-extension chains in the ecosystem. The Text-style fallback (`enum Binary {}` + nested `Binary.Borrowed` + `Ownership.Borrow.Protocol` conformance) landed instead — preserves all the conformance benefits (`Cursor<Binary>` works), retains the nominal `Binary.Borrowed` type, gains the typed-count discipline (`Index<Byte>.Count` on Borrowed), and keeps the binary ecosystem compile-clean. Source: `swift-binary-primitives/Sources/Binary Namespace/Binary.Borrowed.swift` + `Binary+Ownership.Borrow.Protocol.swift`. Build + test verification: swift-binary-primitives 364 tests / 115 suites pass; swift-binary-parser-primitives 69 tests / 25 suites pass. Companion amendment: `cursor-shape-a-vs-three-worlds.md` v1.4.0 records `Binary` as a third Case-B conformer alongside Byte and Text.
