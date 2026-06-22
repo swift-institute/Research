@@ -191,6 +191,12 @@ public typealias Iterating = Iterator.`Protocol`
 public typealias Parsing   = Parser.`Protocol`
 ```
 
+For a **subject-nested** machine (the agent noun lives under a subject namespace,
+e.g. `Memory.Allocator`) the alias lives at the **subject's** scope —
+`Memory.Allocating`, never a bare module-root `Allocating` and never
+`Memory.Allocator.Allocating`. The alias always sits at the agent noun's
+*enclosing* scope.
+
 The gerund alias is the form written at conformance and constraint sites,
 because it reads as English where the backticked form does not:
 
@@ -387,9 +393,17 @@ extension Memory {
     public struct Allocator<Resource: ~Copyable & Memory.Region>: ~Copyable { … }  // the witness — the value you hold
 }
 extension Memory.Allocator { public typealias \`Protocol\` = __MemoryAllocatorProtocol }
-public typealias Allocating = Memory.Allocator.\`Protocol\`           // gerund alias, on the AGENT NOUN
-extension Memory.Allocator: __MemoryAllocatorProtocol { … }          // conform via the hoisted name
+extension Memory { public typealias Allocating = Memory.Allocator.\`Protocol\` }   // gerund at the SUBJECT scope — Memory.Allocating, NEVER a bare top-level Allocating
+extension Memory.Allocator: __MemoryAllocatorProtocol { … }          // the witness conforms via the hoisted name
+extension Memory.Allocator.Pool:  __MemoryAllocatorProtocol { … }    // sibling concrete conformers — same hoisted name
+extension Memory.Allocator.Arena: __MemoryAllocatorProtocol { … }
 ```
+
+The gerund alias sits at the agent noun's **enclosing scope** — module-root for
+a root namespace (`Iterating`), the **subject** namespace for a subject-nested
+machine (`Memory.Allocating` for `Memory.Allocator`). A bare top-level
+`Allocating`, or a namespace-nested `Memory.Allocator.Allocating`, is forbidden
+(see `[PKG-NAME-002]`).
 
 `[Verified: 2026-06-22]` — swiftc 6.3.2 (`/tmp` typecheck spike): the param-free
 `Memory.Allocator.\`Protocol\`` and the parameterised `Memory.Allocator.\`Protocol\`<E>`
