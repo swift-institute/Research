@@ -2,12 +2,13 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.1.1
 last_updated: 2026-06-22
 status: DECISION
 tier: 3
 scope: ecosystem-wide
 changelog:
+  - "1.1.1 (2026-06-22): §6.1 fix — the gerund typealias RHS targets the hoisted __MemoryAllocatorProtocol directly, NOT Memory.Allocator.Protocol (an unbound generic member is rejected in a typealias RHS on swiftc 6.3.2, though it resolves fine in constraint/conformance position). Aligns the example with the pre-existing [PKG-NAME-006]. Surfaced by the memory-allocation executor (commit 1153e09 on swift-memory-allocation-primitives)."
   - "1.1.0 (2026-06-22): §6.1 added — generic agent-noun *tower* nests (Memory.Allocator<Resource> under non-generic root Memory) carry the canonical triple on the AGENT NOUN via the [API-IMPL-009] hoist (Memory.Allocator.Protocol resolves unbound; the witness is the generic struct itself). Disallows the deverbal-noun protocol home (Memory.Allocation.Protocol / Memory.Allocating) — its 'generics cannot host a protocol' premise is disproven. Verified swiftc 6.3.2. Provenance for the BREAKING code-surface [API-IMPL-023] amendment + the [PKG-NAME-015] clarification; reopens seat ruling R-1 (2026-06-12)."
   - "1.0.1 (2026-05-26): naming: bulk tier Iterator.Span/Contiguous → Iterator.Chunk (+ module Iterator_Chunk_Primitives / protocol __IteratorChunkProtocol); Memory.Contiguous.Iterator example → Memory.Contiguous. Manner example (§7.1/§7.2/§9), the §6 hoisting worked example, and the §7.3/§9.3 package tier updated to the final Chunk name; Swift.Span (stdlib payload), Iterator.Borrow (keep-and-lend), and the Memory.Contiguous subject left untouched."
 supersedes:
@@ -393,7 +394,7 @@ extension Memory {
     public struct Allocator<Resource: ~Copyable & Memory.Region>: ~Copyable { … }  // the witness — the value you hold
 }
 extension Memory.Allocator { public typealias \`Protocol\` = __MemoryAllocatorProtocol }
-extension Memory { public typealias Allocating = Memory.Allocator.\`Protocol\` }   // gerund at the SUBJECT scope — Memory.Allocating, NEVER a bare top-level Allocating
+extension Memory { public typealias Allocating = __MemoryAllocatorProtocol }   // gerund → HOISTED protocol, at the SUBJECT scope (Memory.Allocating, NEVER bare top-level); see the RHS note below
 extension Memory.Allocator: __MemoryAllocatorProtocol { … }          // the witness conforms via the hoisted name
 extension Memory.Allocator.Pool:  __MemoryAllocatorProtocol { … }    // sibling concrete conformers — same hoisted name
 extension Memory.Allocator.Arena: __MemoryAllocatorProtocol { … }
@@ -403,7 +404,14 @@ The gerund alias sits at the agent noun's **enclosing scope** — module-root fo
 a root namespace (`Iterating`), the **subject** namespace for a subject-nested
 machine (`Memory.Allocating` for `Memory.Allocator`). A bare top-level
 `Allocating`, or a namespace-nested `Memory.Allocator.Allocating`, is forbidden
-(see `[PKG-NAME-002]`).
+(see `[PKG-NAME-002]`). The alias's **right-hand side** targets the hoisted
+`__MemoryAllocatorProtocol` directly, not `Memory.Allocator.\`Protocol\``: an
+unbound generic member is rejected in a typealias RHS (`[Verified: 2026-06-22]`,
+swiftc 6.3.2 — *"reference to generic type 'Memory.Allocator' requires
+arguments"*) even though `Memory.Allocator.\`Protocol\`` resolves fine in
+**constraint and conformance** position. This is the `[PKG-NAME-006]`
+hoisted-generic-namespace rule; the `.\`Protocol\`` member is retained as the
+canonical-triple spelling for constraint sites.
 
 `[Verified: 2026-06-22]` — swiftc 6.3.2 (`/tmp` typecheck spike): the param-free
 `Memory.Allocator.\`Protocol\`` and the parameterised `Memory.Allocator.\`Protocol\`<E>`
