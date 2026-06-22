@@ -2,12 +2,13 @@
 
 <!--
 ---
-version: 1.0.1
-last_updated: 2026-05-26
+version: 1.1.0
+last_updated: 2026-06-22
 status: DECISION
 tier: 3
 scope: ecosystem-wide
 changelog:
+  - "1.1.0 (2026-06-22): §6.1 added — generic agent-noun *tower* nests (Memory.Allocator<Resource> under non-generic root Memory) carry the canonical triple on the AGENT NOUN via the [API-IMPL-009] hoist (Memory.Allocator.Protocol resolves unbound; the witness is the generic struct itself). Disallows the deverbal-noun protocol home (Memory.Allocation.Protocol / Memory.Allocating) — its 'generics cannot host a protocol' premise is disproven. Verified swiftc 6.3.2. Provenance for the BREAKING code-surface [API-IMPL-023] amendment + the [PKG-NAME-015] clarification; reopens seat ruling R-1 (2026-06-12)."
   - "1.0.1 (2026-05-26): naming: bulk tier Iterator.Span/Contiguous → Iterator.Chunk (+ module Iterator_Chunk_Primitives / protocol __IteratorChunkProtocol); Memory.Contiguous.Iterator example → Memory.Contiguous. Manner example (§7.1/§7.2/§9), the §6 hoisting worked example, and the §7.3/§9.3 package tier updated to the final Chunk name; Swift.Span (stdlib payload), Iterator.Borrow (keep-and-lend), and the Memory.Contiguous subject left untouched."
 supersedes:
   # Fully superseded — primary content is the operation-domain naming/organizing rule, absorbed here:
@@ -354,6 +355,57 @@ protocols live:
   unbound generic resolves; a depth-2 path resolves *only* when the top
   namespace is non-generic. This is precisely why §3 mandates a non-generic enum
   namespace.
+
+### 6.1 Generic agent-noun nests — the witness is the struct, the triple comes via the hoist
+
+§3 mandates a **non-generic** namespace, and for a leaf operation domain
+(`Iterator`, `Parser`) that namespace is a non-generic `enum` hosting a separate
+generic `Namespace.Witness` (§5). Some agent-noun domains are instead modelled as
+a **generic "tower" struct** directly under a non-generic *root* namespace —
+`Memory.Allocator<Resource>` under `enum Memory` — where the agent-noun type *is*
+the value (the witness) you hold, parameterised over the resource it operates on.
+Here the agent noun cannot be a non-generic enum, and a protocol cannot be
+declared nested in a generic type (§6).
+
+This does **not** force the active protocol off the agent noun. Apply the §6
+hoist: declare the capability protocol at module scope (`__MemoryAllocatorProtocol`)
+and re-expose it via a param-free `typealias \`Protocol\`` on the generic struct
+(per `[API-IMPL-009]`). `Memory.Allocator.\`Protocol\`` then resolves **unbound** —
+because the *root* (`Memory`) is non-generic, this is exactly the depth-2
+resolution §6 verifies. The witness is the generic struct itself, conforming to
+its own protocol via the **hoisted name** (never `: Memory.Allocator.\`Protocol\``
+— that self-reference is the `[API-IMPL-009]` cycle):
+
+```swift
+enum Memory {}
+public protocol __MemoryAllocatorProtocol<Failure>: ~Copyable {     // hoisted, module scope
+    associatedtype Failure: Error
+    mutating func allocate(count: Memory.Address.Count, alignment: Memory.Alignment) throws(Failure) -> Memory.Address
+    mutating func deallocate(_ address: Memory.Address)
+}
+extension Memory {
+    public struct Allocator<Resource: ~Copyable & Memory.Region>: ~Copyable { … }  // the witness — the value you hold
+}
+extension Memory.Allocator { public typealias \`Protocol\` = __MemoryAllocatorProtocol }
+public typealias Allocating = Memory.Allocator.\`Protocol\`           // gerund alias, on the AGENT NOUN
+extension Memory.Allocator: __MemoryAllocatorProtocol { … }          // conform via the hoisted name
+```
+
+`[Verified: 2026-06-22]` — swiftc 6.3.2 (`/tmp` typecheck spike): the param-free
+`Memory.Allocator.\`Protocol\`` and the parameterised `Memory.Allocator.\`Protocol\`<E>`
+both resolve in constraint position on the generic struct, and the generic struct
+conforms to its own hoisted protocol. (The `any Memory.Allocator.\`Protocol\``
+existential also compiles — the "no existentials" discipline for seams
+(`[API-IMPL-023]`) is a convention, not a type-system constraint.)
+
+**Consequence — the deverbal noun is never spent on the protocol.** Because the
+triple lands on the agent noun via the hoist, the deverbal result-noun
+(`Allocation`) stays reserved for the witness-side use of §5 / `[PKG-NAME-015]`
+and is **not** used as the protocol's namespace. Homing the active protocol on
+the deverbal noun instead (`Memory.Allocation.\`Protocol\`` + `Memory.Allocating`)
+— the "workaround for generic nests" of the prior `[API-IMPL-023]` — is
+**disallowed**: its justification was the false premise that a generic nest
+cannot host the protocol, which the hoist disproves. See `[API-IMPL-023]`.
 
 ---
 
