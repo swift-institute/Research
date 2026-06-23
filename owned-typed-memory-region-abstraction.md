@@ -4,16 +4,19 @@
 ---
 version: 2.1.0
 last_updated: 2026-02-25
-status: DECISION
+status: SUPERSEDED (2026-06-23) by memory-contiguous-dissolution.md
 tier: 3
 applies_to: [swift-memory-primitives, swift-string-primitives, swift-identity-primitives, swift-storage-primitives, swift-buffer-primitives]
-normative: true
+normative: false  # superseded 2026-06-23 — see memory-contiguous-dissolution.md
 changelog:
+  - v2.2.0 (2026-06-23): SUPERSEDED — the create-`Memory.Contiguous<Element>` decision is reversed; the type is dissolved (typed/counted/Span veneer → `Storage.Contiguous`; owned-pointer core → `Memory.Heap`; borrowed read → bare `Swift.Span`). See `memory-contiguous-dissolution.md` (records F4 of `tower-layering-status-quo-2026-06-22.md`). [META-003]/[META-004]
   - v2.1.0 (2026-02-25): Experiment `memory-contiguous-owned` (11 variants, all confirmed, debug + release). Key finding: direct stored property access works for @_lifetime propagation — no closure pattern needed. Updated code samples, resolved Open Question #3, added implementation plan with experiment-validated patterns.
   - v2.0.0 (2026-02-25): Converged on Memory.Contiguous<Element>. Reframed from ownership concern to contiguous memory concern. Rejected "cardinality axis" framing — ownership and value are separate concerns. Added protocol hoisting analysis, Type/Type.View pattern, formal boundary (BitwiseCopyable). Decision: Memory.Contiguous<Element> fills the Level 2 gap.
   - v1.0.0 (2026-02-25): Initial draft. Five options (A–E) analyzed. Identified Level 2 gap between Ownership.Unique (Level 1) and Storage (Level 3).
 ---
 -->
+
+> **⚠️ SUPERSEDED (2026-06-23).** The DECISION recorded here — *create* `Memory.Contiguous<Element>` to fill the Level-2 gap — is **reversed**. `Memory.Contiguous` is being **dissolved**: typed/counted/Span veneer → `Storage.Contiguous`, owned-pointer core → `Memory.Heap`, borrowed read → bare `Swift.Span`. See [`memory-contiguous-dissolution.md`](memory-contiguous-dissolution.md) (records F4 of `tower-layering-status-quo-2026-06-22.md`). Retained for history.
 
 ## Context
 
