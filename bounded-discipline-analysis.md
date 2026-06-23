@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-06-23
 status: RECOMMENDATION
 tier: 2
@@ -10,6 +10,11 @@ scope: cross-package
 packages: [swift-finite-primitives, swift-buffer-linear-primitives, swift-buffer-ring-primitives, swift-buffer-slab-primitives, swift-bit-vector-primitives, swift-list-linked-primitives, swift-stack-primitives, swift-pool-primitives, swift-column-primitives]
 ---
 -->
+
+## Changelog
+
+- **v1.1.0 (2026-06-23)**: Principal directive — *"really tackle this proliferation; what if we NOT have ADT `.Bounded` and express it differently."* Re-derived from first principles. The primary recommendation is now the **structural path** (§Structural Option): eliminate the per-ADT `.Bounded`/variant *types* by making each ADT one generic over its buffer — the Decoupling Charter's own ADT-tier target. Q2 corrected: container *family* (keep) vs per-family *variant type* (eliminate) — conflated in v1.0.0. Conditional-throwing seam empirically validated on Swift 6.3.2. The v1.0.0 incremental steps (R1–R4) are retained as stepping-stones / the deferred-migration fallback.
+- **v1.0.0 (2026-06-23)**: Initial four-question analysis + incremental recommendation (split homonym → keep types → single-source overflow vocabulary → close the bound gap).
 
 ## Context
 
@@ -140,13 +145,28 @@ convenience):
 - `List.Linked.Bounded` — pool-backed nodes.
 - `Pool.Bounded` — async resource pool (slots, waiters, effects) over `Fixed<Column.Bounded>`.
 
-A single `Bounded<C>` wrapper cannot unify a ring, a slab, a linked node-pool, and
-a packed bit-array — their reject points, iteration, and element layouts differ.
-This is **already ratified policy**: `occupancy-lives-in-the-leaf.md:109,176`
-dissolves the `.Inline`/`.Small` occupancy types but explicitly **"keep[s]
-`.Bounded` — a capacity axis"** (echoed in `[DS-023]`: *"`.Bounded` is a separate,
-already-lawful capacity axis — retained, not a carve-out"*). Q2 needs no action
-beyond recording the confirmation.
+**`Bounded<C>` (a wrapper that bolts bounding onto any container) is the wrong
+unification and is rejected:** you cannot retro-impose reject-at-limit on an
+already-growable heap buffer from outside — the bound must live in the storage
+allocation. **But this does not mean the per-ADT `.Bounded` *type* must exist.**
+v1.0.0 conflated two distinct things:
+
+- The container **family** (`Stack`, `Ring`, `List.Linked`, `Heap`, …) — genuinely
+  distinct, **KEEP**. You do need a Stack and a Ring; their reject points, iteration,
+  and layouts differ, so no `Bounded<C>` merges them.
+- The per-family **variant type** (`Stack.Bounded`, `Buffer.Ring.Bounded` as
+  *hand-written structs* with their own storage, count/capacity, push/pop, error,
+  conformances, tests) — **this is the proliferation, and it is eliminable.**
+
+The bound is already ratified to live in the **leaf**
+(`occupancy-lives-in-the-leaf.md:109,176`: keep `.Bounded` — a capacity axis — at the
+buffer/leaf; `[DS-023]`). The structural move (§Structural Option) keeps the bounded
+*type* at exactly that one tier and makes every ADT above it a thin generic that
+*picks* a bounded buffer — so `Stack.Bounded` survives only as a zero-cost
+**typealias**, not a hand-written type. That is the principled way to "express bounded
+differently," and the v1.1.0 primary recommendation. (`[RES-029]`: the family-vs-variant
+distinction is an IS-A judgment — `Stack.Bounded` is not a *new kind of container*, it
+is `Stack` over a bounded buffer.)
 
 ### Q3 — Mechanism duplication: the value/check are largely single-sourced; the **overflow vocabulary is copied 7×** (the win)
 
@@ -206,6 +226,94 @@ only re-declares the error (Q3).
 
 ---
 
+## Structural Option — eliminate the per-ADT variant types (the "really tackle it" path)
+
+**Principal directive (2026-06-23): do not keep `Stack.Bounded` et al.; express bounded
+differently.** Re-derived from first principles, this is not only possible — it is the
+Decoupling Charter's own ADT-tier target (`[DS-025]`, currently PROVISIONAL / unexecuted
+above the buffer layer).
+
+### First principles
+
+"Bounded" bundles two orthogonal properties:
+
+1. **Storage / allocation** — heap-dynamic vs heap-fixed vs inline vs inline+spill.
+   *Already decoupled* into the `Column` vocabulary (`Column.Heap`, `Column.Bounded`,
+   `Column.Inline`, … are typealiases over `Buffer.Linear` over different `Storage`;
+   `Column.swift:62-87`).
+2. **Growth policy** — growable (push never fails) vs fixed-reject (push can reject).
+   This manifests as the **throwing-ness of the mutation seam**.
+
+A per-ADT `.Bounded` struct (`Stack.Bounded.swift`) hand-writes *both* — re-declaring
+storage, count/capacity, push/pop, error, conformances, and tests, duplicating the base
+`Stack` and every sibling variant. With *N* ADTs × *V* variants that is *N×V* hand-written
+types — the proliferation.
+
+The principled decomposition collapses this to **one generic ADT per family,
+parameterized over its buffer**; the variant becomes the *buffer you instantiate*:
+
+- `Stack<B: Buffer.\`Protocol\`>` — one type — replaces `Stack` + `Stack.Bounded` +
+  `Stack.Static` + `Stack.Small` (`[DS-026]` classifies today's `Stack` as *concrete* —
+  `Stack<Element>`, hardcoded; the move adds the buffer axis).
+- "Bounded" = `Stack<Column.Bounded<E>>`; "inline" = `Stack<Column.Inline<E,n>>`; etc.
+- Ergonomics: `Stack.Bounded<E>` survives **only as a typealias** —
+  `typealias Stack.Bounded<E> = Stack<Column.Bounded<E>>` — exactly as `Column.Bounded`
+  is already a typealias for `Buffer.Linear.Bounded` (`Column.swift:67`). Zero
+  hand-written variant type.
+
+### The seam: conditional throwing (empirically validated)
+
+The one real obstacle is that `push` must be non-throwing over a growable buffer and
+throwing over a bounded one — without a per-variant type. Two mechanisms, **both confirmed
+to compile on Swift 6.3.2** (probe `scratchpad/bounded_probe.swift`,
+`swiftc -typecheck -swift-version 6`, 2026-06-23):
+
+- **Typed throws + `Never`** (single uniform signature): `func push(_:) throws(B.Overflow)`
+  where the buffer's `Overflow` associatedtype is `Never` for growable columns (call site
+  needs **no `try`** — validated) and a shared `Capacity.Overflow` for bounded columns
+  (call site needs `try`).
+- **Capability-by-conditional-extension** (the `[DS-025]` pattern):
+  `extension Stack where B: Growable { func push(_:) }` /
+  `extension Stack where B: Buffer.Bounded.\`Protocol\` { func push(_:) throws(…) }`.
+
+### End-state — the bound lives at exactly one tier
+
+- The bounded **type** exists only at the buffer/leaf tier (`Buffer.Linear.Bounded`,
+  `Buffer.Ring.Bounded`, `Buffer.Slab.Bounded`, `Bit.Vector.Bounded`) — exactly where
+  `occupancy-lives-in-the-leaf` already says it belongs.
+- Every ADT above is a thin generic that *rides* a bounded (or growable) buffer.
+- The overflow error is single-sourced as the buffer's associated `Overflow` (one
+  `Capacity.Overflow`, `Never` when growable) — **Q3's 7 enums collapse automatically.**
+- The homonym (Q1) **auto-resolves**: container `.Bounded` becomes a typealias; the only
+  primary `.Bounded` left is the value-range index in finite-primitives.
+
+So the structural path **subsumes R2/R3/R4** rather than supplementing them: it is the
+single move that removes the proliferation at its root.
+
+### Honest gates (why this is a plan, not a patch)
+
+1. **Charter ratification.** `[DS-025]` is PROVISIONAL — proven *in reduction*
+   (`Experiments/adt-over-buffer-seam`, CONFIRMED on 6.3.2) but *"ratified once tree-core
+   validates it against the real Buffer/Storage upstream."* The ADT-tier `.Bounded`
+   elimination *is* the Charter execution; it MUST NOT run ahead of that gate.
+2. **~Copyable accessors.** Element-generic `~Copyable` ADTs need `_read`/`_modify`
+   coroutine accessors until `BorrowAndMutateAccessors` ships in a release toolchain (not
+   on 6.3.2). Known; the Charter already accounts for it.
+3. **Conditional-throwing seam.** VALIDATED on 6.3.2 (above) — no longer an unknown.
+4. **Not every `.Bounded` collapses identically.**
+   - `Bit.Vector.Bounded` is a *leaf* below the buffer tier — it keeps its own capacity
+     variant (it *is* the storage where the bound lives), not an ADT-over-buffer.
+   - `Pool.Bounded` is a resource *manager*, not a pure container; an "unbounded pool" is
+     near-contradictory — Pool likely becomes simply `Pool` (always bounded) or
+     `Pool<Column.Bounded>`, decided per-case, not mechanically.
+5. **Scale & staging.** ~7 ADT families × several variants. Stage per-ADT; **Stack is the
+   natural exemplar** — it already stores `Shared<…, Column.Bounded>` and rides the bounded
+   column (`Stack.Bounded.swift:106`), closest to the target shape; its current
+   `requestedCapacity` re-check (R4) folds into the exact-bound buffer contract during the
+   migration.
+
+---
+
 ## Prior Art & Theoretical Grounding (`[RES-021]`/`[RES-022]`/`[RES-026]`)
 
 - **Dijkstra bounded buffer** — `variant-naming-audit.md:83` grounds `.Bounded` as
@@ -233,13 +341,28 @@ only re-declares the error (Q3).
 
 ## Outcome
 
-**Status: RECOMMENDATION.** No source changed. The recommendation gates a later
-arc; it is one integrated move with four ranked steps (structural correctness over
-diff-size, `[RES-022]`; compose-first, `[DS-020]`/`[RES-018]`).
+**Status: RECOMMENDATION.** No source changed. Structural correctness over diff-size
+(`[RES-022]`); compose-first (`[DS-020]`/`[RES-018]`). **STOP after the plan** — this is a
+class-(c) ecosystem program; it needs the principal's explicit per-arc go and must not run
+ahead of the Charter gate.
 
-### The single recommendation: *split the homonym → keep the types → single-source the overflow vocabulary → close the minimum-vs-exact bound gap.*
+### Primary recommendation (v1.1.0): execute the structural path
 
-**R1 — Keep the per-container `.Bounded` types (Q2). Confirm-only; no action.**
+Per the principal's "really tackle it" directive, the primary recommendation is the
+**§Structural Option**: eliminate the per-ADT `.Bounded` (and sibling variant) *types* by
+making each ADT one generic over its buffer — bounded re-exposed as a typealias over the
+`Column` vocabulary, the overflow error single-sourced as the buffer's associated
+`Overflow`. This is the Decoupling Charter at the ADT tier and **subsumes R2/R3/R4 below**.
+Gated on Charter ratification (`[DS-025]`, tree-core real-shape validation); staged per-ADT
+(Stack first). The bounded *type* then lives at exactly one tier (the buffer/leaf), and the
+homonym + the 7-way error duplication dissolve as by-products.
+
+### Stepping-stones / deferred-migration fallback (v1.0.0): *split the homonym → keep the families → single-source the overflow vocabulary → close the minimum-vs-exact bound gap.*
+
+The steps below are do-able *before* the full migration (each an independent partial win),
+or stand alone if the ADT-tier migration is deferred:
+
+**R1 — Keep the container *families* (Q2); under the deferred path the variant *types* stay as-is. Confirm-only; no action.**
 Already ratified (`occupancy-lives-in-the-leaf`, `[DS-023]`). Record that
 `.Bounded` is the lawful capacity axis and the types are not mergeable.
 
