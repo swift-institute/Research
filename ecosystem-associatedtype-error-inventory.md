@@ -383,7 +383,7 @@ This is the rubric's "DOES NOT FIT — no refined conformers" archetype.
 | `Random.Generator` | swift-random-primitives | `Sources/Random Primitives/Random.Generator.swift:25` | `Random.Error` | OS RNG / hardware failure |
 | `Input.Stream.\`Protocol\`` | swift-input-primitives | `Sources/Input Stream Primitives/Input.Stream.Protocol.swift:63` | `Input.Stream.Error.empty` | empty-cursor; not value-domain |
 | `Memory.Allocator.\`Protocol\`` | swift-memory-primitives | (see A.2 above) | per-conformer Error AT | OS allocator failure |
-| `Memory.ContiguousProtocol` | swift-memory-primitives | `Sources/Memory Contiguous Primitives/Memory.ContiguousProtocol.swift:90` | typed | contiguous-storage access |
+| `Span.\`Protocol\`` | swift-span-primitives | `Sources/Span Protocol Primitives/Span.Protocol.swift` | typed | contiguous-storage access |
 | `__SetProtocol` | swift-set-primitives | `Sources/Set Primitives Core/Set.Protocol.swift:17` | typed | set insertion (capacity-bound) |
 
 ### H. Out-of-triage-scope protocols (no init, no fallible-method requirement)
@@ -510,7 +510,7 @@ All four receive a single grouped verdict.
 | `Random.Generator` | DOES NOT FIT — failure is structural | Failure is OS/hardware (RNG unavailable), not value-domain; typed `Random.Error` already captures it |
 | `Input.Stream.\`Protocol\`` | DOES NOT FIT — failure is structural | Empty-cursor failure is structural (insufficient input), not value-validation; typed `Input.Stream.Error.empty` is fixed |
 | `Memory.Allocator.\`Protocol\`` | ALREADY typed (and structural) | Has per-conformer Error AT; failure is OS-domain (allocator-specific) — per-conformer Error AT is appropriate because different allocators have different failure modes (system-OOM vs arena-exhausted vs pool-empty) |
-| `Memory.ContiguousProtocol` | DOES NOT FIT — failure is structural | Contiguous-storage-access failure is structural |
+| `Span.\`Protocol\`` | DOES NOT FIT — failure is structural | Contiguous-storage-access failure is structural |
 | `__SetProtocol` | DEFER — needs deeper investigation | Insertion may have per-conformer failure modes (bounded vs unbounded). The current shape was researched in `set-insert-error-divergence.md`. |
 
 ## Cross-cutting observations

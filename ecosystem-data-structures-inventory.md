@@ -60,7 +60,6 @@ Raw memory abstractions. No element lifecycle management. Consumer manages initi
 | `Memory.Buffer` | struct | No | Read-only raw buffer with non-null guarantee |
 | `Memory.Buffer.Mutable` | struct | No | Mutable raw buffer with non-null guarantee |
 | `Memory.Inline<Element, capacity>` | struct | Yes | Fixed inline storage; @_rawLayout; no tracking — consumer manages lifecycle |
-| `Memory.Contiguous<Element: BitwiseCopyable>` | struct | Yes | Self-owning heap buffer; bulk deallocation only |
 | `Memory.Arena` | struct | Yes | Bump allocator; O(1) alloc, no individual dealloc, bulk reset |
 | `Memory.Pool` | struct | Yes | Fixed-capacity O(1) alloc/dealloc; in-band free list |
 | `Memory.Allocator` | struct | No | System allocator (malloc/free wrapper) |

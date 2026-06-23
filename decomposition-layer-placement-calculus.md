@@ -192,7 +192,7 @@ supply, composed via `where Self: Core & Capability` (CLCPM §3.1; the orthogona
 axes; span is a third, cross-cutting capability"):
 
 - **Span** (vending a contiguous view) — Memory, contiguous Storage, `Byte.Borrowed`, and `Binary.Borrowed`
-  all conform; lifting `span` out of the `Memory.Contiguous` *namespace* into `swift-span-primitives` is the
+  all conform; lifting `span` out of the `Storage.Contiguous` *namespace* into `swift-span-primitives` is the
   canonical *"don't bake a cross-cutting concern into a core"* move.
 - **Iteration** — `Iterable` / `Sequenceable` / `Iterator.Borrow`, orthogonal to every core (a set's identity
   is membership, not iteration).

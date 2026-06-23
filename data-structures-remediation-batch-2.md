@@ -60,7 +60,7 @@ Filtered out (canonical, not violations): `Index_Primitives`, `Finite_Primitives
 
 | Source file | Current import | Used types | Replacement import |
 |-------------|---------------|------------|-------------------|
-| `Sources/Storage Primitives Core/exports.swift` | `@_exported public import Memory_Primitives` | Re-export: `Memory`, `Memory.Address`, `Memory.Alignment`, `Memory.Contiguous`, `Memory.Contiguous.Protocol`, `Memory.Inline`, `Memory.Shift`, `Memory.Allocation` | `@_exported public import Memory_Primitives_Core` |
+| `Sources/Storage Primitives Core/exports.swift` | `@_exported public import Memory_Primitives` | Re-export: `Memory`, `Memory.Address`, `Memory.Alignment`, `Memory.Inline`, `Memory.Shift`, `Memory.Allocation` | `@_exported public import Memory_Primitives_Core` |
 | `Sources/Storage Primitives Core/Storage.swift` | `public import Bit_Vector_Primitives` | `Bit.Vector.Bounded`, `Bit.Vector.Static` | `public import Bit_Vector_Primitives_Core` + `public import Bit_Vector_Static_Primitives` + `public import Bit_Vector_Bounded_Primitives` |
 | `Sources/Storage Split Primitives/exports.swift` | `@_exported public import Memory_Primitives` | Re-export: `Memory.Address.Count`, `Memory.Address.Offset`, `Memory.Alignment` | `@_exported public import Memory_Primitives_Core` |
 | `Sources/Storage Inline Primitives/Storage.Inline.swift` | `public import Bit_Vector_Primitives` | `Bit.Vector.Static` | `public import Bit_Vector_Static_Primitives` |
@@ -100,7 +100,7 @@ Note: `Storage Pool Primitives` target already depends on `Memory Pool Primitive
 
 ### Rationale
 
-- `Memory Primitives Core` provides `Memory`, `Memory.Address`, `Memory.Alignment`, `Memory.Contiguous`, `Memory.Contiguous.Protocol`, `Memory.Inline`, `Memory.Shift`, `Memory.Allocation`.
+- `Memory Primitives Core` provides `Memory`, `Memory.Address`, `Memory.Alignment`, `Memory.Inline`, `Memory.Shift`, `Memory.Allocation`.
 - `Bit Vector Primitives Core` provides `Bit.Vector`, `Bit.Vector.Protocol`.
 - `Bit Vector Static Primitives` provides `Bit.Vector.Static`.
 - `Bit Vector Bounded Primitives` provides `Bit.Vector.Bounded`.

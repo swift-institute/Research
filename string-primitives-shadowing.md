@@ -87,7 +87,7 @@ How should the ecosystem's `@_exported` chain be restructured to prevent primiti
 `String_Primitives.String` is defined at `https://github.com/swift-primitives/swift-string-primitives/blob/main/Sources/String Primitives/String.swift`:
 
 1. **Null-terminated, platform-native string** — `typealias Char = UInt8` on POSIX, `typealias Char = UInt16` on Windows
-2. **Unique ownership via `~Copyable`** — prevents double-free of the underlying `Memory.Contiguous<Char>` allocation
+2. **Unique ownership via `~Copyable`** — prevents double-free of the underlying `Storage.Contiguous<Char>` allocation
 3. **Lifetime-safe views via `~Escapable`** — `String.View` uses `@_lifetime(borrow pointer)` to prevent use-after-free
 4. **Foundation-independent** — required at Layer 1 per [PRIM-FOUND-001]
 5. **Zero-overhead** — all methods `@inlinable`, direct pointer access
@@ -101,7 +101,7 @@ How should the ecosystem's `@_exported` chain be restructured to prevent primiti
 
 | Consumer | Location | How Used |
 |----------|----------|----------|
-| `swift-path-primitives` | `Path.swift:40,48,51,70,81,85` | Core storage: `Memory.Contiguous<String_Primitives.String.Char>` |
+| `swift-path-primitives` | `Path.swift:40,48,51,70,81,85` | Core storage: `Storage.Contiguous<String_Primitives.String.Char>` |
 | `Kernel String Primitives` | `Kernel.String.swift:32` | `typealias Kernel.String = Tagged<Kernel, String_Primitives.String>` |
 | `Kernel Environment Primitives` | `Kernel.Environment.Entry.swift:24,28,40,41,55,65,79,85` | `UnsafePointer<String.Char>` for env var names/values, `Kernel.String.length(of:)` |
 | `swift-loader-primitives` | `Loader.Error.swift:56,61,70,77,78` | `Ownership.Shared<String_Primitives.String>` for error messages |

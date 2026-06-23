@@ -219,11 +219,11 @@ Re-exports all variant modules. No own types.
 
 ### Storage Heap Primitives
 Extensions on `Storage.Heap` (copy, deinitialize, initialize, move,
-`Memory.Contiguous.Protocol` conformance). No new type declarations.
+`Span.Protocol` conformance). No new type declarations.
 
 ### Storage Inline Primitives
 Extensions on `Storage.Inline` (deinitialize, initialize, move,
-`Memory.Contiguous.Protocol` conformance). No new type declarations.
+`Span.Protocol` conformance). No new type declarations.
 
 ### Storage Pool Primitives
 Extensions on `Storage.Pool`. No new type declarations.

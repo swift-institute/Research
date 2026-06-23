@@ -48,7 +48,7 @@ iteration protocol layer already exists in the tower."**
    admit `Element: ~Copyable` (`Span.Protocol`, `Iterable`/`__IteratorChunkProtocol`,
    `Collection.Protocol` — verified declarations below). The exclusion enters at **conformance files**:
    `Buffer.Linear: Span.Protocol` is granted only `where … S.Element: Copyable`
-   (`Buffer Linear Primitives/Buffer.Linear+Memory.Contiguous.Protocol.swift:15`) — in the same file as
+   (`Buffer Linear Primitives/Buffer.Linear+Span.Protocol.swift:15`) — in the same file as
    the `withUnsafeBufferPointer` C-interop hatch that motivated the bound — while the raw `span`
    accessor one file over is unbounded (`Buffer Linear Primitive/Buffer.Linear+Span.swift:7`,
    `extension Buffer.Linear where S: Span.Protocol, S: ~Copyable`). [Verified: 2026-06-10] Array's own
@@ -99,7 +99,7 @@ load-bearing rows [Verified: 2026-06-10]:
 | `Span.Protocol` decl (span-primitives, Span.Protocol.swift:122–133) | `Element: ~Copyable` | capability ADMITS move-only |
 | `__IteratorChunkProtocol` decl (iterator-primitives, :42–64) | `Element: ~Copyable`, `Failure = Never` | chunk iteration ADMITS move-only |
 | `Collection.Protocol` decl (collection-primitives, :58–76) | `Element: ~Copyable`; `subscript -> Element { get }` | lattice ADMITS move-only; subscript probe-cleared |
-| **`Buffer.Linear: Span.Protocol` conformance** (+Memory.Contiguous.Protocol.swift:15) | **`S.Element: Copyable`** | **the Layer-1 gate** (bundled with `withUnsafeBufferPointer`) |
+| **`Buffer.Linear: Span.Protocol` conformance** (+Span.Protocol.swift:15) | **`S.Element: Copyable`** | **the Layer-1 gate** (bundled with `withUnsafeBufferPointer`) |
 | `Buffer.Linear` raw `span` accessor (+Span.swift:7) | none | proof the bound is not needed for the span itself |
 | `Buffer.Linear: Iterable` (+Iterable.swift:18) | `S: Copyable, S.Element: Copyable` | inherited gate + an `S: Copyable` to re-examine (chunk iteration borrows; the iterator wraps a `Span`, which is Copyable regardless of Element) |
 | Array/Fixed lattice extensions (Array ~Copyable.swift:37,41,45; Array.Conformances.swift:25,63; Fixed twins) | `S.Element: Copyable` | downstream propagation of Layer 1 |
@@ -202,7 +202,7 @@ below are verified, not applied).
   iterator-primitives `__IteratorChunkProtocol.swift:42–64`; sequence-primitives
   `Sequence.Borrowing.Protocol.swift:45–77`; collection-primitives `Collection.Protocol.swift:58–76`,
   `+First.swift:8`; buffer-linear `Buffer.Linear+Span.swift:7`,
-  `Buffer.Linear+Memory.Contiguous.Protocol.swift:15`, `Buffer.Linear+Iterable.swift:18`;
+  `Buffer.Linear+Span.Protocol.swift:15`, `Buffer.Linear+Iterable.swift:18`;
   array-primitives `Array ~Copyable.swift:37,41,45`, `Array.Conformances.swift:25,50,63`;
   sequence-primitives Research `element-tilde-escapable-stdlib-span-blocker.md` (the ~Escapable-element
   ceiling — unchanged by this note), `iterable-revision-pitch-comparison.md`;

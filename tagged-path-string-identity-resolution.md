@@ -11,15 +11,15 @@ tier: 2
 
 ## Context
 
-In the D' "always tagged" architecture, `String_Primitives.String` becomes a namespace enum (the concept), and concrete string values are `Tagged<Domain, Memory.Contiguous<Char>>`. For kernel:
+In the D' "always tagged" architecture, `String_Primitives.String` becomes a namespace enum (the concept), and concrete string values are `Tagged<Domain, Storage.Contiguous<Char>>`. For kernel:
 
 ```swift
-Kernel.String = Tagged<Kernel, Memory.Contiguous<Char>>
+Kernel.String = Tagged<Kernel, Storage.Contiguous<Char>>
 ```
 
-The tag is `Kernel`. The RawValue is `Memory.Contiguous<Char>`.
+The tag is `Kernel`. The RawValue is `Storage.Contiguous<Char>`.
 
-**Problem**: `Kernel.Path` also wraps `Memory.Contiguous<Char>`. If it uses `Kernel` as the tag, then `Tagged<Kernel, Memory.Contiguous<Char>>` is one type — paths and strings are identical. They must differ on either Tag or RawValue.
+**Problem**: `Kernel.Path` also wraps `Storage.Contiguous<Char>`. If it uses `Kernel` as the tag, then `Tagged<Kernel, Storage.Contiguous<Char>>` is one type — paths and strings are identical. They must differ on either Tag or RawValue.
 
 ### Trigger
 
@@ -52,7 +52,7 @@ Namespace.Member = Tagged<Namespace, RawValue>
 
 ## Question
 
-How should `Kernel.Path` be structured when both `Kernel.String` and `Kernel.Path` wrap `Memory.Contiguous<Char>` and the domain is `Kernel`?
+How should `Kernel.Path` be structured when both `Kernel.String` and `Kernel.Path` wrap `Storage.Contiguous<Char>` and the domain is `Kernel`?
 
 ## Analysis
 
@@ -66,12 +66,12 @@ extension Kernel {
 }
 
 extension Kernel.Path {
-    public typealias Owned = Tagged<Kernel.Path, Memory.Contiguous<Char>>
+    public typealias Owned = Tagged<Kernel.Path, Storage.Contiguous<Char>>
     public typealias Char = String.Char
 }
 
 // Nested types in constrained extension:
-extension Tagged where Tag == Kernel.Path, RawValue == Memory.Contiguous<Char> {
+extension Tagged where Tag == Kernel.Path, RawValue == Storage.Contiguous<Char> {
     public struct View: ~Copyable, ~Escapable { ... }
 }
 ```
@@ -86,7 +86,7 @@ Call site: `let p: Kernel.Path.Owned = ...`
 | No artificial tags | Yes — `Kernel.Path` is a real domain concept |
 | Scales to other types | Yes — `Kernel.Environment.Entry.Name.Owned`, etc. |
 
-**Problem**: Every type that wraps `Memory.Contiguous<Char>` needs `.Owned` suffix. Ergonomics degrade. And `Kernel.Path.Owned.View` is deeply nested.
+**Problem**: Every type that wraps `Storage.Contiguous<Char>` needs `.Owned` suffix. Ergonomics degrade. And `Kernel.Path.Owned.View` is deeply nested.
 
 ### Option B: Plural tag, singular typealias
 
@@ -95,11 +95,11 @@ The tag uses the plural form. The typealias uses the singular.
 ```swift
 extension Kernel {
     public enum Paths: ~Copyable {}
-    public typealias Path = Tagged<Kernel.Paths, Memory.Contiguous<Char>>
+    public typealias Path = Tagged<Kernel.Paths, Storage.Contiguous<Char>>
 }
 
 // Nested types resolve through the typealias:
-extension Tagged where Tag == Kernel.Paths, RawValue == Memory.Contiguous<Char> {
+extension Tagged where Tag == Kernel.Paths, RawValue == Storage.Contiguous<Char> {
     public struct View: ~Copyable, ~Escapable { ... }
     public typealias Char = String.Char
 }
@@ -121,13 +121,13 @@ Nested access: `Kernel.Path.View` (resolves through typealias to constrained ext
 
 ### Option C: Distinct storage types
 
-Make the RawValue nominally distinct. Both are structurally `Memory.Contiguous<Char>` but are different types.
+Make the RawValue nominally distinct. Both are structurally `Storage.Contiguous<Char>` but are different types.
 
 ```swift
 // In String_Primitives:
 public enum String: ~Copyable {
     public struct Storage: ~Copyable, @unchecked Sendable {
-        public var buffer: Memory.Contiguous<Char>
+        public var buffer: Storage.Contiguous<Char>
         // init, span, view etc. forwarded from buffer
     }
 }
@@ -135,7 +135,7 @@ public enum String: ~Copyable {
 // Path storage either in String_Primitives or Kernel_Primitives:
 public enum Path: ~Copyable {
     public struct Storage: ~Copyable, @unchecked Sendable {
-        public var buffer: Memory.Contiguous<Char>
+        public var buffer: Storage.Contiguous<Char>
     }
 }
 
@@ -154,10 +154,10 @@ Call site: `let p: Kernel.Path = ...`
 | Call site ergonomics | Clean — `Kernel.Path` is the value type |
 | Nested types | Through constrained extension on `Tagged where RawValue == Path.Storage` |
 | No artificial tags | Yes — `Kernel` is the domain, storage type carries semantics |
-| Triple wrapping | `Tagged` wrapping `Storage` wrapping `Memory.Contiguous` — three layers |
+| Triple wrapping | `Tagged` wrapping `Storage` wrapping `Storage.Contiguous` — three layers |
 | Shared behavior | Harder — extensions on `String.Storage` don't apply to `Path.Storage` |
 
-**Problem**: Three layers of wrapping. Shared behavior (span access, length, etc.) must be written separately for each Storage type, or `Memory.Contiguous<Char>` needs a protocol, or each Storage type must forward through `.buffer`. The storage wrapper exists purely for type-level differentiation — it carries no semantic information.
+**Problem**: Three layers of wrapping. Shared behavior (span access, length, etc.) must be written separately for each Storage type, or `Storage.Contiguous<Char>` needs a protocol, or each Storage type must forward through `.buffer`. The storage wrapper exists purely for type-level differentiation — it carries no semantic information.
 
 ### Option D: Path is not Tagged
 
@@ -165,10 +165,10 @@ Strings use Tagged. Paths stay concrete. Exception to "always tagged."
 
 ```swift
 extension Kernel {
-    public typealias String = Tagged<Kernel, Memory.Contiguous<Char>>
+    public typealias String = Tagged<Kernel, Storage.Contiguous<Char>>
 
     public struct Path: ~Copyable, @unchecked Sendable {
-        public var rawValue: Memory.Contiguous<Char>  // stored property, matches Tagged shape
+        public var rawValue: Storage.Contiguous<Char>  // stored property, matches Tagged shape
     }
 }
 ```
@@ -194,8 +194,8 @@ public enum Paths: ~Copyable {}
 
 // Domain-qualified tags via nesting or parameterization:
 extension Kernel {
-    public typealias String = Tagged<Kernel.Strings, Memory.Contiguous<Char>>
-    public typealias Path = Tagged<Kernel.Paths, Memory.Contiguous<Char>>
+    public typealias String = Tagged<Kernel.Strings, Storage.Contiguous<Char>>
+    public typealias Path = Tagged<Kernel.Paths, Storage.Contiguous<Char>>
 }
 ```
 
@@ -253,7 +253,7 @@ The tag is `Kernel` (parent), not `Kernel.Memory` (immediate namespace). The Raw
 
 ## Option F: Domain-Parameterized Structs (The Reformulation)
 
-Options A–E all accept the premise: "String and Path must be `Tagged<Tag, Memory.Contiguous<Char>>`." Option F questions the premise.
+Options A–E all accept the premise: "String and Path must be `Tagged<Tag, Storage.Contiguous<Char>>`." Option F questions the premise.
 
 ### The Splitting Heuristic
 
@@ -275,7 +275,7 @@ Literature on phantom types (Haskell's `Data.Tagged`, Rust's newtype pattern, De
 ```swift
 // String_Primitives:
 public struct String<Domain: ~Copyable>: ~Copyable, @unchecked Sendable {
-    public var storage: Memory.Contiguous<Char>
+    public var storage: Storage.Contiguous<Char>
 }
 
 // Shared behavior — all domains:
@@ -299,7 +299,7 @@ For Path (defined in kernel-primitives, since paths are a kernel concept):
 ```swift
 // Kernel_Primitives:
 public struct Path<Domain: ~Copyable>: ~Copyable, @unchecked Sendable {
-    public var storage: Memory.Contiguous<String.Char>
+    public var storage: Storage.Contiguous<String.Char>
 }
 
 extension Kernel {
@@ -374,7 +374,7 @@ The experiment we ran today proved that `_read` coroutine blocks `@_lifetime` cr
 
 ## Option G: Concrete Types as RawValue — Kind × Domain (The User's Architecture)
 
-Options A–F all assume `Memory.Contiguous<Char>` is the direct RawValue. Option G questions that: **what if String and Path are concrete types that OWN `Memory.Contiguous<Char>`, and Tagged wraps those concrete types?**
+Options A–F all assume `Storage.Contiguous<Char>` is the direct RawValue. Option G questions that: **what if String and Path are concrete types that OWN `Storage.Contiguous<Char>`, and Tagged wraps those concrete types?**
 
 ### The Architecture
 
@@ -515,7 +515,7 @@ Both use Tagged. The difference is what the Tag represents: semantic identity (f
 
 **Option G (concrete types as RawValue)** is the confirmed architecture for D':
 
-1. **Concrete types** (PlatformString, PlatformPath) own `Memory.Contiguous<Char>` and provide `@_lifetime` accessors
+1. **Concrete types** (PlatformString, PlatformPath) own `Storage.Contiguous<Char>` and provide `@_lifetime` accessors
 2. **Tagged wraps concrete types** with domain identity: `Tagged<Kernel, PlatformString>`
 3. **Kind is the RawValue** (String vs Path), **Domain is the Tag** (Kernel) — two orthogonal axes
 4. **Type distinctness** comes from nominal RawValue difference, not tag difference
@@ -528,8 +528,8 @@ Both use Tagged. The difference is what the Tag represents: semantic identity (f
 
 ### Implementation Path
 
-1. `PlatformString` — concrete struct owning `Memory.Contiguous<Char>` with span/view accessors
-2. `PlatformPath` — concrete struct owning `Memory.Contiguous<Char>` with path-specific methods
+1. `PlatformString` — concrete struct owning `Storage.Contiguous<Char>` with span/view accessors
+2. `PlatformPath` — concrete struct owning `Storage.Contiguous<Char>` with path-specific methods
 3. `Tagged<Kernel, PlatformString>` = `Kernel.String` via typealias
 4. `Tagged<Kernel, PlatformPath>` = `Kernel.Path` via typealias
 5. Extensions on `Tagged where RawValue == PlatformString` forward through rawValue

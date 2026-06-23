@@ -187,7 +187,7 @@ All docstrings follow the pilot's three-section form (Safety Invariant / Intende
 ///   decoded frames, or disk I/O completion payloads) to a consumer thread
 ///   as a one-shot transfer.
 /// - Sending into an `actor`'s initializer.
-/// - Storage backing for `Memory.Contiguous.Protocol` values that cross
+/// - Storage backing for `Span.Protocol` values that cross
 ///   isolation boundaries.
 ///
 /// ## Non-Goals

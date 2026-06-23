@@ -13,7 +13,7 @@ status: DECISION
 During the Tagged migration (Phase 2: `Kernel.Path = Tagged<Kernel, Path>`), a cross-module ambiguity arose with `View` typealiases on Tagged. Before solving the ambiguity (via a `Viewable` protocol), we need to answer a prior question: **does the View type need to exist at all?**
 
 Both `Path` and `String` in primitives follow the same pattern:
-- An **owned** type (`Path`, `String`) — `~Copyable`, owns a `Memory.Contiguous<Char>` buffer
+- An **owned** type (`Path`, `String`) — `~Copyable`, owns a `Storage.Contiguous<Char>` buffer
 - A **view** type (`Path.View`, `String.View`) — `~Copyable, ~Escapable`, holds a single `UnsafePointer<Char>`
 - **Span** (`Span<Char>`) — stdlib type, holds pointer + count, `~Escapable`
 

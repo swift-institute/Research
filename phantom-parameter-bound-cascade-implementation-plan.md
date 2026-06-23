@@ -280,7 +280,7 @@ Per `project_indexed_wrapper_consolidation` (memory) and `swift-array-primitives
 
 ### 5b. The `swift-array-primitives` Collection.Protocol / Iterable arc
 
-The Collection.Protocol/Iterable relaxation has **settled** (HEAD commit `9c226f5`, "Relax Array/Array.Fixed Iterable + Memory.Contiguous.Protocol to ~Copyable (Piece 7a / D4)"; working tree clean). **`swift-array-primitives` is NOT in this cascade's relax inventory** — its only former phantom-bound sites were the now-deleted `Array.*.Indexed` (§1.5). No file collision and no remaining hold. Re-confirm quiescence (`git -C swift-primitives/swift-array-primitives status -s` empty) before executing G6, since array-primitives is upstream of the migrated consumers.
+The Collection.Protocol/Iterable relaxation has **settled** (HEAD commit `9c226f5`, which relaxed Array/Array.Fixed Iterable + the read-span capability protocol (now `Span.Protocol`) to ~Copyable — Piece 7a / D4; working tree clean). **`swift-array-primitives` is NOT in this cascade's relax inventory** — its only former phantom-bound sites were the now-deleted `Array.*.Indexed` (§1.5). No file collision and no remaining hold. Re-confirm quiescence (`git -C swift-primitives/swift-array-primitives status -s` empty) before executing G6, since array-primitives is upstream of the migrated consumers.
 
 ---
 

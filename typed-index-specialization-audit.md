@@ -168,7 +168,7 @@ asymmetry under identical surface annotations is the load-bearing
 empirical signal. Both are `@inlinable` extension methods on the
 now-`@frozen` `Cursor<DomainTag>` struct, both close over
 `@usableFromInline` stored properties, both inside the same `extension
-Cursor where DomainTag.Borrowed: Memory.Contiguous<Byte>.Borrowed.\`Protocol\`,
+Cursor where DomainTag.Borrowed: Span.\`Protocol\`,
 DomainTag.Borrowed.Element == Byte, DomainTag: ~Copyable` constraint.
 The only structural difference at the function signature is:
 - `consume() -> Byte` (specialized)

@@ -164,7 +164,7 @@ extension Container: Sendable where Element: Sendable { }
 - `Set.Ordered.Bounded.swift` — Bounded variant properties/operations
 - `Set.Ordered.Algebra.swift` — Set algebra operations
 - `Set.Ordered+Sequence.Consume.swift` — Iterator protocol
-- `Set.Ordered+Memory.Contiguous.swift` — Span access
+- `Set.Ordered+Span.Protocol.swift` — Span access
 
 ### swift-stack-primitives (follows pattern)
 

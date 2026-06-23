@@ -167,7 +167,7 @@ The base type carries both generics directly. World specializations are module-l
 ```swift
 public typealias CursorOverBorrowedBytes<DomainTag: ~Copyable> = Cursor<Byte.Borrowed, DomainTag>
 public typealias CursorOverOwnedStorage<Storage> = Cursor<Storage, Storage>
-  where Storage: Memory.Contiguous.`Protocol` & ~Copyable, Storage.Element == UInt8
+  where Storage: Span.`Protocol` & ~Copyable, Storage.Element == UInt8
 public typealias CursorOverArray<Element> = Cursor<[Element], Element>
 ```
 
@@ -225,9 +225,9 @@ where Storage == [UInt8], PositionTag == UInt8 {
     public mutating func consume() -> UInt8 { ... }
 }
 
-// W1 ops — single-index reader over Memory.Contiguous storage (Phase 4)
+// W1 ops — single-index reader over Storage.Contiguous storage (Phase 4)
 extension Cursor
-where Storage: Memory.Contiguous.`Protocol` & ~Copyable,
+where Storage: Span.`Protocol` & ~Copyable,
       Storage.Element == UInt8 { ... }
 ```
 
@@ -288,7 +288,7 @@ extension Cursor {
 }
 ```
 
-Add conditional operation extensions on `Cursor.Generic` per Storage shape (Memory.Contiguous.Protocol-bound, [Element]-bound). The dual-index reader-writer is the only structural complication — it stores two positions, which doesn't fit `Cursor.Generic`'s single-position field.
+Add conditional operation extensions on `Cursor.Generic` per Storage shape (Span.Protocol-bound, [Element]-bound). The dual-index reader-writer is the only structural complication — it stores two positions, which doesn't fit `Cursor.Generic`'s single-position field.
 
 **Two paths for the dual-index W1**:
 
@@ -399,7 +399,7 @@ public struct Cursor<DomainTag: Ownership.Borrow.`Protocol` & ~Copyable>: ~Copya
 
 Storage derives from `DomainTag.Borrowed`. Call sites collapse from `Cursor<Byte.Borrowed, Byte>(span)` to `Cursor<Byte>(span)` and from `Cursor<Byte.Borrowed, Text>(...)` to `Cursor<Text>(...)`.
 
-The conditional Copyable/Escapable extensions are dropped — storage is always `~Copyable, ~Escapable` (per the protocol's associated-type declaration), so the cursor is always `~Copyable, ~Escapable`. The W1 (owned `Memory.Contiguous.\`Protocol\`` storage) and W3 (owned `[UInt8]`) Worlds don't fit the borrowed-view protocol bound and remain deferred to a sibling owned-cursor type or a more general protocol bound (Phase 4).
+The conditional Copyable/Escapable extensions are dropped — storage is always `~Copyable, ~Escapable` (per the protocol's associated-type declaration), so the cursor is always `~Copyable, ~Escapable`. The W1 (owned `Span.\`Protocol\`` storage) and W3 (owned `[UInt8]`) Worlds don't fit the borrowed-view protocol bound and remain deferred to a sibling owned-cursor type or a more general protocol bound (Phase 4).
 
 Implementation SHAs (refinement 2):
 
@@ -465,11 +465,11 @@ W1 principled-refuse is closed under current ecosystem state. Revisit if:
 
 1. A second cross-domain owned-cursor consumer materializes (non-binary L1
    package needing dual-index or single-index owned reader/writer over
-   `Memory.Contiguous.\`Protocol\`` storage). Zero such consumers exist at
+   `Span.\`Protocol\`` storage). Zero such consumers exist at
    HEAD 2026-05-18.
 2. A sub-Tier-13 cursor-needing consumer surfaces that would benefit from
    owned-cursor primitives.
-3. `Memory.Contiguous.\`Protocol\``'s shape changes substantively (e.g.,
+3. `Span.\`Protocol\``'s shape changes substantively (e.g.,
    absorbed into a broader L2 boundary).
 
 ## References
@@ -543,7 +543,7 @@ Three new files in `swift-binary-primitives/Sources/Binary Namespace/`:
   Ownership_Primitives) to support the nested type and the conformance.
 
 `Binary` is `public struct Binary: ~Copyable, @unsafe @unchecked Sendable`
-over `Memory.Contiguous<Byte>` storage — the canonical institute owned-
+over `Storage.Contiguous<Byte>` storage — the canonical institute owned-
 storage T+T.Borrowed pattern, paralleling String / Path / Byte.
 
 ### v1.4.0 Retraction Note (v1.5.0)
@@ -568,11 +568,11 @@ The Case-B conformers shipping in production:
 
 | Conformer | Borrowed Type | Notes |
 |---|---|---|
-| `String` (struct, ~Copyable) | nested `String.Borrowed` | owned storage `Memory.Contiguous<Char>`; nominal `.Borrowed` over `UnsafePointer<Char> + count` |
-| `Path` (struct, ~Copyable) | nested `Path.Borrowed` | owned storage `Memory.Contiguous<Char>`; nominal `.Borrowed` over `UnsafePointer<Char> + count` |
+| `String` (struct, ~Copyable) | nested `String.Borrowed` | owned storage `Storage.Contiguous<Char>`; nominal `.Borrowed` over `UnsafePointer<Char> + count` |
+| `Path` (struct, ~Copyable) | nested `Path.Borrowed` | owned storage `Storage.Contiguous<Char>`; nominal `.Borrowed` over `UnsafePointer<Char> + count` |
 | `Byte` (struct, Copyable value type) | nested `Byte.Borrowed` | value type; nominal `.Borrowed` over `Swift.Span<UInt8>` |
 | `Text` (enum, namespace) | typealias to `Byte.Borrowed` | no storage; phantom-domain reuses byte borrowed view |
-| **`Binary` (struct, ~Copyable)** | **nested `Binary.Borrowed` over `Span<Byte>`** | **owned `Memory.Contiguous<Byte>` storage; `~Copyable`; byte-domain Span (NOT `Span<UInt8>` per W2 cascade); typed counts `Index<Byte>.Count`** |
+| **`Binary` (struct, ~Copyable)** | **nested `Binary.Borrowed` over `Span<Byte>`** | **owned `Storage.Contiguous<Byte>` storage; `~Copyable`; byte-domain Span (NOT `Span<UInt8>` per W2 cascade); typed counts `Index<Byte>.Count`** |
 
 `Binary` is the canonical institute owned-storage T+T.Borrowed pattern, paralleling String / Path / Byte. The only deviation: `Binary.Borrowed.span` uses `Span<Byte>` rather than `Span<UInt8>` per the W2 cascade discipline (byte-domain typing at all public surfaces, UInt8 reserved for stdlib-interop boundary). `Byte.Borrowed` currently uses `Span<UInt8>` (pre-W2 cascade) and is queued for a sweep to align with Binary's precedent.
 
@@ -612,7 +612,7 @@ Recommended: path 1 for now (mirror); path 2 if/when other binary-byte-span borr
 
 ## Changelog
 
-- **v1.5.0** (2026-05-20): IMPLEMENTED — v1.4.0's "MemberImportVisibility prevents struct Binary" claim RETRACTED. Verified empirically: the failure was 100% stale SwiftPM `.build` cache from before the enum→struct interface change; hard `rm -rf .build` on both upstream and downstream packages resolves cleanly. `Binary` is now a `public struct Binary: ~Copyable, @unsafe @unchecked Sendable` over `Memory.Contiguous<Byte>` storage in swift-binary-primitives. `Binary.Borrowed` is a nested `~Copyable & ~Escapable` struct over `Swift.Span<Byte>` (NOT `<UInt8>` — per the W2 cascade discipline, byte-domain typing at all public surfaces; `Byte.Borrowed`'s `Span<UInt8>` is a pre-W2 inconsistency queued for sweep). `Cursor<Binary>` is now a valid generic instantiation. Operation extensions on `Cursor<Binary>` shipped in this arc alongside (constrained on `where DomainTag.Borrowed == Binary.Borrowed`). Discipline saved: `feedback_clean_build_before_compiler_limitation_claim` — hard-clean before claiming Swift compiler limitations. Verification: swift-binary-primitives 364/115 + swift-binary-parser-primitives 69/25 tests pass with the full struct Binary shape.
+- **v1.5.0** (2026-05-20): IMPLEMENTED — v1.4.0's "MemberImportVisibility prevents struct Binary" claim RETRACTED. Verified empirically: the failure was 100% stale SwiftPM `.build` cache from before the enum→struct interface change; hard `rm -rf .build` on both upstream and downstream packages resolves cleanly. `Binary` is now a `public struct Binary: ~Copyable, @unsafe @unchecked Sendable` over the owned region (then `Memory.Contiguous<Byte>`, now `Storage.Contiguous<Byte>`) storage in swift-binary-primitives. `Binary.Borrowed` is a nested `~Copyable & ~Escapable` struct over `Swift.Span<Byte>` (NOT `<UInt8>` — per the W2 cascade discipline, byte-domain typing at all public surfaces; `Byte.Borrowed`'s `Span<UInt8>` is a pre-W2 inconsistency queued for sweep). `Cursor<Binary>` is now a valid generic instantiation. Operation extensions on `Cursor<Binary>` shipped in this arc alongside (constrained on `where DomainTag.Borrowed == Binary.Borrowed`). Discipline saved: `feedback_clean_build_before_compiler_limitation_claim` — hard-clean before claiming Swift compiler limitations. Verification: swift-binary-primitives 364/115 + swift-binary-parser-primitives 69/25 tests pass with the full struct Binary shape.
 - **v1.4.0** (2026-05-20, RETRACTED by v1.5.0): IMPLEMENTED — Binary joins Byte and Text as a third Case-B conformer of `Ownership.Borrow.Protocol`. (Retraction note: this version claimed Binary remained an empty enum due to a `MemberImportVisibility` constraint; v1.5.0 shows the constraint was stale-cache artifact, and ships the actual owned-struct Binary.)
 - **v1.3.0** (2026-05-18): Status remains IMPLEMENTED — adds §"Phase 4 Resolution" recording that the v1.2.0 W1/W3 deferral is now closed. W3 settled by `typed-input-unification.md` v1.0.0 DECISION (Option A `Binary.Bytes.Input = Byte.Input` typealias chain rooted in swift-byte-parser-primitives). W1 settled by `cursor-w1-expansion.md` v1.0.0 DECISION via Option (c) principled refuse — `Binary.Cursor<Storage>` + `Binary.Reader<Storage>` stay in swift-binary-primitives; cursor-primitives stays at Tier 6-8 with only the borrowed Span-cursor cohort. The W2 single-generic cohort stands as the final shape of cursor-primitives; W1 stays in its binary-domain home. Phase 4 expansion of HANDOFF.md Wave 1 Item 1 is CLOSED. Seven structural arguments grounding W1 principled-refuse (see cursor-w1-expansion.md §Phase 2 §Rationale). No change to the v1.2.0 single-generic shape, the SHAs, the BENCH-011 results, or the analytical content; the IMPLEMENTED verdict is unchanged.
 - **v1.2.0** (2026-05-18): IMPLEMENTED — Single-generic refinement of the v1.1.0 two-generic landing. Cursor reshapes from `Cursor<Storage: ~Copyable & ~Escapable, PositionTag: ~Copyable>` to `Cursor<DomainTag: Ownership.Borrow.`Protocol` & ~Copyable>` with storage derived as `DomainTag.Borrowed`. Call sites collapse from `Cursor<Byte.Borrowed, Byte>(span)` to `Cursor<Byte>(span)`. The two-generic shape was structurally redundant — `Byte`'s and `Text`'s `Ownership.Borrow.`Protocol`` conformance already encoded the Storage choice via the associatedtype `Borrowed = Byte.Borrowed`. Conditional Copyable/Escapable extensions are dropped — the borrowed-view shape is always `~Copyable, ~Escapable`. Implementation: swift-text-primitives 190fb64 (Text conformance), swift-cursor-primitives b4dc49e (single-generic reshape), swift-binary-parser-primitives a6fbf075 (View typealias), swift-lexer-primitives 511d06e (Scanner inner field). BENCH-011 replay GREEN at parity across all four probes; ecosystem build gate clean across 8 packages (~990 tests). Adds §Implementation Outcomes documenting both refinement 1 (two-generic, morning) and refinement 2 (single-generic, afternoon) within the same day. W1/W3 deferral acknowledged as Phase 4 concern — single-generic shape forecloses "one cursor for all three Worlds" option A; Phase 4 needs a sibling owned-cursor type or a more general protocol bound. Status: DECISION → IMPLEMENTED.

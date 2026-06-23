@@ -96,7 +96,7 @@ is *absent* from the witness mangling is the necessary and sufficient dodge.
 `[Element]` snapshot, conforming `Iterator.\`Protocol\`` with index-based `next()`.
 
 `swift-memory-sequence-primitives` — a `makeSnapshotIterator()` witness on
-`Memory.Contiguous.Protocol` that snapshots `span` into `[Element]` and returns
+`Span.Protocol` that snapshots `span` into `[Element]` and returns
 `Memory.Snapshot.Cursor`. The original lazy `makeIterator() -> Memory.Cursor<Self>` default is kept.
 
 A conformer adopts it by binding `@_implements(Sequenceable, Iterator) typealias = Memory.Snapshot.Cursor<Element>`
@@ -156,5 +156,5 @@ item. (The reshape's release codegen is sound — confirmed with `-disable-llvm-
   corrupt-mangled-name-emission class), § A11 (same buffer-linear `@_rawLayout`/Span context),
   master fix-status table; `swiftlang/swift#86652` (ambient release confound).
 - Source touched (reshape): `swift-memory-cursor-primitives/Sources/Memory Cursor Primitives/Memory.Snapshot.Cursor.swift`;
-  `swift-memory-sequence-primitives/Sources/Memory Sequence Primitives/Memory.Contiguous+Sequenceable.swift`.
+  the `Sequenceable` extension on the owned typed region (then `Memory.Contiguous+Sequenceable.swift` in `swift-memory-sequence-primitives`; the region is now `Storage.Contiguous`).
 - Skills: [ISSUE-002], [ISSUE-013], [ISSUE-025], [ISSUE-028], [EXP-006], [EXP-020], [API-NAME-001].

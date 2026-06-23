@@ -477,7 +477,7 @@ Annotation: `public struct Map: ~Copyable, @unsafe @unchecked Sendable {`
 /// ## Safety Invariant
 ///
 /// `~Copyable` enforces unique ownership so no two owners share the buffer.
-/// The buffer is immutable after initialization (stored via `Memory.Contiguous`
+/// The buffer is immutable after initialization (stored via `Storage.Contiguous`
 /// with a `let` pointer). `@unchecked Sendable` enables move-across-thread
 /// ownership transfer for syscall dispatch.
 ///
@@ -581,7 +581,7 @@ Annotation: `public struct Retained<T: AnyObject>: ~Copyable, @unsafe @unchecked
 /// ## Safety Invariant
 ///
 /// `~Copyable` enforces unique ownership so no two owners share the buffer.
-/// The buffer is immutable after initialization (stored via `Memory.Contiguous`
+/// The buffer is immutable after initialization (stored via `Storage.Contiguous`
 /// with a `let` pointer). `@unchecked Sendable` enables move-across-thread
 /// ownership transfer; sharing via a `Reference.Box` is safe because reads
 /// are the only access and lifetime is box-managed.

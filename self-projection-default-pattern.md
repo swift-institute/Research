@@ -96,7 +96,7 @@ Six variants were authored:
 | V2 | Property<Tag, Base> two-param generic | **DOES NOT FIT** (REFUTED for the pure pattern; admits adjacent patterns) |
 | V3 | Constraint-compatibility failure (deliberately mismatched suppressions) | **REFUTED** (diagnostic captured) |
 | V4 | Hash-shape (namespace + protocol but no sibling generic) | **DEGENERATE** (CONFIRMED structurally; not the self-projection pattern) |
-| V5 | Memory.Contiguous-shape structural lookalike (element-containment, not Self projection) | **DOES NOT FIT** (CONFIRMED structurally; protocol's associatedtype is not a projection of Self) |
+| V5 | Storage.Contiguous-shape structural lookalike (element-containment, not Self projection) | **DOES NOT FIT** (CONFIRMED structurally; protocol's associatedtype is not a projection of Self) |
 
 ### Candidate shape ↔ verdict ↔ rationale
 
@@ -276,14 +276,13 @@ distinctly:
 The Borrow DECISION instantiates the former; Hash instantiates the
 latter.
 
-#### V5 — Memory.Contiguous structural lookalike (DOES NOT FIT)
+#### V5 — Storage.Contiguous structural lookalike (DOES NOT FIT)
 
-`swift-memory-primitives/Memory.Contiguous<Element>` has all three
-structural elements: namespace `Memory`, generic struct
-`Memory.Contiguous<Element: BitwiseCopyable>`, capability protocol
-`Memory.ContiguousProtocol` (exposed via
-`typealias \`Protocol\` = Memory.ContiguousProtocol`). The experiment
-mirrors this with `V5_Memory.Contiguous<Element: ~Copyable>` and
+`swift-storage-primitives/Storage.Contiguous<Element>` has all three
+structural elements: namespace `Storage`, generic struct
+`Storage.Contiguous<Element: BitwiseCopyable>`, capability protocol
+`Span.Protocol` (the borrowed read-span capability). The experiment
+mirrors this with `V5_Storage.Contiguous<Element: ~Copyable>` and
 `__V5_ContiguousProtocol` carrying `associatedtype Element: ~Copyable`.
 
 The protocol's associatedtype is `Element` — *what the conformer
@@ -292,7 +291,7 @@ Element is a property of the conformer, not a projection of the
 conformer.
 
 A "self-projection" default would have to read Element as "what Self
-contains when projected through Memory.Contiguous." But Self IS the
+contains when projected through Storage.Contiguous." But Self IS the
 container; Element is what it contains. There is no natural
 resolution; "Self contains Self" makes sense only for self-referential
 types like trees, not for general containers. The experiment's
@@ -356,7 +355,7 @@ with the principal, informed by this characterization.
 | Property<Tag, Base> | V2 | **DOES NOT FIT** | Two-param generic has no canonical Self-axis |
 | Mismatched suppressions | V3 | **REFUTED** | Constraint-compatibility precondition violated; diagnostic captured |
 | Hash (no sibling generic) | V4 | **DEGENERATE** | Capability-default pattern, not self-projection default |
-| Memory.Contiguous (element-axis) | V5 | **DOES NOT FIT** | Element-containment role, not Self-projection role |
+| Storage.Contiguous (element-axis) | V5 | **DOES NOT FIT** | Element-containment role, not Self-projection role |
 
 ### Adoption checklist for future applications
 
@@ -412,7 +411,7 @@ ground-rule #6.
 - **Ownership.Inout<Value>**: `swift-ownership-primitives/Sources/Ownership Primitives/Ownership.Inout.swift:36` — the V1 mirror's real-world counterpart (named Inout in the ecosystem; Mutate in SE-0519).
 - **Property<Tag, Base>**: `swift-property-primitives/Sources/Property Primitives Core/Property.swift:41` — V2 source.
 - **Hash + Hash.Value + Hash.`Protocol`**: `swift-hash-primitives/Sources/Hash Primitives Core/{Hash.swift, Hash.Value.swift, Hash.Protocol.swift}` — V4 source.
-- **Memory.Contiguous<Element> + Memory.Contiguous.`Protocol`**: `swift-memory-primitives/Sources/Memory Primitives Core/{Memory.Contiguous.swift, Memory.ContiguousProtocol.swift}` — V5 source.
+- **Storage.Contiguous<Element> + Span.`Protocol`**: `swift-storage-primitives/Sources/Storage Contiguous Primitives/Storage.Contiguous.swift` + `swift-span-primitives/Sources/Span Protocol Primitives/Span.Protocol.swift` — V5 source.
 
 ### Ecosystem precedent (other hoisted-protocol sites surveyed)
 

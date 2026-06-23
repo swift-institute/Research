@@ -57,7 +57,7 @@ Zero files are parser-generic. Every parser-touching file is locked to
 `Binary.Bytes.Input` specifically. The parsing ergonomics layer (`.ascii.whole()`,
 `.ascii.prefix()`) provides similar functionality to `Binary.Parse.Access`
 (`.parse.whole()`, `.parse.prefix()`), though the ASCII wrappers add
-`StringProtocol` and `Memory.Contiguous.Protocol` overloads that
+`StringProtocol` and `Span.Protocol` overloads that
 `Binary.Parse.Access` does not currently offer. Zero external consumers use the
 `.ascii` wrappers — no usage found in swift-standards or swift-foundations outside
 the ASCII module itself.
@@ -409,11 +409,11 @@ parser.parse.prefix(bytes)
 // swift-ascii's wrapper adds:
 parser.ascii.whole(bytes)           // Collection<UInt8>
 parser.ascii.whole(string)          // + StringProtocol overload
-parser.ascii.whole(contiguous)      // + Memory.Contiguous.Protocol overload
+parser.ascii.whole(contiguous)      // + Span.Protocol overload
 ```
 
 The `.ascii` wrappers are not strictly identical to `Binary.Parse.Access` — they add
-`StringProtocol` and `Memory.Contiguous.Protocol & ~Copyable` input overloads, and throw
+`StringProtocol` and `Span.Protocol & ~Copyable` input overloads, and throw
 a different error type (`Binary.ASCII.Parsing.Error` vs `Binary.Parse.Error`).
 
 However, zero external consumers use these wrappers (no usage in swift-standards or
@@ -636,7 +636,7 @@ also drop `binary-parser-primitives`.
 | Embedded Swift compatibility | Create experiment verifying leaf parser and Machine IR under embedded mode | `[EXP-*]` TODO |
 | `Binary.ASCII.Serializable` migration | Separate ecosystem-wide research document | `ascii-serialization-migration.md` TODO |
 | `.Parse` vs `.Parser` convention alignment | Standards packages use `.Parse` (verb); this document recommends `.Parser` (noun). Convention reconciliation deferred. | Discovery research candidate |
-| `Binary.Parse.Access` overload gaps | StringProtocol and Memory.Contiguous.Protocol overloads exist in `.ascii` wrappers but not in `Binary.Parse.Access`. Add if demand materializes. | Monitor |
+| `Binary.Parse.Access` overload gaps | StringProtocol and Span.Protocol overloads exist in `.ascii` wrappers but not in `Binary.Parse.Access`. Add if demand materializes. | Monitor |
 
 **Rationale**: The leaf parser at L1 is the primary implementation — `@inlinable`,
 zero-allocation, fully specializable, likely embedded-compatible. Machine IR code is
@@ -701,7 +701,7 @@ compatible/incompatible (unverified)." Experiment reference added to Open Items.
 
 v4.0.0 incorrectly characterized `.ascii` wrappers as "identical behavior under a
 different accessor name." Corrected to acknowledge the StringProtocol and
-Memory.Contiguous.Protocol overload differences, while noting zero external consumers.
+Span.Protocol overload differences, while noting zero external consumers.
 
 ## Changelog
 
