@@ -2,18 +2,20 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-06-23
-status: DECISION (principal intent stated in-session 2026-06-23; recorded per F4b)
+status: EXECUTED (steps 4–5 landed 2026-06-23 — type + satellites deleted, consumers retargeted, corpus reconciled; steps 1–3 landed prior)
 tier: 3
 scope: ecosystem-wide
 records: tower-layering-status-quo-2026-06-22.md §F4 (F4a type-smell + F4b unrecorded-plan)
 supersedes_in_part:
-  - owned-typed-memory-region-abstraction.md   # flips its DECISION:create → DISSOLVED
-updates_pending:
-  - "[DS-006]"                                  # ecosystem-data-structures: stops citing Memory.Contiguous as canonical
-  - REPORT-layering-harvest-ledger.md           # drop Memory.Contiguous<Memory.X> from the converged core
-  - "code-surface, modularization, memory-safety" # skill cites of Memory.Contiguous as current/model
+  - owned-typed-memory-region-abstraction.md   # DONE — flipped to DISSOLVED 2026-06-23
+updates_done:
+  - "[DS-006]"                                  # DONE — Memory.Contiguous row removed from the Buffers & Storage table
+  - "memory-safety [MEM-SAFE-030]"              # DONE — read-Span exemplar updated off Memory.Contiguous to Storage.Contiguous / borrowed-Span
+updates_not_applicable:
+  - REPORT-layering-harvest-ledger.md           # the ledger carries NO Memory.Contiguous<Memory.X> row + no string/path blast-radius row (only Storage.Contiguous<Memory.X> + Memory.Allocator.{Arena,Pool}); nothing to drop
+  - "code-surface, modularization"              # no current/model cite of the Memory.Contiguous TYPE found (only historical/relocated .Protocol cites; MOD-PLACE etc. cite Storage.Contiguous)
 decoupled_from:
   - .handoffs/HANDOFF-memory-tier-cleanup.md    # the Tracked+Unique arc (F1/F2/F3); shares the swift-memory-primitives tree — must NOT run concurrently
 ---
@@ -99,8 +101,12 @@ is that record.**
 build artifacts, not consumers — excluded):
 
 - **Heavy (own-storage → `Storage.Contiguous`):** `swift-binary-primitives` (`Binary._storage:
-  Memory.Contiguous<Byte>`, `Binary.swift:85`), `swift-string-primitives`, `swift-path-primitives`
-  (both `Memory.Contiguous<Char>`).
+  Memory.Contiguous<Byte>`, `Binary.swift:85` → `Storage.Contiguous<Byte>`).
+- **Heavy (owned-raw → `Memory.Heap` (+ `take()`)):** `swift-string-primitives`, `swift-path-primitives`
+  (both formerly `Memory.Contiguous<Char>`). These are owned-raw-egress, NOT typed-ledgered: each now
+  owns the trivial `Char` byte region directly via `Memory.Heap` (`_storage: Memory.Heap`,
+  `Memory.Heap(adopting:)`), with `String`/`Path` owning the trivial Char view and `Memory.Heap`
+  gaining `take()` / `unsafeBaseAddress`. (Closes the F4b-class drift: the record now matches what landed.)
 - **Light (conformance / seam refs → `Swift.Span` or unaffected):** `swift-span-primitives`,
   `swift-storage-primitives` (`Store.swift`), `swift-buffer-{linear,primitives}`, `swift-lexer-primitives`,
   `swift-cursor-primitives`, `swift-list-linked`/`queue-linked` (Iterable conformances).
@@ -117,8 +123,8 @@ build artifacts, not consumers — excluded):
    `Memory.Contiguous<Byte>` wrap; derive `base: Memory.Address` from the cached pointer for the
    `Memory.Region` seam.
 2. *(adjacent, F6)* `Memory.Aligned` de-`unsafe` via the same compose pattern — optional, same arc.
-3. **Retarget consumers** — borrowed-read → `Swift.Span`; own-storage (`binary`/`string`/`path`) →
-   `Storage.Contiguous`.
+3. **Retarget consumers** — borrowed-read → `Swift.Span`; own-storage (`binary`) →
+   `Storage.Contiguous`; owned-raw-egress (`string`/`path`) → `Memory.Heap` (+ `take()`).
 4. **Delete `Memory.Contiguous`** + its `+Span`/`+Iterable`/`+Sequenceable` satellites.
 5. **Corpus reconciliation** — flip `owned-typed-memory-region-abstraction.md` (create → DISSOLVED);
    update `[DS-006]`, the harvest-ledger converged-core entry, and the skill cites that still treat
