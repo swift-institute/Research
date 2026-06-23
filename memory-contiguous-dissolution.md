@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-06-23
 status: DECISION (principal intent stated in-session 2026-06-23; recorded per F4b)
 tier: 3
@@ -126,6 +126,35 @@ build artifacts, not consumers — excluded):
 
 The **only behavioral edit** in the whole arc is at the consumer retarget; steps 1–4 are
 target-removal + composition + umbrella/manifest drops.
+
+## Follow-on (out of THIS arc's scope) — String/Path generic-over-leaf (SSO)
+
+This dissolution correctly lands `String`/`Path` on **concrete `Memory.Heap`** (the egress-capable raw
+leaf — owned bytes + `take()`/`unsafeBaseAddress` for the `char*` syscall path; `Storage.Contiguous`'s
+no-escape posture cannot serve egress). Recorded here so it is not lost: the natural next step is to
+make the **owning** `String`/`Path` *generic over the raw leaf*, which unlocks small-string optimization.
+
+- **Shape:** `String<Backing>` where `Backing` is a raw-leaf protocol = `Memory.Region` (base+capacity)
+  + a borrowed raw-base egress accessor + **conditional** `Memory.Growable`. Admits `Memory.Heap`,
+  `Memory.Small<n>`, `Memory.Inline<n>`; `Shared<…>` layers CoW value-semantics.
+- **Wins:** **SSO via `Memory.Small<n>`** (inline ≤ n bytes, heap spill) — the prize; bounded/inline via
+  `Memory.Inline<n>` (borrowed egress only — move-sensitive footprint address); value-vs-move via `Shared<>`.
+- **Ownership boundary — do NOT widen the generic.** Keep `String<Backing>` to the **self-owning,
+  self-freeing, egress-capable** leaves (uniform lifecycle). The zero-copy / foreign / arena cases are a
+  *different* ownership model and belong to the **existing owning/borrowed split**: `String.Borrowed` /
+  `Path.Borrowed` already exist as non-owning views — `Memory.Foreign` (adopted + release callback) rides
+  those, not a wider backing generic. Arena is an allocation-source concern; defer until a real need.
+  Rationale is `[DS-023]` (inline/small are *leaf* concerns — the same principle dissolving
+  `Buffer.Slab.Inline/.Small`): SSO routes through `Memory.Small`, never a `Buffer`/`Storage` variant.
+- **Ergonomic default — NOT a typealias.** `typealias String = String<Memory.Heap>` does **not** work:
+  the alias name collides with the generic `String<…>` itself (two `String`s in one scope). Instead provide
+  convenience inits via a constrained extension — `extension String where Backing == Memory.Heap { init(…) }`
+  — so `String("…")` construction still infers the heap default. **Arc tasks:** verify Swift infers
+  `Backing` from the constrained-init `where` clause for bare `String(…)`; and resolve bare-`String`
+  *type-annotation* ergonomics (a `: String` annotation would otherwise need `: String<Memory.Heap>`).
+- **Scope:** a SEPARATE follow-on arc, AFTER this dissolution lands — a real API change (`String`/`Path`
+  gain a generic parameter → wide consumer impact), justified by the SSO payoff (the large majority of
+  strings are short). Not to be folded into the live dissolution.
 
 ## References
 
