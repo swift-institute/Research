@@ -45,7 +45,7 @@ L1 PRIMITIVES
   ├──────────────────────────────────────────────────────────────┤
   │ swift-path-primitives / Path Primitives                      │
   │   Path_Primitives.Path                ~Copyable, Sendable    │
-  │     ._storage: Memory.Contiguous<Char> (NUL-terminated)      │
+  │     ._storage: Storage.Contiguous<Char> (NUL-terminated)    │
   │   Path_Primitives.Path.View           ~Copyable, ~Escapable  │
   │   Path_Primitives.Path.Protocol       (Phase 4a; static reqs)│
   │   Path.Char                 = String_Primitives.String.Char  │
@@ -64,7 +64,7 @@ L1 PRIMITIVES
 
 | # | Qualified Name | Layer | Source | Storage | Own. | NUL-term? | Copyable | Escapable | Notes |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | `Path_Primitives.Path` | L1 | `swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.swift:45` | `Memory.Contiguous<Char>` (heap, adopts raw buffer) | owned value | yes, excluded from `count` | `~Copyable` | Escapable (default) | `@unsafe @unchecked Sendable`. Public API: `init(adopting:count:)`, `init(copying: String.View)`, `init(_ span: Span<Char>)`, `count`, `bytes: Span<Char>`, `view: View`, `take()`. |
+| 1 | `Path_Primitives.Path` | L1 | `swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.swift:45` | `Storage.Contiguous<Char>` (heap, adopts raw buffer) | owned value | yes, excluded from `count` | `~Copyable` | Escapable (default) | `@unsafe @unchecked Sendable`. Public API: `init(adopting:count:)`, `init(copying: String.View)`, `init(_ span: Span<Char>)`, `count`, `bytes: Span<Char>`, `view: View`, `take()`. |
 | 2 | `Path_Primitives.Path.View` | L1 | `swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.View.swift:35` | `UnsafePointer<Char>` + `count: Int` | borrowed view | yes, excluded from `count` | `~Copyable` | `~Escapable` | `@safe`. API: `pointer`, `count`, `init(_:count:)`, `withUnsafePointer(_:)`, `span: Span<Char>`. Debug-validated NUL in DEBUG only. |
 | 3 | `Path_Primitives.Path.Protocol` | L1 | `swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.Protocol.swift:50` | n/a | protocol | — | `~Copyable, ~Escapable` | `~Escapable` | Static requirements: `parent(of:) -> Span<Char>?`, `component(of:) -> Span<Char>`, `appending(_:_:) -> Path`. Protocol-ext instance defaults: `parent`, `component`, `appending(_:)`. |
 | 4 | `Path_Primitives.Path.Char` | L1 | same, line 59 | typealias | — | — | — | — | `= String_Primitives.String.Char` → `UInt8` POSIX, `UInt16` Windows. |
@@ -98,7 +98,7 @@ L1 PRIMITIVES
 
 | Type | Allocation | NUL terminator? | Count excludes NUL? | Owner |
 |---|---|---|---|---|
-| `Path_Primitives.Path` | single heap block via `Memory.Contiguous` | **yes** (required; precondition in adopting init) | **yes** (`count = storage.count`, NUL not counted) | value (consumed on destruction) |
+| `Path_Primitives.Path` | single heap block via `Storage.Contiguous` | **yes** (required; precondition in adopting init) | **yes** (`count = storage.count`, NUL not counted) | value (consumed on destruction) |
 | `Paths.Path` | `[Char]` via `Array` | **yes** (explicit `buffer.append(0)`) | **yes** (`Storage.count = buffer.count - 1`) | value (Copyable, Hashable) |
 | `Paths.Path.bytes` span | `_storage.buffer.span` | **INCLUDES NUL** per `Path.swift:277` doc + implementation | n/a | borrowed |
 | `Paths.Path.View` | pointer to existing path's buffer | yes (assumed invariant; no stored count) | — | borrowed (`~Escapable`) |
@@ -192,7 +192,7 @@ L1 PRIMITIVES
 
 ### Conversion asymmetries
 
-- `Paths.Path` ↔ `Path_Primitives.Path`: **no direct bridge**. Round-trip requires Path_Primitives.Path `init(_ span:)` + `Paths.Path.init(copying:)`; both allocate. There is no zero-copy bridge L3↔L1 because storage types differ (`Memory.Contiguous<Char>` vs `[Char]`).
+- `Paths.Path` ↔ `Path_Primitives.Path`: **no direct bridge**. Round-trip requires Path_Primitives.Path `init(_ span:)` + `Paths.Path.init(copying:)`; both allocate. There is no zero-copy bridge L3↔L1 because storage types differ (`Storage.Contiguous<Char>` vs `[Char]`).
 - The **view layer bridges zero-alloc**: `Paths.Path.kernelPath` hands out an `UnsafePointer<Char>` + `length` as a `Kernel.Path.View` (= L1 `Path.View`) without copying. This is the intended Phase 4b anchor: scan `_storage.buffer` directly (or go via `view.kernelPath` into L1 protocol methods).
 
 ---
@@ -316,7 +316,7 @@ Each flag below is a **candidate risk**: a place where naive byte scanning (repl
 ### D1 — `bytes` convention inconsistency (**highest stakes**)
 
 - `Paths.Path.bytes` (L3) returns `_storage.buffer.span` → **includes the NUL terminator**. Documented at `Path.swift:277`.
-- `Path_Primitives.Path.bytes` (L1) returns `_storage.span` → **excludes NUL** (since `Memory.Contiguous.count` excludes it).
+- `Path_Primitives.Path.bytes` (L1) returns `_storage.span` → **excludes NUL** (since `Storage.Contiguous.count` excludes it).
 - `Path_Primitives.Path.View.span` (L1) excludes NUL (uses the stored `count`).
 
 If Phase 4b byte-scans using `_storage.buffer`, the implementer must **remember to scan only `buffer[0..<count]` = `buffer[0..<buffer.count-1]`** to skip the trailing `0`. Otherwise `lastSep` of the NUL byte (which is not 0x2F, so fine) is a non-issue, but iteration length matters for correctness of `count` in the resulting path. **Escalate to user if unclear which convention downstream code expects.**

@@ -62,7 +62,7 @@ Total `@unchecked Sendable` hits across scope: **23**
 | 17 | `swift-memory-primitives/Sources/Memory Arena Primitives/Memory.Arena.swift:125` | `Memory.Arena` | B | `@safe struct ~Copyable` with `deinit` that deallocates. Owns `UnsafeMutableRawPointer`. Textbook ownership-transfer. | §Appendix A15 |
 | 18 | `swift-memory-primitives/Sources/Memory Primitives Core/Memory.Inline ~Copyable.swift:73` | `Memory.Inline._Raw` | B | `@_rawLayout` `package struct ~Copyable`. Raw inline storage. `@_rawLayout` bypasses normal Sendable analysis — ownership-transfer via `~Copyable`. | §Appendix A16 |
 | 19 | `swift-memory-primitives/Sources/Memory Primitives Core/Memory.Inline ~Copyable.swift:77` | `Memory.Inline<Element, let capacity: Int>` | B | `public struct ~Copyable` containing `_Raw` (`@_rawLayout`). Explicit dependency on `_Raw`'s `@unchecked Sendable`. Ownership-transfer. | §Appendix A17 |
-| 20 | `swift-memory-primitives/Sources/Memory Primitives Core/Memory.Contiguous.swift:45` | `Memory.Contiguous<Element: BitwiseCopyable>` | B | `@frozen @safe struct ~Copyable` with `deinit` that deallocates. Owns `UnsafePointer<Element>`. Existing docstring notes "pointer is read-only after init" — this is an ownership-transfer argument, not synchronization. Ownership-transfer. | §Appendix A18 |
+| 20 | `swift-storage-primitives/Sources/Storage Contiguous Primitives Core/Storage.Contiguous.swift:45` | `Storage.Contiguous<Element: BitwiseCopyable>` | B | `@frozen @safe struct ~Copyable` with `deinit` that deallocates. Owns `UnsafePointer<Element>`. Existing docstring notes "pointer is read-only after init" — this is an ownership-transfer argument, not synchronization. Ownership-transfer. | §Appendix A18 |
 | 21 | `swift-memory-primitives/Sources/Memory Pool Primitives/Memory.Pool.swift:370` | `Memory.Pool` | B | `@safe struct ~Copyable` with `deinit` that deallocates. Owns `UnsafeMutableRawPointer` backing storage. Fixed-slot allocator. Ownership-transfer. | §Appendix A19 |
 
 **Category D candidates** (counted separately, flagged to queue rather than classified):
@@ -555,7 +555,7 @@ extension Memory.Inline._Raw: @unsafe @unchecked Sendable where Element: Sendabl
 extension Memory.Inline: @unsafe @unchecked Sendable where Element: Sendable {}
 ```
 
-### A18. `Memory.Contiguous` — `Memory.Contiguous.swift:45`
+### A18. `Storage.Contiguous` — `Storage.Contiguous.swift:45`
 
 Existing form (declaration site):
 ```swift
@@ -570,7 +570,7 @@ Existing docstring already contains a partial `## Thread Safety` section. Replac
 ///
 /// ## Safety Invariant
 ///
-/// `Memory.Contiguous` is `@frozen @safe struct ~Copyable` owning an
+/// `Storage.Contiguous` is `@frozen @safe struct ~Copyable` owning an
 /// `UnsafePointer<Element>` that `deinit` deallocates. The pointer is
 /// `internal let` (read-only after init) and the struct provides no
 /// mutation API. Under unique ownership, the only reader at any time
@@ -591,7 +591,7 @@ Existing docstring already contains a partial `## Thread Safety` section. Replac
 /// - Does not expose mutation; consumers that need mutable access must
 ///   build on a different primitive.
 /// - `unsafeBaseAddress` is a deliberate escape hatch; sharing the
-///   returned pointer independently of the `Memory.Contiguous` owner is
+///   returned pointer independently of the `Storage.Contiguous` owner is
 ///   unsafe and unsupported.
 @frozen
 @safe

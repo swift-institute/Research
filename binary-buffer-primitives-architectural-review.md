@@ -23,7 +23,7 @@ Should `swift-binary-buffer-primitives` exist as a package? If so, is `Buffer.Al
 
 | File | Responsibility | Depends on Binary? |
 |------|---------------|--------------------|
-| `Buffer.Aligned.swift` | Platform-specific aligned allocation (`posix_memalign` / `_aligned_malloc`), lifetime management (deinit frees), Span access, `Memory.Contiguous.Protocol` conformance | **No** — imports `Binary_Primitives` but uses only `Memory_Primitives` and `Buffer_Primitives` types |
+| `Buffer.Aligned.swift` | Platform-specific aligned allocation (`posix_memalign` / `_aligned_malloc`), lifetime management (deinit frees), Span access, `Span.Protocol` conformance | **No** — imports `Binary_Primitives` but uses only `Memory_Primitives` and `Buffer_Primitives` types |
 | `Buffer.Aligned.Error.swift` | Error enum (allocationFailed) | **No** |
 | `Buffer.Aligned+Convenience.swift` | Single-byte subscript, copy, zero | **No** |
 | `Buffer.Aligned+Subscript.swift` | Range subscripts returning `Span<UInt8>` | **No** |
@@ -102,7 +102,7 @@ This means `Buffer<String>.Aligned`, `Buffer<Int>.Aligned`, `Buffer<MyType>.Alig
 - Available at a lower tier (memory-primitives is tier ~6)
 - Semantically accurate: this is memory allocation, not a data structure
 - `Memory.Alignment` (its key dependency) is already in memory-primitives
-- `Memory.Contiguous.Protocol` (its conformance) is already in memory-primitives
+- `Span.Protocol` (its conformance) is already in span-primitives
 - Cleanest dependency graph: no need for buffer-primitives or binary-primitives
 
 **Disadvantages**:
@@ -149,7 +149,7 @@ This means `Buffer<String>.Aligned`, `Buffer<Int>.Aligned`, `Buffer<MyType>.Alig
 ## Constraints
 
 1. `Buffer.Aligned` is `~Copyable` and uses `posix_memalign` / `_aligned_malloc` — platform-specific C
-2. It conforms to `Memory.Contiguous.Protocol` — which is in memory-primitives
+2. It conforms to `Span.Protocol` — which is in span-primitives
 3. `Buffer.Unbounded` depends on `Buffer.Growth.Policy` — which is in buffer-primitives
 4. The `Binary.Position` extensions (`+Binary.swift`) genuinely need both binary-primitives and the aligned buffer type
 5. IO Completions is the only consumer — migration cost is bounded
@@ -188,6 +188,6 @@ This means `Buffer<String>.Aligned`, `Buffer<Int>.Aligned`, `Buffer<MyType>.Alig
 - `swift-binary-buffer-primitives/Sources/Binary Buffer Primitives/` — all 8 source files
 - `swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.swift` — `enum Buffer<Element: ~Copyable>`
 - `swift-memory-primitives/Sources/Memory Primitives Core/Memory.Alignment.swift` — alignment type
-- `swift-memory-primitives/Sources/Memory Primitives Core/Memory.Contiguous.Protocol.swift` — conformance protocol
+- `swift-span-primitives/Sources/Span Protocol Primitives/Span.Protocol.swift` — conformance protocol
 - `swift-io/Sources/IO Completions/` — sole consumer (7 files)
 - `Documentation.docc/Primitives Tiers.md` — tier 14 (binary), 15 (buffer), 16 (binary-buffer)

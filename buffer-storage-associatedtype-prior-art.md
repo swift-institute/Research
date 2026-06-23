@@ -53,7 +53,7 @@ directly and govern pending explicit override:
   the ecosystem-wide capability-protocol model. **It already answers this question.**
   It positions `Buffer.Protocol` as logical-occupancy (`count`/`isEmpty`) that
   **"Does NOT refine `Storage.Protocol` (has-a) nor `Iterable` (orthogonal)"**, and
-  routes the contiguous-read surface to the *orthogonal* `Memory.Contiguous.Protocol`
+  routes the contiguous-read surface to the *orthogonal* `Span.Protocol`
   (a `span` capability), with iteration composed `where Self: Iterable`
   (`cross-layer-capability-protocol-model.md`, §3.4, lines 200–204).
 - `storage-buffer-abstraction-analysis.md` (v1.2.0, Tier 3) — surveyed Rust Storage
@@ -328,14 +328,14 @@ But the survey shows the response to that exact need, everywhere it has arisen:
 
 And the Institute already has a non-T1 answer in hand: the **APPROVED**
 `cross-layer-capability-protocol-model.md` routes the *escaping-base* read surface to
-the orthogonal **`Memory.Contiguous.Protocol`** (a `span` capability requirement, with
+the orthogonal **`Span.Protocol`** (a `span` capability requirement, with
 `withUnsafeBufferPointer` as the C-interop escape) and composes iteration via
 `extension … where Self: Iterable`. A `~Copyable` borrow-iterator is the
 `Iterator.Borrow` concern composed onto whichever capability core can vend a base —
 *without* `Buffer.Protocol` exposing a `Storage` associated type
 (`cross-layer-capability-protocol-model.md` §3.4 lines 188–204). The model's own words
 on the buffer layer: it **"Does NOT refine `Storage.Protocol` (has-a)"** and
-**"`span` stays on `Memory.Contiguous.Protocol` for contiguous variants"** (line 203).
+**"`span` stays on `Span.Protocol` for contiguous variants"** (line 203).
 
 ### Why-not-compose-existing-primitives ([RES-018] case (b), domain-owned vocabulary)
 
@@ -343,9 +343,9 @@ This proposal is not a new cross-cutting primitive; it reshapes an existing
 domain-owned protocol (`Buffer.Protocol`). The composition alternative is already
 designed and SIL-proven: a generic algorithm over `some Storage.Protocol` is the cold
 path (0 `witness_method` cross-module, per the `storage-protocol-specialization`
-experiment), and the contiguous-read capability lives on `Memory.Contiguous.Protocol`.
+experiment), and the contiguous-read capability lives on `Span.Protocol`.
 The borrow-iterator can be vended by `extension Iterable where Self:
-Memory.Contiguous.Protocol` (capability) — **not** by `extension Iterable where Self:
+Span.Protocol` (capability) — **not** by `extension Iterable where Self:
 Buffer.Protocol` reaching through an exposed `Storage` type. Composition covers the
 use case; T1 is not required.
 
@@ -370,7 +370,7 @@ years** and even it exposes an opaque `Handle`, not a pointer-vending storage ob
 occupancy core (`count` / `isEmpty`) that **HAS-A** storage by composition but does
 **not** expose it as an associated type — exactly the **APPROVED 2026-05-28**
 `cross-layer-capability-protocol-model.md` shape. Vend the borrow-iterator from a
-**contiguous-read CAPABILITY** — `Memory.Contiguous.Protocol` (`span` +
+**contiguous-read CAPABILITY** — `Span.Protocol` (`span` +
 `withUnsafeBufferPointer`) for contiguous disciplines, or a generic algorithm over
 `some Storage.Protocol` for slot-addressed ones — composed via `extension Iterable
 where Self: <capability>`. This is the T4 form, matches the SIL-proven two-lever
@@ -421,6 +421,6 @@ non-load-bearing for the verdict (the verdict rests on Swift SE-0447/0237 and C+
 15. Zig std.mem.Allocator (explicit allocator passing). https://github.com/ziglang/zig/blob/master/lib/std/mem/Allocator.zig
 
 ### Internal research (governs per [RES-019])
-16. `cross-layer-capability-protocol-model.md` (v1.1.0, APPROVED 2026-05-28, Tier 3) — Buffer HAS-A Storage, does NOT refine it; span on Memory.Contiguous.Protocol; iteration composed `where Self: Iterable`. §3.4 lines 188–211.
+16. `cross-layer-capability-protocol-model.md` (v1.1.0, APPROVED 2026-05-28, Tier 3) — Buffer HAS-A Storage, does NOT refine it; span on Span.Protocol; iteration composed `where Self: Iterable`. §3.4 lines 188–211.
 17. `storage-buffer-abstraction-analysis.md` (v1.2.0, Tier 3) — Rust Storage API / C++ pmr / Zig survey; storage-strategy-under-one-protocol intractable; abstract at the ownership-capability level.
 18. `storage-generic-buffer-core.md` (v1.1.0) — two-lever model; generic-over-`some Storage.Protocol` cold path proven 0-`witness_method`.

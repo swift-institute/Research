@@ -206,7 +206,7 @@ With these corrections, the naming argument holds. The structural need for an op
 
 ### v4.1.0 Changes
 
-Corrected the characterization from "identical behavior" to "similar functionality" with explicit acknowledgment of StringProtocol and Memory.Contiguous.Protocol overloads.
+Corrected the characterization from "identical behavior" to "similar functionality" with explicit acknowledgment of StringProtocol and Span.Protocol overloads.
 
 ### Reassessment
 

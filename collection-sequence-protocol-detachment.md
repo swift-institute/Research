@@ -42,7 +42,7 @@ Should `Collection.Protocol` inherit from `Sequence.Protocol`? If not, what is t
 | 1 | `next() -> Element?` returns an owned value | For ~Copyable elements, this is a consuming move — incompatible with multi-pass borrowing |
 | 2 | `Optional<~Copyable>` compiles in Swift 6.2 | The blocker is not the type system but ownership semantics |
 | 3 | `SuppressedAssociatedTypes` is available | `associatedtype Element: ~Copyable` works in user-defined protocols |
-| 4 | `Memory.Contiguous.Protocol` exists (memory-primitives) | Provides `var span: Span<Element>` + `withUnsafeBufferPointer` — no need for new span protocol |
+| 4 | `Span.Protocol` exists (span-primitives) | Provides `var span: Span<Element>` + `withUnsafeBufferPointer` — no need for new span protocol |
 | 5 | 4 generic algorithms use `makeIterator()` on `Collection.Protocol` | `count.where`, `count.all`, `min`, `max` — all trivially rewritable to index-based |
 | 6 | 2 downstream conformers | `Buffer.Linear` (where Element: Copyable), `Input.Slice` (via conditional extensions) |
 | 7 | Collection.ForEach already uses index-based iteration | The index/subscript iteration pattern is proven and deployed |
@@ -134,7 +134,7 @@ Create `Collection.Iterable: Collection.Protocol & Sequence.Protocol` to provide
 
 3. **The migration is small and bounded.** 4 generic algorithms (`count.where`, `count.all`, `min`, `max`) use `makeIterator()` on `Collection.Protocol`. All are trivially rewritten to index-based loops — the exact pattern `Collection.ForEach+Property.View.swift` already uses. The index-based versions are actually better: they support `~Copyable` elements via borrowing subscript, which the iterator-based versions cannot.
 
-4. **No new protocols needed.** `Memory.Contiguous.Protocol` (memory-primitives) already provides span access for contiguous storage. `Sequence.Borrowing.Protocol` is reframed as a chunked span optimization, not a borrowing iteration mechanism. The final architecture has four non-overlapping concepts, three of which already exist.
+4. **No new protocols needed.** `Span.Protocol` (span-primitives) already provides span access for contiguous storage. `Sequence.Borrowing.Protocol` is reframed as a chunked span optimization, not a borrowing iteration mechanism. The final architecture has four non-overlapping concepts, three of which already exist.
 
 5. **Bridge protocol has zero use cases.** The audit found no algorithms that need both Collection.Protocol and Sequence.Protocol simultaneously. Every algorithm uses one access mode. Types can conform to both independently.
 
@@ -142,7 +142,7 @@ Create `Collection.Iterable: Collection.Protocol & Sequence.Protocol` to provide
 
 ```
 Memory tier (memory-primitives):
-  Memory.Contiguous.Protocol     → "I have contiguous storage" (span + unsafe pointer)
+  Span.Protocol                  → "I have contiguous storage" (span + unsafe pointer)
 
 Sequence tier (sequence-primitives):
   Sequence.Protocol              → "I produce owned elements one at a time" (consuming)
@@ -235,8 +235,8 @@ All 23 tests pass. Results:
 
 | Step | Change |
 |------|--------|
-| C1 | Update docs: "chunked span access optimization over Memory.Contiguous.Protocol, not borrowing iteration" |
-| C2 | Add explicit relationship statement: "Conformers typically also conform to Memory.Contiguous.Protocol" |
+| C1 | Update docs: "chunked span access optimization over Span.Protocol, not borrowing iteration" |
+| C2 | Add explicit relationship statement: "Conformers typically also conform to Span.Protocol" |
 | C3 | Canonical borrowing iteration guidance → `Collection.ForEach` |
 | C4 | Defer deletion until audit confirms zero bounded-chunk usage (all call sites currently pass `Cardinal(UInt.max)`) |
 
@@ -255,7 +255,7 @@ swift test    # across all affected packages
 - `swift-sequence-primitives/Research/iterator-protocol-hierarchy.md` v1.0.0 — parallel iterator protocol architecture
 - `swift-sequence-primitives/Research/sequence-protocol-surface-simplification.md` v1.0.0 — six sequence protocols, each distinct
 - `swift-array-primitives/Research/array-protocol-unification.md` v1.0.0 → v1.1.0 — Phase 4 now unlocked
-- `swift-memory-primitives/Sources/Memory Primitives Core/Memory.Contiguous.Protocol.swift` — existing span access protocol
+- `swift-span-primitives/Sources/Span Protocol Primitives/Span.Protocol.swift` — existing span access protocol
 - Collaborative discussion 1 (design): `/tmp/collection-protocol-hierarchy-transcript.md`
 - Converged plan 1 (design): `/tmp/collection-protocol-hierarchy-converged.md`
 - Collaborative discussion 2 (implementation): `/tmp/collection-sequence-detachment-impl-transcript.md`

@@ -166,7 +166,8 @@ Today's `Storage<E>.Heap` mechanics relocate wholesale (same `~Copyable` struct-
 
 - **#2 rename executes here**: type + target + files (`Storage Flat Primitives` → `Storage
   Contiguous Primitives`); zero external consumers (receipt above), no deprecation shim needed;
-  names the real axis and rhymes with `Memory.Contiguous` as the follow-ups specify.
+  names the real axis and rhymed with the then-existing typed `Memory.Contiguous` region (since
+  dissolved into this same `Storage.Contiguous`) as the follow-ups specified.
 - Gains **conditional Copyable**: `extension Storage.Contiguous: Copyable where Element: ~Copyable, Substrate: Copyable {}`
   (NEW — Flat is unconditionally ~Copyable today; required for the Heap CoW chain). No deinit
   anywhere — the wall is respected by construction.

@@ -67,13 +67,14 @@ ecosystem-wide:
 
 | Capability protocol | Package | Identity | Surface |
 |---|---|---|---|
-| `Memory.Contiguous.\`Protocol\`` | swift-memory-primitives | physical contiguous **read** | `span` + unsafe escape (model §3, line 51) |
+| `Span.\`Protocol\`` | swift-span-primitives | physical contiguous **read** | `span` + unsafe escape (model §3, line 51) |
 | `Storage.\`Protocol\`` | swift-storage-primitives | physical **slot-access** | `pointer(at:)`, `capacity` |
 | `Buffer.\`Protocol\`` | swift-buffer-primitives | logical **occupancy** | `count` + `isEmpty` (model §3, line 53) |
 
 The model states verbatim that `Buffer.\`Protocol\`` *"Does NOT refine
-`Storage.Protocol` (has-a) nor `Iterable` (orthogonal)"* and that *"`span` stays
-on `Memory.Contiguous.Protocol` for contiguous variants"* (§3.4, lines 200-203).
+`Storage.Protocol` (has-a) nor `Iterable` (orthogonal)"* and that `span` stays on
+the contiguous-read capability — at the time `Memory.Contiguous.Protocol`, since lifted
+out to the namespace-neutral `Span.Protocol` — for contiguous variants (§3.4, lines 200-203).
 A buffer **has-a** storage; it is not a *kind-of* storage. This note applies that
 already-approved logical/physical split to the *membership* of the `Buffer.*`
 namespace — the dual of the protocol-shape question the model answered.
@@ -177,11 +178,12 @@ remain occupancy disciplines as Linear variants.)
   stated principle *"Binary owns semantics … Buffer owns storage (allocation,
   capacity)"* (`:25-26`). By their own design statements, these are storage
   regions, not occupancy disciplines.
-- **`Buffer.Aligned` already IS a Memory-layer type**: it conforms
-  `Memory.Contiguous.\`Protocol\`` (Buffer.Aligned.swift:270), allocates via
+- **`Buffer.Aligned` already IS a Memory-layer type**: it conforms the
+  contiguous-read capability `Span.\`Protocol\`` (then `Memory.Contiguous.\`Protocol\``;
+  Buffer.Aligned.swift:270), allocates via
   `UnsafeMutableRawPointer.allocate(byteCount:alignment:)` (`:41`, `:106-122`),
   and its own usage guidance says *"For most APIs, accept `some
-  Memory.Contiguous.Protocol` rather than `Buffer.Aligned` directly"* (`:66-68`).
+  Span.Protocol`* (then the Memory-namespaced spelling) *rather than `Buffer.Aligned` directly"* (`:66-68`).
 
 **Result of the test:** five families (Linear, Ring, Slab, Arena, Linked) are
 genuine occupancy disciplines and STAY. Three members — `Buffer.Aligned`,
@@ -215,14 +217,15 @@ pattern — and *how* they break it tells you their correct home.
 `Buffer.Aligned` is a fixed-size, aligned, self-owning `~Copyable` raw byte
 region with `count` ≡ allocation and no element lifecycle. It depends **only** on
 swift-memory-primitives — no Storage primitive underneath — because there is no
-element lifecycle to track. It is structurally `Memory.Contiguous<Byte>` plus an
-**alignment guarantee**.
+element lifecycle to track. It is structurally `Storage.Contiguous<Byte>` (the owned
+typed region, then spelled `Memory.Contiguous<Byte>`) plus an **alignment guarantee**.
 
-**[DS-020] composition-over-existing check.** Does an existing Memory primitive
-already cover it? Closest is `Memory.Contiguous<Element>` (swift-memory-primitives,
-"Level 2 memory primitive — above raw pointers, below `Storage`"). It does **not**
-cover Aligned: `Memory.Contiguous`'s initializer is `init(adopting pointer:count:)`
-(Memory.Contiguous.swift:100) — it *adopts* a pre-allocated pointer; it does
+**[DS-020] composition-over-existing check.** Does an existing primitive
+already cover it? Closest is the owned typed region `Storage.Contiguous<Element>`
+(then spelled `Memory.Contiguous<Element>`, "above raw pointers, below `Storage`",
+before it was itself dissolved into the storage tier). It does **not**
+cover Aligned: that region's initializer adopts a pre-resolved base
+(`Storage.Contiguous.swift`) — it *adopts* a pre-allocated pointer; it does
 **not** allocate-with-alignment, and stores no alignment. Aligned's *aligned
 allocation* + stored `alignment` + `isAligned(to:)` is a genuine capability gap in
 the Memory layer. So this is **not** a premature primitive ([RES-018] / [DS-020]):
@@ -230,18 +233,19 @@ it is **existing domain-owned vocabulary relocating to its correct layer** — t
 Memory domain owns "raw aligned byte allocation."
 
 **Recommended home + name:** a Memory-layer type **`Memory.Aligned`**, sibling of
-`Memory.Contiguous` / `Memory.Buffer` / `Memory.Inline`. The name is free
+`Memory.Heap` / `Memory.Buffer` / `Memory.Inline`. The name is free
 (verified: no existing `Memory.Aligned`). Under [API-NAME-001b], "Aligned" is a
 *manner* descriptor of a memory region, consistent with the sibling shape-words
-`Memory.Contiguous`, `Memory.Inline`. Two sub-options for the principal:
+`Memory.Heap`, `Memory.Inline`. Two sub-options for the principal:
 - **(a) distinct sibling `Memory.Aligned`** (recommended) — preserves the named
   alignment capability as a first-class Memory primitive.
-- **(b) fold into `Memory.Contiguous`** by adding an aligned-allocating
+- **(b) fold into the owned typed region** (`Storage.Contiguous`, then spelled
+  `Memory.Contiguous`) by adding an aligned-allocating
   initializer + `alignment` storage — fewer types, but couples the alignment
   guarantee into the generic adopt-only type and forces the `Element == Byte`
   specialization to coexist with the generic `BitwiseCopyable` surface.
 
-It retains its `Memory.Contiguous.\`Protocol\`` conformance either way (that
+It retains its `Span.\`Protocol\`` conformance either way (that
 conformance is the right one — physical contiguous read).
 
 ### 3.2 `Buffer.Unbounded` → **Memory layer** (`Memory.Aligned.Resizable` / `Memory.Unbounded`)
@@ -322,15 +326,15 @@ and build logs), verified 2026-06-02:
 
 **[RES-023] correction to the trigger brief.** The brief stated *"e.g.
 Binary.Cursor uses Unbounded."* This is **false as a code dependency**:
-`Binary.Cursor` is `struct Cursor<Storage: Memory.Contiguous.\`Protocol\` &
-~Copyable>` (Binary.Cursor.swift:42) — it is **generic over
-`Memory.Contiguous.\`Protocol\``**, not over `Buffer.Unbounded`, and tracks its
+`Binary.Cursor` is `struct Cursor<Storage: Span.\`Protocol\` &
+~Copyable>` (then spelled `Memory.Contiguous.\`Protocol\``; Binary.Cursor.swift:42) — it is **generic over
+the contiguous-read capability `Span.\`Protocol\``**, not over `Buffer.Unbounded`, and tracks its
 own reader/writer occupancy via `readerIndex`/`writerIndex` (`:65-70`). Neither
 `Binary.Cursor` nor swift-binary-cursor-primitives references Unbounded or
 Aligned. This **strengthens** the recommendation: the positioned-byte occupancy
-abstraction (`Binary.Cursor`) *already* composes the **Memory** layer
-(`Memory.Contiguous.\`Protocol\``), and `Buffer.Aligned`/`Unbounded` are merely
-candidate conformers of that Memory protocol. Relocating them to Memory aligns
+abstraction (`Binary.Cursor`) *already* composes the physical contiguous-read
+capability (`Span.\`Protocol\``), and `Buffer.Aligned`/`Unbounded` are merely
+candidate conformers of that capability. Relocating them to Memory aligns
 them with the abstraction they were always meant to serve.
 
 **Net blast radius is minimal and identity-driven, not adoption-gated:**
@@ -381,7 +385,7 @@ re-derive:
 
 - **`cross-layer-capability-protocol-model.md`** (v1.1.0, APPROVED 2026-05-28,
   Tier 3) — the governing model. It already fixes the logical/physical split
-  (`Buffer.\`Protocol\`` = occupancy; `Memory.Contiguous.\`Protocol\`` = physical
+  (`Buffer.\`Protocol\`` = occupancy; `Span.\`Protocol\`` = physical
   read; Buffer HAS-A Storage, does NOT refine it). This note applies that approved
   *protocol-shape* decision to *namespace membership*: a member whose only content
   is physical (raw region / raw slots) belongs on the physical side of the same
@@ -422,7 +426,7 @@ model.
 | `Buffer.Arena` (+variants) | **STAY** | swift-buffer-arena-primitives (over Storage.Arena) | High |
 | `Buffer.Linked` (+variants) | **STAY** | swift-buffer-linked-primitives (over Storage.Pool) | High |
 | `Buffer.\`Protocol\``, `Buffer.Growth.*` | **STAY** | swift-buffer-primitives | High |
-| `Buffer.Aligned` | **RELOCATE → Memory** | `Memory.Aligned` (sibling of Memory.Contiguous/Buffer), swift-memory-primitives | High |
+| `Buffer.Aligned` | **RELOCATE → Memory** | `Memory.Aligned` (sibling of Memory.Heap/Buffer), swift-memory-primitives | High |
 | `Buffer.Unbounded` | **RELOCATE → Memory** | `Memory.Aligned.Resizable` / `Memory.Unbounded`, swift-memory-primitives | High |
 | `Buffer.Slots` | ~~RELOCATE → Storage~~ **REVERSED 2026-06-03 → STAY in `Buffer.*`** (see correction banner + §3.3) | swift-buffer-slots-primitives (over `Storage.Split`) | — (occupancy-test mis-fire; metadata-parametric buffer discipline per R4) |
 
@@ -436,7 +440,7 @@ physical storage primitives" (principal directive 1); the raw byte regions land 
 revivable.
 
 **Open items for the principal's decision (not blockers to the recommendation):**
-1. `Memory.Aligned` as a distinct sibling vs folding into `Memory.Contiguous`
+1. `Memory.Aligned` as a distinct sibling vs folding into the owned typed region (`Storage.Contiguous`, then spelled `Memory.Contiguous`)
    (§3.1 a/b).
 2. `Buffer.Slots` fold-into-`Storage.Split` vs distinct `Storage.Slots` (§3.3
    a/b) — gated by which Slots ops Hash.Table needs (`ensureUnique`,
@@ -449,19 +453,19 @@ revivable.
 ## References
 
 ### Internal research (governs per [RES-019])
-1. `cross-layer-capability-protocol-model.md` (v1.1.0, APPROVED 2026-05-28, Tier 3) — logical/physical capability split; Buffer HAS-A Storage, span on Memory.Contiguous.Protocol. §3, lines 51-53, 188-203.
+1. `cross-layer-capability-protocol-model.md` (v1.1.0, APPROVED 2026-05-28, Tier 3) — logical/physical capability split; Buffer HAS-A Storage, span on the contiguous-read capability (then `Memory.Contiguous.Protocol`, since lifted out to `Span.Protocol`). §3, lines 51-53, 188-203.
 2. `storage-buffer-abstraction-analysis.md` (v1.2.0, Tier 3) — Aligned/Unbounded historically in separate Tier-16 `swift-binary-buffer-primitives`, excluded from the six-discipline inventory (line 34); storage-strategy abstraction belongs at the ownership-capability level.
 3. `buffer-storage-associatedtype-prior-art.md` (v1.0.0, Tier 2) — Buffer.Protocol is the logical occupancy core that has-a (not exposes) storage.
 4. `derive-for-free-capability-composition.md` — GAP-N / GAP-O (co-architect-owned; this note is the GAP-O Tier-2 investigation it requested).
 
 ### Source (verified on disk 2026-06-02, [RES-023])
 5. `swift-buffer-primitives/Sources/Buffer Protocol Primitives/Buffer.Protocol.swift` — `__BufferProtocol` (`count` + `isEmpty`); orthogonal-to-Storage note lines 87-91.
-6. `swift-buffer-aligned-primitives/.../Buffer.Aligned.swift` — `count` = allocated bytes (:77); aligned allocation (:41); Memory.Contiguous.Protocol conformance (:270); "accept some Memory.Contiguous.Protocol" (:66-68).
+6. `swift-buffer-aligned-primitives/.../Buffer.Aligned.swift` — `count` = allocated bytes (:77); aligned allocation (:41); `Span.Protocol` conformance — then the Memory-namespaced spelling — (:270); "accept some Span.Protocol" (:66-68).
 7. `swift-buffer-unbounded-primitives/.../Buffer.Unbounded.swift` — `count` ≡ `capacity` (:102-110); occupancy → Binary.Cursor.writerIndex (:28-29).
 8. `swift-buffer-slots-primitives/.../Buffer.Slots.swift` — non-conformer; backed by Storage.Split (:43); "same contract as Storage.Split" (:27-28); Header "trivial — just capacity" (Buffer.Slots.Header.swift:8).
 9. `swift-storage-split-primitives/.../Storage.Split ~Copyable.swift` — `Header(capacity:)` (:55), `slotCapacity` (:67), slot `pointer` (:117).
-10. `swift-memory-primitives/.../Memory.Contiguous.swift` — self-owning region, `init(adopting:count:)` (:100), "above raw pointers, below Storage."
-11. `swift-binary-cursor-primitives/.../Binary.Cursor.swift` — `Cursor<Storage: Memory.Contiguous.Protocol & ~Copyable>` (:42), reader/writer occupancy (:65-70). (Refutes "Binary.Cursor uses Unbounded.")
+10. The owned typed region (then `swift-memory-primitives/.../Memory.Contiguous.swift` — self-owning region, `init(adopting:count:)` (:100), "above raw pointers, below Storage"; since dissolved into `swift-storage-primitives/.../Storage.Contiguous.swift`).
+11. `swift-binary-cursor-primitives/.../Binary.Cursor.swift` — `Cursor<Storage: Span.Protocol & ~Copyable>` (then the Memory-namespaced spelling; :42), reader/writer occupancy (:65-70). (Refutes "Binary.Cursor uses Unbounded.")
 12. Genuine disciplines' `count` vs `capacity`: Buffer.Linear+Lifecycle.swift:26/:30; Buffer.Ring+Operations.swift:24/:28; Buffer.Slab+Operations.swift:32; Buffer.Arena ~Copyable.swift:32; Buffer.Linked ~Copyable.swift:68/:76.
 
 ### Skills

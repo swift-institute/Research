@@ -25,7 +25,7 @@ owned-input home), substrate in `swift-input-primitives`. Phase 4 reduces to W1
 only.
 
 **W1's open question**: what to do with `Binary.Cursor<Storage>` (~Copyable,
-Escapable, dual-index reader-writer over `Storage: Memory.Contiguous.\`Protocol\` &
+Escapable, dual-index reader-writer over `Storage: Span.\`Protocol\` &
 ~Copyable where Storage.Element == UInt8`) and `Binary.Reader<Storage>` (same
 generics, single-index read-only), both currently shipping at
 `swift-primitives/swift-binary-primitives/Sources/Binary Cursor Primitives/`.
@@ -39,7 +39,7 @@ candidate paths surfaced:
   `swift-cursor-primitives` alongside the existing `Cursor<DomainTag>`.
 - **(b) Broader protocol bound** — introduce `Cursor.Storage.\`Protocol\``
   covering both borrowed-view and owned-storage cases; refactor `Cursor` to
-  bound on it; conform `Byte.Borrowed` and the `Memory.Contiguous.\`Protocol\``
+  bound on it; conform `Byte.Borrowed` and the `Span.\`Protocol\``
   family. Effectively re-introduces the two-generic shape v1.2.0 simplified
   away.
 - **(c) Principled refuse** — `Binary.Cursor` + `Binary.Reader` remain in
@@ -79,7 +79,7 @@ the original Shape ι commitment, or stay in their current home in
 
 Internal corpus `swift-institute/Research/` and `swift-primitives/*/Research/`
 greps for cursor, `Cursor.Storage`, `Cursor.Owned`, owned cursor,
-`Ownership.Borrow.\`Protocol\``, `Memory.Contiguous.\`Protocol\``,
+`Ownership.Borrow.\`Protocol\``, `Span.\`Protocol\``,
 protocol-bound abstractions covering borrowed + owned:
 
 | Document | Status | Relevance |
@@ -89,7 +89,7 @@ protocol-bound abstractions covering borrowed + owned:
 | `ownership-borrow-protocol-unification.md` v1.0.0 | DECISION | Defines `Ownership.Borrow.\`Protocol\`` with Cases A/B/C. The current `Cursor<DomainTag>`'s bound. Borrow-view contract; not owned-storage. |
 | `nested-view-vs-borrowed-naming.md` v1.3.0 | DECISION | Pattern 1 (passive borrow-projection) → `.Borrowed`; Pattern 3 (stateful cursor) → `.View`/`.Cursor`/`.Iterator`. Explicitly classifies `Binary.Bytes.Input.View` (a cursor) as Pattern 3 NOT a `Ownership.Borrow.\`Protocol\`` conformer. Axis-based naming table (v1.2.0 framework) reserves `.Owned` as one of the access-mode suffixes for the property-family precedent. |
 | `byte-cursor-primitive-unification.md` v1.3.0 | IN_PROGRESS | Predecessor analytical input. Shape F decomposition insight (`Tagged<DomainTag, Ordinal>` as the already-decomposed position substrate) survives as INPUT; downgraded after the per-package grep surfaced `Binary.Cursor` as a third cursor abstraction. |
-| `owned-typed-memory-region-abstraction.md` v2.1.0 | DECISION | Defines `Memory.Contiguous<Element: BitwiseCopyable>` and the `Memory.Contiguous.\`Protocol\`` shape (`associatedtype Element: BitwiseCopyable; var count: Int { get }` + span access). Establishes the formal BitwiseCopyable boundary separating bulk-deallocation owned storage from `Storage<Element>` per-element lifecycle storage. |
+| `owned-typed-memory-region-abstraction.md` v2.1.0 | DECISION | Defines the owned typed region (then `Memory.Contiguous<Element: BitwiseCopyable>`, now `Storage.Contiguous<Element>`) and the `Span.\`Protocol\`` shape (`associatedtype Element: BitwiseCopyable; var count: Int { get }` + span access). Establishes the formal BitwiseCopyable boundary separating bulk-deallocation owned storage from `Storage<Element>` per-element lifecycle storage. |
 | `typed-input-unification.md` v1.0.0 | DECISION | Closes Item 2: owned typed-input cursor placed in `swift-byte-parser-primitives`, NOT `swift-cursor-primitives`. Structural precedent for owned-cursor placement. |
 | `swift-binary-primitives/Research/Lifetime Dependent Borrowed Cursors.md` v1.0.0 | RECOMMENDATION (2026-01-19) | Two Worlds architecture (Owned + Parsing.Parser vs Borrowed + Binary.Bytes.Parser). Structural-constraint claim obsoleted by SE-0503; reuse-strategy framing engaged by the v1.4.0 Tier 3 arc. |
 | `linked-list-cursor-and-arena-backing-improvements.md` v1.0.0 | RECOMMENDATION | Different family of cursors (linked-list positional removal, Pool/Arena semantic boundary). Same English word; structurally orthogonal. NOT load-bearing for this arc. |
@@ -110,7 +110,7 @@ Phase 0 gate: **CLEAR**.
 // public struct Cursor<DomainTag: Ownership.Borrow.`Protocol` & ~Copyable>: ~Copyable, ~Escapable
 extension Cursor {
     /// Owned single-index read-only cursor (parallel of Binary.Reader).
-    public struct Owned<Storage: Memory.Contiguous.`Protocol` & ~Copyable>: ~Copyable
+    public struct Owned<Storage: Span.`Protocol` & ~Copyable>: ~Copyable
     where Storage.Element == UInt8 {
         public let storage: Storage
         @usableFromInline internal let _count: Index<Storage>.Count
@@ -121,7 +121,7 @@ extension Cursor {
 
 extension Cursor.Owned {
     /// Owned dual-index read-write cursor (parallel of Binary.Cursor).
-    public struct ReaderWriter<Storage: Memory.Contiguous.`Protocol` & ~Copyable>: ~Copyable
+    public struct ReaderWriter<Storage: Span.`Protocol` & ~Copyable>: ~Copyable
     where Storage.Element == UInt8 {
         public var storage: Storage
         @usableFromInline internal let _count: Index<Storage>.Count
@@ -134,10 +134,10 @@ extension Cursor.Owned {
 // In swift-binary-primitives — typealiases
 extension Binary {
     public typealias Reader<Storage> = Cursor.Owned<Storage>
-    where Storage: Memory.Contiguous.`Protocol` & ~Copyable, Storage.Element == UInt8
+    where Storage: Span.`Protocol` & ~Copyable, Storage.Element == UInt8
 
     public typealias Cursor<Storage> = Cursor.Owned.ReaderWriter<Storage>
-    where Storage: Memory.Contiguous.`Protocol` & ~Copyable, Storage.Element == UInt8
+    where Storage: Span.`Protocol` & ~Copyable, Storage.Element == UInt8
 }
 ```
 
@@ -199,7 +199,7 @@ extension Cursor.Storage {
 extension Byte.Borrowed: Cursor.Storage.`Protocol` {}  // ~Copyable, ~Escapable
 
 extension Buffer.Heap: Cursor.Storage.`Protocol` where Element == UInt8 {}
-// ... and all other Memory.Contiguous.Protocol conformers with Element == UInt8
+// ... and all other Span.Protocol conformers with Element == UInt8
 
 // Cursor refactored to bound on the new protocol
 public struct Cursor<
@@ -226,7 +226,7 @@ Call sites collapse back from `Cursor<Byte>(span)` to either
 associatedtype is preserved as a convenience — a mix of shapes per
 instantiation. **This is an architectural regression** relative to v1.2.0.
 
-**Tier impact**: same as Option (a) — Memory.Contiguous.Protocol becomes a
+**Tier impact**: same as Option (a) — Span.Protocol becomes a
 dep of cursor-primitives. **Tier 13**.
 
 **Composition check per [RES-018]**:
@@ -262,7 +262,7 @@ as instantiations of the unified `Cursor<Storage, PositionTag>`.
 - No new package, no new types in cursor-primitives, no source changes
   outside this research arc's doc back-port.
 
-**Tier impact**: cursor-primitives stays at Tier 6-8. `Memory.Contiguous.\`Protocol\``
+**Tier impact**: cursor-primitives stays at Tier 6-8. `Span.\`Protocol\``
 remains an unused-by-cursor-primitives type — used by binary-primitives,
 buffer-primitives, etc. at higher tiers as before.
 
@@ -277,7 +277,7 @@ buffer-primitives, etc. at higher tiers as before.
 
 **Reversibility**: maximum. If a future cross-domain owned-cursor consumer
 materializes (e.g., a non-binary L1 package needing dual-index owned
-reader-writer over Memory.Contiguous storage), the extraction can be done
+reader-writer over Storage.Contiguous storage), the extraction can be done
 *then* — informed by the second consumer's actual shape. Pre-extraction
 on hypothetical pressure is exactly the speculative-architecture-laundering
 pattern that `nested-view-vs-borrowed-naming.md` v1.2.0 names forbidden.
@@ -364,9 +364,9 @@ The principled answer is grounded in seven structural arguments:
 4. **`Ownership.Borrow.\`Protocol\`` is the *borrow-view* contract, not the
    *owned-storage* contract.** The institute has no parallel
    "owned-storage capability" protocol for the borrow-pattern domain types
-   (Byte, Text) the W2 Cursor parameterizes over. `Memory.Contiguous.\`Protocol\``
+   (Byte, Text) the W2 Cursor parameterizes over. `Span.\`Protocol\``
    exists, but it abstracts owned-storage *implementations* (Buffer.Heap,
-   Buffer.Linear, Buffer.Aligned, Memory.Contiguous itself), NOT the
+   Buffer.Linear, Buffer.Aligned, Storage.Contiguous itself), NOT the
    *value-domain phantom tags* (Byte, Text) that the W2 Cursor's DomainTag
    generic encodes. Forcing W1 into the same Cursor type requires either
    a sibling type with completely different generic shape (Option a) or
@@ -411,7 +411,7 @@ The principled answer is grounded in seven structural arguments:
   preserved. Options (a) and (b) fail the substantive composition test
   (no cross-domain pressure to compose against; W2's case was unique).
 - **Tier impact explicit**: ✓ — Option (c) keeps cursor-primitives at Tier
-  6-8; no Memory.Contiguous.Protocol dep added. Options (a) and (b)
+  6-8; no Span.Protocol dep added. Options (a) and (b)
   elevate to Tier 13 (post-publication-irreversible per the inversion
   reasoning).
 - **Reversibility heuristic explicit**: ✓ — Option (c) preserves maximum
@@ -437,7 +437,7 @@ The principled answer is grounded in seven structural arguments:
 
 - Does not foreclose a future centralization arc. If a cross-domain owned-
   cursor consumer materializes (a second non-binary L1 domain needing
-  dual-index owned reader-writer over Memory.Contiguous storage), the
+  dual-index owned reader-writer over Storage.Contiguous storage), the
   W1 extraction can be opened then — informed by the second consumer's
   actual shape, not by hypothetical pressure.
 - Does not modify `Binary.Cursor` or `Binary.Reader`'s public API surface.
@@ -477,14 +477,14 @@ This DECISION is closed under principled-refuse. Revisit conditions:
 
 1. **Cross-domain owned-cursor consumer surfaces.** A second L1 package
    (non-binary domain) requiring dual-index or single-index owned
-   reader/writer over `Memory.Contiguous.\`Protocol\`` storage — currently
+   reader/writer over `Span.\`Protocol\`` storage — currently
    zero such consumers in the workspace. If one materializes, re-evaluate
    W1 extraction informed by the second consumer's actual shape.
 2. **Tier-13 cap becomes binding.** A sub-Tier-13 cursor consumer
    materializes that would benefit from owned-cursor primitives — currently
    none. If one surfaces, the Tier 13 cost becomes problematic and an
    extraction (with split-package mitigation) becomes warranted.
-3. **`Memory.Contiguous.\`Protocol\``'s shape changes substantively.** If
+3. **`Span.\`Protocol\``'s shape changes substantively.** If
    the storage protocol is reshaped (e.g., absorbed into a broader
    abstraction or replaced by a different L2 boundary), revisit whether
    the W1 cursor types should follow that change cohort.
@@ -516,7 +516,7 @@ This DECISION is closed under principled-refuse. Revisit conditions:
   classification + axis-based naming framework.
 - `byte-cursor-primitive-unification.md` v1.3.0 IN_PROGRESS — predecessor.
 - `owned-typed-memory-region-abstraction.md` v2.1.0 DECISION —
-  Memory.Contiguous.Protocol framework.
+  Span.Protocol framework (then in the Memory.Contiguous namespace).
 - `typed-input-unification.md` v1.0.0 DECISION — Item 2 / W3 dissolution
   precedent.
 - `swift-binary-primitives/Research/Lifetime Dependent Borrowed Cursors.md`
@@ -528,9 +528,9 @@ This DECISION is closed under principled-refuse. Revisit conditions:
   — `public struct Cursor<DomainTag: Ownership.Borrow.\`Protocol\` & ~Copyable>: ~Copyable, ~Escapable`
   (HEAD `b4dc49e`).
 - `swift-primitives/swift-binary-primitives/Sources/Binary Cursor Primitives/Binary.Cursor.swift:42`
-  — `public struct Cursor<Storage: Memory.Contiguous.\`Protocol\` & ~Copyable>: ~Copyable where Storage.Element == UInt8`.
+  — `public struct Cursor<Storage: Span.\`Protocol\` & ~Copyable>: ~Copyable where Storage.Element == UInt8`.
 - `swift-primitives/swift-binary-primitives/Sources/Binary Cursor Primitives/Binary.Reader.swift:42`
-  — `public struct Reader<Storage: Memory.Contiguous.\`Protocol\` & ~Copyable>: ~Copyable where Storage.Element == UInt8`.
+  — `public struct Reader<Storage: Span.\`Protocol\` & ~Copyable>: ~Copyable where Storage.Element == UInt8`.
 - `swift-primitives/swift-byte-primitives/Sources/Byte Primitives/Byte.Borrowed.swift:69`
   — `extension Byte: Ownership.Borrow.\`Protocol\` {}`.
 - `swift-primitives/swift-text-primitives/Sources/Text Primitives/Text+Ownership.Borrow.Protocol.swift:43-44`

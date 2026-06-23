@@ -53,12 +53,12 @@ swift-foundations yields:
 | Memory.Buffer.Mutable | None | — |
 | Memory.Pool | None | — |
 | Memory.Arena | None | — |
-| Memory.Contiguous.Protocol | 3 packages | Generic constraints and conformances |
+| Span.Protocol | 3 packages | Generic constraints and conformances |
 | Memory.Address | Pervasive | Core type used across many packages |
 | Memory.Alignment | Several | Used in buffer-primitives growth policy |
 
-**Critical finding**: `Memory.Contiguous.Protocol` (which lives in Memory Primitives
-Core, not in the Buffer files) is actively used across swift-binary-primitives
+**Critical finding**: `Span.Protocol` (the span-vending capability, since lifted out of
+the Memory namespace into swift-span-primitives) is actively used across swift-binary-primitives
 (generic constraints on Cursor/Reader), swift-buffer-primitives (conformances on
 Buffer.Linear variants), and swift-storage-primitives (conformances on Storage.Heap
 and Storage.Inline). But `Memory.Buffer` and `Memory.Buffer.Mutable` themselves —
@@ -173,8 +173,9 @@ that the Storage tier implements independently.
 
 **Rationale**: Strict YAGNI. Zero consumers means zero value. If raw-byte consumers
 emerge, they can be rebuilt. The Memory Primitives package retains its core value:
-Memory.Address, Memory.Alignment, Memory.Contiguous.Protocol, and stdlib pointer
-extensions.
+Memory.Address, Memory.Alignment, the span-vending capability (then
+Memory.Contiguous.Protocol, since lifted out to Span.Protocol in swift-span-primitives),
+and stdlib pointer extensions.
 
 **Advantages**:
 - Cleanest: no dead code
@@ -226,7 +227,7 @@ swift-networking for pool allocation).
 
 1. **Zero consumers after 61+ packages.** These types have had ample opportunity to
    find consumers. Every package that COULD have used them (storage-primitives,
-   buffer-primitives, binary-primitives) instead uses either Memory.Contiguous.Protocol
+   buffer-primitives, binary-primitives) instead uses either Span.Protocol
    (different type), stdlib pointer types directly, or independent implementations of
    the same patterns.
 
@@ -260,7 +261,7 @@ swift-networking for pool allocation).
    ongoing cost of maintaining unused code across every build, test, and refactor cycle.
 
 **What remains in swift-memory-primitives**:
-- Memory Primitives Core: Memory.Address, Memory.Alignment, Memory.Contiguous.Protocol,
+- Memory Primitives Core: Memory.Address, Memory.Alignment, the span-vending capability (then Memory.Contiguous.Protocol, since lifted out to Span.Protocol in swift-span-primitives),
   typed arithmetic — all actively used across the ecosystem
 - Memory Primitives Standard Library Integration: Extensions on UnsafeRawPointer,
   UnsafeMutableRawPointer, UnsafeRawBufferPointer, UnsafeMutableRawBufferPointer —

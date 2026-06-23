@@ -69,7 +69,7 @@ shows the scalar-primitive shape (see V1) while both design docs describe the sp
 | **V2** | `__IteratorChunkProtocol` carries `where Element: Escapable` **AND** refines `Iterator.\`Protocol\`` | `__IteratorChunkProtocol.swift:34` (`: Iterator.\`Protocol\`, ~Copyable, ~Escapable` — the refinement) + `:35` (`where Element: Escapable` — the over-narrow bound); doc rationale `:26-30` ("`Span<Element>` requires escapable elements") | **VERIFIED (both)** |
 | **V3** | `Iterator.Chunk` *struct* is **bound-free + span-storing** | `Iterator.Chunk.swift:26` (`struct Chunk<Element>: ~Copyable, ~Escapable` — no `Escapable` bound) + `:27` (`let span: Swift.Span<Element>`); only its *conformance* `:45` inherits the protocol's bound | **VERIFIED** |
 | **V4** | `Span<~Copyable>` exists + subscript is a **borrowing addressor** (no move-out) | `Span/Span.swift:29` (`public struct Span<Element: ~Copyable>: ~Escapable, Copyable, BitwiseCopyable`) + `:455-461` (`subscript(_:) -> Element { unsafeAddress { … } }` — borrow, never moves out) | **VERIFIED** |
-| **V5** | `Memory.Contiguous.span` is `~Copyable`-capable | `Memory.ContiguousProtocol.swift:90-101` (`protocol ContiguousProtocol: ~Copyable { associatedtype Element: ~Copyable; var span: Span<Element> { get } }`) + `Set.Ordered+Iteration.swift:27-34` (span witness `where Element: ~Copyable`) | **VERIFIED** |
+| **V5** | `Span.Protocol`'s `span` is `~Copyable`-capable | `Span.Protocol.swift` (`protocol Protocol: ~Copyable { associatedtype Element: ~Copyable; var span: Span<Element> { get } }`) + `Set.Ordered+Iteration.swift:27-34` (span witness `where Element: ~Copyable`) | **VERIFIED** |
 
 ### V6 — Independent confirmation from the `swiftlang/swift` clone (`/Users/coen/Developer/swiftlang/swift`)
 
@@ -119,7 +119,7 @@ unambiguous).
 Enumerated workspace-wide across all org-mirror dirs (literal `: Iterable`, generic-instantiated, AND
 conformance-position incl. attribute-prefixed forms). **[HANDOFF-040]/[HANDOFF-031] lesson:** the literal
 `(:|,) *Iterable\b` regex **silently missed** the `@unsafe Iterable` / `@retroactive Iterable` attribute-prefixed
-conformances (Buffer.Ring/Slab/Linked inline variants, Single, Cyclic.Group.Static, Memory.Contiguous). An
+conformances (Buffer.Ring/Slab/Linked inline variants, Single, Cyclic.Group.Static, Storage.Contiguous). An
 attribute-aware grep (`extension .*:.*\bIterable\b`) was required for completeness. No conformers exist outside
 `swift-primitives` (standards/foundations/legal/coenttb dirs returned none); no generic-instantiated `Iterable<…>`
 forms (the institute `Iterable` is unparameterized).
@@ -143,8 +143,8 @@ building.**
 |---|---|---|---|
 | `swift-set-ordered-primitives` | `Set.Ordered`, `.Fixed`, `.Small`, `.Static` | 4 | the **D5 exemplar**; `Set.Ordered.Iterator.swift:46` etc. via bridge over `span` |
 | `swift-buffer-linear-primitives` | `Buffer.Linear`, `.Inline`, `.Small`, `.Bounded` | 4 | `Buffer.Linear+Sequence.Protocol.swift:30-32` `@_implements typealias IterableIterator = Iterator.Chunk<Element>` |
-| `swift-array-primitives` | `Array`, `.Static`, `.Small`, `.Fixed` | 4 | `Array.Conformances.swift:52,57-60` (`: Memory.Contiguous.Protocol` + `Iterator.Chunk` "vended FOR FREE by the bridge") |
-| `swift-memory-iterator-primitives` | `Memory.Contiguous` | 1 | `Memory.Contiguous+Iterable.swift:84` `@retroactive` opt-in |
+| `swift-array-primitives` | `Array`, `.Static`, `.Small`, `.Fixed` | 4 | `Array.Conformances.swift:64` (`: Span.\`Protocol\`` + `Iterator.Chunk` "vended FOR FREE by the bridge") |
+| `swift-memory-iterator-primitives` | `Storage.Contiguous` | 1 | `Span.Protocol+Iterable.swift` (the contiguous ⇄ iteration bridge; per-conformer `@retroactive` opt-in) |
 
 **B. HAND-ROLLED SCALAR (18) — BREAK under D2; need migration. FLAGGED per Ground Rule 4.** `Iterable.Iterator`
 is a scalar `Iterator.\`Protocol\`` conformer (`next() -> Element?`); after D2 re-points `Iterable.Iterator` to
@@ -169,7 +169,7 @@ is a scalar `Iterator.\`Protocol\`` conformer (`next() -> Element?`); after D2 r
 | `swift-buffer-ring-primitives` | `Buffer.Ring` (base) | 1 | `Buffer.Ring.Segments` — owns ≤2 `Iterator.Chunk`, drains via `Iterator.Chunk.next(maximumCount:)`. Already **bulk-shaped**; needs `Segments` to conform to `__IteratorChunkProtocol` (yield sub-spans across both segments). Moderate migration; machinery exists. |
 | `swift-buffer-ring-primitives` | `Buffer.Ring.Small`, `.Bounded` | 2 | `@unsafe Iterable` in `+Span.swift`; not directly read — **likely** scalar `Walk` (like `.Inline`) OR piecewise (like base). Re-verify at execution; **breaks under D2 either way.** |
 
-**Net:** **13 migrate free** (the dense-contiguous `Memory.Contiguous` family); **21 break under D2** (18
+**Net:** **13 migrate free** (the dense-contiguous `Span.Protocol` family); **21 break under D2** (18
 hand-rolled scalar + 3 ring) across **9 packages outside the authorized 3-package reference scope**
 (bit-vector, vector, buffer-ring, buffer-slab, buffer-linked, single, input, hash-table, cyclic). This is the
 basis for the escalation below.
@@ -215,12 +215,12 @@ deprecate; **git work-forward, stage explicit paths, never `git add -A`**; commi
 
 ### Package 2 — `swift-memory-iterator-primitives` (D4)
 
-- **Commit 4 — D4** (`Memory Iterator Primitives/Memory.Contiguous+Iterable.swift`): relax the **owned bridge**
+- **Commit 4 — D4** (`Memory Iterator Primitives/Span.Protocol+Iterable.swift`): relax the **owned bridge**
   (`:28`, `where … Element: Copyable → ~Copyable`) and the **borrowed bridge** (`:74-75`, same); **delete the
   bespoke span-lending `forEach` floor** (`:55-67`) now subsumed by the general span-loop `forEach` (D3).
   Verify no overload ambiguity between the general `Iterable.forEach` and any residual (the `:48-54` comment
   documents the prior intra-`Iterable`-vs-cross-protocol ambiguity wall — confirm the general floor resolves
-  for `Memory.Contiguous` conformers). Migrate the in-package fixture (`FixtureBorrowed`, `Memory.Contiguous
+  for `Span.Protocol` conformers). Migrate the in-package fixture (`FixtureBorrowed`, `Span.Protocol
   Iterable Tests.swift:27`) if affected.
   **Gate (mirror discipline, arc §10.1):** commit Package 1 locally **and purge**
   `~/Library/Caches/org.swift.swiftpm/repositories` before this package resolves the change; then
@@ -255,7 +255,7 @@ deprecate; **git work-forward, stage explicit paths, never `git add -A`**; commi
 | # | Criterion | Verification source |
 |---|---|---|
 | 1 | `__IteratorChunkProtocol` bound is `~Copyable`, **not** refining `Iterator.\`Protocol\``; `Iterable.Iterator` re-pointed; `Iterator.Chunk` still conforms | disk Read + grep; build |
-| 2 | `Iterable.forEach` (+ fallible) driven by the span loop; bespoke `Memory.Contiguous` floor subsumed/deleted; both element kinds, no Copyable gate | disk Read `Iterable+ForEach.swift` + `Memory.Contiguous+Iterable.swift` |
+| 2 | `Iterable.forEach` (+ fallible) driven by the span loop; bespoke span-lending floor subsumed/deleted; both element kinds, no Copyable gate | disk Read `Iterable+ForEach.swift` + `Span.Protocol+Iterable.swift` |
 | 3 | bridge is `~Copyable` (not Copyable-gated); `Set.Ordered: Iterable` is ONE conformance; per-type `forEach` deleted; `x.forEach { }` resolves for both kinds | disk grep + `/tmp` consumer over a `~Copyable`-element set |
 | 4 | **build-verify gate** passes (`Iterator.Chunk(span)` over inline `@_rawLayout`, `~Copyable`, debug AND release) | build/test — supervisor runs |
 | 5 | 0-`witness_method` on the hot path | SIL grep (cross-module `-O`) |
@@ -294,7 +294,7 @@ deprecate; **git work-forward, stage explicit paths, never `git add -A`**; commi
 
 **The escalation trigger fired.** The arc dispatch Ground Rule 6(a) and this dispatch's Ground Rule 6(c) both
 require escalation BEFORE finalizing the plan if the blast-radius enumeration surfaces hand-rolled **scalar**
-`Iterable` conformers outside the `Memory.Contiguous` family. **It surfaced 21** (cohorts B + C) across **9
+`Iterable` conformers outside the `Span.Protocol` family. **It surfaced 21** (cohorts B + C) across **9
 packages**.
 
 **The structural problem.** D2 lands in `swift-iterator-primitives` (a foundational dependency) and changes
@@ -350,7 +350,7 @@ Step-0 gate + all 7 acceptance criteria PASS; D1–D4 applied in a scratch works
 the 4 real packages remain clean at baselines (`b7277fb`/`1c6d694`/`6af55a2`/`dd60699`, `main`) — **D1/D2 NOT on
 shared `main`, nothing pushed, `Iterator.Borrow` parked-untouched.** SIL hot path **0-`witness_method`** (residuals
 off-path: `Int.description`/print + generic witness thunks). The span-primitive shape is proven via the **Step-0
-`@_rawLayout` spike + a synthetic `Memory.Contiguous` `~Copyable` consumer** (the accepted isolated proof per the
+`@_rawLayout` spike + a synthetic `Storage.Contiguous` `~Copyable` consumer** (the accepted isolated proof per the
 D5 adjudication).
 
 **Premise correction ([HANDOFF-016]).** This doc's earlier claim — *"the 3-package reference rework can build/test
@@ -371,7 +371,7 @@ first wave.
 **Two D-step refinements (from execution; fold into the Option-A dispatch):**
 - **D4 mechanism:** "relax `Copyable → ~Copyable`" is realized by **removing the positive `Element: Copyable`
   narrowing** on the bridge extensions, NOT by writing `where Element: ~Copyable` (the compiler rejects re-suppressing
-  Copyable on an already-`~Copyable` outer-scope associated type — `Memory.ContiguousProtocol.Element` is already
+  Copyable on an already-`~Copyable` outer-scope associated type — `Span.Protocol.Element` is already
   `~Copyable`).
 - **D3 scope:** D2 breaks **every** terminal that drove the scalar `next()` — `first`/`contains`/`reduce` migrate to
   the span loop too, not just `forEach` (+ fallible). The extraction gate (`Element: Copyable & Escapable`) on `first`

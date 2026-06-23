@@ -11,7 +11,7 @@ scope: ecosystem-wide
 type: investigation/architecture
 changelog:
   - "1.5.0 (2026-06-04): §13 AMENDMENT (RATIFIED 2026-06-04, seat — authored inside the storage/memory-split W-C per the packet's ratified ask-6; commit rides that arc's merge window). (a) §3.4's `Storage.Protocol` row refreshed to the post-split stack: `Store.Protocol` (FROZEN) ⊂ `Store.Tracked.Protocol` (NEW — the split's initialization-ledger tier; the (b′) sanction wording lives there verbatim) ⊂ `Storage.Protocol` (pure marker refinement). The dense-discipline gate: `Storage.Contiguous<M>` is Tracked/Storage exactly when `M: Store.Tracked.Protocol` — untracked substrates unrepresentable under dense disciplines; the discipline-side inert `.empty` witness deleted. The cleanup oracle lives in the LEAF's class (`Memory.Heap<E>` backing `deinit` walks the header ledger; the bd04f32 wall); `Storage<E>.Heap = Storage<E>.Contiguous<Memory.Heap<E>>` (typealias, the sanctioned intermediate per #5a(i)); the mutable span leg stays PINNED concrete (the form-G wall). (b) §12 currency note: the Unify span collapse (swift-span-primitives f2c0c4f) — Span.Borrowed.`Protocol` DELETED; ONE Span.`Protocol`: ~Copyable, ~Escapable with the single @_lifetime(borrow self) requirement carries both lifetime regimes; §12's LIFT decision + Span.Mutable.`Protocol` stand unchanged. Evidence: the split packet's P1/P2 probes + W-A/W-B/W-C receipts (20/6 · 15/5 · 144/26 true-clean; 0-witness_method drivers per wave)."
-  - "1.4.0 (2026-06-03): §3.4 AMENDMENT (RECOMMENDATION; awaits supervisor re-approval) — the Memory.Contiguous.Protocol `span` requirement is LIFTED into a namespace-neutral Span capability in swift-span-primitives (principal-authorized 2026-06-03): Span.`Protocol` (owned, @_lifetime(borrow self)) + Span.Borrowed.`Protocol` (~Escapable, @_lifetime(copy self)) + Span.Mutable.`Protocol` (refines Span.`Protocol`). Memory.Contiguous(.Borrowed) CONFORMS to Span(.Borrowed).`Protocol` rather than owning a Memory-named protocol; §3.4's 'Storage provides span' becomes a Span.`Protocol` conformance composed over the Storage core. This is the same don't-bake-a-cross-cutting-concern-into-a-core move (§3.1) applied to span. Dissolves the byte/binary→memory coupling (Byte.Borrowed/Binary.Borrowed conform to the namespace-neutral capability in their own packages) and retires __Memory_Contiguous_Borrowed_Protocol. Derived + verified in swift-institute/Research/memory-byte-bit-domain-orthogonality.md v1.0.0. See §12. swift-span-primitives authored via a separate dispatch, not from this doc; execution sequenced by the principal."
+  - "1.4.0 (2026-06-03): §3.4 AMENDMENT (RECOMMENDATION; awaits supervisor re-approval) — the read/span requirement (then the `Memory.Contiguous.Protocol` `span` requirement) is LIFTED into a namespace-neutral Span capability in swift-span-primitives (principal-authorized 2026-06-03): Span.`Protocol` (owned, @_lifetime(borrow self)) + Span.Borrowed.`Protocol` (~Escapable, @_lifetime(copy self)) + Span.Mutable.`Protocol` (refines Span.`Protocol`). The owned region (then `Memory.Contiguous`, now `Storage.Contiguous`) and its borrowed view CONFORM to Span(.Borrowed).`Protocol` rather than owning a Memory-named protocol; §3.4's 'Storage provides span' becomes a Span.`Protocol` conformance composed over the Storage core. This is the same don't-bake-a-cross-cutting-concern-into-a-core move (§3.1) applied to span. Dissolves the byte/binary→memory coupling (Byte.Borrowed/Binary.Borrowed conform to the namespace-neutral capability in their own packages) and retires __Memory_Contiguous_Borrowed_Protocol. Derived + verified in swift-institute/Research/memory-byte-bit-domain-orthogonality.md v1.0.0. See §12. swift-span-primitives authored via a separate dispatch, not from this doc; execution sequenced by the principal."
   - "1.3.0 (2026-05-29): SUBSTRATE LANDED (local/unpushed) — with a design PIVOT from the §4.2/§8 approved plan. (a) `Algebra.Lattice` landed IN swift-algebra-primitives (the consolidated tower's `Algebra Lattice Primitives` target: join+meet semilattices + absorption + bounds; `.minMax` for Comparable), NOT a standalone `swift-algebra-lattice` package — a lattice is not a Boolean/Bool type. (b) NO `Algebra.Boolean` type and NO Boolean-algebra package: `Swift.Bool` IS the Boolean algebra, extended directly in `swift-bool-algebra-primitives` (`Algebra.Lattice<Bool>()` + `Algebra.Semiring<Bool>.Commutative()` as plain init()s; native `!` is the complement). (c) `swift-set-algebra-primitives`: `someUniverse.powerset() -> Algebra.Lattice<Self>` (join=union, meet=intersection, ⊥=∅, ⊤=self); relative complement = the package's own native `subtracting` (U∖A), no Boolean witness. Also landed: a tower-wide Sendable-requirement sweep across swift-algebra-primitives (region-based isolation over Sendable per [MEM-SEND-012]/[MEM-SEND-013] — witnesses CONFORM but no longer REQUIRE Sendable); set-algebra `powerset()` dropped its `where Self: Sendable` workaround. Ecosystem build-check clean — no consumer breaks from de-Sendable-requiring (4 unrelated pre-existing failures: field/group incomplete-consolidation target collisions, pool missing array product, tensor vector-primitives typed-throws). Still deferred: ~Copyable-predicate slice, ×16 fan-out, set-ordered SIL re-proof."
   - "1.2.0 (2026-05-29): EXECUTION LANDED (held for push) + §8 Decision #3 REFINED. The §4 reduction + in-place algebra rehome landed on the real types — set-primitives 0fa1334 (core = {contains,count} + isEmpty; predicates `where Self: Iterable`; constructive `where Self: Set.Buildable.Protocol & Iterable` returning Self; subtract→subtracting; the three-location `.algebra` fragmentation deleted), set-ordered c10e05e (Set.Ordered + .Small adopt Set.Buildable.Protocol; bounded Fixed/Static predicates-only). Builder-for-free follow-on: family `Set.Builder` @resultBuilder hoisted + free `init(@Set.Builder)` default for growable; bounded keep one-line per-variant THROWING inits and remain NOT Set.Buildable.Protocol (§4.2 preserved) — set-primitives f40f5d3, set-ordered 01de92c. In-package SIL on the REAL Set.Ordered: 0 witness_method on the algebra + DSL hot path (release, cross-module; 2 residuals = off-path stdlib Comparable.>= generic). Still deferred: ~Copyable-predicate slice, lattice/Boolean substrate, swift-set-algebra-primitives extraction, ×16 fan-out."
   - "1.1.0 (2026-05-28): Supervisor APPROVED (SIL receipt verified against the real file — hot-path 0-witness confirmed; sequencer-refactor landing + Buffer.Protocol-extended-not-superseded confirmed). §3 normal form + Set.Protocol elevation approved as the ×16 fan-out template foundation. Decisions #1/#3/#4 approved as recommended. Decision #2's substrate condition RESOLVED: the principal authorizes a bounded-lattice package (swift-algebra-lattice = existing semilattice + absorption) + a Boolean-algebra package (on Swift.Bool + the algebra family; name per [PKG-NAME-*]), so the swift-set-algebra-primitives bridge witnesses ∪=join/∩=meet/∁=complement over REAL packaged structures, not prose (§4.2/§8). Research phase concluded. Execution sequenced by the principal — NOT begun."
@@ -20,7 +20,7 @@ changelog:
 -->
 
 > **RECOMMENDATION (Tier 3, ecosystem-wide / cross-layer) — APPROVED 2026-05-28 (supervisor).** The
-> theoretically-optimal capability-protocol model for the data-structure stack — `Memory.Contiguous.Protocol`
+> theoretically-optimal capability-protocol model for the data-structure stack — `Span.Protocol`
 > / `Storage.Protocol` / `Buffer.Protocol` / `Set.Protocol`, and how they relate to the iteration substrate
 > (`Iterable` / `Iterator.Borrow` / `Sequenceable`) — so a conformer **inherits as much as theoretically
 > possible for free**, bounded by the specialization boundary.
@@ -50,7 +50,7 @@ collection tier, expose a *capability protocol*:
 
 | Protocol | Package | Concern | Today's shape |
 |----------|---------|---------|---------------|
-| `Memory.Contiguous.Protocol` (`Memory.ContiguousProtocol`) | swift-memory-primitives | physical contiguous *read* | `span` + unsafe escape hatch |
+| `Span.Protocol` (`Span.Protocol.swift`) | swift-span-primitives | physical contiguous *read* | `span` + unsafe escape hatch |
 | `Storage.Protocol` (`__StorageProtocol`) | swift-storage-primitives | physical slot *access* | `capacity` + `pointer(at:)` |
 | `Buffer.Protocol` (`__BufferProtocol`) | swift-buffer-primitives | logical *occupancy* | `count` + `isEmpty` default (relaxed `Count`) |
 | `Set.Protocol` (`__SetProtocol`) | swift-set-primitives | set *membership/algebra* | `contains` + `forEach` + `count` → algebra defaults |
@@ -81,7 +81,7 @@ Each cited artifact was read in full and is accounted for. Verification tags per
 
 | Artifact | Status read | Disposition | Reason |
 |----------|-------------|-------------|--------|
-| `Memory.ContiguousProtocol.swift` | `[Verified: 2026-05-28]` | **EXTEND** | The contiguous-read surface (`span`) is the Memory-layer capability. Model positions it as the read terminal of the physical axis; its opt-in `where Self: Iterable` bridge is the canonical relate-don't-refine edge. No change to requirements. |
+| `Span.Protocol.swift` (then `Memory.ContiguousProtocol.swift`) | `[Verified: 2026-05-28]` | **EXTEND** | The contiguous-read surface (`span`) is a cross-cutting capability. Model positions it as the read terminal of the physical axis; its opt-in `where Self: Iterable` bridge is the canonical relate-don't-refine edge. No change to requirements. |
 | `Storage.Protocol.swift` | `[Verified: 2026-05-28]` | **EXTEND** | `capacity` + `pointer(at:)` is the minimal physical-slot primitive. Model keeps it; notes the open `capacity`/`slotCapacity` conformer gap (buffer-dedup blocker) as a Storage-arc concern, not this model's. |
 | `Buffer.Protocol.swift` | `[Verified: 2026-05-28]` | **EXTEND, not supersede** | The A′ shape (logical `count`+`isEmpty`; orthogonal-not-refined to `Iterable`; no `Storage` refinement; relaxed `Count: Carrier.Protocol<Cardinal>`) is *correct* and is the buffer-layer instance of this model. Model positions it; does **not** reshape its requirements. → the buffer arc is **not** forced to pause. |
 | `Set.Protocol.swift` | `[Verified: 2026-05-28]` | **SUPERSEDE-with-reason** | The capability surface is *retained and elevated* (§4); the **fragmentation** of its algebra across three files / two packages and the **hard-coded `Set.Ordered` return type** are superseded. Its stale-comment reconciliation (already applied: cites the live docs, not the dead `iteration-architecture-set-probe.md`) is confirmed `[Verified: 2026-05-28]`. |
@@ -97,7 +97,7 @@ Each cited artifact was read in full and is accounted for. Verification tags per
 
 ## 2. Question
 
-How should the four capability protocols (`Memory.Contiguous.Protocol`, `Storage.Protocol`,
+How should the four capability protocols (`Span.Protocol`, `Storage.Protocol`,
 `Buffer.Protocol`, `Set.Protocol`) and the iteration substrate be related so that **(a)** a data
 structure inherits the maximum derivable surface for free, **(b)** `Set.Protocol` becomes the genuine
 set-layer capability surface (peer of `Buffer`/`Storage`, not a narrow algebra add-on), and **(c)** the
@@ -119,7 +119,7 @@ when it is in fact a third orthogonal concern, no more part of a set's identity 
 COMPOSITION STACK ([DS-001]) — a HAS-A containment chain; each layer's capability protocol is a MINIMAL core
 declaring ONLY its layer's irreducible primitives:
    Memory  ◄─has─  Storage  ◄─has─  Buffer  ◄─has─  Collection-tier (Set, …)
-   Memory.Contiguous.Protocol   Storage.Protocol     Buffer.Protocol   Set.Protocol
+   Span.Protocol                Storage.Protocol     Buffer.Protocol   Set.Protocol
    (span)                       (pointer(at:)+capacity)  (count)        (contains + count)
 
 ORTHOGONAL CROSS-CUTTING CONCERNS — composed OVER the cores via `where Self: Core [& OtherConcern]`,
@@ -155,7 +155,7 @@ conformer is then the union of every orthogonal family whose `where`-clause it s
 
 **Decision rule for (R) vs (C):** *refine only when the type's identity is the supertype's concern;
 compose otherwise.* `Collection.Protocol: Iterable` is a legitimate refinement (a collection **is**
-iteration-with-indices). `Buffer.Protocol`, `Storage.Protocol`, `Memory.Contiguous.Protocol` and
+iteration-with-indices). `Buffer.Protocol`, `Storage.Protocol`, `Span.Protocol` and
 `Set.Protocol` do **not** refine `Iterable` (their identity is occupancy / slot-access / contiguous-read
 / membership — not iteration); they relate to it by (C).
 
@@ -187,22 +187,22 @@ the property-primitives pattern ([PRP-008], [PRP-001]).
 
 For each protocol: **R**equires / **P**rovides-as-default / **C**omposition / **inherits-for-free**.
 
-#### Memory.Contiguous.Protocol — physical contiguous read
+#### Span.Protocol — physical contiguous read
 - **Requires:** `span: Span<Element>` (the one primitive) + `withUnsafeBufferPointer` (C-interop escape). `Element: ~Copyable`.
 - **Provides (D):** positional read, `count == span.count`, bounds — all derivable from `span` (today minimal; expandable).
-- **Composition (C):** `extension Memory.ContiguousProtocol where Self: Iterable, Element: Copyable { makeIterator() → Iterator.Chunk }` — the canonical relate-don't-refine bridge (already shipped; retroactive refinement is *impossible* cross-package and would force an iterator dep onto memory — [MOD-035]).
+- **Composition (C):** `extension Span.Protocol where Self: Iterable, Element: Copyable { makeIterator() → Iterator.Chunk }` — the canonical relate-don't-refine bridge (already shipped; retroactive refinement is *impossible* cross-package and would force an iterator dep onto the read-capability package — [MOD-035]).
 - **Inherits-for-free:** a contiguous type declaring `: Iterable` gets the bulk span iterator + the `Iterable` terminal suite, writing only `span`.
 
 #### Storage.Protocol — physical slot access
 - **Requires:** `capacity: Index<Element>.Count`, `@unsafe pointer(at: Index<Element>)`. `Element: ~Copyable`. Single-region (`Storage.Split` is multi-region → does not conform).
-- **Provides (D):** the generic-over-`some Storage.Protocol` element algorithm (fill/move/sum-shape) — proven 0-witness (`storage-protocol-specialization`). **New (recommended):** a `where Self: …` default supplying `Memory.Contiguous.Protocol.span` from `pointer(at: .zero)` + `capacity` for contiguous single-region storage — a free Memory-read surface (composition within the physical axis).
-- **Composition (C):** **does NOT refine `Memory.Contiguous.Protocol`** by default (a slab/arena is slot-addressed but not contiguous) — the span default is gated to contiguous disciplines.
+- **Provides (D):** the generic-over-`some Storage.Protocol` element algorithm (fill/move/sum-shape) — proven 0-witness (`storage-protocol-specialization`). **New (recommended):** a `where Self: …` default supplying `Span.Protocol.span` from `pointer(at: .zero)` + `capacity` for contiguous single-region storage — a free read surface (composition within the physical axis).
+- **Composition (C):** **does NOT refine `Span.Protocol`** by default (a slab/arena is slot-addressed but not contiguous) — the span default is gated to contiguous disciplines.
 - **Inherits-for-free:** any single-region storage gets the generic element algorithm; contiguous storage additionally gets `span`.
 
 #### Buffer.Protocol — logical occupancy *(EXTEND; keep A′)*
 - **Requires:** `count: Count` where `Count: Carrier.Protocol<Cardinal> = Index<Element>.Count`. `Element: ~Copyable`, `Self: ~Copyable & ~Escapable`.
 - **Provides (D):** `isEmpty` (`count == .zero`, constrained `where Count == Index<Element>.Count`).
-- **Composition (C):** `extension __BufferProtocol where Self: Iterable & ~Copyable { … }` for count+iteration logic; `span` stays on `Memory.Contiguous.Protocol` for contiguous variants. **Does NOT refine `Storage.Protocol`** (has-a) nor `Iterable` (orthogonal; refining would couple header-knowable `count` to iterability).
+- **Composition (C):** `extension __BufferProtocol where Self: Iterable & ~Copyable { … }` for count+iteration logic; `span` stays on `Span.Protocol` for contiguous variants. **Does NOT refine `Storage.Protocol`** (has-a) nor `Iterable` (orthogonal; refining would couple header-knowable `count` to iterability).
 - **Inherits-for-free:** every discipline writes `count`; gets `isEmpty` free; gains iteration by *separately* conforming `Iterable` (via `Iterator.Borrow` for `~Copyable`).
 
 #### Set.Protocol — the set membership *core* *(SUPERSEDE-with-reason; the elevation — §4)*
@@ -304,7 +304,7 @@ composition specializes (§6).
 
 ## 5. The iteration relationship (relate-don't-refine)
 
-`Set.Protocol` (and `Buffer`/`Storage`/`Memory.Contiguous`) relate to the iteration substrate by
+`Set.Protocol` (and `Buffer`/`Storage`/`Span`) relate to the iteration substrate by
 **edge kind (C)** — orthogonal sibling, not refinement:
 
 - The set **algebra is generic over `Set.Protocol` alone** — it never names `Iterable`. Iteration is
@@ -582,7 +582,7 @@ is landed; no live package or worktree edited; execution is sequenced by the pri
 
 ## References
 
-- Protocols: `swift-memory-primitives/.../Memory.ContiguousProtocol.swift`;
+- Protocols: `swift-span-primitives/.../Span.Protocol.swift`;
   `swift-storage-primitives/.../Storage.Protocol.swift`;
   `swift-buffer-primitives/.../Buffer.Protocol.swift`;
   `swift-set-primitives/.../Set.Protocol.swift`, `.../Set.Protocol+defaults.swift`.
@@ -622,7 +622,7 @@ span-vending protocol — and that this protocol is **mis-located in the Memory 
 
 ### What §1/§3.4 said, and what this refines
 
-§1 dispositioned `Memory.ContiguousProtocol` as **EXTEND — no change to requirements** ("the contiguous-read
+§1 dispositioned the read-surface protocol (then `Memory.ContiguousProtocol`, now `Span.Protocol`) as **EXTEND — no change to requirements** ("the contiguous-read
 surface (`span`) is the Memory-layer capability"). §3.4 then had **Storage *provide*** that `span`
 (`where Self: …` default from `pointer(at:.zero)`+`capacity`). The two together already imply what this
 amendment makes explicit: **`span`-vending is not Memory's exclusive core primitive — it is a cross-cutting
@@ -632,12 +632,12 @@ into a namespace-neutral capability, exactly as the set *algebra* was lifted out
 
 ### The empirical proof that it is cross-cutting
 
-`__Memory_Contiguous_Borrowed_Protocol.swift:20-35` documents **three conformers from three domains** —
-`Memory.Contiguous.Borrowed`, `Byte.Borrowed` (swift-byte-primitives), `Binary.Borrowed`
-(swift-binary-primitives) — and states the owned/borrowed split is **structural**: *"a single protocol
+`__Memory_Contiguous_Borrowed_Protocol.swift:20-35` (the then-borrowed-view protocol, since dissolved into `Span.Protocol`) documented **three conformers from three domains** —
+the borrowed view (then `Memory.Contiguous.Borrowed`), `Byte.Borrowed` (swift-byte-primitives), `Binary.Borrowed`
+(swift-binary-primitives) — and stated the owned/borrowed split was **structural**: *"a single protocol
 cannot polymorphically express both — the witness-table contract for `var span` differs across the two
-lifetime regimes."* Naming a protocol with byte- and binary-domain conformers `Memory.Contiguous.Borrowed.Protocol`
-**is** the byte/binary→memory coupling. [Verified: 2026-06-03]
+lifetime regimes."* Naming a protocol with byte- and binary-domain conformers in the Memory namespace (then `Memory.Contiguous.Borrowed.Protocol`)
+**was** the byte/binary→memory coupling. [Verified: 2026-06-03]
 
 ### The amendment
 
@@ -663,26 +663,26 @@ public enum Span {
 
 Then, across the stack:
 
-- `Memory.Contiguous` **conforms to** `Span.Protocol`; `Memory.Contiguous.Borrowed` **conforms to**
-  `Span.Borrowed.Protocol`. `Memory.ContiguousProtocol` / `__Memory_Contiguous_Borrowed_Protocol` are
-  **retired** (the struct stays; only the protocol it declared moves out and is renamed). The `__`-mangled
-  sibling-resolution workaround is retired with it.
+- The owned region (then `Memory.Contiguous`, now `Storage.Contiguous`) **conforms to** `Span.Protocol`; its borrowed view **conforms to**
+  `Span.Borrowed.Protocol`. The Memory-named read protocols (then `Memory.ContiguousProtocol` / `__Memory_Contiguous_Borrowed_Protocol`) were
+  **retired** (the struct stays; only the protocol it declared moved out and was renamed). The `__`-mangled
+  sibling-resolution workaround was retired with it.
 - §3.4's **Storage span-provision becomes a `Span.Protocol` conformance** composed over the Storage core
   (`where Self: Storage.Protocol & contiguous-discipline`), not a provision of a Memory-named protocol.
 - `Byte.Borrowed` / `Binary.Borrowed` conform to `Span.Borrowed.Protocol` **in their own packages**
   (downward dep on `swift-span-primitives`); the byte/binary→**memory** edge is dissolved at the root, not
   relocated to a bridge.
-- Cursor operations generalize from `where DomainTag.Borrowed: Memory.Contiguous<Byte>.Borrowed.Protocol`
+- Cursor operations generalized from the former `where DomainTag.Borrowed: …Borrowed.Protocol` in the Memory namespace
   to `where DomainTag.Borrowed: Span.Borrowed.Protocol, …Element == Byte` — decoupling the cursor surface
   from Memory.
-- **Compose, do not precompose** ([API-NAME-002]): requirements read `M: Memory.* & Span.Mutable.Protocol`,
-  never a nested `Memory.Contiguous.Mutable.Protocol` conjunction.
+- **Compose, do not precompose** ([API-NAME-002]): requirements read `M: Storage.* & Span.Mutable.Protocol`,
+  never a nested `Storage.Contiguous.Mutable.Protocol` conjunction.
 
 ### What this does NOT change
 
 The §3 normal form, the three edge kinds, the specialization boundary, the Set.Protocol elevation, and the
 Storage/Buffer cores are unchanged. This amendment only **relocates and renames** the `span` capability
-(Memory.Contiguous core primitive → cross-cutting `Span` capability) and is consistent with §3.1's
+(the former Memory-namespace core primitive → cross-cutting `Span` capability) and is consistent with §3.1's
 core-vs-cross-cutting decision rule. Byte-domain operations on borrowed byte spans are best attached to
 `extension Span.Borrowed.Protocol where Element == Byte` (covering every byte-span uniformly), which makes
 each domain's nominal `.Borrowed` a thin storage+identity type — see the follow-on in the companion doc.
@@ -690,7 +690,7 @@ each domain's nominal `.Borrowed` a thin storage+identity type — see the follo
 ### Specialization (the HARD constraint, §3.3) — to verify before execution
 
 A `/tmp` 0-`witness_method` spike (build `swift-span-primitives`; reconform `Byte.Borrowed` +
-`Memory.Contiguous.Borrowed`; run the cursor peek/advance/consume hot path cross-module, `-O`) is required
+the owned region's borrowed view; run the cursor peek/advance/consume hot path cross-module, `-O`) is required
 before this amendment reaches DECISION, replicating the §6 harness. Renaming a protocol does not change
 witnesses, so the expectation is the existing 0-witness result holds; the spike confirms it.
 

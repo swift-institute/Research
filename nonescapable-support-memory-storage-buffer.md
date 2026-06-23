@@ -74,7 +74,7 @@ These types allocate on construction and deallocate on destruction. They have `d
 
 | Package | Type | Backing | ~Copyable | ~Escapable? |
 |---------|------|---------|:---------:|:-----------:|
-| memory | `Memory.Contiguous<E>` | `UnsafePointer<E>` + count | Yes | — |
+| storage | `Storage.Contiguous<E>` | `UnsafePointer<E>` + count | Yes | — |
 | memory | `Memory.Arena` | `UnsafeMutableRawPointer` | Yes | — |
 | memory | `Memory.Pool` | `UnsafeMutableRawPointer` | Yes | — |
 | memory | `Memory.Inline<E, capacity>` | `@_rawLayout` stack | Yes | — |
@@ -168,7 +168,7 @@ Current usage across the three packages:
 |--------|------------------:|-------------------:|------------------:|
 | `@_lifetime` annotations | 3 | 20+ | 100+ |
 | `_overrideLifetime` calls | 1 | 3 | varies |
-| `Span` properties | 1 (`Memory.Contiguous.span`) | 2 (Heap, Inline) | all linear/ring types |
+| `Span` properties | 0 | 3 (`Storage.Contiguous`, Heap, Inline) | all linear/ring types |
 | `MutableSpan` properties | 0 | 1 (Inline) | all linear/ring types |
 | Yielding `_read` accessors | few | many | many |
 | Yielding `_modify` accessors | few | many | many |
@@ -208,7 +208,7 @@ public struct Borrowed: ~Escapable {
     internal let _count: Int
 
     @_lifetime(borrow source)
-    init(borrowing source: Memory.Contiguous<some BitwiseCopyable>) { ... }
+    init(borrowing source: Storage.Contiguous<some BitwiseCopyable>) { ... }
 }
 ```
 

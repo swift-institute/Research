@@ -138,7 +138,7 @@ No source file violations.
 
 | Line | Current product | Target | Replacement product |
 |------|----------------|--------|-------------------|
-| 57 | `Memory Primitives` | Binary Primitives Core | `Memory Primitives Core` -- uses `Memory.Alignment`, `Memory.Contiguous.Protocol` |
+| 57 | `Memory Primitives` | Binary Primitives Core | `Memory Primitives Core` -- uses `Memory.Alignment`; `Span.Protocol` (span-primitives) |
 
 No source file violations.
 
@@ -526,7 +526,7 @@ No source file violations.
 
 | Line | Current product | Target | Replacement product |
 |------|----------------|--------|-------------------|
-| 30 | `Memory Primitives` | String Primitives | `Memory Primitives Core` -- uses `Memory.Contiguous.Protocol`, `Memory.Inline` |
+| 30 | `Memory Primitives` | String Primitives | `Memory Primitives Core` -- uses `Memory.Inline`; `Span.Protocol` (span-primitives) |
 
 No source file violations.
 

@@ -55,8 +55,6 @@ Does the `Kernel.Memory` domain re-implement concepts from `Memory` (memory-prim
 | `Memory.Shift` | struct | Bit shift count (0–63) |
 | `Memory.Shift.Error` | enum | `.outOfRange` |
 | `Memory.Allocation` | enum (namespace) | Allocation tracking (empty at primitives) |
-| `Memory.Contiguous<Element>` | struct (~Copyable) | Self-owning heap contiguous typed memory |
-| `Memory.ContiguousProtocol` | protocol | Borrowed read-access (span) |
 | `Memory.Inline<Element, capacity>` | struct | Fixed-capacity inline storage (@_rawLayout) |
 | `Memory.Aligned` | protocol | Power-of-2 alignment requirement |
 
@@ -266,6 +264,6 @@ All types in `Kernel.Memory` that don't wrap memory-primitives types are **genui
 
 ## References
 
-- `owned-typed-memory-region-abstraction.md` — Memory.Contiguous design decision (related type)
+- `owned-typed-memory-region-abstraction.md` — owned-typed-region design decision (now `Storage.Contiguous`)
 - `foundations-dependency-utilization-audit.md` — Layer 3 dependency audit
 - `swift-io-deep-audit.md` — IO layer quality audit (uses Kernel.Memory.Map)

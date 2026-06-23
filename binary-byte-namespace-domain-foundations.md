@@ -706,7 +706,7 @@ production at `String + String.Borrowed`, `Path + Path.Borrowed`, and
 
 ```swift
 public struct Binary: ~Copyable {
-    internal let _storage: Memory.Contiguous<UInt8>
+    internal let _storage: Storage.Contiguous<UInt8>
     public var count: Index<Byte>.Count { /* … */ }
 }
 
@@ -724,15 +724,15 @@ Precedent for the shape:
 
 | Type | Owned | Borrowed | Conforms to |
 |---|---|---|---|
-| `String` | `struct String: ~Copyable` over `Memory.Contiguous<Char>` | `struct Borrowed: ~Copyable, ~Escapable` over `UnsafePointer<Char> + count` | `Ownership.Borrow.Protocol` |
-| `Path` | `struct Path: ~Copyable` over `Memory.Contiguous<Char>` | `struct Borrowed: ~Copyable, ~Escapable` over `UnsafePointer<Char> + count` | `Ownership.Borrow.Protocol` |
+| `String` | `struct String: ~Copyable` over `Storage.Contiguous<Char>` | `struct Borrowed: ~Copyable, ~Escapable` over `UnsafePointer<Char> + count` | `Ownership.Borrow.Protocol` |
+| `Path` | `struct Path: ~Copyable` over `Storage.Contiguous<Char>` | `struct Borrowed: ~Copyable, ~Escapable` over `UnsafePointer<Char> + count` | `Ownership.Borrow.Protocol` |
 | `Byte` | `struct Byte` (value type) | `struct Borrowed: ~Copyable, ~Escapable` over `Span<UInt8>` | `Ownership.Borrow.Protocol` |
 
 The pattern is governed by `Ownership.Borrow.Protocol` (in `swift-ownership-primitives`) with `associatedtype Borrowed: ~Copyable, ~Escapable`. `Cursor<DomainTag>` in `swift-cursor-primitives` derives storage via the protocol's associated type — `Cursor<Byte>` uses `Byte.Borrowed`, and `Cursor<Binary>` would use `Binary.Borrowed`. This is the canonical institute pattern for owned-buffer types.
 
 ### Empirical Finding — Why Option #8's Owned Struct Did NOT Land
 
-The principal authorized 2026-05-20: *"ship Binary with typed counts, we'll sweep after."* Implementation proceeded with `struct Binary: ~Copyable` owning `Memory.Contiguous<UInt8>` and a nested `Binary.Borrowed: ~Copyable, ~Escapable`. Implementation [Verified: 2026-05-20]:
+The principal authorized 2026-05-20: *"ship Binary with typed counts, we'll sweep after."* Implementation proceeded with `struct Binary: ~Copyable` owning `Storage.Contiguous<UInt8>` and a nested `Binary.Borrowed: ~Copyable, ~Escapable`. Implementation [Verified: 2026-05-20]:
 
 - `swift-binary-primitives/Sources/Binary Namespace/Binary.swift` rewritten to `struct Binary: ~Copyable` with `count: Index<Byte>.Count` storage.
 - `Binary.Borrowed.swift` authored.
@@ -872,7 +872,7 @@ The actual Option #8 — the canonical institute T+T.Borrowed pattern:
 
 **`Binary` is a `~Copyable` owned-storage struct** in
 `swift-binary-primitives/Sources/Binary Namespace/`, owning
-`Memory.Contiguous<Byte>` (byte-domain typed, NOT `Memory.Contiguous<UInt8>`).
+`Storage.Contiguous<Byte>` (byte-domain typed, NOT `Storage.Contiguous<UInt8>`).
 The `count: Index<Byte>.Count` accessor establishes the new precedent for
 typed counts on T+T.Borrowed types; String / Path / Byte.Borrowed
 remain at `Int` count until a separate sweep.
@@ -915,7 +915,7 @@ Discipline lesson saved to memory as `feedback_clean_build_before_compiler_limit
 
 | File | Status | Purpose |
 |---|---|---|
-| `swift-binary-primitives/Sources/Binary Namespace/Binary.swift` | MODIFIED | `enum Binary {}` → `@safe public struct Binary: ~Copyable, @unsafe @unchecked Sendable` over `Memory.Contiguous<Byte>` with `count: Index<Byte>.Count`, byte-typed + UInt8-bridging initializers |
+| `swift-binary-primitives/Sources/Binary Namespace/Binary.swift` | MODIFIED | `enum Binary {}` → `@safe public struct Binary: ~Copyable, @unsafe @unchecked Sendable` over `Storage.Contiguous<Byte>` with `count: Index<Byte>.Count`, byte-typed + UInt8-bridging initializers |
 | `swift-binary-primitives/Sources/Binary Namespace/Binary.Borrowed.swift` | NEW | Nominal `extension Binary { public struct Borrowed: ~Copyable, ~Escapable }` over `Swift.Span<Byte>` (not `<UInt8>`) with `count: Index<Byte>.Count` |
 | `swift-binary-primitives/Sources/Binary Namespace/Binary+Ownership.Borrow.Protocol.swift` | NEW | `extension Binary: Ownership.Borrow.Protocol {}` — Swift auto-infers `Borrowed = Binary.Borrowed` |
 | `swift-binary-primitives/Package.swift` | MODIFIED | `Binary Namespace` target gains five deps: Byte_Primitives, Cardinal_Primitives, Index_Primitives, Memory_Primitives_Core, Ownership_Primitives |
@@ -939,7 +939,8 @@ the fixed-width-integer ↔ byte codec.
 ### Why Option #8 is retired
 
 Option #8 promoted `Binary` from a namespace to an owned `~Copyable` struct
-over `Memory.Contiguous<Byte>`, on the premise that the binary-domain wanted a
+over `Storage.Contiguous<Byte>` (then `Memory.Contiguous<Byte>`, since dissolved),
+on the premise that the binary-domain wanted a
 String/Path/Byte-style owned-buffer type. The truly-primitive review rejects
 that premise: it conflates two orthogonal concerns this very document already
 separated —

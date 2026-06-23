@@ -62,7 +62,7 @@ So the answer to the brief's critical sub-question Q3(a) is: **the existing cons
 | Protocol | Cut | Conformers today | Notes |
 |---|---|---|---|
 | `Memory.Region` | located raw bytes (`base`+`capacity`), construction-time seam | `Memory.Heap`, `Memory.Inline`, `Memory.Allocator.System` | the memory-tier protocol [Verified above] |
-| `Span.Protocol` (span-primitives) | OWNED typed span-vending capability | `Memory.Contiguous` et al. | the former "owned Memory contiguous protocol", deliberately relocated OUT of the Memory namespace — "the institute-neutral lift … so byte/binary/memory each conform without a cross-domain edge" (`Memory.Contiguous+Span.Protocol.swift:12-26`) [Verified: 2026-06-12] |
+| `Span.Protocol` (span-primitives) | OWNED typed span-vending capability | `Storage.Contiguous` et al. | the former "owned Memory contiguous protocol", deliberately relocated OUT of the Memory namespace — "the institute-neutral lift … so byte/binary/memory each conform without a cross-domain edge". The owned typed region that anchored this row was itself later dissolved into `Storage.Contiguous` [Verified: 2026-06-12, pre-dissolution] |
 | `Store.Protocol` | 4+1-op typed element seam (`capacity`, subscript, `initialize`, `move`, `prepareForMutation`) | `Storage.Contiguous`, `Store.Inline`, `Memory.Small` | "a **deletable convenience code-share vehicle**, not a foundational layer … never refined into storage identity" (`swift-store-primitives/Sources/Store Protocol Primitives/Store.Protocol.swift:118-135`) [Verified: 2026-06-12] |
 | `Store.Ledgered.Protocol` | `Store.Protocol` + settable `initialization` ledger | `Storage.Contiguous`, `Store.Inline` | ratified 2026-06-10 (ASK-A) precisely so "a composing discipline whose occupancy is not prefix-shaped" — "the ring now; **future wrapped/sparse disciplines**" — can sync the ledger generically (`Store.Ledgered.swift:21-55`) [Verified: 2026-06-12] |
 | `Memory.Tracked.Protocol` / `Memory.Allocatable.Protocol` | typed self-cleaning leaf; + allocate/bulk-relocate | `Memory.Small` only | the narrow D1-B/D2 replacements for the eliminated universal capabilities (2026-06-05). Doc comments still name `Memory.Heap`/`Memory.Inline` as conformers — stale since Heap/Inline went element-free; only `Memory.Small` conforms (`swift-memory-small-primitives/Sources/.../Memory.Small+Store.Protocol.swift:102`, `+Memory.Allocatable.swift:59`) [Verified: 2026-06-12, grep across swift-primitives] |
@@ -82,7 +82,7 @@ Consequence, independent of Foreign: **the pins fence out every non-heap region,
 ### Corrections to the dispatching brief
 
 1. The brief's canonical spelling `Storage<Int>.Contiguous<Memory.Heap<Int>>` (taken from the doc comment at `Buffer.swift:23`) is stale. The current shape is `Storage<Allocation>.Contiguous<Element>`; the dense column is `Storage<Memory.Allocator<Memory.Heap>.System>.Contiguous<Element>`, and `Memory.Heap` is element-free (`Memory.Heap.swift:16-40`) [Verified: 2026-06-12]. The `Buffer.swift:23` doc comment lags W4/W5 and should be fixed when the tower program next touches that file.
-2. "The root package already declares … a `Memory.Contiguous.Protocol`" — partially stale. The owned-contiguous capability was lifted out of the Memory namespace into the namespace-neutral `Span.Protocol` (`Memory.Contiguous+Span.Protocol.swift:12-26`); the `Memory.swift:21` overview line still advertising ``Memory/Contiguous/Protocol`` is doc lag.
+2. The brief's claim "The root package already declares … a `Memory.Contiguous.Protocol`" was already stale at the time of writing: the owned-contiguous capability had been lifted out of the Memory namespace into the namespace-neutral `Span.Protocol`; the `Memory.swift:21` overview line still advertising ``Memory/Contiguous/Protocol`` was doc lag. (Since then the owned typed region was itself dissolved into `Storage.Contiguous`, so even the namespace-qualified spelling is gone.)
 3. The brief's worry about "Copyability/@_rawLayout interactions" (INV-INLINE-004a) does not apply to Foreign: `@_rawLayout` constrains the **Inline/Small** storage variants (`Buffer.swift:27-36`); Foreign is a pointer-adopting regime like Heap and never touches raw layout.
 
 ## Empirical Probe (the load-bearing instantiation claim)
@@ -136,13 +136,13 @@ Universal adoption does not imply universal necessity, so: what does the consens
 
 ### Q1 — Shape and placement
 
-**Placement**: a sibling regime package, `swift-memory-foreign-primitives`, matching the one-regime-per-package family layout (heap/inline/map/shared/small/…). Namespace: `Memory.Foreign` ([API-NAME-001]). Naming check ([RES-010a]-scope): *Foreign* over *External* (which collides with the generic "external storage" phrasing the docs already use for unrelated things) and over *Adopted* (describes the construction verb, not the regime; every regime has an adopting init — `Memory.Contiguous.init(adopting:)`, `Memory.Heap.init(adopting:)`). *Foreign* names the provenance, matching the family's provenance-based naming, and matches the domain vocabulary (DPDK "external buffer", mbuf "externally managed data") without colliding inside the ecosystem.
+**Placement**: a sibling regime package, `swift-memory-foreign-primitives`, matching the one-regime-per-package family layout (heap/inline/map/shared/small/…). Namespace: `Memory.Foreign` ([API-NAME-001]). Naming check ([RES-010a]-scope): *Foreign* over *External* (which collides with the generic "external storage" phrasing the docs already use for unrelated things) and over *Adopted* (describes the construction verb, not the regime; every regime has an adopting init — `Memory.Heap.init(adopting:)`, `Memory.Inline`'s value-is-the-bytes construction). *Foreign* names the provenance, matching the family's provenance-based naming, and matches the domain vocabulary (DPDK "external buffer", mbuf "externally managed data") without colliding inside the ecosystem.
 
 **Why not compose existing primitives ([RES-018] composition check)**:
 
 | Candidate | Why it cannot cover the regime |
 |---|---|
-| `Memory.Heap` / `Memory.Contiguous<Byte>` | `deinit` deallocates (`Memory.Contiguous.swift:117-120`) — wrong release semantics; adopting kernel-pool memory into them would free memory we don't own |
+| `Memory.Heap` | `deinit` deallocates the origin pointer (`Memory.Heap.swift:24`) — wrong release semantics; adopting kernel-pool memory into it would free memory we don't own |
 | `Swift.Span` / `Span.Protocol` | `~Escapable` — cannot outlive the lending scope (SE-0447/SE-0446); the regime's defining property is owning *past* it |
 | `Memory.Map.Region` | non-owning Copyable descriptor; release is an explicit platform `unmap`, no hook for provider callbacks (`Memory.Map.Region.swift:14-45`) |
 | `Memory.Allocator<…>` | allocators allocate; foreign memory is definitionally not allocated by us (the D3-deferred allocator-injection axis is orthogonal) |
@@ -227,7 +227,7 @@ The question dissolves under the verified current state:
 3. **A unifying protocol over the five regimes would have an empty requirement set.** Remove what varies per regime — allocation (heap family only), release (the *defining* per-regime variation; abstracting it is the category error the brief anticipated), element operations (higher tier), mapping verbs (L2 platform) — and what remains is "located bytes": `base` + `capacity`. That IS `Memory.Region`. A sixth protocol would be a rename, not a discovery.
 4. **The Memory namespace already hosts a protocol *family*, not a protocol *gap***: `Memory.Region` (raw located bytes) · `Span.Protocol` (owned typed span-vending — deliberately namespace-neutral, so NOT the seed of a Memory protocol; different cut: contiguity-for-reading vs located-ownership) · `Memory.Tracked`/`Memory.Allocatable` (typed self-cleaning leaves above `Store.Protocol`) · `Memory.Unique` (CoW). Each names one capability; none should grow.
 
-**Verdict on the brief's Q3 sub-questions**: (a) `Storage.Contiguous` requires `Memory.Region` (convenience) / nothing (designated) — answered empirically; (b) `Memory.Contiguous.Protocol` is not the seed — it left the namespace as `Span.Protocol` for documented reasons; contiguity and provenance are orthogonal cuts; (c) confirmed and strengthened: deallocation stays out of the protocol because release is regime identity, encapsulated in each regime's `deinit` — the tower already works this way (the storage drop cascade never names release semantics).
+**Verdict on the brief's Q3 sub-questions**: (a) `Storage.Contiguous` requires `Memory.Region` (convenience) / nothing (designated) — answered empirically; (b) the owned-contiguous capability (the brief's `Memory.Contiguous.Protocol`) is not the seed — it had already left the namespace as `Span.Protocol` for documented reasons (and its owned typed region has since dissolved into `Storage.Contiguous`); contiguity and provenance are orthogonal cuts; (c) confirmed and strengthened: deallocation stays out of the protocol because release is regime identity, encapsulated in each regime's `deinit` — the tower already works this way (the storage drop cascade never names release semantics).
 
 **Legitimate additive roles when Foreign lands** (scoped per the doctrine; none block anything):
 
@@ -270,7 +270,8 @@ Note the asymmetry this resolves in the brief's "defensible middle": the middle 
 ## References
 
 Internal (paths relative to `/Users/coen/Developer/`):
-- `swift-primitives/swift-memory-primitives/Sources/Memory Region Primitives/Memory.Region.swift` · `Memory Contiguous Primitives/Memory.Contiguous{,+Span.Protocol}.swift` · `Memory {Tracked,Allocatable,Unique} Primitives/*.Protocol.swift`
+- `swift-primitives/swift-memory-primitives/Sources/Memory Region Primitives/Memory.Region.swift` · `Memory {Tracked,Allocatable,Unique} Primitives/*.Protocol.swift`
+- `swift-primitives/swift-storage-primitives/Sources/Storage Contiguous Primitives/Storage.Contiguous{,+Span}.swift` (the owned typed region, formerly `Memory.Contiguous`) · `swift-primitives/swift-span-primitives/Sources/Span Protocol Primitives/Span.Protocol.swift` (the span-vending capability, formerly `Memory.Contiguous.Protocol`)
 - `swift-primitives/swift-memory-heap-primitives/Sources/Memory Heap Primitives/Memory.Heap{, ~Copyable}.swift`
 - `swift-primitives/swift-storage-primitives/Sources/Storage Contiguous Primitives/Storage.Contiguous{,+Store.Protocol}.swift`
 - `swift-primitives/swift-store-primitives/Sources/Store {Protocol,Ledgered} Primitives/Store.{Protocol,Ledgered}.swift`

@@ -146,14 +146,14 @@ L1 PRIMITIVES
 
 | # | Qualified Name | Layer | Source | Storage | Own. | NUL-term? | Copyable | Escapable | Encoding | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 1 | `String_Primitives.String` | L1 | `swift-primitives/swift-string-primitives/Sources/String Primitives/String.swift:47` | `Memory.Contiguous<Char>` (heap, adopts) | owned value | **yes**, excluded from `count` | `~Copyable` | Escapable | UTF-8 POSIX / UTF-16 Windows | `@safe @unsafe @unchecked Sendable`. API: `init(adopting:count:)`, `init(copying: View)`, `init(_ span: Span<Char>)`, `init(ascii literal: StaticString)`, `count`, `span`, `view`, `take()`, `withUnsafePointer(_:)`. Conforms `Memory.Contiguous.Protocol`. |
+| 1 | `String_Primitives.String` | L1 | `swift-primitives/swift-string-primitives/Sources/String Primitives/String.swift:47` | `Storage.Contiguous<Char>` (heap, adopts) | owned value | **yes**, excluded from `count` | `~Copyable` | Escapable | UTF-8 POSIX / UTF-16 Windows | `@safe @unsafe @unchecked Sendable`. API: `init(adopting:count:)`, `init(copying: View)`, `init(_ span: Span<Char>)`, `init(ascii literal: StaticString)`, `count`, `span`, `view`, `take()`, `withUnsafePointer(_:)`. Conforms `Span.Protocol`. |
 | 2 | `String_Primitives.String.View` | L1 | `swift-primitives/swift-string-primitives/Sources/String Primitives/String.View.swift:33` | `UnsafePointer<Char>` + `count: Int` | borrowed view | **yes**, excluded from `count` | `~Copyable` | `~Escapable` | same as parent | `@safe`. API: `pointer`, `count`, `length`, `span`, `withUnsafePointer(_:)`. Debug-validates NUL in DEBUG only (scan cap 16 MiB). |
 | 3 | `String_Primitives.String.Char` | L1 | `String.Char.swift:23/25` | typealias | — | — | — | — | `UInt8` POSIX / `UInt16` Windows | `#if os(Windows)` switch. |
 | 4 | `String_Primitives.String.CodeUnit` | L1 | `String.Char.swift:31` | typealias | — | — | — | — | = Char | Semantic alias; doc recommends it for new code. |
 | 5 | `String_Primitives.String.terminator` | L1 | `String.Char.swift:35` | static let | — | — | — | — | — | `Char = 0`. |
 | 6 | `Kernel.String` | L1 | `swift-primitives/swift-kernel-primitives/Sources/Kernel String Primitives/Kernel.String.swift:34` | typealias → `Tagged<Kernel, String_Primitives.String>` | owned (tagged) | yes | `~Copyable` (via RawValue) | Escapable | platform-native | Zero-cost phantom wrapper. All String APIs forwarded via `Tagged+String.swift` and `Tagged+String.View.swift`. |
 | 7 | `Kernel.String.View` | L1 | resolves via `Tagged: Viewable` → `swift-primitives/swift-identity-primitives/Sources/Identity Primitives/Tagged+Viewable.swift:20` | `= String_Primitives.String.View` (typealias identity) | borrowed | yes | `~Copyable` | `~Escapable` | platform-native | **Type identity preserved**: `Kernel.String.View` IS `String_Primitives.String.View`, not a wrapper. |
-| 8 | `ISO_9899.String` | L2 (or L1-style; see Q7) | `swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.swift:30` | `pointer: UnsafeMutablePointer<Char>` + `count: Int` (NOT via `Memory.Contiguous`) | owned value | **yes**, excluded from `count` | `~Copyable` (`@frozen @safe`) | Escapable | ISO C byte semantics (no declared encoding) | `deinit` deallocates. API: `init(adopting:count:)`, `init(copying: View)`, `init(copying pointer:)`, `view`, `take()`, `withUnsafePointer(_:)`, `withUnsafeMutablePointer(_:)`. |
+| 8 | `ISO_9899.String` | L2 (or L1-style; see Q7) | `swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.swift:30` | `pointer: UnsafeMutablePointer<Char>` + `count: Int` (NOT via `Storage.Contiguous`) | owned value | **yes**, excluded from `count` | `~Copyable` (`@frozen @safe`) | Escapable | ISO C byte semantics (no declared encoding) | `deinit` deallocates. API: `init(adopting:count:)`, `init(copying: View)`, `init(copying pointer:)`, `view`, `take()`, `withUnsafePointer(_:)`, `withUnsafeMutablePointer(_:)`. |
 | 9 | `ISO_9899.String.View` | L2 | `ISO_9899.String.View.swift:16` | `pointer: UnsafePointer<Char>` (NO count stored) | borrowed | yes | `~Copyable` | `~Escapable` | ISO C byte | `@safe`. API: `pointer`, `length` (computes via strlen), `withUnsafePointer(_:)`. Debug-validates NUL (scan cap 16 MiB). |
 | 10 | `ISO_9899.String.Char` | L2 | `ISO_9899.String.Char.swift:21` | typealias | — | — | — | — | `UInt8` (all platforms) | **Platform-invariant**. Doc at lines 18-20: "different domain from String_Primitives.String.Char". |
 | 11 | `ISO_9899.String.terminator` | L2 | `ISO_9899.String.Char.swift:25` | static let | — | — | — | — | — | `Char = 0`. |
@@ -216,9 +216,9 @@ L1 PRIMITIVES
 
 | Type | Allocation | NUL terminator? | Count excludes NUL? | Char Width | Owner |
 |---|---|---|---|---|---|
-| `String_Primitives.String` | `Memory.Contiguous<Char>` (single heap) | **yes** (precondition in `adopting`, asserted in `copying`) | **yes** (`count = _storage.count`) | `UInt8` POSIX / `UInt16` Win | value (consumed on destruction) |
+| `String_Primitives.String` | `Storage.Contiguous<Char>` (single heap) | **yes** (precondition in `adopting`, asserted in `copying`) | **yes** (`count = _storage.count`) | `UInt8` POSIX / `UInt16` Win | value (consumed on destruction) |
 | `String_Primitives.String.View` | pointer + stored count | yes (invariant) | yes | same as parent | borrowed (`~Escapable`) |
-| `ISO_9899.String` | raw `UnsafeMutablePointer<UInt8>` + count (NOT via Memory.Contiguous) | **yes** (precondition, debug-asserted) | **yes** | `UInt8` always | value; `deinit` deallocates |
+| `ISO_9899.String` | raw `UnsafeMutablePointer<UInt8>` + count (NOT via Storage.Contiguous) | **yes** (precondition, debug-asserted) | **yes** | `UInt8` always | value; `deinit` deallocates |
 | `ISO_9899.String.View` | pointer only (NO stored count) | yes (invariant) | computed via `length` (scans) | `UInt8` always | borrowed (`~Escapable`) |
 | `ASCII.Byte` | single `UInt8` | n/a | n/a | `UInt8` | value |
 | `Text.Position / Offset / Count` | `Tagged<Text, Affine.*>` | n/a | n/a | byte | value |
@@ -226,7 +226,7 @@ L1 PRIMITIVES
 
 **Asymmetry A1**: `String_Primitives.String.View` stores `count`, `ISO_9899.String.View` does NOT. The latter computes `length` via a scan on every access. The L1/L2 split is deliberate (see ISO_9899.String.View.swift:16 — no `count` field), but it means ISO_9899 consumers pay O(n) per `.length` call. *(Mirrors the Path cycle Q7 — `Paths.Path.View` had no stored count; root cause was the same L3-trust-the-NUL convention.)*
 
-**Asymmetry A2**: `String_Primitives.String` adopts via `Memory.Contiguous<Char>`, which holds a "tracked count + NUL outside region" invariant. `ISO_9899.String` holds `pointer + count` directly and manages its own deinit deallocation. The two types use structurally different storage — there is **no shared Memory.Contiguous backing** between them. Even on POSIX where both are `UInt8`, a bridge requires full copy (edge E14 below).
+**Asymmetry A2**: `String_Primitives.String` adopts via `Storage.Contiguous<Char>`, which holds a "tracked count + NUL outside region" invariant. `ISO_9899.String` holds `pointer + count` directly and manages its own deinit deallocation. The two types use structurally different storage — there is **no shared Storage.Contiguous backing** between them. Even on POSIX where both are `UInt8`, a bridge requires full copy (edge E14 below).
 
 ### Encoding / char-width matrix
 
@@ -344,7 +344,7 @@ L1 PRIMITIVES
 - **No `String.View.Protocol`** to generalize view types over shared `Char` + `count/length` access.
 
 Conforming types share a *structural* pattern:
-1. Owned type with `pointer` (or `Memory.Contiguous<Char>`) + NUL-terminator + `count`.
+1. Owned type with `pointer` (or `Storage.Contiguous<Char>`) + NUL-terminator + `count`.
 2. View struct `~Copyable, ~Escapable` with `pointer` + optionally `count`.
 3. `init(copying: View)`, `view` accessor, `take()` consuming.
 4. Debug validation scanning for NUL in view constructors.
@@ -353,9 +353,9 @@ But this pattern is duplicated by convention, not enforced by a protocol.
 
 ### Sub-view extension protocols
 
-- `Primitives.String` conforms to `Memory.Contiguous.Protocol` via `withUnsafeBufferPointer(_:)` (`String.swift:185`).
-- `Tagged` where `RawValue == String, Tag: ~Copyable` conforms `@retroactive Memory.Contiguous.Protocol` (`Tagged+String.swift:100`).
-- `ISO_9899.String` does NOT conform to `Memory.Contiguous.Protocol` (uses raw pointer+count, not `Memory.Contiguous`).
+- `Primitives.String` conforms to `Span.Protocol` via `withUnsafeBufferPointer(_:)` (`String.swift:185`).
+- `Tagged` where `RawValue == String, Tag: ~Copyable` conforms `@retroactive Span.Protocol` (`Tagged+String.swift:100`).
+- `ISO_9899.String` does NOT conform to `Span.Protocol` (uses raw pointer+count, not `Storage.Contiguous`).
 - `RFC_3986.URI.Scheme` conforms `Binary.ASCII.Serializable`, `Binary.ASCII.RawRepresentable` (`RFC_3986.URI.Scheme.swift:122`). Other RFC_3986 / WHATWG types follow the same pattern.
 
 ### Platform-specific conformances (syscall-adjacent)
@@ -513,11 +513,11 @@ Three owned string types with overlapping API surface (§4). A protocol bundling
 - document the invariants (NUL-terminated, `count` excludes NUL)
 - enable cross-type retroactive conformances at L2 (e.g., `ISO_9899.String.View: @retroactive String.Decomposition`)
 
-But the shapes differ (stored count vs scan; `Memory.Contiguous` vs raw pointer) enough that a single protocol might force one side to adopt the other's cost model. Alternative: an abstract `String.Strict.Protocol` (validated UTF-8) distinct from `String.Lenient.Protocol` (arbitrary bytes).
+But the shapes differ (stored count vs scan; `Storage.Contiguous` vs raw pointer) enough that a single protocol might force one side to adopt the other's cost model. Alternative: an abstract `String.Strict.Protocol` (validated UTF-8) distinct from `String.Lenient.Protocol` (arbitrary bytes).
 
 ### Q2 — Should `ISO_9899.String` be at L1 or L2?
 
-Its storage model is distinct from `Primitives.String` (no `Memory.Contiguous`). Its doc emphasizes it's "different domain" (ISO_9899.String.Char.swift:18-20). It is imported by `swift-strings` at L3 alongside `String_Primitives` (see `exports.swift`). But its location (`swift-iso/swift-iso-9899/`) says L2 (specification). If this is "the C byte string type", arguably it's a tier-0 primitive (the C standard is the most foundational spec). **The placement is consistent with "L2 = spec implementations"** — ISO 9899 is a spec — but the type itself feels L1-shaped.
+Its storage model is distinct from `Primitives.String` (no `Storage.Contiguous`). Its doc emphasizes it's "different domain" (ISO_9899.String.Char.swift:18-20). It is imported by `swift-strings` at L3 alongside `String_Primitives` (see `exports.swift`). But its location (`swift-iso/swift-iso-9899/`) says L2 (specification). If this is "the C byte string type", arguably it's a tier-0 primitive (the C standard is the most foundational spec). **The placement is consistent with "L2 = spec implementations"** — ISO 9899 is a spec — but the type itself feels L1-shaped.
 
 ### Q3 — Are `swift-text-primitives`, `swift-token-primitives`, `swift-input-primitives`, `swift-lexer-primitives` string family members?
 

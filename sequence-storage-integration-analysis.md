@@ -178,7 +178,7 @@ extension Stack: Sequence.`Protocol` where Element: Copyable {
 
 ### Pattern 2: Span-Bridged Borrowing Iteration
 
-ADTs with contiguous storage implement `Sequence.Borrowing.Protocol` by exposing `Span<Element>` from `Memory.Contiguous.Protocol`.
+ADTs with contiguous storage implement `Sequence.Borrowing.Protocol` by exposing `Span<Element>` from `Span.Protocol`.
 
 ```swift
 // Conceptual pattern
@@ -191,12 +191,12 @@ extension Array: Sequence.Borrowing.`Protocol` where Element: Copyable {
 ```
 
 **Integration points**:
-- `Storage.Heap` and `Storage.Inline` both conform to `Memory.Contiguous.Protocol`
-- `Memory.Contiguous.Protocol` provides `var span: Span<Element>` (borrowing)
+- `Storage.Heap` and `Storage.Inline` both conform to `Span.Protocol`
+- `Span.Protocol` provides `var span: Span<Element>` (borrowing)
 - `Swift.Span.Iterator.Batch` (from sequence-primitives stdlib integration) wraps a `Span` as a borrowing iterator
 - `nextSpan(maximumCount:)` returns sub-spans without copying
 
-**This is the tightest integration point**: sequence-primitives already provides `Swift.Span.Iterator.Batch`, and storage-primitives already provides `span` via `Memory.Contiguous.Protocol`. The bridge is `Span<Element>` — a stdlib type that both packages understand.
+**This is the tightest integration point**: sequence-primitives already provides `Swift.Span.Iterator.Batch`, and storage-primitives already provides `span` via `Span.Protocol`. The bridge is `Span<Element>` — a stdlib type that both packages understand.
 
 ### Pattern 3: Drain-as-Move-Sequence
 
@@ -362,7 +362,7 @@ Deque (Tier 10)
 | **No direct dependency** | Correct. Neither package needs the other's types. |
 | **Shared Index<Element>** | Excellent. Provides typed coordination without coupling. |
 | **Property.View pattern** | Consistent. Both packages use the same accessor pattern. |
-| **Span as bridge** | Effective. `Memory.Contiguous.Protocol.span` + `Swift.Span.Iterator.Batch` provides zero-copy iteration. |
+| **Span as bridge** | Effective. `Span.Protocol.span` + `Swift.Span.Iterator.Batch` provides zero-copy iteration. |
 | **Consume.Protocol design** | Storage-aware. Documentation encodes storage interaction patterns. |
 | **Conditional Copyable** | Pragmatic. `Swift.Sequence` conformance gated on `Element: Copyable`. |
 
@@ -456,7 +456,7 @@ The architecture maintains no direct dependency between sequence-primitives (Tie
 2. **Intermediary adoption is correct**: Bit-vector-primitives (Tier 9) now depends on sequence-primitives (Tier 7). This is a downward dependency, architecturally permitted and semantically justified — bit-vector iteration IS a sequence concern.
 3. **Transitive upgrade**: Storage-primitives and buffer-primitives call `_slots.ones.forEach { }`. This call site is syntactically unchanged but now dispatches to `Swift.Sequence.forEach` instead of a bare reimplementation. Zero source changes downstream.
 4. **Shared dependencies sufficient**: `Index<Element>` and `Property.View` provide all necessary coordination between sequence and storage directly.
-5. **Span bridge works**: `Memory.Contiguous.Protocol.span` + `Swift.Span.Iterator.Batch` gives zero-copy iteration without coupling.
+5. **Span bridge works**: `Span.Protocol.span` + `Swift.Span.Iterator.Batch` gives zero-copy iteration without coupling.
 6. **Each package evolves independently**: Storage can add Arena/Pool variants; Sequence can add new operations — neither change forces updates to the other.
 
 **Principle applied**: Dependency maximum utilization — use what lower tiers provide rather than reimplementing. Bare `forEach` on `Ones.View` was a reimplementation of `Swift.Sequence.forEach`; adopting the dependency eliminates it.

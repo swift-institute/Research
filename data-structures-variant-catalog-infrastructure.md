@@ -21,10 +21,6 @@ of the nine banned-umbrella packages in `swift-primitives`.
 | `Memory.Alignment.Align` | enum (tag) | Memory.Alignment.Align.swift |
 | `Memory.Alignment.Error` | enum (Error) | Memory.Alignment.Error.swift |
 | `Memory.Allocation` | enum (namespace) | Memory.Allocation.swift |
-| `Memory.Contiguous` | struct (~Copyable) | Memory.Contiguous.swift |
-| `Memory.Contiguous.Protocol` (= `Memory.ContiguousProtocol`) | typealias | Memory.Contiguous.swift |
-| `Memory.Contiguous.View` (= `Span<Element>`) | typealias | Memory.Contiguous+Memory.ContiguousProtocol.swift |
-| `Memory.ContiguousProtocol` | protocol | Memory.ContiguousProtocol.swift |
 | `Memory.Inline<Element, capacity>` | struct (~Copyable) | Memory.Inline.swift |
 | `Memory.Inline._Raw` | struct (~Copyable, package) | Memory.Inline.swift |
 | `Memory.Shift` | struct | Memory.Shift.swift |
@@ -74,7 +70,7 @@ No new public types. Extensions on stdlib types:
 
 | Extension Target | File |
 |-----------------|------|
-| `Swift.Array: Memory.Contiguous.Protocol` | Memory+Array.swift |
+| `Swift.Array: Span.Protocol` | Memory+Array.swift |
 | `UnsafeMutableRawBufferPointer` (+ `Store` tag enum) | Memory+UnsafeMutableRawBufferPointer.swift, .Store.swift |
 | `UnsafeMutableRawPointer` (+ `Store` tag enum, `Move` tag enum) | Memory+UnsafeMutableRawPointer.swift, .Store.swift, .Memory.Move.swift, .Memory.swift |
 | `UnsafeRawBufferPointer` | Memory+UnsafeRawBufferPointer.swift |

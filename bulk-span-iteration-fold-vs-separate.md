@@ -8,7 +8,7 @@ status: RECOMMENDATION
 tier: 3
 scope: ecosystem-wide
 changelog:
-  - "1.0.1 (2026-05-26): naming: bulk tier Iterator.Span/Contiguous → Iterator.Chunk; Memory.Contiguous.Iterator example → Memory.Contiguous. Institute on-disk-shape refs (§Context, §6 table, §7 option (c), References) brought current to Iterator.Chunk.`Protocol`; the Iterator.Borrow→Iterator.Span→Iterator.Chunk rename history is preserved (§Implications #3). All SE-0516 / stdlib citations (nextSpan, BorrowingIteratorProtocol, BorrowingSequence, SpanIterator, stdlib Iterable, Span<Element>, Swift.Span) kept verbatim."
+  - "1.0.1 (2026-05-26): naming: bulk tier Iterator.Span/Contiguous → Iterator.Chunk; contiguous-iterator example simplified to the bare storage subject (now Storage.Contiguous). Institute on-disk-shape refs (§Context, §6 table, §7 option (c), References) brought current to Iterator.Chunk.`Protocol`; the Iterator.Borrow→Iterator.Span→Iterator.Chunk rename history is preserved (§Implications #3). All SE-0516 / stdlib citations (nextSpan, BorrowingIteratorProtocol, BorrowingSequence, SpanIterator, stdlib Iterable, Span<Element>, Swift.Span) kept verbatim."
   - "1.0.0 (2026-05-26): Initial draft. External-evidence survey (stdlib SE-0516 in-flight
      source on the local swiftlang/swift clone + the SE-0516 review/revision history +
      Forums) commissioned to inform the in-progress institute decision on whether the bulk/
@@ -251,9 +251,9 @@ axis:
 | Internal artifact | Disposition | Bearing on fold-vs-separate |
 |---|---|---|
 | `Iterator.`Protocol`` (scalar) + `Iterator.Chunk.`Protocol`` (bulk refinement) on disk in `swift-iterator-primitives` | **SEPARATE** — scalar admits `~Escapable` Element; bulk **narrows** Element to `Escapable` (the `Span` ceiling) | Matches stdlib `IteratorProtocol` vs `BorrowingIteratorProtocol` split exactly: scalar protocol keeps the permissive element, bulk protocol carries the `Escapable`-narrowed `Span` method. (`unified-iteration-design.md` §3 table) |
-| `unified-iteration-design.md` v0.10.0, **D-2 (RESOLVED — RETIRE)** | Retire the bulk-span *borrowing-sequence* protocol; bulk-span = contiguous-memory property → `Memory.Contiguous.Protocol`; scalar borrowing-sequence = `Iterable where Iterator: Iterator.Borrow.Protocol` | The institute went *further* than "separate protocol": it moved the bulk/contiguous capability out of the *iteration* hierarchy entirely and onto a *memory* abstraction, because "produce span chunks is a property of contiguous storage, not a kind of sequence." Stdlib keeps bulk in the iteration hierarchy (`BorrowingIteratorProtocol`); the institute routes contiguous-bulk to `Memory.Contiguous`. Both are *non-fold* answers; they differ on *where* the bulk surface lives. |
-| `collection-sequence-protocol-detachment.md` v1.1.0 (DECISION), Step C | `Sequence.Borrowing.Protocol` reframed as "chunked span access optimization over `Memory.Contiguous.Protocol`, not borrowing iteration"; every call site passes `Cardinal(UInt.max)` (nobody chunks) | Reinforces D-2: the institute's empirical finding is that the *bulk* path is, in practice, "give me the whole span" = `Memory.Contiguous.span`, not a chunking iterator. |
-| `HANDOFF-data-structure-iteration-arc.md` (Key Decisions 1-4; G1-G3) | Keep the bulk tier; build it on `Memory.Contiguous` (not raw `Swift.Span`); name the manner `Iterator.Chunk` (NOT `Contiguous`, which is reserved for the memory *subject* `Memory.Contiguous`) | These are *placement/naming* decisions atop an already-separate architecture. The external evidence (§2-§3) does not disturb them; it supports keeping bulk distinct. |
+| `unified-iteration-design.md` v0.10.0, **D-2 (RESOLVED — RETIRE)** | Retire the bulk-span *borrowing-sequence* protocol; bulk-span = contiguous-memory property → `Span.Protocol`; scalar borrowing-sequence = `Iterable where Iterator: Iterator.Borrow.Protocol` | The institute went *further* than "separate protocol": it moved the bulk/contiguous capability out of the *iteration* hierarchy entirely and onto a *storage* abstraction, because "produce span chunks is a property of contiguous storage, not a kind of sequence." Stdlib keeps bulk in the iteration hierarchy (`BorrowingIteratorProtocol`); the institute routes contiguous-bulk to `Storage.Contiguous`. Both are *non-fold* answers; they differ on *where* the bulk surface lives. |
+| `collection-sequence-protocol-detachment.md` v1.1.0 (DECISION), Step C | `Sequence.Borrowing.Protocol` reframed as "chunked span access optimization over `Span.Protocol`, not borrowing iteration"; every call site passes `Cardinal(UInt.max)` (nobody chunks) | Reinforces D-2: the institute's empirical finding is that the *bulk* path is, in practice, "give me the whole span" = `Storage.Contiguous.span`, not a chunking iterator. |
+| `HANDOFF-data-structure-iteration-arc.md` (Key Decisions 1-4; G1-G3) | Keep the bulk tier; build it on `Storage.Contiguous` (not raw `Swift.Span`); name the manner `Iterator.Chunk` (NOT `Contiguous`, which is reserved for the storage *subject* `Storage.Contiguous`) | These are *placement/naming* decisions atop an already-separate architecture. The external evidence (§2-§3) does not disturb them; it supports keeping bulk distinct. |
 
 No internal doc currently compares the institute's choice against SE-0516's *explicit*
 Alternatives-Considered rejection of the folded/scalar design — this doc supplies that link.
@@ -264,7 +264,7 @@ Alternatives-Considered rejection of the folded/scalar design — this doc suppl
 |--------|-------------|------------------------|-----------------------|
 | **(a) FOLD** — one protocol, optional defaulted `Span` bulk hook | Spike proves it *compiles + dispatches* | **Stdlib rejected the analogous fold** (SE-0516 Alternatives: bulk is "fundamental, not optional"; wrapper-element is awkward). Folding forces the **whole** protocol's `Element` to `Escapable` (the `Span` ceiling), **losing `~Escapable`-element scalar iteration** — the institute's load-bearing capability (views into iterator-owned storage; `two-world` §4.5). | **Element MUST be `Escapable`** — `~Escapable` element iteration is sacrificed. |
 | **(b) SEPARATE** — scalar protocol (admits `~Escapable` Element) + bulk refinement (narrows to `Escapable`) | The institute's current on-disk shape; the stdlib's shape (`IteratorProtocol` + `BorrowingIteratorProtocol`) | **Strongly corroborated.** Stdlib went separate; the institute went separate; both keep the scalar protocol permissive and isolate the `Escapable` narrowing to the bulk protocol where `Span` lives. | **Scalar admits `~Escapable`; bulk is `Escapable`-only.** Best of both. |
-| **(c) ELSEWHERE** — bulk/contiguous capability lives on a *memory* abstraction, not the iterator hierarchy | The institute's D-2 resolution: `Memory.Contiguous.Protocol` owns `span`; "bulk iteration" = `Iterable where Iterator: Iterator.Chunk.Protocol`, or just `Memory.Contiguous.span` | **Institute-specific, evidence-compatible.** Goes beyond stdlib (which keeps bulk in the iteration hierarchy) but is *more* aligned with the decomposition principle and with the empirical "nobody chunks" finding. Not contradicted by any external evidence. | Scalar iteration stays `~Escapable`-admitting; contiguous-bulk is a memory property (`Escapable` elements). |
+| **(c) ELSEWHERE** — bulk/contiguous capability lives on a *storage* abstraction, not the iterator hierarchy | The institute's D-2 resolution: `Span.Protocol` owns `span`; "bulk iteration" = `Iterable where Iterator: Iterator.Chunk.Protocol`, or just `Storage.Contiguous.span` | **Institute-specific, evidence-compatible.** Goes beyond stdlib (which keeps bulk in the iteration hierarchy) but is *more* aligned with the decomposition principle and with the empirical "nobody chunks" finding. Not contradicted by any external evidence. | Scalar iteration stays `~Escapable`-admitting; contiguous-bulk is a memory property (`Escapable` elements). |
 
 ## Outcome
 
@@ -320,11 +320,11 @@ still requires `Escapable`. The institute should not treat that claim as settled
    here.
 2. **Option (b) vs option (c)**: the *external* evidence does not adjudicate between the institute's
    two non-fold answers — keep a bulk *iteration* refinement (`Iterator.Chunk.`Protocol``, stdlib-shaped)
-   vs route contiguous-bulk to a *memory* abstraction (`Memory.Contiguous`, the D-2 resolution). That
+   vs route contiguous-bulk to a *storage* abstraction (`Storage.Contiguous`, the D-2 resolution). That
    is an internal decomposition call already resolved as D-2 (RETIRE the bulk-span *sequence* protocol;
    bulk = contiguous-memory property), and the external evidence is *compatible* with it. The
-   `HANDOFF` Key Decisions (build the bulk manner on `Memory.Contiguous`; the memory bridge vends
-   `Iterator.Chunk` over the `Memory.Contiguous` subject) sit on top of this and are undisturbed.
+   `HANDOFF` Key Decisions (build the bulk manner on `Storage.Contiguous`; the storage bridge vends
+   `Iterator.Chunk` over the `Storage.Contiguous` subject) sit on top of this and are undisturbed.
 3. **Naming**: the stdlib's own naming is in flux (`BorrowingSequence` → `Iterable`; the "Borrow"
    stem was a known hazard the institute *also* hit and resolved by renaming `Iterator.Borrow` →
    `Iterator.Span` → `Iterator.Chunk`, `two-world` §3). This is corroboration that the bulk tier
@@ -363,6 +363,6 @@ still requires `Escapable`. The institute should not treat that claim as settled
 ### Internal prior art extended (not duplicated)
 - `iterator-span-buffer-elimination.md` (DECISION, v5.0.0) — `nextSpan` bulk surface; zero-heap reducibility.
 - `unified-iteration-design.md` (RECOMMENDATION, v1.2.1) — four traversal axes; the `Span` ceiling; scalar `Iterator.`Protocol`` admits `~Escapable` Element, bulk `Iterator.Chunk.`Protocol`` narrows to `Escapable`.
-- `unified-iteration-design.md` (DRAFT, v0.10.0) — D-2 RETIRE the bulk-span borrowing protocol; bulk = `Memory.Contiguous` property.
-- `collection-sequence-protocol-detachment.md` (DECISION, v1.1.0) — `Sequence.Borrowing.Protocol` reframed as chunked-span optimization over `Memory.Contiguous.Protocol`; "nobody chunks" (all call sites `Cardinal(UInt.max)`).
-- `HANDOFF-data-structure-iteration-arc.md` — bulk-tier placement/naming decisions (the bulk manner `Iterator.Chunk` on `Memory.Contiguous`; the memory bridge vends `Iterator.Chunk` over the `Memory.Contiguous` subject).
+- `unified-iteration-design.md` (DRAFT, v0.10.0) — D-2 RETIRE the bulk-span borrowing protocol; bulk = `Storage.Contiguous` property.
+- `collection-sequence-protocol-detachment.md` (DECISION, v1.1.0) — `Sequence.Borrowing.Protocol` reframed as chunked-span optimization over `Span.Protocol`; "nobody chunks" (all call sites `Cardinal(UInt.max)`).
+- `HANDOFF-data-structure-iteration-arc.md` — bulk-tier placement/naming decisions (the bulk manner `Iterator.Chunk` on `Storage.Contiguous`; the storage bridge vends `Iterator.Chunk` over the `Storage.Contiguous` subject).

@@ -30,10 +30,10 @@ default (or an orthogonal-concern bridge) can provide.
 | `contains` | `Set.Protocol` core requirement | hot O(1) membership; body delegates over `Hash.Table.Protocol.contains` terminal |
 | `index(_:)` | (delegates `Hash.Table.Protocol.position`) | hot; the index-returning sibling of `contains` |
 | `insert` / `remove` / `clear` / `drain` | concrete-Base hot mutating | specialization boundary — protocol-Base `Property.Inout` doesn't specialize; **②** dedup blocked on a missing buffer-mutable protocol |
-| `var span` | `Memory.Contiguous.Protocol` witness (the one requirement) | `@_lifetime(borrow self) borrowing get { buffer.span }` |
+| `var span` | `Span.Protocol` witness (the one requirement) | `@_lifetime(borrow self) borrowing get { buffer.span }` |
 | `var mutableSpan` | direct mutable accessor | `@_lifetime(&self) mutating get` (base/Fixed CoW, Small direct; Static read-only) |
 | `Sequenceable.makeIterator()` | concrete scalar (`Buffer.Linear.Scalar`) | the demangle-safe choice; generic `Memory.Cursor` crashes the inline family |
-| conformance decls (`: Set.Protocol`, `: Memory.Contiguous.Protocol`, `: Iterable`, `: Sequenceable`, `: Hash.Protocol`) | per-variant | each variant declares its own |
+| conformance decls (`: Set.Protocol`, `: Span.Protocol`, `: Iterable`, `: Sequenceable`, `: Hash.Protocol`) | per-variant | each variant declares its own |
 
 ### Inherits (free)
 
@@ -62,17 +62,17 @@ favored. **Fan-out:** every dual-conformer (Array×4, Buffer.Linear×4, future A
 > `withSpan { body($0) }` adds nothing over `let s = set.span`.
 
 Realized on the exemplar:
-- **Read** = `var span` (the Memory.Contiguous witness). **Mutable** = `var mutableSpan { mutating get }`.
+- **Read** = `var span` (the Span.Protocol witness). **Mutable** = `var mutableSpan { mutating get }`.
 - Raw C-interop = on the span/mutableSpan itself (`span.withUnsafeBufferPointer { … }`), **never** the
   container.
-- **`Memory.Contiguous.Protocol` reduced to require only `span`** (memory-primitives `11e1611`); the
+- **`Span.Protocol` reduced to require only `span`** (memory-primitives `11e1611`); the
   container-level `withUnsafeBufferPointer` *requirement* is dropped (grep-verified zero generic callers;
   conformers' witnesses become ordinary, deletable methods). Verified across all 10 L1 conformers + foundations.
 - All four container-level `with*` groups (`withSpan`, `withUnsafeBufferPointer`, `withMutableSpan`,
   `withUnsafeMutableBufferPointer`) deleted from Set.Ordered ×4 — all grep-verified dead.
 
 **Fan-out:** apply the same to every buffer-backed ADT; drop their container-level `with*`; the
-`Memory.Contiguous.Protocol` simplification is already ecosystem-wide.
+`Span.Protocol` simplification is already ecosystem-wide.
 
 ## 3. Deferred axes (the template is HONEST about what it does NOT do)
 
@@ -94,7 +94,7 @@ Realized on the exemplar:
    withdrawal, user-confirmed), not parked. `unified-iteration-design.md` §2.5/§3, `HANDOFF-data-structure-
    iteration-arc.md` §2/§3.2/§5, and `cross-layer-capability-protocol-model.md` References should read
    "deleted". (The 4 stale source doc-comments are already fixed: buffer/buffer-linear/sequence.)
-4. **`cross-layer-capability-protocol-model.md` §3.4** — `Memory.Contiguous.Protocol` requires **only**
+4. **`cross-layer-capability-protocol-model.md` §3.4** — `Span.Protocol` requires **only**
    `span` (the `withUnsafeBufferPointer` requirement is dropped per the `with*`-elimination principle).
 
 ## 5. Verification (LOCAL/unpushed)
@@ -103,9 +103,9 @@ Realized on the exemplar:
   (dual→Iterable, seq-only/triple→bridge, cross-module `-O` 0 `witness_method`); 160 tests green debug+release.
 - **Set.Ordered**: per-type forEach deleted (`ff73329`), with*-elimination (`8a7d7b8`+`44b36af`), §2.9 reverted
   (`f84450d`), §2.8 comment reconciled (`9881605`); **108 tests green debug AND release**, warning-clean.
-- **Memory.Contiguous.Protocol** reduced (`11e1611`): all **10 L1 conformers build green**; array (173) +
+- **Span.Protocol** reduced (`11e1611`): all **10 L1 conformers build green**; array (173) +
   buffer-linear (184) tests pass the disambiguator. (swift-ascii fails on a pre-existing `Binary.Parse`
-  baseline break — zero Memory.Contiguous errors.)
+  baseline break — zero Span.Protocol errors.)
 - **SIL**: hot ops (contains/insert/==/algebra) byte-unchanged from the prior 0-witness receipts; the real
   probe builds release `-O` green; the disambiguator's forEach path is formally 0-witness (spike). Direct
   `-emit-sil` on the real probe is SwiftPM-tooling-blocked (as the cascade documented).
@@ -124,7 +124,7 @@ Realized on the exemplar:
 |---|---|
 | Conformance-file naming | `Type+Protocol.swift` — named for the protocol it satisfies, never a concept (`+Iteration` ✗) nor the conforming type alone (`.Iterator.swift` for a non-iterator ✗) |
 | One protocol per file | grab-bags (e.g. Iterable+Sequenceable in one file) split per protocol |
-| Witness co-location | each witness sits with the conformance it satisfies (`span` in `+Memory.Contiguous.Protocol.swift`, not a concept file) |
+| Witness co-location | each witness sits with the conformance it satisfies (`span` in `+Span.Protocol.swift`, not a concept file) |
 | Type/ops split ([MOD-004]/[MOD-036]) | cold/Copyable-gated conformances (Iterable, Sequenceable, Sequence.Drain, Clearable) in the OPS module (PLURAL); the lean `~Copyable` type + its hot witnesses (refined-C: `makeIterator`, `span`) in the TYPE module (SINGULAR) |
 | One type per file ([API-IMPL-005]) | hoisted error enums, nested helper types → one declaration per file |
 | Import hygiene | per-file imports trimmed to what's used; dead imports dropped. The ACTIVE `Memory_Iterator_Primitives` bridge (vends `Iterable.makeIterator`) is load-bearing and STAYS — it is NOT the dormant `memory-sequence` bridge |
@@ -153,7 +153,7 @@ so it lives in the ops module with its conformance. Same rule, different bodies.
 
 TYPE module `{Domain} {Variant} Primitive` (SINGULAR):
 - `X+Set.Protocol.swift` — Set.Protocol conformance + count/contains/index witnesses
-- `X+Memory.Contiguous.Protocol.swift` — conformance + the `span` witness (co-located)
+- `X+Span.Protocol.swift` — conformance + the `span` witness (co-located)
 - `X+Sequenceable.swift` — the consuming `makeIterator()` witness (refined-C hot member)
 - `X+Hash.Protocol.swift` — Hash.Protocol conformance (`==`/`hash` over the span)
 

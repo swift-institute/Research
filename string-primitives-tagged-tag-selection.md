@@ -11,10 +11,10 @@ tier: 2
 
 ## Context
 
-The D' migration wraps `Memory.Contiguous<Char>` in `Tagged<Tag, Memory.Contiguous<Char>>`. For domain types the tag is obvious:
+The D' migration wraps `Storage.Contiguous<Char>` in `Tagged<Tag, Storage.Contiguous<Char>>`. For domain types the tag is obvious:
 
-- `Kernel.Path` = `Tagged<Kernel.Path.Tag, Memory.Contiguous<Char>>` (or similar)
-- `Kernel.String` could become `Tagged<Kernel, Memory.Contiguous<Char>>`
+- `Kernel.Path` = `Tagged<Kernel.Path.Tag, Storage.Contiguous<Char>>` (or similar)
+- `Kernel.String` could become `Tagged<Kernel, Storage.Contiguous<Char>>`
 
 For `String_Primitives.String` — the base primitive — the tag is not obvious. The primitive layer has no domain; it IS the substrate that domain types build on.
 
@@ -37,7 +37,7 @@ Tagged now has `public var rawValue: RawValue` (stored property, not `_read` cor
 
 ## Question
 
-What should the `Tag` type be for `String_Primitives.String` when migrating to `Tagged<Tag, Memory.Contiguous<Char>>`?
+What should the `Tag` type be for `String_Primitives.String` when migrating to `Tagged<Tag, Storage.Contiguous<Char>>`?
 
 ## Consumer Inventory
 
@@ -45,12 +45,12 @@ What should the `Tag` type be for `String_Primitives.String` when migrating to `
 
 | Package | File | Usage |
 |---------|------|-------|
-| swift-string-primitives | String.swift | Defines `String` — owns `Memory.Contiguous<Char>` |
+| swift-string-primitives | String.swift | Defines `String` — owns `Storage.Contiguous<Char>` |
 | swift-string-primitives | String.Char.swift | `String.Char` — platform-conditional `UInt8`/`UInt16` |
 | swift-string-primitives | String.View.swift | `String.View` — `~Escapable` borrowed view |
 | swift-string-primitives | String.Length.swift | `String.length(of:)` — null-terminated length |
 | swift-kernel-primitives | Kernel.String.swift | `Kernel.String = String_Primitives.String` (typealias) |
-| swift-kernel-primitives | Kernel.Path.swift | `Kernel.Path` — separate struct, stores `Memory.Contiguous<String.Char>` |
+| swift-kernel-primitives | Kernel.Path.swift | `Kernel.Path` — separate struct, stores `Storage.Contiguous<String.Char>` |
 | swift-kernel-primitives | Kernel.Environment.Entry.swift | Uses `Kernel.String.Char`, `Kernel.String.length()` |
 | swift-loader-primitives | Loader.Error.swift | Stores `String_Primitives.String` for error messages |
 
@@ -92,7 +92,7 @@ Pattern: **the tag is the domain namespace that gives the value its semantic ide
 
 ### Option A: String stays concrete — not Tagged
 
-`String_Primitives.String` remains `struct String { _storage: Memory.Contiguous<Char> }`. Only domain types (Kernel.Path) use Tagged.
+`String_Primitives.String` remains `struct String { _storage: Storage.Contiguous<Char> }`. Only domain types (Kernel.Path) use Tagged.
 
 | Criterion | Assessment |
 |-----------|------------|
@@ -111,14 +111,14 @@ Pattern: **the tag is the domain namespace that gives the value its semantic ide
 extension String_Primitives {
     public enum StringTag: ~Copyable {}
 }
-public typealias String = Tagged<StringTag, Memory.Contiguous<Char>>
+public typealias String = Tagged<StringTag, Storage.Contiguous<Char>>
 ```
 
 Domain variants get their own tags:
 ```swift
 // In Kernel_Primitives:
 extension Kernel {
-    public typealias String = Tagged<Kernel.StringTag, Memory.Contiguous<Char>>
+    public typealias String = Tagged<Kernel.StringTag, Storage.Contiguous<Char>>
 }
 ```
 
@@ -149,11 +149,11 @@ Every string must have a domain: `Kernel.String`, `Loader.String`, etc. No untag
 
 ### Option D: String_Primitives provides extensions, not a type
 
-String_Primitives defines no `String` type. Instead it provides extensions on `Tagged where RawValue == Memory.Contiguous<Char>`:
+String_Primitives defines no `String` type. Instead it provides extensions on `Tagged where RawValue == Storage.Contiguous<Char>`:
 
 ```swift
 // String_Primitives provides behavior, not identity:
-extension Tagged where RawValue == Memory.Contiguous<Char>, Tag: ~Copyable {
+extension Tagged where RawValue == Storage.Contiguous<Char>, Tag: ~Copyable {
     public var count: Int { rawValue.count }
     public var span: Span<Char> { ... }
     public var view: View { ... }
@@ -164,11 +164,11 @@ extension Tagged where RawValue == Memory.Contiguous<Char>, Tag: ~Copyable {
 Each consumer defines their own concrete type:
 ```swift
 // Kernel defines:
-extension Kernel { typealias Path = Tagged<Kernel.Path.Domain, Memory.Contiguous<Char>> }
-extension Kernel { typealias String = Tagged<Kernel.String.Domain, Memory.Contiguous<Char>> }
+extension Kernel { typealias Path = Tagged<Kernel.Path.Domain, Storage.Contiguous<Char>> }
+extension Kernel { typealias String = Tagged<Kernel.String.Domain, Storage.Contiguous<Char>> }
 
 // Loader defines:
-extension Loader.Error { typealias Message = Tagged<Loader.Error.MessageTag, Memory.Contiguous<Char>> }
+extension Loader.Error { typealias Message = Tagged<Loader.Error.MessageTag, Storage.Contiguous<Char>> }
 ```
 
 | Criterion | Assessment |
@@ -182,7 +182,7 @@ extension Loader.Error { typealias Message = Tagged<Loader.Error.MessageTag, Mem
 | No artificial tags | Consumers who need a string define a tag. No "default" needed. |
 | Conceptual clarity | String_Primitives is a behavior library, not a type library |
 
-**Problem**: `swift-ascii` extends "String_Primitives.String" — but there is no such type. It would need to extend `Tagged where RawValue == Memory.Contiguous<Char>` generically. And `swift-strings` bridges "a string" to Swift.String — which concrete Tagged type does it bridge?
+**Problem**: `swift-ascii` extends "String_Primitives.String" — but there is no such type. It would need to extend `Tagged where RawValue == Storage.Contiguous<Char>` generically. And `swift-strings` bridges "a string" to Swift.String — which concrete Tagged type does it bridge?
 
 ### Option E: String is Tagged with a tag, but shared extensions use `Tag: ~Copyable`
 
@@ -194,23 +194,23 @@ public enum String: ~Copyable {}  // String IS the tag (namespace enum)
 
 // String's storage type:
 extension String {
-    public typealias Storage = Tagged<String, Memory.Contiguous<Char>>
+    public typealias Storage = Tagged<String, Storage.Contiguous<Char>>
 }
 
 // Shared behavior on ALL strings regardless of domain:
-extension Tagged where RawValue == Memory.Contiguous<Char>, Tag: ~Copyable {
+extension Tagged where RawValue == Storage.Contiguous<Char>, Tag: ~Copyable {
     public var count: Int { rawValue.count }
     public var span: Span<Char> { ... }
 }
 
 // String-specific nested types:
-extension Tagged where RawValue == Memory.Contiguous<Char>, Tag == String {
+extension Tagged where RawValue == Storage.Contiguous<Char>, Tag == String {
     public typealias Char = UInt8  // or platform-conditional
     public struct View: ~Copyable, ~Escapable { ... }
 }
 ```
 
-Wait — this makes `String` the tag and `String.Storage` the actual value type. This inverts the nesting. `Kernel.String` would then be... `Tagged<Kernel, Memory.Contiguous<Char>>`? That doesn't relate to `String.Storage` at all.
+Wait — this makes `String` the tag and `String.Storage` the actual value type. This inverts the nesting. `Kernel.String` would then be... `Tagged<Kernel, Storage.Contiguous<Char>>`? That doesn't relate to `String.Storage` at all.
 
 This option has the same fundamental tension as B: `String_Primitives.String.Storage` and `Kernel.String` (= `Tagged<Kernel, ...>`) are different types.
 
@@ -247,7 +247,7 @@ This means D' forces a decision: either `Kernel.String` stops being a typealias 
 
 3. **Does `Loader.Error` need a domain-specific string?** Today it stores `String_Primitives.String`. If String is Tagged, it uses whatever tag String_Primitives picks. With Option D, it needs its own tag — unnecessary complexity.
 
-4. **What does `swift-ascii` extend?** Today: `extension String_Primitives.String`. With D': either `extension Tagged where Tag == StringTag, RawValue == Memory.Contiguous<Char>` (tag-specific) or `extension Tagged where Tag: ~Copyable, RawValue == Memory.Contiguous<Char>` (all strings get ASCII).
+4. **What does `swift-ascii` extend?** Today: `extension String_Primitives.String`. With D': either `extension Tagged where Tag == StringTag, RawValue == Storage.Contiguous<Char>` (tag-specific) or `extension Tagged where Tag: ~Copyable, RawValue == Storage.Contiguous<Char>` (all strings get ASCII).
 
 ## Outcome
 
@@ -255,7 +255,7 @@ This means D' forces a decision: either `Kernel.String` stops being a typealias 
 
 **Resolved by Option G** from `tagged-path-string-identity-resolution.md`: the Tag is the **domain** (Kernel, Loader, etc.), and String/Path are **concrete types** used as the RawValue.
 
-The question "what Tag for String?" is answered: **the Tag is always the consumer's domain**. `String_Primitives` does NOT define a Tagged string type. It defines a concrete `PlatformString` struct that owns `Memory.Contiguous<Char>` and provides `@_lifetime` accessors. Domain consumers wrap it:
+The question "what Tag for String?" is answered: **the Tag is always the consumer's domain**. `String_Primitives` does NOT define a Tagged string type. It defines a concrete `PlatformString` struct that owns `Storage.Contiguous<Char>` and provides `@_lifetime` accessors. Domain consumers wrap it:
 
 ```swift
 // String_Primitives defines the concrete type:

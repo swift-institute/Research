@@ -28,12 +28,12 @@ Strings have **no such ambiguity**. The model's D9 finding was:
 
 This is an asymmetry of **existence** (one type lacks the accessor), not asymmetry of **semantics**. The right fix is additive: add `.span` to `ISO_9899.String` + `.View` matching the existing semantics. Not a rename of a name that was never ambiguous.
 
-### 2. `Memory.Contiguous.Protocol` requires `.span`
+### 2. `Span.Protocol` requires `.span`
 
-`String_Primitives.String` (via `String.swift:185`) and `Tagged<…, String_Primitives.String>` (via `Tagged+String.swift:100`) both conform `@retroactive` to `Memory.Contiguous.Protocol` (defined at `swift-memory-primitives/Sources/Memory Primitives Core/Memory.ContiguousProtocol.swift:101`). The protocol requires `var span: Span<Element> { get }`. Renaming to `.content` breaks the witness.
+`String_Primitives.String` (via `String.swift:185`) and `Tagged<…, String_Primitives.String>` (via `Tagged+String.swift:100`) both conform `@retroactive` to `Span.Protocol`. The protocol requires `var span: Span<Element> { get }`. Renaming to `.content` breaks the witness.
 
 The implementation perspective's analysis missed this constraint. The fix would have required either:
-- Dropping the protocol conformance (loses generic-algorithms-over-contiguous-storage capability for String — many consumers across `swift-buffer-primitives`, `swift-storage-primitives`, etc. would lose the ability to write `T: Memory.Contiguous.Protocol` constraints that admit String).
+- Dropping the protocol conformance (loses generic-algorithms-over-contiguous-storage capability for String — many consumers across `swift-buffer-primitives`, `swift-storage-primitives`, etc. would lose the ability to write `T: Span.Protocol` constraints that admit String).
 - Keeping both `.span` (witness) and `.content` (idiomatic) — duplicates surface for no benefit.
 - Renaming the protocol's requirement (out of scope).
 
@@ -41,7 +41,7 @@ None is a good trade.
 
 ### 3. `.span` is the canonical Swift name
 
-`Array.span`, `Memory.Contiguous.span`, `Span<T>` itself — `.span` is the cross-stdlib + cross-ecosystem name for "give me a Span". Renaming String specifically to `.content` makes it inconsistent with hundreds of other ecosystem types using `.span`. The "intent over mechanism" argument from `[IMPL-081]` loses to ecosystem-consistency when the existing name is already a domain-recognized term.
+`Array.span`, `Storage.Contiguous.span`, `Span<T>` itself — `.span` is the cross-stdlib + cross-ecosystem name for "give me a Span". Renaming String specifically to `.content` makes it inconsistent with hundreds of other ecosystem types using `.span`. The "intent over mechanism" argument from `[IMPL-081]` loses to ecosystem-consistency when the existing name is already a domain-recognized term.
 
 ## What stays from Wave 3
 
