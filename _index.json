@@ -669,6 +669,17 @@
       "scope": null
     },
     {
+      "file": "bounded-discipline-algebra.md",
+      "displayName": "Bounded Discipline — Algebraic Model",
+      "topic": "Formal ([RES-024]) companion to bounded-discipline-analysis.md: the container composition stack (Memory -> Storage -> Buffer -> ADT) and the bounded/capacity axis expressed as sum/product/functor relations, so placement/merge/naming questions are decided structurally. Key results: bounded value = a truncated length-sum (Stack_<=n = Sigma_{k<=n} E^k), with n at value-level (.Bounded) or type-index (.Inline); bounded and growable share the SAME representation product (Header = Count x Count), differing only in the push MORPHISM, which gains a +Overflow summand (Overflow = 0/Never growable, 1/capacityExceeded bounded) introduced by the Buffer functor (or by Mem = Pool(n) for the pool family) -- NOT Memory.Heap.Bounded; the variant set is the grid L (storage) x G (growth) with Inline collapsing G by moving n to the type index; and the per-ADT .Bounded type is the manually-enumerated image of one functor (Sigma_i Stack_i = Sigma_B Stack(B)), removable inhabitant-preservingly to a typealias. Never = 0 (A+0 ~= A) is the algebraic reason throws(Never) unifies the seam (validated on Swift 6.3.2).",
+      "date": "2026-06-24",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0. Tier 2 cross-package formal-semantics companion to bounded-discipline-analysis.md (formalizes existing structure: the Decoupling Charter [DS-025]-[DS-027], the variant lattice [DS-002], occupancy-lives-in-the-leaf [DS-023]; introduces no new normative contract). Answers the placement questions from the design dialogue (where does bounded live; is Inline redundant; is it Memory.Heap.Bounded) with an algebraic test: a variant is a new cell iff it changes a factor of L x G; otherwise it is a typealias. READ-ONLY; no source changed.",
+      "statusRaw": "RECOMMENDATION (v1.0.0)",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
       "file": "bounded-discipline-analysis.md",
       "displayName": "Bounded Discipline Analysis",
       "topic": "Resolves the `.Bounded` proliferation across ~9 primitive packages (buffer linear/ring/slab, bit-vector, list-linked, stack, pool, finite, column). Confirms `.Bounded` is two unrelated axes: a value-range/finite-position concept (the commented-out Finite.Bounded Haskell-Bounded typeclass + the live Index<Element>.Bounded<N> = Tagged<Element, Ordinal.Finite<N>>) vs the capacity-bounded container family (Dijkstra bounded buffer). The per-container capacity types are genuinely distinct (ring/contiguous/slab/linked/LIFO/resource-pool/bitmap) and NOT mergeable into one Bounded<C> — already ratified as a retained capacity axis (occupancy-lives-in-the-leaf, [DS-023]). The bound correctly originates at the buffer tier (Column.Bounded = typealias for Buffer.Linear.Bounded; Pool.Bounded = Fixed<Column.Bounded>; Stack/List compose). Residual duplication (the win): the overflow ERROR is copied 7x under three names (capacityExceeded x3 / overflow x3 / full x1) with no shared primitive; and Stack.Bounded re-implements a threshold guard because Buffer.Linear.Bounded enforces at physical (rounded-up) capacity, not the requested bound.",
