@@ -434,6 +434,9 @@ Source (verified 2026-06-23):
 - `swift-column-primitives/Sources/Column Primitives/Column.swift:44-45,67-68` — `Column.Bounded` typealias = `Buffer.Linear.Bounded`
 - `swift-array-primitives` — `Array.Bounded` absent (retired in favour of `Column.Bounded`)
 
+Formal companion:
+- `swift-institute/Research/bounded-discipline-algebra.md` — algebraic (sum/product/functor) model of the capacity axis and the container composition stack (`[RES-024]` formal semantics); proves the bound lives at the `Buffer` functor (the `+Overflow` summand), `.Inline` ≠ `.Bounded` (distinct `L × G` cells), and the per-ADT `.Bounded` type is an inhabitant-preserving typealias over a parameterized ADT.
+
 Prior research (cite-and-extend):
 - `swift-institute/Research/array-bounded-index-revisit-2026-05-08.md` (DECISION, tier 2) — value-range index disambiguation; `[RES-029]` worked example
 - `swift-institute/Research/adt-buffer-storage-decoupling-shape.md` (tier 3, COMPANION to `[DS-025]`–`[DS-027]`)
