@@ -1,7 +1,10 @@
 # Fix options — serializer leaf-`body` bodyless-witness SIL crash (catalog A16)
 
-**Status**: RECOMMENDATION / decision-pending. Drafted 2026-06-25 from the
-`/issue-investigation` of `HANDOFF-windows-compiler-crashes.md`. No package edits made.
+**Status**: RESOLVED — **Option 1 applied 2026-06-25** (`swift-primitives/swift-serializer-primitives`
+`a652cec`): `Serializer.Witness` + its conformance relocated to a new `Serializer Witness Primitives`
+target; the umbrella and deprecated Core shim re-export it; the five Witness-using test targets were
+rewired. Verified clean on stock Xcode 6.3.2 + `-sil-verify-all` (the Windows crash condition) and
+Embedded on 6.5-dev. Drafted from the `/issue-investigation` of `HANDOFF-windows-compiler-crashes.md`.
 
 **Bug**: `swift-issue-noncopyable-assoctype-never-bodyless-witness` (dossier) / catalog
 **A16**. Unfixed on Swift 6.5-dev. The `Body == Never` leaf-default `var body: Never`
