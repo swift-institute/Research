@@ -117,6 +117,8 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | A12 | Corrupt associated-type-witness mangled name for a deep generic instantiation as a `Sequenceable.Iterator` witness | 6.3.1 (still broken; no standalone reducer) | Deep `Memory.Cursor<Buffer.Linear.Inline>` witness emits a malformed mangled name (`'}'`); same emission class as §A9. Workaround: flatten the witness to element-only-generic |
 | A13 | `FunctionSignatureOpts` `SILArgument.cpp:40` assertion on a generic fn with a generic typed-throws error | 6.2 → 6.5-dev CRASH (NOT a 6.3 regression; verifier-caught 6.2/6.2.3, assertion-caught 6.3+; unfixed) | `func f<T>() throws(E<T>)` + same-module caller + `-O` aborts FunctionSignatureOpts creating a `SILArgument` whose type still has a type parameter |
 | A15 | Runtime cannot verify a conditional conformance whose same-type RHS is `~Copyable` → null-metadata SIGSEGV at `-Onone` + silent wrong dynamic casts | 6.2 → 6.5-dev compiler AND runtime, ALL broken (NOT a regression; distinct from §A9 despite identical 0x10 signature) | `extension Gen: P where A == Pool` (`Pool: ~Copyable`) + a generic wrapper `W<S: P>` storing `S`: any member access at `-Onone` derefs null metadata at `+0x10`; `(Gen<Pool>() as Any) is any P` returns false; runtime says `subject type x does not conform to protocol P`. 8-declaration bare-swiftc repro, no feature flags. Tower trigger: the ecosystem's only same-type conditional conformance, `Storage.Generational: Store.Protocol where Allocation == Memory.Allocator<Memory.Heap>.Pool` (the LEG-7 slotmap DEBUG wall) |
+| A16 | Bodyless `shared [serialized]` default-witness `read` accessor for a `~Copyable` associated-type property bound to `Never` (cross-module) | 6.3.2 → 6.5-dev (UNFIXED; surfaces only when SIL verification runs: +Asserts/Embedded/`-sil-verify-all`) | A protocol with `associatedtype Body: ~Copyable` + a `Body == Never` leaf-default `var body` + a `Body == Never` conformer in BOTH the defining and a consumer module emits a bodyless `body.read` in the consumer → "Must have a construct to emit for" / "function must have a body". Latent/silent on NoAsserts RELEASE (macOS/Linux pass); crashes Windows + Embedded. Surfaced by swift-serializer-primitives (ALL leaf combinators, not just Trace) |
+| A17 | Sema `getEffects(req).contains(getEffects(witness))` assertion: `throws(Never)` derived witness vs non-throwing `IteratorProtocol.next()` | 6.3.2 +Asserts CRASH / FIXED 6.5-dev | A type conforming to BOTH a custom chunk protocol (whose `where Element: Copyable` extension provides `throws(Never) next() -> Element?`) AND stdlib `IteratorProtocol` trips the effects-containment assertion at TypeCheckProtocol.cpp:1311 during witness resolution. +Asserts-only (Windows); release legs pass; fixed on 6.5-dev. Surfaced by swift-input-primitives tests |
 | B1 | `Property.View ~Copyable` extension constraint placement | 6.3.x (lang spec) | All constraints MUST be at extension level, not method level — implicit `Base: Copyable` else |
 | B2 | `Property.View` rejected on `Copyable` types (~Copyable + ~Escapable result from mutating method) | 6.3.x (lang spec) | Use `Property<Tag, Base>` for `@CoW` Copyable types instead |
 | B3 | Tagged constrained-extension nested-type ambiguity | 6.3.1 (still broken) | `extension Tagged where Tag == X, RawValue == Y { typealias Foo = ... }` causes cross-instantiation ambiguity |
@@ -126,7 +128,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | C2 | Typed throws — Swift 6.2.4 stdlib support matrix | 6.2.4 / 6.3.x (lang spec) | Some stdlib `rethrows` APIs propagate `throws(E)`; many erase to `any Error` |
 | C3 | Typed throws — catch blocks preserve concrete typed error | 6.3.x (lang spec) | `error` in catch IS the concrete typed error, NOT `any Error` |
 
-**Total entries: 20** (19 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
+**Total entries: 22** (21 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
 
 ---
 
@@ -867,6 +869,75 @@ print(w.c)                                   // ← SIGSEGV at -Onone: EXC_BAD_A
 **No-auto-lift record (§A15 ≠ §A9)**: §A15 is NOT fixed by the 6.4-dev+ compiler (broken through 6.5-dev); the mitigation is the institute-side respelling above. The `compiler(<6.4)` gates protecting the recorded §A9 paths (Set.Ordered/Graph) must NOT be lifted on §A15 grounds, and a future 6.4 gate-bump does not retire this entry — only an upstream runtime fix does.
 
 **Reproducer + dossier**: probes at `.handoffs/probes-2026-06-10/noncopyable-sametype-conformance-crash/` (FINDINGS.md = full bisect record; `aprime.swift` = the A′ probe); upstream dossier STAGED (not filed — needs principal YES) at `swift-institute/Issues/swift-issue-noncopyable-sametype-conditional-conformance/`.
+
+---
+
+### A16. Bodyless `shared [serialized]` default-witness `read` accessor for a `~Copyable` associated-type property bound to `Never` (cross-module)
+
+**Swift versions**: 6.3.2 → 6.5-dev (2026-05-27 snapshot) — UNFIXED. Surfaces only when SIL verification runs: +Asserts toolchains (Windows 6.3.2-RELEASE), Embedded (any toolchain), or `-Xfrontend -sil-verify-all` on any toolchain. On NoAsserts RELEASE (stock macOS/Linux) the malformed SIL is emitted but never verified → silent success (latent). Investigation 2026-06-25 (`/issue-investigation`, `HANDOFF-windows-compiler-crashes.md`).
+
+**Symptom**: emit-module / `-c` of a *consumer* module crashes lowering AST to SIL —
+```
+<unknown>:0: note: Must have a construct to emit for           # +Asserts (Windows)
+SIL verification failed: public/package/shared function must have a body   # Embedded / -sil-verify-all
+While verifying SIL function "...Protocol...body...read" for read for body (in module '<DefiningModule>')
+```
+The crashing function demangles to `<Proto>.Protocol.body.read where Body == Never, Self: ~Copyable` — the leaf-default `read` accessor, originating in the *defining* module but emitted bodyless into the consumer.
+
+**Minimal reproducer** (2 files, bare `swiftc`, stock Xcode 6.3.2, no SwiftPM):
+```swift
+// module M
+public protocol P: ~Copyable {
+    associatedtype Body: ~Copyable
+    var body: Body { borrowing get }
+}
+extension P where Self: ~Copyable, Body == Never {
+    @inlinable public var body: Never { borrowing get { fatalError() } }
+}
+public struct InCore: P { public typealias Body = Never; public init() {} }   // in-defining-module conformer
+// module N
+public import M
+public struct Use: P { public typealias Body = Never; public init() {} }       // consumer-module conformer
+```
+```
+swiftc -enable-experimental-feature SuppressedAssociatedTypes -wmo -parse-as-library \
+       -emit-module -emit-module-path M.swiftmodule -module-name M repro-core.swift
+swiftc -enable-experimental-feature SuppressedAssociatedTypes -Xfrontend -sil-verify-all \
+       -wmo -parse-as-library -c repro-consumer.swift -I . -module-name N        # → "Must have a construct to emit for"
+```
+
+**Constraint model** (each verified by removal): requires (1) `associatedtype Body: ~Copyable` (Copyable `Body` passes; the protocol/`Self` being `~Copyable` is NOT required — only the associated type); (2) a property requirement of that type + a `Body == Never` default returning `Never`; (3) a `Body == Never` conformer in the *defining* module; (4) a `Body == Never` conformer in a *consumer* module; (5) SIL verification active. NOT required: `@inlinable`, `borrowing get` (plain `get` also crashes), result builders, the package's experimental feature flags.
+
+**Mechanism**: the leaf-default's `read` coroutine yields the uninhabited `Never`. The in-defining-module conformer forces the generic default to be serialized into the defining `.swiftmodule`; a consumer conformer's witness table then references it and the compiler emits it as a `shared [serialized]` SIL function with no body. SIL verification rejects a bodyless public/package/shared function. Only the verifier's presence differs across platforms — hence macOS/Linux RELEASE pass while Windows/Embedded fail on identical code.
+
+**Workarounds**: `@_optimize(none)`, `@inline(never)`, `@_alwaysEmitIntoClient` on the default — all FAIL (verification, not optimization). The only verified mitigation is structural: remove the `Body == Never` conformer from the *defining* module (relocate it to a separate target), so the serialized default is never instantiated there. A `#if !os(Windows)`/`#if !hasFeature(Embedded)` guard does NOT apply (guarding the default out leaves leaf conformers without a `body` witness; and the malformed SIL is emitted on every platform regardless). [ISSUE-022] fix-shape decision — left to principal.
+
+**Scope**: affects EVERY leaf combinator in swift-serializer-primitives (Map/Optional/Many/Filter/Lazy/Literal/Always/Fail/Trace/Tagged), not only Trace — the Windows build merely halted at Trace first.
+
+**Reproducer + dossier**: STAGED (not pushed) at `swift-institute/Issues/swift-issue-noncopyable-assoctype-never-bodyless-witness/`. Windows evidence: `swift-primitives/swift-serializer-primitives` CI run `28169921710` job `83431175554`. Source: `Serializer.Protocol.swift:73-81` (leaf-default), `Serializer.Witness+Protocol.swift:13-22` (in-core conformer).
+
+---
+
+### A17. Sema `getEffects(req).contains(getEffects(witness))` assertion: `throws(Never)` derived witness vs non-throwing `IteratorProtocol.next()`
+
+**Swift versions**: 6.3.2 (+Asserts) CRASH; **FIXED on 6.5-dev** (2026-05-27 snapshot — real swift-input-primitives test target and a faithful cross-module model both build clean). +Asserts-only; NoAsserts RELEASE legs (macOS/Linux) pass. Investigation 2026-06-25 (`/issue-investigation`, `HANDOFF-windows-compiler-crashes.md`).
+
+**Symptom**: type-checking a protocol conformance aborts —
+```
+Assertion failed: getEffects(req).contains(getEffects(witness)) &&
+    "witness has more effects than requirement?", lib/Sema/TypeCheckProtocol.cpp:1311
+While evaluating request ResolveValueWitnessesRequest(... : IteratorProtocol)
+```
+
+**Trigger**: a type conforms in one extension to BOTH (a) a custom chunk protocol whose `where Element: Copyable` extension supplies a derived `mutating func next() throws(Failure) -> Element?` (with `Failure == Never`, i.e. `throws(Never)`), and (b) stdlib `IteratorProtocol` (a non-throwing `next()` requirement). When resolving the `IteratorProtocol.next()` witness, the `throws(Never)` derived candidate's effect set carries a `throws` effect the requirement lacks; the effects-containment assertion fires before `throws(Never)` is reduced to non-throwing. (An explicitly-written `next() -> Element?` is also present → witness contention under typed throws.)
+
+**Reproducer**: faithful cross-module model preserved at `swift-institute/Issues/swift-issue-typed-throws-never-witness-effects-assertion/repro.swift` (depends on swift-iterator-primitives). It reproduces the shape but cannot trigger the assertion on any locally-available toolchain (the 6.3.2 snapshots on this machine are NoAsserts; 6.5-dev has the fix); the Windows CI run is the reproduction of record.
+
+**Fix verification ([ISSUE-001])**: `TOOLCHAINS=org.swift.64202605271a swift build --build-tests` on the real package → `Build complete!`, zero crash markers. **Coverage scope ([ISSUE-026])**: confirmed PRESENT on 6.3.2 +Asserts (Windows CI), confirmed FIXED on 6.5-dev; exact 6.4-stable status not locally verifiable (no 6.3.2/6.4 +Asserts toolchain on hand).
+
+**Resolution ([ISSUE-008] fixed-on-dev)**: Windows 6.3.2-RELEASE won't get the fix until its toolchain advances → a test-code workaround is needed to green Windows CI now (guard `#if !os(Windows)`, drop the `IteratorProtocol` conformance if unused, or disambiguate the witness). Left to principal per [ISSUE-022]. Distinct from the typed-throws-in-`#expect` SIL crash already worked around in `Input.Buffer/Slice Tests.swift`.
+
+**Dossier**: STAGED (not pushed) at `swift-institute/Issues/swift-issue-typed-throws-never-witness-effects-assertion/`. Windows evidence: `swift-primitives/swift-input-primitives` CI run `28169939296` job `83431230550`. Source: `Input.Slice Tests.swift:31`; derived witness `Iterator.Chunk.Protocol.swift:15-27`.
 
 ---
 
