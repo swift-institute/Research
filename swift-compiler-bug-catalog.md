@@ -4,8 +4,8 @@ tier: 2
 scope: cross-package
 status: REFERENCE
 created: 2026-05-10
-last_reviewed: 2026-06-06
-last_verified: 2026-06-06
+last_reviewed: 2026-06-26
+last_verified: 2026-06-26
 toolchains:
   - Swift 6.3.1 (Xcode 26.4.1, swiftlang-6.3.1.1.2)
   - Swift 6.3.2 (swiftlang-6.3.2.1.108, SDK MacOSX26.5) — § A11
@@ -119,6 +119,9 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | A15 | Runtime cannot verify a conditional conformance whose same-type RHS is `~Copyable` → null-metadata SIGSEGV at `-Onone` + silent wrong dynamic casts | 6.2 → 6.5-dev compiler AND runtime, ALL broken (NOT a regression; distinct from §A9 despite identical 0x10 signature) | `extension Gen: P where A == Pool` (`Pool: ~Copyable`) + a generic wrapper `W<S: P>` storing `S`: any member access at `-Onone` derefs null metadata at `+0x10`; `(Gen<Pool>() as Any) is any P` returns false; runtime says `subject type x does not conform to protocol P`. 8-declaration bare-swiftc repro, no feature flags. Tower trigger: the ecosystem's only same-type conditional conformance, `Storage.Generational: Store.Protocol where Allocation == Memory.Allocator<Memory.Heap>.Pool` (the LEG-7 slotmap DEBUG wall) |
 | A16 | Bodyless `shared [serialized]` default-witness `read` accessor for a `~Copyable` associated-type property bound to `Never` (cross-module) | 6.3.2 → 6.5-dev (UNFIXED; surfaces only when SIL verification runs: +Asserts/Embedded/`-sil-verify-all`) | A protocol with `associatedtype Body: ~Copyable` + a `Body == Never` leaf-default `var body` + a `Body == Never` conformer in BOTH the defining and a consumer module emits a bodyless `body.read` in the consumer → "Must have a construct to emit for" / "function must have a body". Latent/silent on NoAsserts RELEASE (macOS/Linux pass); crashes Windows + Embedded. Surfaced by swift-serializer-primitives (ALL leaf combinators, not just Trace) |
 | A17 | Sema `getEffects(req).contains(getEffects(witness))` assertion: `throws(Never)` derived witness vs non-throwing `IteratorProtocol.next()` | 6.3.2 +Asserts CRASH / FIXED 6.5-dev | A type conforming to BOTH a custom chunk protocol (whose `where Element: Copyable` extension provides `throws(Never) next() -> Element?`) AND stdlib `IteratorProtocol` trips the effects-containment assertion at TypeCheckProtocol.cpp:1311 during witness resolution. +Asserts-only (Windows); release legs pass; fixed on 6.5-dev. Surfaced by swift-input-primitives tests |
+| A18 | `Mem2Reg`/`OSSACompleteLifetime` `SILBitfield.h:60` (`endBit <= numCustomBits`) per-function bitfield overflow compiling a test function under `-O` | 6.3.2 macOS+Linux release (UNFIXED) | `-O` inlines an `@inlinable` ~Copyable/generic accessor+init chain (e.g. `Fixed<Buffer<Storage<…>.Contiguous<E>>.Linear.Bounded>`) into a `@Test` function; the deep nested-borrow graph overflows `Mem2Reg`'s per-function `SILBitfield` budget → signal 6. Crash site is the inlining-sink (test) function, not any library decl. WA: `@_optimize(none)` on the crash-prone test(s). Distinct from §A13. Surfaced by swift-fixed-primitives |
+| A19 | `@_optimize(none)` + `consume` of a `~Copyable`-with-`deinit` value elides the element deinits (NoOptimization-in-`-O` teardown miscompile) | 6.3.2 macOS+Linux release (UNFIXED) | Annotating a function `@_optimize(none)` inside an `-O` module makes a `consume` of a move-only value skip its `deinit`s (`destroyedCount → 0`); full `-Onone`/debug are correct. WA: never `@_optimize(none)` a function that must observe move-only deinits. Surfaced by swift-fixed-primitives (the §A18 workaround exposed it) |
+| A20 | `Mangler::verify` (`Mangler.cpp:176`) abort on the `@_implements(Iterable, makeIterator())` witness returning a nested-generic `Materializing<Vector.Iterator>` | 6.3.0-dev / 6.3.2 / 6.3.3-dev +Asserts CRASH (UNFIXED); NoAsserts macOS/Linux green | The Iterable `@_implements` witness `iterableMakeIterator → Iterator.Chunk.Materializing<Vector<A>.Iterator>` (deep generic instantiation + `~Escapable` `Ri_z` + associated-conformance `HCg`) mangles to a symbol the compiler's own round-trip verifier cannot demangle → `abort()` during AST→SIL lowering. `Mangler::verify` is `CONDITIONAL_ASSERT`-gated → +Asserts-only (Windows); NoAsserts emits the malformed name unverified → latent. Same class as §A12 (NOT the Sequenceable witness the handoff presumed). WA: drop or flatten the Iterable witness. Surfaced by swift-vector-primitives |
 | B1 | `Property.View ~Copyable` extension constraint placement | 6.3.x (lang spec) | All constraints MUST be at extension level, not method level — implicit `Base: Copyable` else |
 | B2 | `Property.View` rejected on `Copyable` types (~Copyable + ~Escapable result from mutating method) | 6.3.x (lang spec) | Use `Property<Tag, Base>` for `@CoW` Copyable types instead |
 | B3 | Tagged constrained-extension nested-type ambiguity | 6.3.1 (still broken) | `extension Tagged where Tag == X, RawValue == Y { typealias Foo = ... }` causes cross-instantiation ambiguity |
@@ -128,7 +131,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | C2 | Typed throws — Swift 6.2.4 stdlib support matrix | 6.2.4 / 6.3.x (lang spec) | Some stdlib `rethrows` APIs propagate `throws(E)`; many erase to `any Error` |
 | C3 | Typed throws — catch blocks preserve concrete typed error | 6.3.x (lang spec) | `error` in catch IS the concrete typed error, NOT `any Error` |
 
-**Total entries: 22** (21 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
+**Total entries: 25** (24 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
 
 ---
 
@@ -938,6 +941,86 @@ While evaluating request ResolveValueWitnessesRequest(... : IteratorProtocol)
 **Resolution ([ISSUE-008] fixed-on-dev)**: Windows 6.3.2-RELEASE won't get the fix until its toolchain advances → a test-code workaround is needed to green Windows CI now (guard `#if !os(Windows)`, drop the `IteratorProtocol` conformance if unused, or disambiguate the witness). Left to principal per [ISSUE-022]. Distinct from the typed-throws-in-`#expect` SIL crash already worked around in `Input.Buffer/Slice Tests.swift`.
 
 **Dossier**: STAGED (not pushed) at `swift-institute/Issues/swift-issue-typed-throws-never-witness-effects-assertion/`. Windows evidence: `swift-primitives/swift-input-primitives` CI run `28169939296` job `83431230550`. Source: `Input.Slice Tests.swift:31`; derived witness `Iterator.Chunk.Protocol.swift:15-27`.
+
+---
+
+### A18. `Mem2Reg` / `OSSACompleteLifetime` `SILBitfield.h:60` per-function bitfield overflow from `@inlinable` inlining into a test function
+
+**Swift versions**: 6.3.2 — reproduces on BOTH macOS-release (arm64) and Linux-release (x86_64) at `-O`; `-Onone`/debug clean on all platforms. UNFIXED (not retested on 6.4/6.5-dev). **Distinct from §A13/#89617** (different pass, function, and assertion).
+
+**Symptom**:
+```
+Assertion failed: (endBit <= T::numCustomBits && "too many/large bit fields allocated in function"),
+  function SILBitfield at SILBitfield.h:60.
+While running pass "Mem2Reg" on SILFunction "<the @Test function>"
+  → OSSACompleteLifetime::analyzeAndUpdateLifetime ⇄ InteriorLiveness::compute (deep recursion)
+  → StackAllocationPromoter::run → SILMem2Reg::run → signal 6 / fatalError
+```
+
+**Root cause**: `SILBitfield` is a per-`SILFunction` scratch bit allocator with a fixed budget (`numCustomBits`). `Mem2Reg`'s `StackAllocationPromoter` calls `OSSACompleteLifetime::completeOSSALifetime`, which walks borrow scopes via `InteriorLiveness` and **recurses on a deeply nested interior-borrow graph**, allocating `SILBitfield`s as it descends; past a threshold it overflows. Under `-O` the inliner collapses an `@inlinable` ~Copyable/generic/closure-bearing accessor+init chain into one function, producing the deep graph. The crash is on the **inlining-sink** function (here a `@Test`), not the library declarations (Sources release-compile clean). A scalability limit, not a miscompile; the `ASSERT` fires even in NDEBUG → loud build-blocker.
+
+**Ingredients**: (1) `-O`; (2) an `@inlinable` chain over a move-only/generic value heavy on nested borrows (e.g. `Fixed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear.Bounded>` accessors); (3) a sink function the inliner collapses it into above an accessor-count threshold (the smaller move-only test in the same suite did NOT trip it).
+
+**Workaround**: `@_optimize(none)` on the sink function (keeps the inliner from collapsing the chain in). Behaviour-preserving. **Caution: see §A19** — do not apply it to a function that must observe move-only `deinit`s.
+
+**Production / evidence**: `swift-fixed-primitives` `Tests/Fixed Primitives Tests/Fixed Tests.swift` (5 of 6 `@Test`s tripped it). CI run `28230583451` (Linux); macOS-release `swift build --build-tests -c release` reproduces byte-identical (same pass/function/assertion). Fix committed `5457eca`; 6.3-release CI leg green (runs `28243845222`/`28244117012`). Dossier: `swift-institute/Issues/swift-issue-fixed-release-compiler-crash/`.
+
+**Source**: 2026-06-26 swift-fixed-primitives release-CI investigation.
+
+---
+
+### A19. `@_optimize(none)` + `consume` of a `~Copyable`-with-`deinit` value elides the element `deinit`s
+
+**Swift versions**: 6.3.2 — macOS-release AND Linux-release at `-O`; full `-Onone`/debug correct. UNFIXED.
+
+**Symptom**: a function marked `@_optimize(none)` (inside an otherwise `-O` module) that `consume`s a move-only value whose elements have observable `deinit`s runs **0** deinits instead of N (`destroyedCount → 0`). No diagnostic; a silent missed-destroy.
+
+**Root cause (hypothesis)**: NoOptimization codegen for a `consume`/end-of-scope destroy of a `~Copyable` value within an `-O` module fails to emit the element teardown. The library type's value-witness/teardown is correct on its own — full `-Onone` AND the unannotated `-O` build both run the deinits — so the defect is the hybrid `@_optimize(none)`-function-inside-an-`-O`-module mode, not the library.
+
+**Ingredients (verified by [ISSUE-013] variable isolation)**: (1) `-O` build; (2) `@_optimize(none)` on the function; (3) the function `consume`s / end-of-scope destroys a `~Copyable` value with element `deinit`s. Removing **only** (2) restores correct teardown (`destroyedCount → 2`).
+
+**NOT a library bug**: this explicitly refutes an intermediate "release teardown miscompile with blast radius across the `Buffer`/`Storage` family (other public packages silently leaking)" reading. The `Fixed`/Buffer/Storage teardown is correct at `-O`; only the `@_optimize(none)` annotation suppresses it. The misreading came from observing failure on both macOS- and Linux-release *with the annotation present* and inferring platform-independence of a library bug; the missing control was release *without* the annotation.
+
+**Workaround**: never `@_optimize(none)` a function that must observe move-only element `deinit`s. (It surfaced only because §A18's workaround put `@_optimize(none)` on a deinit-counting test; leaving that one test unannotated fixed it, and it does not trip §A18 anyway.)
+
+**Production / evidence**: `swift-fixed-primitives` test `move-only elements live in Fixed and tear down once`. Dossier: `swift-institute/Issues/swift-issue-fixed-release-compiler-crash/` (Issue #2).
+
+**Source**: 2026-06-26 swift-fixed-primitives release-CI investigation.
+
+---
+
+### A20. `Mangler::verify` (`Mangler.cpp:176`) abort on the `@_implements(Iterable, makeIterator())` witness returning a nested-generic `Materializing<Vector.Iterator>`
+
+**Swift versions**: 6.3.2 `+Asserts` (Windows CI gating leg) CRASH; reproduced on `swiftlang/swift:nightly-6.3-jammy` = 6.3.0-dev (`f30e11b`) AND 6.3.3-dev (`c83acbf`), both `+assertions`. UNFIXED across the 6.3 line. NoAsserts (stock macOS/Linux 6.3.2 release) GREEN. Investigation 2026-06-26 (`/issue-investigation`, `HANDOFF-vector-sequenceable-windows-asserts-ice.md`).
+
+**Symptom**: emit-module / `-c` of the consumer (ops) module aborts lowering AST to SIL —
+```
+While evaluating request ASTLoweringRequest(Lowering AST to SIL for module Vector_Primitives)
+Abort: function verify at Mangler.cpp:176
+Can't demangle: $s16Vector_Primitive0A0V0A11_PrimitivesE20iterableMakeIterator0f1_B00F0O0f7_Chunk_C0E13MaterializingVy_AcARi_zrlEAGVyx_GAmH0F9_ProtocolE0I0AD_HCg_GyF
+```
+The symbol demangles to `Vector.(ext in Vector_Primitives).iterableMakeIterator() -> Iterator.Chunk.Materializing<Vector<A>.Iterator>` — the **Iterable `@_implements(Iterable, makeIterator())` witness**. Stack: `Mangle::Mangler::verify` ← `ASTMangler::mangleEntity` ← `SILDeclRef::mangle` ← `SILFunctionBuilder::getOrCreateFunction` ← `SILGenModule::emitFunction(FuncDecl*)` ← `SILGenExtension::visitFuncDecl`.
+
+**Mechanism**: the `+Asserts` mangler emits a symbol for a witness whose signature embeds the **deep generic instantiation** `Materializing<Vector<A>.Iterator>` (an adapter parameterized by the conforming type's own nested `~Copyable` iterator), carrying a `~Escapable` requirement (`Ri_z`) and an associated-conformance node (`HCg`) — and the mangler's own round-trip self-check cannot re-demangle it. `Mangler::verify` is `CONDITIONAL_ASSERT_enabled()`-gated, so it runs only on +Asserts toolchains; NoAsserts emits the malformed name unverified → latent (macOS/Linux pass). **Same class as §A12** (corrupt/un-roundtrippable mangled name for a nested-generic iterator-adapter witness); §A12 was a `Sequenceable.Iterator` witness surfacing at IRGen/runtime, this is an `Iterable.Iterator` witness surfacing at SILGen via `Mangler::verify`. Distinct from §A16 (bodyless witness) and §A17 (Sema effects-containment assertion).
+
+**Attribution correction**: the originating handoff presumed the crash was the **Sequenceable** witness (because the WMO emit-module diagnostic's *file* attribution lands on `Vector+Sequenceable.swift`). It is the **Iterable** witness `iterableMakeIterator` in `Vector+Iterable.swift`. Verified three ways: (1) the real-package crash symbol is `iterableMakeIterator`; (2) reducer matrix — removing the Sequenceable conformance does NOT fix it; (3) **dropping the Iterable conformance turns CRASH → PASS** (the isolation proof).
+
+**Minimal reproducer** (2 modules, bare `swiftc`, host-PASS + asserts-CRASH): `swift-institute/Issues/swift-issue-vector-iterable-materializing-mangler-verify/` (`defining.swift` + `consumer.swift` + `build.sh`; `CHARACTERIZATION.md` has the full analysis; `real-package-crash-6.3.3-dev.log` is the real-package abort).
+
+**Why Vector and no other Iterable conformer** (built on the +Asserts image): the `Materializing<Iterator>` + `@_implements(Iterable, makeIterator())` pattern is used by ~10 types; `swift-bit-vector-primitives` (8 types, value-generic), `swift-buffer-slab-primitives` (type param `S` kept `~Copyable`), and `swift-single-iterator-primitives` (binds the SHARED `Materializing<Iterator.Once<Element>>`) all compile CLEAN. Vector is the only one combining **two** traits, each harmless alone: **(A)** Iterable.Iterator wraps Vector's OWN nested iterator `Materializing<Vector<Bound>.Iterator>` (deep generic — confirmed load-bearing: swapping to a shared element-generic iterator flips CRASH→PASS), and **(B)** Vector re-Copyable-izes its `~Copyable` type param (`Vector<Bound: ~Copyable>` + `where Bound: Copyable`, because its param IS its element). buffer-slab has A-not-B → pass; Single has B-without-A → pass; Vector has both → the mangler can't round-trip the name.
+
+**Workaround — APPLIED & VALIDATED (the §A12 element-only-generic dodge)**: bind `Iterable.Iterator` to the SHARED element-generic `Iterator.Witness<Bound, Never>` instead of Vector's own nested iterator (exactly the Single pattern). Type-erase the scalar cursor through `Iterator.Witness` before materializing — lazy, behavior-preserving, no new Vector type, all three conformances retained:
+```swift
+public typealias IterableIterator = Iterator.Materializing<Iterator.Witness<Bound, Never>>          // was Materializing<Iterator>
+func iterableMakeIterator() -> Iterator.Materializing<Iterator.Witness<Bound, Never>> {
+    Iterator.Materializing(Iterator.Witness(makeIterator())) }                                       // was Materializing(scalar)
+// + "Vector Primitives" target dep on product "Iterator Witness Primitives"
+```
+`Materializing<Iterator.Witness<Bound, Never>>` mangles shallow, dodging the verifier. **Validated**: +Asserts (nightly-6.3-jammy 6.3.3-dev) `Vector Primitives` build clean; macOS 106 tests pass. Applied to `swift-vector-primitives` `64daf53` 2026-06-26 (Vector + Vector.Reversed). Drop-Iterable and `#if !os(Windows)` were the rejected alternatives; `@_optimize(none)`/`@inline(never)` do NOT help (mangling, not optimization). Compiler bug itself UNFIXED.
+
+**Production / evidence**: `swift-primitives/swift-vector-primitives` @ `6b85557`, target `Vector Primitives`. CI: vector run `28250591435` job `Windows (Swift 6.3, debug)` step `Build`; pre-restructure run `28244613615` (sha `7740cc4`) shows the identical crash attributed to `Vector+Iterable.swift`. Source: `Vector+Iterable.swift:75-97` (the `@_implements` Iterable conformance + `iterableMakeIterator`), `Vector+Iterable.swift:38` (dual `IterP`/`IteratorProtocol`), `Vector+ConformanceSupport.swift:35` (`_makeSequenceIterator` window).
+
+**Source**: 2026-06-26 swift-vector-primitives Windows +Asserts investigation (`HANDOFF-vector-sequenceable-windows-asserts-ice.md`).
 
 ---
 
