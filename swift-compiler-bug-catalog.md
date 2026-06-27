@@ -122,6 +122,8 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | A18 | `Mem2Reg`/`OSSACompleteLifetime` `SILBitfield.h:60` (`endBit <= numCustomBits`) per-function bitfield overflow compiling a test function under `-O` | 6.3.2 macOS+Linux release (UNFIXED) | `-O` inlines an `@inlinable` ~Copyable/generic accessor+init chain (e.g. `Fixed<Buffer<Storage<…>.Contiguous<E>>.Linear.Bounded>`) into a `@Test` function; the deep nested-borrow graph overflows `Mem2Reg`'s per-function `SILBitfield` budget → signal 6. Crash site is the inlining-sink (test) function, not any library decl. WA: `@_optimize(none)` on the crash-prone test(s). Distinct from §A13. Surfaced by swift-fixed-primitives |
 | A19 | `@_optimize(none)` + `consume` of a `~Copyable`-with-`deinit` value elides the element deinits (NoOptimization-in-`-O` teardown miscompile) | 6.3.2 macOS+Linux release (UNFIXED) | Annotating a function `@_optimize(none)` inside an `-O` module makes a `consume` of a move-only value skip its `deinit`s (`destroyedCount → 0`); full `-Onone`/debug are correct. WA: never `@_optimize(none)` a function that must observe move-only deinits. Surfaced by swift-fixed-primitives (the §A18 workaround exposed it) |
 | A20 | `Mangler::verify` (`Mangler.cpp:176`) abort on the `@_implements(Iterable, makeIterator())` witness returning a nested-generic `Materializing<Vector.Iterator>` | 6.3.0-dev / 6.3.2 / 6.3.3-dev +Asserts CRASH (UNFIXED); NoAsserts macOS/Linux green | The Iterable `@_implements` witness `iterableMakeIterator → Iterator.Chunk.Materializing<Vector<A>.Iterator>` (deep generic instantiation + `~Escapable` `Ri_z` + associated-conformance `HCg`) mangles to a symbol the compiler's own round-trip verifier cannot demangle → `abort()` during AST→SIL lowering. `Mangler::verify` is `CONDITIONAL_ASSERT`-gated → +Asserts-only (Windows); NoAsserts emits the malformed name unverified → latent. Same class as §A12 (NOT the Sequenceable witness the handoff presumed). WA: drop or flatten the Iterable witness. Surfaced by swift-vector-primitives |
+| A21 | `getMangledName` (`IRGenDebugInfo.cpp:1098`) abort emitting debug info for a named local of a value-generic same-type-constrained typealias (`Axis<N>.*`) | 6.3.x +Asserts CRASH (UNFIXED); NoAsserts macOS/Linux green | A test `let v: Axis<2>.Vertical = …` (value-generic `Axis<let N: Int>` + `extension Axis where N == 2 { typealias Vertical = … }`) makes IRGen `emitVariableDeclaration` mangle the variable's debug type to a `$…_Rsz…` name the round-trip self-check can't re-demangle → abort. Assert-gated (`-disable-round-trip-debug-types`) → +Asserts-only (Windows); NoAsserts latent. Same class as §A20. Whole `Axis<N>.{Vertical,Depth,Horizontal,Direction,Temporal}` family affected. WA: reference `Axis<N>.*` in expression position (no named local of the sugared type) — the flag and dropping the family were both principal-rejected. Surfaced by swift-dimension-primitives |
+| A22 | `hasErrorResult()` (`Types.h:5274`, `SILFunctionType::getMutableErrorResult`) abort on a non-throwing → typed-throws (nested-generic error) conversion thunk | 6.3.x +Asserts CRASH (UNFIXED); NoAsserts macOS/Linux green | A bare non-throwing literal `{ _ in false }` assigned to `Field.reciprocal: (Element) throws(Field<Element>.Error) -> Element` inserts a reabstraction thunk whose SIL function type trips `getMutableErrorResult`'s `hasErrorResult()` assert during `-Onone -g` IRGen. Assert-gated → +Asserts-only (Windows + assertions-nightly); NoAsserts latent. Distinct from §A13 (FunctionSignatureOpts `-O`). WA: spell the closure's typed-throws signature explicitly. Surfaced by swift-algebra-primitives |
 | B1 | `Property.View ~Copyable` extension constraint placement | 6.3.x (lang spec) | All constraints MUST be at extension level, not method level — implicit `Base: Copyable` else |
 | B2 | `Property.View` rejected on `Copyable` types (~Copyable + ~Escapable result from mutating method) | 6.3.x (lang spec) | Use `Property<Tag, Base>` for `@CoW` Copyable types instead |
 | B3 | Tagged constrained-extension nested-type ambiguity | 6.3.1 (still broken) | `extension Tagged where Tag == X, RawValue == Y { typealias Foo = ... }` causes cross-instantiation ambiguity |
@@ -1021,6 +1023,61 @@ func iterableMakeIterator() -> Iterator.Materializing<Iterator.Witness<Bound, Ne
 **Production / evidence**: `swift-primitives/swift-vector-primitives` @ `6b85557`, target `Vector Primitives`. CI: vector run `28250591435` job `Windows (Swift 6.3, debug)` step `Build`; pre-restructure run `28244613615` (sha `7740cc4`) shows the identical crash attributed to `Vector+Iterable.swift`. Source: `Vector+Iterable.swift:75-97` (the `@_implements` Iterable conformance + `iterableMakeIterator`), `Vector+Iterable.swift:38` (dual `IterP`/`IteratorProtocol`), `Vector+ConformanceSupport.swift:35` (`_makeSequenceIterator` window).
 
 **Source**: 2026-06-26 swift-vector-primitives Windows +Asserts investigation (`HANDOFF-vector-sequenceable-windows-asserts-ice.md`).
+
+---
+
+### A21. `getMangledName` (`IRGenDebugInfo.cpp:1098`) abort emitting debug info for a named local of a value-generic same-type-constrained typealias (`Axis<N>.*`)
+
+**Swift versions**: 6.3 `+Asserts` (Windows CI gating leg, `swift-6.3-windows-toolchain`) CRASH; reproduced on `swiftlang/swift:nightly-6.3-jammy` = 6.3.3-dev (`c83acbf`), `+assertions`. UNFIXED on the 6.3 line. NoAsserts (stock macOS/Linux 6.3.3 release) GREEN. The library compiles clean everywhere — only the **test target** crashes. Investigation 2026-06-27 (`/issue-investigation`, `HANDOFF-dimension-algebra-windows-asserts-ice.md`).
+
+**Symptom**: `-Onone -g` build of the test target aborts in IRGen debug-info emission —
+```
+Abort: function getMangledName at .../lib/IRGen/IRGenDebugInfo.cpp:1098
+Failed to reconstruct type for $s14Axis_Primitive0A0V20Dimension_PrimitivesSiRVz$1_RszlE8Verticalay$1__GD
+Pass '-Xfrontend -disable-round-trip-debug-types' to disable this assertion.
+```
+The symbol is `Axis<2>.Vertical` (value-generic same-type-constrained member typealias; `$…_Rsz…` carries the value-generic requirement). Stack: `IRGenDebugInfoImpl::getMangledName` ← `getOrCreateType` ← `emitVariableDeclaration` — the decisive frame is `emitVariableDeclaration`: the crash emits the debug-info type record for a **source variable** whose declared type is the sugared typealias.
+
+**Mechanism**: `Axis<let N: Int>` (swift-axis-primitives) + `extension Axis where N == 2 { typealias Vertical = Dimension_Primitives.Vertical }` (and the Depth/Horizontal/Direction/Temporal siblings, each `where N == k`). A test declares a **named local of the sugared type** (`let v: Axis<2>.Vertical = .downward`); under `-g` IRGen mangles its debug type to a name the round-trip self-check cannot re-demangle → abort. Assert-gated → +Asserts-only (Windows); NoAsserts emits it unverified → latent (macOS/Linux green). **Same class as §A20** (vector): +Asserts mangled-name round-trip on a value-generic/deep institute construct — §A20 is `Mangler::verify` at SILGen on an `@_implements` witness name, this is `getMangledName` at IRGen debug-info on a variable's declared type. The whole `Axis<N>.{Vertical,Depth,Horizontal,Direction,Temporal}` family is affected (CI hit `Axis<3>.Depth` first, the local baseline hit `Axis<2>.Vertical` first — file ordering).
+
+**Reproducer**: canonical = build the real package's test target on the +Asserts image (dossier `evidence/real-package-crash-6.3.3-dev.log`). A minimal 2-module bare-`swiftc` reduction did **not** reproduce (the trigger needs the cross-module named-local context) — recorded as a negative result per [ISSUE-026]. Ingredient model: value-generic typealias + named local of the sugared type in a downstream module + `-g` + +Asserts; removing any one (drop `-g`, annotate with the canonical underlying type, or reference in expression position) clears it.
+
+**Workaround — APPLIED & VALIDATED (test-side expression-position rewrite)**: reference `Axis<N>.*` in expression position instead of as the declared type of a named local:
+```swift
+#expect(Axis<2>.Vertical.downward == Vertical.downward)          // was: let v: Axis<2>.Vertical = .downward; #expect(v == …)
+```
+Expression-position member access yields inferred-**canonical** types (`Vertical`), so no `emitVariableDeclaration` runs for the sugared type and `getMangledName` is never called on it. All 5 typealias **source files are untouched** (API maintained); no unsafeFlags. Coverage preserved (identity via homogeneous `==`, all members, existence, multi-dim `Axis<1..4>.Direction`). The two structural dodges — `-Xfrontend -disable-round-trip-debug-types` on the test target, and removing the (0-consumer) family — were **both principal-rejected** (no unsafeFlags; the family is domain-complete API per [ARCH-LAYER-006]/[ARCH-LAYER-008], consumer count must not drive removal). **Validated**: +Asserts `build --build-tests` clean (19.88s); macOS 268 tests pass. Applied to `swift-dimension-primitives` `5b940ee` 2026-06-27; Windows leg run `28280214029` => success. Compiler bug UNFIXED — latent-on-+Asserts for any consumer declaring a named local of a value-generic same-type-constrained typealias under `-g`.
+
+**Production / evidence**: `swift-primitives/swift-dimension-primitives` `6939cea`→`5b940ee`. Dossier: `swift-institute/Issues/swift-issue-dimension-axis-typealias-windows-asserts-ice/`.
+
+**Source**: 2026-06-27 swift-dimension-primitives Windows +Asserts investigation.
+
+---
+
+### A22. `hasErrorResult()` (`Types.h:5274`) abort on a non-throwing → typed-throws (nested-generic error) conversion thunk
+
+**Swift versions**: 6.3 `+Asserts` (Windows CI gating leg) CRASH; reproduced on `swiftlang/swift:nightly-6.3-jammy` 6.3.3-dev (`c83acbf`), `+assertions`; also fired the advisory `Ubuntu (Swift main nightly, release)` leg (assertions-enabled nightly, `Types.h:5374`). UNFIXED on the 6.3 line. NoAsserts (stock macOS/Linux 6.3.3 release) GREEN. The library compiles clean everywhere — only the **test target** crashes. Investigation 2026-06-27 (`HANDOFF-dimension-algebra-windows-asserts-ice.md`).
+
+**Symptom**: `-Onone -g` IRGen of the test file aborts —
+```
+swift-frontend: .../AST/Types.h:5274: SILResultInfo &swift::SILFunctionType::getMutableErrorResult(): Assertion `hasErrorResult()' failed.
+While evaluating request IRGenRequest(IR Generation for file ".../Algebra.Law Tests.swift")
+... for expression at [Algebra.Law Tests.swift:100:25 - line:100:38] RangeText="{ _ in false "
+```
+
+**Mechanism**: `Algebra.Field<Element>` stores `reciprocal: (Element) throws(Algebra.Field<Element>.Error) -> Element` — typed-throws with the **nested-generic** error `Field<Element>.Error`. A test fixture assigns a **bare non-throwing** literal `{ _ in false }`. The non-throwing → typed-throws subtype conversion inserts a reabstraction thunk; under +Asserts `-g`, IRGen of the thunk's SIL function type calls `getMutableErrorResult()`, whose `hasErrorResult()` assert fails (the thunk's type lacks the error result the assert expects). Assert-gated → +Asserts-only; NoAsserts skips it → latent. **Distinct from §A13** (`FunctionSignatureOpts` `SILArgument.cpp:40` on a generic *thrown* error at `-O`): this is `-Onone -g` IRGen of the *non-throwing→typed-throws conversion thunk*.
+
+**Reproducer**: single-file `main.swift`, bare `swiftc`, host-PASS + asserts-CRASH (dossier `main.swift` + `build.sh`; `evidence/repro-crash-6.3.3-dev.log`). Ingredient model: a generic struct with a typed-throws stored closure whose error is the struct's own nested generic error, assigned a bare non-throwing literal. Explicit closure signature or a non-generic error removes the trigger.
+
+**Workaround — APPLIED & VALIDATED (test-side explicit typed-throws signature)**:
+```swift
+reciprocal: { (_: Bool) throws(Algebra.Field<Bool>.Error) -> Bool in false }   // was: { _ in false }
+```
+Spelling the signature makes the closure natively typed-throws, so no conversion thunk is generated. Matches the already-working sibling `Algebra.Field Tests.swift:31`; library API (the nested-generic `Field<Element>.Error`, correct per [API-NAME-001]/[API-ERR-001]) unchanged. The library-side alternative (non-generic error) was rejected as an API change to dodge a compiler bug. **Validated**: +Asserts `build --build-tests` clean (6.80s); macOS 122 tests pass. Applied to `swift-algebra-primitives` `2b41253` 2026-06-27; Windows leg run `28280214397` => success. Compiler bug UNFIXED — latent-on-+Asserts for the same bare-literal-into-nested-generic-typed-throws pattern.
+
+**Production / evidence**: `swift-primitives/swift-algebra-primitives` `8fe0381`→`2b41253`. Dossier: `swift-institute/Issues/swift-issue-algebra-field-typed-throws-windows-asserts-ice/`.
+
+**Source**: 2026-06-27 swift-algebra-primitives Windows +Asserts investigation.
 
 ---
 
