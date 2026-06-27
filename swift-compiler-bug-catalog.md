@@ -662,6 +662,87 @@ whatever the container's backing. Guards restored VERBATIM (zero source delta; g
 its tip); `Toolchain.hasTaggedMetadataSIGSEGV` and the `compiler(<6.4)` gate stand. Retirement
 re-tries at the swift-6.4-RELEASE canon bump (the staged-bump ruling's wall re-probes).
 
+#### §A9 New Site (2026-06-27) — `Parser.Machine.Parser<Byte.Input, …>.parse` (machine-parser metadata / `Parser.Protocol` witness-table forcing)
+
+A new site of the same family, found while greening `swift-w3c-xml` after its
+`Parser.Input.Bytes` → `Input_Primitives.Input` + `Byte.Input` migration (commit `57ebb7d`).
+`swift-w3c-xml` builds green (debug + release) but `W3C_XML.parse("<root/>")` SIGSEGVs at
+runtime — even on the most trivial input. Confirmed §A9 by **both** type identity and the
+canonical failed-type-lookup signature — *not* a new bug, *not* a migration defect, *not* a
+w3c-xml logic error.
+
+| Site | Trigger | Faulting path |
+|---|---|---|
+| `Parser.Machine.Parser<Byte.Input, Element, Parse.Error>.parse` | machine-parser type-metadata / `Parser.Protocol` witness-table instantiation that forces `Byte.Input`'s `Index == Tagged<Element, Ordinal>` VWT | `__swift_instantiateConcreteTypeFromMangledNameV2` → `swift_getTypeByMangledName` → `TypeLookupError("unknown error")` → null-metadata deref `EXC_BAD_ACCESS 0x10` (`var parse` getter path) / `instantiateWitnessTable` null deref (direct-method / `Parser.Protocol` witness path) |
+
+`Byte_Parser_Primitives.Byte.Input = Input_Primitives.Input.Slice<Array<Column.Shared<Byte>>>`
+(`swift-byte-parser-primitives/Sources/Byte Parser Primitives/Byte.Input.swift:54`), and
+`Input.Slice`'s `Input.Protocol` conformance is constrained `A.Index == Tagged_Primitives.Tagged<A.Element, Ordinal>`.
+So `Parser.Machine.Parser<Byte.Input, …>`'s metadata transitively forces `Tagged`'s full
+value-witness table — the §A9 trigger — exactly as `Set<Graph.Node>.Ordered` does via
+`Graph.Node = Index = Tagged`. A literal `Tagged…` grep does not find it (the `Tagged` is two
+typealias/conformance hops down inside `Byte.Input`).
+
+**Empirical crash confirmation (2026-06-27, Apple Swift 6.3.3 `swiftlang-6.3.3.1.3`)**: a minimal
+**3-package** standalone reproducer with **zero w3c-xml code** —
+`swift-parser-primitives` + `swift-parser-machine-primitives` + `swift-byte-parser-primitives` —
+crashes identically:
+
+```swift
+import Parser_Primitives; import Parser_Machine_Primitives; import Byte_Parser_Primitives
+enum E: Error { case fail }
+let parser = Parser.Machine.build { (b: inout Parser.Machine.Builder<Byte.Input, E>) -> Parser.Machine.Expression<Byte.Input, E, Int> in
+    Parser.Machine.pure(42, in: &b)
+}
+var input = Byte.Input(utf8: "<root/>")
+_ = try parser.parse(&input)   // ← SIGSEGV
+```
+
+```
+$ SWIFT_DEBUG_FAILED_TYPE_LOOKUP=1 .build/debug/repro
+failed type lookup for +o: unknown error
+[exit 139]
+```
+
+`-Onone` **and** `-O` both crash. The `var parse` getter (`Parse(parser: self)`), the
+getter-only form (`let _ = parser.parse`), and the direct `func parse(_:)` reached via the
+`Parser.Protocol` witness **all** crash — the trigger is the type's VWT / witness-table
+instantiation, not the `parse` getter specifically. (Reproducer kept at scratchpad `MachineRepro/`,
+not committed — empirical scratch.)
+
+**Pre-existing institutional knowledge**: `swift-parser-primitives/Tests/Support/Parser.Test.Input.swift:8-10`
+already documents this exact SIGSEGV class — it deliberately uses a flat local `Parser.Test.Bytes`
+backing "to avoid a Swift runtime SIGSEGV … when composing parser types over
+`Input.Slice<Buffer<…Memory.Heap…>.Linear>` across modules." That is why
+`swift-parser-machine-primitives`' own tests pass (flat `Parser.Test.Input`) while a
+canonical-`Byte.Input` consumer crashes.
+
+**Dev-toolchain status (PASS-on-dev — inherited; direct re-confirm blocked)**: inherits the §A9
+family fix (incomplete `SuppressedAssociatedTypes` codegen on 6.3, complete by 6.4-dev; the fix
+travels with the binary). A direct per-site re-confirm on a 6.4/6.5-dev snapshot is currently
+BLOCKED: every installed dev snapshot frontend-crashes compiling the `swift-parser-primitives`
+stack (`Parser.Fail.swift` on `2026-05-27-a`; `Parser.Trace.swift` on `2026-05-12-a`) — unrelated
+dev-toolchain regressions, not this bug. Per the §A9 new-site precedent (2026-06-01), signature +
+type identity is sufficient to classify; per-site 6.4-dev re-confirm is low marginal value.
+
+**Consumer mitigation (w3c-xml)**: the five `W3C_XML.parse`-exercising suites (`W3C_XML Parser
+Tests`, `…Error Handling Tests`, `…Parser Edge Cases`, `…Deep Nesting Tests`, `…Round-trip Tests`)
+and the two `parse`-calling tests in `…Character Validation Tests` were guarded 2026-06-27 with
+`.disabled(if: Toolchain.hasTaggedMetadataSIGSEGV, …)` gated on `compiler(<6.4)`
+(`swift-w3c-xml/Tests/W3C XML Tests/{Toolchain.swift, ParserTests.swift}`). The non-`parse` suites
+(`…Encoder Tests`, `…Type Tests`, the five character-predicate tests) run unguarded. No
+source/manifest change; the `Byte.Input` migration (`57ebb7d`) is correct and stands.
+
+**Disposition**: same as §A9 — no Institute-side code fix; require Swift 6.4+ for
+`Parser.Machine.Parser<Byte.Input, …>` (and, by extension, any byte-domain machine-parser
+composition over `Byte.Input`). **Principal decision (2026-06-27)**: accept the "require 6.4+" stance
+— **no `Byte.Input` change, no flatter cursor backing**; the `compiler(<6.4)` guards retire when the
+workspace adopts Swift 6.4 at its **~September 2026** launch (the family's `compiler(<6.4)` gate, not
+the older "wait for 6.5" phrasing). The 6.3.x coverage gap until then is accepted. **Ecosystem note**:
+the trigger is `Byte.Input`'s `Tagged`-bearing `Index`, so this affects the **entire** byte-domain
+machine-parser surface, not only w3c-xml — every such site inherits the same accepted stance and the
+September-2026 retirement trigger.
+
 ---
 
 ### A10. Unconditional protocol-conformance extension leaks `Copyable` to primary declaration of `~Copyable`-generic nested type
