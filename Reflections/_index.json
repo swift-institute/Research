@@ -6006,6 +6006,20 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-06-26-swift-linter-closure-cadence-pivot-and-overnight-handoff-race.md",
+      "date": "2026-06-26",
+      "title": "swift-linter Closure — the resolve-check cadence pivot, and the overnight-handoff race",
+      "packages": [
+        "swift-primitives",
+        "swift-linter-primitives",
+        "swift-buffer-primitives",
+        "swift-optic-primitives",
+        "swift-memory-iterator-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
