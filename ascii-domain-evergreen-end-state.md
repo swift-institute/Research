@@ -2,12 +2,13 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-06-29
-status: RECOMMENDATION
+status: RECOMMENDATION (W0–W1 EXECUTED + pushed; W2–W4 pending)
 tier: 2
 scope: ecosystem-wide
 changelog:
+  - "1.1.0 (2026-06-29): W0 + W1 executed and pushed (autonomous posture, standing push authorization). W1 refined from §OQ1 by recon — see the Execution log: the Binary.ASCII parse/access facade was dead AND redundant with canonical Binary.Parse.* → DELETED (not moved); Base62 + Equals DELETED (redundant with binary-base's Binary.Base.62 and ISO_9899.String.Comparison.equals); the Decimal-machine was the one unique capability → MOVED to swift-ascii-parser-primitives as ASCII.Decimal.Machine. Binary.ASCII fully dissolved at L3 (rg→0). KEY FINDING: the parser×machine split is the owned/borrowed (Escapable/~Escapable) input duality, not primarily stack-safety — spawns the owned/borrowed parser-unification design (tracked follow-up). Two dep-hygiene follow-ups logged."
   - "1.0.0 (2026-06-29): initial. Direction principal-ratified 2026-06-29. Re-derived from first principles per explicit directive (everything in scope; prior deferral verdicts superseded). Two pressure-test corrections folded after ratification: (1) OQ1 — the Binary.Machine-bound parsing facade routes to swift-binary-parser-primitives, NOT swift-byte-parser-primitives, because binary-parser → byte-parser is an existing one-way edge and the reverse closes a [MOD-032] cycle; (2) Wave-4 deletion is gated by the @_exported umbrella blast-radius (~40 hidden convenience call sites a namespace grep misses), with a clean ecosystem build as the only sufficient proof. Supersedes the cost-gated DEFER verdicts of ascii-serialization-migration.md v2.0.0 and ascii-migration-category-b.md v3.0.0 (those deferrals were cost-driven, not architectural)."
 supersedes_verdict_only:
   - ascii-serialization-migration.md            # its DEFER/Strategy-(c) verdict; analysis retained
@@ -18,7 +19,23 @@ governing_conventions:
 ---
 -->
 
-> **Status**: RECOMMENDATION — direction principal-ratified 2026-06-29; execution gated on a per-wave green-light. Package source is NOT yet modified. This document is the evergreen end-state plan for the ASCII parse/serialize domain across L1→L3, treating as one coherent target: (a) the `Binary.ASCII.*` L3 re-homing, (b) the deprecated `Binary.ASCII.Serializable` family retirement + ecosystem migration, (c) the L1 ASCII gerund-namespace cleanup. The single sentence: **`Binary.ASCII` ceases to exist** — its byte-domain machinery descends to the byte/binary parser layer, its genuinely-ASCII content rejoins the `ASCII` subject domain, and its value-attachment role is replaced by the family-Codable twins `ASCII.Serializable` + `ASCII.Parseable`.
+> **Status**: W0–W1 EXECUTED + pushed (autonomous posture, standing push authorization 2026-06-29); W2–W4 pending. See the **Execution log (W0–W1)** section below for what actually landed — W1 was refined from §OQ1 by recon (delete-not-move). This document is the evergreen end-state plan for the ASCII parse/serialize domain across L1→L3, treating as one coherent target: (a) the `Binary.ASCII.*` L3 re-homing, (b) the deprecated `Binary.ASCII.Serializable` family retirement + ecosystem migration, (c) the L1 ASCII gerund-namespace cleanup. The single sentence: **`Binary.ASCII` ceases to exist** — its byte-domain machinery descends to the byte/binary parser layer, its genuinely-ASCII content rejoins the `ASCII` subject domain, and its value-attachment role is replaced by the family-Codable twins `ASCII.Serializable` + `ASCII.Parseable`.
+
+## Execution log (W0–W1) — landed & refined
+
+**W0 ✅ pushed** — `ASCII.Serializable` marker (write peer of `ASCII.Parseable`) + `Binary.Serializable` bridge + `.serialized`/`append(serialized:)` + RawRepresentable-backed default serializer `ASCII.RawRepresentable.Serializer` (swift-ascii-serializer-primitives `ff27979`+`6bf9a6c`). Deferred → W3: a RawRep type *also* declaring `: Binary.Serializable` hits a witness ambiguity vs binary-serializer's pre-existing RawRep defaults — a family-Codable convention call settled when conformers need it.
+
+**W1 ✅ pushed — refined from §OQ1 by recon.** §OQ1 planned "move the byte-generic facade to binary-parser." Recon showed the `Binary.ASCII.Parsing/Access/Machine` facade is dead (zero consumers) AND redundant with canonical `Binary.Parse.Access.{prefix,whole}` / `Binary.withInput` / `Binary.Machine`, so it was **DELETED, not moved** (swift-ascii `81b5299`). `Binary.ASCII.Equals` **DELETED** (`74d75b3`, redundant w/ `ISO_9899.String.Comparison.equals`); `Binary.ASCII.Base62` **DELETED** (`d462499`, redundant w/ binary-base's complete `Binary.Base.62` codec — the "preserve" premise was recon-falsified). The Decimal-machine was the one genuinely-unique capability → **MOVED** to swift-ascii-parser-primitives as **`ASCII.Decimal.Machine`** (`f920455`/`bbf5078`). `Binary.ASCII` is **fully dissolved at L3** (`rg → 0`); its namespace enum + the deprecated `Serializable/RawRepresentable/Wrapper` family remain in swift-ascii-serializer-primitives → **W4**.
+
+### Finding — parser × machine is the owned/borrowed input duality (not stack-safety)
+
+`Binary.Machine.swift:11-35`: the Machine exists primarily because a `~Escapable` borrowed cursor/`Span` **cannot be captured in an escaping closure**, so closure-based combinators are structurally impossible over borrowed input — Reynolds defunctionalization to an `Instruction` IR is the fix; stack-safety on recursive grammars is a co-benefit, not the driver. Two execution **worlds**: **owned** (Escapable `Byte.Input`, closure-leaf `Parser.Protocol`) and **borrowed** (`~Escapable` `Cursor`/`Span`, defunctionalized `Binary.Machine`). ASCII is **grammar** specialized over either world, never a separate machine; `ASCII.Decimal.Parser` (owned) and `ASCII.Decimal.Machine` (borrowed) are today the same grammar written twice — the duplication a unification collapses.
+
+### Tracked follow-ups (design/ratification-gated; NOT executed)
+
+1. **Owned/borrowed parser unification** — Tier-2/3 design: one grammar authored once → lowered to both backends (owned-closure + borrowed-IR); ASCII-as-grammar; the `Binary.Machine` engine is byte-level (the `Binary.*` home/name is questionable). To be written up as a research doc reconciled with the two-world-traversal corpus and **ratified before any execution**.
+2. **Flag 1 — `ASCII.Decimal.Machine` dep-weight**: co-located in the `ASCII Decimal Parser Primitives` target, it pulls binary-parser's closure onto owned-world `ASCII.Decimal.Parser` consumers; resolve via a target-split (dedicated `ASCII Decimal Machine Primitives`) within the unification design.
+3. **Flag 2 — swift-ascii unused-dep cleanup** ([MOD-025]/[PKG-DEP-003]): the W1 deletions left unused `Binary Parser`/`Binary Base` products + the now-obviated binary-parser transitive-collision-override cluster (`Package.swift:33-54`); a dedicated [MOD-025] pass (transitive-closure analysis + clean-build). Harmless meanwhile (resolved-but-unused; builds green).
 
 ## Context
 
