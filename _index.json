@@ -3759,14 +3759,14 @@
       "scope": "cross-package"
     },
     {
-      "file": "string-path-type-unification.md",
-      "displayName": "string-path-type-unification.md",
-      "topic": "String and path type unification across ecosystem (Tier 3, v2.0) — SLR (16 sources), formal semantics, prior art (Rust/C++/Go/Zig/Python/Swift). 5 types across 3 layers. Experiment `phantom-tagged-string-unification` (9 variants, ALL CONFIRMED) **refuted** C2 blocker — Option D is feasible today. Two viable paths: Option E (refine, conservative) or Option D (phantom-tag, progressive). Decision deferred to design judgment.",
+      "file": "string-path-parameterization-arc-baseline.md",
+      "displayName": "String / Path Parameterization — arc baseline & status quo",
+      "topic": "Consolidated baseline for the String/Path parameterization arc (forcing function: path-primitives [PLAT-ARCH-008c] blocks the swift-linter publication closure). Reconciles three orthogonal axes — domain identity (DECIDED: Tagged<Domain,RawValue>, Option G, inherited), encoding (the [PLAT-ARCH-008c] fix: parameterize Char, bind PlatformString at L3), backing storage (SSO rider: String<Backing: Memory.Growable>, the memory-contiguous-dissolution follow-on). Unified shape Tagged<Domain, String<Char, Backing>>; also resolves @_exported Swift.String shadowing by construction. Infrastructure (Memory.Region/Allocatable/Growable + Heap/Small/Inline + Storage.Contiguous) already exists — refactor not new-primitive arc. Migrates all findings from the deleted string-char-generic-future-cycle.md + string-path-type-unification.md per [META-016]. Open: one-vs-two param, scope-minimal-vs-complete, @_lifetime re-validation through generic RawValue.",
       "status": "RECOMMENDATION",
       "statusDetail": null,
       "statusRaw": "RECOMMENDATION",
       "tier": 3,
-      "scope": null
+      "scope": "ecosystem-wide"
     },
     {
       "file": "string-primitives-shadowing.md",
