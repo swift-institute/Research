@@ -2,12 +2,13 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-06-29
-status: RECOMMENDATION (W0–W1 EXECUTED + pushed; W2–W4 pending)
+status: RECOMMENDATION (W0–W2 EXECUTED + pushed; W3–W4 pending)
 tier: 2
 scope: ecosystem-wide
 changelog:
+  - "1.2.0 (2026-06-29): W2 (OQ3) EXECUTED + pushed — ASCII.Parsing/ASCII.Serialization dissolved into ASCII.Decimal (code/serialize), ASCII.Hexadecimal (code(_:case: ASCII.Case)), and inlined ASCII.Code.digitValue/.hexValue; 12 repos pushed, all green (swift-ascii 501 tests). KEY FINDING (lesson for W3): the call-site consumer inventory under-counted TWICE — a grep anchored on the method-call form 'ASCII.Serialization.' (trailing dot) missed (a) swift-iec-61966 (a single hex call, in the swift-iec org-dir I had not scoped) and (b) swift-incits-4-1986, an L2 spec package that re-exported the dissolved namespaces via 'typealias Numeric.Serialization = ASCII.Serialization' (a TYPE reference, no call token). The authoritative consumer finder for a namespace dissolution is the loose word-boundary grep 'ASCII.(Parsing|Serialization)' (no trailing dot) across ALL per-authority org-dirs (swift-ietf/iso/iec/whatwg/incits/…), not just primitives/standards/foundations. INCITS migrated per principal decision (option A): gerund aliases → subject-domain aliases (Numeric.Decimal = ASCII.Decimal, Numeric.Hexadecimal = ASCII.Hexadecimal), parse via ASCII.Code accessors; downstream swift-ascii followed. Also surfaced: transitive-pin cascade — iso-32000 needed a full 'swift package update' to pick up the already-migrated rfc-4648, not just the L1/INCITS pins. The Step-3 subagent hit the weekly usage limit mid-run; W2 completed in-chat under principal authorization."
   - "1.1.0 (2026-06-29): W0 + W1 executed and pushed (autonomous posture, standing push authorization). W1 refined from §OQ1 by recon — see the Execution log: the Binary.ASCII parse/access facade was dead AND redundant with canonical Binary.Parse.* → DELETED (not moved); Base62 + Equals DELETED (redundant with binary-base's Binary.Base.62 and ISO_9899.String.Comparison.equals); the Decimal-machine was the one unique capability → MOVED to swift-ascii-parser-primitives as ASCII.Decimal.Machine. Binary.ASCII fully dissolved at L3 (rg→0). KEY FINDING: the parser×machine split is the owned/borrowed (Escapable/~Escapable) input duality, not primarily stack-safety — spawns the owned/borrowed parser-unification design (tracked follow-up). Two dep-hygiene follow-ups logged."
   - "1.0.0 (2026-06-29): initial. Direction principal-ratified 2026-06-29. Re-derived from first principles per explicit directive (everything in scope; prior deferral verdicts superseded). Two pressure-test corrections folded after ratification: (1) OQ1 — the Binary.Machine-bound parsing facade routes to swift-binary-parser-primitives, NOT swift-byte-parser-primitives, because binary-parser → byte-parser is an existing one-way edge and the reverse closes a [MOD-032] cycle; (2) Wave-4 deletion is gated by the @_exported umbrella blast-radius (~40 hidden convenience call sites a namespace grep misses), with a clean ecosystem build as the only sufficient proof. Supersedes the cost-gated DEFER verdicts of ascii-serialization-migration.md v2.0.0 and ascii-migration-category-b.md v3.0.0 (those deferrals were cost-driven, not architectural)."
 supersedes_verdict_only:
@@ -144,6 +145,15 @@ Commit-as-you-go per phase ([HANDOFF-019]); public-repo pushes only on explicit 
 | **4** | OQ4 + **join**: delete demo tests; delete the deprecated target + product + umbrella `@_exported`; fix the `Parser.swift:53` doc-comment; confirm `Binary.ASCII` fully dissolved | three-part C2 pre-flight: namespace grep → 0 · convenience grep → 0 · **clean ecosystem build with the target removed** |
 
 **Sequencing constraints**: Wave 0 unblocks Wave 3 (the twins must exist). Wave 1 must precede Wave 4 (the L3 `Binary.ASCII.*` machinery must leave the `Binary.ASCII` namespace before the enum is deleted). Wave 3 must precede Wave 4 (no conformers may remain).
+
+## W2 execution record (2026-06-29)
+
+**W2 (OQ3) complete — 12 repos pushed, all green, HEAD==origin verified on each.** L1 `swift-ascii-primitives` dissolved (`756a782`): the parse statics inlined into `ASCII.Code.{digitValue,hexValue}`; the serialize direction folded to `ASCII.Decimal.code(_:) -> ASCII.Code?`, `ASCII.Decimal.serialize(_:into:)` (un/signed, `Buffer.Element == Byte`), and `ASCII.Hexadecimal.code(_ value:, `case`: ASCII.Case = .upper)`. Consumers migrated: swift-rfc-4122 (`c3eea53`), -6238 (`942216f`), swift-iec-61966 (`904a156`), swift-json (`f638e2c`), swift-rfc-4648 (`ba6398d`), -3986 (`be5dd92`), swift-whatwg-url (`6868553`), swift-version-primitives (`e21786f`), swift-iso-32000 (`0510ecb`), **swift-incits-4-1986** (`c16a8bb`, L2 re-export), **swift-ascii** (`a5d0dcd`, L3 — 501 tests pass).
+
+**Inventory correction — three lessons that carry to W3's larger conformer sweep:**
+1. **Loose grep, all org-dirs.** A method-call-anchored grep (`ASCII.Serialization.`) under-counted twice: it missed swift-iec-61966 (one hex call, in an org-dir not initially scoped) and swift-incits-4-1986 (a `typealias` re-export — a *type* reference with no call token). Use `ASCII.(Parsing|Serialization)` (word-boundary, no trailing dot) across **all** per-authority org-dirs (swift-ietf/iso/iec/whatwg/incits/…), not just primitives/standards/foundations. W3 must expect type-reference re-exporters (typealias/extension), not only conformers/callers.
+2. **Transitive-pin cascade.** A high-layer consumer (iso-32000) builds its *dependencies'* checkouts too; updating only the directly-named pins left a stale pre-migration `swift-rfc-4648`. A full `swift package update` was required to pull all already-migrated transitive deps.
+3. **INCITS shape (principal decision, option A).** The L2 spec package mirrors the dissolution: `INCITS_4_1986.Numeric.{Decimal,Hexadecimal}` subject-domain aliases replace the gerund `Numeric.{Serialization,Parsing}` aliases; parse moves to `ASCII.Code` accessors; its downstream (swift-ascii `Int+Serializable`) follows. The same gerund-alias question will recur for any other spec package that re-exported `Binary.ASCII.*`.
 
 ## Consumer set (union)
 
