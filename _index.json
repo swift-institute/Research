@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "ascii-domain-evergreen-end-state.md",
+      "displayName": "ASCII Parse/Serialize Domain — Evergreen End-State",
+      "topic": "Evergreen end-state for the ASCII parse/serialize domain across L1→L3, treating as one coherent target: (a) re-homing the Binary.ASCII.* L3 subsystem, (b) retiring the deprecated Binary.ASCII.Serializable family + migrating the conformer + call-site packages, (c) dissolving the L1 ASCII gerund namespaces. Net: the Binary.ASCII namespace ceases to exist. Answers four OQs from first principles with file:line evidence; rejects a unified Coder in favor of the family-Codable ASCII.Serializable + ASCII.Parseable twins. Two governing constraints are first-class: [MOD-032] binary-parser→byte-parser one-way edge (the Machine-bound facade routes to binary-parser, not byte-parser, else a SwiftPM-rejected cycle); and the @_exported umbrella blast-radius (~40 hidden convenience call sites a namespace grep misses, gated by a clean ecosystem build per [HANDOFF-013b]).",
+      "date": "2026-06-29",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0. Tier 2 ecosystem-wide. Direction principal-ratified 2026-06-29; execution gated per-wave (package source not yet modified). Supersedes the cost-gated DEFER verdicts of ascii-serialization-migration.md and ascii-migration-category-b.md. Governing conventions: operation-domain-naming-and-organization.md v1.1.2, 2026-05-15-family-codable-convention.md [FAM-009].",
+      "statusRaw": "RECOMMENDATION (v1.0.0)",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "2026-05-07-clean-build-first-elevation.md",
       "displayName": "2026-05-07-clean-build-first-elevation.md",
       "topic": "Should the feedback_clean_build_first.md memory rule be elevated from advisory ('rm -rf .build before debugging unexpected failures') to preemptive ('clean .build before verification when ecosystem churn has occurred since last build')? Two recent instances surfaced the recurring pattern: (1) Stream 2 polish dispatch swift-linter ld symbol-not-found from Binary primitives drift; (2) lint-manifest-drop dispatch swift-tagged-primitives duplicate-symbol from Binary_Borrowed_Primitives. Both verifications ran against .build directories whose age spanned multiple ecosystem churn events. The reflection's third-instance threshold suggests deferring elevation until a third independent instance surfaces. Open questions: detection mechanism, cost asymmetry, scope of preemptive rule, third-instance threshold.",
