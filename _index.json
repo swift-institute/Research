@@ -4567,6 +4567,14 @@
       "statusRaw": "SUPERSEDED",
       "tier": null,
       "scope": null
+    },
+    {
+      "file": "byte-parse-serialize-l1-consolidation.md",
+      "displayName": "Byte Parse / Serialize — L1 Single-Source-of-Truth Consolidation",
+      "topic": "Gating design for the byte parser/serializer reuse program: the complete principally-correct L1 parse/serialize family (ASCII.{Decimal,Hexadecimal,Binary,Octal}.{Parser,Serializer} + Float, signed/unsigned, greedy/fixed-count, Byte input) onto which every consumer delegates, plus the Binary.Machine generic-Collection input generalization and the layering-forced two-ASCII-stacks resolution (INCITS_4_1986.Numeric delegates down to L1). Settle-L1-then-migrate per [RES-011]; backed by Audits/byte-binary-reuse-audit.md.",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
     }
   ],
   "narrativeSections": [
