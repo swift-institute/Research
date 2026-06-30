@@ -444,8 +444,8 @@ shape). The model fails closed where it should and avoids the `@_implements` tra
 | `Serializer.Witness` (`Serializer Witness Primitives/...`) | leaf closure-witness; `typealias Body = Never`; A16 Option-1 relocation confirmed | **Kept** — the leaf variant witness. |
 | `Binary.Serializable` (`Binary.Serializable.swift:42-55`) | `protocol Serializable: Sendable { static func serialize<Buffer: RRC>(_ serializable: Self, into:) where Buffer.Element == Byte }` | **Kept as the template**; add `borrowing` to the value param (Exp 4); the `: Sendable` refinement is orthogonal and reviewable (a `~Copyable` value need not be `Sendable`). |
 | `ASCII.Serializable` (`ASCII.Serializable.swift:10-36`) | **bare marker** `protocol Serializable {}` | **Symmetrise** — gain the static verb `where Buffer.Element == ASCII.Code` (the root-cause fix). |
-| `Binary.Parseable` (`Binary.Parseable.swift:61-76`) | `static func parse<Source: RRC>(from:) throws(Binary.Parse.Failure) -> Self where Source.Element == Byte`; **fixed** `Binary.Parse.Failure` (enum insufficient/malformed/outOfRange) | **Kept**; per-type/rich `Failure` moves to the **parser witness** (`throws(W.Failure)`, Exp 3); the marker's default keeps the format-level fixed `Failure`. |
-| `ASCII.Parseable` (`ASCII.Parseable.swift:10-33`) | bare marker | **Symmetrise** — gain the static parse verb `where Source.Element == ASCII.Code`. |
+| `Binary.Parseable` (`Binary.Parseable.swift:61-76`) | `static func parse<Source: RRC>(from:) throws(Binary.Parse.Failure) -> Self where Source.Element == Byte`; **fixed** `Binary.Parse.Failure` (enum insufficient/malformed/outOfRange) | **Kept, fixed-concrete** (minimal-B). Wire failures are genuinely *structural* (insufficient/malformed/out-of-range), so the binary side keeps a fixed `Binary.Parse.Failure`; per-type *rich* failures are a *text* (positional) phenomenon and live on the `ASCII.Parseable.Failure` associatedtype (next row). The parser witness remains the carrier for **context**-bearing parses (Exp 3). |
+| `ASCII.Parseable` (`ASCII.Parseable.swift:10-33`) | bare marker | **Symmetrise (minimal-B)** — gain the static parse verb `where Source.Element == ASCII.Code` carrying a per-type **rich `associatedtype Failure: Error`**. A single *fixed-per-type* error is appropriately a marker associatedtype (unlike per-call-varying Variant/Context, which stay witness VALUES). Dual-parse conformers (Binary + ASCII — IPv4/IPv6) add an explicit `typealias Failure` as the disambiguation (cleaner than, but equivalent to, an `@_implements` — both permitted); single-sibling text conformers need neither. |
 | ASCII→binary bridge (`Binary.Serializable+ASCII.swift:19-36`) | `buffer.append(contentsOf: serializable.serialized)` | **Delete** (§9). |
 | `.asciiCodes`/`.serialized` (`Serializable+ASCII.swift`) | derive via `Self.serializer.serialize(...)` keyed on `Serializer.Buffer == [ASCII.Code]` | **Re-derive** via the static ASCII verb (`Self.serialize(self, into: &codes)`); additive sugar, not load-bearing. |
 | Deprecated `Binary.ASCII.Serializable` (`Binary.ASCII.Serializable.swift:14-35`) | `: Binary.Serializable` refinement + `associatedtype Error/Context` + `init(ascii:in:)`; **still load-bearing** (IPv4 + IPv6 text ride it) | **Delete** (W4) once IPv4/IPv6 migrate to the symmetric verbs (§9). |
@@ -707,7 +707,11 @@ via `skill-lifecycle`**, not codified here.
 >    borrowing Self, into: inout Buffer) where Buffer.Element == <FormatElement>` (tree formats:
 >    `into: inout <Tree>`), and the dual `parse`. **No bare-marker sibling may piggyback another
 >    sibling's or the canonical's operational slot.** The FORMAT is the sink's element type; the
->    collection is free.
+>    collection is free. The parse verb **names its `Failure`**: Binary keeps a *fixed concrete*
+>    `Failure` (structural wire errors); ASCII/text carries a per-type *rich* `associatedtype Failure`
+>    (**minimal-B**) — a single fixed-per-type error is appropriately a marker associatedtype. A
+>    dual-parse conformer disambiguates with an explicit `typealias Failure` (or an `@_implements` —
+>    both permitted). The parse-verb *requirement* + transitional-default removal land **seal-last**.
 > 2. A type conforms to **exactly the siblings it genuinely has.** `|siblings| = 1` is the "single
 >    inherent codec" case (formerly canonical); `|siblings| ≥ 2` is multi-representation. **Both are
 >    ordinary — there is no canonical attachment to decline and no derivation bridge.**
@@ -718,7 +722,12 @@ via `skill-lifecycle`**, not codified here.
 > 4. **PARSE CONTEXT** (the non-Void conformers) is carried by the **parser witness VALUE** passed to
 >    `parse(from:, parser:)` (serde `DeserializeSeed` shape); the flat marker carries no
 >    `associatedtype Context` ([FAM-001]). Serialize-variant ∥ parse-context are the same principle:
->    the witness carries the operation's parameters; you pass the witness.
+>    the witness carries the operation's parameters; you pass the witness. **[FAM-001] refined:**
+>    Variant and Context stay off the marker because they are *per-call-varying* parameters — a
+>    type-level associatedtype names only one and cannot be selected at the call site, so they are
+>    witness VALUES (serde `DeserializeSeed`). A single *fixed-per-type* parse `Failure` is the one
+>    associatedtype a marker may carry (minimal-B). This is a **semantic** distinction, not an
+>    `@_implements` avoidance — `@_implements` is permitted (the iterator domain uses it freely).
 > 5. **ACCESSORS** (`.bytes`/`.asciiCodes`) are additive instance sugar deriving from the static verb;
 >    not load-bearing; a type may omit them.
 > 6. The canonical single-slot `Serializable`/`static var serializer` (and `Parseable`/`Codable`
@@ -728,6 +737,11 @@ via `skill-lifecycle`**, not codified here.
 > 8. **Sink** ([FAM-005]-clean): the default sink is `RangeReplaceableCollection`; an `OutputSpan<E>`
 >    region-write overload MAY be added for the `~Copyable`/buffer-primitives perf path. Format is the
 >    element type in both. No sink protocol (the no-append-on-protocol decision stands).
+> 9. **COMPOSITION (evergreen).** A composite's format verb composes its re-cut sub-parts'
+>    **same-format verbs** directly into the sink — `SubPart.serialize(value.subpart, into: &buffer)`
+>    — never via a `[Byte]`-intermediate detour and never by reaching into a re-cut sub-part's
+>    `rawValue`/property. The leaf byte-producing bodies are preserved; the composite's *composition*
+>    is re-expressed over the new verbs (each format verb composes the same-format sub-verbs).
 
 **Companion lint candidate** (out of scope; for `lint-rule-promotion`): flag any type conforming to a
 format sibling AND a (retired) canonical operational protocol; flag any bare-marker format sibling
