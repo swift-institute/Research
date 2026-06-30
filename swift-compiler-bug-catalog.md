@@ -124,6 +124,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | A20 | `Mangler::verify` (`Mangler.cpp:176`) abort on the `@_implements(Iterable, makeIterator())` witness returning a nested-generic `Materializing<Vector.Iterator>` | 6.3.0-dev / 6.3.2 / 6.3.3-dev +Asserts CRASH (UNFIXED); NoAsserts macOS/Linux green | The Iterable `@_implements` witness `iterableMakeIterator → Iterator.Chunk.Materializing<Vector<A>.Iterator>` (deep generic instantiation + `~Escapable` `Ri_z` + associated-conformance `HCg`) mangles to a symbol the compiler's own round-trip verifier cannot demangle → `abort()` during AST→SIL lowering. `Mangler::verify` is `CONDITIONAL_ASSERT`-gated → +Asserts-only (Windows); NoAsserts emits the malformed name unverified → latent. Same class as §A12 (NOT the Sequenceable witness the handoff presumed). WA: drop or flatten the Iterable witness. Surfaced by swift-vector-primitives |
 | A21 | `getMangledName` (`IRGenDebugInfo.cpp:1098`) abort emitting debug info for a named local of a value-generic same-type-constrained typealias (`Axis<N>.*`) | 6.3.x +Asserts CRASH (UNFIXED); NoAsserts macOS/Linux green | A test `let v: Axis<2>.Vertical = …` (value-generic `Axis<let N: Int>` + `extension Axis where N == 2 { typealias Vertical = … }`) makes IRGen `emitVariableDeclaration` mangle the variable's debug type to a `$…_Rsz…` name the round-trip self-check can't re-demangle → abort. Assert-gated (`-disable-round-trip-debug-types`) → +Asserts-only (Windows); NoAsserts latent. Same class as §A20. Whole `Axis<N>.{Vertical,Depth,Horizontal,Direction,Temporal}` family affected. WA: reference `Axis<N>.*` in expression position (no named local of the sugared type) — the flag and dropping the family were both principal-rejected. Surfaced by swift-dimension-primitives |
 | A22 | `hasErrorResult()` (`Types.h:5274`, `SILFunctionType::getMutableErrorResult`) abort on a non-throwing → typed-throws (nested-generic error) conversion thunk | 6.3.x +Asserts CRASH (UNFIXED); NoAsserts macOS/Linux green | A bare non-throwing literal `{ _ in false }` assigned to `Field.reciprocal: (Element) throws(Field<Element>.Error) -> Element` inserts a reabstraction thunk whose SIL function type trips `getMutableErrorResult`'s `hasErrorResult()` assert during `-Onone -g` IRGen. Assert-gated → +Asserts-only (Windows + assertions-nightly); NoAsserts latent. Distinct from §A13 (FunctionSignatureOpts `-O`). WA: spell the closure's typed-throws signature explicitly. Surfaced by swift-algebra-primitives |
+| A23 | CopyPropagation shortens a `borrowing ~Copyable` value's borrow scope to end before a `try_apply` consuming its `@guaranteed` field (the §A5 mechanism, clean single-file reducer) | 6.3.3 `-O` CRASH / FIXED 6.5-dev (`2026-05-27-a`, `Swift 4d0c97fa5b05711`, +assertions) | `do { try callee(span, to: value.field!) } catch { throw Mapped(error) }` over a `borrowing ~Copyable` value → CopyPropagation ends `begin_borrow` before the `try_apply`; "Found outside of lifetime use?!" signal 6. SILGen is well-formed. Trigger is the field-projected borrow scope, NOT the `try_apply` (a plain `apply` over a `Result`-returning helper crashes identically). FIX (shipped): structural borrowing-method restructure, no suppression (`4b19e6b`); `@_optimize(none)`/`-sil-disable-pass` rejected as ungated footguns. Surfaced by swift-file-system `Streaming.write(chunk:to:)`, was blocking swift-pdf release |
 | B1 | `Property.View ~Copyable` extension constraint placement | 6.3.x (lang spec) | All constraints MUST be at extension level, not method level — implicit `Base: Copyable` else |
 | B2 | `Property.View` rejected on `Copyable` types (~Copyable + ~Escapable result from mutating method) | 6.3.x (lang spec) | Use `Property<Tag, Base>` for `@CoW` Copyable types instead |
 | B3 | Tagged constrained-extension nested-type ambiguity | 6.3.1 (still broken) | `extension Tagged where Tag == X, RawValue == Y { typealias Foo = ... }` causes cross-instantiation ambiguity |
@@ -133,7 +134,7 @@ Not 6.3.1 regressions — these landed somewhere in the 6.2.3 → 6.3.0 window a
 | C2 | Typed throws — Swift 6.2.4 stdlib support matrix | 6.2.4 / 6.3.x (lang spec) | Some stdlib `rethrows` APIs propagate `throws(E)`; many erase to `any Error` |
 | C3 | Typed throws — catch blocks preserve concrete typed error | 6.3.x (lang spec) | `error` in catch IS the concrete typed error, NOT `any Error` |
 
-**Total entries: 25** (24 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
+**Total entries: 26** (25 distinct bugs/patterns + the master fix-status table). Worked-example sections begin below.
 
 ---
 
@@ -1161,6 +1162,40 @@ Spelling the signature makes the closure natively typed-throws, so no conversion
 **Production / evidence**: `swift-primitives/swift-algebra-primitives` `8fe0381`→`2b41253`. Dossier: `swift-institute/Issues/swift-issue-algebra-field-typed-throws-windows-asserts-ice/`.
 
 **Source**: 2026-06-27 swift-algebra-primitives Windows +Asserts investigation.
+
+---
+
+### A23. CopyPropagation shortens a `borrowing ~Copyable` value's borrow scope to end before a `try_apply` that consumes its `@guaranteed` field (the §A5 mechanism, now with a clean single-file reducer)
+
+**Swift versions**: 6.3.3 (Xcode default, `swiftlang-6.3.3.1.3`) **CRASH** at `-O`; clean at `-Onone`. **FIXED** on 6.5-dev (`swift-latest` = `swift-DEVELOPMENT-SNAPSHOT-2026-05-27-a`, `Swift 4d0c97fa5b05711`, `+assertions`).
+
+**Pattern**: A static func taking a `borrowing` `~Copyable` value plus a `borrowing Span<Byte>`, whose body is `do { try callee(span, to: value.field!) } catch { throw Mapped(error) }`, where the `catch` performs a typed-throws **error-type mapping** and `field` is itself a `~Copyable` (owning) optional. The `do/catch` lowers to a `try_apply` (normal + error continuation blocks) that consumes the `@guaranteed` borrowed field.
+
+**Symptom** (`swiftc -O`, pass #226 `CopyPropagation`):
+```
+Found outside of lifetime use?!
+Value:   %6 = begin_borrow %1 : $Context
+Consuming User:   end_borrow %6 : $Context
+Non Consuming User:   try_apply %15(%5, %13) : $@convention(thin)
+        (@guaranteed Span<UInt8>, @guaranteed Descriptor) -> @error InnerError, normal bb3, error bb4
+Found ownership error?!  →  signal 6
+```
+
+**Root cause**: SILGen emits a **well-formed** borrow scope (`end_borrow` in *both* the normal and error continuations, after the `try_apply` — verified via `-emit-silgen`). **CopyPropagation** shortens the `begin_borrow`/`end_borrow` of the borrowed value to end *before* the `try_apply`, which still uses the borrowed field; ownership verification then aborts. Identical mechanism to **§A5**; this entry adds the missing standalone reducer (§A5 had assumed WMO + cross-module inlining were required — **disproven**: a single-file `swiftc -O` reproduces). `-Xfrontend -sil-verify-all` surfaces the same failure as early as the mandatory `MoveOnlyChecker` (#448), confirming the lowering is fragile pre-optimizer; the default `-Onone` pipeline (verification off) compiles it cleanly.
+
+**Reducer** (standalone, single file, zero deps — `swiftc -O reducer.swift`): `swift-institute/Issues/swift-issue-file-system-streaming-write-ownership/reducer.swift`. Ingredients (each required): (1) `~Copyable` value with an Optional `~Copyable` owning field (with `deinit`); (2) `borrowing` of that value + `borrowing Span<UInt8>`; (3) `do { try callee(span, to: value.field!) } catch { throw Mapped(error) }` typed-throws error mapping; (4) callee taking `@guaranteed Span` + `@guaranteed field` → `@error Inner`; (5) `-O`.
+
+**Resolution (SHIPPED 2026-06-30 — STRUCTURAL, no suppression)**: house each descriptor-field-projecting throwing call inside a `borrowing` method on the `~Copyable` value (here `Context.write(chunk:)`/`sync()` propagating `File.System.Write.Error`); the caller maps the error at the boundary (`do { try context.write(chunk: span) } catch { throw Error(error) }`). Inside a `borrowing` method `self` is a whole-function `@guaranteed` parameter — no nested `begin_borrow`/`end_borrow` for CopyPropagation to shorten — and the caller's wrapped call takes the *whole* value as `@guaranteed self` (not a field projection), so the borrow spans the call by construction. Correct on ALL toolchains → no compiler gate. swift-file-system `-c release` crash→clean (commit `4b19e6b`).
+
+**Empirical correction (2026-06-30)**: the abort is NOT specific to the `try_apply`. A reducer that eliminated the `try_apply` by giving the helper a non-throwing `Result<Void, …>` form STILL crashed — SIL then shows a plain `apply … -> @owned Result<…>` as the offending "Non Consuming User", same `begin_borrow`/`end_borrow`-of-value shortened before it. So the trigger is the *field-projected nested borrow scope*, independent of `try_apply` vs plain `apply`; the fix must target the borrow scope, not the error-mapping continuation. (Reducer variants: scratchpad `reducer-exp/` — `v0_baseline`/`vB_shim`/`vBmethod_shim` crash, `vA_borrowing_method` clean.)
+
+**Rejected workaround**: `@_optimize(none)` on the crashing function (verified clean on the reducer) and the module-wide `-Xllvm -sil-disable-pass=CopyPropagation` (release only) were both rejected by the principal — ungated suppression is a footgun that would silently survive into Swift 6.5 (where the bug is FIXED), and the module-wide flag costs the whole module its CopyPropagation pass. §A5's `try?` fix does **not** apply (the `catch` maps the error type), and the descriptor cannot be hoisted out of the borrow (the field type is itself `~Copyable`).
+
+**Distinct from**: upstream **#89787** (SILGenCleanup crash requiring `catch <enum-case-pattern>`; a 6.4 regression that *works* on 6.3.2 — opposite version profile; no `~Copyable` borrow) and **#78447** (C-header struct-pointer trigger). The `Found outside of lifetime use?!` string is the generic ownership-verifier diagnostic and is not itself a duplicate signal.
+
+**Production / evidence**: `swift-foundations/swift-file-system` (crash at HEAD `7f1b013`; fixed at `4b19e6b`), module **File System Core**, `File.System.Write.Streaming.write(chunk:to:)` (`Sources/File System Core/File.System.Write.Streaming+API.swift:264`); was blocking `swift-pdf`'s `-c release` build. All three same-shape sites in the file (`write(chunk span:to:)`, `write(chunk buffer:to:)`, `commit(_:)`'s `syncFile` call) fixed with the one shared borrowing-method pattern; the reusable-buffer + Atomic APIs verified unaffected (owned-local, not borrowed, contexts). Dossier: `swift-institute/Issues/swift-issue-file-system-streaming-write-ownership/INVESTIGATION.md`.
+
+**Source**: 2026-06-30 swift-file-system streaming-write ownership-verifier investigation.
 
 ---
 
