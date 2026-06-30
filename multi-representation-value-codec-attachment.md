@@ -2,13 +2,37 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.0.1
 last_updated: 2026-06-30
-status: RECOMMENDATION
+status: SUPERSEDED
+superseded_by: serialize-parse-codec-attachment-model.md
 tier: 2
 scope: ecosystem-wide
 ---
+
+Changelog:
+- v1.0.1 (2026-06-30): status → SUPERSEDED. Banner added; analysis preserved unchanged below.
+- v1.0.0 (2026-06-30): initial RECOMMENDATION (the per-corner "decline canonical" carve-out).
 -->
+
+> **⚠️ SUPERSEDED 2026-06-30 by [`serialize-parse-codec-attachment-model.md`](serialize-parse-codec-attachment-model.md) (v1.0.0, Tier 3).**
+>
+> This document resolved the IPv4/IPv6 forcing function by a **carve-out**: multi-representation
+> value types are *special* and MUST **decline** the canonical `Serializable`/`static var
+> serializer` attachment (which structurally disables the ASCII→binary bridge). The principal
+> directed a first-principles re-derivation whose answer is **ecosystem-wide, not a carve-out**:
+> the canonical operational tier is **unnecessary for all types** and is **retired** — `|siblings|
+> = 1` IS the "single inherent codec" case, so there is nothing to decline and no bridge to
+> suppress. The root-cause fix is **symmetrising `ASCII.Serializable`** (give the text sibling its
+> own static verb, as `Binary.Serializable` already has); after that, the bridge and the canonical
+> operational slot have no referent. Multi-representation types (IPv4/IPv6) are **ordinary
+> two-sibling values**. The narrow `[FAM-012]` proposed here ("multi-representation value types MUST
+> decline the canonical attachments") is replaced by the broader `[FAM-012]` (self-contained format
+> siblings carry a static universal verb; canonical operational tier retired) in the superseding
+> doc, which also folds in the verified six-experiment build-truth, the sink model, the Context/OQ2
+> resolution, and the `[FAM-002/003/005/010]` re-cut.
+>
+> The original v1.0.0 analysis is preserved below unchanged (per [RES-008]) for provenance.
 
 ## Context
 
