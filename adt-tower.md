@@ -346,7 +346,10 @@ diagnostic). Front doors therefore follow three laws:
 
 1. **Axis-CHANGING aliases** (allocation: `Small<n>`, `Inline<n>`) are declared in extensions
    constrained to DIRECT canonical columns via the `Direct` capability marker (a deletable
-   convenience per [API-IMPL-023], homed in the column vocabulary; conformed by the buffer
+   convenience per [API-IMPL-023]; SPLIT HOME per the hoist idiom — SEAT ruling 2026-07-02:
+   the PROTOCOL `__ColumnDirect` homes in Store Protocol Primitives, low enough for the buffer
+   disciplines to conform; the public `Column.Direct` SPELLING homes in the column vocabulary
+   as `extension Column { public typealias Direct = __ColumnDirect }`; conformed by the buffer
    stacks and storage-direct columns, NOT by `Shared` or bounded instantiations) — a cross-axis
    chain that would silently reset an axis becomes a compile error.
 2. **Axis-ADDING aliases** are column-PRESERVING transformers: `Shared` wraps `S`
@@ -1163,10 +1166,15 @@ serial-build disciplines (one executor per package tree; parent builds once afte
 
 **The W1.5 fence-retrofit unit (SEAT ruling 2026-07-02).** The §4.4/[DS-028] alias-law
 INFRASTRUCTURE lands as one coherent unit immediately AFTER the W1 lands and BEFORE W2 opens
-(and before json's L2 dispatch consumes `Array<Byte>.Small<24>`): (i) the `Column.Direct`
-marker (hoisted `__ColumnDirect`), homed in Store Protocol Primitives — the seam tier both
-buffer disciplines and storage-direct columns can reach — CARRYING the capacity twin:
-`associatedtype BoundedTwin: ~Copyable`; (ii) W1.5 conformances: `Buffer.Linear` and
+(and before json's L2 dispatch consumes `Array<Byte>.Small<24>`): (i) the marker protocol
+`__ColumnDirect: __StoreProtocol` (the refinement yields `S.Element` in alias bodies), homed
+in Store Protocol Primitives — low enough for the buffer disciplines to conform — CARRYING
+the capacity twin `associatedtype BoundedTwin: ~Copyable`; its public `Column.Direct`
+spelling is a typealias in the column vocabulary (`swift-column-primitives`, which already
+deps the storage package), making W1.5 a 5-package unit; IN-TOWER plumbing (conformances AND
+where-clauses, incl. the array Small alias) binds `__ColumnDirect` DIRECTLY — the Small
+variant target takes NO Column_Primitives dep (closure stays lean; `Column.Direct` is the
+consumer-facing/doc spelling); (ii) W1.5 conformances: `Buffer.Linear` and
 `Buffer.Ring` (+ twins = their `.Bounded`) only — ring/slab/linked op generalization stays W3,
 `Generational` conforms at its family's wave, `Shared` NEVER conforms (that IS the fence);
 (iii) the shipped axis-changing alias (`Array<E>.Small<n>`) gains `where S: Column.Direct`,
