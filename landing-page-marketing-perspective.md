@@ -3,8 +3,8 @@
 <!--
 ---
 version: 1.0.0
-last_updated: 2026-04-15
-status: IN_PROGRESS
+last_updated: 2026-07-02
+status: RECOMMENDATION
 ---
 -->
 

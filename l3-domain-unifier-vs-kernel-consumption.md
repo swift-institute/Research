@@ -3,8 +3,8 @@
 <!--
 ---
 version: 1.0.0
-last_updated: 2026-04-30
-status: IN_PROGRESS
+last_updated: 2026-07-02
+status: DEFERRED
 tier: 2
 ---
 -->
@@ -54,7 +54,11 @@ The pattern that emerges from observed cases:
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Held operational finding recorded; completion awaits the next concrete L3 unifier case.
+> **Resumption trigger**: The next L3 domain-unifier layering decision arises (class-(c) question — surface to principal per standing feedback).
+
+**Status**: DEFERRED (2026-07-02)
 
 **Held finding (operational)**: a domain L3 package needs its own cross-platform unifier surface when ANY of the following hold:
 

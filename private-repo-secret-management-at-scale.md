@@ -3,8 +3,8 @@
 <!--
 ---
 version: 0.2.0
-last_updated: 2026-06-04
-status: IN_PROGRESS
+last_updated: 2026-07-02
+status: DEFERRED
 research_tier: 2
 scope: ecosystem-wide
 ---
@@ -160,6 +160,10 @@ session.
 
 ## Decision Criteria
 
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Doc requires a dedicated investigation session for verdicts (footprint at N=17/100/1000, threat model, migration cost).
+> **Resumption trigger**: The dedicated secret-management investigation session is scheduled.
+
 The dedicated investigation session must produce verdicts on:
 
 1. Operational footprint at N=17, N=100, N=1000 for each option (one-time
@@ -297,7 +301,7 @@ runbook when they first gain a public package.
 
 ## Outcome
 
-**Status**: IN_PROGRESS (seed; § Executed State records Option B live for
+**Status**: DEFERRED (2026-07-02) (seed; § Executed State records Option B live for
 CI resolution as of 2026-06-04 — the Option C/D/E evaluation and the
 PRIVATE_REPO_TOKEN deprovision decision remain open). Outcome deferred to
 dedicated investigation session. Resume in a separate chat.

@@ -3,7 +3,7 @@
 Date: 2026-04-26
 Scope: ecosystem-wide (any Doc-class investigation that recommends deleting a publicly-declared type without adoption elsewhere)
 Tier: 2 (cross-package, methodology guidance, reversible precedent)
-Status: IN_PROGRESS — methodology survey; recommendation to follow once empirical comparison lands
+Status: DEFERRED (triaged 2026-07-02) — was IN_PROGRESS — methodology survey; recommendation to follow once empirical comparison lands
 Provenance: Reflection `2026-04-24-post-cycle-3-audit-and-p2-9-unify-cycle-4.md` (Cycle 4 Phase 2 io_uring orphan-reference build-time failure); informs codified rules [HANDOFF-013b] (writer-side), [SUPER-026] (principal-side)
 
 ---
@@ -47,6 +47,10 @@ Pending the analysis, the codified rules [HANDOFF-013b] and [SUPER-026] specify 
 ---
 
 ## Outcome (placeholder)
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Recommendation awaits empirical comparison of mechanisms (grep -l vs symbolgraph-extract vs targeted build).
+> **Resumption trigger**: The empirical mechanism comparison is scheduled or the next doc-class deletion audit runs.
 
 To be authored once the analysis section completes. Expected shape:
 

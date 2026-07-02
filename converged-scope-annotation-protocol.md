@@ -1,10 +1,10 @@
 ---
 title: Scope-Annotation Protocol for CONVERGED Design Outcomes
 version: 0.1.0
-status: IN_PROGRESS
+status: DEFERRED
 tier: 3
 created: 2026-04-16
-last_updated: 2026-04-16
+last_updated: 2026-07-02
 applies_to:
   - swift-institute
   - collaborative-discussion
@@ -70,7 +70,9 @@ Key sub-questions to work through:
 
 # Outcome
 
-_Placeholder — to be filled when analysis completes._
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Placeholder stub from 2026-04-16 reflection triage; no analysis authored since.
+> **Resumption trigger**: The originating scope-annotation question recurs, or the topic is scheduled into a design cycle.
 
 # Provenance
 

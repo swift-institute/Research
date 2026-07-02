@@ -2,11 +2,13 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-07-02
 status: RECOMMENDATION
 research_tier: 2
 scope: ecosystem-wide
+changelog:
+  - 1.1.0 (2026-07-02): §D3 SUPERSEDED handling corrected — [META-005] (rewritten 2026-04-24) FORBIDS _archived/ relocation; docs stay in place, filtered via _index.json. v1.0.0 carried a stale cross-reference from the research-process skill's [RES-002] subdirectory table (which still lists _archived/ "per [META-005]"); that table needs a skill fix. Caught by the 2026-07-02 corpus-meta-analysis sweep — an instance of this doc's own [RES-013a] discipline.
 ---
 -->
 
@@ -94,7 +96,7 @@ From these, the target state per dimension. Each is a single recommendation, not
 ### D3 — Documentation corpora: generated indexes, archived supersession, restored cadence
 
 - **Index drift**: `_index.json` regeneration becomes scripted-and-validated — a `validate-research-index` check (same validator muscle) fails when docs-on-disk ≠ index entries. An index that can drift silently is not an index.
-- **SUPERSEDED docs**: keep (Nygard), but relocate to `Research/_archived/` per the already-sanctioned [META-005] path, with `superseded-by:` links; the index carries them under their status. This clears the browsing surface without destroying the record.
+- **SUPERSEDED docs**: keep **in place** per [META-005] (rewritten 2026-04-24: relocation to `_archived/` is FORBIDDEN — with `_index.json` as the canonical catalog, status is a first-class filter dimension and physical relocation would only add path churn). The realignment work is `supersededBy` backfill in the index, not moves. *(v1.1.0 correction; v1.0.0 recommended relocation off a stale [RES-002] cross-reference — the research-process skill's subdirectory table still cites the pre-rewrite [META-005] and needs a fix.)*
 - **Reflections**: drain the 25 pending (oldest 2026-04-23) via `reflections-processing`; the cadence hook already performs — no structural change.
 - **corpus-meta-analysis**: the monthly sweep gets a visible cadence anchor (a dated entry the validator can check, e.g. a `META-run: YYYY-MM-DD` marker file or Audits/ record freshness check) instead of relying on memory.
 - **Blog/deferred branches**: no structural defect found; excluded from realignment scope.
@@ -136,7 +138,7 @@ The ideal meta-setup is the current architecture — harness-as-corpus, filesyst
 |---|---|---|
 | R1 Handoff drain | One-time triage of 247 files (retire consumed, move terminal REPORTs to Audits/, keep open); relocate 7 root strays; extend + wire `check-handoffs.sh`; amend handoff skill naming table | principal go; skill amendment via skill-lifecycle |
 | R2 Skill eviction | Top-8 skills first: evict changelog/rationale/example mass per D1 (each eviction lands the Research/ destination doc in the same wave); add `lint-skill-size` validator; bring Engagement skills into review metadata | principal go; per-skill review |
-| R3 Corpus hygiene | Regenerate + validate `_index.json`; archive 85 SUPERSEDED to `_archived/`; drain 25 reflections; run overdue corpus-meta-analysis | principal go |
+| R3 Corpus hygiene | Regenerate + validate `_index.json`; backfill `supersededBy` on SUPERSEDED entries (in place per [META-005]); drain 25 reflections; run overdue corpus-meta-analysis | principal go |
 | R4 Lint M+T | Wire advisory lint job into org wrappers; tier the 91 rules; publish first burndown | principal go (touches 3 org wrapper workflows) |
 | R5 Lint B+R | Build baseline feature in swift-linter; generate baselines; enable error-on-new-code; per-rule flips thereafter | R4 data in hand; feature review |
 

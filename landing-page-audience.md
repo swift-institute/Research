@@ -3,8 +3,8 @@
 <!--
 ---
 version: 1.0.0
-last_updated: 2026-04-16
-status: IN_PROGRESS
+last_updated: 2026-07-02
+status: DEFERRED
 ---
 -->
 
@@ -190,7 +190,11 @@ Conversion signals, ordered by reader investment:
 
 ## Outcome
 
-**Status: IN_PROGRESS** — pending user confirmation and review. Will advance to RECOMMENDATION once requirements below are confirmed; to DECISION once a new landing-page implementation derived from this doc has shipped and verified.
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Blocked on user confirmation of landing-page requirements (doc Outcome).
+> **Resumption trigger**: User review/confirmation of the audience requirements; advances to RECOMMENDATION then DECISION per doc's own ladder.
+
+**Status: DEFERRED** (2026-07-02) — pending user confirmation and review. Will advance to RECOMMENDATION once requirements below are confirmed; to DECISION once a new landing-page implementation derived from this doc has shipped and verified.
 
 ### Summary findings
 

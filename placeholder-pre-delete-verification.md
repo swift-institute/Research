@@ -4,7 +4,7 @@
 |-------|-------|
 | Tier | 2 |
 | Scope | GitHub repo lifecycle (destructive-action safety) |
-| Status | IN_PROGRESS |
+| Status | DEFERRED (triaged 2026-07-02) |
 | Provenance | 2026-04-22-heritage-transfers-investigation-and-placeholder-verification-gap.md |
 
 ## Context
@@ -62,3 +62,9 @@ The 9 html-tree transfer placeholders need this protocol applied before any of t
 
 - Reflections: 2026-04-22-heritage-transfers-investigation-and-placeholder-verification-gap.md
 - handoff skill [HANDOFF-025] Anti-Defer Rule for Cheap Verifications
+
+## Deferral
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Protocol sketched; not yet exercised.
+> **Resumption trigger**: The next placeholder-repo delete batch (html-tree transfer checklist) is executed.

@@ -3,8 +3,8 @@
 <!--
 ---
 version: 1.0.0
-last_updated: 2026-04-30
-status: IN_PROGRESS
+last_updated: 2026-07-02
+status: DEFERRED
 tier: 2
 ---
 -->
@@ -55,7 +55,11 @@ Strategy A would have caught it (Cycle 2's wider gate would have exposed the sam
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Held findings recorded in Outcome; remaining work is empirical calibration across a future multi-cycle arc.
+> **Resumption trigger**: The next multi-cycle arc designs its arc-close verification gate.
+
+**Status**: DEFERRED (2026-07-02)
 
 **Held findings (operational, applicable now)**:
 

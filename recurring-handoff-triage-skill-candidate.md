@@ -3,8 +3,8 @@
 <!--
 ---
 version: 1.0.0
-last_updated: 2026-04-30
-status: IN_PROGRESS
+last_updated: 2026-07-02
+status: DEFERRED
 tier: 2
 ---
 -->
@@ -84,7 +84,11 @@ Create a dedicated skill with `[BHT-*]` rule prefix codifying the six-phase fram
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Doc's own recommendation: defer codification until a second bulk-triage cycle is observed.
+> **Resumption trigger**: A second bulk handoff-triage cycle is observed.
+
+**Status**: DEFERRED (2026-07-02)
 
 **Recommendation (preliminary)**: Defer codification until a second bulk-triage cycle is observed. The framework executed cleanly once; that's necessary but not sufficient evidence to codify. A second cycle will (a) test the framework's reproducibility, (b) surface the universal-vs-cycle-specific partition, and (c) confirm or refute the ~2-week cadence. The action items from the 2026-04-29 cycle ([REFL-009a] in-flight-file conservativism + [HANDOFF-032] extraction-time material check) are codified now; the framework-as-a-whole codification waits for the second iteration.
 

@@ -54,10 +54,10 @@
       "file": "2026-05-07-clean-build-first-elevation.md",
       "displayName": "2026-05-07-clean-build-first-elevation.md",
       "topic": "Should the feedback_clean_build_first.md memory rule be elevated from advisory ('rm -rf .build before debugging unexpected failures') to preemptive ('clean .build before verification when ecosystem churn has occurred since last build')? Two recent instances surfaced the recurring pattern: (1) Stream 2 polish dispatch swift-linter ld symbol-not-found from Binary primitives drift; (2) lint-manifest-drop dispatch swift-tagged-primitives duplicate-symbol from Binary_Borrowed_Primitives. Both verifications ran against .build directories whose age spanned multiple ecosystem churn events. The reflection's third-instance threshold suggests deferring elevation until a third independent instance surfaces. Open questions: detection mechanism, cost asymmetry, scope of preemptive rule, third-instance threshold.",
-      "date": "2026-05-07",
-      "status": "IN_PROGRESS",
-      "statusDetail": "v0.1.0. Tier 1 narrow-scope research (concerns build-verification discipline). Authored in response to action item from Research/Reflections/2026-05-07-pre-publishable-polish-stream-2.md. Recommendation in current draft: defer elevation until a third independent instance surfaces.",
-      "statusRaw": "IN_PROGRESS (v0.1.0)",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "v0.1.0. Tier 1 narrow-scope research (concerns build-verification discipline). Authored in response to action item from Research/Reflections/2026-05-07-pre-publishable-polish-stream-2.md. Recommendation in current draft: defer elevation until a third independent instance surfaces. [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: A third independent clean-build-first instance surfaces (doc's own criterion).]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 1,
       "scope": "package-specific"
     },
@@ -65,10 +65,10 @@
       "file": "2026-05-07-package-extraction-defect-catalog.md",
       "displayName": "2026-05-07-package-extraction-defect-catalog.md",
       "topic": "Canonical catalog of pure-structural-extraction defect-detection patterns. The 2026-05-07 swift-linter modularization cohort surfaced three reusable patterns: (1) helper-duplication-after-extraction (Phase 2.5b: sanitize/tempPath duplicated across Lint.Driver and Manifest.Resolver), (2) concrete-string-leak-in-generic ('Lint.swift' string in Manifest.Resolver.evalParent leaking lint-specific knowledge into the supposedly generic resolver), (3) AST tokenKind discriminator under generic syntax types (rethrows accidentally flagged by Lint.Rule.UntypedThrows because both throws and rethrows are ThrowsClauseSyntax). Each has a grep-recipe detection. Open questions: pattern enumeration (other classes), detection automation, where the catalog lives (skill rule vs research doc vs Scripts/), ordering. Likely outcome: combination — research doc as audit trail, [MOD-026] rule for normative discipline, Scripts/ for automation.",
-      "date": "2026-05-07",
-      "status": "IN_PROGRESS",
-      "statusDetail": "v0.1.0. Tier 2 ecosystem-wide research. Authored in response to action item from Research/Reflections/2026-05-07-swift-linter-modularization-cohort-completion.md. Adjacent disciplines: [MOD-022], [MOD-024], [MOD-025], [HANDOFF-013b], [HANDOFF-035].",
-      "statusRaw": "IN_PROGRESS (v0.1.0)",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "v0.1.0. Tier 2 ecosystem-wide research. Authored in response to action item from Research/Reflections/2026-05-07-swift-linter-modularization-cohort-completion.md. Adjacent disciplines: [MOD-022], [MOD-024], [MOD-025], [HANDOFF-013b], [HANDOFF-035]. [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The next package-extraction cycle is scheduled.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -76,10 +76,10 @@
       "file": "2026-05-07-single-file-lint-swift-deprecation-decision.md",
       "displayName": "2026-05-07-single-file-lint-swift-deprecation-decision.md",
       "topic": "Should the institute preserve, formally deprecate, or completely remove the single-file Lint.swift consumer form? Phase B.1 of the architecture cohort left the single-file path inert at post-decouple state (zero findings without consumer-side rule registration). The Lint/ nested-package shape is the working consumer pattern. D1' README cleanup stripped the inert documentation; this doc asks whether engine-side support should also be removed, deprecated with migration path, or preserved as a future-facing sugar form (typed-DSL evolution that subsumes Lint/ for simple cases). The Tier 1/Tier 2 canonical scaffolds currently use single-file form — removal would require their migration to Lint/. Pending investigation.",
-      "date": "2026-05-07",
-      "status": "IN_PROGRESS",
-      "statusDetail": "v0.1.0. Tier 2 ecosystem-wide research. Authored in response to action item from Research/Reflections/2026-05-07-d1-readme-and-driver-repair.md. Cross-references the canonical-tier rule activation design doc (in swift-linter Research) and the consumer-syntax research doc (this dir).",
-      "statusRaw": "IN_PROGRESS (v0.1.0)",
+      "date": "2026-05-31",
+      "status": "SUPERSEDED",
+      "statusDetail": "v0.1.0. Tier 2 ecosystem-wide research. Authored in response to action item from Research/Reflections/2026-05-07-d1-readme-and-driver-repair.md. Cross-references the canonical-tier rule activation design doc (in swift-linter Research) and the consumer-syntax research doc (this dir). [2026-07-02 corpus sweep] index status corrected from IN_PROGRESS to SUPERSEDED per document frontmatter.",
+      "statusRaw": "SUPERSEDED",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -98,10 +98,10 @@
       "file": "2026-05-07-tool-path-env-var-fallback-pattern.md",
       "displayName": "2026-05-07-tool-path-env-var-fallback-pattern.md",
       "topic": "Canonical pattern for tools deployed beyond the developer's workspace, when the tool's runtime needs a path / config / endpoint that varies per adopter. Origin: swift-linter Driver hardcoded fallback to /Users/coen/Developer/swift-foundations/swift-linter when SWIFT_LINTER_PATH unset; the fallback worked in dev but would silently misbehave on first non-developer adopter run. Question axes: env-var-or-fail vs env-var-or-fallback; acceptable fallback shapes (XDG, CWD-walk, well-known install location); diagnostic discipline (silent vs warn vs hard-fail); detection at release-readiness time. Four options: A (env-var-or-fail), B (env-var-or-warn-and-empty-default — current post-fix shape), C (XDG fallback), D (CWD-walk per Cargo/npm convention). Pending investigation.",
-      "date": "2026-05-07",
-      "status": "IN_PROGRESS",
-      "statusDetail": "v0.1.0. Tier 2 ecosystem-wide research. Authored in response to action item from Research/Reflections/2026-05-07-swift-linter-pre-publishable-discovery-investigation.md. Open questions span detection, fallback shapes, diagnostic discipline, and release-readiness gate.",
-      "statusRaw": "IN_PROGRESS (v0.1.0)",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "v0.1.0. Tier 2 ecosystem-wide research. Authored in response to action item from Research/Reflections/2026-05-07-swift-linter-pre-publishable-discovery-investigation.md. Open questions span detection, fallback shapes, diagnostic discipline, and release-readiness gate. [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The next tool-path/env-var fallback incident surfaces.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -245,7 +245,7 @@
       "file": "2026-05-15-swift-arguments-ecosystem-design.md",
       "displayName": "2026-05-15-swift-arguments-ecosystem-design.md",
       "topic": "RECOMMENDATION (v1.0.7, 2026-05-17): Tier 3 ecosystem-wide design Research + IMPLEMENTED v1 for institute-native alternative to Apple's swift-argument-parser. 3-package v1 shape (post v1.0.7 scope reduction): swift-primitives/swift-argument-primitives (L1, 10 targets, 50 tests) + swift-standards/swift-ieee-1003 (L2, 5 targets, 21 tests) + swift-foundations/swift-arguments (L3, 7 targets, 47 tests). Total 118 tests passing; all Foundation-free; all lint-clean. Implemented via orchestrator/subagent pattern 2026-05-17/18 (3 sequential subagent dispatches). v1.0.7 scope reduction per principal direction 'we haven't needed this yet' applied [ECO-002] + [PLAT-ARCH-021] + [MOD-RENT]: dropped Command.Completion.{Bash,Zsh,Fish,PowerShell} (D10 v2 — separate L3 swift-shell-completion); dropped Command.Manpage (D11); dropped swift-gnu L2 (GNU long-options handled inline at L3). Earlier v1.0.0–v1.0.6 audit-pass evolution: prior-art survey of optparse-applicative + clap + System.CommandLine + Click/argparse + Cobra; code-surface naming audit (11 fixes); architecture/modularization/primitives audit (§3.8 Package.swift target structure); 4 parallel agents validated P0 REFUTED (WritableKeyPath + ~Copyable Q1-only — Copyable Command default), P1 CONFIRMED (Parser.Protocol over [String]), P2 CONFIRMED (visitor-over-Schema pattern), U8 benchmark (~115× faster parse than swift-argument-parser); U3 resolved single always-async Command.Protocol; U10/D7 resolved Argument.Codable at L3 per [FAM-009] hybrid placement rule. Subcommand dispatch deferred from v1 by P3 (P4 follow-up arc). Companion research docs: 2026-05-15-command-protocol-sync-async-design.md (D6), 2026-05-15-family-codable-convention.md (D7/U10). Spike: swift-institute/Experiments/argv-parser-protocol-spike/ (10/10 tests). Benchmark: swift-institute/Experiments/argv-parser-benchmark/ (115× faster).",
-      "date": "2026-05-17",
+      "date": "2026-05-18",
       "status": "RECOMMENDATION",
       "statusDetail": "v1.0.7 (2026-05-17). v1 IMPLEMENTED end-to-end via orchestrator/subagent pattern; 3 packages on disk uncommitted (swift-primitives/swift-argument-primitives, swift-standards/swift-ieee-1003, swift-foundations/swift-arguments); 118 tests passing across 22 targets; no Foundation; lint-clean. v1.0.7 scope reduction: dropped Completion+Manpage to D10/D11 v2 follow-up; collapsed swift-gnu inline at L3. Per [RES-020] Tier 3 ecosystem-wide foundational. Per [RES-021] prior-art survey of 6 systems with contextualization. Per [RES-018] 3 packages classified explicitly (b)+(d)+composition. Per [RES-022] structural-correctness framing throughout. Per [RES-023] empirical verification at write time + 4-agent parallel investigation validated all premises. Per [RES-027] P1+P2 premise-CONFIRMED via spike; D6+D7 resolved via companion research docs; D8/D9/D10/D11/D12/D13 directionally classified for v2 follow-up. P4 subcommand-dispatch follow-up arc + swift-dependency-analysis migration scheduled.",
       "statusRaw": "RECOMMENDATION (v1.0.9)",
@@ -256,10 +256,10 @@
       "file": "2026-05-22-sequence-protocol-count-relocation-impact.md",
       "displayName": "2026-05-22-sequence-protocol-count-relocation-impact.md",
       "topic": "RECOMMENDATION (v1.0.0, 2026-05-22): Tier 2 ecosystem-wide impact assessment for relocating `var count: Cardinal { consuming get }` off `Sequence.\\`Protocol\\`` (swift-sequence-primitives Sequence.Protocol+Count.swift:21). Triggered by sibling investigation `swift-buffer-primitives/HANDOFF-buffer-borrowing-count-sequence-detachment.md` Findings (RECOMMENDATION 2026-05-22) which traced 9+ test compile errors (`'buffer' used after consume`) on Buffer.Ring.Inline / Ring.Small / Linked.Inline / Linear.Inline to overload-resolution shadowing: the protocol-default's `where Self: ~Copyable, Element: Copyable` clause is strictly more specific than the typed accessor's `where Element: ~Copyable` clause, so Swift picks the consuming `count: Cardinal` over the typed `count: Index<Element>.Count { borrowing get }`. Principal reframe: local conformer-drop fix vs first-principles relocation. Three options evaluated per `[RES-029]` semantic-identity-first ranking + `[RES-022]` structural-correctness-over-diff-size: (a) move count to Collection.\\`Protocol\\` matching Apple stdlib's placement; (b) new opt-in sub-protocol Sequence.Counting.\\`Protocol\\`; (c) remove default entirely. Workspace enumeration: 73 direct Sequence.\\`Protocol\\` conformers — 40 Group A multi-pass indexed storage (Buffer 8, Queue 8, Array 4, Stack 4, Set.Ordered 4, Dictionary.Ordered 5, Heap 5, Vector 2, Bit.Vector 6, Input.Slice 1), 32 Group B lazy single-pass combinators (Sequence.{Map,Filter,Drop,Prefix,CompactMap,FlatMap,Difference,...}), 1 Group C. Only 3 of 40 Group A currently also conform to Collection.\\`Protocol\\` (Queue.DoubleEnded, Queue.DoubleEnded.Fixed, Buffer.Linear via Buffer.Linear+Collection.Protocol.swift); remaining ~36 are Collection.Protocol-eligible per pre-existing class-(c)-queued migration cited in count-direct-vs-fluent-and-hint-namespace.md v1.0.0 (DECISION 2026-05-21 commit ac09a43). Zero workspace generic-context call sites consume seq.count on a `some Sequence.\\`Protocol\\``-constrained receiver (per `[RES-023]` verified via grep across swift-primitives/swift-standards/swift-foundations/swift-institute Sources/; matches prior DECISION's 2026-05-21 grep). Apple stdlib precedent: Sequence has underestimatedCount: Int (hint, default 0) and NO count; Collection has count: Int (O(n) forward, O(1) RandomAccess) — institute deviated from this placement on stdlib-mental-model-match-for-call-site-shape grounds while putting count on the wrong protocol per stdlib's structural placement. Cross-protocol consistency check: Sequence.Borrowing.\\`Protocol\\` / Sequence.Drain.\\`Protocol\\` / Sequence.Clearable / Sequence.Consume.\\`Protocol\\` / Sequence.Iterator.\\`Protocol\\` carry zero counting defaults; only Sequence.\\`Protocol\\` is affected. RECOMMENDATION: Option (a) with refinement — relocate `var count` to Collection.\\`Protocol\\` with typed return Index<Element>.Count { borrowing get }; retain `count(where:) -> Cardinal` on Sequence.\\`Protocol\\` (no shadowing concern; method-vs-property identifier shape). Migration scope: 4–6 commits across swift-sequence-primitives + swift-collection-primitives + swift-buffer-primitives for Phases 1–3+5–6; Phase 4 (~36 Group A types acquire Collection.\\`Protocol\\`) bundles with the existing class-(c) follow-up. Composes with: collection-sequence-protocol-detachment.md v1.1.0 DECISION (consistent — Collection.Protocol is the multi-pass indexed protocol), count-direct-vs-fluent-and-hint-namespace.md v1.0.0 DECISION (stdlib-aligned ergonomics preserved and strengthened), sequence-protocol-surface-simplification.md v1.1.0 DECISION (preserved literally — Option a does not add a 7th protocol), HANDOFF-buffer-borrowing-count-sequence-detachment.md (sibling local fix + this structural fix cohere). Assessment-only; no source edits.",
-      "date": "2026-05-22",
-      "status": "RECOMMENDATION",
-      "statusDetail": "v1.0.0 (2026-05-22). Tier 2 ecosystem-wide per [RES-020] (precedent-setting across the Sequence/Collection protocol-family for the placement of counting capability; expected lifetime timeless; cost of error medium — wrong placement persists for years and shadows typed accessors on ~Copyable storage). Per [RES-019] internal grep first applied across swift-institute/Research, swift-sequence-primitives/Research, swift-collection-primitives/Research, swift-buffer-primitives/Research — load-bearing precedents cited (count-direct-vs-fluent-and-hint-namespace.md v1.0.0 from 2026-05-21, escapable-protocol-foreach-count-view.md v1.2.0, sequence-protocol-surface-simplification.md v1.1.0, collection-sequence-protocol-detachment.md v1.1.0); not re-derived. Per [RES-021] Apple stdlib precedent surveyed; cross-system precedent contextualized (Rust Iterator::count vs Haskell Foldable::length vs institute typed-protocol shape). Per [RES-022] structural correctness drove Option (a) recommendation; cost arguments engaged only as tiebreakers among structurally-defensible options. Per [RES-023] every file:line citation verified at write time via Read on source files (Sequence.Protocol+Count.swift:21, Buffer.Ring.Inline Copyable.swift:57, Buffer.Ring.Inline.swift:21, Buffer.Linear+Collection.Protocol.swift:5, etc.) and via Bash grep enumeration; subagent Explore performed independent workspace-wide conformer enumeration. Per [RES-029] semantic-identity-first ranking applied — Tier 1 (placement: Apple stdlib + institute's own collection-sequence-protocol-detachment.md DECISION) dispositive; Tier 2 (cross-system operational behavior) reinforcing; Tier 3 (call-site cost) as tiebreaker only. Per [HANDOFF-013] reader-side prior-research grep applied to both swift-institute/Research and per-package Research/ directories. Per [HANDOFF-021] scope enumeration with live grep output cited in §3 and §4. Per [HANDOFF-040] generic-instantiated forms accounted for in conformer grep. Per Do Not Touch directive: all target packages (swift-institute, swift-sequence-primitives, swift-collection-primitives, swift-buffer-primitives, swift-tagged-primitives) verified clean working trees at assessment start; no parallel work to surface; no .swift / Package.swift edits made.",
-      "statusRaw": "RECOMMENDATION (v1.0.0; Option (a) relocate count to Collection.Protocol; retain count(where:) on Sequence.Protocol)",
+      "date": "2026-05-25",
+      "status": "ACCEPTED",
+      "statusDetail": "v1.0.0 (2026-05-22). Tier 2 ecosystem-wide per [RES-020] (precedent-setting across the Sequence/Collection protocol-family for the placement of counting capability; expected lifetime timeless; cost of error medium — wrong placement persists for years and shadows typed accessors on ~Copyable storage). Per [RES-019] internal grep first applied across swift-institute/Research, swift-sequence-primitives/Research, swift-collection-primitives/Research, swift-buffer-primitives/Research — load-bearing precedents cited (count-direct-vs-fluent-and-hint-namespace.md v1.0.0 from 2026-05-21, escapable-protocol-foreach-count-view.md v1.2.0, sequence-protocol-surface-simplification.md v1.1.0, collection-sequence-protocol-detachment.md v1.1.0); not re-derived. Per [RES-021] Apple stdlib precedent surveyed; cross-system precedent contextualized (Rust Iterator::count vs Haskell Foldable::length vs institute typed-protocol shape). Per [RES-022] structural correctness drove Option (a) recommendation; cost arguments engaged only as tiebreakers among structurally-defensible options. Per [RES-023] every file:line citation verified at write time via Read on source files (Sequence.Protocol+Count.swift:21, Buffer.Ring.Inline Copyable.swift:57, Buffer.Ring.Inline.swift:21, Buffer.Linear+Collection.Protocol.swift:5, etc.) and via Bash grep enumeration; subagent Explore performed independent workspace-wide conformer enumeration. Per [RES-029] semantic-identity-first ranking applied — Tier 1 (placement: Apple stdlib + institute's own collection-sequence-protocol-detachment.md DECISION) dispositive; Tier 2 (cross-system operational behavior) reinforcing; Tier 3 (call-site cost) as tiebreaker only. Per [HANDOFF-013] reader-side prior-research grep applied to both swift-institute/Research and per-package Research/ directories. Per [HANDOFF-021] scope enumeration with live grep output cited in §3 and §4. Per [HANDOFF-040] generic-instantiated forms accounted for in conformer grep. Per Do Not Touch directive: all target packages (swift-institute, swift-sequence-primitives, swift-collection-primitives, swift-buffer-primitives, swift-tagged-primitives) verified clean working trees at assessment start; no parallel work to surface; no .swift / Package.swift edits made. [2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to ACCEPTED per document frontmatter.",
+      "statusRaw": "ACCEPTED — Phases 1–2 landed; Phases 3–4 pending",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -297,9 +297,9 @@
       "file": "adt-buffer-storage-decoupling-shape.md",
       "displayName": "ADT / Buffer / Storage Decoupling — The Canonical ADT Shape",
       "topic": "RECOMMENDATION / DRAFT (v1.0.0, 2026-06-18): Tier 3 ecosystem-wide. Step 1 of the ADT/Buffer/Storage decoupling plan: the canonical, formalized statement of the tower's ADT SHAPE in the cross-layer R/C/D normal form, grounded against prior research+experiments and ADDITIVELY correcting universal-adt-shape.md (DECISION). THE SHAPE (points 1-6): (1) minimal orthogonal cores KEPT (Store.Protocol=4-op slot seam; Buffer.Protocol=count; Span.Protocol=span; Set.Protocol=contains+count) composed-not-refined per cross-layer-capability-protocol-model.md -- element-access NOT folded into Buffer, strict-layering DROPPED; (2) struct ADT<S: ~Copyable> minimal bound, NO foundational lower-protocol bound (exactly Buffer<S: ~Copyable> today, Buffer.swift:23); (3) capabilities by conditional extension keyed on the cores (edge-kind C, GATE-1-proven 0-witness x2 on 6.3.2); (4) ADDITIVE per-ADT consumer protocol -- extension ADT: ADT.Protocol where S: <cores> (the __ArrayProtocol layer, Array ~Copyable.swift:50; the STORAGE never conforms it, only ADT<S> does) -- THE LAYER universal-adt-shape.md OMITTED (grep empty); (5) deps decoupled -- generic core depends only on the protocol packages, concrete-column constructors in a separate target; (6) Array is the OUTLIER (Array.swift:44 carries hard bound S: Store.Protocol & Buffer.Protocol), NOT the template -- Buffer already implements the target. RECONCILIATION: cross-layer-capability-protocol-model.md KEPT as backbone (minimal cores + R/C/D); universal-adt-shape.md right on no-bound/minimal-cores/compose-not-refine, ONLY gap = omitted point 4 -> AMEND IN PLACE (additive, not supersede). THE BOUND TENSION RECONCILED (NOT a contradiction): the 2026-06-10 families tranche (REPORT-ADT-families-*) built set/dict/queue/deque/slot-map WITH the hard bound + F-4 walled relaxing Shared's bound -> [MEM-COPY-018]; this governs the Shared COLUMN COMBINATOR's declaration bound (consumed via same-type method pins), ONE LAYER BELOW the ADT type -- different subject + explicit sequencing (Array/slot-store families realign in later passes) + the bound was CORRECT for those slot-store families (their leaves genuinely ARE slot-stores; C1/C2 pass) -- the seam fails C1/C2 only for the tree-inclusive universal family. CAVEAT (surfaced, not glossed): Array's per-column same-type method pins (where S == Shared<...>) make its realignment a Step-2 confirmation target, possibly an Array-specific [MEM-COPY-018] wall -- Tree had no such pins (GATE-1 fresh), Array does. STEP-2 confirmation target: minimal-bound struct + conditional-extension ops on separate cores + additive ADT.Protocol -> builds x2 (debug+-O), 0-warn, 0 witness_method on 6.3.2 (cite storage-protocol-specialization / property-inout-specialization / GATE-1; Step 2 confirms the UNION). OPEN: Step-7 storage-protocol overlap (a Storage Protocol Primitives product exists but NO __StorageProtocol decl -- the slot protocol is Store.Protocol; flagged not resolved). RESEARCH/SYNTHESIS only -- no package source/Package.swift edited, no builds, no experiments re-run (all empirical claims cite prior receipts, Swift 6.3.2). NOT a final DECISION.",
-      "status": "RECOMMENDATION",
-      "statusDetail": "v1.0.0 (2026-06-18). Tier 3 per [RES-020]. RECOMMENDATION/DRAFT pending SEAT verification + principal ratification -- NOT a final DECISION. Step 1 of the ADT/Buffer/Storage decoupling plan (HANDOFF-adt-shape-research.md). Formalizes the converged ADT shape in R/C/D normal form; KEEPS cross-layer-capability-protocol-model.md as backbone; ADDITIVELY corrects universal-adt-shape.md (omitted point 4 = the per-ADT consumer protocol) -> recommends AMEND IN PLACE (v1.1.0), not supersede. Reconciles the 2026-06-10 families-execution hard bound + [MEM-COPY-018] as a layer boundary + sequencing clause (no contradiction); surfaces the Array same-type-pin realignment caveat. All source facts [Verified: 2026-06-18] (Array.swift:44, Array ~Copyable.swift:50, Array.Protocol.swift:20/84, Buffer.swift:23, Store/Buffer .Protocol decls); empirical claims cite prior receipts, not re-run.",
-      "statusRaw": "RECOMMENDATION / DRAFT (v1.0.0; NOT a final DECISION)",
+      "status": "COMPANION",
+      "statusDetail": "v1.0.0 (2026-06-18). Tier 3 per [RES-020]. RECOMMENDATION/DRAFT pending SEAT verification + principal ratification -- NOT a final DECISION. Step 1 of the ADT/Buffer/Storage decoupling plan (HANDOFF-adt-shape-research.md). Formalizes the converged ADT shape in R/C/D normal form; KEEPS cross-layer-capability-protocol-model.md as backbone; ADDITIVELY corrects universal-adt-shape.md (omitted point 4 = the per-ADT consumer protocol) -> recommends AMEND IN PLACE (v1.1.0), not supersede. Reconciles the 2026-06-10 families-execution hard bound + [MEM-COPY-018] as a layer boundary + sequencing clause (no contradiction); surfaces the Array same-type-pin realignment caveat. All source facts [Verified: 2026-06-18] (Array.swift:44, Array ~Copyable.swift:50, Array.Protocol.swift:20/84, Buffer.swift:23, Store/Buffer .Protocol decls); empirical claims cite prior receipts, not re-run. [2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to COMPANION per document frontmatter.",
+      "statusRaw": "COMPANION to ecosystem-data-structures [DS-025]–[DS-027] (the normative Charter; ratified 2026-06-18). This doc is the rationale + status ledger; the binding rules live in the skill.",
       "tier": 3,
       "scope": "ecosystem-wide",
       "date": "2026-06-18",
@@ -309,9 +309,9 @@
       "file": "affine-operator-unification-completeness.md",
       "displayName": "affine-operator-unification-completeness.md",
       "topic": "Should remaining Tagged+Affine operators be unified via Domain? (Tier 1) — completeness check after Phase 2",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "DEFERRED",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from IN_PROGRESS to DEFERRED per document frontmatter.",
+      "statusRaw": "DEFERRED",
       "tier": 1,
       "scope": null
     },
@@ -330,11 +330,12 @@
       "file": "agent-handoff-patterns.md",
       "displayName": "agent-handoff-patterns.md",
       "topic": "Agent-to-agent handoff in Claude Code: failure mode analysis (handoff paradox — degraded agent writes the handoff), SBAR-derived template, progressive capture, file-based handoff at `HANDOFF.md`, token budget (500–1500), timing triggers, acceptance protocol. Prior art: medical SBAR, ATC handover, NASA MER, industrial shift ops, OpenAI Swarm, Continuous Claude v3, \"lost in the middle\" research. Recommends `/handoff` skill design. Tier 2, ecosystem-wide.",
-      "status": "RECOMMENDATION",
-      "statusDetail": null,
-      "statusRaw": "RECOMMENDATION",
+      "status": "SUPERSEDED",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to SUPERSEDED per document frontmatter.",
+      "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": "ecosystem-wide"
+      "scope": "ecosystem-wide",
+      "supersededBy": "handoff skill [HANDOFF-001..016]"
     },
     {
       "file": "agent-harness-engineering-comparative-analysis.md",
@@ -372,9 +373,9 @@
       "file": "ai-context-reduction-via-type-system-tooling.md",
       "displayName": "ai-context-reduction-via-type-system-tooling.md",
       "topic": "AI context reduction via type system tooling (Tier 2) — 4 options (root Package.swift for CCLSP workspace indexing, symbol graph pipeline for batch API inventory, hybrid CCLSP for interactive composition, signature shape meta-analysis). Recommends phased: symbol graph pipeline first (proven, high-value), then scoped workspace Package.swift, then meta-analysis scripts, then hybrid workflow. Empirical validation: symbol graph extraction works, CCLSP workspace search blocked by missing root manifest.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "RECOMMENDATION",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from IN_PROGRESS to RECOMMENDATION per document frontmatter.",
+      "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": null
     },
@@ -394,9 +395,9 @@
       "displayName": "api-name-002-private-surface-applicability.md",
       "topic": "RECOMMENDATION (v1.0.0): Tier 2 ecosystem-wide cross-cutting question surfaced by HANDOFF Wave 3 thread #4. Does [API-NAME-002] (no compound identifiers) apply uniformly to all visibility levels, or only to consumer-observable surface? Surfaces three options: A uniform (status quo), B exempt fileprivate+private (module-export boundary, provisional lean), C exempt internal+below (named-export boundary). Empirical anchor: 2 RULE-WRONG findings on Ownership.Transfer.Erased.Outgoing.Header fileprivate fields (destroyPayload, payloadOffset) in swift-ownership-primitives Wave 2 leaf triage. Decision pending; would amend [API-NAME-002] in the code-surface skill plus the Lint.Rule.Naming.Compound rule. Follow-up: extend lint pass to capture visibility per finding to measure the fileprivate/private slice ecosystem-wide.",
       "date": "2026-05-11",
-      "status": "RECOMMENDATION",
-      "statusDetail": "v1.0.0. Tier 2 cross-cutting question surfaced as research-first per HANDOFF Wave 3 thread #4 explicit constraint ('Don't dispatch as a code-edit task without prior research-process pass'). Three options enumerated with pros/cons + comparison matrix + empirical footprint. Provisional lean is Option B (module-export boundary). Decision pending user/principal deliberation.",
-      "statusRaw": "RECOMMENDATION (v1.0.0)",
+      "status": "DECISION",
+      "statusDetail": "v1.0.0. Tier 2 cross-cutting question surfaced as research-first per HANDOFF Wave 3 thread #4 explicit constraint ('Don't dispatch as a code-edit task without prior research-process pass'). Three options enumerated with pros/cons + comparison matrix + empirical footprint. Provisional lean is Option B (module-export boundary). Decision pending user/principal deliberation. [2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to DECISION per document frontmatter.",
+      "statusRaw": "DECISION",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -487,9 +488,9 @@
       "file": "ascii-parsing-adversarial-review.md",
       "displayName": "ascii-parsing-adversarial-review.md",
       "topic": "Adversarial review of ascii-parsing-domain-ownership v4.0→v4.1 (Tier 2, v2.0) — two review rounds. v1.0: 8 claims, 4 revisions recommended. v2.0: 6 verdicts upgraded QUALIFIED→CONFIRMED after v4.1 revisions. Two remaining factual corrections: (1) LEB128 serialization EXISTS (`[UInt8](leb128:)` in binary-primitives) — \"one-directional\" characterization is wrong; (2) standards `.Parse`/`.Parser` convention split 22/25 — no dominant convention. New \"domains as namespaces\" principle QUALIFIED (sound but degenerate-case criterion needs refinement). Four-protocol design (Protocol, Serializer, Printer, ParserPrinter) confirmed. Overall: v4.1 holds with corrections.",
-      "status": "ANALYSIS",
-      "statusDetail": null,
-      "statusRaw": "ANALYSIS",
+      "status": "RECOMMENDATION",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from ANALYSIS to RECOMMENDATION per document frontmatter.",
+      "statusRaw": "RECOMMENDATION (validation history)",
       "tier": 2,
       "scope": null
     },
@@ -507,9 +508,9 @@
       "file": "ascii-serialization-migration.md",
       "displayName": "ascii-serialization-migration.md",
       "topic": "ASCII serialization migration (Tier 2) — full migration plan for ~83 `Binary.ASCII.Serializable` conformers across 16+ standards packages. No replacement domain protocol. Separate Parser + Serializer per type. Constrained convenience extensions on Parseable/Serializable. Per-type CustomStringConvertible opt-in. 8-phase rollout aligned with parser adoption. Zero external generic constraints — clean migration. Full cleanup: delete protocol, Wrapper, RawRepresentable.",
-      "status": "DECISION",
-      "statusDetail": null,
-      "statusRaw": "DECISION",
+      "status": "DEFERRED",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from DECISION to DEFERRED per document frontmatter.",
+      "statusRaw": "DEFERRED (post-release)",
       "tier": 2,
       "scope": null
     },
@@ -560,10 +561,10 @@
       "file": "audit-finding-triage-taxonomy.md",
       "displayName": "audit-finding-triage-taxonomy.md",
       "topic": "Pre-execution classifier separating mechanical-fix from design-cycle audit findings. Four axes (type-surface crossing, layer crossing, ownership-shape change, single-file scope); routes any axis-1-3 hit to design-cycle dispatch. Addresses the 2026-04-22 pattern where three of four 'mechanical' fixes surfaced as design cycles after starting remediation.",
-      "date": "2026-04-24",
-      "status": "IN_PROGRESS",
-      "statusDetail": "hypothesis axes sketched; prototype pending against remaining platform-audit cycle findings",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "hypothesis axes sketched; prototype pending against remaining platform-audit cycle findings [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The next audit remediation cycle prototypes the mechanical-vs-design-cycle classifier.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -571,19 +572,20 @@
       "file": "benchmark-implementation-conventions.md",
       "displayName": "benchmark-implementation-conventions.md",
       "topic": "Benchmark implementation conventions (Tier 2) — 7 patterns extracted from swift-io case study: suite hierarchy, tiered .timed() config, backtick naming with workload params, clean namespace enums, Test Support fixtures, byte-identical WorkSimulator for comparison, Benchmarks/ sub-package structure. Prepares ground for benchmark-implementation skill.",
-      "status": "RECOMMENDATION",
-      "statusDetail": null,
-      "statusRaw": "RECOMMENDATION",
+      "status": "SUPERSEDED",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to SUPERSEDED per document frontmatter.",
+      "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "benchmark skill [BENCH-001..009]"
     },
     {
       "file": "benchmark-inline-strategy.md",
       "displayName": "benchmark-inline-strategy.md",
       "topic": "Benchmark inline strategy (Tier 2) — parameter ownership between `.timed()` and `#benchmark`/`measure {}`, and whether `#benchmark` should parallel `#snapshot`'s inline source rewriting. Recommends Option E: unified `#benchmark` macro with inline documentary results (not assertion). Key insight: benchmarks are non-deterministic, so inline values are documentation, not baselines.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "RECOMMENDATION",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from IN_PROGRESS to RECOMMENDATION per document frontmatter.",
+      "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": null
     },
@@ -653,7 +655,7 @@
       "file": "binary-byte-namespace-domain-foundations.md",
       "displayName": "binary-byte-namespace-domain-foundations.md",
       "topic": "IMPLEMENTED (v3.0.0, 2026-05-20): Tier 3 ecosystem-wide foundational analysis of the relationship between Bit, Byte, and Binary as namespace domains across the nine packages in the byte-ecosystem (swift-bit-primitives, swift-byte-primitives, swift-byte-parser-primitives, swift-byte-serializer-primitives, swift-binary-primitives, swift-binary-parser-primitives, swift-binary-coder-primitives, swift-binary-base-primitives, swift-binary-leb128-primitives). Triggered by principal's 2026-05-20 question on whether `Binary` is justified as a namespace or should collapse to a typealias for `Collection<Byte>`, and whether binary-parser-primitives + binary-serializer-primitives are redundant with byte-parser-primitives + byte-serializer-primitives. Formal three-layer stratification established: Bit (atomic information, GF(2) two-element field) → Byte (value-type, Bit^8 with byte-domain identity per byte-protocol-capability-marker.md, sibling to UInt8) → Binary (representation domain, the category of byte-sequence-based encoding morphisms — endianness, position, pattern, mask, cursor, serializable, parseable, coder, format, base-N, LEB128). Tier 3 SLR with parallel subagent verification of Rust ([bytes, byteorder, bitvec, nom, serde+bincode/postcard, leb128, deku] — no ecosystem collapses 'binary' to 'byte collection'; Rust distributes across bytes+byteorder+nom+format-crates), Haskell ([Word8, Data.Bits, ByteString, binary, cereal, attoparsec] — load-bearing finding: ByteString.Builder.Prim owns LE/BE primitives INSIDE storage package, refuting 'ByteString = [Word8]'; attoparsec ≠ binary.Get split runs along endianness-in-scope axis), and Go+OCaml (Go encoding/binary as peer-of-text encoding namespace; OCaml has no top-level Binary, uses Cstruct.BE/LE sub-modules). Five options evaluated: A status quo (ACCEPT — matches formal semantics + institute conventions); B collapse to typealias (REJECT — categorically wrong, no prior art, loses load-bearing structure, reverses W2 cascade); C collapse binary-parser into byte-parser (REJECT — violates [MOD-DOMAIN], contradicts Haskell attoparsec/binary.Get precedent, breaks dependency layering); D split Binary.Serializable per binary-primitives-package-decomposition.md (REAFFIRM existing RECOMMENDATION); E Tier 3 cursor-abstractions successor arc (REAFFIRM in-flight arc, do not pre-empt). [RES-023] verification: 14 empirical claims about package state confirmed file:line; binary-parser-primitives Package.swift line 62-63 verified depending on swift-byte-primitives + swift-byte-parser-primitives (binary-parser IS already built on byte-parser). [RES-021] contextualization step closes the 'binary = byte collection' reading against all four surveyed ecosystems. [RES-024] formal semantics: Binary is a category (objects: encoded representations; morphisms: serialize/parse/code/format; parameterizing structure: endianness/position/pattern/mask/cursor), NOT a set/collection/typealias. Why Binary ≠ Collection<Byte>: Binary.Endianness has no meaning on a raw byte collection (parameterizes encoding morphism, not collection); Binary.Position is Tagged<Byte, Ordinal> not Collection<Byte>.Index; Binary.Serializable maps T → [Byte] for arbitrary T (UInt32, JWT, IPv4.Address), conformance is on T not on [Byte]; under typealias the protocol would only conform to byte-collection types — empty content. Canonical organization table for all nine packages stamped with substrate dependencies. Composes with: byte-cursor-primitive-unification.md v1.3.0 IN_PROGRESS (does NOT pre-determine the cursor-abstractions successor arc's outcome); binary-primitives-package-decomposition.md (REAFFIRMS its split recommendations); transformation-domain-architecture.md v3.4.0 (inherits the Parser/Serializer/Coder/Formatter capability-package discipline); byte-discipline skill (composes with [API-BYTE-001..007]).",
-      "date": "2026-05-20",
+      "date": "2026-06-22",
       "status": "IMPLEMENTED",
       "statusDetail": "v3.0.0 (2026-05-20). Tier 3 ecosystem-wide per [RES-020] — precedent-setting (governs the relationship between Bit/Byte/Binary as semantic domain layers; informs every future byte-ecosystem package and every binary-encoding consumer); cost-of-error very high (collapsing the three-layer stratification is one-way structural commitment that cascades through 9 primitives packages + 20+ L2 spec packages + every L3 composition consumer); expected lifetime timeless. Per [RES-019] internal grep first: 26 ecosystem-wide research docs surveyed; load-bearing predecessors cited not re-derived (transformation-domain-architecture.md DECISION, byte-protocol-capability-marker.md Tier 3 RECOMMENDATION, byte-arithmetic-conformance.md RECOMMENDATION ζ, binary-primitives-package-decomposition.md RECOMMENDATION, byte-cursor-primitive-unification.md IN_PROGRESS, broader-l2-l3-byte-typing-gap-plan.md IN_PROGRESS). Per [RES-021] parallel subagent verification with three independent surveys (Rust / Haskell / Go+OCaml), all primary-source URLs verified at write-time. Per [RES-023] empirical state of all nine packages verified file:line; binary-parser → byte-parser dependency confirmed in Package.swift; Binary.Serializable.Buffer.Element == Byte confirmed post-W2 retype. Per [RES-024] formal three-layer categorical semantics included inline (Bit as GF(2), Byte as Bit^8 with byte-domain identity, Binary as category of encoding morphisms). Per [RES-029] semantic-identity-first ranking: Tier 1 (categorical layer distinction Bit/Byte/Binary) dispositive; Tier 2 (adjacent-type consensus across Rust/Haskell/Go/OCaml — no ecosystem collapses binary to byte collection) confirms. Per [RES-022] structural correctness drove ACCEPT verdict on status quo + REAFFIRM on existing in-flight arcs; cost arguments engaged only as tiebreakers within structurally-defensible options. Closes Q1/Q2/Q3 (Binary as namespace, Binary as category, Binary ≠ Collection<Byte>); Q4/Q5 (binary-parser justification + already-builds-on-byte-parser); Q6/Q7 (three-layer model + canonical organization table for nine packages). Opens skill-promotion candidate for binary-discipline (three-layer model worth promoting to a sibling of byte-discipline).",
       "statusRaw": "IMPLEMENTED (v3.0.0)",
@@ -697,9 +699,9 @@
       "file": "blog-pipeline-stall-check.md",
       "displayName": "blog-pipeline-stall-check.md",
       "topic": "Blog pipeline stall check — 32 items checked, 18 stalled >30 days. [META-019] Phase 9.",
-      "status": "INVENTORY",
-      "statusDetail": null,
-      "statusRaw": "INVENTORY",
+      "status": "COMPLETE",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from INVENTORY to COMPLETE per document frontmatter.",
+      "statusRaw": "COMPLETE",
       "tier": null,
       "scope": null
     },
@@ -745,7 +747,7 @@
       "statusRaw": "RECOMMENDATION (v1.0.0)",
       "tier": 2,
       "scope": "cross-layer",
-      "date": "2026-06-02",
+      "date": "2026-06-03",
       "supersededBy": null
     },
     {
@@ -797,7 +799,7 @@
       "file": "byte-primitive-extraction-and-domain-naming.md",
       "displayName": "Byte Primitive Extraction and Domain Naming",
       "topic": "DECISION (v1.0.1, 2026-05-15): Tier 2 ecosystem-wide architectural decisions cemented from the 2026-05-15 byte extraction arc. Four decisions: (1) LargerDomain.Subdomain naming ordering — subject owns namespace when role/specialization at intersection; formalized across Byte × Parser and prior ASCII × Parser instances; promoted to code-surface [API-NAME-001b]. (2) Byte location split — Byte value type in swift-byte-primitives (zero parser deps); Byte.Input typealias in swift-byte-parser-primitives sibling L1 package. (3) Input is peer-foundational — deleted ~148 Parser.Input.* re-exports; consumers reference Input_Primitives.Input.X directly; verified 7 non-parser direct L1 consumers of swift-input-primitives (binary-coder, infinite, dictionary, list, queue, heap, terminal). (4) Byte.Protocol as refinement of Carrier.Protocol<UInt8> + stdlib basics (Sendable/Equatable/Hashable/Comparable/ExpressibleByIntegerLiteral); UInt8 conformance question deferred to capability-marker Tier 3 branching session. Plus Parser.Input qualification cost-IS-the-contract framing (extension Parser scopes now require Input_Primitives.Input.X qualification — verbose by design; surfaces architectural meaning syntactically). Binary-stack audit (binary-primitives, binary-parser-primitives, binary-base-primitives, binary-coder-primitives, binary-leb128-primitives) returned GREEN — no byte reimplementation across all five packages. Capability-marker generalization deferred to HANDOFF-byte-protocol-capability-marker.md. Binary.Bytes.Input vs Byte.Input unification subsumed by byte-cursor-primitive-unification.md v1.1.0 [RES-018] case (a) DEFERRED.",
-      "date": "2026-05-15",
+      "date": "2026-05-26",
       "status": "SUPERSEDED",
       "statusDetail": "Naming ([API-NAME-001b]) absorbed into operation-domain-naming-and-organization.md (2026-05-26); the byte→L1 extraction decision stands as executed.",
       "statusRaw": "SUPERSEDED",
@@ -833,13 +835,14 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "ownership-transfer-conventions.md"
     },
     {
       "file": "canonical-attachment-semantic.md",
       "displayName": "canonical-attachment-semantic.md",
       "topic": "RECOMMENDATION (v1.0.0, 2026-05-22): Tier 2 ecosystem-wide investigation resolving axis B (canonical-attachment semantic) deferred by sibling-refines-canonical-attachment.md v1.1.0 §10a. Recommends path (c) sanctioned-but-deferred: additive Common.Codable peer protocol alongside the existing canonical attachment trio (Coder_Primitives.Codable, Parser_Primitives_Core.Parseable, Serializer_Primitives_Core.Serializable). [FAM-002]'s type-commitment semantic is retained UNCHANGED for the existing trio; the new peer carries author-choice-with-fallback semantic for currency types (Range, CGRect, UUID, etc.) that have no single inherent canonical codec but do have a clean cross-format floor representation. New rule [FAM-011] codifies the design-space reservation; authoring is deferred until empirical pull (consumer-driven currency-type need OR Apple New Codable proposal reaches formal Swift Evolution pitch). Workspace-wide canonical-attachment conformer inventory per [HANDOFF-021] with live grep output and three-class classification: Class I spec-value-type commitments (RFC_8259.Value at JSON.Coder.swift:125 with [FAM-003] justification, Version.Semantic + Version.Tools + Version.Calendar + Glob.Pattern — exactly match [FAM-002] type-commitment); Class II generic-instantiated delegations (Tagged + Optional — semantically neutral lifting pattern); Class III legacy stdlib pins (10 FixedWidthInteger types — RECOMMENDED-FOR-MIGRATION per Φ.3, treated as defects). Apple New Codable live-state survey per [RES-031]: t/78585 178 posts last reply 2026-03-06; t/85186 71 posts last reply 2026-05-22 active. Prototype IS structurally path (c) — additive CommonEncodable/CommonDecodable peer alongside JSONEncodable/JSONDecodable siblings; Perry verbatim quote 'entirely distinct from the format-agnostic one' confirms peer relationship not refinement. Tipping-question enumeration (§4) settles NO: a sufficiently-rich canonical CANNOT absorb every format's native concerns without translation loss — categorical mismatches for protobuf field numbers + XML attribute-vs-element + plist Data/Date; format-shape-leak costs for CBOR tags + MessagePack ext types + JSON null-vs-missing-key. This rules out path (b)'s effective rich-canonical reframing; the canonical must be either narrow type-commitment (path a) or thin floor (path c new peer) — not a rich primary surface. Per-path mechanical analysis + per-rule interaction analysis ([FAM-001]–[FAM-010]) + cognitive-dimensions analysis (path c wins 3 dimensions, path a wins 1 viscosity, 1 tie). Path (c) sanctioned-but-deferred bounds the viscosity cost while preserving every existing FAM rule intact. Companion to sibling-refines-canonical-attachment.md v1.2.0 (amended same date with axis B Disposition updated to RESOLVED-VIA-PATH-(c)-DEFERRED), per-package family-codable-convention.md v1.1.4 ([FAM-001]–[FAM-008]), and ecosystem-wide 2026-05-15-family-codable-convention.md v1.0.0 ([FAM-009]).",
-      "date": "2026-05-22",
+      "date": "2026-05-26",
       "status": "SUPERSEDED",
       "statusDetail": "Superseded 2026-05-26 by operation-domain-naming-and-organization.md.",
       "statusRaw": "SUPERSEDED",
@@ -887,7 +890,8 @@
       "statusDetail": "SUPERSEDED 2026-05-04 by cardinal-trivial-self-revert-plan.md. Phase 5 verified green on 2026-05-04 with Option C build-blocker scope authorization: 10 L1 BLOCKERS (set, graph, pool, structured-queries, symmetry, test, heap, algebra-linear, observation, dictionary) + 1 L2 BLOCKER (color-standard) fixed using mechanical Finding A/B accessor adjustments; downstream cascade (async, dictionary) unblocked. Stylistic-only leftovers and newly-discovered cascade repos enumerated in the plan's `Deferred follow-up — Tagged-rename adoption sweep` section. The Cardinal.`Protocol` unification approach in this memo is preserved as historical context.",
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": "cross-package"
+      "scope": "cross-package",
+      "supersededBy": "cardinal-trivial-self-revert-plan.md"
     },
     {
       "file": "cardinal-trivial-self-revert-plan.md",
@@ -1247,9 +1251,9 @@
       "file": "comparative-swift-testing-frameworks.md",
       "displayName": "comparative-swift-testing-frameworks.md",
       "topic": "Comparative analysis: Apple swift-testing vs Swift Institute swift-testing (Tier 3) — module architecture, macro system, type safety, trait system, runner design, capability gaps. 8-dimension comparison with formal semantics, Cognitive Dimensions validation. Novel contributions: layered decomposition, typed throws, ~Copyable registry. Key gaps: expression decomposition, parameterized tests.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "RECOMMENDATION",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from IN_PROGRESS to RECOMMENDATION per document frontmatter.",
+      "statusRaw": "RECOMMENDATION",
       "tier": 3,
       "scope": null
     },
@@ -1332,10 +1336,10 @@
       "file": "corpus-drift-taxonomy.md",
       "displayName": "corpus-drift-taxonomy.md",
       "topic": "Initial inventory of 12 distinct corpus-drift classes observed in /corpus-meta-analysis sweeps. Maps each class to detection mechanism + responsible [META-*] rule. Surfaces 4 gap classes (9, 10, 11, 12) with no current rule coverage. Open questions: phase-vs-class organization, canonical-anchor enforcement, proactive parallel-session contamination check, pre-2026-04-30 inventory pass.",
-      "date": "2026-05-10",
-      "status": "IN_PROGRESS",
-      "statusDetail": "v0.1.0. Tier 2 ecosystem-wide research. Authored as ResearchTopic outcome of /reflections-processing on Reflections/2026-04-30-corpus-meta-analysis-and-phase-11-completion.md (Pattern 3 corpus-drift-comes-in-many-distinct-flavors). 12 drift classes inventoried; 4 open questions; resumption trigger = next /corpus-meta-analysis run or new skill update introducing a previously-unknown class.",
-      "statusRaw": "IN_PROGRESS (v0.1.0)",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "v0.1.0. Tier 2 ecosystem-wide research. Authored as ResearchTopic outcome of /reflections-processing on Reflections/2026-04-30-corpus-meta-analysis-and-phase-11-completion.md (Pattern 3 corpus-drift-comes-in-many-distinct-flavors). 12 drift classes inventoried; 4 open questions; resumption trigger = next /corpus-meta-analysis run or new skill update introducing a previously-unknown class. [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: Next reflections-triage inventory pass against pre-2026-04-30 reflections (Q4) or gap-rule authoring for classes 9–12.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -1354,10 +1358,10 @@
       "file": "cross-cycle-verification-strategy.md",
       "displayName": "cross-cycle-verification-strategy.md",
       "topic": "When multi-cycle audit-remediation arcs land ecosystem-wide changes with parallel/sibling cycles active, what verification gate strategy minimizes latent cross-cycle ambiguities? Three candidates: (A) per-cycle paranoid wider gates; (B) arc-close full-ecosystem sweep; (C) post-arc /audit pass. Origin: 2026-04-24 cycle-3-close where Cycle 2 introduced Kernel.Signal.Information ambiguity invisible until Cycle 3 broader gate exposed it. Held finding: combine (B) + targeted (A) widening when sibling cycles touch overlapping packages.",
-      "date": "2026-04-30",
-      "status": "IN_PROGRESS",
-      "statusDetail": "Held operational finding (B+A hybrid); empirical comparison pending across next multi-cycle arcs",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "Held operational finding (B+A hybrid); empirical comparison pending across next multi-cycle arcs [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The next multi-cycle arc designs its arc-close verification gate.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "cross-package"
     },
@@ -1387,10 +1391,10 @@
       "file": "cross-platform-sibling-as-refactor-template.md",
       "displayName": "cross-platform-sibling-as-refactor-template.md",
       "topic": "When fixing a layering or structural violation in one per-platform package, sibling per-platform packages' working analogs are often the fastest refactor template. Origin instance: swift-windows.Thread.Affinity (2026-04-26 P3.5 refactor) used swift-linux.Thread.Affinity as structural template (NUMA discovery via same-package call + downward System_Primitives import). Doc scopes when the heuristic applies (cross-platform-shared concerns with shared conceptual model) vs when it does not (genuinely platform-divergent subsystems like Mach ports / io_uring / Job Objects, all-siblings-violate cases, platform-conditional rules). Open: ecosystem-wide census, failure modes, skill-level codification candidacy.",
-      "date": "2026-04-30",
-      "status": "IN_PROGRESS",
-      "statusDetail": "Origin observation captured from one instance; ecosystem-wide census of cross-platform-shared subsystems pending before recommendation graduates",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "Origin observation captured from one instance; ecosystem-wide census of cross-platform-shared subsystems pending before recommendation graduates [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The cross-platform sibling census is scheduled.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "cross-package"
     },
@@ -1419,7 +1423,7 @@
       "file": "cursor-shape-a-vs-three-worlds.md",
       "displayName": "Cursor Shape A vs Three Worlds: Storage-as-Borrow-Carrier Re-Evaluation",
       "topic": "IMPLEMENTED (v1.2.0, 2026-05-18): Tier 3 ecosystem-wide successor arc to cursor-abstractions-l1-ecosystem.md v1.4.0. Principal-authorized 2026-05-18: transition to Shape A as canonical L1 cursor architecture. The v1.4.0 doc's Shape A rejection reasoning ('Swift offers no way to make Escapable conditional on a generic parameter') is empirically false — Tagged precedent + cursor-shape-a-feasibility experiment (commit fa990a4, V1/V2/V5/V6/V7 CONFIRMED) refute the literal claim. Storage-as-borrow-carrier (Ownership.Borrow.\\`Protocol\\` framework from ownership-borrow-protocol-unification.md v1.0.0; Pattern 1 borrow-view per nested-view-vs-borrowed-naming.md v1.2.0) sidesteps the Mode-discriminator constraint entirely. The implementation arc landed in two same-day refinements: Refinement 1 (morning, v1.1.0 DECISION shape) = two-generic Cursor<Storage, PositionTag> with Byte.Borrowed Case B conformer landed across 4 packages. Refinement 2 (afternoon, v1.2.0 IMPLEMENTED shape) = single-generic Cursor<DomainTag: Ownership.Borrow.\\`Protocol\\` & ~Copyable> with storage derived as DomainTag.Borrowed — the two-generic shape was structurally redundant because the conformance already encoded the Storage choice. Added Text: Ownership.Borrow.\\`Protocol\\` with Borrowed = Byte.Borrowed (principled domain-identity statement — text storage IS bytes). Call sites collapse to Cursor<Byte>(span) and Cursor<Text>(...). BENCH-011 replay GREEN at parity across all 4 probes after both refinements (ratios 0.998-0.999); ecosystem build gate clean across 8 packages (~990 tests). W1/W3 (owned-storage Worlds) explicitly deferred — the protocol-bound shape forecloses 'one cursor type for all three Worlds' option A; Phase 4 dispatch decides between sibling owned-cursor type and broader protocol bound. §Implementation Outcomes documents both refinements with implementation SHAs.",
-      "date": "2026-05-18",
+      "date": "2026-05-20",
       "status": "IMPLEMENTED",
       "statusDetail": "v1.3.0 (2026-05-18, status remains IMPLEMENTED). Adds §Phase 4 Resolution recording that the v1.2.0 W1/W3 deferral is now closed: W3 by typed-input-unification.md v1.0.0 (Option A typealias chain rooted in swift-byte-parser-primitives); W1 by cursor-w1-expansion.md v1.0.0 via Option (c) principled refuse — Binary.Cursor<Storage> + Binary.Reader<Storage> stay in swift-binary-primitives; cursor-primitives stays at Tier 6-8 with only the borrowed Span-cursor cohort. The W2 single-generic cohort stands as the final shape of cursor-primitives. Phase 4 expansion of HANDOFF.md Wave 1 Item 1 is CLOSED. Seven structural arguments grounding W1 principled-refuse (see cursor-w1-expansion.md §Phase 2 §Rationale). v1.2.0 (2026-05-18, IMPLEMENTED): Single-generic refinement of the v1.1.0 two-generic landing. Cursor: Cursor<DomainTag: Ownership.Borrow.\\`Protocol\\` & ~Copyable> with storage = DomainTag.Borrowed. Implementation SHAs: swift-text-primitives 190fb64 (Text conformance), swift-cursor-primitives b4dc49e (reshape + drops conditional Copyable/Escapable extensions), swift-binary-parser-primitives a6fbf075 (View typealias + binary-domain extensions), swift-lexer-primitives 511d06e (Scanner inner field). BENCH-011 GREEN at parity (Text peekAdvance 0.998, Text consume 0.999, Binary consumeLoop 0.999, Binary peekAdvance 0.999). Ecosystem build gate: 12+32+69+48+45+6+216+501+61 = 990 tests across 9 packages.",
       "statusRaw": "IMPLEMENTED (v1.3.0)",
@@ -1490,15 +1494,16 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 1,
-      "scope": null
+      "scope": null,
+      "supersededBy": "next-steps-dependencies.md"
     },
     {
       "file": "dependency-witness-store-coherence.md",
       "displayName": "dependency-witness-store-coherence.md",
       "topic": "Dependency/witness store coherence (Tier 2, v2.1) — L1 `Dependency.Scope` and L3 `Witness.Context` maintain separate @TaskLocal stores; values invisible across boundary. Full investigation: dependency chain analysis, conformance census (18 L1 keys, 8+ L3 keys), 5 options evaluated. `SuppressedAssociatedTypes` unblocks Option D (protocol refinement). Recommends 3-phase: Phase 1 mode propagation (eliminates dual scope push, 2 files); Phase 2 protocol refinement (`Witness.Key: Dependency.Key`, resolves name shadowing, 3 files); Phase 3 L1 key bridge (full cross-store visibility, 4 files).",
-      "status": "RECOMMENDATION",
-      "statusDetail": null,
-      "statusRaw": "RECOMMENDATION",
+      "status": "IMPLEMENTED",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to IMPLEMENTED per document frontmatter.",
+      "statusRaw": "IMPLEMENTED",
       "tier": 2,
       "scope": null
     },
@@ -1550,10 +1555,10 @@
       "file": "doc-audit-module-import-visibility-preflight.md",
       "displayName": "doc-audit-module-import-visibility-preflight.md",
       "topic": "Doc-Class Audit Module-Import-Visibility Pre-Flight",
-      "date": "2026-04-26",
-      "status": "IN_PROGRESS",
-      "statusDetail": "methodology survey; recommendation pending empirical comparison",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "methodology survey; recommendation pending empirical comparison [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The empirical mechanism comparison is scheduled or the next doc-class deletion audit runs.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -1607,7 +1612,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "documentation skill [DOC-028], [DOC-029]"
     },
     {
       "file": "documentation-skill-design.md",
@@ -1664,9 +1670,9 @@
       "file": "dual-defunctionalize-discussion-transcript.md",
       "displayName": "dual-defunctionalize-discussion-transcript.md",
       "topic": "Collaborative discussion transcript: structural type primitives decomposition — Claude + ChatGPT. Option A (separate macros) converged. Duality vs defunctionalization preserve different invariants.",
-      "status": "TRANSCRIPT",
-      "statusDetail": null,
-      "statusRaw": "TRANSCRIPT",
+      "status": "DECISION",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from TRANSCRIPT to DECISION per document frontmatter.",
+      "statusRaw": "DECISION",
       "tier": null,
       "scope": null
     },
@@ -1754,9 +1760,9 @@
       "file": "experiment-revalidation-inventory.md",
       "displayName": "experiment-revalidation-inventory.md",
       "topic": "Experiment revalidation inventory — BUG REPRODUCED/REFUTED experiments for retesting on toolchain upgrade. [META-019] Phase 7.",
-      "status": "INVENTORY",
-      "statusDetail": null,
-      "statusRaw": "INVENTORY",
+      "status": "COMPLETE",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from INVENTORY to COMPLETE per document frontmatter.",
+      "statusRaw": "COMPLETE",
       "tier": null,
       "scope": null
     },
@@ -1789,7 +1795,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": null,
-      "scope": null
+      "scope": null,
+      "supersededBy": "feature-flags-assessment.md"
     },
     {
       "file": "feature-flags-assessment.md",
@@ -1809,7 +1816,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": null,
-      "scope": null
+      "scope": null,
+      "supersededBy": "feature-flags-assessment.md"
     },
     {
       "file": "feature-flags-compiletime-struct-reparenting.md",
@@ -1819,7 +1827,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": null,
-      "scope": null
+      "scope": null,
+      "supersededBy": "feature-flags-assessment.md"
     },
     {
       "file": "feature-flags-coroutine-borrow-accessors.md",
@@ -1829,7 +1838,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": null,
-      "scope": null
+      "scope": null,
+      "supersededBy": "feature-flags-assessment.md"
     },
     {
       "file": "file-directory-path-consumer-call-site-inventory.md",
@@ -1895,11 +1905,12 @@
       "file": "generalized-audit-skill-design.md",
       "displayName": "generalized-audit-skill-design.md",
       "topic": "Generalized /audit skill design: single `audit.md` per scope, section-per-skill structure, update-in-place, 10 requirement IDs [AUDIT-001–010]. Solves orphan files, version proliferation, naming chaos. Tier 2, ecosystem-wide.",
-      "status": "RECOMMENDATION",
-      "statusDetail": null,
-      "statusRaw": "RECOMMENDATION",
+      "status": "SUPERSEDED",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to SUPERSEDED per document frontmatter.",
+      "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": "ecosystem-wide"
+      "scope": "ecosystem-wide",
+      "supersededBy": "audit skill [AUDIT-001..019]"
     },
     {
       "file": "git-history-transfer-patterns.md",
@@ -2042,10 +2053,10 @@
       "file": "inlinable-spi-transitive-semantics.md",
       "displayName": "inlinable-spi-transitive-semantics.md",
       "topic": "Swift's @_spi-in-@inlinable rule is a direct-reference rule, not a transitive-call-graph rule. Composing @inlinable through a public non-@inlinable boundary severs the cascade. Earlier (2026-04-20) inferential extension that treated propagation as transitive is corrected by this finding. Implications for cross-package consumer migration patterns, error-conversion layering, and overall API-layer design. Pending: empirical multi-Swift-version sweep, boundary-pattern-shape investigation.",
-      "date": "2026-04-30",
-      "status": "IN_PROGRESS",
-      "statusDetail": "Held finding (direct-reference rule); empirical multi-version pin pending before promotion to RECOMMENDATION",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "Held finding (direct-reference rule); empirical multi-version pin pending before promotion to RECOMMENDATION [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The @inlinable/@_spi empirical spike is scheduled.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "cross-package"
     },
@@ -2068,7 +2079,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 3,
-      "scope": null
+      "scope": null,
+      "supersededBy": "implementation skill [IMPL-INTENT], [IMPL-EXPR-001]"
     },
     {
       "file": "io-prior-art-and-swift-io-design-audit.md",
@@ -2170,10 +2182,10 @@
       "file": "l3-domain-unifier-vs-kernel-consumption.md",
       "displayName": "l3-domain-unifier-vs-kernel-consumption.md",
       "topic": "When does an L3 domain package need its own cross-platform unifier surface (e.g., swift-sockets, swift-io) vs consuming swift-kernel directly (e.g., swift-file-system, swift-paths)? Origin: 2026-04-20 socket-unifier migration crystallized [PLAT-ARCH-021]. Operational rule: domain L3 needs own unifier when introducing public types distinct from kernel primitives, public operations composing kernel + domain policy, or spec deps belonging outside swift-kernel. Pending: empirical survey of existing domain packages.",
-      "date": "2026-04-30",
-      "status": "IN_PROGRESS",
-      "statusDetail": "Operational rule sufficient ([PLAT-ARCH-021] codified); empirical threshold analysis deferred",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "Operational rule sufficient ([PLAT-ARCH-021] codified); empirical threshold analysis deferred [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The next L3 domain-unifier layering decision arises (class-(c) question — surface to principal per standing feedback).]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "cross-package"
     },
@@ -2285,9 +2297,9 @@
       "displayName": "mem-safe-025-reconciliation.md",
       "topic": "RECOMMENDATION (v1.0.0): Tier 2 ecosystem-wide policy reconciliation surfaced by HANDOFF Wave 3 thread #7. Current [MEM-SAFE-025] REQUIRES @safe adjacent to nonisolated(unsafe); institute policy FORBIDS @safe in Sources entirely. Empirical catalogue: 13 @safe sites ecosystem-wide (6 live decls, mostly on Category-A @unchecked Sendable patterns); 247 @unchecked Sendable sites in swift-primitives. Surfaces three options: A retain status quo, B two-rule replacement per partition doc (require invariant comment + forbid @safe — provisional lean), C hybrid. Includes implementation plan for Option B: skill update, lint rule split, ~10-site source migration. Resolves 1 AMBIGUOUS + 3 held findings (per HANDOFF) once direction is chosen.",
       "date": "2026-05-11",
-      "status": "RECOMMENDATION",
-      "statusDetail": "v1.0.0. Tier 2 policy reconciliation surfaced as research-first per HANDOFF Wave 3 thread #7 explicit constraint ('Output: research doc + skill update'). Three options enumerated with pros/cons + comparison matrix on eight criteria. Provisional lean is Option B (partition doc's articulated direction). Decision pending; skill update gated on decision.",
-      "statusRaw": "RECOMMENDATION (v1.0.0)",
+      "status": "DECISION",
+      "statusDetail": "v1.0.0. Tier 2 policy reconciliation surfaced as research-first per HANDOFF Wave 3 thread #7 explicit constraint ('Output: research doc + skill update'). Three options enumerated with pros/cons + comparison matrix on eight criteria. Provisional lean is Option B (partition doc's articulated direction). Decision pending; skill update gated on decision. [2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to DECISION per document frontmatter.",
+      "statusRaw": "DECISION",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -2423,7 +2435,7 @@
       "file": "mutator-naming-protocol-and-typealias.md",
       "displayName": "Naming: Mutator namespace + Mutable adjective typealias",
       "topic": "Naming convention investigation: rename strawman Mutatable to Mutable (proper -able adjective of mutate); apply [PKG-NAME-002] Mutator.Protocol pattern; assess no-clash with Ownership.Mutable type. Result preserved as ecosystem reference even though the swift-mutator-primitives package was retired — the naming spine applies to any future ecosystem package occupying mutation-capability territory.",
-      "date": "2026-04-25",
+      "date": "2026-05-26",
       "status": "SUPERSEDED",
       "statusDetail": "Superseded 2026-05-26 by operation-domain-naming-and-organization.md.",
       "statusRaw": "SUPERSEDED",
@@ -2551,7 +2563,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "ownership-transfer-conventions.md"
     },
     {
       "file": "noncopyable-closure-capture-relaxation.md",
@@ -2561,7 +2574,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": "cross-package"
+      "scope": "cross-package",
+      "supersededBy": "noncopyable-ecosystem-state.md"
     },
     {
       "file": "noncopyable-ecosystem-state.md",
@@ -2581,7 +2595,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": "ecosystem-wide"
+      "scope": "ecosystem-wide",
+      "supersededBy": "noncopyable-ecosystem-state.md"
     },
     {
       "file": "noncopyable-ownership-transfer-patterns.md",
@@ -2591,7 +2606,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": "ecosystem-wide"
+      "scope": "ecosystem-wide",
+      "supersededBy": "noncopyable-ecosystem-state.md"
     },
     {
       "file": "noncopyable-peek-escapable.md",
@@ -2601,7 +2617,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": "ecosystem-wide"
+      "scope": "ecosystem-wide",
+      "supersededBy": "nonescapable-ecosystem-state.md"
     },
     {
       "file": "noncopyable-property-extract-via-underscore-owned.md",
@@ -2619,7 +2636,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": "ecosystem-wide"
+      "scope": "ecosystem-wide",
+      "supersededBy": "noncopyable-ecosystem-state.md"
     },
     {
       "file": "nonescapable-ecosystem-state.md",
@@ -2639,7 +2657,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "nonescapable-ecosystem-state.md"
     },
     {
       "file": "nonescapable-storage-mechanisms.md",
@@ -2649,7 +2668,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "nonescapable-ecosystem-state.md"
     },
     {
       "file": "nonsending-adoption-audit.md",
@@ -2659,7 +2679,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "ownership-transfer-conventions.md"
     },
     {
       "file": "nonsending-callasfunction-inference-quirk.md",
@@ -2679,7 +2700,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "ownership-transfer-conventions.md"
     },
     {
       "file": "nonsending-ecosystem-migration-audit.md",
@@ -2689,7 +2711,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "ownership-transfer-conventions.md"
     },
     {
       "file": "occupancy-encoding-1-adt-cell-layout.md",
@@ -2777,7 +2800,7 @@
       "file": "operation-domain-naming-and-organization.md",
       "displayName": "Operation-Domain Naming and Organization",
       "topic": "DECISION (2026-05-26): Tier 3 ecosystem-wide definitive consolidation of the operation-domain naming-and-organization convention. Package and namespace names take noun form; the subject owns the namespace when a role/specialization sits at a domain intersection (LargerDomain.Subdomain, subject-first), and the gerund/capability is reserved as a top-level typealias onto the canonical Namespace.`Protocol`. Consolidates and supersedes the agent/witness-attachable, canonical-attachment, sibling-refines-canonical-attachment, package-namespace-noun-convention, mutator-naming, and parsing/serialization-capability-organization lines, and absorbs the naming portions of the byte-extraction ([API-NAME-001b]), ASCII-parsing-domain-ownership (subject-first), and nested-protocols-in-generic-types (protocol-hoisting) research.",
-      "date": "2026-05-26",
+      "date": "2026-06-22",
       "status": "DECISION",
       "statusDetail": "Definitive consolidation (2026-05-26) of the operation-domain naming-and-organization line.",
       "statusRaw": "DECISION",
@@ -2799,10 +2822,10 @@
       "file": "optic-prism-namespace-cascade.md",
       "displayName": "optic-prism-namespace-cascade.md",
       "topic": "Tagged-derived Optic.Prism<Enum, Part> accessors collide with enum-case pattern matches at consumer sites that transitively public-import Tagged-bearing primitives. Inventory at-risk consumers; classify workaround patterns (wildcard, demoted internal import, fully-qualified case match, upstream rename); decide between naming-discipline, access-level change, macro-output adjustment, or accept-and-document.",
-      "date": "2026-04-24",
-      "status": "IN_PROGRESS",
-      "statusDetail": "consultation artifact stood up; inventory pending",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "consultation artifact stood up; inventory pending [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: Principal decision on the prism-accessor collision options.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -2822,11 +2845,12 @@
       "file": "owned-typed-memory-region-abstraction.md",
       "displayName": "owned-typed-memory-region-abstraction.md",
       "topic": "Owned typed memory region abstraction (Tier 3, v2.0) — SLR (17 sources: Capability Calculus, Cyclone, Rust/C++, Resource Polymorphism), formal semantics. Gap: no self-owning typed contiguous region. Decision: `Memory.Contiguous<Element: BitwiseCopyable>` fills the gap in its natural namespace. String.Storage wraps `Memory.Contiguous<Char>` + null-termination. BitwiseCopyable is the formal boundary with Storage (per-element lifecycle).",
-      "status": "DECISION",
-      "statusDetail": null,
-      "statusRaw": "DECISION",
+      "status": "SUPERSEDED",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from DECISION to SUPERSEDED per document frontmatter.",
+      "statusRaw": "SUPERSEDED (2026-06-23) by memory-contiguous-dissolution.md",
       "tier": 3,
-      "scope": null
+      "scope": null,
+      "supersededBy": "memory-contiguous-dissolution.md"
     },
     {
       "file": "ownership-transfer-conventions.md",
@@ -2842,7 +2866,7 @@
       "file": "package-namespace-noun-convention.md",
       "displayName": "package-namespace-noun-convention.md",
       "topic": "Package and namespace names take noun form; the gerund is reserved as a top-level typealias onto Namespace.`Protocol` (the canonical capability protocol). Aligns swift-primitives with Apple/Rust/Haskell/Go naming bias. Inventories four primitive packages (formatting, ordering, positioning, rendering) plus six L3 renderer foundations for rename. Companion skill `swift-package` proposed to encode [PKG-NAME-*] rules.",
-      "date": "2026-04-21",
+      "date": "2026-05-26",
       "status": "SUPERSEDED",
       "statusDetail": "Superseded 2026-05-26 by operation-domain-naming-and-organization.md.",
       "statusRaw": "SUPERSEDED",
@@ -2883,9 +2907,9 @@
       "file": "parser-bridge-architecture.md",
       "displayName": "parser-bridge-architecture.md",
       "topic": "Parser bridge architecture (Tier 2) — bifurcated parsing in standards packages: composed parser combinators in Parse struct files vs ad-hoc byte-level parsing in public APIs. Zero public APIs delegate to parse structs. Investigation of bridge pattern to connect them.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "RECOMMENDATION",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from IN_PROGRESS to RECOMMENDATION per document frontmatter.",
+      "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": null
     },
@@ -2893,9 +2917,9 @@
       "file": "parser-bridge-ergonomics-assessment.md",
       "displayName": "parser-bridge-ergonomics-assessment.md",
       "topic": "Parser bridge ergonomics assessment (Tier 2) — MediaType exemplar validates parser bridge pattern. 6 friction points identified: ByteInput qualification noise (F-1), dual generic constraint `Collection.Slice.Protocol & Swift.Collection` (F-2, resolved by `Input.Slice: Swift.Collection` infrastructure fix), slice→String conversion ceremony (F-3), missing grammar combinators for `_splitOnComma`/`_trimOWS` (F-4), parser name collision (F-5), dead `_quotedString` helper (F-6). 313 lines of inline parsing across 10 unmigrated domain types. ISO 8601 demonstrates target unified pattern. 5 recommendations: migrate remaining types, add `TokenOrQuotedString` combinator, consider UTF8String wrapper (deferred), delete helpers post-migration, document constraint guidance.",
-      "status": "RECOMMENDATION",
-      "statusDetail": null,
-      "statusRaw": "RECOMMENDATION",
+      "status": "DECISION",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to DECISION per document frontmatter.",
+      "statusRaw": "DECISION",
       "tier": 2,
       "scope": null
     },
@@ -2927,7 +2951,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "next-steps-parsers.md"
     },
     {
       "file": "parsers-ecosystem-adoption-audit.md",
@@ -2937,7 +2962,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 1,
-      "scope": null
+      "scope": null,
+      "supersededBy": "next-steps-parsers.md"
     },
     {
       "file": "parsing-serialization-capability-organization.md",
@@ -2947,7 +2973,8 @@
       "statusDetail": "Capability-organization content consolidated into operation-domain-naming-and-organization.md (2026-05-26).",
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "transformation-domain-architecture.md (DECISION incorporating this analysis)"
     },
     {
       "file": "path-decomposition-delegation-strategy.md",
@@ -3015,10 +3042,10 @@
       "file": "placeholder-pre-delete-verification.md",
       "displayName": "placeholder-pre-delete-verification.md",
       "topic": "Four-check protocol for verifying GitHub placeholder repos before gh repo delete. Checks non-scaffold commit tokens, non-empty Sources/, tag enumeration, and issue/PR enumeration. Safe-to-delete requires all four to return 0; any non-zero signal routes to user decision with signal cited.",
-      "date": "2026-04-24",
-      "status": "IN_PROGRESS",
-      "statusDetail": "protocol defined; 9 pending repos queued for application",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "protocol defined; 9 pending repos queued for application [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The next placeholder-repo delete batch (html-tree transfer checklist) is executed.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "GitHub repo lifecycle"
     },
@@ -3087,10 +3114,10 @@
       "file": "private-repo-secret-management-at-scale.md",
       "displayName": "private-repo-secret-management-at-scale.md",
       "topic": "Architectural options for distributing PRIVATE_REPO_TOKEN (or its eventual replacement) across the swift-institute ecosystem at 1000+ org scale. Seeded 2026-05-06 after Option A (bot-driven read-only verification via organization_secrets:read) executed; remainder deferred to dedicated investigation. Four options stubbed: B (distribute App credentials to mint per-run tokens), C (bot writes secrets via organization_secrets:write), C-split (two-App separation of duties with separate secrets-bot), E (OIDC + external secret manager — Vault/Doppler/cloud-native). Common worst-case framing: App-key leak is catastrophic baseline regardless of option (existing contents:write across 17 orgs). Decision criteria: operational footprint at N=17/100/1000, threat-model blast radius, migration cost from Option A, required mitigations per option, terminal state + phased migration path. Sub-questions to verify empirically + prior-art targets enumerated. Tier 2, ecosystem-wide, IN_PROGRESS.",
-      "date": "2026-05-06",
-      "status": "IN_PROGRESS",
-      "statusDetail": "v0.2.0 SEED + § Executed State: Option B LIVE for CI dependency resolution 2026-06-04 (per-job App-token mints, dual ID-name contract, [CI-109] cross-org explicit-forward, provisioning runbook; 11 orgs provisioned, 6 zero-public trail). Legacy-tier exists-but-doesn't-deliver degradation observed on 2 orgs — strengthens deprovision-after-soak. Option C/D/E evaluation + deprovision decision remain open.",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "v0.2.0 SEED + § Executed State: Option B LIVE for CI dependency resolution 2026-06-04 (per-job App-token mints, dual ID-name contract, [CI-109] cross-org explicit-forward, provisioning runbook; 11 orgs provisioned, 6 zero-public trail). Legacy-tier exists-but-doesn't-deliver degradation observed on 2 orgs — strengthens deprovision-after-soak. Option C/D/E evaluation + deprovision decision remain open. [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The dedicated secret-management investigation session is scheduled.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -3099,9 +3126,9 @@
       "displayName": "property-ownership-escapable-base-upgrade.md",
       "topic": "DECISION (v1.0.0): Cross-package ~Escapable Base/Value upgrade for Property<Tag, Base> + Ownership.Inout<Value>. Establishes the cascade-execution-order (ownership-primitives lands first; property-primitives lands second), cites escapable-support-pair-either-product.md v1.1.0 as canonical cohort pattern, cites Ownership.Borrow as structural template (raw-pointer storage; minus _owner field, minus init(borrowing:) path that Inout doesn't need). Resolves the 4 open questions from HANDOFF-property-primitives-escapable-upgrade.md: Tagged needs no upgrade (already admits ~Escapable Underlying); Property.View ~Escapable re-add SUPERSEDED (already shipped 2026-03-25 commit 43247e3); supersession path SUPERSEDED (already done); Carrier composition unaffected (already admits ~Escapable Underlying). Phase 0 + Phase 0.5 readiness audit: only Ownership.Inout (Value: ~Copyable only) needs structural upgrade. Per-package execution lives in swift-ownership-primitives/Research/escapable-value-upgrade.md and swift-property-primitives/Research/escapable-base-upgrade.md.",
       "date": "2026-05-09",
-      "status": "DECISION",
-      "statusDetail": "v1.0.0. Tier 2 cross-package research. Authored 2026-05-09 in Phase 1 of HANDOFF-property-primitives-escapable-upgrade.md cascade. Phase 2 implementation gated on per-action user authorization at the Phase 1→Phase 2 boundary; both ownership and property pushes are class-(c) public-repo pushes gated independently.",
-      "statusRaw": "DECISION (v1.0.0)",
+      "status": "CONVERGED",
+      "statusDetail": "v1.0.0. Tier 2 cross-package research. Authored 2026-05-09 in Phase 1 of HANDOFF-property-primitives-escapable-upgrade.md cascade. Phase 2 implementation gated on per-action user authorization at the Phase 1→Phase 2 boundary; both ownership and property pushes are class-(c) public-repo pushes gated independently. [2026-07-02 corpus sweep] index status corrected from DECISION to CONVERGED per document frontmatter.",
+      "statusRaw": "CONVERGED",
       "tier": 2,
       "scope": "cross-package"
     },
@@ -3162,10 +3189,10 @@
       "file": "recurring-handoff-triage-skill-candidate.md",
       "displayName": "recurring-handoff-triage-skill-candidate.md",
       "topic": "Should the six-phase bulk-triage framework executed on 2026-04-29 against 32 HANDOFF-*.md files be codified as a skill? Three options: (A) absorb into handoff skill as [HANDOFF-bulk-triage-*]; (B) extend reflect-session with a bulk-triage variant; (C) author new bulk-handoff-triage skill. Framework exercises [HANDOFF-021]/[HANDOFF-016]/[HANDOFF-029]/[REFL-009]/[REFL-012]/[AUDIT-005]/[AUDIT-009]/[AUDIT-002] — composes existing skills cleanly. Preliminary recommendation: defer codification until a second cycle is observed; preliminary preference is Option C because framework crosses [REFL-*], [HANDOFF-*], [AUDIT-*] without naturally fitting any single existing skill's surface.",
-      "date": "2026-04-30",
-      "status": "IN_PROGRESS",
-      "statusDetail": "Single-cycle observation pending second iteration; codification deferred per [RES-018] premature-primitive heuristic. 2026-04-30 update: prevention-side complement landed (handoff-lifecycle-and-retention.md v1.0.0 RECOMMENDATION; [HANDOFF-038]/[HANDOFF-039]/[REFL-009] amendment); codification priority lowered. Framework's primary use case (routine 2-week cleanup) being absorbed by prevention rules. Resolution path: if framework fires 0 times in next 6 months under new rules, resolve as DECISION (framework stays ad-hoc, not codified)",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "Single-cycle observation pending second iteration; codification deferred per [RES-018] premature-primitive heuristic. 2026-04-30 update: prevention-side complement landed (handoff-lifecycle-and-retention.md v1.0.0 RECOMMENDATION; [HANDOFF-038]/[HANDOFF-039]/[REFL-009] amendment); codification priority lowered. Framework's primary use case (routine 2-week cleanup) being absorbed by prevention rules. Resolution path: if framework fires 0 times in next 6 months under new rules, resolve as DECISION (framework stays ad-hoc, not codified) [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: A second bulk handoff-triage cycle is observed.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -3198,7 +3225,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "rendering-context-witness-migration-implications.md (Option A chosen over Option C)"
     },
     {
       "file": "rendering-context-witness-migration-implications.md",
@@ -3234,10 +3262,10 @@
       "file": "research-doc-recommendation-vs-dispatch-override.md",
       "displayName": "research-doc-recommendation-vs-dispatch-override.md",
       "topic": "When a Research doc recommends approach X and the dispatching principal overrides to approach Y, the divergence is permitted but currently invisible during execution; the supervisor block typically does not carry a fact: entry naming the doc's preferred approach, so the override is not visible to the subordinate or any later reviewer. Origin: 2026-04-28 Phase 1.5 case where Research doc recommended status-quo timing, dispatch overrode to pivot-now, downside materialized exactly as predicted; 30+ commits of churn paid in full. Doc enumerates three options (mandatory fact: entry / SHOULD fact: entry plus pre-dispatch grep / absorb into [SUPER-002a]); preliminary recommendation is Option B since [SUPER-027] was extended with a Research-doc dimension during this Doc's drafting.",
-      "date": "2026-04-30",
-      "status": "IN_PROGRESS",
-      "statusDetail": "Three-option analysis with preliminary recommendation; open questions on threshold for fact: entry, composition with [HANDOFF-018], and writer-side counterpart",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "Three-option analysis with preliminary recommendation; open questions on threshold for fact: entry, composition with [HANDOFF-018], and writer-side counterpart [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: A [SUPER-027] amendment is taken up via the skill-lifecycle workflow.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -3245,7 +3273,7 @@
       "file": "result-builder-performance-optimization.md",
       "displayName": "result-builder-performance-optimization.md",
       "topic": "Recovers on-par-or-better performance for the Round-1 + Round-2 result-builder ecosystem when builder bodies contain `for` loops or bulk sequences. Empirical baseline (`Experiments/result-builder-perf/`) showed 11-39x slowdown vs imperative for `Swift.Array` for-loop bodies at N=100-1000. Root cause: per-iteration `[Element]` allocation in `buildExpression`, mandated by SE-0289's transform of `for` in builder body. Final decision (v2.0.0): ship Option G — bare `Swift.Sequence` overload added as `buildExpression<S: Sequence>(_:) where S.Element == Element`. An OVERLOAD, not a TYPE — satisfies the no-new-type constraint while delivering 0.13x of imperative for N=100 (8x faster) and 0.17x for N=1000 (6x faster). Combined with Option B (consume + append in buildPartialBlock), removes O(N) array-concat for mixed bodies. The `Repeat<S, Element>` helper (Option E) was prototyped, validated, and rejected in favor of Option G — identical performance, no new type, cleaner ergonomics. For-loop pattern documented as anti-pattern; users write `0..<N` directly.",
-      "date": "2026-05-06",
+      "date": "2026-05-07",
       "status": "DECISION",
       "statusDetail": "v2.1.0. The 'in-body .map is 21x slower' loose end filed in v2.0.0 has been investigated and REFUTED (see Experiments/result-builder-map-investigation/). The slowdown is not a builder anomaly — same cost inside or outside builder bodies. The v2.0.0 decision (Option G + Option B) stands. v1.0.0 recommended Option E (Repeat helper); v2.0.0 supersedes after the user constraint 'we'd prefer NOT adding a type in standard-library-extensions' + 'we control all packages, can change all code' produced the Option G + Option B path. Implementation shipped: standard-library-extensions builders (Array, ContiguousArray, ArraySlice, Set, Dictionary) + 13 institute Round-1/Round-2 builders. Empirical revalidation: 8/12 cases pass at <= 1.5x; the 4 failing cases are exclusively the explicit for-loop body shape (anti-pattern). v2.1.0 originally framed the residual as 'stdlib Collection.map's specialization gap'; that framing has since been further refuted in `stdlib-collection-map-actor-isolation-overhead.md` (2026-05-07) — the per-element cost is the runtime actor-isolation check mandated by SE-0423, conditioned on stdlib's .swiftinterface being built in Swift 5 mode, not a generic-specialization failure.",
       "statusRaw": "DECISION (v2.1.0)",
@@ -3267,10 +3295,10 @@
       "file": "rule-dependency-tracking.md",
       "displayName": "rule-dependency-tracking.md",
       "topic": "Rule dependency tracking — skill rules and implicit assumptions",
-      "date": "2026-04-26",
-      "status": "IN_PROGRESS",
-      "statusDetail": "failure-mode evidence collected; mechanism proposal pending design review",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "failure-mode evidence collected; mechanism proposal pending design review [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: Design review selects a rule-dependency tracking mechanism.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -3335,7 +3363,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": null,
-      "scope": null
+      "scope": null,
+      "supersededBy": "ownership-transfer-conventions.md"
     },
     {
       "file": "sending-expansion-audit.md",
@@ -3345,7 +3374,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": null,
-      "scope": null
+      "scope": null,
+      "supersededBy": "ownership-transfer-conventions.md"
     },
     {
       "file": "sequence-operator-unification.md",
@@ -3365,7 +3395,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 3,
-      "scope": null
+      "scope": null,
+      "supersededBy": "reflect-session skill [REFL-*] + reflections-processing skill [REFL-PROC-*]"
     },
     {
       "file": "set-contains-performance-restoration.md",
@@ -3401,7 +3432,7 @@
       "file": "sibling-refines-canonical-attachment.md",
       "displayName": "sibling-refines-canonical-attachment.md",
       "topic": "RECOMMENDATION (v1.2.0, 2026-05-22): Tier 2 ecosystem-wide research closing the gap left between [FAM-001] (no associatedtype on top-level siblings) and [FAM-006] (no attachment-vs-attachment refinement among canonicals) on the sibling-refines-canonical-attachment diagonal. v1.0.0 (2026-05-21) codified [FAM-010] forbidding format-specific sibling attachment protocols from refining the canonical attachment protocols; all six currently-shipped siblings (JSON.Serializable, Plist.Serializable, XML.Serializable, Binary.Serializable, Binary.Parseable, ASCII.Parseable [Φ.1-pending]) match the rule. v1.1.0 (2026-05-22) incorporates findings from an independent outside-view review (HANDOFF-multi-format-serialization-fresh-review.md — firewalled investigation surveying 36 systems across Rust serde / Haskell aeson family / OCaml ppx_deriving + atdgen / Scala circe-play-upickle-scodec-avro4s-scala-pickling / Java Jackson-Gson-Moshi-Kryo / Kotlin kotlinx.serialization / Python pydantic-marshmallow-msgspec-cattrs-dataclasses-json / Go encoding.* + protobuf-go + easyjson / .NET System.Text.Json + Newtonsoft + MessagePack-CSharp + protobuf-net / JS/TS zod-io-ts-class-transformer-superjson-cbor-x / Protocol Buffers cross-language / Apple Foundation Codable + New Codable prototype; corpus-grounded forums-review thread simulation per /swift-forums-review with archetypes c0–c11 and venue-stratified angle base rates; independent synthesis per [RES-020]). Axis A ([FAM-010]) REINFORCED by 36-system convergence (refinement essentially absent from production-grade libraries) and coherence-theoretic citation (Bottu et al. 2019 arXiv:1907.00844, Racordon 2025 arXiv:2502.20546, ezyang coherence write-up) matching §8's anchor-merging argument; Apple New Codable prototype independently corroborates siblings-not-refinement. v1.1.0 deferred axis B ([FAM-002] semantic) to successor arc with three resolution paths enumerated: (a) preserve [FAM-002] type-commitment scoped via [FAM-003], (b) reframe canonical to author-choice-with-fallback, (c) introduce thin CommonCodable analogue alongside existing canonical. v1.2.0 (2026-05-22) RESOLVES axis B via successor arc canonical-attachment-semantic.md v1.0.0: path (c) sanctioned-but-deferred — codified as new rule [FAM-011]; additive Common.Codable peer alongside existing canonical trio; [FAM-002]'s type-commitment semantic UNCHANGED; new peer's authoring deferred until empirical pull (consumer-driven currency-type need OR Apple New Codable formal pitch). Tipping question settled NO via §4 enumeration in successor doc (protobuf field numbers + XML attribute-vs-element categorically distinct; CBOR/MessagePack/plist absorb at format-shape-leak cost; JSON null-vs-missing-key asymmetrically absorbable) — rules out path (b)'s rich-canonical reframing. §10a Disposition updated from DEFERRED-PENDING-SUCCESSOR-ARC to RESOLVED-VIA-PATH-(c)-DEFERRED. §10 [FAM-010] body unchanged across v1.0.0–v1.2.0. Companion to per-package family-codable-convention.md v1.1.4 ([FAM-001]–[FAM-008]), ecosystem-wide 2026-05-15-family-codable-convention.md v1.0.0 ([FAM-009]), and canonical-attachment-semantic.md v1.0.0 ([FAM-011]).",
-      "date": "2026-05-22",
+      "date": "2026-05-26",
       "status": "SUPERSEDED",
       "statusDetail": "Superseded 2026-05-26 by operation-domain-naming-and-organization.md.",
       "statusRaw": "SUPERSEDED",
@@ -3646,10 +3677,10 @@
       "file": "stdlib-naming-beats-ecosystem-naming.md",
       "displayName": "stdlib-naming-beats-ecosystem-naming.md",
       "topic": "When stdlib naming beats ecosystem naming (and when it doesnt)",
-      "date": "2026-04-26",
-      "status": "IN_PROGRESS",
-      "statusDetail": "survey scope defined; principle-extraction pending case-study sweep",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "survey scope defined; principle-extraction pending case-study sweep [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The empirical stdlib-vs-ecosystem naming sweep is scheduled.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -3657,10 +3688,10 @@
       "file": "stdlib-protocol-sdk-availability.md",
       "displayName": "stdlib-protocol-sdk-availability.md",
       "topic": "When do new stdlib protocols (introduced in Swift 6.x) become available in SDK .swiftinterface? Origin: 2026-04-16 cooperative-donation session discovered RunLoopExecutor + SchedulingExecutor + MainExecutor are public in swiftlang/swift source but absent from macOS 26.4 SDK. Two-mechanism model (SPI stripping + SDK-availability lag) produces the same compile-time failure. Held operational rule: grep target SDK .swiftinterface before authoring conformance. Pending: multi-SDK spike + source archaeology + Apple roadmap search.",
-      "date": "2026-04-30",
-      "status": "IN_PROGRESS",
-      "statusDetail": "Operational rule sufficient ([INFRA-026]/[RES-021]); empirical analysis of stripping mechanism deferred until forced",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "Operational rule sufficient ([INFRA-026]/[RES-021]); empirical analysis of stripping mechanism deferred until forced [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The multi-SDK availability spike is scheduled.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "cross-package"
     },
@@ -3710,9 +3741,9 @@
       "file": "stream-isolation-propagation.md",
       "displayName": "stream-isolation-propagation.md",
       "topic": "Stream isolation propagation analysis (Tier 2) — every operator breaks isolation (100% breakage). Root causes: `@Sendable` `_next`, sync closures cannot be nonsending, actor state, unstructured Tasks. Option D: accept stream as concurrency boundary.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "DEFERRED",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from IN_PROGRESS to DEFERRED per document frontmatter.",
+      "statusRaw": "DEFERRED",
       "tier": 2,
       "scope": null
     },
@@ -3862,9 +3893,9 @@
       "displayName": "swift-linter-per-finding-disable-mechanism.md",
       "topic": "RECOMMENDATION (v1.0.0): Tier 2 ecosystem-wide design proposal surfaced by HANDOFF Wave 3 thread #8. swift-linter currently has no per-finding disable mechanism; the rule message references SwiftLint's `// swiftlint:disable:next` which the swift-linter engine does not recognize. Empirical anchor: 2 unchecked_call_site findings on Ownership.Slot.Move.swift:51,59 are genuine institute escape hatches that the rule cannot exempt structurally. Surfaces four options: A line-comment protocol (mirror SwiftLint syntax), B custom attribute, C config-file entries, D hybrid (A primary + C for rule-wide disables — provisional lean). Includes engine-implementation sketch (~150 LOC), migration plan for 40 existing swiftlint:disable sites, meta-audit rule for orphan suppressions. Decision pending; would land as engine-level addition + rule message text updates.",
       "date": "2026-05-11",
-      "status": "RECOMMENDATION",
-      "statusDetail": "v1.0.0. Tier 2 design-proposal-first per HANDOFF Wave 3 thread #8 explicit constraint ('Design proposal first (research-process); engine implementation second'). Four options enumerated with pros/cons + comparison matrix on eight criteria. Provisional lean is Option D (hybrid). Decision pending user/principal deliberation.",
-      "statusRaw": "RECOMMENDATION (v1.0.0)",
+      "status": "DECISION",
+      "statusDetail": "v1.0.0. Tier 2 design-proposal-first per HANDOFF Wave 3 thread #8 explicit constraint ('Design proposal first (research-process); engine implementation second'). Four options enumerated with pros/cons + comparison matrix on eight criteria. Provisional lean is Option D (hybrid). Decision pending user/principal deliberation. [2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to DECISION per document frontmatter.",
+      "statusRaw": "DECISION",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -3873,9 +3904,9 @@
       "displayName": "swift-package-domain-l1-l2-split.md",
       "topic": "Tier-2 RECOMMENDATION: the L1/L2/L3 layering for the SwiftPM package domain. Surfaced by the swift-package-graph + swift-impact arc which audited the domain ownership of SwiftPM types. Establishes: (1) swift-package-primitives stays L1-generic (Package.Name/Product.Name/Target.Name typed identifiers only); (2) new L2 swift-spm-standard at swift-standards/ owns the SwiftPM PackageDescription DSL as Swift types — Package.Manifest, Package.Dependency (with .path/.url(Requirement)/.registry), Package.Requirement (.from/.upToNextMajor/.upToNextMinor/.range/.exact/.branch/.revision), Package.Identity (SE-0292), Manifest.Product (+ Kind/LibraryType), Manifest.Target (+ Kind), TargetDependency, SupportedPlatform, Platform — plus JSON Codable conformances matching `swift package dump-package` wire format; (3) L3 swift-package-manager foundation deferred per [RES-018] (only 1 direct consumer today; trigger is a mutation use case OR ≥2 direct consumers). Migration plan: Phase 0a author swift-spm-standard, Phase 0b refactor swift-package-primitives (remove migrated Package.Dependency types), Phase 0c update ecosystem consumers; Phase 1+2 swift-package-graph and swift-impact respectively. Pre-1.0 breaking changes acceptable per memory feedback_no_inter_launch_soak.md. Tier 2, ecosystem-wide.",
       "date": "2026-05-14",
-      "status": "RECOMMENDATION",
-      "statusDetail": "Awaiting Phase 0 execution authorization",
-      "statusRaw": "RECOMMENDATION",
+      "status": "APPROVED",
+      "statusDetail": "Awaiting Phase 0 execution authorization [2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to APPROVED per document frontmatter.",
+      "statusRaw": "APPROVED",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -3903,9 +3934,9 @@
       "file": "swift-testing-data-maximization.md",
       "displayName": "swift-testing-data-maximization.md",
       "topic": "Swift Testing data maximization (Tier 2) — unified schema for test artifacts, structured performance/functional output, LLM-actionable test diagnostics",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "RECOMMENDATION",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from IN_PROGRESS to RECOMMENDATION per document frontmatter.",
+      "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": null
     },
@@ -3978,7 +4009,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 1,
-      "scope": null
+      "scope": null,
+      "supersededBy": "ownership-transfer-conventions.md"
     },
     {
       "file": "task-local-stack-unification.md",
@@ -4024,9 +4056,9 @@
       "file": "temporal-operator-determinism.md",
       "displayName": "temporal-operator-determinism.md",
       "topic": "Temporal operator determinism (Tier 2) — NonsendingClock and deterministic temporal testing, triggered by Pointfree Episode #355. ImmediateClock with nonisolated(nonsending) sleep achieves 100% deterministic testing (10,000 runs, 0 failures).",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "RECOMMENDATION",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from IN_PROGRESS to RECOMMENDATION per document frontmatter.",
+      "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": null
     },
@@ -4046,9 +4078,9 @@
       "displayName": "Tensor-primitives implementation: deferred follow-ups",
       "topic": "DEFERRED (v1.0.0, 2026-05-17): companion to tensor-primitives-and-tensors-package-decomposition.md v1.2.0. Captures three classes of follow-up surfaced during the swift-tensor-primitives L1 implementation that did NOT block the 0-finding lint-clean state but are worth principal disposition: (a) three skill-amendment candidates surfaced by the second-opinion review but resolved via code-side fixes (IMPL-033 typed-throws exemption shape, API-NAME-001 spec-mirror allowlist for linear-algebra vocabulary, API-ERR-004 try!-vs-try distinction); (b) typed-throws iteration ceremony gap (the Vector<Int>.forEach pattern is more ceremony than a typed-throws Range.forEach extension would be); (c) cross-package observation that swift-affine-geometry-primitives and swift-algebra-linear-primitives have similar for-counter loops that would benefit from the same remediation. All three classes are research-shape follow-ups, not ship-blockers for swift-tensor-primitives. Status DEFERRED awaiting principal disposition on each item.",
       "date": "2026-05-17",
-      "status": "DEFERRED",
-      "statusDetail": "v1.0.0 (2026-05-17). Tier 1 ecosystem-wide companion to the v1.2.0 tensor-primitives research doc. Three classes of deferred work each with what-would-resolve-it documented per [RES-006]. No ship-blockers; all items are quality-of-ecosystem improvements rather than tensor-primitives correctness issues.",
-      "statusRaw": "DEFERRED (v1.0.0)",
+      "status": "PARTIALLY_RESOLVED",
+      "statusDetail": "v1.0.0 (2026-05-17). Tier 1 ecosystem-wide companion to the v1.2.0 tensor-primitives research doc. Three classes of deferred work each with what-would-resolve-it documented per [RES-006]. No ship-blockers; all items are quality-of-ecosystem improvements rather than tensor-primitives correctness issues. [2026-07-02 corpus sweep] index status corrected from DEFERRED to PARTIALLY_RESOLVED per document frontmatter.",
+      "statusRaw": "PARTIALLY_RESOLVED",
       "tier": 1,
       "scope": "ecosystem-wide"
     },
@@ -4067,9 +4099,9 @@
       "file": "test-output-quality-parity.md",
       "displayName": "test-output-quality-parity.md",
       "topic": "Test output quality: parity with Apple and beyond (Tier 2) — 7 improvements identified. Root cause: ConsoleSink discards all Test.Text styling, ignores Failure.expected/actual/difference/comment, omits source location. All data already captured in primitives types. Phase 1: ANSI color + source location + structured fields in reporter (~60 lines, 1 file). Phase 2: pass DiffResult as Failure.difference instead of string-embedding. Phase 3: type-aware sourceCode. After Phase 1-3: parity on all Apple features, exceeding on structural diffs, semantic styling, extensibility.",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "status": "DECISION",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from IN_PROGRESS to DECISION per document frontmatter.",
+      "statusRaw": "DECISION",
       "tier": 2,
       "scope": null
     },
@@ -4122,15 +4154,16 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 1,
-      "scope": "ecosystem-wide"
+      "scope": "ecosystem-wide",
+      "supersededBy": "ownership-transfer-conventions.md"
     },
     {
       "file": "time-api-naming-literature-review.md",
       "displayName": "time-api-naming-literature-review.md",
       "topic": "Time API naming literature review (Tier 2) — Bloch, Fowler, Muratori, Schankin et al. (ICPC 2018), SE-0329 review threads. Nested accessor vs compound identifier analysis. Empirical gap: no study compares `x.in.seconds` vs `x.inSeconds`",
-      "status": "DECISION",
-      "statusDetail": null,
-      "statusRaw": "DECISION",
+      "status": "COMPLETE",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from DECISION to COMPLETE per document frontmatter.",
+      "statusRaw": "COMPLETE",
       "tier": 2,
       "scope": null
     },
@@ -4138,9 +4171,9 @@
       "file": "time-primitives-api-prior-art.md",
       "displayName": "time-primitives-api-prior-art.md",
       "topic": "Cross-language time/duration API survey (Tier 2) — 7 languages (Rust, Java, C++, Haskell, Go, Python, Swift stdlib), exact method signatures, prefix taxonomy (`as_`/`to`/`in`/`total`/bare), total-vs-component ambiguity analysis",
-      "status": "DECISION",
-      "statusDetail": null,
-      "statusRaw": "DECISION",
+      "status": "COMPLETE",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from DECISION to COMPLETE per document frontmatter.",
+      "statusRaw": "COMPLETE",
       "tier": 2,
       "scope": null
     },
@@ -4206,9 +4239,9 @@
       "file": "trie-keyed-tree-literature-review.md",
       "displayName": "trie-keyed-tree-literature-review.md",
       "topic": "Trie and keyed-tree SLR (Tier 3) — Kitchenham methodology, 34 sources across 7 languages. RQ1: canonical signature `Trie<K,V>` where key = `[K]`. RQ2: tries classified as maps, never trees. RQ3: Hinze exponent-law derivation. RQ4: keyed trees extremely rare (Boost.PropertyTree only). Child representation taxonomy (7 strategies).",
-      "status": "ANALYSIS",
-      "statusDetail": null,
-      "statusRaw": "ANALYSIS",
+      "status": "RECOMMENDATION",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from ANALYSIS to RECOMMENDATION per document frontmatter.",
+      "statusRaw": "RECOMMENDATION",
       "tier": 3,
       "scope": null
     },
@@ -4231,7 +4264,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 3,
-      "scope": null
+      "scope": null,
+      "supersededBy": "existing-infrastructure skill [INFRA-*]"
     },
     {
       "file": "typed-input-unification.md",
@@ -4279,9 +4313,9 @@
       "file": "unified-geometry-types-critique.md",
       "displayName": "unified-geometry-types-critique.md",
       "topic": "Critique of unified geometry types proposal",
-      "status": "RECOMMENDATION",
-      "statusDetail": null,
-      "statusRaw": "RECOMMENDATION",
+      "status": "COMPLETE",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to COMPLETE per document frontmatter.",
+      "statusRaw": "COMPLETE",
       "tier": null,
       "scope": null
     },
@@ -4299,9 +4333,9 @@
       "file": "unified-geometry-types-research.md",
       "displayName": "unified-geometry-types-research.md",
       "topic": "Research for unified geometry types design",
-      "status": "RECOMMENDATION",
-      "statusDetail": null,
-      "statusRaw": "RECOMMENDATION",
+      "status": "COMPLETE",
+      "statusDetail": "[2026-07-02 corpus sweep] index status corrected from RECOMMENDATION to COMPLETE per document frontmatter.",
+      "statusRaw": "COMPLETE",
       "tier": null,
       "scope": null
     },
@@ -4319,10 +4353,10 @@
       "file": "value-generic-parameter-naming-convention.md",
       "displayName": "value-generic-parameter-naming-convention.md",
       "topic": "Value-generic parameter naming convention (capacity vs N)",
-      "date": "2026-04-26",
-      "status": "IN_PROGRESS",
-      "statusDetail": "inconsistency documented; convention selection pending principal review",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "inconsistency documented; convention selection pending principal review [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: Principal review of the value-generic parameter naming recommendation.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -4374,10 +4408,10 @@
       "file": "withUnsafe-borrowing-noncopyable-pattern-reach-survey.md",
       "displayName": "withUnsafe-borrowing-noncopyable-pattern-reach-survey.md",
       "topic": "Pattern-reach survey for withUnsafe* + borrowing + ~Copyable + @inlinable miscompile",
-      "date": "2026-04-26",
-      "status": "IN_PROGRESS",
-      "statusDetail": "survey scope defined; empirical work deferred until A2 upstream filing authorized",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "survey scope defined; empirical work deferred until A2 upstream filing authorized [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: A2 authorization decision, or re-scoping of the survey to internal-dossier purpose.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "ecosystem-wide"
     },
@@ -4409,7 +4443,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 1,
-      "scope": null
+      "scope": null,
+      "supersededBy": "witness-macro-noncopyable-support-design.md (revised DEFERRED to VIABLE)"
     },
     {
       "file": "witness-macro-noncopyable-support-design.md",
@@ -4419,7 +4454,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 2,
-      "scope": null
+      "scope": null,
+      "supersededBy": "witness-ownership-integration.md"
     },
     {
       "file": "witness-noncopyable-nonescapable-support.md",
@@ -4429,7 +4465,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 3,
-      "scope": null
+      "scope": null,
+      "supersededBy": "witness-ownership-integration.md"
     },
     {
       "file": "witness-ownership-integration.md",
@@ -4449,7 +4486,8 @@
       "statusDetail": null,
       "statusRaw": "SUPERSEDED",
       "tier": 1,
-      "scope": null
+      "scope": null,
+      "supersededBy": "witness-ownership-integration.md"
     },
     {
       "file": "witness-result-outcome-unification.md",
@@ -4598,10 +4636,10 @@
       "file": "acceptance-gate-grep-design.md",
       "displayName": "Canonical Acceptance-Gate Grep Design",
       "topic": "IN_PROGRESS (v0.1.0, 2026-04-16): Tier 2. Research question spun off the ecosystem @unsafe audit, whose naive acceptance-gate grep (`rg \"@unchecked Sendable\" | rg -v ...`) produced false positives from docstrings, .build/checkouts/, and .claude/worktrees/. Asks for the canonical design of an acceptance-gate grep script for ecosystem-wide code-pattern audits — exhaustive exclusion list, input interface (positive/negative/required-context patterns), and CI-integration suitability — since the \"verify every X is annotated with Y, excluding noise\" shape recurs across audits (typed throws, namespace migrations, @_exported removals).",
-      "date": "2026-04-16",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "[Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The 'verify every X is annotated with Y' gate pattern recurs in an ecosystem audit, or the topic is scheduled into a design cycle.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": null
     },
@@ -4876,10 +4914,10 @@
       "file": "compose-then-trace-skill-design-phase.md",
       "displayName": "Compose-Then-Trace Phase for Skill Design",
       "topic": "IN_PROGRESS (v0.1.0, 2026-04-16): Tier 3. Asks whether skill-lifecycle should gain a [SKILL-CREATE-006a] \"compose-then-trace\" phase — between content ([SKILL-CREATE-006]) and integration ([SKILL-CREATE-007]) — that proactively traces 2-3 end-to-end workflows across composing sibling skills. Motivated by the agent-workflow cluster audit, whose highest-value findings (e.g. \"supervisor in absentia\") were composition gaps visible only when two skills were traced together.",
-      "date": "2026-04-16",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "[Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The originating skill-design pattern recurs, or the topic is scheduled into a design cycle.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 3,
       "scope": null
     },
@@ -4887,10 +4925,10 @@
       "file": "converged-scope-annotation-protocol.md",
       "displayName": "Scope-Annotation Protocol for CONVERGED Design Outcomes",
       "topic": "IN_PROGRESS (v0.1.0, 2026-04-16): Tier 3. Designs a scope-annotation protocol for CONVERGED /collaborative-discussion outcomes: a CONVERGED record should state what question converged, not just the answer, and subsequent scope-widening should prompt re-verification rather than deference. Motivated by the IO design review cycle reopening Shape B's convergence three times as its scope widened beyond the originally-discussed question.",
-      "date": "2026-04-16",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "[Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The originating scope-annotation question recurs, or the topic is scheduled into a design cycle.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 3,
       "scope": null
     },
@@ -5096,10 +5134,10 @@
       "file": "descriptor-rawvalue-access-surface-2026-05-02.md",
       "displayName": "Research: `ISO_9945.Kernel.Descriptor.rawValue` access surface",
       "topic": "IN_PROGRESS (2026-05-02): Investigation (kicked off 2026-05-02, not decided) into the two coexisting raw-fd accessor surfaces on the ~Copyable ISO_9945.Kernel.Descriptor at L2 — the package-scoped `_raw: Int32` and the `@_spi(Syscall)` `init(_rawValue:)`/`_rawValue` pair — and what the single canonical access surface should be.",
-      "date": "2026-05-02",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "INVESTIGATION (kicked off 2026-05-02; not DECIDED)",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "[Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: Principal review of the descriptor raw-handle access-surface options.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": null,
       "scope": null
     },
@@ -5151,10 +5189,10 @@
       "file": "exported-chain-audit-string-primitives.md",
       "displayName": "@_exported Chain Audit — String_Primitives and L1 Module Propagation",
       "topic": "IN_PROGRESS (v0.1.0, 2026-04-16): Tier 2. Enumerate every @_exported import chain that propagates an L1 module (particularly String_Primitives) into an L3 consumer's public namespace, and design fixes at the re-export level. Trigger: the UTF-8 perf session's leak path Parsers → ... → Path_Primitives → String_Primitives, where removing one @_exported fixed one instance but Path_Primitives' `public import String_Primitives` still shadows Swift.String through any @_exported importer — @_exported is viral and accumulative.",
-      "date": "2026-04-16",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "[Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: An @_exported chain audit of string-primitives is scheduled.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": null
     },
@@ -5195,10 +5233,10 @@
       "file": "handoff-vs-convention-resolution-protocol.md",
       "displayName": "Handoff-vs-Convention Resolution Protocol",
       "topic": "IN_PROGRESS (v0.1.0, 2026-04-16): Tier 3. What is the canonical resolution protocol when a handoff document specifies a structural choice (path, naming, location, pattern) conflicting with an established skill convention? Motivated by the /supervise creation session nearly following a handoff's literal `~/.claude/skills/` destination over the canonical `swift-institute/Skills/` convention; the general rule (conventions beat handoff specifications in structural disputes) is not yet codified anywhere.",
-      "date": "2026-04-16",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "[Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: A handoff-vs-convention conflict recurs in practice.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 3,
       "scope": null
     },
@@ -5383,10 +5421,10 @@
       "file": "landing-page-audience.md",
       "displayName": "Audience Research for the swift-institute.org Landing Page",
       "topic": "IN_PROGRESS (v1.0.0, 2026-04-16): Locks the primary reader of swift-institute.org — the evaluator persona, with an iOS-centric mental frame (Foundation assumed, cross-platform novel) — so downstream landing-page design is evaluator-targeted rather than three-personas-averaged. Fifth doc in the landing-page series; the four prior docs reasoned about structure within DocC without naming a primary reader.",
-      "date": "2026-04-16",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "[Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: User review/confirmation of the audience requirements; advances to RECOMMENDATION then DECISION per doc's own ladder.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": null,
       "scope": null
     },
@@ -5394,10 +5432,10 @@
       "file": "landing-page-comparative-study.md",
       "displayName": "Comparative Study of Technical-Project Landing Pages",
       "topic": "IN_PROGRESS (v1.0.0, 2026-04-15): Descriptive study of 14 comparable technical-project landing pages (including Apple's DocC-on-DocC precedent), separating patterns expressible within DocC's chrome from those requiring bypassing it. One of three perspectives (with marketing and DocC-capabilities) feeding the landing-page-user-journey.md synthesis; deliberately makes no recommendation itself.",
-      "date": "2026-04-15",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "RECOMMENDATION",
+      "statusDetail": "[Status synced 2026-07-02: doc Outcome self-declared RECOMMENDATION; metadata lagged.]",
+      "statusRaw": "RECOMMENDATION (status-synced 2026-07-02)",
       "tier": null,
       "scope": null
     },
@@ -5416,10 +5454,10 @@
       "file": "landing-page-marketing-perspective.md",
       "displayName": "Marketing Perspective on Landing-Page UX",
       "topic": "IN_PROGRESS (v1.0.0, 2026-04-15): Audience/journey/copy diagnosis of the live swift-institute.org root page against its three personas (evaluator, early adopter, curious developer) and their time budgets — the opening viewport, click-through paths, and the buried blog (the alpha's primary purpose). One of three perspectives feeding the synthesis; voice/content triage already locked by documentation-docc-alpha-launch.md is out of scope.",
-      "date": "2026-04-15",
-      "status": "IN_PROGRESS",
-      "statusDetail": null,
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "RECOMMENDATION",
+      "statusDetail": "[Status synced 2026-07-02: doc Outcome self-declared RECOMMENDATION; metadata lagged.]",
+      "statusRaw": "RECOMMENDATION (status-synced 2026-07-02)",
       "tier": null,
       "scope": null
     },
@@ -5465,7 +5503,8 @@
       "statusDetail": "Superseded by nonescapable-ecosystem-state.md (2026-04-02).",
       "statusRaw": "SUPERSEDED",
       "tier": null,
-      "scope": null
+      "scope": null,
+      "supersededBy": "nonescapable-ecosystem-state.md"
     },
     {
       "file": "linked-list-cursor-and-arena-backing-improvements.md",
@@ -5564,16 +5603,17 @@
       "statusDetail": "Absorbed into the modularization skill (MOD-001..016).",
       "statusRaw": "SUPERSEDED",
       "tier": 3,
-      "scope": null
+      "scope": null,
+      "supersededBy": "modularization skill (theoretical rationale absorbed; see MOD-001..016)"
     },
     {
       "file": "multi-agent-git-worktree-isolation.md",
       "displayName": "Git Worktree Isolation for Multi-Agent Concurrent Editing",
       "topic": "IN_PROGRESS (v0.1.0, 2026-04-16): Tier 2, applies to swift-institute and all superrepos with concurrent agent activity. Asks whether git worktree isolation should be the default for sessions sharing a working tree with concurrent agents, after Phase 3's perfection-audit fix pass contaminated a commit with a concurrent agent's in-flight skill edits. Open sub-questions: per-agent worktree cost (disk, build cache, SourceKit-LSP re-index, cclsp config), automated setup at sub-agent spawn, merge-back strategy, and supervisor-skill awareness of worktree boundaries. Analysis section is a stub.",
-      "date": "2026-04-16",
-      "status": "IN_PROGRESS",
-      "statusDetail": "Analysis section is a stub — to be filled in during investigation.",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "Analysis section is a stub — to be filled in during investigation. [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: Multi-agent worktree isolation friction recurs (note: partially covered operationally by feedback_no_duplicate_dispatch_shared_tree).]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "swift-institute, all superrepos with concurrent agent activity"
     },
@@ -6296,10 +6336,10 @@
       "file": "witness-uniformity-vs-strategy-specialization.md",
       "displayName": "Witness Uniformity vs Strategy Specialization in @Witness Macro Design",
       "topic": "IN_PROGRESS (v0.1.0, 2026-04-16): Tier 3, applies to swift-witnesses, swift-io, swift-sockets. The IO witness pivot (IO as a flat @Witness struct of five @Sendable async closures) surfaced an ecosystem-wide tension: accept punts to runtime ENOTSUP on non-socket backends (a runtime lie breaking witness uniformity), and divergent backends (blocking, io_uring, IOCP) need different edge signatures. Frames four candidate resolutions — capability-split witnesses, optional methods, strategy-specialized generics (IO<Strategy>), and composition of small witnesses. Analysis section is a stub pending investigation.",
-      "date": "2026-04-16",
-      "status": "IN_PROGRESS",
-      "statusDetail": "Analysis section is a stub — to be filled in during investigation.",
-      "statusRaw": "IN_PROGRESS",
+      "date": "2026-07-02",
+      "status": "DEFERRED",
+      "statusDetail": "Analysis section is a stub — to be filled in during investigation. [Triaged DEFERRED 2026-07-02 by corpus sweep; resumption trigger: The witness-uniformity question recurs in a design cycle.]",
+      "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 3,
       "scope": "swift-witnesses, swift-io, swift-sockets"
     },

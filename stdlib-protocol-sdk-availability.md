@@ -3,8 +3,8 @@
 <!--
 ---
 version: 1.0.0
-last_updated: 2026-04-30
-status: IN_PROGRESS
+last_updated: 2026-07-02
+status: DEFERRED
 tier: 2
 ---
 -->
@@ -64,7 +64,11 @@ Both are detectable by the same mechanical check: `grep` the SDK's `.swiftinterf
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Held operational finding recorded (grep .swiftinterface preflight); multi-SDK spike pending.
+> **Resumption trigger**: The multi-SDK availability spike is scheduled.
+
+**Status**: DEFERRED (2026-07-02)
 
 **Held finding** (operational, applies regardless of mechanism): grep the target SDK's `.swiftinterface` for the protocol declaration before authoring a conformance. If the protocol is absent, follow infrastructure-ready, conformance-deferred posture per [INFRA-026].
 

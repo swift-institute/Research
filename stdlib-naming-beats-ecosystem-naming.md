@@ -3,7 +3,7 @@
 Date: 2026-04-26
 Scope: ecosystem-wide (all packages that shadow Swift stdlib types — Array, Set, Dictionary, Result, etc.)
 Tier: 2 (cross-package, naming-convention research, reversible precedent)
-Status: IN_PROGRESS — survey scope defined; principle-extraction pending case-study sweep
+Status: DEFERRED (triaged 2026-07-02) — was IN_PROGRESS — survey scope defined; principle-extraction pending case-study sweep
 Provenance: Reflection `2026-04-24-post-hoc-api-name-compliance-swap-rename.md` action item; the 2026-04-24 `Array.swapAt → swap(at:with:)` post-ship rename surfaced the underlying tension.
 
 ---
@@ -58,6 +58,10 @@ The sweep produces a per-API table; the principle emerges (or doesn't) from the 
 ---
 
 ## Outcome (placeholder)
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Outcome awaits the empirical naming sweep.
+> **Resumption trigger**: The empirical stdlib-vs-ecosystem naming sweep is scheduled.
 
 To be authored once the empirical sweep completes. Expected shape:
 
