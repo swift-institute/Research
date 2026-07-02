@@ -15,7 +15,7 @@ triage_outcomes:
     description: "AI 2 (superrepo-dismantle-remediation-playbook) deferred — recipe embedded in [HANDOFF-036] worked example + [RES-024]."
   - type: no_action
     description: "AI 3 (_index.json rebuild) addressed by 2026-04-30 corpus-meta-analysis Phase 10 sweep."
-status: pending
+# 2026-07-02 (R3c drain): stale duplicate 'status: pending' key removed; entry was processed 2026-04-30 (triage_outcomes above).
 ---
 
 # Layer-Container Orphan Triage

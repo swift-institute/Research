@@ -6,7 +6,18 @@ packages:
   - swift-linter-primitives
   - swift-buffer-primitives
   - swift-cursor/list/loader/memory-iterator/memory-shared/memory-lock/memory-small/optic-primitives
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: testing-institute
+    description: "Proposal collected (recommend KEEP — highest-value item, campaign live): [INST-TEST-013] generic-namespace / no-own-type carve-out — @Suite cannot emit static stored properties inside a generic type; conforming shape is top-level single-word @Suite(\"Name\") struct Tests or an extension of a non-generic parent / @_exported namespace; swiftc -typecheck probe as verification. Verified absent from testing-institute."
+  - type: skill_update
+    target: handoff
+    description: "Proposal collected (recommend KEEP): landing-barrier rule for autonomous successors — do not launch an autonomous successor chat until the predecessor's state is fully landed (squashes/force-pushes complete) AND recorded (baton/tracker written); extends feedback_no_duplicate_dispatch_shared_tree from same-task to different-task landing boundaries."
+  - type: skill_update
+    target: ci-cd-workflows
+    description: "Proposal collected (recommend KEEP; merge with the 2026-06-02 release-readiness ci.yml item into one 'CI signal exists' vet): before flipping a package whose validation relies on CI, vet gh api repos/<org>/<pkg>/actions/permissions --jq .enabled; if false the flip ships unvalidated — run the local floor or skip."
 ---
 
 # swift-linter Closure — the resolve-check cadence pivot, and the overnight-handoff race

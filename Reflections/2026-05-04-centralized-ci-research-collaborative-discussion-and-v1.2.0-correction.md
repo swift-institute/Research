@@ -3,8 +3,19 @@ date: 2026-05-04
 session_objective: Investigate centralized Swift CI/CD strategy + Phase β advisory CI gate design + improvements catalog (per HANDOFF-centralized-swift-ci-research.md), then refine via /collaborative-discussion with ChatGPT, then apply principal-driven v1.2.0 correction, then dispatch implementation plan via /handoff
 packages:
   - swift-institute
-status: pending
+status: processed
+processed_date: 2026-07-02
 index_pending: true   # Reflections/_index.json is on the parent investigation handoff's "Do Not Touch" list (uncommitted parent-session reflections; principal will commit separately). Index entry for this file deferred to the principal's commit cycle. Per [REFL-007]'s MUST, updated outside this session.
+triage_outcomes:
+  - type: skill_update
+    target: research-process
+    description: "Proposal collected (recommend DEFER): decompose privacy/security/cost deferrals into sub-concerns (time-bounded vs permanent, load-bearing vs auxiliary) before recommending defer. Worked example preserved in centralized-swift-ci-and-spine-gate.md v1.2.0; no recurrence since 2026-05-04; leanness posture disfavors a new rule."
+  - type: skill_update
+    target: research-process
+    description: "Proposal collected (recommend DEFER): 'advisory mode dissolves the deferral' — separate should-we-run from should-we-gate. Captured in the research doc's own v1.1.0 reasoning; fold only if the pattern recurs."
+  - type: skill_update
+    target: collaborative-discussion
+    description: "Proposal collected (recommend KEEP as fold): Round-1 positions name the binding constraint / cost-calculus base rate explicitly (parallel to [HANDOFF-030]); one-line fold into the round-protocol rule, no new ID."
 ---
 
 # Centralized CI Research, Collaborative Discussion, and v1.2.0 Correction

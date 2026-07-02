@@ -12,7 +12,18 @@ packages:
   - swift-storage-split-primitives
   - swift-set-ordered-primitives
   - swift-async
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: handoff
+    description: "Proposal collected (recommend KEEP, fold extending [HANDOFF-016]'s transcription axis): relay-content transport rule — paste-ready content for a successor session MUST land as an on-disk scaffold file (explicit target, land-verbatim, delete-after per [HANDOFF-008a]), never only in the predecessor's chat; the ledger is the authority, relays are transport."
+  - type: skill_update
+    target: audit
+    description: "Proposal collected (recommend KEEP): post-NO-FF-merge residual check — when a merge absorbs a format/move commit, grep the MERGE RESULT for identifiers the branch deleted (rename+move 3-way silent-keep class; dead-import incident); pairs with the resolution-diff-vs-both-parents receipt. Verified absent from audit skill."
+  - type: package_insight
+    target: swift-async
+    description: "Proposal collected (recommend DEFER to the async-domain arc, which the reflection itself assigns as carry-forward): #22 is a test-target COMPILE error (Isolation tests, Map/Filter non-Sendable vs Stream.init Sendable), so any 'green minus one test' gate phrasing is unrealizable; the honest gate is 'library build green + exactly the one known diagnostic'. The test file now lives as 'Async.Sequence.Isolation Tests.swift' — re-verify current state before ledgering."
 ---
 
 # Storage/Memory Split — Cleave-2 Termination (the close tail through merge + push)

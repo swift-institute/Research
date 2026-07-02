@@ -8,7 +8,18 @@ packages:
   - swift-buffer-ring-primitives
   - swift-span-primitives
   - swift-sockets
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: research-process
+    description: "Proposal collected (recommend KEEP — strongest cross-reflection signal): dispatch-time skill load gate — before drafting, map the topic's rule-prefix territory via the skill-routing table and LOAD the owning skills; cite the loaded set in the doc's Constraints. Same defect class observed in 4 reflections (2026-06-02 span-equatable, 2026-06-02 storage-closure, both 2026-06-12 memory-foreign entries)."
+  - type: skill_update
+    target: testing
+    description: "Proposal collected (recommend KEEP): structural-law vs fixture — no runtime checks for type-system theorems (~Copyable exactly-once); test workaround seams and the caller's half of @unsafe contracts; lifecycle-counting fixtures named Census (never Witness, per [PKG-NAME-015]). Verified absent ([TEST-036/037/038] cover clean-build/TSan/-Onone, not this)."
+  - type: skill_update
+    target: memory-safety
+    description: "Proposal collected (recommend KEEP; MERGED with the sibling 2026-06-12 third-ownership-regime entry's item 1 — dual provenance): guarded-deinit as the canonical pattern for closure-bearing/non-trivially-destroyed ~Copyable types while the discard-self wall stands (Optional field, nil-in-consuming-op, guarded deinit; three shipped instances: Completion.Entry, Memory.Foreign, Memory.Map), plus the `consuming sending` boundary spelling and the additive sending-retrofit wrapper. Verified absent from memory-safety."
 ---
 
 # The Memory.Foreign Arc: From Apple Comparison to Shipped Regime in One Session

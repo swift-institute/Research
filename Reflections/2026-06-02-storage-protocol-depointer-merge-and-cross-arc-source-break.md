@@ -8,7 +8,17 @@ packages:
   - swift-buffer-linear-primitives
   - swift-tree-n-primitives
   - swift-array-primitives
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: memory-safety
+    description: "Proposal collected (recommend KEEP): escape-hatch retention discipline — a retained @unsafe accessor on a typed conformer MUST cite the specific language/compiler limitation AND a REMOVE-WHEN condition; absent both it is migration debt. Verified absent from memory-safety (no REMOVE-WHEN content)."
+  - type: experiment_topic
+    target: storage-protocol-specialization
+    description: "Proposal collected (recommend DEFER): refresh the SIL gate to the north-star subscript{get set} witness shape. The 0-witness_method release cross-module criterion is already standing practice in every subsequent tower gate (GATE-MAIN); formalizing the experiment refresh is low residual value."
+  - type: blog_idea
+    description: "Proposal collected (recommend KEEP, queue to Blog/_index.json when authorized): 'Deleting a protocol's most dangerous member made it stronger, safer, and free' — capability-leak repair, OutputSpan dissolving the raw-pointer argument, value-backed soundness win, SIL-proven zero cost."
 ---
 
 # Deleting `Storage.Protocol`'s raw-pointer requirement: a stronger contract, *sounder* value-backed storage, and zero-cost access — the safety trade-offs were artifacts

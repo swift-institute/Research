@@ -7,7 +7,15 @@ packages:
   - swift-equation-primitives
   - swift-hash-primitives
   - swift-collection-primitives
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: no_action
+    description: "[MEM-COPY-004] conformance-extension coverage: already landed — the 2026-06-04 extension (memory-safety SKILL.md changelog) retitled the rule to the suppression-restatement family covering extensions, refinements, AND conformances, with the lint rule in scope. Duplicate."
+  - type: research_topic
+    description: "Proposal collected (recommend DEFER): audit of every Standard-Library-Integration bridge conformance on ~Copyable-generic stdlib types for missing ~Copyable clauses. Largely subsumed by the extended [MEM-COPY-004] + Lint.Rule.Memory.ExtensionNoncopyableConstraint; verify lint sweep coverage before commissioning a manual audit."
+  - type: no_action
+    description: "Collection.Slice.Protocol Escapable constraint: already fixed — current source declares `where Index: Swift.Comparable & Swift.Escapable` with an SE-0499 rationale comment (Collection.Slice.Protocol.swift:35). The proposed fix landed."
 ---
 
 # Span Equation/Hash bridges were silently Copyable-gated — a [MEM-COPY-004] bug the skill named and the user's "~Copyable maximally" push surfaced

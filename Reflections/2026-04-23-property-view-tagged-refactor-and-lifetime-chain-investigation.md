@@ -8,6 +8,7 @@ packages:
   - swift-property-primitives
   - swift-queue-primitives
   - swift-buffer-primitives
+  - swift-primitives/Experiments
 status: processed
 processed_date: 2026-04-30
 triage_outcomes:
@@ -18,8 +19,7 @@ triage_outcomes:
   - type: skill_update
     target: handoff
     description: "[HANDOFF-037] Probe-List vs Do-Not-Touch Internal Contradiction (sixth staleness axis to [HANDOFF-016])."
-  - swift-primitives/Experiments
-status: pending
+# 2026-07-02 (R3c drain): stale duplicate 'status: pending' key + orphaned package-list item removed (item restored to packages list above); entry was processed 2026-04-30.
 ---
 
 # Property.View over Tagged<Ownership.Inout> — refactor drift, compiler-conservatism dead ends, V12 accessor split

@@ -14,7 +14,20 @@ packages:
   - swift-kernel
   - swift-executors
   - swift-memory-map-primitives
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: benchmark
+    description: "Proposal collected (recommend KEEP): metric-of-record requirement — every recorded baseline gating a decision MUST state its derivation formula inline, and verification MUST cite the formula, not just re-measure (W2/W3 raw-vs-delta symmetric misread). Verified absent from benchmark skill."
+  - type: skill_update
+    target: research-process
+    description: "Proposal collected (recommend KEEP, fold into the review machinery): licensed fresh-take review — when a ratified direction is questioned, the review session MUST be licensed to refute the questioner's own frame (principal's AND seat's), prior-art-first then fresh derivation (the Iteration-typealias collision three framed passes missed)."
+  - type: skill_update
+    target: supervise
+    description: "Proposal collected (recommend KEEP, part of the consolidated supervise batch): standing-scope-YES pattern — principal pre-grants a SCOPE class while every instance still gets a supervisor shape-ruling and HALT gates; include escalation carve-outs (API-visible, un-quarantine-class)."
+  - type: no_action
+    description: "[PKG-NAME-017] and the rename-cancellation ratification: already landed 2026-06-13 (swift-package SKILL.md changelog); the zsh word-split recurrence is folded into the [REFL-012] proposal from the 2026-06-02 path-url entry."
 ---
 
 # Tower Phase 4 — the Round M Seat: Supervision at Multi-Lane Scale
