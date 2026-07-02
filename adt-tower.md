@@ -482,7 +482,10 @@ hard-floor carve-outs (already dissolved). **Confirms**: [DS-023] verbatim.
 1. **Canonical-in-main** (kept): `swift-X-primitives` holds the canonical family — the hoisted
    carrier, the seam-generic ops, the canonical front-door alias, and the **allocation/capacity/
    ownership variant aliases** (each its own file per [API-IMPL-005]). A package per 3-line
-   alias fails every modularization test; variant aliases are not packages.
+   alias fails every modularization test; variant aliases are not packages. Heavy-leaf variant
+   aliases (whose column leaf is outside the canonical target's closure) get their own TARGET +
+   product in the same package, umbrella-re-exported — the [DS-027].1 rider — keeping lean
+   consumers lean.
 2. **One-SIBLING-per-package** (replaces one-variant-per-package): semantic siblings
    (`Set.Ordered`, `Queue.DoubleEnded`, `Queue.Linked`, `Dictionary.Ordered`, tree columns)
    keep their own packages — they are distinct contracts with real op layers. The prior rule's
@@ -661,9 +664,16 @@ correct against the old predicate.
 ### 4.3 `[DS-027]` The Packaging Law *(clause 2 amended; RATIFIED)*
 
 **Statement**:
-1. **Canonical-in-main** *(unchanged)*: `swift-X-primitives` holds the canonical family — the
-   hoisted carrier, seam-generic ops, the canonical front door, and ALL allocation/capacity/
-   ownership **variant aliases** (one file each per [API-IMPL-005]/[API-IMPL-006]).
+1. **Canonical-in-main** *(unchanged)*, with a target-placement rider: `swift-X-primitives`
+   holds the canonical family — the hoisted carrier, seam-generic ops, the canonical front
+   door, and ALL allocation/capacity/ownership **variant aliases** (one file each per
+   [API-IMPL-005]/[API-IMPL-006]). A variant alias whose column LEAF is NOT already in the
+   canonical target's product closure (`Small` → Memory Small Primitives; `Inline` → Store
+   Inline Primitives) lands in **its own variant target + product** within the package
+   ([MOD-031]; the array manifest already scaffolds the "Small type/ops/variant" MARKs),
+   umbrella-re-exported per [MOD-005] — so heap-only consumers keep a lean dependency graph
+   (panel-measured: the in-target shape would push +2 packages onto 7 consumers that never
+   spell `Small`).
 2. **One-sibling-per-package** *(amends "one-variant-per-package")*: a semantic SIBLING — a
    family member with distinct observable laws (`Set.Ordered`, `Queue.DoubleEnded`,
    `Queue.Linked`, `Dictionary.Ordered`, tree columns) — lives in its own
@@ -1001,9 +1011,9 @@ distinct lenses (minimality, evidence-fidelity, forward-compatibility; type-syst
 ergonomics/diagnostics, performance; expressivity, compiler-scale, migration-cost;
 discriminator-robustness, modularization-fit, build-graph), each required to produce a
 compiling counterexample, a source citation, or a measured number for a REFUTED verdict.
-Outcome: **0 REFUTED · 7 DENTED · 3 SURVIVES** (two lenses — D7 modularization-fit and
-build-graph — recorded below with their coverage note). Every dent was a text/plan repair that
-left the decision standing, and every repair is INTEGRATED in this document:
+Outcome: **0 REFUTED · 8 DENTED · 4 SURVIVES** (all twelve lenses completed). Every dent was
+a text/plan repair that left the decision standing, and every repair is INTEGRATED in this
+document:
 
 | Lens | Verdict | Repair (integrated at) |
 |---|---|---|
@@ -1017,8 +1027,8 @@ left the decision standing, and every repair is INTEGRATED in this document:
 | D4 compiler-scale | SURVIVES | interface round-trip + 400-alias scale + 3-hop chains pass; caught the worked example's missing `@frozen` (fixed in-session, evolution emit passes) |
 | D4 migration-cost | DENTED | Graph/Cache consumer sweeps; corrected counts; Tests/ in scope; the silent-retype hazard ⇒ the legacy-spelling grep-zero gate — §9.1/§9.3/§9.4 |
 | D7 discriminator | DENTED | the ordered mechanical test: three free axes; discipline frozen; decreed op forms; variant-vs-nest alias senses — D4.1/D4.4/[DS-027].2/[DS-028]/§5.1 |
-| D7 modularization-fit | (see note) | lens re-run pending at record time; its attack surface is partially covered by the migration-cost and minimality refuters' packaging evidence + the [MOD-*] cross-check in D7 |
-| D7 build-graph | (see note) | as above; the variants-in-main dependency question is additionally bounded by the existing manifests (the canonical packages already depend on their families' column packages) |
+| D7 modularization-fit | SURVIVES | the sibling nest-alias-through-hoisted-typealias shape compiles and runs cross-module (3-module probe, MemberImportVisibility); [MOD-032] scan: 0 cycles across 203 manifests; sibling deps one-way |
+| D7 build-graph | DENTED | the [DS-027].1 target-placement rider: heavy-leaf variant aliases (Small/Inline) get their own variant target + product, umbrella-re-exported — the in-target shape would have pushed the dropped memory-small dep (+2 packages) onto 7 heap-only consumers — D7/[DS-027].1/§9.2 |
 
 The full verdicts (attacks, evidence, probes) are in the panel workflow journal; the probes the
 refuters wrote are reproducible from the evidence lines quoted in each repair's section.
@@ -1156,7 +1166,11 @@ serial-build disciplines (one executor per package tree; parent builds once afte
    re-point any `Memory.Heap`-hardcoded pin that should be `R: Memory.Growable` — `Queue`'s
    `enqueue` trio collapses to one R-generic pin + one `Shared` twin + one bounded pin).
 4. Front doors: canonical + variants with live consumers (grep the consumer list per family
-   before choosing which variant aliases land in W1; everything else waits for pull).
+   before choosing which variant aliases land in W1; everything else waits for pull). Apply
+   the [DS-027].1 target rider: `Array<Byte>.Small<24>` lands in a `Array Small Primitive`
+   variant target/product (the scaffolded MARKs), NOT in the canonical target — json (the
+   day-one puller) already declares the memory-small dep; the 7 heap-only consumers gain
+   nothing.
 5. Consumer migration: mechanical respell `X<Column>` → `__X<Column>` or (preferred where the
    column is a default/`Small` point) the front door. Break lists per family live in the wave
    dispatch; the 27-package consumer survey (13 L2/L3 + 14 intra-L1; io=10 files, async=9 the
