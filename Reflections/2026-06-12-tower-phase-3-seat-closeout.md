@@ -12,7 +12,17 @@ packages:
   - swift-heap-primitives
   - swift-pool-primitives
   - swift-buffer-primitives
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: supervise
+    description: "Proposal collected (recommend KEEP, part of the consolidated supervise batch): instruction-driven-executor rule — no /goal auto-resume hooks on gated sessions (auto-resume must never outrank a HALT gate; already standing practice per this reflection) — plus a relay-confirmation convention (explicit paste-me blocks; supervisor tracks unacknowledged relays as open items). Extends memory feedback_wave_gate_halt_absolute to the structural fix."
+  - type: blog_idea
+    description: "Proposal collected (recommend KEEP, queue when authorized — publishable only after Round P's public flip): 'Verify before optimize, measured' — harnesses that caught their own fixer's bugs; the benchmark arc that found what code-reading missed; falsifiable mechanism predictions."
+  - type: package_insight
+    target: swift-pool-primitives
+    description: "Proposal collected (recommend KEEP, small): ledger the fill-lane liveness flake (1-in-3 debug-leg wedge, lost-continuation signature) in Research/_Package-Insights.md; chase candidate = fill-lane adversarial test. Verify the preserved evidence path (.handoffs/probes-2026-06-11/seat-arc1-gates/pool-hang/) still exists at execution time — it was not found on 2026-07-02."
 ---
 
 # Tower Phase 3: the Seat's Close-Out — Verify → Measure → Fix in One Phase

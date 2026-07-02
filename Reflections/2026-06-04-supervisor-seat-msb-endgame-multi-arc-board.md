@@ -8,7 +8,18 @@ packages:
   - swift-memory-heap-primitives
   - swift-buffer-ring-primitives
   - swift-institute/.github
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: memory-safety
+    description: "Proposal collected (recommend DEFER): the wall-resolution taxonomy for ~Copyable-generic substrate towers (protocol-lift / substrate-pin fresh-param RHS / Box-with-concrete-under-phantom-S; capability-presence resolves as tier membership; truthful-vs-necessity-phantom spelling). Verified absent from memory-safety, but the tower's breaking rounds are closed (Round M was the last); the taxonomy is preserved here + in tower records — codify if a new substrate-tower arc opens."
+  - type: skill_update
+    target: supervise
+    description: "Proposal collected (recommend KEEP, part of a consolidated supervise batch): seat-symmetry rule (candidate [SUPER-054]) — the seat's own gate artifacts (greps, enumerations, comparators, record-derived narratives) are state claims requiring re-derivation; gate tooling fails closed; authorization conditions are literal commands with abort-on-delta; plus the named-session multi-arc board pattern and seat-succession handoff form."
+  - type: skill_update
+    target: handoff
+    description: "Proposal collected (recommend KEEP, fold into [HANDOFF-016]): authorization-record staleness — before presenting any 'pending since <date>' decision, re-derive pending-ness from current disk/CI state (May batch-fix instance: 30-second grep showed the gates already in-tree)."
 ---
 
 # The Supervisor Seat: MSB Endgame Through the Multi-Arc Board

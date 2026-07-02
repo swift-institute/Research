@@ -7,7 +7,17 @@ packages:
   - swift-standards/.github
   - swift-foundations/.github
   - swift-institute/Skills
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: supervise
+    description: "Proposal collected (recommend KEEP, folds into [SUPER-052]/[SUPER-031] families): (a) verify a repo's visibility class from primary source (CLAUDE.md table or gh repo view) before citing any visibility-scoped grant; (b) reflog forensics (refs/remotes reflog 'update by push' events) as the evidence form for push-attribution questions. Verified absent from supervise."
+  - type: skill_update
+    target: ci-cd-workflows
+    description: "Proposal collected (recommend KEEP, note near [CI-110]): matching Actions expression literals (${{ ... }}) MUST use grep -F — BSD grep silently returns 0 matches on brace/$ pattern syntax. Verified absent. [CI-109]/[CI-110] substance itself already landed 2026-06-04."
+  - type: research_topic
+    description: "Proposal collected (recommend DEFER): delivery-side secret oracle for the weekly coverage lint (Configured-N echo replacing existence-only axis-2). The runbook (private-repo-secret-management-at-scale.md) already documents the verification ladder; the lint enhancement is non-foundational — revisit when the coverage lint is next touched."
 ---
 
 # Porter arc: private-dep CI resolution, the cross-org secret-transport discovery, and the silent startup-failure class

@@ -12,7 +12,17 @@ packages:
   - swift-memory-primitives
   - swift-bit-pack-primitives
   - swift-bit-vector-primitives
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: release-readiness
+    description: "Proposal collected (recommend KEEP, folds not new IDs): (a) Phase 0 baseline check that .github/workflows/ci.yml thin-caller exists; (b) add ci-cd-workflows + github-repository as must-load companion skills for publish/flip arcs; (c) reinforce in [RELEASE-011] that post-flip metadata syncs via sync-metadata.yml per [GH-REPO-002], never direct gh repo edit. Merge with the 2026-06-26 Actions-enabled vet into one 'CI signal exists' cluster (ci.yml present AND Actions enabled)."
+  - type: skill_update
+    target: release-readiness
+    description: "Proposal collected (recommend KEEP, clarifying fold into [RELEASE-007]): pre-existing READMEs are a high-risk class — they can document removed APIs (memory's Memory.Address.Buffer.Mutable); the compile gate MUST re-verify pre-existing examples against current API."
+  - type: no_action
+    description: "Dependency-closure premature-flip detection proposal: superseded by newer practice — the 2026-06-26 campaign cadence productized the pre-flip deps-public check (resolve_check.sh) which is exactly the full-closure visibility survey; flip-back-private remains the obvious remediation. No skill text needed beyond the (a)-item above."
 ---
 
 # Publishing the swift-storage-primitives dependency closure: reactive skill-loading shipped iterator with no CI and routed metadata through the forbidden path; the [RELEASE-007] compile gate caught a README documenting a deleted API

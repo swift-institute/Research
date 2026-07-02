@@ -6,7 +6,17 @@ packages:
   - swift-rfc-3986
   - swift-binary-serializer-primitives
   - swift-windows-standard
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: no_action
+    description: "One-form-per-package [PKG-DEP-*] rule: already captured — [PKG-DEP-001]'s 2026-06-02 pointer names the one-form-per-package invariant with versioning-and-release-strategy.md governing. Residual (lint-rule-promotion candidacy from Package.resolved) queued in the consolidated proposals list as DEFER."
+  - type: skill_update
+    target: reflect-session
+    description: "Proposal collected (recommend KEEP, clarifying fold into [REFL-012]): a verification command that errors or expands to a no-op (zsh non-word-split for-loop, unmatched glob, silently-failing subcommand) emits empty output that reads as PASS — verification MUST confirm the check actually iterated its set; high-stakes '0 found' cross-checked by a second method. Recurrence evidence: the same zsh trap re-fired 2026-06-13 despite the memory entry."
+  - type: skill_update
+    target: handoff
+    description: "Proposal collected (recommend KEEP, fold into [HANDOFF-021]): a scope expansion to 'all/everything' requires an enumerate-AND-classify-for-cause pass before acceptance (2142 vs 180 path-dep scoping; out-for-cause = other-domain-intentional + external not-ours)."
 ---
 
 # Co-architecting three disjoint arcs: verification caught a zsh-no-op gate-check and a wrong tag-staleness hypothesis; dep-pinning's real invariant is one-form-per-package

@@ -9,7 +9,16 @@ packages:
   - swift-memory-map-primitives
   - swift-storage-primitives
   - swift-store-primitives
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: no_action
+    description: "Guarded-deinit memory-safety proposal: merged into the sibling entry 2026-06-12-memory-foreign-arc-comparison-to-shipped-regime.md's identical proposal per [REFL-PROC-002a] (dual provenance recorded there)."
+  - type: skill_update
+    target: research-process
+    description: "Proposal collected (recommend KEEP, small fold into [RES-019] step-0): source-shape sweep — when the question includes 'does X already exist', grep Sources for candidate type shapes, not only Research/ docs (Memory.Map found shipped after the doc treated the owning mapped envelope as hypothetical)."
+  - type: no_action
+    description: "Async.Channel sending-seam adoption research topic: already recorded — the reflection itself states both constraints are written into memory-foreign-and-memory-protocol.md Residual #2 for sockets 2B+, and the sockets/async arc owns the consumer chain (project_memory_foreign_arc). A separate research doc would duplicate the parent doc's residual."
 ---
 
 # Memory.Foreign Arc — the Third Ownership Regime

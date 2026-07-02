@@ -13,7 +13,17 @@ packages:
   - swift-primitives/swift-byte-parser-primitives
   - swift-primitives/swift-input-primitives
   - swift-primitives/swift-parser-primitives
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: doc_improvement
+    target: unified-iteration-design.md
+    description: "Proposal collected (recommend KEEP): refine-edge transitive-conformer enumeration procedure — before adding a super-protocol to a base protocol, walk the full refinement chain and enumerate conformers at every level. Verified absent from the doc at v2.2.0."
+  - type: doc_improvement
+    target: unified-iteration-design.md
+    description: "Proposal collected (recommend KEEP): Materializing-template warning — the source iterator inside Iterator.Materializing<...> MUST be fully qualified; bare `Iterator` shadows to the associatedtype being defined (circular reference). Verified absent from the doc at v2.2.0."
+  - type: no_action
+    description: "swift-tree-unbounded-primitives subtree-drop bug: superseded — the package was dissolved into swift-tree-primitives (Tree<Children> recomposition), whose _forEachPostOrder now uses the correct two-stack algorithm (Tree+Operations.swift:290) and whose Research/_Package-Insights.md already documents the post-order fix. Nothing to ledger."
 ---
 
 # Finish the Fan-Out — Collection.Protocol: Iterable refine edge + duplicate-iterator drop + .Indexed wrapper removal

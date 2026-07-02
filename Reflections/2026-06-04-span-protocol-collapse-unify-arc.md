@@ -8,7 +8,14 @@ packages:
   - swift-memory-iterator-primitives
   - swift-binary-parser-primitives
   - swift-ascii
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: no_action
+    description: "[PKG-BUILD-013] cold-build/Package.resolved/pin-assert proposal: already landed — the rule exists verbatim (added 2026-06-04 from the sibling W3-endgame reflection; swift-package-build SKILL.md:409). Duplicate."
+  - type: skill_update
+    target: handoff
+    description: "Proposal collected (recommend KEEP, fold into the [HANDOFF-035]/merge-back family): in worktree arcs with merge-excluded scaffolding commits, scaffolding and mergeable edits MUST live in disjoint files OR merge-readiness MUST assert excluded commits carry zero mergeable hunks (binary-parser Package.swift comment-repoint swallow, completed post-merge as 85e47bd1)."
 ---
 
 # Span.Protocol Collapse (Unify Arc): One Capability, Both Lifetime Regimes — and Three Tool-Reach Failures in One Session

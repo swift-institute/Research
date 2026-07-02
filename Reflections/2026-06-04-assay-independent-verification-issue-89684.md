@@ -3,7 +3,19 @@ date: 2026-06-04
 session_objective: Independent clean-room verification of swiftlang/swift#89684 from its public body alone, then landing its reproducer as an Issues-repo entry verified on CI
 packages:
   - Issues
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: issue-investigation
+    description: "Proposal collected (recommend KEEP): out-of-process reproducer-harness pattern for non-compilable triggers (ICE/crash AND rejects-valid) — .swift.txt resource, subprocess compile/typecheck, signature/exit-0/inconclusive three-way disposition, withKnownIssue flip. Verified absent (skill IDs through [ISSUE-028], no harness rule). Two shipped exemplars (FSO #89617, #89684)."
+  - type: skill_update
+    target: handoff
+    description: "Proposal collected (recommend KEEP, clarifying fold into [HANDOFF-041]): a 'CI green' acceptance criterion MUST name the leg-set and the writer MUST check the target repo's baseline run state at write time; red-by-design baselines make run-level green structurally unattainable."
+  - type: blog_idea
+    description: "Proposal collected (recommend KEEP, queue when authorized): #89684 conditional-extension name capture as companion to the 2026-04-20 associated-type-trap post; same @_implements escape hatch."
+  - type: no_action
+    description: "Snapshot-labeling discipline (swift --version per bundle ID): already captured as memory feedback_snapshot_labels_must_match_empirical_version; no further routing."
 ---
 
 # Assay: sealed-records independent verification of swiftlang/swift#89684

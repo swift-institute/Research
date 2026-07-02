@@ -7,7 +7,18 @@ packages:
   - swift-buffer-aligned-primitives
   - swift-buffer-unbounded-primitives
   - swift-buffer-slots-primitives
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: research-process
+    description: "Proposal collected (recommend KEEP, fold into [RES-023], no new ID): operative-evaluator clause — verify a derived predicate by running the actual evaluator (gate script as the gate runs it, dep-graph grep, conformer enumeration, symbol grep) against real inputs, never a reconstruction/content-proxy. Unifies four per-domain memory entries per the CLAUDE.md memory-write guardrail. Verified absent from research-process."
+  - type: skill_update
+    target: modularization
+    description: "Proposal collected (recommend KEEP): @inlinable/@_alwaysEmitIntoClient cross-module bodies MUST carry explicit public import of every module the body references (transitive re-export visibility insufficient under InternalImportsByDefault + MemberImportVisibility); MUST be reconciled against [MOD-027]/[MOD-016] at execution time to state only the distinct transitive-insufficiency property."
+  - type: skill_update
+    target: handoff
+    description: "Proposal collected (recommend KEEP, clarifying fold into [HANDOFF-009]): liveness discriminator on the HANDOFF.md collision branch — live parallel-arc incumbent (recent mtime + unfinished Next Steps + different lineage) => topic-name the newcomer; rename-and-displace reserved for stale/ended incumbents."
 ---
 
 # Derive-for-free via capability composition — and four verification misses that shared one root: checking a *model* of the ground truth instead of the ground truth

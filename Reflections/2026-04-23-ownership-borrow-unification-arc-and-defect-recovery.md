@@ -27,7 +27,7 @@ packages:
   - swift-microsoft/swift-windows-standard
   - swift-linux-foundation/swift-linux-standard
   - swift-iso/swift-iso-9945
-status: pending
+# 2026-07-02 (R3c drain): stale duplicate 'status: pending' key removed; entry was processed 2026-04-30 (triage_outcomes above).
 ---
 
 # Ownership.Borrow.`Protocol` unification arc and principal-audit defect recovery

@@ -8,6 +8,7 @@ packages:
   - swift-institute/Research
   - swift-institute/Experiments
   - handoff
+  - supervise
 status: processed
 processed_date: 2026-04-30
 triage_outcomes:
@@ -18,8 +19,7 @@ triage_outcomes:
     description: "AI 2 (multi-repo-dismantle-recipes canonical-home decision) deferred — corrected recipe is now embedded in [HANDOFF-036] worked example and [RES-024] empirical-reproduction rule. Standalone playbook can be authored later if a third dismantle cycle surfaces."
   - type: no_action
     description: "AI 3 (_index.json updates for 5 relocated Research + 3 Experiments) — addressed by 2026-04-30 corpus-meta-analysis Phase 10 sweep that backfilled 46 missing reflection-index entries. Research/_index.json + Experiments/_index.json gaps for the specific files cited still pending; will be caught by future corpus sweep."
-  - supervise
-status: pending
+# 2026-07-02 (R3c drain): stale duplicate 'status: pending' key + orphaned package-list item removed (item restored to packages list above); entry was processed 2026-04-30.
 ---
 
 # Superrepo dismantle + interposed Phase 0.5 remediation; supervisor pushback as load-bearing safeguard

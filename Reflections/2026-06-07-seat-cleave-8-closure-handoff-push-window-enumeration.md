@@ -6,7 +6,16 @@ packages:
   - swift-memory-unbounded-primitives
   - swift-span-primitives
   - swift-memory-buffer-primitives
-status: pending
+status: processed
+processed_date: 2026-07-02
+triage_outcomes:
+  - type: skill_update
+    target: handoff
+    description: "Proposal collected (recommend KEEP, clarifying fold into [HANDOFF-006]): a held/unpushed push window recorded in a handoff is a factual section — enumerate it programmatically (per-repo rev-list --count origin/main..main), never carry a sampled subset from context; pair with an exclude-WIP/non-building-commits check before any mechanical window (the ~5x under-sizing + swift-sockets WIP-commit hazard)."
+  - type: no_action
+    description: "Pre-close handoff review pattern ('consider' routing a near-final handoff through a second agent): declined as a rule — soft-worded, already demonstrated organically (Cleave-8's adversarial review), and the leanness posture disfavors codifying optional process ceremony; the [HANDOFF-006] fold above covers the defect class mechanically."
+  - type: no_action
+    description: "Design substance (A1 memory-tier dissolution, .Inline converged-equilibrium exception): already canonical per the reflection itself ([MEM-COPY-016], [MEM-SAFE-027], [DS-023], GOAL docs)."
 ---
 
 # The Supervisor Seat: Cleave-8 Closure and the Handoff Push-Window Under-Sizing

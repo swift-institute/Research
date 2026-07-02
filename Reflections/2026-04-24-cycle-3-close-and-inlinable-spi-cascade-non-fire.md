@@ -6,6 +6,7 @@ packages:
   - swift-foundations
   - swift-institute
   - research-process
+  - supervise
 status: processed
 processed_date: 2026-04-30
 triage_outcomes:
@@ -17,8 +18,7 @@ triage_outcomes:
   - type: research_topic
     target: cross-cycle-verification-strategy.md
     description: "Tier 2 IN_PROGRESS — three candidate strategies for preventing cross-cycle latent ambiguities in multi-cycle arcs."
-  - supervise
-status: pending
+# 2026-07-02 (R3c drain): stale duplicate 'status: pending' key + orphaned package-list item removed (item restored to packages list above); entry was processed 2026-04-30.
 ---
 
 # Cycle 3 close: writeAll L2→L3 split + @inlinable/@_spi transitive-cascade non-fire

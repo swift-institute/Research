@@ -8,6 +8,8 @@ packages:
   - coenttb/swift-email
   - coenttb/swift-syndication
   - swift-institute/Research
+  - supervise
+  - handoff
 status: processed
 processed_date: 2026-04-30
 triage_outcomes:
@@ -17,9 +19,7 @@ triage_outcomes:
     description: "AI 2 (git-history-transfer-patterns recipe correction update) deferred — superseded by [RES-024] Empirical-Reproduction Requirement for Git-Recipe Claims (added 2026-04-30). The corrected recipe shape (rm+checkout primary) is now embedded in the rule's worked example."
   - type: no_action
     description: "AI 3 ([SUPER-015] provenance note) — added inline as 'Empirical-Provenance Note (Compression-at-Pivot)' addendum to supervise/SKILL.md on 2026-04-30 alongside [SUPER-029] / [SUPER-030]."
-  - supervise
-  - handoff
-status: pending
+# 2026-07-02 (R3c drain): stale duplicate 'status: pending' key + orphaned package-list items removed (items restored to packages list above); entry was processed 2026-04-30.
 ---
 
 # Phase II.5 premise-break, supervisor-block compression at architectural pivot, and plan review
