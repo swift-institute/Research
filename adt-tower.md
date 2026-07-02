@@ -1169,7 +1169,7 @@ INFRASTRUCTURE lands as one coherent unit immediately AFTER the W1 lands and BEF
 (and before json's L2 dispatch consumes `Array<Byte>.Small<24>`): (i) the marker protocol
 `__ColumnDirect: __StoreProtocol` (the refinement yields `S.Element` in alias bodies), homed
 in Store Protocol Primitives — low enough for the buffer disciplines to conform — CARRYING
-the capacity twin `associatedtype BoundedTwin: ~Copyable`; its public `Column.Direct`
+the capacity twin `associatedtype Bounded: ~Copyable`; its public `Column.Direct`
 spelling is a typealias in the column vocabulary (`swift-column-primitives`, which already
 deps the storage package), making W1.5 a 5-package unit; IN-TOWER plumbing (conformances AND
 where-clauses, incl. the array Small alias) binds `__ColumnDirect` DIRECTLY — the Small
@@ -1179,7 +1179,7 @@ consumer-facing/doc spelling); (ii) W1.5 conformances: `Buffer.Linear` and
 `Generational` conforms at its family's wave, `Shared` NEVER conforms (that IS the fence);
 (iii) the shipped axis-changing alias (`Array<E>.Small<n>`) gains `where S: Column.Direct`,
 and the shipped rebuild-style `.Bounded` aliases re-express column-preserving as
-`__X<S.BoundedTwin>`; (iv) the Small variant TARGET+product land in this unit with their
+`__X<S.Bounded>`; (iv) the Small variant TARGET+product land in this unit with their
 constraint. W1 itself lands as-is — the mis-chain hazard is unreachable through any shipped
 alias chain and consumers are grep-zero-gated; W1.5 closes the carrier-spelling residual.
 
@@ -1192,6 +1192,14 @@ standing lint discipline: fix-source (commit per package), fix-rule (escalate wi
 amendment), ambiguous (escalate). Results land in a NEW ledger file (`Audits/adt-tower-quality-
 sweep.tsv`) — the M-phase burndown's `Audits/lint-burndown.tsv` belongs to the paused parallel
 arc and is NEVER written by this sweep (nor is `lint-sweep.sh` reused — it appends there).
+GATE DISPOSITION (SEAT ruling 2026-07-02, per the partial-verification discipline): the W1.75
+gate was met by the CODE-SURFACE half (judgment review: clean, one defect ruled, two items
+folded to W2 queue-linked); the AUTOMATED lint half was structurally vacuous — swift-linter's
+own dep closure contains swift-async-primitives, an unmigrated W1 consumer whose build now
+hard-errors on the old spellings (field-proof of the §9.4 hazard), so 0 rules load. The lint
+re-run is therefore a NAMED W2 GATE ITEM: it executes immediately after async-primitives
+migrates (first W2 consumer migration) and must be non-vacuous for the W2 wave gate to close.
+Not a skip — a tracked obligation.
 
 **Family-cluster landing (SEAT ruling on pilot ESC-2, 2026-07-02).** A family hoist BREAKS any
 sibling that declares its type inside `extension <Family> where …` — post-hoist the family name
