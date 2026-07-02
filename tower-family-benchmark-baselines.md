@@ -34,6 +34,11 @@ witness"); measured code path identical; 6.3.2 rows stay comparable. Array's `in
 | ring queue ~2.6 ns flat | `cycle.steady` 2.584 @64k | ~2.6 | ✓ |
 | deque frontFront ~4.1 ns flat | `frontFront.steady` 4.071 | ~4.1 | ✓ |
 
+**SEAT ruling (2026-07-02)**: the move-only invariant re-pins to **≥2.5× stdlib on 6.3.3**
+(measured 2.7×; the ≥3× line was a 6.3.2-era statement); the W1 land-guardrail is NO FURTHER
+regression vs these 6.3.3 rows (±5%); the +44% direct-write toolchain shift is LEDGERED as an
+investigation item (probe candidate at W4; per standing rule, never filed upstream).
+
 **Flag**: `set.indexed` tower.direct regressed **0.30 → 0.432 ns (+44%)** on 6.3.2→6.3.3 (pure
 toolchain — un-reshaped main), softening the move-only invariant from 3.8× to 2.7×. 0.432 is the
 new 6.3.3 guardrail for post-reshape comparison; whether the ">=3x" invariant re-pins to ">=2.7x"
