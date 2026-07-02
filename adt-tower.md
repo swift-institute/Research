@@ -354,7 +354,7 @@ diagnostic). Front doors therefore follow three laws:
    chain that would silently reset an axis becomes a compile error.
 2. **Axis-ADDING aliases** are column-PRESERVING transformers: `Shared` wraps `S`
    (`typealias Shared = __X<Shared<S.Element, S>>`); `Bounded` maps through a **capacity-twin
-   associated type** (`Buffer<S>.Linear` declares `BoundedTwin = Buffer<S>.Linear.Bounded` in
+   associated type** (`Buffer<S>.Linear`'s nested `.Bounded` witnesses the `Bounded` requirement in
    its own generic context — expressible today — and `Shared` forwards it conditionally), so
    every §5.1 product point, including the live `Shared×Bounded` ring column
    (`Queue+Columns.swift:76`), has a correct, order-insensitive spelling.
