@@ -10,6 +10,36 @@ scope: ecosystem-wide
 ---
 -->
 
+## 6.3.3 invariant-subset re-pin (2026-07-02, ADT Tower W1)
+
+**Label of record**: `Apple Swift 6.3.3 (swiftlang-6.3.3.1.3), XcodeDefault (Xcode 26.6 17F113)`.
+Microprobe methodology unchanged (frozen); M3 fanless; quiesced window (lint-sweep paused).
+Measures the **un-reshaped main** tree (the reshapes are on `adt-tower-w1` branches) — this is
+the toolchain baseline the post-reshape numbers compare against. Raw per-run data:
+`scratchpad/bench-repin/*.log` (3 invocations/family).
+
+**Harness compile-fix** (SEAT-authorized, ruling a 2026-07-02): re-spell
+`Memory.Allocator<Memory.Heap>.System` → `Memory.Allocator<Memory.Heap>` across all 5 benchmark
+sources — SAME column (`.System` absorbed into the agent noun at `1153e09`, "Allocator IS the
+witness"); measured code path identical; 6.3.2 rows stay comparable. Array's `initialCapacity:`/
+`count<E>` errors were a CASCADE from the broken column typealias, not a semantic drift.
+
+**§9.5 invariant guardrail check (6.3.3)**:
+
+| Invariant | 6.3.3 measured | 6.3.2 baseline | verdict |
+|---|---|---|---|
+| typed indices cost-free vs stdlib | `get.indexed` tower 0.318 (runs 2/3) vs stdlib 0.340 | ~0.29 vs 0.295 | ✓ cost-free |
+| move-only writes ≥~3× stdlib | `set.indexed` tower **0.432** vs stdlib 1.170 = **2.7×** | 0.30 vs 1.14 = 3.8× | ⚠ tower +44% (toolchain) → 2.7× |
+| `Shared` gate ~1 ns inlinable | `gate.prepareForMutation` 1.087 | ~1 | ✓ |
+| ring queue ~2.6 ns flat | `cycle.steady` 2.584 @64k | ~2.6 | ✓ |
+| deque frontFront ~4.1 ns flat | `frontFront.steady` 4.071 | ~4.1 | ✓ |
+
+**Flag**: `set.indexed` tower.direct regressed **0.30 → 0.432 ns (+44%)** on 6.3.2→6.3.3 (pure
+toolchain — un-reshaped main), softening the move-only invariant from 3.8× to 2.7×. 0.432 is the
+new 6.3.3 guardrail for post-reshape comparison; whether the ">=3x" invariant re-pins to ">=2.7x"
+or warrants a 6.3.3 `set.indexed` investigation is a SEAT/principal call. `Hash.Indexed remove`
+rows: raw logs retained; confirm at the hash-table family's own wave re-pin.
+
 ## Context
 
 Arc 3 of the post-W5 tower iteration (`GOAL-tower-arc-bench.md`; weakness-sweep §2bis #3):
