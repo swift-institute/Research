@@ -1252,7 +1252,14 @@ unless the wave's dispatch names an accepted trade):
   packages for heap and slab are AUTHORED as part of their W2 dispatches (gate item); the
   6.3.3 label of record is "Apple Swift 6.3.3 (swiftlang-6.3.3.1.3), XcodeDefault (Xcode 26.6
   17F113)"; the harness stays the baselines doc's recorded microprobe methodology (a
-  methodology change would invalidate cross-version deltas).
+  methodology change would invalidate cross-version deltas). SEAT ruling 2 (2026-07-02): "harness
+  unchanged" freezes the METHODOLOGY, not stale spellings — pre-existing compile drift in the
+  harness (e.g. `Allocator<…>.System` absorbed into the agent noun at 1153e09; init-label
+  renames) is fixed by SAME-COLUMN re-spelling only, one line each + a note row in the
+  baselines doc; a family whose drift proves SEMANTIC (not spelling) falls back to its 6.3.2
+  rows as guardrails-of-record with a version caveat + a post-land re-pin obligation, the
+  others proceed. Benchmarks/ packages are CONSUMERS: they join the §9.4 break-lists for the
+  front-door spelling migration after their family lands.
 
 ### 9.6 Deletions and corrections (Q12)
 
