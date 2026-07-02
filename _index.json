@@ -4620,6 +4620,14 @@
       "status": "RECOMMENDATION",
       "tier": 2,
       "scope": "ecosystem-wide"
+    },
+    {
+      "file": "ecosystem-meta-setup-target-state.md",
+      "displayName": "Ecosystem Meta-Setup Target State",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-07-02): Tier 2 ecosystem-wide. First-principles target state for the meta-layer (skills, handoffs, documentation corpora, CI meta-automation, lint greening), derived from the 2026-07-02 inventory (Audits/REPORT-meta-setup-inventory-2026-07-02.md). Core law: mechanically-validated invariants hold (~100%), prose-only lifecycles decay (0-14%). Recommends: evict WHY-mass from skills to Research/ with a lint-skill-size validator; WIP-cap .handoffs/ with check-handoffs.sh wired into reflect-session; validator-fresh indexes + META-005 archival; measure-baseline-ratchet-flip lint greening per [PROMOTE-009]. Five gated arcs R1-R5 for Phase 3.",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
     }
   ],
   "narrativeSections": [
