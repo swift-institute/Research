@@ -670,8 +670,11 @@ correct against the old predicate.
    [API-IMPL-005]/[API-IMPL-006]). A variant alias whose column LEAF is NOT already in the
    canonical target's product closure (`Small` → Memory Small Primitives; `Inline` → Store
    Inline Primitives) lands in **its own variant target + product** within the package
-   ([MOD-031]; the array manifest already scaffolds the "Small type/ops/variant" MARKs),
-   umbrella-re-exported per [MOD-005] — so heap-only consumers keep a lean dependency graph
+   ([MOD-031]; the array manifest already scaffolds the "Small type/ops/variant" MARKs), as its
+   OWN PRODUCT explicitly imported by variant consumers — NOT folded into the umbrella product
+   (SEAT ruling 2026-07-02: umbrella re-export would drag the heavy leaf into every umbrella
+   consumer, defeating this rider's entire purpose; the earlier [MOD-005] phrasing was a
+   drafting slip) — so heap-only consumers keep a lean dependency graph
    (panel-measured: the in-target shape would push +2 packages onto 7 consumers that never
    spell `Small`).
 2. **One-sibling-per-package** *(amends "one-variant-per-package")*: a semantic SIBLING — a
@@ -1157,6 +1160,20 @@ Waves are serial; packages within W1/W2 parallelize per the no-duplicate-dispatc
 serial-build disciplines (one executor per package tree; parent builds once after edits).
 
 ### 9.2 W1 mechanics (per package, uniform)
+
+**The W1.5 fence-retrofit unit (SEAT ruling 2026-07-02).** The §4.4/[DS-028] alias-law
+INFRASTRUCTURE lands as one coherent unit immediately AFTER the W1 lands and BEFORE W2 opens
+(and before json's L2 dispatch consumes `Array<Byte>.Small<24>`): (i) the `Column.Direct`
+marker (hoisted `__ColumnDirect`), homed in Store Protocol Primitives — the seam tier both
+buffer disciplines and storage-direct columns can reach — CARRYING the capacity twin:
+`associatedtype BoundedTwin: ~Copyable`; (ii) W1.5 conformances: `Buffer.Linear` and
+`Buffer.Ring` (+ twins = their `.Bounded`) only — ring/slab/linked op generalization stays W3,
+`Generational` conforms at its family's wave, `Shared` NEVER conforms (that IS the fence);
+(iii) the shipped axis-changing alias (`Array<E>.Small<n>`) gains `where S: Column.Direct`,
+and the shipped rebuild-style `.Bounded` aliases re-express column-preserving as
+`__X<S.BoundedTwin>`; (iv) the Small variant TARGET+product land in this unit with their
+constraint. W1 itself lands as-is — the mis-chain hazard is unreachable through any shipped
+alias chain and consumers are grep-zero-gated; W1.5 closes the carrier-spelling residual.
 
 **Family-cluster landing (SEAT ruling on pilot ESC-2, 2026-07-02).** A family hoist BREAKS any
 sibling that declares its type inside `extension <Family> where …` — post-hoist the family name
