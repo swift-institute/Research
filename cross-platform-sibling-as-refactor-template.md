@@ -3,8 +3,8 @@
 <!--
 ---
 version: 1.0.0
-last_updated: 2026-04-30
-status: IN_PROGRESS
+last_updated: 2026-07-02
+status: DEFERRED
 tier: 2
 ---
 -->
@@ -82,7 +82,11 @@ The sibling's structural shape was the answer; the platform-specific bits (Windo
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Preliminary recommendation held; boundary census across swift-darwin/swift-linux/swift-windows not yet scheduled.
+> **Resumption trigger**: The cross-platform sibling census is scheduled.
+
+**Status**: DEFERRED (2026-07-02)
 
 **Recommendation (preliminary)**: For cross-platform-shared subsystems, sibling per-platform packages are valid refactor templates. The heuristic does not apply to genuinely platform-divergent subsystems. Further empirical census across the swift-darwin / swift-linux / swift-windows packages is required to identify the boundary cases and to determine whether the heuristic warrants codification at skill level.
 

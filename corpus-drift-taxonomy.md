@@ -3,8 +3,8 @@
 <!--
 ---
 version: 0.1.0
-last_updated: 2026-05-10
-status: IN_PROGRESS
+last_updated: 2026-07-02
+status: DEFERRED
 ---
 -->
 
@@ -64,7 +64,11 @@ This research enumerates the distinct drift classes observed in production corpu
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Initial 12-class inventory complete; Q1–Q4 open (doc's own resumption trigger retained).
+> **Resumption trigger**: Next reflections-triage inventory pass against pre-2026-04-30 reflections (Q4) or gap-rule authoring for classes 9–12.
+
+**Status**: DEFERRED (2026-07-02)
 
 **Initial inventory complete (12 classes)**. Open questions Q1–Q4 remain. Conversion to DECISION pending: (a) inventory pass against pre-2026-04-30 reflections (Q4), (b) decision on phase-vs-class organization (Q1), (c) gap-rule authoring for classes 9, 10, 11, 12.
 

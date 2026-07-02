@@ -1,6 +1,6 @@
 # Research: `ISO_9945.Kernel.Descriptor.rawValue` access surface
 
-**Status:** INVESTIGATION (kicked off 2026-05-02; not DECIDED)
+**Status:** DEFERRED (triaged 2026-07-02; was INVESTIGATION/IN_PROGRESS, kicked off 2026-05-02; not DECIDED)
 
 ## Problem
 
@@ -270,6 +270,10 @@ public collapses the design. Listed for completeness only.
   as Option F if the SPI re-emergence concern (Option C) is decisive.
 
 ## Recommendation (preliminary; needs principal review)
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Recommendation drafted (lean Option D, Option C as migration intermediate); pending principal review.
+> **Resumption trigger**: Principal review of the descriptor raw-handle access-surface options.
 
 Lean toward **Option D** (`withRawHandle` + `init(adoptingRawHandle:)`) for
 new sites and **Option C** as the migration intermediate.

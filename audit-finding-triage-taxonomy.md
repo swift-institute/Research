@@ -4,7 +4,7 @@
 |-------|-------|
 | Tier | 2 |
 | Scope | Ecosystem-wide |
-| Status | IN_PROGRESS |
+| Status | DEFERRED (triaged 2026-07-02) |
 | Provenance | 2026-04-22-platform-audit-remediation-cycle-and-advisory-pivot.md |
 
 ## Context
@@ -35,6 +35,10 @@ Hypothesis axes to investigate:
 Per-axis triage rule: if ANY of axes 1-3 fires, the finding routes to a design-cycle dispatch, not a remediation slot. Mechanical remediation is reserved for axis-4-only findings.
 
 ## Outcome (pending)
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Classifier matrix proposed but not prototyped.
+> **Resumption trigger**: The next audit remediation cycle prototypes the mechanical-vs-design-cycle classifier.
 
 A proposed pre-execution classifier matrix, to be prototyped against the remaining findings in the current platform-audit cycle.
 

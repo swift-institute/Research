@@ -3,7 +3,7 @@
 Date: 2026-04-26
 Scope: ecosystem-wide (all primitives packages using `<let X: Int>` value-generic parameters)
 Tier: 2 (cross-package, naming convention, reversible precedent)
-Status: IN_PROGRESS — inconsistency documented; convention selection pending principal review
+Status: DEFERRED (triaged 2026-07-02) — was IN_PROGRESS — inconsistency documented; convention selection pending principal review
 Provenance: Reflection `2026-04-24-se-0527-outputspan-adoption-wave.md` action item (Pattern 2 — value-generic parameter naming creates shadowing hazards)
 
 ---
@@ -66,6 +66,10 @@ Renaming `capacity` to `N` (Option A) or `inlineCapacity` (Option C) is a breaki
 ---
 
 ## Outcome (placeholder)
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Recommendation drafted (Option A, single-letter N) but pending principal review and a coordinated rename decision.
+> **Resumption trigger**: Principal review of the value-generic parameter naming recommendation.
 
 Pending principal review. Expected recommendation shape:
 

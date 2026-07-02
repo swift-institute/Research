@@ -4,7 +4,7 @@
 |-------|-------|
 | Tier | 2 |
 | Scope | Ecosystem-wide |
-| Status | IN_PROGRESS |
+| Status | DEFERRED (triaged 2026-07-02) |
 | Provenance | 2026-04-22-iso9945-signal-information-cycle2-beta-prime-revision.md; 2026-04-22-cycle-2-close-beta-prime-and-c-representability.md |
 
 ## Context
@@ -38,6 +38,10 @@ This document is the consultation artifact for the investigation. Fill in:
 4. **Criterion**: when is a consumer at risk? Rule-of-thumb from the first observed case: any consumer that declares an enum AND transitively imports a Tagged-bearing module with a matching case name.
 
 ## Outcome (pending)
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Blocked on principal selection among options A–D (naming rule / @_spi / call-site convention / accept-and-document).
+> **Resumption trigger**: Principal decision on the prism-accessor collision options.
 
 Choose one:
 

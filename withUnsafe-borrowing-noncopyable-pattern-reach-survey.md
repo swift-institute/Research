@@ -3,7 +3,7 @@
 Date: 2026-04-26
 Scope: ecosystem-wide (stdlib `withUnsafe*` family + production consumers in swift-primitives / swift-foundations)
 Tier: 2 (cross-package, empirical survey, reversible precedent)
-Status: IN_PROGRESS — survey scope defined; reproducer construction + empirical verification deferred until A2 upstream filing is authorized
+Status: DEFERRED (triaged 2026-07-02) — was IN_PROGRESS — survey scope defined; reproducer construction + empirical verification deferred until A2 upstream filing is authorized
 Provenance: Reflection `2026-04-24-noncopyable-inlinable-abi-fix-and-v11-overclaim-walkback.md` action item B3; informs the eventual upstream compiler-issue filing (gated on audit action A2)
 
 ---
@@ -69,3 +69,9 @@ This Doc's primary purpose at IN_PROGRESS is to scope the survey before V13 + A2
 - Audit: `swift-institute/Audits/borrow-pointer-storage-release-miscompile.md` (the parent audit — action A2 upstream filing gates this Doc's empirical work)
 - Experiment: `swift-institute/Experiments/borrow-pointer-storage-release-miscompile/` (V1–V12 already landed; V13 deferred per source reflection action A3)
 - Skill rules: [EXP-020] Claim Validation Trap, [ISSUE-025] In-Package Verification of Synthetic-Reproducer Claims, [AUDIT-027] Shipping HOLD Evidence Bar
+
+## Deferral
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Survey scope defined; reproducer construction gated on audit action A2 (upstream filing authorization). Standing policy (never file upstream to swiftlang) makes A2 unlikely as framed — candidate for re-scoping.
+> **Resumption trigger**: A2 authorization decision, or re-scoping of the survey to internal-dossier purpose.

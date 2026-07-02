@@ -3,8 +3,8 @@
 <!--
 ---
 version: 1.0.0
-last_updated: 2026-04-30
-status: IN_PROGRESS
+last_updated: 2026-07-02
+status: DEFERRED
 tier: 2
 ---
 -->
@@ -83,7 +83,11 @@ Less restrictive: the supervisor block SHOULD include the `fact:` entry. Additio
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Preliminary recommendation (Option B, [SUPER-027] extension) held; not yet proposed as a skill amendment.
+> **Resumption trigger**: A [SUPER-027] amendment is taken up via the skill-lifecycle workflow.
+
+**Status**: DEFERRED (2026-07-02)
 
 **Recommendation (preliminary)**: Option B — the supervisor block SHOULD include the `fact:` entry, plus extend [SUPER-027] (Pre-Dispatch Ecosystem-Constraint Scan) to grep relevant Research docs at dispatch authorization time. This balances the authorial burden against the visibility benefit. [SUPER-027] was already extended with a Research-doc dimension during this Doc's drafting, providing the mechanical-scan side of the recommendation; the open question is whether a SHOULD `fact:` entry on top adds meaningful visibility or is redundant.
 

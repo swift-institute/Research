@@ -3,8 +3,8 @@
 <!--
 ---
 version: 1.0.0
-last_updated: 2026-04-30
-status: IN_PROGRESS
+last_updated: 2026-07-02
+status: DEFERRED
 tier: 2
 ---
 -->
@@ -48,7 +48,11 @@ The earlier inferential extension — that the SPI cascade propagates through ca
 
 ## Outcome
 
-**Status**: IN_PROGRESS
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Held finding recorded (direct-reference rule); pending empirical spike remains.
+> **Resumption trigger**: The @inlinable/@_spi empirical spike is scheduled.
+
+**Status**: DEFERRED (2026-07-02)
 
 **Held finding**: `@_spi`-in-`@inlinable` is a direct-reference rule. Composing `@inlinable` through a public non-inlinable boundary severs the cascade. Earlier transitive-propagation framings (in `2026-04-20-l2-l3-same-signature-latent-ambiguity.md` and adjacent docs) are corrected by this finding.
 

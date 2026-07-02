@@ -1,10 +1,10 @@
 ---
 title: Tool-Path Env-Var Fallback Pattern for Cross-Adopter Deployment
 version: 0.1.0
-status: IN_PROGRESS
+status: DEFERRED
 tier: 2
 created: 2026-05-07
-last_updated: 2026-05-07
+last_updated: 2026-07-02
 applies_to:
   - swift-foundations/swift-linter
   - any institute tool deployed beyond the developer's workspace
@@ -104,6 +104,10 @@ _To be expanded during investigation._
 | D — env-var-or-cwd-walk | Tool walks parents of CWD looking for config marker | Convention from build tools (Cargo, npm) |
 
 # Outcome
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Pending-investigation stub from 2026-05-07 reflection triage.
+> **Resumption trigger**: The next tool-path/env-var fallback incident surfaces.
 
 _Pending investigation._
 

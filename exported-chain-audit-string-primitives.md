@@ -1,10 +1,10 @@
 ---
 title: "@_exported Chain Audit — String_Primitives and L1 Module Propagation"
 version: 0.1.0
-status: IN_PROGRESS
+status: DEFERRED
 tier: 2
 created: 2026-04-16
-last_updated: 2026-04-16
+last_updated: 2026-07-02
 applies_to:
   - swift-primitives
   - swift-standards
@@ -68,7 +68,9 @@ Key sub-questions to work through:
 
 # Outcome
 
-_Placeholder — to be filled when analysis completes._
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Placeholder stub from 2026-04-16 reflection triage; no analysis authored since.
+> **Resumption trigger**: An @_exported chain audit of string-primitives is scheduled.
 
 # Provenance
 

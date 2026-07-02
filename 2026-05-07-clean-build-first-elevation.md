@@ -1,10 +1,10 @@
 ---
 title: Should `feedback_clean_build_first` Be Elevated From Advisory to Preemptive?
 version: 0.1.0
-status: IN_PROGRESS
+status: DEFERRED
 tier: 1
 created: 2026-05-07
-last_updated: 2026-05-07
+last_updated: 2026-07-02
 applies_to:
   - all institute build verification workflows
   - swift-institute/Skills/swift-package-build
@@ -103,6 +103,10 @@ _Stub — to be filled in during investigation._
 | D — Conditional preemptive (ecosystem-churn-aware) | Clean only when dep packages' source is newer than .build/checkouts/ cache | Tightest predicate; requires implementation infra |
 
 # Outcome
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Pending-investigation stub; doc's own recommendation is to wait for more evidence.
+> **Resumption trigger**: A third independent clean-build-first instance surfaces (doc's own criterion).
 
 _Pending investigation. Recommendation: defer the elevation decision
 until a third independent instance surfaces, per the reflection's

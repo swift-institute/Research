@@ -3,7 +3,7 @@
 Date: 2026-04-26
 Scope: ecosystem-wide (all skill rules with non-trivial dependencies on assumptions, prior rules, or external artifacts)
 Tier: 2 (cross-skill, infrastructure proposal, reversible precedent)
-Status: IN_PROGRESS — failure-mode evidence collected; mechanism proposal pending design review
+Status: DEFERRED (triaged 2026-07-02) — was IN_PROGRESS — failure-mode evidence collected; mechanism proposal pending design review
 Provenance: Reflection `2026-04-24-meta-process-cascade-reflections-to-handoff.md` action item H2 (rule-about-rules staleness; [META-005] obsoleted by 2026-04-18 JSON-index migration without auto-detection).
 
 ---
@@ -71,6 +71,10 @@ Authoring assumption IDs feels heavyweight; the cost is real and recurrent. The 
 ---
 
 ## Outcome (placeholder)
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Design review pending; options table drafted (Lightest/Medium/Heaviest).
+> **Resumption trigger**: Design review selects a rule-dependency tracking mechanism.
 
 Pending design review. Expected recommendation shape options:
 

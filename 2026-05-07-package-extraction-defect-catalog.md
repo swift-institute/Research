@@ -1,10 +1,10 @@
 ---
 title: Package-Extraction Defect Catalog
 version: 0.1.0
-status: IN_PROGRESS
+status: DEFERRED
 tier: 2
 created: 2026-05-07
-last_updated: 2026-05-07
+last_updated: 2026-07-02
 applies_to:
   - all institute multi-package extractions
   - swift-institute/Skills/modularization (potential consumer)
@@ -121,6 +121,10 @@ _To be expanded._
 | C — Catalog as Script + skill rule | Script automates detection; skill rule mandates running it; this doc is the design doc |
 
 # Outcome
+
+> **DEFERRED (2026-07-02 corpus-meta-analysis sweep, [META-001]/[META-002])** — stale IN_PROGRESS triage.
+> **Blocker**: Pending-investigation stub from 2026-05-07 reflection triage.
+> **Resumption trigger**: The next package-extraction cycle is scheduled.
 
 _Pending investigation._
 
