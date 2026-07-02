@@ -1183,6 +1183,16 @@ and the shipped rebuild-style `.Bounded` aliases re-express column-preserving as
 constraint. W1 itself lands as-is — the mis-chain hazard is unreachable through any shipped
 alias chain and consumers are grep-zero-gated; W1.5 closes the carrier-spelling residual.
 
+**W1.75 — tower quality sweep (PRINCIPAL directive 2026-07-02; gates the W2 open).** After
+W1.5 lands and before any W2 source work: run `swift-linter` directly over every W1/W1.5-touched
+package (~16: the 11 W1 carriers + storage/buffer-linear/buffer-ring/column/array W1.5 legs)
+plus a code-surface review of the NEW public surface (carriers, front doors, the marker) against
+[API-NAME-001/002], [API-IMPL-005/021/022/023], [API-ERR-*]. Findings triage three-way per the
+standing lint discipline: fix-source (commit per package), fix-rule (escalate with drafted rule
+amendment), ambiguous (escalate). Results land in a NEW ledger file (`Audits/adt-tower-quality-
+sweep.tsv`) — the M-phase burndown's `Audits/lint-burndown.tsv` belongs to the paused parallel
+arc and is NEVER written by this sweep (nor is `lint-sweep.sh` reused — it appends there).
+
 **Family-cluster landing (SEAT ruling on pilot ESC-2, 2026-07-02).** A family hoist BREAKS any
 sibling that declares its type inside `extension <Family> where …` — post-hoist the family name
 is a column-pinned generic alias, so the extension's `S` no longer binds and the nested type is
