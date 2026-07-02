@@ -514,7 +514,7 @@ in existing packages.
    public tower op is `@inlinable` and every hoisted decl carries
    `@_documentation(visibility: public)`. Encoded by
    re-pointing `Scripts/adt-decoupling-classify.py` (predicate + registry + fresh ledger at wave
-   W1, §9.2); promoted to a swift-linter AST rule per lint-rule-promotion at W4 — the recorded
+   W0, §9.1); promoted to a swift-linter AST rule per lint-rule-promotion at W4 — the recorded
    "AST linter unrunnable (binary-parser closure lag)" blocker is CONTRADICTED at the
    rules-bundle level (swift-primitives-linter-rules builds clean, 90.2s, zero binary-* deps;
    verified 2026-07-02). The RUNNER's recorded failure was its ~4000-module full-closure run
@@ -654,7 +654,7 @@ premises survive in git history and §8 of the rationale companion only.
 Every family is in exactly one state: **at-target** (a–d hold) · **carrier-only** (a–b hold;
 front doors or op generalization pending) · **legacy** (a fails: bound-on-type, or no column
 axis at all). The predicate is encoded in `Scripts/adt-decoupling-classify.py` (re-pointed at
-wave W1 with a fresh ledger; the embedded 2026-06-18 V1-axis LEDGER is void) and is a
+wave W0 with a fresh ledger; the embedded 2026-06-18 V1-axis LEDGER is void) and is a
 swift-linter AST-rule promotion candidate per lint-rule-promotion.
 
 **Status**: RATIFIED 2026-07-02. The three-shape taxonomy (at-target / foundational / concrete)
@@ -743,7 +743,7 @@ property is body-visibility-conditional, not automatic).
 
 A `Memory.Heap`-hardcoded pin where `R: Memory.Growable` suffices is a defect (the [DS-026](d)
 check). Buffer-tier public ops follow the same law (`Buffer.Linear.append` is the shipped
-exemplar; ring/slab/linked heap-pinned ops are wave-W4 migration items).
+exemplar; ring/slab/linked heap-pinned ops are wave-W3 migration items, §9.1).
 
 **Provenance**: `Buffer.Linear+Lifecycle.swift` (the shipped pattern; `swift-json` consumes it
 over `Memory.Small<24>` in production); `Experiments/adt-tower-worked-example` §3 (the pattern
@@ -1188,6 +1188,7 @@ serial-build disciplines (one executor per package tree; parent builds once afte
 | `Hash.Table` (swift-hash-table-primitives) | reclassified: **internal engine**, not a consumer ADT (dense elements + POD index engine per the 2026-06-10 hashed-family decisions); `__HashIndexed` remains the set/dict combinator; the engine's tombstone scheme migrates to backward-shift + per-instance seed (both upstream lineages reject tombstones) | census state: n/a (engine) |
 | `Bitset` (swift-bitset-primitives) | KEEP concrete (deliberate, recorded exception: a bit-packed word engine has no element axis; the column algebra's Element would be `Bit` with nothing to vary) — trigger to revisit: a consumer pulls an inline/bounded bitset | its existing `.Static`/`.Small`/`.Fixed` hand variants get the same dissolution treatment at that trigger, not before |
 | `Cache` (swift-cache-primitives) | family: out of tower scope (reference cache; census n/a) — but a W1 CONSUMER sweep: 4 `Array<Column.Heap<…>>` sites (Cache.swift:269,373,403,436) | |
+| *(census note — SEAT ruling 2026-07-02: COLUMN packages (tree-n, tree-keyed) classify n-a in the [DS-026] census — the carrier predicate applies to carriers; columns are its inputs, not its subjects)* | | |
 | `Tree` family | already at-target (carrier `Tree<S>` b09726a); W2 adds the front doors the 6.3.2 SIGSEGV blocked: `Tree<E>.N<n>` etc. via aliases over the tree-n/tree-keyed columns; `TreeDynamic` compound alias RETIRES in favor of the canonical `Tree<E>` front door | tree-n/tree-keyed stay column/sibling packages |
 | `Graph` | family: namespace, no reshape — but a W1 CONSUMER sweep: 13 files / 28 `Array<Column.Shared<Payload>>` sites migrate to the Shared front door | the §9.4 silent-retype gate applies |
 
@@ -1227,7 +1228,12 @@ unless the wave's dispatch names an accepted trade):
 - Hash.Indexed remove stays O(n−rank)-class (the B-7 V3 fix: back 87 ns / random 43.6 µs /
   front 93 µs @64k) — the tombstone→backward-shift migration must not regress it;
 - W0 re-pins all of these on 6.3.3 before W1 lands anything (labels must match
-  `swift --version`).
+  `swift --version`). SEAT ruling 2026-07-02: the re-pin scope at W0 is the INVARIANT
+  SUBSET above (the family tables re-pin at each family's own wave gate); `Benchmarks/`
+  packages for heap and slab are AUTHORED as part of their W2 dispatches (gate item); the
+  6.3.3 label of record is "Apple Swift 6.3.3 (swiftlang-6.3.3.1.3), XcodeDefault (Xcode 26.6
+  17F113)"; the harness stays the baselines doc's recorded microprobe methodology (a
+  methodology change would invalidate cross-version deltas).
 
 ### 9.6 Deletions and corrections (Q12)
 
