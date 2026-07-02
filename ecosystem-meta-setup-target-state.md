@@ -2,12 +2,13 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-07-02
 status: RECOMMENDATION
 research_tier: 2
 scope: ecosystem-wide
 changelog:
+  - 1.2.0 (2026-07-02): R4 spike residual resolved with measured lint timings; per-push per-package CI lint rejected, M-phase re-scoped to local sweep + burndown report; release-binary path blocked on Swift 6.3.3 FunctionSignatureOpts SIL crash (dossier handoff filed).
   - 1.1.0 (2026-07-02): §D3 SUPERSEDED handling corrected — [META-005] (rewritten 2026-04-24) FORBIDS _archived/ relocation; docs stay in place, filtered via _index.json. v1.0.0 carried a stale cross-reference from the research-process skill's [RES-002] subdirectory table (which still lists _archived/ "per [META-005]"); that table needs a skill fix. Caught by the 2026-07-02 corpus-meta-analysis sweep — an instance of this doc's own [RES-013a] discipline.
 ---
 -->
@@ -147,7 +148,7 @@ R1 and R3 are pure debt-drain (no design risk); R2 touches canonical skills (per
 ## Residuals ([RES-027])
 
 - **Premise (verified)**: swift-linter lacks a baseline-file mechanism — confirmed by source inspection 2026-07-02 (`Lint.Suppression` is inline-comment only). R5 builds it; no further spike needed before R4, which uses counts only.
-- **Premise (needs a ≤1h spike before R4)**: the advisory lint job's runtime across 304 packages (a `swift run swift-linter` per package implies a build of the linter per CI job; caching strategy interacts with the no-`.build`-cache policy [CI-*]). Spike: time the reusable `lint.yml` on 3 representative packages before mass-wiring.
+- **Premise — RESOLVED by spike (2026-07-02, v1.2.0)**: measured on Apple Swift 6.3.3 / arm64, debug binary (the `swift run` path lint.yml uses): linter build 114 s; lint wall-clock 131 s (20-file package, first-run overhead), 43 s (37 files), 351 s (149 files); violation output magnitude ~70 → ~2,080 lines across those three. Two consequences: (a) **per-push per-package lint jobs are rejected** — linter-build-per-job plus minutes-per-run across 304 packages is infeasible on free-tier CI; the M-phase becomes a **local sweep script emitting a burndown report to Audits/** (BET-compatible, zero CI cost), with an optional weekly-cron sharded sweep on public repos later; (b) **release binaries are blocked** by a Swift 6.3.3 SIL crash (`FunctionSignatureOpts`, `!type.hasTypeParameter()`, RFC_3986 typed-throws generic — see `.handoffs/HANDOFF-swift-linter-release-sil-crash.md`), so prebuilt-binary distribution waits on that dossier. The wall≫user gap (351 s wall / 51 s user on the large run) suggests per-run overhead worth linter-side investigation.
 - **Direction (no follow-up required)**: whether evicted-rationale Research docs should be one-per-skill or one-per-rule-family; decide during R2's first skill.
 - **Direction**: whether `GOAL-`/`RELAY-` scaffolding deserves its own skill-defined template or folds into handoff forms; decide during R1.
 
