@@ -432,7 +432,24 @@ re-points to `Ownership.Shared<E, Column.Heap<E>>`; the ADT-level `X<E>.Shared` 
 spellings are UNCHANGED. **Governance note**: throughout §2–§5 and §9, the CoW column's bare
 spelling `Shared<Element, B>` / `Shared<E, _>` now denotes `Ownership.Shared<…>`; occurrences of
 "Shared" as the ownership AXIS word or the `X<E>.Shared` FRONT DOOR are unaffected. Lands in its
-own wave **W1.8** (the ~45-site migration is forced by no earlier wave). Supersedes the pre-M8
+own wave **W1.8** (the ~45-site migration is forced by no earlier wave).
+
+**M8 package disposition (F3, seat layer-check 2026-07-03 — PRINCIPAL DECISION for W1.8).** The
+namespace re-home raises a package question M8's rename-pricing did not: `Ownership` is owned by
+swift-ownership-primitives, but the CoW column lives in swift-shared-primitives. Empirical layer
+check (seat, this weekend): swift-ownership-primitives currently deps NO buffer/storage packages
+and is depended on BY them (its `Ownership.Box` is the [MEM-SAFE-028] drain-box the column stack
+uses) — so **absorbing the CoW column into swift-ownership-primitives is layer-INVALID (cycle:
+ownership→buffer→ownership.box)**. The column must stay in its own high-tier package that
+declares `extension Ownership { public struct Shared … }` cross-package (namespace extension, not
+ownership — permitted, common in the tree). The residual decision is package-basename alignment:
+**(b)** keep `swift-shared-primitives` (mild basename-vs-namespace smell — the package no longer
+owns a top-level `Shared`); or **(c, seat lean)** heritage-preserving rename
+`swift-shared-primitives` → `swift-ownership-shared-primitives`, aligning basename with the
+`Ownership.Shared` it declares (adds a package rename: mirror + GH + consumer-pin cost). NOT
+absorb/delete. Until the principal rules (b)/(c), W1.8 executes the namespace re-home either way
+(the `extension Ownership` wrapper + the ~45-site sweep are identical); only the package name
+differs, and it is a clean, pre-flagged W1.8 escalation — never a cold STOP. Supersedes the pre-M8
 top-level-`Shared` spelling in §D4.5 / §5.1 / §5.2 (rewritten in place below); the [DS-028] law-1
 marker home stays as amended by M4.
 
