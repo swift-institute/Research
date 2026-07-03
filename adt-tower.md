@@ -181,7 +181,7 @@ extension __Array: Sendable where S: Sendable & ~Copyable {}
 A **column** is a value of the composed stack — `Buffer<Storage<Memory.Allocator<M>>
 .Contiguous<E>>.D` for a Memory leaf `M` and buffer discipline `D`, a storage-direct
 `Storage<Memory.Allocator<M>.Pool>.Generational<E>` for identity-geometry disciplines, or
-`Shared<E, that>` for the CoW ownership column. The carrier's capabilities attach by **conditional extension keyed on the
+`Ownership.Shared<E, _>` for the CoW ownership column. The carrier's capabilities attach by **conditional extension keyed on the
 seams the column itself conforms** (D3): observability and element access over
 `S: Store.Protocol & Buffer.Protocol`; construction and growth over allocation-generic pins
 (D4.3). The ADT "rides the column": it calls the column's own operations and the seams' slot
@@ -289,7 +289,7 @@ has four orthogonal axes, each owned by the layer whose concern it is (D1):
 | **allocation placement** | `Memory.Heap` / `Memory.Small<n>` (via `Storage<Memory.Allocator<·>>.Contiguous`) · inline: the fused, allocation-independent `Store.Inline<E, n>` leaf (seat ruling 2026-06-09) | Memory (heap/small); Store tier (inline) | the leaf inside the column spelling; inline columns compose `Buffer<Store.Inline<E, n>>.D` |
 | **capacity contract** | growable / `Bounded` (typed `Overflow` on growth ops) | Buffer | the column's discipline variant (`….Linear` vs `….Linear.Bounded`), never a sibling ADT type |
 | *(discipline — a FROZEN per-family coordinate, NOT a variant axis)* | Linear / Ring / Slab / Linked / Slots (Buffer tier) · Generational (Storage tier, storage-direct) | Buffer, or Storage for identity-geometry disciplines | fixed by the family's semantics (`Array`→Linear, `Queue`→Ring, `SlotMap`→Generational); a DIFFERENT discipline under the same semantic surface is a SIBLING family (`Queue.Linked`), never a variant |
-| **ownership** | move-only direct (default) / `Shared` CoW | ADT-column boundary | wrapping the column in `Shared<Element, _>` |
+| **ownership** | move-only direct (default) / `Shared` CoW | ADT-column boundary | wrapping the column in `Ownership.Shared<Element, _>` |
 
 **D4.1 The variant/sibling discriminator (panel-hardened to an ordered, mechanical test).**
 
@@ -666,7 +666,7 @@ correcting [DS-002]/[DS-003]. Classification: **BREAKING** for [DS-025]/[DS-026]
 **Statement**: Every tower container is a thin **carrier** `struct __X<S: ~Copyable>: ~Copyable`
 — hoisted per [API-IMPL-009]/[PKG-NAME-006] — generic over exactly one parameter, its storage
 **column** (the composed buffer stack, a storage-direct identity-geometry discipline, or
-`Shared<Element, _>` over one), with the parameter
+`Ownership.Shared<Element, _>` over one), with the parameter
 bound `~Copyable` **only**: no capability-protocol bound on the type, direct or inherited.
 
 - Capabilities attach by **conditional extension** keyed on what the column conforms:
@@ -892,7 +892,7 @@ of preference:
    discipline + `throws(Overflow)` — where `Overflow` denotes the family's OWN nested `Error`
    (a `.full` case; the LANDED per-family shape), NOT a shared tower-wide `Overflow` type (which
    never landed). See §4.7 M10 rider; keep per-family nested `Error`.
-3. **Ownership twin** (`where S == Shared<E, …>`): one thin gate-twin per column-surface op
+3. **Ownership twin** (`where S == Ownership.Shared<E, …>`): one thin gate-twin per column-surface op
    (`store.withUnique { … }`) — only for ops form 1 cannot express.
 
 All three forms are `@inlinable` ([DS-025]'s visibility requirement — the specialization
@@ -1006,10 +1006,10 @@ K ⊨ Buffer     (count : Count, isEmpty)
 
 Direct columns satisfy both by construction of the buffer stack (the discipline conforms
 `Store.Protocol` where its storage is `Ledgered`; `Buffer.Protocol` unconditionally).
-**Shared preservation**: `K ⊨ Store ∧ K ⊨ Buffer ⟹ Shared(E, K) ⊨ Store ∧ Buffer`, with
+**Shared preservation**: `K ⊨ Store ∧ K ⊨ Buffer ⟹ Ownership.Shared(E, K) ⊨ Store ∧ Buffer`, with
 `unshare()` overridden to the uniqueness-restoring gate. The preservation
-conformances are *declared* on `Shared` with full seam bounds — they cannot be derived
-conditionally through pins (W12/F-4) — which is sound because `Shared` is a column, not a
+conformances are *declared* on `Ownership.Shared` with full seam bounds — they cannot be derived
+conditionally through pins (W12/F-4) — which is sound because `Ownership.Shared` is a column, not a
 carrier: [DS-025]'s bound-free law binds carriers only.
 
 The carrier's capability extensions are conditional morphism families:
@@ -1345,8 +1345,9 @@ in Store Protocol Primitives — low enough for the buffer disciplines to confor
 the capacity twin `associatedtype Bounded: ~Copyable`; its public `Column.Direct`
 spelling is a typealias in the column vocabulary (`swift-column-primitives`, which already
 deps the storage package), making W1.5 a 5-package unit; IN-TOWER plumbing (conformances AND
-where-clauses, incl. the array Small alias) binds `__ColumnDirect` DIRECTLY — the Small
-variant target takes NO Column_Primitives dep (closure stays lean; `Column.Direct` is the
+where-clauses, incl. the array Small alias) binds the seam-tier `Store.Direct` typealias
+(= `__ColumnDirect`; M4 supersession, §10 — NO dunder token in a public conformance clause) — the
+Small variant target takes NO Column_Primitives dep (closure stays lean; `Column.Direct` is the
 consumer-facing/doc spelling); (ii) W1.5 conformances: `Buffer.Linear` and
 `Buffer.Ring` (+ twins = their `.Bounded`) only — ring/slab/linked op generalization stays W3,
 `Generational` conforms at its family's wave, `Shared` NEVER conforms (that IS the fence);
