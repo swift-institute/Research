@@ -6041,6 +6041,22 @@
       ],
       "status": "processed",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-03-file-system-windows-green-and-quality-pass-phase1.md",
+      "date": "2026-07-03",
+      "title": "file-system Windows Green + Quality-Pass Phase 1",
+      "packages": [
+        "swift-file-system",
+        "swift-windows-standard",
+        "swift-windows",
+        "swift-kernel",
+        "swift-executors",
+        "swift-async",
+        "swift-iso-9945",
+        "swift-linux-standard"
+      ],
+      "status": "pending"
     }
   ]
 }
