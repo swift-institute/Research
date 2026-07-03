@@ -233,8 +233,8 @@ bound-free clause.
 
 | Seam | Requirements | Role |
 |---|---|---|
-| `Store.Protocol` (`__StoreProtocol`) | `capacity`, `subscript(slot:) { get set }` (witnessed `_read`/`_modify`), `initialize(at:to:)`, `move(at:)`, `prepareForMutation()` (defaulted no-op) | the generic cross-module **mutate seam**: slot-typed element access + the two init-state transitions + the CoW gate |
-| `Buffer.Protocol` (`__BufferProtocol`) | `count` (assoc `Count: Carrier.Protocol<Cardinal> = Index<Element>.Count`), `isEmpty` (defaulted for the element domain) | the logical **observability seam** |
+| `Store.Protocol` (`__StoreProtocol`) | `capacity`, `subscript(slot:) { get set }` (witnessed `_read`/`_modify`), `initialize(at:to:)`, `move(at:)`, `unshare()` (defaulted no-op) | the generic cross-module **mutate seam**: slot-typed element access + the two init-state transitions + the CoW gate |
+| `Buffer.Protocol` (`__BufferProtocol`) | `count: Index<Element>.Count` **(CONCRETE — M7 deletes the `associatedtype Count`; `Element: ~Copyable` is the only associated type left)**, `isEmpty` (defaulted, now UNCONSTRAINED — concrete `Index<Element>.Count` surfaces `==`/`.zero`, resolving W18) | the logical **observability seam** |
 | `Store.Ledgered.Protocol` | one settable-ledger member over `Store.Protocol` | the **one permitted refinement** (non-prefix occupancy sync for ring/sparse columns); its dissolution review remains a Round-C item, inherited unchanged |
 | `Span.Protocol` / `Iterable` | (unchanged, orthogonal) | bulk read surface / borrowing iteration — composed, never refined into the seams |
 
@@ -345,13 +345,17 @@ column from `S.Element` silently RESETS the other axes when chained (probed:
 diagnostic). Front doors therefore follow three laws:
 
 1. **Axis-CHANGING aliases** (allocation: `Small<n>`, `Inline<n>`) are declared in extensions
-   constrained to DIRECT canonical columns via the `Direct` capability marker (a deletable
-   convenience per [API-IMPL-023]; SPLIT HOME per the hoist idiom — SEAT ruling 2026-07-02:
-   the PROTOCOL `__ColumnDirect` homes in Store Protocol Primitives, low enough for the buffer
-   disciplines to conform; the public `Column.Direct` SPELLING homes in the column vocabulary
-   as `extension Column { public typealias Direct = __ColumnDirect }`; conformed by the buffer
-   stacks and storage-direct columns, NOT by `Shared` or bounded instantiations) — a cross-axis
-   chain that would silently reset an axis becomes a compile error.
+   constrained to DIRECT canonical columns via the `Direct` marker (a **load-bearing** seam type,
+   NOT a deletable convenience — M4, 2026-07-03: it is the axis-drop fence itself, §4.7
+   [API-IMPL-023]; SPLIT HOME per the hoist idiom: the PROTOCOL `__ColumnDirect` homes in Store
+   Protocol Primitives, with a seam-tier public typealias `Store.Direct` (= `__ColumnDirect`)
+   alongside it — in-tower conformance/where-clauses bind `Store.Direct`, so NO dunder token ever
+   appears in a public conformance clause (M4, superseding the SEAT's 2026-07-02 "in-tower
+   plumbing binds `__ColumnDirect` directly" ruling; recorded in §10); the buffer disciplines are
+   low enough to conform; the consumer-facing `Column.Direct` SPELLING homes in the column
+   vocabulary as `extension Column { public typealias Direct = __ColumnDirect }`; conformed by the
+   buffer stacks and storage-direct columns, NOT by `Shared` or bounded instantiations) — a
+   cross-axis chain that would silently reset an axis becomes a compile error.
 2. **Axis-ADDING aliases** are column-PRESERVING transformers: `Shared` wraps `S`
    (`typealias Shared = __X<Shared<S.Element, S>>`); `Bounded` maps through a **capacity-twin
    associated type** (`Buffer<S>.Linear`'s nested `.Bounded` witnesses the `Bounded` requirement in
@@ -374,18 +378,31 @@ extension __Heap where S: ~Copyable {
     public mutating func push<E: ~Copyable & Comparison.`Protocol`, Resource: Memory.Growable & ~Copyable>(
         _ element: consuming E
     ) where S == Buffer<Storage<Memory.Allocator<Resource>>.Contiguous<E>>.Linear {
-        column.append(element)          // the column's own R-generic append
-        siftUp(from: Int(count.underlying.rawValue) - 1)
+        column.append(element)                       // the column's own R-generic append
+        // Restore the heap invariant from the newly-appended tail. Op bodies derive
+        // the seed through the TYPED count (Count → Index via `.map { Ordinal() }`),
+        // descending to Int only via `Int(clamping:)` where heap arithmetic genuinely
+        // needs it — NEVER the reach-through `Int(count.underlying.rawValue)` (a tier-5
+        // double-unwrap, [CONV-016]) or `Int(bitPattern:)` (§4.7 [conversions] rider).
+        siftUp(fromLastOf: count)                     // typed count in; helper clamps internally
     }
 }
 ```
+
+> **Op-body index hygiene (M6, ratified 2026-07-03).** The seam count is typed
+> (`Index<Element>.Count`); the two DECREED descents to raw `Int` in an op body are (i)
+> `count.map { Ordinal() }` / typed arithmetic for a bound, and (ii) `Int(clamping:)` for the
+> residual arithmetic seed a raw loop genuinely needs. The reach-through
+> `Int(count.underlying.rawValue)` (which the W2 heap pilot still carries at
+> `Heap.swift:176,207`) and `Int(bitPattern:)` are FORBIDDEN in op bodies. This is the
+> [conversions] rider below; the pilot is corrected on its branch and re-gates in full.
 
 This is the shipped `Buffer.Linear` pattern (`append<Element, Resource: Memory.Growable>` —
 "pinned to the column over ANY `Resource: Memory.Growable`"; `swift-json` consumes it over
 `Memory.Small<24>` in production) promoted to law. `Memory.Inline` correctly does not conform
 `Memory.Growable`, so growth ops do not exist for inline columns — by construction, not by
 duplication. Ops expressible over the seams alone (removal, in-place mutation, observation,
-iteration hooks) are written once, fully generic, CoW-correct via `prepareForMutation()`
+iteration hooks) are written once, fully generic, CoW-correct via `unshare()`
 (the worked example's `pop`).
 
 **D4.4 The capacity axis.** `Bounded` lives at the buffer (`Column.Bounded` with `Header`
@@ -399,7 +416,7 @@ to exactly that (the 2026-06-23 principal directive, executed by §9).
 
 **D4.5 The ownership axis.** `Shared<Element, B>` is the one CoW column (F-4 keeps its declared
 seam bounds load-bearing). Seam-expressible ops are CoW-correct for free through
-`prepareForMutation()`; column-surface ops (growth) take one thin gate twin per op
+`unshare()`; column-surface ops (growth) take one thin gate twin per op
 (`store.withUnique { … }`). The `Shared` front door is an alias like any other variant.
 
 **Prior-art grounding** (§6): this is the `heapless` shape (storage-parameterized core +
@@ -581,10 +598,11 @@ correcting [DS-002]/[DS-003]. Classification: **BREAKING** for [DS-025]/[DS-026]
 bound `~Copyable` **only**: no capability-protocol bound on the type, direct or inherited.
 
 - Capabilities attach by **conditional extension** keyed on what the column conforms:
-  observability and slot ops over `where S: Store.\`Protocol\` & Buffer.\`Protocol\`` (plus
-  `S.Count == Index<S.Element>.Count` where the element-domain count is needed); construction
-  and growth by allocation-generic pins per [DS-029]; every extension restates
-  `where S: ~Copyable`.
+  observability and slot ops over `where S: Store.\`Protocol\` & Buffer.\`Protocol\``;
+  construction and growth by allocation-generic pins per [DS-029]; every extension restates
+  `where S: ~Copyable`. **(M7, 2026-07-03: the former `S.Count == Index<S.Element>.Count` pin is
+  DELETED — `Buffer.Protocol.count` is now the concrete `Index<Element>.Count`, so the
+  element-domain count needs no pin; spike-verified GREEN, see M7 note below.)**
 - The public spelling of the family is its **front doors** per [DS-028]; the carrier's hoisted
   name never appears in consumer signatures or `throws` clauses ([API-ERR-007]).
 - Every hoisted carrier AND hoisted seam protocol carries `@_documentation(visibility: public)`:
@@ -606,23 +624,30 @@ bound `~Copyable` **only**: no capability-protocol bound on the type, direct or 
   front-door client, with 29 `witness_method` sites in the middle-module SIL.
 - Element accessors are `_read`/`_modify` coroutines per [API-IMPL-021]; carriers are `@frozen`
   per [API-IMPL-022]; carriers carry **no `deinit`** (teardown lives in the leaf, [DS-023]).
+- The carrier vends exactly the column in/out pair inline — `@inlinable init(column: consuming S)`
+  and `@inlinable consuming func take() -> S` — and nothing else structural; every capability is a
+  conditional extension (M12).
 - Escapability: capability protocols suppress `~Escapable`; carriers stay `Escapable` until the
   recorded trigger (first nonescapable column, or un-flagged `@_lifetime`) — the widening is
   non-breaking.
+- **Carrier vs combinator (M9)**: this rule governs CARRIERS — functors `__X⟨−⟩` from storage
+  columns (§5.1). A **combinator** whose single parameter is the wrapped ADT rather than a column
+  (`__HashIndexed`, `Cache`) has NO column axis; [DS-025] and the [DS-026] predicate do not apply,
+  and its classification state is **n-a** (see [DS-026] combinator carve-out).
 
 **Correct**:
 ```swift
 @frozen public struct __Array<S: ~Copyable>: ~Copyable {
     @usableFromInline package var column: S
     @inlinable public init(column: consuming S) { self.column = column }
+    @inlinable public consuming func take() -> S { column }
 }
 extension __Array: Copyable where S: Copyable {}
-extension __Array where S: ~Copyable, S: Store.`Protocol` & Buffer.`Protocol`,
-    S.Count == Index<S.Element>.Count {
+extension __Array where S: ~Copyable, S: Store.`Protocol` & Buffer.`Protocol` {
     @inlinable
     public subscript(_ i: Index<S.Element>) -> S.Element {
         _read { yield column[i] }
-        _modify { column.prepareForMutation(); yield &column[i] }
+        _modify { column.unshare(); yield &column[i] }
     }
 }
 extension __Array: Array.`Protocol` where S: Store.`Protocol` & Buffer.`Protocol` {}
@@ -659,6 +684,42 @@ front doors or op generalization pending) · **legacy** (a fails: bound-on-type,
 axis at all). The predicate is encoded in `Scripts/adt-decoupling-classify.py` (re-pointed at
 wave W0 with a fresh ledger; the embedded 2026-06-18 V1-axis LEDGER is void) and is a
 swift-linter AST-rule promotion candidate per lint-rule-promotion.
+
+**Combinator carve-out (M9, 2026-07-03)**: a family whose single generic parameter is the
+WRAPPED ADT rather than a storage column is a **combinator**, not a carrier — `__HashIndexed`
+(the Set/Dictionary index combinator: its index table is derived state, and per §5.1 it is not a
+functor `__X⟨−⟩` from `Columns(E)`), in the same class as `Cache`. [DS-025]'s bound-free-COLUMN
+law and this predicate's parts (a)–(d) DO NOT APPLY to a combinator; its state is **n-a**. Its
+W1 gate is instead: census n-a consistent + composes with the reshaped carriers it wraps
+(the reshaped `Set`/`Dictionary`). SEAT ruling 2026-07-02, grounded here in §5.1.
+
+**Pin/predicate reconciliation (M7 / GAP-3, 2026-07-03)**: part (b) forbids an extension that
+reaches through a nested associated type; yet the pre-M7 [DS-025] op extensions carried exactly
+such a reach-through — `S.Count == Index<S.Element>.Count` — to obtain the element-domain count,
+an internal contradiction between two ratified rules. **M7 dissolves it**: concretizing
+`Buffer.Protocol.count` to `Index<Element>.Count` deletes `S.Count`, so no op extension reaches
+through a nested associated type and part (b) holds cleanly tower-wide.
+
+**[DS-025]/[DS-026] seam amendment (M7 — concretize `Count`; RATIFIED 2026-07-03, SPIKE-GATED →
+GREEN).** `Buffer.Protocol` deletes `associatedtype Count` and vends the concrete
+`count: Index<Element>.Count` (`Element: ~Copyable` remains its only associated type). Effects:
+(i) removes the `S.Count == Index<S.Element>.Count` reach-through pin from every op extension
+(§4.1, §2 D3); (ii) resolves §3 **W18** — the unconstrained `isEmpty` default `count == .zero`
+now compiles because concrete `Index<Element>.Count` (= `Tagged<Element, Cardinal>`) surfaces
+both `==` and `.zero` (this is M7's payoff, not a wall hit). **Conformer cost**: the four slab
+witnesses re-tag their `Bit`-domain occupancy into the element domain via the sanctioned in-tree
+`.retag(S.Element.self)` (one occupied bitmap slot IS one live element — a phantom-label change,
+numerically sound; `Buffer.Slab+Operations.swift:20` already uses `.retag`); the generational
+witness is already element-domain (verbatim). **Secondary win**: deleting the
+`Count: Carrier.\`Protocol\`<Cardinal>` bound removes `swift-buffer-protocol-primitives`'s direct
+imports of `Carrier_Protocol` and `Cardinal_Primitive` (`.zero`/`==` still resolve via
+`Index_Primitives`' re-export) — a two-module dep-surface reduction. **Evidence**: scratch spike
+`m7-concretize-count`, `swift build` GREEN on 6.3.3 — concretized seam + real atomic-type
+packages (index/cardinal/carrier/tagged/ordinal), six conformers + a negative control (a
+non-retag slab witness is correctly REJECTED, proving the constraint is load-bearing); promotion
+to `Experiments/` is a follow-up. **WAVE GATE (SEAT)**: this proves the DESIGN; the production
+seam change additionally requires the same green reproduced against the REAL
+slab/slot-map/generational packages before it lands.
 
 **Status**: RATIFIED 2026-07-02. The three-shape taxonomy (at-target / foundational / concrete)
 is superseded by the three states above; the 2026-06-18 census (2/9/10) remains historically
@@ -708,11 +769,19 @@ declared as a **typealias**, never a hand-written type:
   column: `public typealias X<E: ~Copyable> = __X<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.D>`.
 - Every **variant** is a constrained nested alias on the carrier, `Element` inherited from the
   member it is named on — spelled `X<E>.Small<n>`, `X<E>.Inline<n>`, `X<E>.Bounded`,
-  `X<E>.Shared` per [API-NAME-001] (variant labels nest) — under the THREE ALIAS LAWS:
-  axis-CHANGING aliases (allocation) constrain to the `Direct` marker (cross-axis chains
-  error instead of silently resetting an axis); axis-ADDING aliases are column-preserving
-  transformers (`Shared` wraps `S`; `Bounded` maps the capacity-twin associated type); every
-  alias doc comment states the units rule (`Small<n>` = bytes, `Inline<n>` = element count).
+  `X<E>.Shared` per [API-NAME-001] (variant labels nest) — under a GOVERNING RESTATEMENT LAW
+  plus the three alias laws. **Restatement law (M1, ratified 2026-07-03)**: every alias-hosting
+  extension MUST restate the carrier's suppression on `S` — `where S: ~Copyable` (and, when it
+  also constrains the fence, `where S: ~Copyable, S: Store.Direct`), per [MEM-COPY-004]. A bare
+  `extension __X where S: Store.Direct { … }` implicitly re-imposes `S: Copyable` (W9,
+  extension-implies-Copyable), making the alias UNREACHABLE from the move-only canonical column —
+  the CONFIRMED `Array.Small.swift:27` defect (missing `, S: ~Copyable`; fixed on-branch, one-line
+  compile-verified). The W1.6 wave-gate adds a per-family alias-reachability compile-probe from a
+  move-only column (compile, not grep). Then the three alias laws: axis-CHANGING aliases
+  (allocation) constrain to the `Direct` marker (cross-axis chains error instead of silently
+  resetting an axis); axis-ADDING aliases are column-preserving transformers (`Shared` wraps `S`;
+  `Bounded` maps the capacity-twin associated type); every alias doc comment states the units rule
+  (`Small<n>` = bytes, `Inline<n>` = element count).
 - Which variants exist per family is **consumer-pulled**; pulling one costs one alias file.
   Conformances, inits (including value-generic pins), and `~Copyable` elements flow through the
   alias chain with zero forwarding code and zero runtime cost (0 `witness_method`, verified).
@@ -735,12 +804,22 @@ of preference:
 
 1. **Seam-generic** (`where S: Store.\`Protocol\` & Buffer.\`Protocol\``): any op expressible
    over slot transitions + count — removal, in-place mutation, observation. CoW-correct via
-   `prepareForMutation()` before the first write. Covers every column including `Shared`.
+   `unshare()` before the first write. Covers every column including `Shared`.
+   **Gate discipline (M3, ratified 2026-07-03 — formalizes pilot-review F4)**: a public mutating
+   op calls `unshare()` EXACTLY ONCE, at entry, before its first write; seam-generic HELPERS
+   (`exchange`, `siftUp`, `siftDown`, …) NEVER gate and MUST carry the gating precondition in
+   their doc comment ("caller must have gated `unshare()`"). Double-gating and an un-gated helper
+   write are both defects. (`unshare()` is the [DS-025] seam requirement renamed from
+   `prepareForMutation()` — M3 ships the rule text, the skill rider, and the 42-site code change
+   as ONE lockstep arc; a validator or skill still spelling `prepareForMutation` after the wave is
+   a defect.)
 2. **Allocation-generic pin** (`where S == Buffer<Storage<Memory.Allocator<R>>.Contiguous<E>>.D,
    R: Memory.Growable & ~Copyable`): ops needing the column's own surface (construction,
    growth). One extension covers heap AND small; `Memory.Inline` correctly falls outside
    (`Memory.Growable` is the fence). Bounded columns take the same shape with the bounded
-   discipline + `throws(Overflow)`.
+   discipline + `throws(Overflow)` — where `Overflow` denotes the family's OWN nested `Error`
+   (a `.full` case; the LANDED per-family shape), NOT a shared tower-wide `Overflow` type (which
+   never landed). See §4.7 M10 rider; keep per-family nested `Error`.
 3. **Ownership twin** (`where S == Shared<E, …>`): one thin gate-twin per column-surface op
    (`store.withUnique { … }`) — only for ops form 1 cannot express.
 
@@ -781,7 +860,11 @@ The variant-selection and container-catalog tables are **stale against the tree*
 | **memory-safety** [MEM-COPY-016] / [MEM-COPY-018] | Unchanged; now load-bearing citations of [DS-025] (D2 rationale). Refresh their [DS-*] cross-references to the ratified numbers. |
 | **code-surface** [API-IMPL-021] | Unchanged; add the 6.3.3 data point: `CoroutineAccessors` flag is accepted (struct `read`/`modify` parse; protocol requirements accept `{ read }`/`{ read set }`, not `modify`); adoption stays deferred to the SE-0474/SE-0507 gate bump. |
 | **code-surface** [API-IMPL-022] | Unchanged; carriers are stored tower value types ⇒ `@frozen` from birth (the worked example complies). |
-| **code-surface** [API-IMPL-023] | Unchanged; [DS-028] front doors are generic-instantiation aliases, expressly OUTSIDE the forbidden rename-bridge class; discipline seams remain deletable conveniences. |
+| **code-surface** [API-IMPL-023] | **AMENDED (M4, 2026-07-03)**: [DS-028] front doors are generic-instantiation aliases, expressly OUTSIDE the forbidden rename-bridge class. Discipline seams remain deletable conveniences WITH ONE CARVE-OUT — the `Direct` marker (`__ColumnDirect`, and the NEW seam-tier `Store.Direct` typealias below) is **load-bearing**, NOT a deletable convenience: it is the axis-drop FENCE the [DS-028] alias laws depend on ([DS-028] law 1 — deleting it lets a cross-axis chain silently reset an axis). Reclassified from "deletable convenience" to a required seam type; §10 records the supersession of the prior "in-tower plumbing binds `__ColumnDirect` directly" ruling. |
+| **code-surface** [API-NAME-004] / `Store.Direct` (M4, NEW) | Add a seam-tier public typealias `Store.Direct` (= `__ColumnDirect`) in Store Protocol Primitives alongside the hoisted marker, so in-tower conformance/where-clauses bind `Store.Direct` — NOT the dunder `__ColumnDirect` and NOT the column-vocabulary `Column.Direct` (which stays the consumer-facing spelling). No dunder token ever appears in a public conformance clause. |
+| **conversions** [CONV-016] / op-body index hygiene (M6, NEW) | Op bodies over the typed seam count MUST derive bounds through the typed API (`count.map { Ordinal() }`, typed `Index`/`Offset`/`Count` arithmetic) and descend to raw `Int` ONLY via `Int(clamping:)` for the residual arithmetic seed a raw loop genuinely needs. The reach-through `Int(x.underlying.rawValue)` (tier-5 double-unwrap) and `Int(bitPattern:)`-in-arithmetic are FORBIDDEN in tower op bodies; both are AST-lint-promotion candidates (extends `no_int_bitpattern_arithmetic`). The W2 heap pilot's `Heap.swift:176,207` carry the reach-through and are corrected on-branch. |
+| **code-surface** [API-NAME-008] remove-op naming (M5, NEW) | A single-word removal op that can fail on empty returns `Optional` (`pop() -> Element?`), tower-wide (extends the SEAT's §9.3 remove-from-empty ruling into a naming decree): `Array.removeLast()` → `pop()`; every family's single-word remove follows. Carve-out: this supersedes any [API-NAME-008] compound-name pressure for the `~Copyable`-carrier remove ops — the Optional-consuming return is available for `~Copyable` elements (a borrow is not, so borrowing accessors keep crashing preconditions, `min`). |
+| **ecosystem-data-structures** bounded error (M10, NEW) | The bounded op form spelled `throws(Overflow)` throughout this document denotes each family's OWN nested error type (`throws(Queue.Error)` with a `.full` case — the LANDED shape, `Queue+Columns.swift:62,75`, `Queue.Bounded.swift:29`), NOT a shared tower-wide `Overflow` type (which never landed). Keep per-family nested `Error`; `Overflow` in [DS-028]/[DS-029]/D4.1/D4.4 is a stand-in token for that per-family error, read accordingly. |
 
 ---
 
@@ -827,14 +910,14 @@ construction, not by duplication.
 ### 5.2 Capability judgments
 
 ```
-K ⊨ Store      (capacity, slot subscript, initialize, move, prepareForMutation)
+K ⊨ Store      (capacity, slot subscript, initialize, move, unshare)
 K ⊨ Buffer     (count : Count, isEmpty)
 ```
 
 Direct columns satisfy both by construction of the buffer stack (the discipline conforms
 `Store.Protocol` where its storage is `Ledgered`; `Buffer.Protocol` unconditionally).
 **Shared preservation**: `K ⊨ Store ∧ K ⊨ Buffer ⟹ Shared(E, K) ⊨ Store ∧ Buffer`, with
-`prepareForMutation()` overridden to the uniqueness-restoring gate. The preservation
+`unshare()` overridden to the uniqueness-restoring gate. The preservation
 conformances are *declared* on `Shared` with full seam bounds — they cannot be derived
 conditionally through pins (W12/F-4) — which is sound because `Shared` is a column, not a
 carrier: [DS-025]'s bound-free law binds carriers only.
@@ -984,7 +1067,7 @@ institute-shaped instance of this lineage, not a novelty:
 - **The two ownership rows over one kernel**: Perceus (uniqueness-guarded reuse) and FP²
   (static ownership guarantees in-place execution) formalize exactly the design's split — the
   move-only column is the static row, the `Shared` CoW column the dynamic row, both over ONE
-  mutation kernel gated by `prepareForMutation()`.
+  mutation kernel gated by `unshare()`.
 - **Ownership/representation exposure**: Clarke/Potter/Noble's defect class (aggregate state
   mutated "via an alias to one of its components") names the invariant the seams enforce —
   storage never escapes; only non-escaping borrows are vended (W11's SIL-enforced contract).
@@ -1244,7 +1327,7 @@ LEDGER FLIP rides the cluster's landing window — never precedes it (a pre-merg
 |---|---|---|
 | `Stack` (swift-stack-primitives) | carrier `__Stack<S>` over Linear columns; ops seam-generic (push/pop are append/removeLast shapes) + R-generic growth; front doors `Stack<E>`, `.Bounded` (alias to the bounded linear column + `throws(Overflow)` pin) — **deletes the hand-written `Stack.Bounded` type** (the 2026-06-23 directive, executed) | the entangled Pool `Stack<Slot.Index>.Bounded` consumer migrates to the alias in the same wave |
 | `Heap` (swift-heap-primitives) | carrier `__Heap<S>`; the worked example IS the blueprint (ops verbatim-portable); `Comparison.Protocol` element bound; MinMax stays parked as a sibling for the heap-template round (unchanged plan) | replaces 2,676-LOC shape-E core; benchmark rows: heap family baselines |
-| *(W2 convention rider — SEAT review of the heap pilot, 2026-07-03)* **Remove-from-empty ops return `Optional` across the tower** (`pop() -> S.Element?`, matching the landed `Queue.dequeue()` model; supersedes both the shape-E `throws(Heap.Error)` and the worked example's crashing precondition — the experiment stays frozen as-is). Crashing preconditions remain ONLY for borrowing accessors where an `Optional` is structurally unavailable (`min` yields a `~Copyable` borrow; documented). **Pilot-set test floor**: each reshaped family ships a randomized differential test against a plain-array oracle (≥500 mixed ops incl. duplicates + interleaved push/pop) — 5-7 example tests alone do not license the fan-out. **Mutating seam-generic helpers carry the gating contract in their doc comment** ("caller must have gated `prepareForMutation()`"). **Tracked optimization (ledgered, not gating)**: exchange-based sifting costs ~2× the seam traffic of the classical hole-shift form; the pilot's insert tax (1.3–1.9× stdlib) is attributable to BOTH the typed-slot append path AND this — re-attribute honestly in benchmark notes; hole-shift lands as a measured follow-up. | applies template-wide to the W2 fan-out (Stack.pop etc.) |
+| *(W2 convention rider — SEAT review of the heap pilot, 2026-07-03)* **Remove-from-empty ops return `Optional` across the tower** (`pop() -> S.Element?`, matching the landed `Queue.dequeue()` model; and a single-word removal op that can fail on empty IS spelled `pop()` per the M5 naming decree (§4.7 [API-NAME-008]) — `Array.removeLast()` renames to `pop()`; supersedes both the shape-E `throws(Heap.Error)` and the worked example's crashing precondition — the experiment stays frozen as-is). Crashing preconditions remain ONLY for borrowing accessors where an `Optional` is structurally unavailable (`min` yields a `~Copyable` borrow; documented). **Pilot-set test floor**: each reshaped family ships a randomized differential test against a plain-array oracle (≥500 mixed ops incl. duplicates + interleaved push/pop) — 5-7 example tests alone do not license the fan-out. **Mutating seam-generic helpers carry the gating contract in their doc comment** ("caller must have gated `unshare()`"). **Tracked optimization (ledgered, not gating)**: exchange-based sifting costs ~2× the seam traffic of the classical hole-shift form; the pilot's insert tax (1.3–1.9× stdlib) is attributable to BOTH the typed-slot append path AND this — re-attribute honestly in benchmark notes; hole-shift lands as a measured follow-up. | applies template-wide to the W2 fan-out (Stack.pop etc.) |
 | `Slab` (swift-slab-primitives) | carrier `__Slab<S>` over the generational/slab column family; stable-index laws in [DS-024]-style tests | discipline = Generational storage / Slab buffer per the leaf-law |
 | `Queue.Linked` (swift-queue-linked-primitives) | SIBLING (O(1) middle-removal is a contract difference, D4.1); carrier `__QueueLinked<S>` over Linked columns; front door `Queue<E>.Linked` (a NEST alias on `__Queue`, declared in the sibling package — D4.1 sense (b)) + a `.Bounded` alias (its `Fixed` hand variant was already deleted in the Round M coda; nothing residual remains) | pre-existing list-linked RED clears with W2 List work below |
 | `List.Linked` (swift-list-linked-primitives) | carrier `__ListLinked<S, let N: Int>` (already thin-generic!) — W2 adds front doors + deletes the hand `List.Linked.Bounded` type for the alias | the `List` namespace root stays (nest for `Linked`) |
@@ -1381,6 +1464,22 @@ wave W4 (§9.1) with explicit per-file adds and one commit per repo.
 `Skills/modularization/SKILL.md` ([MOD-PLACE] note + [MOD-PLACE-DECOMPOSE] row),
 `Skills/code-surface/SKILL.md` ([API-IMPL-021] data point; [API-IMPL-022]/[API-IMPL-023]
 cross-reference refresh).
+
+**Ruling supersessions (design-audit arc, 2026-07-03).** Two prior SEAT rulings are superseded
+by this session's amendments:
+
+- **M4** — the SEAT's 2026-07-02 "in-tower plumbing binds `__ColumnDirect` directly" ruling is
+  superseded by the seam-tier `Store.Direct` typealias (§4.4 alias-law 1; §4.7 [API-IMPL-023] /
+  [API-NAME-004] riders): in-tower conformance and where-clauses bind `Store.Direct`, so no dunder
+  token ever appears in a public conformance clause, and the `Direct` marker is reclassified from a
+  deletable [API-IMPL-023] convenience to a **load-bearing** required seam type — it IS the
+  axis-drop fence the [DS-028] alias laws depend on. The SEAT ratified this supersession
+  ("`Store.Direct` at the seam tier is strictly better… reclassifying the marker as load-bearing
+  matches the fence's ratified role. Write the supersession note.").
+- **M3** — the [DS-025] seam requirement `prepareForMutation()` is renamed `unshare()` (§4.1;
+  §2 D3 seam table; §4.5 gate decree). The rename ships as ONE lockstep arc — rule text + skill
+  rider (via skill-lifecycle) + the 42-site code change; any validator, skill, or source still
+  spelling `prepareForMutation` after the wave is a defect.
 
 ### 10.2 Per-file dispositions (mined groups)
 
