@@ -357,7 +357,7 @@ diagnostic). Front doors therefore follow three laws:
    buffer stacks and storage-direct columns, NOT by `Shared` or bounded instantiations) — a
    cross-axis chain that would silently reset an axis becomes a compile error.
 2. **Axis-ADDING aliases** are column-PRESERVING transformers: `Shared` wraps `S`
-   (`typealias Shared = __X<Shared<S.Element, S>>`); `Bounded` maps through a **capacity-twin
+   (`typealias Shared = __X<Ownership.Shared<S.Element, S>>`); `Bounded` maps through a **capacity-twin
    associated type** (`Buffer<S>.Linear`'s nested `.Bounded` witnesses the `Bounded` requirement in
    its own generic context — expressible today — and `Shared` forwards it conditionally), so
    every §5.1 product point, including the live `Shared×Bounded` ring column
@@ -414,10 +414,27 @@ growth pin — a DECREED op form under the D4.1 test (typed overflow does not ma
 sibling); the surviving hand-written `Stack.Bounded` and `List.Linked.Bounded` types migrate
 to exactly that (the 2026-06-23 principal directive, executed by §9).
 
-**D4.5 The ownership axis.** `Shared<Element, B>` is the one CoW column (F-4 keeps its declared
-seam bounds load-bearing). Seam-expressible ops are CoW-correct for free through
+**D4.5 The ownership axis.** `Ownership.Shared<Element, B>` is the one CoW column (F-4 keeps its
+declared seam bounds load-bearing). Seam-expressible ops are CoW-correct for free through
 `unshare()`; column-surface ops (growth) take one thin gate twin per op
 (`store.withUnique { … }`). The `Shared` front door is an alias like any other variant.
+
+**M8 finalization** (principal-ruled 2026-07-03; seat-authored, the fellow reviews it at Phase 3).
+The CoW ownership column is homed at `Ownership.Shared<Element, B>` — axis word and type name
+coincide under one namespace, closing the last top-level Nest.Name gap ([API-NAME-001]). Three
+coordinated moves, all tower-internal (~14 files / ~45 sites, priced at ruling time):
+(a) the immutable single-value ARC box `Ownership.Shared<Value>` (a `final class`) is renamed
+`Ownership.Immutable<Value>` — the honest name for an immutable shared box, which frees the axis
+name; (b) the CoW column, previously the top-level `Shared<Element, B>` struct
+(swift-shared-primitives), moves onto the freed `Ownership.Shared<Element, B>` (it still wraps
+`Ownership.Box<B>`, the [MEM-SAFE-028] drain-box home — unchanged); (c) `Column.Shared<E>`
+re-points to `Ownership.Shared<E, Column.Heap<E>>`; the ADT-level `X<E>.Shared` front-door
+spellings are UNCHANGED. **Governance note**: throughout §2–§5 and §9, the CoW column's bare
+spelling `Shared<Element, B>` / `Shared<E, _>` now denotes `Ownership.Shared<…>`; occurrences of
+"Shared" as the ownership AXIS word or the `X<E>.Shared` FRONT DOOR are unaffected. Lands in its
+own wave **W1.8** (the ~45-site migration is forced by no earlier wave). Supersedes the pre-M8
+top-level-`Shared` spelling in §D4.5 / §5.1 / §5.2 (rewritten in place below); the [DS-028] law-1
+marker home stays as amended by M4.
 
 **Prior-art grounding** (§6): this is the `heapless` shape (storage-parameterized core +
 typealias front-doors + capacity-in-the-storage-type — the shipping Rust counterexample that
@@ -955,7 +972,7 @@ K ::= D(S_d(Alloc(M), E))            buffered column        (D ∈ 𝔻, S_d ∈
     | Shared(E, K_direct)            ownership column
 ```
 
-concretely spelled `Buffer<Storage<Memory.Allocator<M>>.S_d<E>>.D` and `Shared<E, _>`. A
+concretely spelled `Buffer<Storage<Memory.Allocator<M>>.S_d<E>>.D` and `Ownership.Shared<E, _>`. A
 **family** is a carrier functor `__X⟨−⟩` from columns to types; a **variant** is a fiber of the
 projection
 
