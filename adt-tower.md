@@ -549,6 +549,61 @@ in existing packages.
    already tracks the surviving tree shape.
 4. **Benchmark guardrails**: the family baselines (§9.5) gate every reshape wave.
 
+### D9 (Q9) — The iteration contract: iteration flows from the column (borrowing `forEach`), 0-witness
+
+**Decision.** The ADT tier defines NO iteration of its own. A tower container is iterable exactly
+when its column vends borrowing iteration; iteration **flows from the column** — composed over the
+buffer-tier surface, never refined into the seams (D3), never re-implemented per family. The
+guaranteed common surface is a **borrowing `forEach`** lending `(borrowing S.Element)` — the one
+surface every occupancy discipline provides.
+
+**The borrow/consume boundary.** A `~Copyable` column is **borrow-iterable only**. The consuming
+`Sequenceable` path is `Element: Copyable`-gated on both Linear and Ring
+(`Buffer.Linear+Sequenceable.swift:14`, `Buffer.Ring+Sequence.Protocol.swift:18`): a move-only
+element can be borrow-iterated but never consume-iterated (consuming iteration would move each
+element out — structurally unavailable, the multipass/single-pass orthogonality of
+`Iterable.swift:24-34`). So "iteration over a `~Copyable` column" means **borrow**-iteration —
+mirroring the `min`-vs-`pop` boundary in [DS-025] (a `~Copyable` borrow of `Element?` is
+structurally unavailable, so borrowing accessors keep precondition gates while consuming ops vend
+`Optional`).
+
+**The Linear/Ring asymmetry (load-bearing — why the contract is stated over `forEach`, not
+`Iterable`).** The two disciplines are NOT symmetric on the *protocol-vended* surface:
+- **Linear** ALSO vends the multipass `Iterable` protocol, element gate relaxed to `~Copyable`
+  (`Buffer.Linear+Iterable.swift:22`).
+- **Ring** vends ONLY the single-pass bespoke borrowing `forEach` (`Buffer.Ring+forEach.swift`).
+  Its multipass `Iterable` side was **active-pruned** (seat-ruled 2026-06-10,
+  `Buffer.Ring+Sequence.Protocol.swift:11-17`); a live multipass ring story re-materializes only
+  when a borrowing *segment iterator* is designed against the move-only substrate.
+
+Therefore D9 states the tower iteration contract as **"a borrowing `forEach` over the column"**
+(the surface BOTH columns satisfy at 0-witness), NOT the multipass `Iterable` protocol — stating
+it over `Iterable` would overstate Ring. A family MUST NOT claim multipass `Iterable` unless its
+column vends it (Linear yes; Ring no, until the segment iterator lands).
+
+**0-witness evidence (spike-verified, real packages).** Cross-module, over a move-only
+`Job: ~Copyable`, both Linear and Ring borrow-`forEach` specialize to **zero `witness_method`** on
+every executing path. The `-O` consumer SIL carries 4 `witness_method` sites — ALL inside the
+retained `@inlinable` generic `Iterable.forEach` template (`public_external`, unreachable from a
+concrete client); the three specialized functions the client actually calls (Linear `Iterable`
+count, Linear bespoke sum, Ring bespoke sum) hold 0 each. Iteration bottoms out in the concrete
+column's `Span.Protocol` span (Linear) / ledger-walked `storage[slot]` subscript (Ring) with no
+protocol dispatch — it flows from the column exactly as D3 requires. Evidence: scratch spike
+`m11-iteration-0witness` (path-deps the REAL buffer/storage/allocator packages on local mains, as
+the ratified worked example does); GREEN + runtime-correct on 6.3.3; promotion to `Experiments/`
+is a follow-up.
+
+**W2 implication.** Each family's iteration IS the column's borrowing `forEach`; the ADT adds no
+iteration machinery. Families over Linear additionally expose multipass `Iterable`; families over
+Ring (and any single-pass column) expose only the single-pass borrowing `forEach` until a
+borrowing segment iterator exists. The W2 fan-out inherits this — a family's iteration surface is
+READ FROM its column, never declared at the ADT tier.
+
+**Provenance**: §2 D3 (compose-don't-refine); spike `m11-iteration-0witness`;
+`Buffer.Linear+Iterable.swift`, `Buffer.Ring+forEach.swift`,
+`Buffer.Ring+Sequence.Protocol.swift:11-17` (the 2026-06-10 ring multipass prune);
+`Iterable.swift:24-34` (multipass/single-pass orthogonality).
+
 ---
 
 ## 3. Constraints-compliance table
@@ -865,6 +920,24 @@ The variant-selection and container-catalog tables are **stale against the tree*
 | **conversions** [CONV-016] / op-body index hygiene (M6, NEW) | Op bodies over the typed seam count MUST derive bounds through the typed API (`count.map { Ordinal() }`, typed `Index`/`Offset`/`Count` arithmetic) and descend to raw `Int` ONLY via `Int(clamping:)` for the residual arithmetic seed a raw loop genuinely needs. The reach-through `Int(x.underlying.rawValue)` (tier-5 double-unwrap) and `Int(bitPattern:)`-in-arithmetic are FORBIDDEN in tower op bodies; both are AST-lint-promotion candidates (extends `no_int_bitpattern_arithmetic`). The W2 heap pilot's `Heap.swift:176,207` carry the reach-through and are corrected on-branch. |
 | **code-surface** [API-NAME-008] remove-op naming (M5, NEW) | A single-word removal op that can fail on empty returns `Optional` (`pop() -> Element?`), tower-wide (extends the SEAT's §9.3 remove-from-empty ruling into a naming decree): `Array.removeLast()` → `pop()`; every family's single-word remove follows. Carve-out: this supersedes any [API-NAME-008] compound-name pressure for the `~Copyable`-carrier remove ops — the Optional-consuming return is available for `~Copyable` elements (a borrow is not, so borrowing accessors keep crashing preconditions, `min`). |
 | **ecosystem-data-structures** bounded error (M10, NEW) | The bounded op form spelled `throws(Overflow)` throughout this document denotes each family's OWN nested error type (`throws(Queue.Error)` with a `.full` case — the LANDED shape, `Queue+Columns.swift:62,75`, `Queue.Bounded.swift:29`), NOT a shared tower-wide `Overflow` type (which never landed). Keep per-family nested `Error`; `Overflow` in [DS-028]/[DS-029]/D4.1/D4.4 is a stand-in token for that per-family error, read accordingly. |
+| **ecosystem-data-structures** iteration (D9 / M11, NEW) | The ADT tier defines NO iteration; it flows from the column as a **borrowing `forEach`** lending `(borrowing Element)` — 0-witness cross-module, spike-verified for both Linear and Ring over a move-only element. `~Copyable` columns are **borrow-iterable only** (consuming `Sequenceable` is `Element: Copyable`-gated). Multipass `Iterable` is a **Linear-only** surface (Ring's was pruned 2026-06-10); a family claims `Iterable` ONLY if its column vends it. See §2 D9. |
+| **code-surface** [API-IMPL-009] struct-carrier hoist (M12, NEW) | The [API-IMPL-009]/[PKG-NAME-006] hoist idiom explicitly covers STRUCT carriers (`__X` struct + front-door alias), not only protocols and agent-nouns — the tower carrier is the canonical struct-hoist instance. State it in the skill so a family author reads the struct-carrier hoist as sanctioned, not an exception. |
+| **modularization** [MOD-036] correction (M12, NEW) | [MOD-036]'s wholesale claim that `@usableFromInline package` storage + `@inlinable` accessors collide cross-package is REFUTED — the landed carriers compile and specialize (0-witness, cross-module). The real constraint is narrower: it manifests ONLY at a RESILIENT (library-evolution) module boundary. Tower packages build NON-RESILIENT, so the [DS-025] carrier shape is sound. Record the **non-resilient-builds invariant** (tower carriers assume non-resilient builds) and correct [MOD-036] to the resilient-boundary-only scope via skill-lifecycle. |
+
+**M12 tracked follow-ups (design-audit arc, 2026-07-03).** Basket items that carry into the wave
+plan rather than the rule text — each lands with its finding's specific data at wave dispatch,
+noted here so none is lost:
+
+- **Lint re-arm is a HARD pre-W2 gate** — the [DS-026] predicate classifier + the M1/M6 checks
+  must be ARMED (not promotion-candidates) before the nine-family fan-out (§7 Error-proneness,
+  D8(1)). Until armed, the §9.4 grep-zero + per-family compile-probes carry enforcement.
+- **§9.4 consumer counts** are plan-time indicative and re-grepped at each package dispatch
+  ([RES-023] predicates re-run at execution); any specific count correction lands with its
+  package's break-list, not in this document.
+- **GAP-6/7 + the gate-twin spike** fold into the W2 per-family gates (§9.3), carried with their
+  finding detail at wave dispatch.
+- **[DS-027] skill-slip**, **`Inline` double-spend**, and **Column-vocab axis-consistency** are
+  tracked skill-lifecycle riders — recorded here so they survive; each resolves with its finding.
 
 ---
 
@@ -1085,7 +1158,7 @@ institute-shaped instance of this lineage, not a novelty:
 | **Abstraction level** | Two entry tiers: names (front doors) for the 99% case; the column algebra for composers. No third tier — no builder DSL, no macro layer (by charter). |
 | **Visibility / hidden dependencies** | Diagnostics print the carrier instantiation (`__Array<Buffer<…>.Linear>`), not the alias — the known alias trade-off ([API-NAME-004] rationale). Mitigations: the hoisted name is one hop from the alias file; error surfaces keep public paths ([API-ERR-007]); `@_documentation(visibility: public)` keeps the hoisted API in DocC (the panel-found symbol-graph hole, D2). Accepted cost, stated. |
 | **Viscosity** | Changing a variant choice at a use site = editing one type spelling; adding a variant to a family = one alias file; adding an ADT = one package-internal file set (measured §1.1). Cross-family renames stay mechanical (aliases localize spellings). |
-| **Error-proneness** | The seam contract is compiler-enforced (W11: borrow yes, mutate yes, move-out no); capacity misuse is typed (`throws(Overflow)`); the two residual footguns — forgetting `where S: ~Copyable` (W9) and heap-pinning an op (D8(d)) — both have mechanical checks. |
+| **Error-proneness** | The seam contract is compiler-enforced (W11: borrow yes, mutate yes, move-out no); capacity misuse is typed (per-family `throws(Error)` with `.full`, M10). The two residual footguns — forgetting `where S: ~Copyable` (W9) and heap-pinning an op (D8(d)) — have mechanical checks **DESIGNED but NOT YET ARMED (M12 honesty)**: the [DS-026] predicate classifier + the M6 reach-through lint are swift-linter promotion candidates (armed at W4, D8(1)); the M1 alias-reachability check is a per-family COMPILE-probe added at the W1.6 gate. **Lint re-arm is a HARD pre-W2 gate** (M12) — the fan-out MUST NOT proceed on aspirational checks; until armed, the per-family compile-probes + the §9.4 grep-zero gates carry the enforcement. |
 | **Consistency** | One shape for every family; a reader who learns `__Array<S>` + front doors has learned `__Heap<S>`, `__Queue<S>`, `Tree<S>`. The existing `Tree` family already reads this way. |
 | **Premature commitment** | Consumers choose a variant last (swap the alias), not first; family authors choose variants never (consumer-pulled). |
 
