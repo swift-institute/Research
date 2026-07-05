@@ -656,6 +656,16 @@ Ring (and any single-pass column) expose only the single-pass borrowing `forEach
 borrowing segment iterator exists. The W2 fan-out inherits this — a family's iteration surface is
 READ FROM its column, never declared at the ADT tier.
 
+**Reconciliation with D4.3's "iteration hooks" (W1.9 closure, seat-ruled 2026-07-05/06;
+principal-reversible).** "The ADT adds no iteration machinery" binds CONTRACT claims (no
+`Iterable`/`Sequenceable` the column does not vend) and walk SEMANTICS (the ADT walk must match
+the column's documented order) — it does NOT forbid a seam-generic borrowing `forEach` written
+once over `Store.Protocol & Buffer.Protocol`, which is a [DS-029]-form-1 op (§2 D4.3 lists
+"iteration hooks" among the seam-expressible forms) and covers every conforming column with one
+method. The W1.9 evidence leg found the two such hand-walks (queue, deque) cover FOUR columns
+each; the pinned-delegation re-home (4 overloads/family + a new FIFO-order differential gate)
+is BANKED in the W1.9 evidence report, applied only if the principal rules for it.
+
 **Provenance**: §2 D3 (compose-don't-refine); `Experiments/adt-tower-m11-iteration-0witness`;
 `Buffer.Linear+Iterable.swift`, `Buffer.Ring+forEach.swift`,
 `Buffer.Ring+Sequence.Protocol.swift:11-17` (the 2026-06-10 ring multipass prune);
