@@ -424,7 +424,11 @@ declared seam bounds load-bearing). Seam-expressible ops are CoW-correct for fre
 **M8 finalization** (principal-ruled 2026-07-03; seat-authored, the fellow reviews it at Phase 3).
 The CoW ownership column is homed at `Ownership.Shared<Element, B>` — axis word and type name
 coincide under one namespace, closing the last top-level Nest.Name gap ([API-NAME-001]). Three
-coordinated moves, all tower-internal (~14 files / ~45 sites, priced at ruling time):
+coordinated moves, all tower-internal (~14 files / ~45 sites, priced at ruling time; **W1.8
+dispatch re-grep 2026-07-05: ~136 load-bearing code sites / 57 files** — the plan-time pricing
+missed the ~11 family packages' `where S == Shared<…>` op-pins, which hard-break when the
+top-level name is vacated; all compiler-caught, so the build + grep-zero gates cover them, but
+the land window enumerates every family + tree package, per the dispatch dossier):
 (a) the immutable single-value ARC box `Ownership.Shared<Value>` (a `final class`) is renamed
 `Ownership.Immutable<Value>` — the honest name for an immutable shared box, which frees the axis
 name; (b) the CoW column, previously the top-level `Shared<Element, B>` struct
