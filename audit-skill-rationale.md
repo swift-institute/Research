@@ -124,3 +124,17 @@ The 2026-04-26 lateral-L3 codification cycle started from audit findings P2.11 +
 **Worked example (origin incident)**: 2026-05-15 cardinal-canary run during the swift-linter bottom-up sweep read `swift-process` as "1 commit behind origin" with `Poll.Entry._raw` at `Process.Spawn.Capture.POSIX.swift:678`, then immediately drafted an A/B/C escalation (pull-origin / local-fix / hold). By the time the principal responded, swift-process was 3 commits AHEAD (a parallel v2 Windows arc) and `_raw` had already been revised out in the working tree — all three options were wrong because the premise was stale.
 
 **Rationale**: Composes with [SUPER-056] non-interference — the same iteration-zone churn that makes cross-arc edits forbidden also makes a just-observed failure a decaying state claim. Anchoring the escalation to verified-now evidence prevents drafting a path-choice on a premise that has already resolved itself.
+
+---
+
+## §[AUDIT-040] Weigh Evidence by Commit Recency When Adjudicating (memory-drain fold 2026-07-05)
+
+**Why recency, not existence**: The ecosystem is a maturing corpus — conventions (namespace shape, typed throws, `~Copyable`/ownership adoption, region-based `Sendable`) converged over time, so a given file's shape encodes *the convention as of its last touch*, not the current model. Treating "it exists and compiles" as a blessing grandfathers pre-convention legacy into current decisions. The failure mode is asymmetric and expensive at flip time: an irreversible public flip (tag, visibility change) made on the strength of an old surface's mere existence cannot be walked back cheaply. Commit recency is the cheap discriminator — `git log` the cited paths and let the newest converged pattern win.
+
+**The two directions**:
+- **Choosing a precedent / model to emulate**: pick the newest converged pattern. `array-primitives` (the `Array<S>`-over-column design, the column vocabulary) is a current reference MODEL for the column-ADT family; emulate it.
+- **Readying OLD code**: scrutinise for staleness rather than assume-correct. Old `Heap.Min/Max` `fatalError` stubs are a flip-readiness *question* (should public `fatalError` stubs ship?), not a benign "`@frozen` doesn't fire" precedent; a stale README on an old package is a defect to fix, not a template to copy.
+
+**Relationship to the sibling rules**: [AUDIT-033] bounds what grep-EMPTY can prove (negative claims only); [AUDIT-034] re-verifies inherited *findings* against current code; [AUDIT-040] (this rule) governs which *code* counts as the model when two surfaces conflict. All three share one root: authority is not conferred by age or by prior status — it is conferred by verification against the current corpus. Generalises the memory-safety legacy posture (`@Sendable` sites are pre-[MEM-SEND-012] legacy, revised freely when touched; [MEM-SEND-*]) from one annotation class to the whole code corpus.
+
+**Provenance (full form)**: memory `feedback_weigh_by_commit_recency` (principal directive 2026-06-15), which generalised `feedback_sendable_sites_not_presumed_correct` / `feedback_sendable_legacy_posture_default_revise` across the corpus and relates to `feedback_lint_triage_three_class` (the corpus is still maturing, so "the rule/old-code is right" is never assumed).

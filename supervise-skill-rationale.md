@@ -850,3 +850,27 @@ Acceptance:
 ### §[SUPER-056] Non-Interference With Parallel State — Rationale (evicted 2026-07-05)
 
 **Rationale**: Parallel sessions own their working-tree edits; source-level interference (editing their files, reverting their state, committing their WIP) is destructive across sessions and conflates authorship and commit cadence. Build-cache mutation is local and safe. STOP-and-INFORM when blocked, plus work-around when not, is the only posture that neither races parallel work nor stalls the arc.
+
+---
+
+## [SUPER-057] (promoted 2026-07-05)
+
+**Rule**: [SUPER-057] Class-(c) Ecosystem Questions Surface-and-Stop; Never Auto-Dispatch the Architectural Program.
+
+**Provenance**: memory `feedback_class_c_ecosystem_stop_not_dispatch` (2026-05-13 linter-arc closure). Promoted by the 2026-07-05 memory-drain (D1 cluster: supervise / handoff / collaborative-discussion / reflect-session / quick-commit-and-push-all).
+
+**Origin incident**: during the 2026-05-13 linter-arc closure, an audit finding (`File.Path.Temporary.randomized` -> typed `RFC_4122.UUID.v4()`) surfaced a swift-rfc-4122 layering defect (class-(c)). The orchestrator framed the resolution as "Wave 4 — swift-uuids L3 architectural arc" and dispatched Phase 4.0 design exploration in parallel with the linter waves; after a Tier-3 design RECOMMENDATION returned, it continued through Phase 4.1 (swift-rfc-4122 repair, pushed) and dispatched Phase 4.2 (swift-uuids package creation + swift-identities migration) before the principal pulled it back: "this is just so substantially removed from the work we're doing on the linter... All we needed was a UUID package for random file paths?" The architectural arc was orthogonal to the linter arc; auto-dispatching it inflated the arc closure with ecosystem-development work the principal had not authorized.
+
+**Generalization**: the shape recurs whenever an arc-closing audit surfaces a finding whose maximal-reuse-compliant fix requires touching the L2/L3 architectural surface beyond the arc's domain. A predecessor wave returning green plus remaining waves in the envelope does NOT authorize expanding the arc into ecosystem architecture. Authoring the design/research doc that documents the gap is acceptable (documentation, not execution); dispatching the phased program (Phase N.1 / N.2 / N.3) is a separate, per-phase-authorized set of arcs. Complements [SUPER-045] (a "proceed autonomously" mandate applies WITHIN the established arc scope) and is the sibling trigger shape to [SUPER-039] (class-(c) from a build-gate failure).
+
+**Disposition table** (from the memory entry):
+
+| Signal | Action |
+|--------|--------|
+| Arc surfaces a class-(c) ecosystem question (layering repair, new package, cross-package architectural decision) | Surface as a class-(c) finding. STOP the arc. Do NOT dispatch the next phase. |
+| Class-(c) work has a design phase producing a research doc | Authoring the design doc is OK; it documents the gap, not the start of execution. |
+| Predecessor wave returns green AND the arc has remaining waves | Push the predecessor; pause. Check whether remaining waves are domain-bounded (in scope) or ecosystem-architectural (out of scope). |
+| Design doc names a phased program (Phase N.1 / N.2 / N.3) | The phased program is NOT a unitary dispatch envelope; each phase is a separate principal-authorized arc. |
+| Net-positive ecosystem fix lands incidentally during dispatch | Acknowledge as a bonus; do not use it to justify further ecosystem-architectural work. |
+
+**Eviction paid for this rule**: the standalone [SUPER-015a] "Empirical-Provenance Note (Compression-at-Pivot)" block in `supervise/SKILL.md` — a pure non-normative pointer whose content already lives in this archive's §[SUPER-015a] — was removed from the SKILL.md to stay within the 1407-line size baseline. §[SUPER-015a] in this archive is unchanged and remains the durable record; [SUPER-015]'s rule body is unaffected.

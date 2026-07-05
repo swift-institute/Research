@@ -272,6 +272,20 @@ extension Swift.Optional: Serializable where Wrapped: Serializable { ... }
 
 **Provenance**: W5b subordinate's class-(c) surface 2026-05-14 (Coder/Serializer modeling arc). The brief listed `@retroactive Serializable` on `Optional`'s conformance in `swift-serializer-primitives`' Standard-Library-Integration target; compile error surfaced as `error: 'retroactive' attribute does not apply; 'Serializable' is declared in the same package`. Resolution shape in `swift-serializer-primitives/Sources/Serializer Primitives Standard Library Integration/Optional+Serializable.swift` (commit `3f4f897`).
 
+**Lint enforcement candidate** (evicted from the SKILL.md body 2026-07-05, net-zero pay for the Refinement corollary): an AST rule could parse `ExtensionDeclSyntax`'s inherited types for `@retroactive` and cross-check against the package manifest's targets list. Not yet implemented.
+
+**Refinement corollary — dual conformance clause (full text)** (memory-drain D4, 2026-07-05; source memory `feedback_retroactive_refinement_conformance.md`): When an in-package protocol `X` refines an external-package protocol `Y`, and a stdlib type `T` conforms via the refinement, the Swift 6.3 compiler requires the conformance clause to list BOTH protocols explicitly:
+
+```swift
+extension Int: ASCII.Parseable, @retroactive Parseable { ... }  // ✓ both listed
+extension Int: @retroactive ASCII.Parseable { ... }              // ✗ rejected — ASCII.Parseable is in-package
+extension Int: ASCII.Parseable { ... }                            // ✗ warning — inherited Parseable needs @retroactive
+```
+
+`@retroactive` is package-scoped: required for the inherited external base `Y`, rejected for the in-package refining protocol `X`. Refinement-via-inheritance satisfies both simultaneously, so the single-protocol form surfaces two contradictory diagnostics at once. Provenance: Wave 3 of the Parseable adoption cohort, 2026-05-14, `swift-ascii-parser-primitives@68e02d7`.
+
+**Alternative resolution — sibling-form refactor** (added 2026-05-16): when the refining protocol can be restructured to NOT inherit from the external base, the dual-clause requirement disappears. The byte-arc (`swift-byte-primitives@fbccde4`) chose this: `Byte.\`Protocol\`` was declared as a sibling (no `ExpressibleByIntegerLiteral` inheritance), so `Tagged: Byte.\`Protocol\`` stays clean with no `@retroactive`. Choose the dual-clause form when the inheritance is load-bearing (the refinement IS the inherited capability); choose the sibling-form refactor when the inheritance is incidental (witnesses don't require the base — they happen to overlap). The sibling-form has a structural cost (consumers may declare both conformances separately) but avoids the `@retroactive` package-scope coupling.
+
 ---
 
 ## §[API-IMPL-019] Qualified Names Inside Conforming Extensions

@@ -744,6 +744,14 @@ the trigger is `Byte.Input`'s `Tagged`-bearing `Index`, so this affects the **en
 machine-parser surface, not only w3c-xml — every such site inherits the same accepted stance and the
 September-2026 retirement trigger.
 
+**Gated consumer sites (retirement checklist — delete the `Toolchain.swift` + `.disabled(if:)` guards at 6.4 adoption)**:
+- `swift-w3c-xml/Tests/W3C XML Tests/{Toolchain.swift, ParserTests.swift}` (5 parse suites + 2 char-validation tests) — gated 2026-06-27.
+- `swift-graph-primitives/Tests/Support/Toolchain.swift` + 4 analyze/transform/reverse suites — gated 2026-06-01.
+- **`swift-foundations/swift-xml/Tests/XML Tests/{Toolchain.swift, StreamTests.swift, XMLTests.swift}`** — L3 consumer (`XML.parse` / `XML.ND.stream` / `XML` string-literal init → `W3C_XML.parse`); 4 parse-exercising suites (`Stream Tests`, `XML Wrapper Tests`, `XML.Document Tests`, `XML Literal Tests`) gated **2026-07-03**. Was missed in the 2026-06-27 sweep. Note: `XML Literal Tests` parses via `ExpressibleByStringLiteral`/`StringInterpolation` → `Self.fragment`, not obvious from a `parse(` grep.
+- **Likely still-missed**: the plist consumer (same `Byte.Input` machine-parser surface) — audit before the retirement sweep.
+
+**`@_specialize` real-fix spike (2026-07-03) — NEGATIVE; do not re-run.** Empirically established (minimal 3-package reproducer, 6.3.3): the crash fires whenever the concrete `Byte.Input` metadata / `Input.Protocol` witness table is **materialized at runtime**. Calling `parse` from a *generic* context (Input abstract) dodges it at **`-Onone` only** (debug PASS); under `-O` / `@_specialize` / `@inlinable` the optimizer re-specializes to concrete `Byte.Input` and the crash returns (release CRASH). **Specialization is the trigger, not the cure** — so no `@_specialize`-family source fix exists, and the `-Onone`-only generic-indirection dodge is strictly worse than the gate (it would green a debug build while shipping a guaranteed release crash). This is the empirical basis for the "no source fix, require 6.4+" disposition.
+
 ---
 
 ### A10. Unconditional protocol-conformance extension leaks `Copyable` to primary declaration of `~Copyable`-generic nested type
@@ -1047,7 +1055,7 @@ While running pass "Mem2Reg" on SILFunction "<the @Test function>"
 
 **Ingredients**: (1) `-O`; (2) an `@inlinable` chain over a move-only/generic value heavy on nested borrows (e.g. `Fixed<Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Linear.Bounded>` accessors); (3) a sink function the inliner collapses it into above an accessor-count threshold (the smaller move-only test in the same suite did NOT trip it).
 
-**Workaround**: `@_optimize(none)` on the sink function (keeps the inliner from collapsing the chain in). Behaviour-preserving. **Caution: see §A19** — do not apply it to a function that must observe move-only `deinit`s.
+**Workaround**: source-restructuring — split the sink function, or reduce its per-function inlined complexity so the inliner cannot collapse the chain past the budget (per amended [ISSUE-008], `swift-institute/Skills`). `@_optimize(none)` on the sink function is **forbidden**, not merely disfavoured: it is itself miscompile-prone — see §A19, which documents that it elides move-only element `deinit`s inside an `-O` module (a silent teardown miscompile).
 
 **Production / evidence**: `swift-fixed-primitives` `Tests/Fixed Primitives Tests/Fixed Tests.swift` (5 of 6 `@Test`s tripped it). CI run `28230583451` (Linux); macOS-release `swift build --build-tests -c release` reproduces byte-identical (same pass/function/assertion). Fix committed `5457eca`; 6.3-release CI leg green (runs `28243845222`/`28244117012`). Dossier: `swift-institute/Issues/swift-issue-fixed-release-compiler-crash/`.
 
