@@ -6057,6 +6057,13 @@
         "swift-linux-standard"
       ],
       "status": "pending"
+    },
+    {
+      "file": "2026-07-05-origin-state-meta-ecosystem-consolidation.md",
+      "date": "2026-07-05",
+      "title": "Origin State — memory dissolution, canon consolidation, and the day the guards started biting",
+      "packages": [],
+      "status": "pending"
     }
   ]
 }
