@@ -590,3 +590,60 @@ eviction time (2026-07-02); no clause was hoisted. Ordered as they appeared in t
 - **2026-05-10**: [HANDOFF-040] amended with form-position variants in conformance lists per Reflections/2026-05-08-two-l1-layer-reversals-system-and-iso.md (Cluster A)
 
 - **2026-05-10**: [HANDOFF-007] Program-shape exception added per Reflections/2026-04-30-phase-1b-stale-triage-and-deferred-fixed-codification.md
+
+---
+
+## §D1 Eviction Pass 2026-07-05
+
+Non-normative content evicted from `Skills/handoff/SKILL.md` to clear the skill-size gate (baseline 1496). One-line pointers remain in-skill.
+
+### §[HANDOFF-013] Prior Research Check — Example (correct) (evicted 2026-07-05)
+
+**Example (correct)**:
+```
+Step 1: Read HANDOFF-public-api-review.md
+Step 2: ls Research/ — discover Research/tier-0-consumer-api-review.md
+Step 3: Read the prior doc; it addresses half the questions in the brief
+Step 4: Cite it and extend rather than draft parallel spec
+```
+
+### §[HANDOFF-016] Treat Handoffs as Inputs — Example (correct) (evicted 2026-07-05)
+
+**Example (correct)**:
+```
+Handoff says: "Branch: polling-error-result in both repos"
+Agent checks: main in swift-executors is 16 commits ahead of origin;
+              user has been using main as working branch
+Agent surfaces: "The handoff prescribes a topic branch, but main is
+                already the working branch. Shall I continue on main?"
+User confirms: "why checkout?"
+Agent proceeds on main.
+```
+
+### §[HANDOFF-018] Intent-Reading of Opt-Outs — Example (defect) (evicted 2026-07-05)
+
+**Example (defect)**: A handoff's Tests section read *"If no precedent tests exist, that's acceptable — note in the commit message."* The implementer read literally (no file named `Kernel.Error.Code Tests.swift` existed → take the opt-out). The reviewer's remembered intent: the opt-out covered *unusual test patterns* (e.g., wrappers over compiler-intrinsic types), not *first-of-kind coverage for 2-line mapping functions*. For mechanical 2-line wrappers, tests are cheapest and pin mapping against drift — the opt-out never fires.
+
+### §[HANDOFF-013a] Writer-Side Grep — Example (defect) (evicted 2026-07-05)
+
+**Example (defect)**: A handoff prescribing `Kernel.File.System.Name` as a new typed value at L1 to hide raw bytes, written without consulting `swift-institute/Research/string-type-ecosystem-model.md §D1`, which bans fourth parallel owning string types. The receiver grepped, caught the violation, and forced rework. The writer-side grep would have prevented the wrong-direction handoff at near-zero cost.
+
+### §[HANDOFF-026] Preserved-Label Verification — Example (defect) (evicted 2026-07-05)
+
+**Example (defect)**: A handoff listing `Driver.swift` as Preserved while simultaneously scheduling `IO.Completion` type relocation. `Driver.swift` imports and references `IO.Completion`; the Preserved label is false. The subordinate's state-verification on resume caught the layer-violation; the handoff required amendment mid-execution.
+
+### §[HANDOFF-027] Refuted-Pattern Shape Comparison — Example (defect) (evicted 2026-07-05)
+
+**Example (defect)**: A Phase-3 Next Steps prescribed `Outgoing<V>.Retained<T>` as an ownership shape. The handoff's Dead Ends enumerated a refuted `Box<V>.Unique<U>` pattern with the same double-tagged outer/inner structure. The prescription re-derived the refuted class under new names; execution discovery forced an escalation round-trip.
+
+### §[HANDOFF-049] Commit-First — Comparison Prose + Reversal Note (evicted 2026-07-05)
+
+Commit-first preserves session-attribution clarity (each commit contains one session's edits) without `git add -p` interactivity, risky JSON manipulation, or a stateful stash. It is strictly more reliable than the former stash-edit-commit-pop pattern: `git stash pop` produces merge conflicts when the prior WIP and this session's edits touch adjacent lines that git treats as one hunk, and the pop can silently drop work into the stash on failure. Committing the prior WIP first eliminates the conflict-resolution overhead entirely — this session then edits from a clean tree.
+
+**Reversal note**: this rule previously prescribed `git stash push -- <file>` → edit → commit → `git stash pop`. That is now forbidden — the principal banned `git stash` outright ("do not stash, period"). This ID and its original problem statement (partial commit to a shared `_index.json`/`MEMORY.md` under prior-session WIP) are preserved; only the mechanism reversed. Rationale: *principal directive supersedes*.
+
+**Rationale**: committing the prior WIP first isolates cross-session contamination so each commit carries one session's edits alone, without the stateful-stash failure modes (adjacent-hunk conflicts on `pop`, silent work-drop).
+
+### §[HANDOFF-052] Closure Verification Commit-Landed Evidence — Rationale (evicted 2026-07-05)
+
+**Rationale**: working-tree verification confirms content, not commitment. A session can leave working-tree-only artifacts (untracked files, unstaged edits) that the next subordinate has to reconcile. Composing `git log -1` + clean `git status` into the closure gate moves the check from "the file looks right" to "the file landed."

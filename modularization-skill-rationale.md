@@ -441,3 +441,53 @@ The dated amendment changelog evicted from the skill frontmatter, verbatim and n
 - **2026-05-13**: [MOD-030] added — combinator/leaf-type micro modules are deliberate at any layer; module count is not a quality signal. Generalizes [MOD-026]'s L3 fine-grained-per-type-modularization default to L1 combinator-style packages. Provenance: 2026-05-13 transformation-domain audit (`swift-institute/Experiments/variadic-oneof-same-element-blocker/`). Additive per [SKILL-LIFE-003].
 - **2026-05-10**: Phase 3b TRIM-PROSE — compressed Rationale prose on [MOD-001], [MOD-005], [MOD-007], [MOD-011], [MOD-012] now that `validate-package-structure.yml` mechanically enforces. Statements unchanged per [SKILL-LIFE-001]. Clarifying per [SKILL-LIFE-003].
 - **2026-05-10**: Wave 2b lint extraction (HANDOFF-skill-to-ci-cd-extraction-inventory.md) — added Lint enforcement lines for [MOD-001], [MOD-005], [MOD-007], [MOD-011], [MOD-012], [MOD-017] mapping each rule to the new `validate-package-structure.yml` reusable workflow + companion `.github/scripts/validate-package-structure.py` validator. Clarifying per [SKILL-LIFE-003].
+
+---
+
+## §D1 Eviction Pass 2026-07-05
+
+Non-normative content evicted from `Skills/modularization/SKILL.md` to clear the skill-size gate (baseline 1539). One-line pointers remain in-skill.
+
+### §[MOD-035] Scope Statement — Worked Example (evicted 2026-07-05)
+
+**Worked example** (memory-primitives, codified 2026-05-22):
+
+```markdown
+# Memory Primitives Scope
+
+## Identity
+
+`swift-memory-primitives` provides the substrate for **addressable, aligned,
+allocatable storage with byte-level layout and mutation operations**.
+
+## Core targets
+
+- Memory Address — where things live
+- Memory Alignment — how they're laid out
+- Memory Allocation — creating regions
+- Memory Contiguous — typed layout interface
+- Memory Inline — in-line representation
+- Memory Shift — bit-level mutation
+
+## Out of scope
+
+- Allocation strategies (pool, arena, bump): → `swift-memory-pool-primitives`,
+  `swift-memory-arena-primitives`
+- Memory-bounded containers (buffer with iteration semantics):
+  → `swift-memory-buffer-primitives`
+- Synchronization primitives (lock, shared): → `swift-memory-lock-primitives`,
+  `swift-memory-shared-primitives`
+- OS memory facilities (mmap): → `swift-memory-map-primitives` (with eventual
+  L2 relocation to `swift-iso-9945` / `swift-darwin` / `swift-linux`)
+
+## Evaluation rule
+
+Sub-target additions are evaluated against this scope. If a proposed addition
+is OUT of scope, it extracts to a sibling package, not into this one.
+```
+
+### §[MOD-039] Minimize @_spi — Why Last-Resort + Empirical Baseline (evicted 2026-07-05)
+
+**Why last-resort**: `@_spi`-gated declarations are stripped from the `.swiftinterface` ([INFRA-026], via [RES-021]) — invisible to `swiftinterface`-based consumers and to documentation, so an SPI symbol is neither a supported contract nor a discoverable one. It is a private door with no lock on the semantics: any consumer who opts in with the matching `@_spi(Group)` gets unversioned access to internals. The per-file opt-in ceremony ([MOD-016]) makes the boundary auditable precisely so this rule's audit pass can enumerate it (`grep @_spi(Group)`).
+
+**Empirical baseline** (2026-07-05 measurement across swift-primitives / swift-standards / swift-foundations): 118 files carry `@_spi`, in six SPI groups — `Syscall` (52), `Internal` (51), `DynamicHTML` (21), `Unsafe` (13), `MemoryInternal` (8), `RawSyntax` (2). Group counts are per-group occurrences and sum above the file count because a file may declare more than one group; this baseline is the standing audit pass's starting worklist.
