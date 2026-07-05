@@ -559,3 +559,60 @@ is provably guaranteed.
 - 2026-05-10: Wave 2b lint extraction (HANDOFF-skill-to-ci-cd-extraction-inventory.md) — added Lint enforcement lines for [API-ERR-006], [API-NAME-010], [API-NAME-011], [API-NAME-012] mapping each rule to its new SwiftLint custom rule in `.swiftlint.yml`. Prose unchanged per [SKILL-LIFE-001] minimal revision; these are clarifying additions per [SKILL-LIFE-003].
 - 2026-05-10: Wave 2b finalization Batch 3 (HANDOFF-wave-2b-finalization.md) — added Lint enforcement lines for [API-IMPL-005] (Lint.Rule.Structure.SingleTypePerFile), [API-IMPL-012] (Lint.Rule.Closure.ParameterPosition), [API-IMPL-013] (Lint.Rule.Closure.MultipleLifecycle). [API-NAME-002] confirmed as already-shipped Lint.Rule.Naming.Compound (Wave 1).
 - 2026-05-10: Wave 1 mechanization (HANDOFF-mechanization-wave-1-high-leverage.md) — added Lint enforcement lines for [API-NAME-001] (Lint.Rule.Naming.CompoundType), [API-NAME-013] (Lint.Rule.Naming.RedundantPrefix — type-prefix variant), [API-IMPL-003] (Lint.Rule.Naming.BoolParameter), [API-ERR-007] (Lint.Rule.Throws.HoistedError), [API-IMPL-006] (validate-file-naming.py + workflow). Statements unchanged per [SKILL-LIFE-001]; clarifying per [SKILL-LIFE-003].
+
+---
+
+## §D1 Eviction Pass 2026-07-05
+
+Non-normative content evicted from `Skills/code-surface/SKILL.md` to clear the skill-size gate (baseline 1550). One-line pointers remain in-skill.
+
+### §[API-NAME-003] Specification-Mirroring Names — Rationale (evicted 2026-07-05)
+
+**Rationale**: Specification-mirroring names provide traceability and prevent naming drift.
+
+### §[API-NAME-004] Namespace Adoption Over Rename Bridges — Rationale (evicted 2026-07-05)
+
+**Rationale**: Type unification should eliminate indirection, not add it. Typealiases obscure the canonical type in diagnostics, autocomplete, and documentation.
+
+### §[API-ERR-001] Typed Throws — Rationale (evicted 2026-07-05)
+
+**Rationale**: Typed throws enable exhaustive error handling at compile time and eliminate runtime type checking overhead.
+
+### §[API-IMPL-008] Minimal Type Body — Protocol-Witness Companion Note (evicted 2026-07-05)
+
+**Protocol-witness methods on types with associatedtype-using storage** (companion note, added 2026-05-17 from X2 dispatch): Moving protocol-witness methods into extensions while keeping conformances on the struct declaration creates an associatedtype inference cycle when the struct's storage references the associatedtype unqualified. The cycle manifests as `unsupported recursion for reference to type alias 'Element'` and conformance-failure diagnostics.
+
+The working pattern is:
+
+1. **Full-qualify storage types**: storage members referencing the protocol's associatedtype use the **fully-qualified outer type**, not the unqualified associatedtype name.
+2. **Conformance-on-extension**: each protocol conformance is declared on its own extension, not on the struct declaration.
+3. **Other conformances stay on the struct decl**: marker-only conformances (`Sendable`, `Hashable` if auto-synthesized, etc.) that don't supply witnesses can remain on the struct declaration.
+
+Why full-qualification (not a typealias — the typealias trips [API-NAME-004a]/[PLAT-ARCH-018]) and why conformance-on-extension (the [API-NAME-002] protocol-witness exemption gates on the enclosing extension's inheritance clause), plus the worked Cyclic.Group.Static.Iterator example and provenance: rationale archive §[API-IMPL-008]. The pattern generalizes to all iterator-like types with associatedtype-using storage as ecosystem packages onboard [API-IMPL-008] enforcement.
+
+### §[API-IMPL-023] Capability Seams — Backward Compatibility (evicted 2026-07-05)
+
+**Backward compatibility**: BREAKING (2026-06-22) — supersedes the gerund-with-no-noun-home workaround for generic nests. Generic agent-noun nests now carry the canonical triple ON the agent noun via the [API-IMPL-009] hoist; homing it on the deverbal noun is disallowed. REOPENS the 2026-06-12 seat ruling R-1 (which homed the allocation triple on `Memory.Allocation`). `Memory.Allocating` and any `Store.\`Protocol\``-class seam in the same shape are flagged for triple-retrofit at release-readiness. Principal-ratified 2026-06-22 per [SKILL-LIFE-003]. Provenance: `operation-domain-naming-and-organization.md` v1.1.0 §6.1 (verified swiftc 6.3.2). **ADT Tower rider (2026-07-02)**: [DS-028] front-door aliases are generic-instantiation aliases (the sanctioned [API-NAME-004] exception), expressly OUTSIDE the forbidden rename-bridge class; the tower's discipline/capability seams remain deletable conveniences per this rule (`Research/adt-tower.md` §4.7).
+
+### §[API-NAME-007] Convention-Known-Convention-Unapplied — Why These Two Triggers (evicted 2026-07-05)
+
+**Why these two triggers**:
+
+| Trigger | Why it indicates risk |
+|---------|----------------------|
+| (a) Internal capital letter | Internal capitals are the syntactic signature of compound identifiers. `swapAt`, `walkFiles`, `openWrite`, `readWrite` all match. The check fires regardless of whether the writer intended a compound. |
+| (b) Copied/adapted from external API | External APIs (stdlib, SE proposals, other languages) routinely use compound identifiers that the ecosystem forbids. Stdlib-mimicry creates gravitational pull toward compound names; the explicit re-check counters the gravity. |
+
+### §[API-NAME-014] Module Disambiguation — Rationale (evicted 2026-07-05)
+
+**Rationale**: Alternative names like `Text` are naming-by-avoidance, not naming-by-intent — module-qualified access is verbose at the few ambiguous call sites; alternative naming is wrong at every call site.
+
+### §[API-IMPL-016] Typealiases Allow Nested Type Extensions — Rationale (evicted 2026-07-05)
+
+**Rationale**: Asserting a non-existent compiler limitation as architectural justification leads to bad rename proposals or wholesale relocation; verify actual behavior before designing around an imagined constraint.
+
+### §[API-NAME-015] Namespace Depth Is Not a Design Constraint — Rationale + Provenance (evicted 2026-07-05)
+
+**Rationale**: Depth is an *output* of the domain's semantic structure, not an independent axis to tune. Treating "too deep" or "too shallow" as a defect inverts the dependency — it lets a path-length heuristic override the structure the names exist to mirror. The two failure modes are symmetric violations of [API-NAME-001]: flattening a real nest and padding with filler levels both make the path misrepresent the domain.
+
+**Provenance (full form)**: principal directive 2026-07-05 ("namespace depth is not a semantic concern — can be as deep as possible if semantically correct"), resolving a deferred design question from the 2026-04 POSIX/Linux modularization arc. Additive per [SKILL-LIFE-003] — elaborates [API-NAME-001]'s semantic-weight criterion; no conforming code is invalidated.

@@ -763,3 +763,90 @@ the frontmatter.
 - **2026-05-10**: [SUPER-038] Brief-vs-State-Staleness Pre-Send Verification added per Reflections/2026-05-06-supervisor-mode-cleanup-cycle-and-secret-management-seed.md (Cluster F consolidation)
 - **2026-05-10**: [SUPER-035] Pre-Dispatch Empirical State Verification + [SUPER-036] Edit-Zone Non-Overlap for Parallel Dispatch + [SUPER-037] Build-Warning Classification added per Reflections/{2026-04-30-path-x-multi-cycle-kernel-primitives-removal, 2026-04-30-path-x-completion-cycles-19-23-and-g6, 2026-05-02-supervisor-multi-envelope-parallel-dispatch-and-verification-rhythm}.md (Cluster A consolidation)
 - **2026-05-05**: Track B Phase B-2 — `**Composite:**` annotations on 12 composite rules per HANDOFF-skills-quality-refactor-track-b.md
+
+---
+
+## §D1 Eviction Pass 2026-07-05
+
+Non-normative content evicted from `Skills/supervise/SKILL.md` to clear the skill-size gate (baseline 1407). One-line pointers or cross-refs remain in-skill.
+
+### §[SUPER-001] Handoff-vs-Supervise Distinction — Rationale (evicted 2026-07-05)
+
+**Rationale**: Conflating the two produces either a handoff that depends on a still-living principal (broken when the session ends) or a supervisor that can only intervene after the fact (no in-flight oversight).
+
+### §[SUPER-002/003] Ground-Rules Block Size — Rationale (evicted 2026-07-05)
+
+**Rationale**: 4–6 entries is the size at which the subordinate can hold the full block in working memory while writing each turn. Larger blocks become wallpaper and stop being checked.
+
+### §[SUPER-002a] Scope-Lock Precedes Architecture-Lock — Example (correct) (evicted 2026-07-05)
+
+**Example (correct)**:
+
+```
+fact: In scope — GUI consumers of Executor.Main on Darwin and non-Darwin
+      (user confirmed 2026-04-16, theoretical-best framing regardless of current consumer count).
+      Out of scope — embedded environments (deferred).
+      Explicitly rejected — import Foundation anywhere in the stack (γ lock-out).
+MUST: Platform-agnostic Executor.Main (no #if os(...) in the file).
+MUST NOT: Import Dispatch directly inside Executor.Main.
+  (why: scope fact above — GUI consumers on non-Darwin need a unified type.)
+```
+
+### §[SUPER-006] Boundary-Triggered Intervention — Rationale (evicted 2026-07-05)
+
+**Rationale**: Continuous intervention defeats the subordinate's autonomy and inflates context cost. Zero intervention defeats supervision. Boundary-triggered intervention is the productive middle: the subordinate runs freely between boundaries, the principal verifies at each one.
+
+### §[SUPER-008] Reject-and-Redo — Rationale (evicted 2026-07-05)
+
+**Rationale**: Silent rewrites destroy the subordinate's ability to learn from correction, produce two half-authored artifacts whose authorship is unclear, and erode the verification trail that supervision exists to preserve. Reject-and-redo preserves authorship and corrective signal.
+
+### §[SUPER-009] Acceptance Criteria — Example (evicted 2026-07-05)
+
+**Example**:
+```
+Acceptance:
+  1. swift test green on macOS for the new Listener events strategy.
+     (verified via: build/test output — principal runs `swift test` locally)
+  2. swift test green on Linux Docker for blocking + events + completions.
+     (verified via: build/test output — principal runs Docker test in its own shell)
+  3. No diffs to swift-kernel-primitives or swift-linux-standard.
+     (verified via: disk/git state — `git diff --stat` on those packages)
+  4. Phase 3A research note written at Research/sockets-phase-3-plan.md.
+     (verified via: current file state — principal reads the file)
+```
+
+### §[SUPER-013] Cite-the-Rule Drift Correction — Rationale (evicted 2026-07-05)
+
+**Rationale**: Quoting the rule and citing its number turns drift correction from a personal exchange into a verifiable check against a shared artifact. The subordinate can re-read the cited entry; the principal can re-apply the same check next turn.
+
+### §[SUPER-014] Block-on-Disk — Rationale (evicted 2026-07-05)
+
+**Rationale**: A block held only in conversation context is lost on session end and re-derivable only from memory. The block must be on disk or in the prompt for re-injection to be reliable.
+
+### §[SUPER-015] Append In-Scope Answers — Rationale (evicted 2026-07-05)
+
+**Rationale**: An in-scope answer is a new constraint on the subordinate's remaining work. If it is not added to the block, the subordinate forgets it, the principal re-derives it, and the answer drifts across turns. Appending it freezes the decision and makes it citable for future drift checks.
+
+### §[SUPER-026] Principal-Side Import-Grep — Why Principal-Side (evicted 2026-07-05)
+
+**Why principal-side, not just writer-side**: [HANDOFF-013b] (the writer-side counterpart) catches the methodology gap at handoff-write time. [SUPER-026] catches the same defect at supervision time, when the dispatched approach is being authorized. The two rules are complementary: in single-actor sessions where the writer is also the principal, both fire at the same moment; in dispatched sessions, [HANDOFF-013b] fires first (write time) and [SUPER-026] is the second-line defense at the corresponding authorization moment. A defect that slips past [HANDOFF-013b] (writer didn't grep for explicit imports) is still catchable at [SUPER-026] (principal checks before authorizing the disposition).
+
+### §[SUPER-027] Pre-Dispatch Ecosystem-Constraint Scan — Relationship to [SUPER-020] (evicted 2026-07-05)
+
+**Relationship to [SUPER-020] Pre-Authorization Architectural-Constraint Scan**: [SUPER-020] covers cross-package Package.swift edits, cross-layer type references, and dependency-direction changes at *class (b) authorization* time during execution. [SUPER-027] (this rule) covers the same risk-surface dimensions plus namespace-ownership and Research-doc-recommendation at *dispatch authorization* time, before the subordinate begins. The two rules compose: [SUPER-027] catches the dispatch-time class; [SUPER-020] catches the in-flight class. A defect that slips past [SUPER-027] (dispatcher missed the constraint) is still catchable at [SUPER-020] (principal re-checks before authorizing the in-flight class (b) escalation that surfaces the same defect).
+
+### §[SUPER-055] Orchestrator Match STOP — Relationship, Worked Example, Rationale (evicted 2026-07-05)
+
+**Relationship to adjacent rules**:
+
+- **Subordinate-side symmetry — [SUPER-039]**: [SUPER-039] obligates the *subordinate* to treat an upstream-state divergence surfaced during verification as a class-(c) escalation (neither silent fix nor silent halt). [SUPER-055] is the receiving-end obligation: the orchestrator that receives that class-(c) STOP relays-and-waits rather than absorbing the fix itself.
+- **Distinct from [SUPER-034]**: [SUPER-034] forbids the principal taking over the subordinate's *own in-arc* execution (edits, commits, stamping). [SUPER-055] forbids the orchestrator reaching *outside* the arc into an unrelated package. A "make progress" / "I don't want to keep discussing" user signal authorizes faster relay per [SUPER-034]; it does NOT authorize cross-arc execution.
+- **Composes with [SUPER-056]**: the blocker is frequently parallel-session state; [SUPER-056] governs the general non-interference posture the orchestrator must adopt while waiting.
+
+**Worked example (origin incident)**: 2026-05-18 — a B2 verification dispatch surfaced a `swift-array-primitives` protocol/witness mismatch (`Collection.Remove.Last` requires `static func last(_:)`; five Array witnesses were still named `removeLast`). The subordinate correctly STOPPED per its "if blocked by unrelated work, stop — don't work around" ground rule. The orchestrator then renamed the five signatures in `swift-array-primitives` to unblock B2 — stepping on the principal's parallel work on that same package. Corrected twice ("revert the array-primitives changes, we're working on that separately"; "if parallel work interferes, stop the work and inform me"). The compliant move was to relay the STOP verbatim and wait.
+
+**Rationale**: A subordinate's disciplined STOP is defeated if the layer above it silently performs the very cross-arc edit the subordinate refused. Matching the STOP up the chain preserves authorship boundaries, avoids racing the principal's parallel work on the same package, and keeps the escalation trail intact.
+
+### §[SUPER-056] Non-Interference With Parallel State — Rationale (evicted 2026-07-05)
+
+**Rationale**: Parallel sessions own their working-tree edits; source-level interference (editing their files, reverting their state, committing their WIP) is destructive across sessions and conflates authorship and commit cadence. Build-cache mutation is local and safe. STOP-and-INFORM when blocked, plus work-around when not, is the only posture that neither races parallel work nor stalls the arc.
