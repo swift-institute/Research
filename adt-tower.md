@@ -435,6 +435,13 @@ spellings are UNCHANGED. **Governance note**: throughout §2–§5 and §9, the 
 spelling `Shared<Element, B>` / `Shared<E, _>` now denotes `Ownership.Shared<…>`; occurrences of
 "Shared" as the ownership AXIS word or the `X<E>.Shared` FRONT DOOR are unaffected. Lands in its
 own wave **W1.8** (the ~45-site migration is forced by no earlier wave).
+**Mechanism evidence + ordering (Phase 3, 2026-07-05)**:
+`Experiments/adt-tower-m8-ownership-shared-rehome` — (H1) the re-home compiles debug+release
+cross-module over the REAL `Ownership.Box` + real heap-linear column, CoW semantics
+precondition-guarded green; (H2) the rename ORDER is compiler-FORCED, not hygiene: the 1-param
+box class and the 2-param column struct can COEXIST as declarations, but any module co-seeing
+both gets `ambiguous type name 'Shared' in 'Ownership'` at every type-level use site, and
+generic arity does NOT disambiguate — so M8(a) lands strictly before M8(b) in the W1.8 sequence.
 
 **M8 package disposition (F3 — RULED (c), principal 2026-07-05; absorb-refutation grounds
 corrected at Phase 3).** The namespace re-home raises a package question M8's rename-pricing did
@@ -631,10 +638,13 @@ retained `@inlinable` generic `Iterable.forEach` template (`public_external`, un
 concrete client); the three specialized functions the client actually calls (Linear `Iterable`
 count, Linear bespoke sum, Ring bespoke sum) hold 0 each. Iteration bottoms out in the concrete
 column's `Span.Protocol` span (Linear) / ledger-walked `storage[slot]` subscript (Ring) with no
-protocol dispatch — it flows from the column exactly as D3 requires. Evidence: scratch spike
-`m11-iteration-0witness` (path-deps the REAL buffer/storage/allocator packages on local mains, as
-the ratified worked example does); GREEN + runtime-correct on 6.3.3; promotion to `Experiments/`
-is a follow-up.
+protocol dispatch — it flows from the column exactly as D3 requires. Evidence:
+`Experiments/adt-tower-m11-iteration-0witness` (fresh re-verification landed 2026-07-05 at
+Phase 3; supersedes the lost scratch spike `m11-iteration-0witness`) — path-deps the REAL
+buffer/storage/allocator packages on local mains, GREEN + runtime-correct on 6.3.3; the
+re-verification refines the "4 sites" to 2 real `witness_method` instructions (both inside the
+unreachable template) + 2 calling-convention annotations, and re-confirms by grep that Ring
+conforms NO multipass `Iterable` on current main.
 
 **W2 implication.** Each family's iteration IS the column's borrowing `forEach`; the ADT adds no
 iteration machinery. Families over Linear additionally expose multipass `Iterable`; families over
@@ -642,7 +652,7 @@ Ring (and any single-pass column) expose only the single-pass borrowing `forEach
 borrowing segment iterator exists. The W2 fan-out inherits this — a family's iteration surface is
 READ FROM its column, never declared at the ADT tier.
 
-**Provenance**: §2 D3 (compose-don't-refine); spike `m11-iteration-0witness`;
+**Provenance**: §2 D3 (compose-don't-refine); `Experiments/adt-tower-m11-iteration-0witness`;
 `Buffer.Linear+Iterable.swift`, `Buffer.Ring+forEach.swift`,
 `Buffer.Ring+Sequence.Protocol.swift:11-17` (the 2026-06-10 ring multipass prune);
 `Iterable.swift:24-34` (multipass/single-pass orthogonality).
@@ -811,11 +821,15 @@ numerically sound; `Buffer.Slab+Operations.swift:20` already uses `.retag`); the
 witness is already element-domain (verbatim). **Secondary win**: deleting the
 `Count: Carrier.\`Protocol\`<Cardinal>` bound removes `swift-buffer-protocol-primitives`'s direct
 imports of `Carrier_Protocol` and `Cardinal_Primitive` (`.zero`/`==` still resolve via
-`Index_Primitives`' re-export) — a two-module dep-surface reduction. **Evidence**: scratch spike
-`m7-concretize-count`, `swift build` GREEN on 6.3.3 — concretized seam + real atomic-type
-packages (index/cardinal/carrier/tagged/ordinal), six conformers + a negative control (a
-non-retag slab witness is correctly REJECTED, proving the constraint is load-bearing); promotion
-to `Experiments/` is a follow-up. **WAVE GATE (SEAT)**: this proves the DESIGN; the production
+`Index_Primitives`' re-export) — a two-module dep-surface reduction. **Evidence**:
+`Experiments/adt-tower-m7-concretize-count` (fresh re-verification landed 2026-07-05 at Phase 3;
+supersedes the lost scratch spike `m7-concretize-count`) — build ×2 + run GREEN on 6.3.3:
+concretized seam against the real atomic-type packages, six conformer shapes (element-domain
+verbatim + Bit-domain `.retag` witnesses; the unconstrained `isEmpty` default fires on a
+retagged slab count, the exact W18 case), negative control REJECTED with `cannot convert …
+'Tagged<Bit, Cardinal>' to … 'Tagged<Int, Cardinal>'` (the constraint is load-bearing), and the
+dep-surface reduction confirmed STRICT (the seam module imports only `Index_Primitives` under
+`InternalImportsByDefault` + `MemberImportVisibility`). **WAVE GATE (SEAT)**: this proves the DESIGN; the production
 seam change additionally requires the same green reproduced against the REAL
 slab/slot-map/generational packages before it lands.
 
@@ -2119,7 +2133,10 @@ All four corpora mined per-file (2026-07-02); the compiler-bug docs are KEEP-EVI
 Per the A.4 table above (KEEP-EVIDENCE throughout; `g2` manifest fix per §9.6.8), plus this
 session's three new packages — `adt-tower-walls`, `adt-variant-front-doors`,
 `adt-tower-worked-example` — KEEP-EVIDENCE (they are this document's §3/§1.1 witnesses), indexed
-in `Experiments/_index.json`.
+in `Experiments/_index.json`; plus the three Phase-3 re-verification packages (2026-07-05) —
+`adt-tower-m7-concretize-count`, `adt-tower-m8-ownership-shared-rehome`,
+`adt-tower-m11-iteration-0witness` — KEEP-EVIDENCE (the durable replacements for the design
+audit's lost scratch spikes; §4.2 M7, §2 D4.5 M8, §2 D9 M11 point at them).
 
 ---
 
@@ -2192,6 +2209,10 @@ in `Experiments/_index.json`.
 - `Experiments/adt-tower-walls` (+ `Probes/`, `Outputs/`) — the §3 re-probe matrix, 6.3.3
 - `Experiments/adt-variant-front-doors` — the D4.2 mechanism proof (0-witness)
 - `Experiments/adt-tower-worked-example` — the §1.1 measured worked example (real upstream)
+- `Experiments/adt-tower-m7-concretize-count`, `Experiments/adt-tower-m8-ownership-shared-rehome`,
+  `Experiments/adt-tower-m11-iteration-0witness` — the Phase-3 re-verifications (2026-07-05) of
+  the design-audit spikes (M7 seam concretization; M8 re-home mechanism + compiler-forced
+  rename-first ordering; D9/M11 iteration 0-witness)
 - `Experiments/adt-over-buffer-seam`, `storage-protocol-specialization`, `sparse-inline-slot-storage`, `g2-allocator-store-seam`, `cow-box-deinit-omission-miscompile`, `borrow-pointer-storage-release-miscompile` (+ the consolidated `nonescapable-patterns`, `noncopyable-constraint-behavior`) — inherited witnesses per §10.6
 - `Audits/tower-layering-status-quo-2026-06-22.md`, `AUDIT-adt-decoupling-status.md`, `AUDIT-layering-violations-firstpass.md` — the audited ground state
 - `Research/tower-family-benchmark-baselines.md` — §9.5 baselines (superseded as a document by §10.2; its numbers are carried there and re-pinned at W0)
