@@ -394,8 +394,10 @@ extension __Heap where S: ~Copyable {
 > `count.map { Ordinal() }` / typed arithmetic for a bound, and (ii) `Int(clamping:)` for the
 > residual arithmetic seed a raw loop genuinely needs. The reach-through
 > `Int(count.underlying.rawValue)` (which the W2 heap pilot still carries at
-> `Heap.swift:176,207`) and `Int(bitPattern:)` are FORBIDDEN in op bodies. This is the
-> [conversions] rider below; the pilot is corrected on its branch and re-gates in full.
+> `Heap.swift:176,206`) and `Int(bitPattern:)` are FORBIDDEN in op bodies. This is the
+> [conversions] rider below; the pilot is corrected on its branch AT W1.6 and re-gates in full
+> (Phase-3 verification 2026-07-05: the reach-through is STILL PRESENT at branch tip `76ecd6e`;
+> the fix is pending W1.6 work, and the SEAT's pre-clearance of `76ecd6e` resets on new commits).
 
 This is the shipped `Buffer.Linear` pattern (`append<Element, Resource: Memory.Growable>` —
 "pinned to the column over ANY `Resource: Memory.Growable`"; `swift-json` consumes it over
@@ -434,24 +436,31 @@ spelling `Shared<Element, B>` / `Shared<E, _>` now denotes `Ownership.Shared<…
 "Shared" as the ownership AXIS word or the `X<E>.Shared` FRONT DOOR are unaffected. Lands in its
 own wave **W1.8** (the ~45-site migration is forced by no earlier wave).
 
-**M8 package disposition (F3, seat layer-check 2026-07-03 — PRINCIPAL DECISION for W1.8).** The
-namespace re-home raises a package question M8's rename-pricing did not: `Ownership` is owned by
-swift-ownership-primitives, but the CoW column lives in swift-shared-primitives. Empirical layer
-check (seat, this weekend): swift-ownership-primitives currently deps NO buffer/storage packages
-and is depended on BY them (its `Ownership.Box` is the [MEM-SAFE-028] drain-box the column stack
-uses) — so **absorbing the CoW column into swift-ownership-primitives is layer-INVALID (cycle:
-ownership→buffer→ownership.box)**. The column must stay in its own high-tier package that
-declares `extension Ownership { public struct Shared … }` cross-package (namespace extension, not
-ownership — permitted, common in the tree). The residual decision is package-basename alignment:
-**(b)** keep `swift-shared-primitives` (mild basename-vs-namespace smell — the package no longer
-owns a top-level `Shared`); or **(c, seat lean)** heritage-preserving rename
+**M8 package disposition (F3 — RULED (c), principal 2026-07-05; absorb-refutation grounds
+corrected at Phase 3).** The namespace re-home raises a package question M8's rename-pricing did
+not: `Ownership` is owned by swift-ownership-primitives, but the CoW column lives in
+swift-shared-primitives. Corrected empirical layer check (Phase 3, 2026-07-05, manifest facts):
+swift-ownership-primitives deps ONLY swift-tagged-primitives; **no buffer/storage package deps
+it** — its dependents are swift-shared-primitives (for `Ownership.Box`, the [MEM-SAFE-028]
+drain-box the column wraps) plus 13 non-tower packages (async, byte, cache, cursor, linter,
+observation, property, loader, pool, path, string, text). The prior note's "cycle:
+ownership→buffer→ownership.box" therefore does not exist as a literal package cycle;
+**absorbing the CoW column into swift-ownership-primitives remains RULED OUT, on the corrected
+grounds**: absorption would add an upward-tier dependency (the low-tier ownership vocabulary
+package pulling the full buffer/storage/hash/memory column closure) and push that closure
+transitively onto every one of ownership's 13 non-tower dependents — a D1 tier inversion, not a
+cycle. The column stays in its own high-tier package that declares
+`extension Ownership { public struct Shared … }` cross-package (namespace extension, not
+ownership — permitted, common in the tree). The basename decision is **RULED (c)** (principal,
+2026-07-05, via the meta-seat under delegation): heritage-preserving rename
 `swift-shared-primitives` → `swift-ownership-shared-primitives`, aligning basename with the
-`Ownership.Shared` it declares (adds a package rename: mirror + GH + consumer-pin cost). NOT
-absorb/delete. Until the principal rules (b)/(c), W1.8 executes the namespace re-home either way
-(the `extension Ownership` wrapper + the ~45-site sweep are identical); only the package name
-differs, and it is a clean, pre-flagged W1.8 escalation — never a cold STOP. Supersedes the pre-M8
-top-level-`Shared` spelling in §D4.5 / §5.1 / §5.2 (rewritten in place below); the [DS-028] law-1
-marker home stays as amended by M4.
+`Ownership.Shared` it declares — basenames mirror the namespace nest (precedent:
+swift-ownership-primitives, swift-memory-aligned-primitives, swift-binary-leb128-primitives);
+bare `Shared` would assert a top-level namespace that does not exist. NOT absorb/delete. W1.8
+executes the namespace re-home plus the package rename as one mechanical step (mirror + GH +
+consumer-pin cost; the box's "Ownership Shared Primitives" TARGET in swift-ownership-primitives
+renames with M8(a)). Supersedes the pre-M8 top-level-`Shared` spelling in §D4.5 / §5.1 / §5.2
+(rewritten in place below); the [DS-028] law-1 marker home stays as amended by M4.
 
 **Prior-art grounding** (§6): this is the `heapless` shape (storage-parameterized core +
 typealias front-doors + capacity-in-the-storage-type — the shipping Rust counterexample that
@@ -864,9 +873,10 @@ declared as a **typealias**, never a hand-written type:
   also constrains the fence, `where S: ~Copyable, S: Store.Direct`), per [MEM-COPY-004]. A bare
   `extension __X where S: Store.Direct { … }` implicitly re-imposes `S: Copyable` (W9,
   extension-implies-Copyable), making the alias UNREACHABLE from the move-only canonical column —
-  the CONFIRMED `Array.Small.swift:27` defect (missing `, S: ~Copyable`; fixed on-branch, one-line
-  compile-verified). The W1.6 wave-gate adds a per-family alias-reachability compile-probe from a
-  move-only column (compile, not grep). Then the three alias laws: axis-CHANGING aliases
+  the CONFIRMED `Array.Small.swift:27` defect (missing `, S: ~Copyable`; the one-line fix was
+  compile-verified in the audit session but survives on NO branch — Phase-3 check 2026-07-05:
+  the defect is still live on array main; the fix LANDS at W1.6). The W1.6 wave-gate adds a
+  per-family alias-reachability compile-probe from a move-only column (compile, not grep). Then the three alias laws: axis-CHANGING aliases
   (allocation) constrain to the `Direct` marker (cross-axis chains error instead of silently
   resetting an axis); axis-ADDING aliases are column-preserving transformers (`Shared` wraps `S`;
   `Bounded` maps the capacity-twin associated type); every alias doc comment states the units rule
@@ -951,7 +961,7 @@ The variant-selection and container-catalog tables are **stale against the tree*
 | **code-surface** [API-IMPL-022] | Unchanged; carriers are stored tower value types ⇒ `@frozen` from birth (the worked example complies). |
 | **code-surface** [API-IMPL-023] | **AMENDED (M4, 2026-07-03)**: [DS-028] front doors are generic-instantiation aliases, expressly OUTSIDE the forbidden rename-bridge class. Discipline seams remain deletable conveniences WITH ONE CARVE-OUT — the `Direct` marker (`__ColumnDirect`, and the NEW seam-tier `Store.Direct` typealias below) is **load-bearing**, NOT a deletable convenience: it is the axis-drop FENCE the [DS-028] alias laws depend on ([DS-028] law 1 — deleting it lets a cross-axis chain silently reset an axis). Reclassified from "deletable convenience" to a required seam type; §10 records the supersession of the prior "in-tower plumbing binds `__ColumnDirect` directly" ruling. |
 | **code-surface** [API-NAME-004] / `Store.Direct` (M4, NEW) | Add a seam-tier public typealias `Store.Direct` (= `__ColumnDirect`) in Store Protocol Primitives alongside the hoisted marker, so in-tower conformance/where-clauses bind `Store.Direct` — NOT the dunder `__ColumnDirect` and NOT the column-vocabulary `Column.Direct` (which stays the consumer-facing spelling). No dunder token ever appears in a public conformance clause. |
-| **conversions** [CONV-016] / op-body index hygiene (M6, NEW) | Op bodies over the typed seam count MUST derive bounds through the typed API (`count.map { Ordinal() }`, typed `Index`/`Offset`/`Count` arithmetic) and descend to raw `Int` ONLY via `Int(clamping:)` for the residual arithmetic seed a raw loop genuinely needs. The reach-through `Int(x.underlying.rawValue)` (tier-5 double-unwrap) and `Int(bitPattern:)`-in-arithmetic are FORBIDDEN in tower op bodies; both are AST-lint-promotion candidates (extends `no_int_bitpattern_arithmetic`). The W2 heap pilot's `Heap.swift:176,207` carry the reach-through and are corrected on-branch. |
+| **conversions** [CONV-016] / op-body index hygiene (M6, NEW) | Op bodies over the typed seam count MUST derive bounds through the typed API (`count.map { Ordinal() }`, typed `Index`/`Offset`/`Count` arithmetic) and descend to raw `Int` ONLY via `Int(clamping:)` for the residual arithmetic seed a raw loop genuinely needs. The reach-through `Int(x.underlying.rawValue)` (tier-5 double-unwrap) and `Int(bitPattern:)`-in-arithmetic are FORBIDDEN in tower op bodies; both are AST-lint-promotion candidates (extends `no_int_bitpattern_arithmetic`). The W2 heap pilot's `Heap.swift:176,206` carry the reach-through; the fix lands at W1.6 (still present at `76ecd6e`, Phase-3 check 2026-07-05) and re-gates the pilot. |
 | **code-surface** [API-NAME-008] remove-op naming (M5, NEW) | A single-word removal op that can fail on empty returns `Optional` (`pop() -> Element?`), tower-wide (extends the SEAT's §9.3 remove-from-empty ruling into a naming decree): `Array.removeLast()` → `pop()`; every family's single-word remove follows. Carve-out: this supersedes any [API-NAME-008] compound-name pressure for the `~Copyable`-carrier remove ops — the Optional-consuming return is available for `~Copyable` elements (a borrow is not, so borrowing accessors keep crashing preconditions, `min`). |
 | **ecosystem-data-structures** bounded error (M10, NEW) | The bounded op form spelled `throws(Overflow)` throughout this document denotes each family's OWN nested error type (`throws(Queue.Error)` with a `.full` case — the LANDED shape, `Queue+Columns.swift:62,75`, `Queue.Bounded.swift:29`), NOT a shared tower-wide `Overflow` type (which never landed). Keep per-family nested `Error`; `Overflow` in [DS-028]/[DS-029]/D4.1/D4.4 is a stand-in token for that per-family error, read accordingly. |
 | **ecosystem-data-structures** iteration (D9 / M11, NEW) | The ADT tier defines NO iteration; it flows from the column as a **borrowing `forEach`** lending `(borrowing Element)` — 0-witness cross-module, spike-verified for both Linear and Ring over a move-only element. `~Copyable` columns are **borrow-iterable only** (consuming `Sequenceable` is `Element: Copyable`-gated). Multipass `Iterable` is a **Linear-only** surface (Ring's was pruned 2026-06-10); a family claims `Iterable` ONLY if its column vends it. See §2 D9. |
@@ -1352,6 +1362,24 @@ production packages + skills; this document's own §10 authorizes the pruning.
 Waves are serial; packages within W1/W2 parallelize per the no-duplicate-dispatch and
 serial-build disciplines (one executor per package tree; parent builds once after edits).
 
+**Interstitial waves between W1 and W2 (added at Phase 3, 2026-07-05 — all content previously
+ratified; this block only makes the sequence readable from the plan itself).** The executed and
+planned order is: **W1.5** fence-retrofit unit (§9.2; LANDED) → **W1.75** tower quality sweep
+(§9.2; gate met by the code-surface half; the lint re-run is a NAMED W2 gate item) → **W1.6**
+tower-internal correction — M1 restatement sweep + the alias-reachability compile-probe (§4.4),
+M2 land of the four pre-cleared rename branches (pre-authorized 2026-07-03), M3 `unshare()`
+lockstep (§4.5, §10.1), M4 `Store.Direct` seam-tier alias (§4.7), M5 Optional remove-from-empty
+naming decree (§4.7 [API-NAME-008]), M6 pilot op-body idiom fix + full pilot re-gate (§2 D4.3)
+→ **W1.7** M7 seam concretization, gated on the same green against the REAL
+slab/slot-map/generational packages (§4.2 wave gate) → **W1.8** M8 namespace re-home + the
+RULED F3(c) package rename (§2 D4.5) + the Shared front-door pull and its consumer sweep
+(§9.3 note) → **W1.9** M11/D9 iteration re-home: delete or re-point ADT-tier hand-walk
+iteration to the column flow-through per §2 D9; sites enumerated by grep at dispatch
+(plan-time indicative: the per-family bespoke `forEach` bodies in the set/dictionary/slot-map
+`+Columns` files and the queue/array/fixed `Iterable`/`makeIterator` conformance files; a
+family claims multipass `Iterable` only where its column vends it) → then **W2**. Waves remain
+strictly serial; the seat opens each.
+
 ### 9.2 W1 mechanics (per package, uniform)
 
 **The W1.5 fence-retrofit unit (SEAT ruling 2026-07-02).** The §4.4/[DS-028] alias-law
@@ -1427,7 +1455,14 @@ LEDGER FLIP rides the cluster's landing window — never precedes it (a pre-merg
 5. Consumer migration: mechanical respell `X<Column>` → `__X<Column>` or (preferred where the
    column is a default/`Small` point) the front door. Break lists per family live in the wave
    dispatch; the 27-package consumer survey (13 L2/L3 + 14 intra-L1; io=10 files, async=9 the
-   largest) is the enumeration source of record.
+   largest) is the enumeration source of record. **Scope note (front-door adjudication,
+   2026-07-05)**: the carrier respell is the sanctioned INTERIM for door-less column points
+   only — [DS-025]'s front-door law states the end state, in which consumers spell front
+   doors, never the hoisted carrier. Where a family×column point's front door already exists
+   (default points: `X<E>`) the front door is the required spelling; once a door-less point's
+   pull threshold is met (the `Shared` door — pulled at W1.8 with M8, its `X<E>.Shared`
+   spelling unchanged by the re-home), every interim carrier spelling of that point joins the
+   wave's break-list for the door respell under the §9.4 grep-zero gate.
 
 ### 9.3 W2 per-family dispositions (all decided now)
 
@@ -1444,7 +1479,7 @@ LEDGER FLIP rides the cluster's landing window — never precedes it (a pre-merg
 | `Cache` (swift-cache-primitives) | family: out of tower scope (reference cache; census n/a) — but a W1 CONSUMER sweep: 4 `Array<Column.Heap<…>>` sites (Cache.swift:269,373,403,436) | |
 | *(census note — SEAT ruling 2026-07-02: COLUMN packages (tree-n, tree-keyed) classify n-a in the [DS-026] census — the carrier predicate applies to carriers; columns are its inputs, not its subjects)* | | |
 | `Tree` family | already at-target (carrier `Tree<S>` b09726a); W2 adds the front doors the 6.3.2 SIGSEGV blocked: `Tree<E>.N<n>` etc. via aliases over the tree-n/tree-keyed columns; `TreeDynamic` compound alias RETIRES in favor of the canonical `Tree<E>` front door | tree-n/tree-keyed stay column/sibling packages |
-| `Graph` | family: namespace, no reshape — but a W1 CONSUMER sweep: 13 files / 28 `Array<Column.Shared<Payload>>` sites migrate to the Shared front door | the §9.4 silent-retype gate applies |
+| `Graph` | family: namespace, no reshape — CONSUMER sweep RE-HOMED to W1.8 (adjudicated 2026-07-05): 13 files / 28 `Array<Column.Shared<Payload>>` sites migrate to the Shared front door when it is pulled at W1.8; the interim carrier respell (`__Array<Column.Shared<…>>`, 1 file landed `02682be`) is §9.2.5-sanctioned until then | the §9.4 silent-retype gate applies — the W1.8 sweep re-greps; the 2026-07-05 publication-sweep enumeration (1 file) counted only hard breaks and UNDERCOUNTS vs the 13/28 of record |
 
 ### 9.4 Consumer-migration notes
 
