@@ -793,6 +793,35 @@ hand-rolled-CoW gate+box per op — the same structure B-1′ decomposes). Its d
 the hand-rolled copy is measurably worse than the column combinator it predates (a
 respell datum). stdlib's sub-2 ns rows at n ≤ 1k carry the B-5 spread class.
 
+### Heap — W2 pilot as re-gated at W1.6, bench beside branch tip `a49df99` (M6 `42a1654` + harness `a49df99`)
+
+Recorded 2026-07-05 (W1.6 wave-A re-gate; label of record printed by the run:
+"Apple Swift 6.3.3 (swiftlang-6.3.3.1.3), XcodeDefault (Xcode 26.6 17F113)"). These are the
+family's ROWS OF RECORD — the first COMPILING Gate-7 run: the pre-cleared pilot tip `76ecd6e`
+never compiled the benchmark harness (its Optional-pop revision left the drain loop un-adapted),
+so the 2026-07-02 pilot rows in `REPORT-adt-tower-W2-pilot.md` predate the Optional-pop surface.
+**Harness note row (§9.5 ruling-2 class, SEAT-authorized 2026-07-05)**: `Cases.swift:87`
+tower-drain re-spelled `while !h.isEmpty { acc &+= h.pop() }` → `while let v = h.pop { … }`-form
+(one line, semantics-identical op stream; the stdlib reference at `:100` untouched — its `pop()`
+is non-optional, adapting it would be a methodology change). Median ns/op, 9 samples/row:
+
+| shape | n | tower.direct | stdlib | tower/stdlib |
+|---|---|---|---|---|
+| insert.zero | 16 | **21.798** (cv ≤2.8%) | **12.256** | 1.78× |
+| insert.zero | 1,024 | **8.056** | **5.533** (cv 7.7%, bimodal) | 1.46× |
+| insert.zero | 65,536 | **7.553** (cv 1.2%) | **5.302** | 1.42× |
+| drain.cycle | 16 | **24.306** (cv 1.0%) | **20.638** | 1.18× |
+| drain.cycle | 1,024 | **34.545** (cv 1.3%) | **29.973** | 1.15× |
+| drain.cycle | 65,536 | **64.023** (cv 1.2%) | **61.537** | 1.04× |
+
+vs the 2026-07-02 pilot rows: all six tower rows within ±5% (largest: drain.cycle @64k +3.9%,
+with the loop-shape change and machine state as candidate contributors — the re-spelled drain is
+the harness of record going forward, so future deltas compare like-to-like). Insert tax
+1.42–1.78×, inside the documented 1.3–1.9× band; attribution per the ledger: the typed-slot
+append path + exchange-based sifting (~2× hole-shift seam traffic; hole-shift stays the ledgered
+non-gating follow-up). Extract-min (drain − insert), the O(log n) hot path: tower ≈ stdlib
+parity at scale (1.004× @64k), consistent with the 0-witness SIL gate.
+
 ### Arena (Storage.Generational, the substrate) — batch-2, bench beside tip `52537ef` (commit `b0ac26d`)
 
 Recorded 2026-06-12 06:31–06:40, quiet-gated (60 s sustained-clear), procs=0 at EVERY
