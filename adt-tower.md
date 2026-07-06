@@ -957,6 +957,19 @@ A `Memory.Heap`-hardcoded pin where `R: Memory.Growable` suffices is a defect (t
 check). Buffer-tier public ops follow the same law (`Buffer.Linear.append` is the shipped
 exemplar; ring/slab/linked heap-pinned ops are wave-W3 migration items, §9.1).
 
+> **Scope note (seat ruling 2026-07-06, P3; principal-reversible).** Form 2 is DEFINED for the
+> Contiguous storage path only. The Pool/Generational path's generalization form is UNDEFINED
+> pending the chartered generational/pool design leg (P1+P2+P3 + the DS-024 generational
+> fixture — DEFERRED-TO-PULL, rulings log of record): `Storage.Generational`'s
+> create/grow/clone are `Allocation == Memory.Allocator<Memory.Heap>.Pool` concrete
+> (`Storage.Generational.swift:274`, `+lifecycle.swift:107,:47`) and the self-allocating pool
+> init is `Resource == Memory.Heap` by dependency-inversion design
+> (`Memory.Heap+Memory.Allocator.swift:50`) — those concrete pins are LAWFUL (the defect
+> clause fires only where `R: Memory.Growable` suffices; the W3.1 linked leg proved a
+> generic-M respell cannot compile there). Same class: ownership-shared's heap-pinned wrapping
+> inits (`Shared+Ring.swift:31/47`). The two-lane `Store.Split` (Slots) pin form is likewise
+> undefined pending the leg.
+
 **Provenance**: `Buffer.Linear+Lifecycle.swift` (the shipped pattern; `swift-json` consumes it
 over `Memory.Small<24>` in production); `Experiments/adt-tower-worked-example` §3 (the pattern
 at the ADT tier, real columns, both variants).
@@ -1407,6 +1420,19 @@ iteration to the column flow-through per §2 D9; sites enumerated by grep at dis
 `+Columns` files and the queue/array/fixed `Iterable`/`makeIterator` conformance files; a
 family claims multipass `Iterable` only where its column vends it) → then **W2**. Waves remain
 strictly serial; the seat opens each.
+
+**W3-row inline-door annotation (seat ruling 2026-07-06, P5; principal-reversible).** The W3
+inline-door deliverable closed partially-by-design: `Slab<E>.Inline<n>` is LIVE (the first
+inline door — the axis is proven end-to-end), while the `Array<E>.Inline<n>` door is
+**DEFERRED-TO-PULL** (zero consumer pull; the proven-blocked artifact is banked at array branch
+`adt-tower-w3-3`, `3b34dc0`, DO-NOT-MERGE). Ratified direction when pulled: the BOUNDED route —
+the door aliases the bounded column point over the inline leaf (the inline op profile IS the
+`.Bounded` profile; `Store.Inline ∌ Memory.Growable` makes the capacity axis Bounded by
+construction), reusing the existing bounded overflow machinery plus ONE public seam-generic
+inline construction init at the buffer tier (from a default `Store.Inline<E, n>()`) and the
+matching `__Array` init pin. A plain-Linear inline-pinned insert is REJECTED (a third decreed
+op form against [DS-029]'s two). Probe at pull: `Buffer<Store.Inline<E, n>>.Linear.Bounded`
+via the [DS-028]-law-2 capacity twin (the banked probe proved plain `.Linear` only).
 
 ### 9.2 W1 mechanics (per package, uniform)
 
