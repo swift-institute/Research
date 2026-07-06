@@ -749,8 +749,41 @@ September-2026 retirement trigger.
 - `swift-graph-primitives/Tests/Support/Toolchain.swift` + 4 analyze/transform/reverse suites — gated 2026-06-01.
 - **`swift-foundations/swift-xml/Tests/XML Tests/{Toolchain.swift, StreamTests.swift, XMLTests.swift}`** — L3 consumer (`XML.parse` / `XML.ND.stream` / `XML` string-literal init → `W3C_XML.parse`); 4 parse-exercising suites (`Stream Tests`, `XML Wrapper Tests`, `XML.Document Tests`, `XML Literal Tests`) gated **2026-07-03**. Was missed in the 2026-06-27 sweep. Note: `XML Literal Tests` parses via `ExpressibleByStringLiteral`/`StringInterpolation` → `Self.fragment`, not obvious from a `parse(` grep.
 - **Likely still-missed**: the plist consumer (same `Byte.Input` machine-parser surface) — audit before the retirement sweep.
+- **`swift-foundations/swift-io/Tests/{Support/Toolchain.swift, IO Event Tests/IO.Event.Driver.Contract.Tests.swift}`** — `SourceContractTests` suite (`Event.Source.Contract`) gated **2026-07-06** (the io `__Dictionary.insert` new site below).
 
 **`@_specialize` real-fix spike (2026-07-03) — NEGATIVE; do not re-run.** Empirically established (minimal 3-package reproducer, 6.3.3): the crash fires whenever the concrete `Byte.Input` metadata / `Input.Protocol` witness table is **materialized at runtime**. Calling `parse` from a *generic* context (Input abstract) dodges it at **`-Onone` only** (debug PASS); under `-O` / `@_specialize` / `@inlinable` the optimizer re-specializes to concrete `Byte.Input` and the crash returns (release CRASH). **Specialization is the trigger, not the cure** — so no `@_specialize`-family source fix exists, and the `-Onone`-only generic-indirection dodge is strictly worse than the gate (it would green a debug build while shipping a guaranteed release crash). This is the empirical basis for the "no source fix, require 6.4+" disposition.
+
+#### §A9 New Site (2026-07-06) — swift-io `Kernel.Event.Driver` registry `Dictionary<Tagged-key>.insert` (institute `__Dictionary`/`__HashIndexed` engine)
+
+The io driver-contract test `poll drops events for deregistered IDs` SIGSEGVs on 6.3.2/6.3.3 at the
+first `shared.registry.insert(...)` in `Kernel.Event.Driver.init` (`Kernel.Event.Driver.swift:136`).
+Registry = `Dictionary_Primitives.Dictionary<Kernel.Event.ID, Registration>`,
+`Kernel.Event.ID = Tagged<ISO_9945.Kernel.Event, UInt>`. Confirmed §A9 by type identity + the
+canonical `swift_getTypeByMangledName → TypeLookupError("unknown error")` → null-metadata deref at
+`0x10` signature (`__Dictionary<>.insert`; the register holds the demangling-cache symbol for
+`__Dictionary<__HashIndexed<Buffer<…Hash.Entry<Tagged<ISO_9945.Kernel.Event, UInt>, …Registration>>…>.Linear>>`).
+This is §A9 **site 3** (the io/kernel registry, workaround `a79ca49` reverted `44ab1f8`) re-surfacing
+after the ADT-tower reshape relocated it into `ISO_9945.Kernel` and respelled the container onto the
+`Hash.Indexed`-backed `__Dictionary` engine (same reshape as set-ordered `3e44537`; axis-B
+container-agnosticism holds).
+
+**Bisection refinements** (5-target reducer, real `Kernel.Event.ID` + institute `Dictionary`;
+terminal record + reducer + three `.ips`: `Issues/swift-issue-tagged-dictionary-insert-metadata-crash`,
+landed `afeabd7`): (1) the **Tagged key** is load-bearing — a non-Tagged `UInt` key PASSES;
+(2) **axis-C open cell RESOLVED** — institute `Dictionary` + Tagged key + **Copyable** value (`Int`)
+**CRASHES**, so a `~Copyable` user value is NOT required for the institute container (the
+`__Dictionary`/`__HashIndexed`/`Hash.Entry`/`Buffer.Linear` engine composes `~Copyable` types into the
+mangled name itself); contrast stdlib `Dictionary` + Tagged key + Copyable value = PASS; (3) **crashes
+in DEBUG and RELEASE** at this site (emission defect, not optimizer; distinct from §A15's
+`-Onone`-only); (4) closure/actor context is incidental — a 3-line straight-line `main` reproduces.
+
+**Dev-toolchain**: PASS-on-dev inherited from the §A9 family (fix travels with the 6.4 compiler
+binary — Correction 2026-05-28), per the 2026-06-01 Set.Ordered new-site precedent; a direct dev
+re-run is deferred (installed snapshots trip the `#if swift(>=6.4)` forward gates — non-probative
+per [ISSUE-001]). **Disposition**: same as the family — no Institute source fix; suite-level
+`.disabled(if: Toolchain.hasTaggedMetadataSIGSEGV)` gated `compiler(<6.4)` landed on swift-io
+(`90abb792`, mirrors graph's `Tests/Support/Toolchain.swift`); listed in the retirement checklist
+above; require Swift 6.4+.
 
 ---
 
@@ -1311,6 +1344,32 @@ The namespace enum gives:
 **Branching investigation**: `HANDOFF-constrained-extension-nested-type-lookup-prior-art.md` queued at `/Users/coen/Developer/` to map upstream + cross-language prior art and decide whether to file SE-discussion. Comparison: Rust impls / C++ template specializations / Haskell type families all DO discriminate at this lookup point.
 
 **Source: `tagged-nested-type-ambiguity-pitfall.md` (deleted 2026-05-10 in Wave 6).**
+
+**GENERALIZATION (2026-07-06, P4 leg — the mechanism is NOT Tagged-specific).** Member-TYPE lookup
+on ANY generic carrier offers ALL same-named conditional typealiases regardless of where-clause
+disjointness — verified on 6.3.3 (`swiftlang-6.3.3.1.3`) with a plain-`swiftc` 8-line reproducer,
+no experimental features:
+
+```swift
+struct Carrier<S> {}
+struct A {}; struct B {}
+extension Carrier where S == A { typealias Member = Int }
+extension Carrier where S == B { typealias Member = Bool }
+let x: Carrier<A>.Member = 1     // error: ambiguous type name 'Member' in 'Carrier<A>'
+let y: Carrier<B>.Member = true  // error: ambiguous type name 'Member' in 'Carrier<B>'
+```
+
+Even mutually exclusive concrete same-type pins collide, in concrete and generic contexts alike;
+conformance-gated variants are additionally offered with ILL-FORMED substitutions (a witness
+instantiated with a type argument violating its own generic bound). **Value-member lookup prunes by
+constraints; type-member lookup does not.** Tower consequence: per-instantiation member-type names
+on a shared carrier (e.g. `__Tree.Error` meaning a different error per storage column) CANNOT be
+expressed as multiple conditional aliases — the working pattern is ONE flow-through alias +
+an associatedtype witness on the column protocol (`extension __Tree where S: __TreeStorage
+{ typealias Error = S.Error }` + per-column `Error` witnesses — the P4 S.Error shape, landed
+tree `ea60802` / tree-keyed `e33e743`; probe matrix in the P4 leg's report, reproducer at the
+rulings-log session scratchpad `repro-member-lookup.swift`). Discovered W3.2-B→P4; not
+upstream-filed (the dossier/catalog is the terminal record per the workspace rule).
 
 ---
 
