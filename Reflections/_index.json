@@ -6107,6 +6107,24 @@
         "swift-json"
       ],
       "status": "pending"
+    },
+    {
+      "file": "2026-07-06-completion-arc-fable-orchestration.md",
+      "date": "2026-07-06",
+      "title": "Completion Arc — Three Overturned Relay Claims, One Witness-Carrier Adjudication, swift-pdf Green on Windows",
+      "packages": [
+        "swift-tests",
+        "swift-w3c-xml",
+        "swift-xml",
+        "swift-pdf",
+        "swift-async-primitives",
+        "swift-ownership-shared-primitives",
+        "swift-plist",
+        "swift-css-html-render",
+        "swift-markdown-html-render",
+        "swift-set-ordered-primitives"
+      ],
+      "status": "pending"
     }
   ]
 }
