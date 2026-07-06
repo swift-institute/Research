@@ -2,11 +2,18 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-07-06
-status: RECOMMENDATION
+status: DECISION
 tier: 2
 scope: ecosystem-wide
+changelog:
+  - 1.1.0 (2026-07-06): Principal RATIFIED (same day) → status DECISION. W0 re-assessed
+    after the tower/rename wave landed; torn-mains section and W0 gate updated to the
+    post-heal state (RFC family builds green; windows tear moved into the swift-windows
+    consumer). W1 execution begun (swift-http-standard created; swift-http-headers
+    retired-archived; swift-server slim dispatched).
+  - 1.0.0 (2026-07-06): Initial finalized design.
 ---
 -->
 
@@ -62,7 +69,7 @@ already substantially implemented in **swift-ietf** (enumeration:
 
 | L2 package | Content | State |
 |---|---|---|
-| `swift-rfc-9110` (HTTP Semantics) | `RFC_9110` namespace + `public typealias HTTP`; `HTTP.Method` (open-set struct w/ isSafe/isIdempotent/isCacheable), `HTTP.Status`, `HTTP.Headers` (ordered, case-insensitive), `HTTP.Header.Field`, `HTTP.Request`/`.Response`, content negotiation, authentication, preconditions, media types; built over L1 parser/ascii/byte primitives + RFC 3986/4648/5322; **zero Foundation imports** | REAL — 48 files, 5,835 LOC (source-verified). Build verification on 6.3.2 currently **blocked by the torn ownership-shared rename** — see gate note below `[Verified: 2026-07-06]` |
+| `swift-rfc-9110` (HTTP Semantics) | `RFC_9110` namespace + `public typealias HTTP`; `HTTP.Method` (open-set struct w/ isSafe/isIdempotent/isCacheable), `HTTP.Status`, `HTTP.Headers` (ordered, case-insensitive), `HTTP.Header.Field`, `HTTP.Request`/`.Response`, content negotiation, authentication, preconditions, media types; built over L1 parser/ascii/byte primitives + RFC 3986/4648/5322; **zero Foundation imports** | REAL — 48 files, 5,835 LOC. **Builds green on 6.3.2** (`TOOLCHAINS=org.swift.632202605101a swift build`, 2,531 files, after the tower-wave heal + a `swift package update` cache refresh) `[Verified: 2026-07-06, post-heal]` |
 | `swift-rfc-9112` (HTTP/1.1 syntax) | message framing/parse/serialize | REAL — 17 files, 2,910 LOC |
 | `swift-rfc-9111` (HTTP caching) | cache semantics | REAL — 12 files, 2,150 LOC |
 | `swift-rfc-8446` (TLS 1.3) | wire model | REAL — 20 files, 1,565 LOC |
@@ -111,13 +118,21 @@ behind `SQLValidation` (Package.swift:25–30, 72–73). `[Verified: 2026-07-06]
   swift-postgresql-standard resolution), `RFC_7519`→`RFC 7519` (blocks swift-json-web-token),
   `swift-windows-standard`→`swift-windows-32` half-rename. Owned by the rename wave; this
   arc MUST NOT touch that tree. (`Workspace/inbox.md`, TORN-MAINS entry, two-source verified.)
-  **New evidence this session**: the ownership-shared tear's blast radius is wider than the
-  inbox entry records — a `swift-rfc-9110` build attempt on 6.3.2
-  (`TOOLCHAINS=org.swift.632202605101a swift build`, after deleting a stale gitignored
-  `Package.resolved`) fails at resolution: `swift-array-primitives` main requires product
-  `'Shared Primitive'`, not found in `swift-ownership-shared-primitives` main `a651929`. The
-  swift-ietf RFC family is therefore also resolution-blocked, via
-  parser/ascii primitives → swift-array-primitives. `[Verified: 2026-07-06]`
+  **Post-heal re-assessment (same day, after the tower/rename wave landed)**: the
+  ownership-shared tear is **healed end-to-end** — `swift-array-primitives` main now
+  references `"Ownership Shared Primitive"` (Package.swift:79,129), all six foundations
+  consumers reference the new product name, and `swift-rfc-9110` builds green on 6.3.2
+  (stale SwiftPM caches must be refreshed with `swift package update`; a stale cached clone
+  reproduces the old failure after the manifests heal). The rfc-7519 tear is
+  manifest-healed (`swift-json-web-token` now asks `"RFC 7519"`). The **windows tear moved
+  rather than healed**: `swift-windows-standard`'s manifest is internally consistent as
+  `swift-windows-32`, but consumer `swift-foundations/swift-windows` targets reference
+  `package: "swift-windows-32"` while the dep still resolves under identity
+  `swift-windows-standard` ([PKG-DEP-008] — repo not renamed), so `swift-postgresql-standard`
+  remains resolution-blocked via swift-tests → swift-kernel → swift-windows. Residual tower
+  tear: `swift-async-primitives` main `8699564` still torn vs published buffer mains
+  (39-file dirty local tree — arc in flight); not on this design's W1 path.
+  `[Verified: 2026-07-06, post-heal]`
 
 ## The Layering (normative spine)
 
@@ -395,12 +410,13 @@ workstream.
 To be dispatched only after the principal ratifies this design ([SUPER-057]: authoring this
 doc is in-scope; dispatching the program is not).
 
-- **W0 (external gate, owned by the rename wave — not this arc)**: torn mains heal
-  (ownership-shared product rename — whose consumer set is wider than the inbox records: it
-  also resolution-blocks the swift-ietf RFC family via swift-array-primitives, reproduced
-  this session; RFC 7519 product rename; windows-standard half-rename). Adopting institute
-  deps in swift-server, resolving postgresql-standard, AND building the L2 HTTP family all
-  wait on this. Design work does not.
+- **W0 (external gate, owned by the rename wave — not this arc)**: **PARTIALLY CLEARED
+  2026-07-06 post-ratification** — ownership-shared healed end-to-end (RFC family builds
+  green; W1 unblocked), rfc-7519 manifest-healed. STILL OPEN: the windows tear moved into
+  consumer `swift-foundations/swift-windows` (`package: "swift-windows-32"` refs against
+  resolution identity `swift-windows-standard`), keeping `swift-postgresql-standard`
+  resolution-blocked — this gates W4's postgres swap and postgresql-standard's own
+  builds, NOT W1–W3.
 - **W1 — vocabulary**: create `swift-http-standard` (thin converger; `HTTP` typealias moves
   here from rfc-9110, mechanical consumer follow-up in the RFC repo). Slim `swift-server`:
   dissolve `Server Shared`, adopt `HTTP.Method`/`.Status`/`.Headers`/`.Header.Field`, swap
@@ -448,13 +464,11 @@ those stub-fill arcs.
 ## Residual ([RES-027])
 
 **Premises (load-bearing, each backed by evidence)**: the RFC-9110 family is real,
-institute-pure source (48-file/5,835-LOC enumeration + zero-Foundation grep this session) —
-its *buildability* on 6.3.2 is blocked solely by the torn ownership-shared main (resolution
-error reproduced this session; heals with W0, and W1 MUST re-run the build as its first
-acceptance check); the `(sql, bindings)` statement seam suffices for the app's DSL usage
-(validated by the prototype's `Server.PostgreSQL.Statement` + the workbook's near-verbatim
-DSL port finding); postgres-nio absence from postgresql-standard's main target (manifest
-lines quoted above).
+institute-pure source (48-file/5,835-LOC enumeration + zero-Foundation grep this session)
+and **builds green on 6.3.2** (verified post-heal, same day); the `(sql, bindings)`
+statement seam suffices for the app's DSL usage (validated by the prototype's
+`Server.PostgreSQL.Statement` + the workbook's near-verbatim DSL port finding);
+postgres-nio absence from postgresql-standard's main target (manifest lines quoted above).
 
 **Directions (not constraints)**: whether `swift-http-standard` should eventually also
 converge 9113/9114; whether the http middleware family repos (cors/etag/range/redirect/
