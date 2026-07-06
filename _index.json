@@ -1,10 +1,21 @@
 {
   "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-02",
+  "generatedAt": "2026-07-06",
   "title": "Research Index",
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
+    {
+      "file": "swift-package-index-onboarding-and-spi-manifest-harmonization.md",
+      "displayName": "Swift Package Index Onboarding: Collection Signing and .spi.yml Harmonization",
+      "topic": "Research spike resolving three SPI-onboarding questions ahead of the ~2026-09-15 tagging wave. (1) Collection signing: verified against SwiftPM primary source (PackageCollections+CertificatePolicy.swift, CertificatePolicy.swift, PackageSecurity.md) that no certificate yields zero-setup warning/failure-free trust on Linux for a self-hosted (non-developer.apple.com) collection — on non-Apple platforms the signature check hard-fails unless the consumer installs the DER root into ~/.swiftpm/config/trust-root-certs. Reopens the locked 'sign the unified collection' decision; recommends UNSIGNED for v1 (Linux-first, HTTPS covers the threat model, matches SPI-native author-collection UX). (2) .spi.yml harmonization: schema already uniform (version:1 + builder.configs[0].documentation_targets) but 7 of 17 files point documentation_targets at non-existent targets (copy-paste EmailAddress/HTML Standard/MemoryAllocation, plus Property_Primitives underscore mismatch) — latent because swift-docs.yml doesn't consume .spi.yml. Canonical template: exact target-name fidelity, no platform/swift_version pin, 2-space block, SPI-hosts-docs. (3) Integration: EXTEND github-repository ([GH-REPO-*] authoring) + ci-cd-workflows ([CI-*] validation), mirroring github-metadata-harmonization; centralized validate-spi-manifest.yml (schema PR-gate + weekly target-fidelity sweep) and a collection-generation workflow mirroring sync-metadata-nightly. New rule IDs are proposals to route through skill-lifecycle.",
+      "date": "2026-07-03",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0. Tier 2 ecosystem-wide. Signing sub-decision verified against SwiftPM primary source per [RES-020]/[RES-032]. Reopens locked principal decision (ii) 'sign the unified collection'; awaits explicit ratification. New [GH-REPO-*]/[CI-*] rules staged as skill-lifecycle proposals, not landed. No .spi.yml/tag/skill/commit changes made (spike guardrails).",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
     {
       "file": "2026-05-07-clean-build-first-elevation.md",
       "displayName": "2026-05-07-clean-build-first-elevation.md",
@@ -2746,6 +2757,14 @@
       "statusRaw": "DEFERRED (triaged 2026-07-02)",
       "tier": 2,
       "scope": "cross-package"
+    },
+    {
+      "file": "institute-server-stack-architecture.md",
+      "displayName": "Institute Server-Stack Architecture",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-07-06): Tier 2 ecosystem-wide. Finalizes the Institute server/persistence/HTTP layering with repotraffic as the forcing consumer, resolving the eight open questions of the design-finalization handoff into one layering: HTTP model = existing L2 swift-ietf RFC 9110/9111/9112 family plus a new thin swift-http-standard converger (corrects the pre-research claim that the L2 model was absent); DB plumbing = engine-free L3 swift-sql + swift-migrations interfaces now, native swift-sql-postgres driver later; swift-server = L4 chassis, slimmed to assembly + the single engine-quarantine zone (engines internal-import-only at L4, forbidden at L1-L3 and L5); no swift-networking package (name collides with the coenttb QUIC fork; sockets/TLS/http reservations carry the missions); swift-records superseded-and-split per ruling; postgresql-standard Foundation purge (corrected to 72 of 132 files, not ~15) scheduled as a post-Phase-1 workstream; revenue line = interfaces now, engines deferred to the green-lit stub-fill arcs.",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
     },
     {
       "file": "integration-maximization-comparative-analysis.md",
