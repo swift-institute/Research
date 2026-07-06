@@ -6,6 +6,21 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-07-06-adt-tower-succession-docket-close.md",
+      "date": "2026-07-06",
+      "title": "ADT Tower Succession: Docket Adjudication, W4/W5 Close, and a Compiler-Refuted Ruling",
+      "packages": [
+        "swift-tree-primitives",
+        "swift-tree-keyed-primitives",
+        "swift-graph-primitives",
+        "swift-io",
+        "swift-cache-primitives",
+        "swift-primitives-linter-rules"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-02-12-bit-vector-zeros-sequence-first-disambiguation.md",
       "date": "2026-02-12",
       "title": "Bit Vector Zeros Infrastructure and Sequence.first Disambiguation",
@@ -6063,6 +6078,34 @@
       "date": "2026-07-05",
       "title": "Origin State — memory dissolution, canon consolidation, and the day the guards started biting",
       "packages": [],
+      "status": "pending"
+    },
+    {
+      "file": "2026-07-05-fable-corpus-review-and-dispositions.md",
+      "date": "2026-07-05",
+      "title": "Fable Corpus Review — Findings, Disposition Waves, and Store Triage",
+      "packages": [],
+      "status": "pending"
+    },
+    {
+      "file": "2026-07-06-adt-tower-lead-overnight-w16-w4-execution.md",
+      "date": "2026-07-06",
+      "title": "ADT Tower Lead — Overnight W1.6→W4 Execution, Six STOPs, Five Parks, One Succession",
+      "packages": [
+        "swift-buffer-ring-primitives",
+        "swift-buffer-slab-primitives",
+        "swift-buffer-linked-primitives",
+        "swift-queue-primitives",
+        "swift-deque-primitives",
+        "swift-slab-primitives",
+        "swift-tree-keyed-primitives",
+        "swift-list-linked-primitives",
+        "swift-ownership-shared-primitives",
+        "swift-kernel",
+        "swift-async",
+        "swift-io",
+        "swift-json"
+      ],
       "status": "pending"
     }
   ]
