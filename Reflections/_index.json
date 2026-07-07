@@ -6140,6 +6140,18 @@
         "swift-set-ordered-primitives"
       ],
       "status": "pending"
+    },
+    {
+      "file": "2026-07-07-phase0-ruleset-freeze-standards-tier-and-a5-placement.md",
+      "date": "2026-07-07",
+      "title": "Phase-0 Ruleset Freeze, Standards Tier (A4), and Placement Audit (A5)",
+      "packages": [
+        "swift-standards-linter-rules",
+        "swift-institute-linter-rules",
+        "swift-primitives-linter-rules",
+        "swift-ieee-754"
+      ],
+      "status": "pending"
     }
   ]
 }
