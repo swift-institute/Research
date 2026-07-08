@@ -6152,6 +6152,19 @@
         "swift-ieee-754"
       ],
       "status": "pending"
+    },
+    {
+      "file": "2026-07-08-swiftpm-identity-collision-livelock-and-swap2-fanout.md",
+      "date": "2026-07-08",
+      "title": "SwiftPM Identity-Collision Livelock, and a Fan-Out That Tore a File",
+      "packages": [
+        "swift-webpage",
+        "swift-css",
+        "swift-css-html-render",
+        "swift-css-html-layout-render",
+        "swift-incits-4-1986"
+      ],
+      "status": "pending"
     }
   ]
 }
