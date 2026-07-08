@@ -6165,6 +6165,19 @@
         "swift-incits-4-1986"
       ],
       "status": "pending"
+    },
+    {
+      "file": "2026-07-08-commented-out-types-rebind-silently-and-vacuous-test-passes.md",
+      "date": "2026-07-08",
+      "title": "A Commented-Out Type Re-Binds Silently; A Filtered Test Run Passes Vacuously",
+      "packages": [
+        "swift-webpage",
+        "swift-html",
+        "swift-css",
+        "swift-css-html-render",
+        "swift-server"
+      ],
+      "status": "pending"
     }
   ]
 }
