@@ -1290,6 +1290,46 @@ Found ownership error?!  →  signal 6
 
 ---
 
+### A25. `AllowArgumentMismatch::diagnose` null-pointer abort (signal 6) on `$0` inside a nested zero-parameter builder closure under implicit metatype `callAsFunction`
+
+**Swift versions**: 6.3.2 RELEASE (`org.swift.632202605101a`, macOS arm64) — **CRASH**. 6.5-dev (`swift-latest`, Swift `4d0c97fa5b05711`, +assertions) — **CRASH (UNFIXED)**: `Assertion failed: (Val && "isa<> used on a null pointer"), Casting.h:109`. 6.3.3 / Linux untested — verify at next sweep.
+
+**Command**: `TOOLCHAINS=org.swift.632202605101a xcrun swiftc -typecheck R6a.swift` (14-line no-dependency reducer), and in-package `swift build` of rule-burgerlijk-wetboek-2-html with the triggering spelling.
+
+**Symptom**: swift-frontend signal 6 while evaluating `TypeCheckFunctionBodyRequest` on a result-builder-transformed body; abort inside `swift::constraints::AllowArgumentMismatch::diagnose` → `swift::Diagnostic` constructor (null-pointer `isa<>`), during `ConstraintSystem::applySolutionFixes` under `TypeChecker::applyResultBuilderBodyTransform`. The first arity diagnostic ("contextual type for closure argument list expects 1 argument") IS emitted; the abort follows while producing the remainder. **ICE-on-invalid**: the program is ill-formed (`$0` binds to the innermost zero-parameter closure), and the compiler crashes while diagnosing it — but only along the result-builder + implicit-`callAsFunction` path.
+
+**Minimal reducer** (dependency-free, single file):
+```swift
+@resultBuilder
+enum Builder {
+    static func buildBlock(_ v: [String]) -> [String] { v }
+}
+struct ListItem {
+    init() {}
+    func callAsFunction(_ content: () -> String) -> String { content() }
+}
+@Builder
+func f(_ items: [String]) -> [String] {
+    items.map {
+        ListItem { $0 }
+    }
+}
+```
+
+**Required ingredients** (each verified by removal, [ISSUE-004]): (1) a result-builder-transformed body (plain function → clean diagnostics); (2) the element call spelled through a **metatype with instance `callAsFunction`** (swift-html's `li { … }` via `typealias li = ListItem`, i.e. implicit `ListItem().callAsFunction { … }` — a pre-bound instance or a closure-taking `init` does NOT crash); (3) an enclosing closure with inferrable parameter arity (`.map { … }` or any 1-arg closure literal); (4) `$0` inside the inner zero-parameter builder closure. **NOT required**: `buildEither`/`if-else`, arrays, opaque result types, protocols, generics, typealias-vs-direct naming, nested-type name shadowing, backticked extension context, `strictMemorySafety` or any feature flags, Swift 6 mode (Swift 5 mode crashes too).
+
+**Same-family non-fatal sibling**: without the enclosing parameterized closure, the compiler emits non-fatal `failed to produce diagnostic for expression` (cf. §A8's symptom class) instead of aborting.
+
+**Workaround / proper fix**: name the closure parameter — `items.map { lid in ListItem { lid } }` (the `$0` code is invalid anyway; the valid named-parameter spelling compiles green, including directly at an opaque-`body` site with nested `if/else`). View-layer indirection through an `AnyView` eraser is NOT needed and was a misattributed fix (rule-burgerlijk-wetboek-2-html commit `0f73ae6` credited "direct nested buildEither at the opaque body site" — refuted by ablation; buildEither is innocent).
+
+**Distinctness / upstream**: no exact upstream duplicate found; nearest families swiftlang/swift#68005, #67791, #75790 (result-builder diagnostics failures), #74853, #87210 (callAsFunction/trailing-closure). Nothing filed upstream per standing policy (issues go to swift-institute/Issues only).
+
+**Evidence**: reducer series in the 2026-07-09 session scratchpad (`repro-buildeither/R6a.swift` + controls R2/R4b/R4c/R6b/R7c/R5b, crash logs `tc-*.log`); in-package reproduction with identical backtrace offsets at `Artikel 22a.HTML.swift` body getter.
+
+**Source**: 2026-07-09 issue-investigation pass (rule-burgerlijk-wetboek-2-html v3 arc, AnyView-necessity audit; principal-directed root-cause mandate).
+
+---
+
 ## B. Type-System Pitfalls and Language-Spec Constraints
 
 ### B1. `Property.View ~Copyable` extension constraint placement
