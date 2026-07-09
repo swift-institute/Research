@@ -6178,6 +6178,16 @@
         "swift-server"
       ],
       "status": "pending"
+    },
+    {
+      "file": "2026-07-09-sources-only-harvest-tool-reach-and-volatile-assessment-recovery.md",
+      "date": "2026-07-09",
+      "title": "The Sources-only Harvest: A Verification Tool That Under-reached Its \"Complete\" Claim",
+      "packages": [
+        "swift-w3c-css",
+        "swift-ieee-754"
+      ],
+      "status": "pending"
     }
   ]
 }
