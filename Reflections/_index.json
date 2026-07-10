@@ -82,7 +82,7 @@
     {
       "file": "2026-02-12-data-structures-plan-completion.md",
       "date": "2026-02-12",
-      "title": "Data Structures Plan Completion — Audit Staleness and Verification Depth",
+      "title": "Data Structures Plan Completion \u2014 Audit Staleness and Verification Depth",
       "packages": [
         "swift-bit-vector-primitives",
         "swift-array-primitives",
@@ -100,7 +100,7 @@
     {
       "file": "2026-02-12-stack-buffer-remediation-bounded-canonical.md",
       "date": "2026-02-12",
-      "title": "Stack/Buffer Remediation — Bounded Indices as Sole Canonical API",
+      "title": "Stack/Buffer Remediation \u2014 Bounded Indices as Sole Canonical API",
       "packages": [
         "swift-stack-primitives",
         "swift-buffer-primitives"
@@ -114,7 +114,7 @@
     {
       "file": "2026-02-12-storage-primitives-audit-completion.md",
       "date": "2026-02-12",
-      "title": "Storage Primitives Audit Completion — Infrastructure Discovery as Force Multiplier",
+      "title": "Storage Primitives Audit Completion \u2014 Infrastructure Discovery as Force Multiplier",
       "packages": [
         "swift-storage-primitives",
         "swift-bit-vector-primitives",
@@ -129,7 +129,7 @@
     {
       "file": "2026-02-13-collection-sequence-inheritance-deduplication.md",
       "date": "2026-02-13",
-      "title": "Collection-Sequence Inheritance — Deduplication Through Protocol Refinement",
+      "title": "Collection-Sequence Inheritance \u2014 Deduplication Through Protocol Refinement",
       "packages": [
         "swift-collection-primitives",
         "swift-sequence-primitives"
@@ -143,7 +143,7 @@
     {
       "file": "2026-02-13-input-stream-noncopyable-element.md",
       "date": "2026-02-13",
-      "title": "Input.Stream.Protocol ~Copyable Element — Constraint Cascade and ~Escapable Discovery",
+      "title": "Input.Stream.Protocol ~Copyable Element \u2014 Constraint Cascade and ~Escapable Discovery",
       "packages": [
         "swift-input-primitives",
         "swift-parser-primitives"
@@ -173,7 +173,7 @@
     {
       "file": "2026-02-25-async-callback-nonsending-replacement.md",
       "date": "2026-02-25",
-      "title": "Async.Callback Nonsending Replacement — Research-to-Production Pipeline",
+      "title": "Async.Callback Nonsending Replacement \u2014 Research-to-Production Pipeline",
       "packages": [
         "swift-async-primitives",
         "swift-test-primitives",
@@ -188,7 +188,7 @@
     {
       "file": "2026-02-27-source-location-and-located-error-unification.md",
       "date": "2026-02-27",
-      "title": "Source Location and Located Error Unification — Type Deduplication at Scale",
+      "title": "Source Location and Located Error Unification \u2014 Type Deduplication at Scale",
       "packages": [
         "swift-text-primitives",
         "swift-source-primitives",
@@ -207,7 +207,7 @@
     {
       "file": "2026-02-27-tagged-string-crossmodule-access-levels-and-shadowing.md",
       "date": "2026-02-27",
-      "title": "Tagged String Cross-Module — Access Levels and Shadowing",
+      "title": "Tagged String Cross-Module \u2014 Access Levels and Shadowing",
       "packages": [
         "swift-identity-primitives",
         "swift-string-primitives",
@@ -222,7 +222,7 @@
     {
       "file": "2026-03-03-typed-throws-rethrows-overload-resolution.md",
       "date": "2026-03-03",
-      "title": "Typed Throws Conversion — rethrows Overload Resolution and E Inference",
+      "title": "Typed Throws Conversion \u2014 rethrows Overload Resolution and E Inference",
       "packages": [
         "swift-standard-library-extensions",
         "swift-geometry-primitives",
@@ -242,7 +242,7 @@
     {
       "file": "2026-03-18-iterative-render-machine-stack-overflow-fix.md",
       "date": "2026-03-18",
-      "title": "Iterative Render Machine — Stack Overflow Fix via Heap-Deferred Traversal",
+      "title": "Iterative Render Machine \u2014 Stack Overflow Fix via Heap-Deferred Traversal",
       "packages": [
         "swift-rendering-primitives",
         "swift-html-rendering",
@@ -257,7 +257,7 @@
     {
       "file": "2026-03-18-store-view-not-body-noncopyable-rendering.md",
       "date": "2026-03-18",
-      "title": "Store VIEW Not BODY — ~Copyable Body Support and Protocol Witness Ownership",
+      "title": "Store VIEW Not BODY \u2014 ~Copyable Body Support and Protocol Witness Ownership",
       "packages": [
         "swift-rendering-primitives",
         "swift-css-html-rendering"
@@ -271,7 +271,7 @@
     {
       "file": "2026-03-20-file-path-literal-vs-throwing-init-harmonization.md",
       "date": "2026-03-20",
-      "title": "File/Path Literal vs Throwing Init — Harmonization",
+      "title": "File/Path Literal vs Throwing Init \u2014 Harmonization",
       "packages": [
         "swift-file-system",
         "swift-paths",
@@ -286,7 +286,7 @@
     {
       "file": "2026-03-20-pass4-compound-renames-and-generic-nesting.md",
       "date": "2026-03-20",
-      "title": "Pass 4: Compound Type Renames — Generic Nesting Discoveries",
+      "title": "Pass 4: Compound Type Renames \u2014 Generic Nesting Discoveries",
       "packages": [
         "swift-pool-primitives",
         "swift-cache-primitives",
@@ -315,7 +315,7 @@
     {
       "file": "2026-03-20-skill-system-overhaul-architecture.md",
       "date": "2026-03-20",
-      "title": "Skill System Overhaul — Application Gap, Research-Grounded Restructuring",
+      "title": "Skill System Overhaul \u2014 Application Gap, Research-Grounded Restructuring",
       "packages": [
         "swift-institute"
       ],
@@ -419,7 +419,7 @@
     {
       "file": "2026-03-24-generalized-audit-skill-design.md",
       "date": "2026-03-24",
-      "title": "Generalized Audit Skill — From 82 Orphans to One Canonical Location",
+      "title": "Generalized Audit Skill \u2014 From 82 Orphans to One Canonical Location",
       "packages": [
         "swift-institute"
       ],
@@ -432,7 +432,7 @@
     {
       "file": "2026-03-24-swift-io-audit-consolidation.md",
       "date": "2026-03-24",
-      "title": "swift-io Audit Consolidation — From 3 Scattered Files to One Canonical Location",
+      "title": "swift-io Audit Consolidation \u2014 From 3 Scattered Files to One Canonical Location",
       "packages": [
         "swift-io",
         "swift-institute"
@@ -463,7 +463,7 @@
     {
       "file": "2026-03-26-channel-lifecycle-actor-removal-ownership-as-synchronization.md",
       "date": "2026-03-26",
-      "title": "Channel Lifecycle Actor Removal — Ownership as Synchronization",
+      "title": "Channel Lifecycle Actor Removal \u2014 Ownership as Synchronization",
       "packages": [
         "swift-io"
       ],
@@ -476,7 +476,7 @@
     {
       "file": "2026-03-26-io-api-remediation-sync-submission.md",
       "date": "2026-03-26",
-      "title": "IO API Remediation — Sync Submission and the Async Overload Ambiguity",
+      "title": "IO API Remediation \u2014 Sync Submission and the Async Overload Ambiguity",
       "packages": [
         "swift-io",
         "swift-kernel",
@@ -491,7 +491,7 @@
     {
       "file": "2026-03-27-async-channel-noncopyable-restructure.md",
       "date": "2026-03-27",
-      "title": "Async Channel ~Copyable Restructure — Closure Capture as the Real Blocker",
+      "title": "Async Channel ~Copyable Restructure \u2014 Closure Capture as the Real Blocker",
       "packages": [
         "swift-async-primitives"
       ],
@@ -504,7 +504,7 @@
     {
       "file": "2026-03-29-channel-split-full-duplex-io.md",
       "date": "2026-03-29",
-      "title": "Channel split() — Full-Duplex I/O via Ecosystem-Aligned Split Pattern",
+      "title": "Channel split() \u2014 Full-Duplex I/O via Ecosystem-Aligned Split Pattern",
       "packages": [
         "swift-io"
       ],
@@ -591,7 +591,7 @@
     {
       "file": "2026-03-30-sending-sendable-migration-cascade.md",
       "date": "2026-03-30",
-      "title": "Sending/Sendable Migration Cascade: Primitives → Foundations",
+      "title": "Sending/Sendable Migration Cascade: Primitives \u2192 Foundations",
       "packages": [
         "swift-async-primitives",
         "swift-async",
@@ -633,7 +633,7 @@
     {
       "file": "2026-03-31-bridge-noncopyable-ownership-completion.md",
       "date": "2026-03-31",
-      "title": "Bridge ~Copyable Ownership Completion — Unification Over Duplication",
+      "title": "Bridge ~Copyable Ownership Completion \u2014 Unification Over Duplication",
       "packages": [
         "swift-queue-primitives",
         "swift-async-primitives"
@@ -647,7 +647,7 @@
     {
       "file": "2026-03-31-convention3-unchecked-sendable-audit.md",
       "date": "2026-03-31",
-      "title": "Convention 3 Audit — @unchecked Sendable Truth-Telling",
+      "title": "Convention 3 Audit \u2014 @unchecked Sendable Truth-Telling",
       "packages": [
         "swift-io"
       ],
@@ -660,7 +660,7 @@
     {
       "file": "2026-03-31-copypropagation-noncopyable-enum-already-fixed.md",
       "date": "2026-03-31",
-      "title": "CopyPropagation ~Copyable Enum Crash — Already Fixed Upstream, Prior Misattribution Corrected",
+      "title": "CopyPropagation ~Copyable Enum Crash \u2014 Already Fixed Upstream, Prior Misattribution Corrected",
       "packages": [
         "swift-async-primitives"
       ],
@@ -701,7 +701,7 @@
     {
       "file": "2026-03-31-noncopyable-peek-escapable-scope-nesting-limit.md",
       "date": "2026-03-31",
-      "title": "~Escapable Peek Investigation — Property.View Is the Terminal Scope",
+      "title": "~Escapable Peek Investigation \u2014 Property.View Is the Terminal Scope",
       "packages": [
         "swift-queue-primitives",
         "swift-buffer-primitives",
@@ -716,7 +716,7 @@
     {
       "file": "2026-03-31-nonisolated-nonsending-channel-migration.md",
       "date": "2026-03-31",
-      "title": "Nonisolated(nonsending) Channel Migration — Protocol Witness Confirmation",
+      "title": "Nonisolated(nonsending) Channel Migration \u2014 Protocol Witness Confirmation",
       "packages": [
         "swift-async-primitives"
       ],
@@ -745,7 +745,7 @@
     {
       "file": "2026-03-31-se0499-contextual-lookup-misdiagnosis.md",
       "date": "2026-03-31",
-      "title": "SE-0499 Contextual Lookup Misdiagnosis — Constraint Landscape Shift, Not Compiler Regression",
+      "title": "SE-0499 Contextual Lookup Misdiagnosis \u2014 Constraint Landscape Shift, Not Compiler Regression",
       "packages": [
         "swift-comparison-primitives",
         "swift-ordering-primitives",
@@ -776,7 +776,7 @@
     {
       "file": "2026-03-31-storage-free-arena-bounded-migration.md",
       "date": "2026-03-31",
-      "title": "Storage.Free to Buffer.Arena.Bounded — Prior Audit Retraction and Migration",
+      "title": "Storage.Free to Buffer.Arena.Bounded \u2014 Prior Audit Retraction and Migration",
       "packages": [
         "swift-async-primitives",
         "swift-buffer-primitives"
@@ -790,7 +790,7 @@
     {
       "file": "2026-04-01-async-primitives-audit-round-two.md",
       "date": "2026-04-01",
-      "title": "Async Primitives Audit Round Two — Agent Verification and Ecosystem Delegation",
+      "title": "Async Primitives Audit Round Two \u2014 Agent Verification and Ecosystem Delegation",
       "packages": [
         "swift-async-primitives"
       ],
@@ -803,7 +803,7 @@
     {
       "file": "2026-04-01-async-primitives-reaudit-agent-verification-discipline.md",
       "date": "2026-04-01",
-      "title": "Async Primitives Re-Audit — Agent Verification Discipline and Handoff Triage",
+      "title": "Async Primitives Re-Audit \u2014 Agent Verification Discipline and Handoff Triage",
       "packages": [
         "swift-async-primitives",
         "swift-institute"
@@ -817,7 +817,7 @@
     {
       "file": "2026-04-01-buffer-link-discipline-factoring.md",
       "date": "2026-04-01",
-      "title": "Buffer.Link Discipline — Algorithm Factoring as the Unification Primitive",
+      "title": "Buffer.Link Discipline \u2014 Algorithm Factoring as the Unification Primitive",
       "packages": [
         "swift-buffer-primitives",
         "swift-async-primitives",
@@ -827,7 +827,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Buffer.Link<N> factored, compositions re-derived",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Buffer.Link<N> factored, compositions re-derived"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Buffer.Link<N> factored, compositions re-derived"
     },
     {
       "file": "2026-04-01-buffer-modularization-and-peek-miscompile.md",
@@ -841,12 +841,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "release-mode miscompile tracked in copypropagation memory",
-      "statusRaw": "processed (2026-04-13) MEMORY — release-mode miscompile tracked in copypropagation memory"
+      "statusRaw": "processed (2026-04-13) MEMORY \u2014 release-mode miscompile tracked in copypropagation memory"
     },
     {
       "file": "2026-04-01-corpus-meta-analysis-experiment-coverage.md",
       "date": "2026-04-01",
-      "title": "Corpus Meta-Analysis Experiment Coverage — META-022 through META-026",
+      "title": "Corpus Meta-Analysis Experiment Coverage \u2014 META-022 through META-026",
       "packages": [
         "swift-institute"
       ],
@@ -859,7 +859,7 @@
     {
       "file": "2026-04-01-deferred-compound-methods-and-generic-scoping.md",
       "date": "2026-04-01",
-      "title": "Deferred Compound Methods — Generic Scoping Constraint and Dead Code Discovery",
+      "title": "Deferred Compound Methods \u2014 Generic Scoping Constraint and Dead Code Discovery",
       "packages": [
         "swift-async-primitives"
       ],
@@ -872,7 +872,7 @@
     {
       "file": "2026-04-01-first-full-corpus-sweep-remediation.md",
       "date": "2026-04-01",
-      "title": "First Full Corpus Sweep Remediation — 722 Items, 4-Phase Remediation",
+      "title": "First Full Corpus Sweep Remediation \u2014 722 Items, 4-Phase Remediation",
       "packages": [
         "swift-institute",
         "swift-primitives",
@@ -883,12 +883,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "full corpus sweep remediation complete",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — full corpus sweep remediation complete"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 full corpus sweep remediation complete"
     },
     {
       "file": "2026-04-01-handle-descriptor-ownership-refactor.md",
       "date": "2026-04-01",
-      "title": "Handle Descriptor Ownership Refactor — Ownership Cascades and Lifecycle Footguns",
+      "title": "Handle Descriptor Ownership Refactor \u2014 Ownership Cascades and Lifecycle Footguns",
       "packages": [
         "swift-io",
         "swift-darwin-primitives",
@@ -898,12 +898,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Handle owns Kernel.Descriptor, EBADF fixed",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Handle owns Kernel.Descriptor, EBADF fixed"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Handle owns Kernel.Descriptor, EBADF fixed"
     },
     {
       "file": "2026-04-01-implementation-skill-condensation.md",
       "date": "2026-04-01",
-      "title": "Implementation Skill Condensation — Experiment Audit as Quality Gate",
+      "title": "Implementation Skill Condensation \u2014 Experiment Audit as Quality Gate",
       "packages": [
         "swift-institute"
       ],
@@ -916,7 +916,7 @@
     {
       "file": "2026-04-01-kernel-descriptor-deinit-test-hang.md",
       "date": "2026-04-01",
-      "title": "Kernel.Descriptor Deinit — Process fd Corruption and ~Copyable Ownership Gaps",
+      "title": "Kernel.Descriptor Deinit \u2014 Process fd Corruption and ~Copyable Ownership Gaps",
       "packages": [
         "swift-io",
         "swift-kernel-primitives"
@@ -930,7 +930,7 @@
     {
       "file": "2026-04-01-link-primitives-audit-and-tests.md",
       "date": "2026-04-01",
-      "title": "Link Primitives Audit — Compound Identifier Blind Spot and Test Harness",
+      "title": "Link Primitives Audit \u2014 Compound Identifier Blind Spot and Test Harness",
       "packages": [
         "swift-link-primitives"
       ],
@@ -938,7 +938,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "audit fixes + Sendable correction shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — audit fixes + Sendable correction shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 audit fixes + Sendable correction shipped"
     },
     {
       "file": "2026-04-01-path-protocol-architecture-and-platform-extension-principle.md",
@@ -958,7 +958,7 @@
     {
       "file": "2026-04-01-storage-inline-bottom-up-deinit.md",
       "date": "2026-04-01",
-      "title": "Storage.Inline Bottom-Up Deinit — From Workaround Cascade to One-Line Fix",
+      "title": "Storage.Inline Bottom-Up Deinit \u2014 From Workaround Cascade to One-Line Fix",
       "packages": [
         "swift-storage-primitives",
         "swift-buffer-primitives",
@@ -968,12 +968,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "deinit workaround tracked in noncopyable-deinit-workaround.md memory",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — deinit workaround tracked in noncopyable-deinit-workaround.md memory"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 deinit workaround tracked in noncopyable-deinit-workaround.md memory"
     },
     {
       "file": "2026-04-01-swift-io-code-surface-reaudit.md",
       "date": "2026-04-01",
-      "title": "swift-io Code Surface Re-Audit — Agent Accuracy and ~Copyable Test Patterns",
+      "title": "swift-io Code Surface Re-Audit \u2014 Agent Accuracy and ~Copyable Test Patterns",
       "packages": [
         "swift-io"
       ],
@@ -999,7 +999,7 @@
     {
       "file": "2026-04-01-test-hang-executor-ownership-architecture.md",
       "date": "2026-04-01",
-      "title": "Test Hang Investigation — Executor Ownership as Architectural Question",
+      "title": "Test Hang Investigation \u2014 Executor Ownership as Architectural Question",
       "packages": [
         "swift-io",
         "swift-kernel"
@@ -1008,12 +1008,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "executor shutdown footgun tracked in project_executor_shutdown_footgun.md",
-      "statusRaw": "processed (2026-04-13) MEMORY — executor shutdown footgun tracked in project_executor_shutdown_footgun.md"
+      "statusRaw": "processed (2026-04-13) MEMORY \u2014 executor shutdown footgun tracked in project_executor_shutdown_footgun.md"
     },
     {
       "file": "2026-04-02-cq-cleanup-principled-enforcement-points.md",
       "date": "2026-04-02",
-      "title": "CQ Cleanup — Principled Enforcement Points and Nonisolated Guard Reversal",
+      "title": "CQ Cleanup \u2014 Principled Enforcement Points and Nonisolated Guard Reversal",
       "packages": [
         "swift-io",
         "swift-kernel"
@@ -1022,12 +1022,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "guard reversal and enforcement points shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — guard reversal and enforcement points shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 guard reversal and enforcement points shipped"
     },
     {
       "file": "2026-04-02-cq-poll-thread-hang-structural-analysis.md",
       "date": "2026-04-02",
-      "title": "CQ Poll Thread Hang — Structural Analysis via Code Tracing",
+      "title": "CQ Poll Thread Hang \u2014 Structural Analysis via Code Tracing",
       "packages": [
         "swift-io",
         "swift-async-primitives",
@@ -1037,12 +1037,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "poll thread hang root cause found and fixed",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — poll thread hang root cause found and fixed"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 poll thread hang root cause found and fixed"
     },
     {
       "file": "2026-04-02-escapable-heap-storage-addressof-blocker.md",
       "date": "2026-04-02",
-      "title": "~Escapable Heap Storage — Builtin.addressof Blocker and Upstream Resolution",
+      "title": "~Escapable Heap Storage \u2014 Builtin.addressof Blocker and Upstream Resolution",
       "packages": [
         "swift-storage-primitives"
       ],
@@ -1050,12 +1050,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "INFORMATIONAL",
       "outcomeDescription": "upstream blocker confirmed, no workaround possible",
-      "statusRaw": "processed (2026-04-13) INFORMATIONAL — upstream blocker confirmed, no workaround possible"
+      "statusRaw": "processed (2026-04-13) INFORMATIONAL \u2014 upstream blocker confirmed, no workaround possible"
     },
     {
       "file": "2026-04-02-experiment-consolidation-29-to-5.md",
       "date": "2026-04-02",
-      "title": "Experiment Consolidation — 29 Scattered Packages to 5 Topic-Based Packages",
+      "title": "Experiment Consolidation \u2014 29 Scattered Packages to 5 Topic-Based Packages",
       "packages": [
         "swift-institute",
         "swift-primitives"
@@ -1064,7 +1064,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "corpus consolidation complete, META skills updated",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — corpus consolidation complete, META skills updated"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 corpus consolidation complete, META skills updated"
     },
     {
       "file": "2026-04-02-io-bench-hang-noncopyable-socket-descriptor.md",
@@ -1079,12 +1079,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Socket.Descriptor made ~Copyable, hang fixed",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Socket.Descriptor made ~Copyable, hang fixed"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Socket.Descriptor made ~Copyable, hang fixed"
     },
     {
       "file": "2026-04-02-ownership-corpus-consolidation.md",
       "date": "2026-04-02",
-      "title": "Ownership Corpus Consolidation: 22 → 4 Research Documents",
+      "title": "Ownership Corpus Consolidation: 22 \u2192 4 Research Documents",
       "packages": [
         "swift-institute",
         "swift-primitives"
@@ -1093,12 +1093,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "22 docs consolidated to 4 topic-based documents",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — 22 docs consolidated to 4 topic-based documents"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 22 docs consolidated to 4 topic-based documents"
     },
     {
       "file": "2026-04-03-io-bench-echo-hang-pipeline-deadlock.md",
       "date": "2026-04-03",
-      "title": "io-bench Echo Hang — Pipeline Deadlock, Not Pool Starvation",
+      "title": "io-bench Echo Hang \u2014 Pipeline Deadlock, Not Pool Starvation",
       "packages": [
         "swift-io"
       ],
@@ -1106,12 +1106,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "pipeline deadlock fixed via split() pattern",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — pipeline deadlock fixed via split() pattern"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 pipeline deadlock fixed via split() pattern"
     },
     {
       "file": "2026-04-03-noncopyable-closure-capture-red-herring.md",
       "date": "2026-04-03",
-      "title": "~Copyable Closure Capture Investigation — Hypothesis Disproven, Verification Order Matters",
+      "title": "~Copyable Closure Capture Investigation \u2014 Hypothesis Disproven, Verification Order Matters",
       "packages": [
         "swift-io",
         "swift-kernel-primitives",
@@ -1121,12 +1121,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "verify hypotheses before acting, handoff misattribution pattern",
-      "statusRaw": "processed (2026-04-13) MEMORY — verify hypotheses before acting, handoff misattribution pattern"
+      "statusRaw": "processed (2026-04-13) MEMORY \u2014 verify hypotheses before acting, handoff misattribution pattern"
     },
     {
       "file": "2026-04-03-nonisolated-register-and-channel-init.md",
       "date": "2026-04-03",
-      "title": "Nonisolated Register/Deregister and Channel.init — From Diagnosis to Regression",
+      "title": "Nonisolated Register/Deregister and Channel.init \u2014 From Diagnosis to Regression",
       "packages": [
         "swift-io",
         "swift-async-primitives"
@@ -1135,12 +1135,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "nonisolated register/deregister shipped, regression tracked",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — nonisolated register/deregister shipped, regression tracked"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 nonisolated register/deregister shipped, regression tracked"
     },
     {
       "file": "2026-04-03-pair-noncopyable-widening-sendable-discovery.md",
       "date": "2026-04-03",
-      "title": "Pair ~Copyable Widening — Sendable & ~Copyable Discovery",
+      "title": "Pair ~Copyable Widening \u2014 Sendable & ~Copyable Discovery",
       "packages": [
         "swift-algebra-primitives",
         "swift-iso-9945"
@@ -1149,12 +1149,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Pair widened to ~Copyable, Sendable & ~Copyable composition validated",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Pair widened to ~Copyable, Sendable & ~Copyable composition validated"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Pair widened to ~Copyable, Sendable & ~Copyable composition validated"
     },
     {
       "file": "2026-04-03-pre-publication-audit-fixes-complete.md",
       "date": "2026-04-03",
-      "title": "Pre-Publication Audit Fixes — 18 Packages Across 3 Layers",
+      "title": "Pre-Publication Audit Fixes \u2014 18 Packages Across 3 Layers",
       "packages": [
         "swift-iso-32000",
         "swift-iso-8601",
@@ -1165,12 +1165,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "pre-publication fixes shipped across 18 packages",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — pre-publication fixes shipped across 18 packages"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 pre-publication fixes shipped across 18 packages"
     },
     {
       "file": "2026-04-03-sending-mutex-nesting-flip.md",
       "date": "2026-04-03",
-      "title": "Sending-Mutex Composition — Nesting Flip Eliminates Hot-Path Allocation",
+      "title": "Sending-Mutex Composition \u2014 Nesting Flip Eliminates Hot-Path Allocation",
       "packages": [
         "swift-io",
         "swift-property-primitives",
@@ -1180,12 +1180,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "inout-sending-mechanism memory already captures pattern",
-      "statusRaw": "processed (2026-04-13) SKILL_UPDATE — inout-sending-mechanism memory already captures pattern"
+      "statusRaw": "processed (2026-04-13) SKILL_UPDATE \u2014 inout-sending-mechanism memory already captures pattern"
     },
     {
       "file": "2026-04-03-sending-over-sendable-migration.md",
       "date": "2026-04-03",
-      "title": "Sending Over Sendable Migration — Viral Sendability Removal Across Three Packages",
+      "title": "Sending Over Sendable Migration \u2014 Viral Sendability Removal Across Three Packages",
       "packages": [
         "swift-io",
         "swift-witnesses",
@@ -1195,12 +1195,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "sending-over-sendable pattern already in memory + code shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — sending-over-sendable pattern already in memory + code shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 sending-over-sendable pattern already in memory + code shipped"
     },
     {
       "file": "2026-04-03-swift-io-implementation-audit-quick-wins.md",
       "date": "2026-04-03",
-      "title": "swift-io Implementation Audit — Three Mechanisms + Quick Wins",
+      "title": "swift-io Implementation Audit \u2014 Three Mechanisms + Quick Wins",
       "packages": [
         "swift-io"
       ],
@@ -1208,12 +1208,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "82 findings triaged, quick wins shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — 82 findings triaged, quick wins shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 82 findings triaged, quick wins shipped"
     },
     {
       "file": "2026-04-03-unchecked-sendable-audit-classification.md",
       "date": "2026-04-03",
-      "title": "@unchecked Sendable Audit — Classification Taxonomy and Layer-Boundary Discipline",
+      "title": "@unchecked Sendable Audit \u2014 Classification Taxonomy and Layer-Boundary Discipline",
       "packages": [
         "swift-io"
       ],
@@ -1221,7 +1221,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "audit classification in project_unchecked_sendable_audit.md",
-      "statusRaw": "processed (2026-04-13) MEMORY — audit classification in project_unchecked_sendable_audit.md"
+      "statusRaw": "processed (2026-04-13) MEMORY \u2014 audit classification in project_unchecked_sendable_audit.md"
     },
     {
       "file": "2026-04-04-array-name-shadowing-exported-import-precedence.md",
@@ -1237,12 +1237,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "@_exported import precedence confirmed, disambiguation removed",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — @_exported import precedence confirmed, disambiguation removed"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 @_exported import precedence confirmed, disambiguation removed"
     },
     {
       "file": "2026-04-04-darwin-primitives-kernel-narrowing.md",
       "date": "2026-04-04",
-      "title": "Darwin Primitives Kernel Narrowing — Re-export Chain as Narrowing Leverage",
+      "title": "Darwin Primitives Kernel Narrowing \u2014 Re-export Chain as Narrowing Leverage",
       "packages": [
         "swift-darwin-primitives",
         "swift-ascii-parser-primitives"
@@ -1251,7 +1251,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "umbrella imports narrowed to variant modules",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — umbrella imports narrowed to variant modules"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 umbrella imports narrowed to variant modules"
     },
     {
       "file": "2026-04-04-memberimportvisibility-cascade-remediation.md",
@@ -1264,7 +1264,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "MIV import fixes shipped across 9 packages",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — MIV import fixes shipped across 9 packages"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 MIV import fixes shipped across 9 packages"
     },
     {
       "file": "2026-04-04-miv-noncopyable-array-discovery.md",
@@ -1281,7 +1281,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "MIV fixes + ~Copyable Array discovery shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — MIV fixes + ~Copyable Array discovery shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 MIV fixes + ~Copyable Array discovery shipped"
     },
     {
       "file": "2026-04-05-readiness-driver-domain-model.md",
@@ -1295,12 +1295,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "kqueue driver ported, Recipe+Thing domain model landed",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — kqueue driver ported, Recipe+Thing domain model landed"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 kqueue driver ported, Recipe+Thing domain model landed"
     },
     {
       "file": "2026-04-06-downstream-span-audit-benchmark-drift.md",
       "date": "2026-04-06",
-      "title": "Downstream Span Audit — Benchmark Drift as Predictable Gap",
+      "title": "Downstream Span Audit \u2014 Benchmark Drift as Predictable Gap",
       "packages": [
         "swift-io"
       ],
@@ -1308,12 +1308,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "downstream consumers audited, benchmark gap tracked",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — downstream consumers audited, benchmark gap tracked"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 downstream consumers audited, benchmark gap tracked"
     },
     {
       "file": "2026-04-06-epoll-port-kernel-readiness.md",
       "date": "2026-04-06",
-      "title": "Epoll Port to Kernel.Readiness — ~Copyable Ownership Design Under Review Pressure",
+      "title": "Epoll Port to Kernel.Readiness \u2014 ~Copyable Ownership Design Under Review Pressure",
       "packages": [
         "swift-kernel-primitives",
         "swift-linux-primitives",
@@ -1324,7 +1324,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "epoll ported to Kernel.Readiness",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — epoll ported to Kernel.Readiness"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 epoll ported to Kernel.Readiness"
     },
     {
       "file": "2026-04-06-epoll-port-management-and-api-research.md",
@@ -1340,7 +1340,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "epoll port + API research commissioned",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — epoll port + API research commissioned"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 epoll port + API research commissioned"
     },
     {
       "file": "2026-04-06-executor-first-architecture-research-and-phase2.md",
@@ -1354,7 +1354,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "RESEARCH",
       "outcomeDescription": "executor-first architecture research doc produced, Phase 2 implemented",
-      "statusRaw": "processed (2026-04-13) RESEARCH — executor-first architecture research doc produced, Phase 2 implemented"
+      "statusRaw": "processed (2026-04-13) RESEARCH \u2014 executor-first architecture research doc produced, Phase 2 implemented"
     },
     {
       "file": "2026-04-06-executor-threading-and-noncopyable-closure-constraints.md",
@@ -1368,12 +1368,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "noncopyable-sendable-capture memory covers this constraint",
-      "statusRaw": "processed (2026-04-13) MEMORY — noncopyable-sendable-capture memory covers this constraint"
+      "statusRaw": "processed (2026-04-13) MEMORY \u2014 noncopyable-sendable-capture memory covers this constraint"
     },
     {
       "file": "2026-04-06-intent-over-machinery-module-design.md",
       "date": "2026-04-06",
-      "title": "Intent Over Machinery — Module Boundaries Must Reflect User Concepts",
+      "title": "Intent Over Machinery \u2014 Module Boundaries Must Reflect User Concepts",
       "packages": [
         "swift-io"
       ],
@@ -1381,12 +1381,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "principle reinforces implementation skill axiom",
-      "statusRaw": "processed (2026-04-13) SKILL_UPDATE — principle reinforces implementation skill axiom"
+      "statusRaw": "processed (2026-04-13) SKILL_UPDATE \u2014 principle reinforces implementation skill axiom"
     },
     {
       "file": "2026-04-06-io-events-tier0-api-design.md",
       "date": "2026-04-06",
-      "title": "IO Events Tier 0 API Design — From Specification to Architectural Challenge",
+      "title": "IO Events Tier 0 API Design \u2014 From Specification to Architectural Challenge",
       "packages": [
         "swift-io"
       ],
@@ -1394,7 +1394,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "RESEARCH",
       "outcomeDescription": "Tier 0 API design captured in io-events research docs",
-      "statusRaw": "processed (2026-04-13) RESEARCH — Tier 0 API design captured in io-events research docs"
+      "statusRaw": "processed (2026-04-13) RESEARCH \u2014 Tier 0 API design captured in io-events research docs"
     },
     {
       "file": "2026-04-06-io-stream-consumer-api-isolation-domain.md",
@@ -1409,7 +1409,7 @@
     {
       "file": "2026-04-06-io-stream-span-async-validation.md",
       "date": "2026-04-06",
-      "title": "Span and MutableSpan Survive Async — The Perfect IO API Is Achievable Today",
+      "title": "Span and MutableSpan Survive Async \u2014 The Perfect IO API Is Achievable Today",
       "packages": [
         "swift-io",
         "swift-institute"
@@ -1418,7 +1418,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Span/MutableSpan async validation confirmed, IO.run shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Span/MutableSpan async validation confirmed, IO.run shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Span/MutableSpan async validation confirmed, IO.run shipped"
     },
     {
       "file": "2026-04-06-linux-docker-verification-cross-repo.md",
@@ -1435,12 +1435,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "INFORMATIONAL",
       "outcomeDescription": "cross-repo compilation debt exposed and tracked",
-      "statusRaw": "processed (2026-04-13) INFORMATIONAL — cross-repo compilation debt exposed and tracked"
+      "statusRaw": "processed (2026-04-13) INFORMATIONAL \u2014 cross-repo compilation debt exposed and tracked"
     },
     {
       "file": "2026-04-06-readiness-driver-platform-stack-alignment.md",
       "date": "2026-04-06",
-      "title": "Readiness Driver Platform Stack Alignment — ~Copyable Witness Design Discovery",
+      "title": "Readiness Driver Platform Stack Alignment \u2014 ~Copyable Witness Design Discovery",
       "packages": [
         "swift-io",
         "swift-kernel",
@@ -1450,12 +1450,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "readiness driver moved to swift-kernel, witness pattern validated",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — readiness driver moved to swift-kernel, witness pattern validated"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 readiness driver moved to swift-kernel, witness pattern validated"
     },
     {
       "file": "2026-04-06-shutdown-view-pointer-elimination-investigation.md",
       "date": "2026-04-06",
-      "title": "Shutdown View Pointer Elimination — @_unsafeNonescapableResult Is Orthogonal to TemporaryPointers",
+      "title": "Shutdown View Pointer Elimination \u2014 @_unsafeNonescapableResult Is Orthogonal to TemporaryPointers",
       "packages": [
         "swift-io",
         "swift-property-primitives",
@@ -1465,12 +1465,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "INFORMATIONAL",
       "outcomeDescription": "investigation concluded, orthogonality confirmed",
-      "statusRaw": "processed (2026-04-13) INFORMATIONAL — investigation concluded, orthogonality confirmed"
+      "statusRaw": "processed (2026-04-13) INFORMATIONAL \u2014 investigation concluded, orthogonality confirmed"
     },
     {
       "file": "2026-04-06-unsafe-pointer-audit-span-migration.md",
       "date": "2026-04-06",
-      "title": "Unsafe Pointer Audit — Span Migration Eliminates 18 Sites",
+      "title": "Unsafe Pointer Audit \u2014 Span Migration Eliminates 18 Sites",
       "packages": [
         "swift-io",
         "swift-iso-9945",
@@ -1480,7 +1480,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "18 unsafe pointer sites replaced with Span",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — 18 unsafe pointer sites replaced with Span"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 18 unsafe pointer sites replaced with Span"
     },
     {
       "file": "2026-04-08-descriptor-ownership-aliasing-anti-pattern.md",
@@ -1495,12 +1495,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "no_raw_descriptor_reconstruction memory covers this anti-pattern",
-      "statusRaw": "processed (2026-04-13) MEMORY — no_raw_descriptor_reconstruction memory covers this anti-pattern"
+      "statusRaw": "processed (2026-04-13) MEMORY \u2014 no_raw_descriptor_reconstruction memory covers this anti-pattern"
     },
     {
       "file": "2026-04-08-descriptor-ownership-remediation.md",
       "date": "2026-04-08",
-      "title": "Descriptor Ownership Remediation — Language Features Over Custom Types",
+      "title": "Descriptor Ownership Remediation \u2014 Language Features Over Custom Types",
       "packages": [
         "swift-kernel-primitives",
         "swift-linux-primitives",
@@ -1512,12 +1512,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "language_features_over_custom_types memory captures principle",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — language_features_over_custom_types memory captures principle"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 language_features_over_custom_types memory captures principle"
     },
     {
       "file": "2026-04-08-io-blocking-domain-model-redesign.md",
       "date": "2026-04-08",
-      "title": "IO.Blocking Domain Model Redesign — From Surface Cleanup to Category-Error Discovery",
+      "title": "IO.Blocking Domain Model Redesign \u2014 From Surface Cleanup to Category-Error Discovery",
       "packages": [
         "swift-io",
         "swift-pools",
@@ -1530,12 +1530,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "IO.Blocking.Driver pattern shipped, status in project_blocking_refactor_complete.md",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — IO.Blocking.Driver pattern shipped, status in project_blocking_refactor_complete.md"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 IO.Blocking.Driver pattern shipped, status in project_blocking_refactor_complete.md"
     },
     {
       "file": "2026-04-08-io-blocking-refactor-regressions.md",
       "date": "2026-04-08",
-      "title": "IO.Blocking Refactor Regressions — Honest Post-Completion Assessment",
+      "title": "IO.Blocking Refactor Regressions \u2014 Honest Post-Completion Assessment",
       "packages": [
         "swift-io",
         "swift-executors",
@@ -1546,7 +1546,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "MEMORY",
       "outcomeDescription": "regressions tracked in project_blocking_refactor_complete.md",
-      "statusRaw": "processed (2026-04-13) MEMORY — regressions tracked in project_blocking_refactor_complete.md"
+      "statusRaw": "processed (2026-04-13) MEMORY \u2014 regressions tracked in project_blocking_refactor_complete.md"
     },
     {
       "file": "2026-04-08-io-uring-integration-architecture-and-l1-migration.md",
@@ -1563,7 +1563,7 @@
     {
       "file": "2026-04-08-io-uring-integration-foundation.md",
       "date": "2026-04-08",
-      "title": "io_uring Integration Foundation — Architecture Validated, Type Design Iterated",
+      "title": "io_uring Integration Foundation \u2014 Architecture Validated, Type Design Iterated",
       "packages": [
         "swift-kernel-primitives",
         "swift-kernel",
@@ -1592,7 +1592,7 @@
     {
       "file": "2026-04-08-pool-primitives-canonical-form-second-round.md",
       "date": "2026-04-08",
-      "title": "Pool Primitives Canonical Form: Second-Round Refactor — The \"Go Further\" Pattern",
+      "title": "Pool Primitives Canonical Form: Second-Round Refactor \u2014 The \"Go Further\" Pattern",
       "packages": [
         "swift-pool-primitives",
         "swift-pools",
@@ -1603,7 +1603,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "second-round canonical form refactor complete",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — second-round canonical form refactor complete"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 second-round canonical form refactor complete"
     },
     {
       "file": "2026-04-09-c-shim-placement-and-platform-separation.md",
@@ -1622,7 +1622,7 @@
     {
       "file": "2026-04-09-completion-api-architecture-pivot.md",
       "date": "2026-04-09",
-      "title": "Completion API Architecture Pivot — Tactical Refactor Reveals Design Question",
+      "title": "Completion API Architecture Pivot \u2014 Tactical Refactor Reveals Design Question",
       "packages": [
         "swift-kernel",
         "swift-kernel-primitives",
@@ -1644,7 +1644,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "audit findings remediated, C types eliminated",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — audit findings remediated, C types eliminated"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 audit findings remediated, C types eliminated"
     },
     {
       "file": "2026-04-09-kernel-event-consolidation-domain-model.md",
@@ -1721,12 +1721,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "Either error composition in memory, EINTR wrappers shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — Either error composition in memory, EINTR wrappers shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 Either error composition in memory, EINTR wrappers shipped"
     },
     {
       "file": "2026-04-12-eintr-relayering-and-posix-knowledge-cleanup.md",
       "date": "2026-04-12",
-      "title": "EINTR Relayering — POSIX Knowledge Out of L1",
+      "title": "EINTR Relayering \u2014 POSIX Knowledge Out of L1",
       "packages": [
         "swift-kernel-primitives",
         "swift-iso-9945",
@@ -1750,7 +1750,7 @@
     {
       "file": "2026-04-12-io-uring-sqe-typed-domain-model.md",
       "date": "2026-04-12",
-      "title": "io_uring SQE Typed Domain Model — Design Convergence",
+      "title": "io_uring SQE Typed Domain Model \u2014 Design Convergence",
       "packages": [
         "swift-linux-standard"
       ],
@@ -1805,7 +1805,7 @@
     {
       "file": "2026-04-13-epoll-interest-merging-driver-infrastructure.md",
       "date": "2026-04-13",
-      "title": "Epoll Interest Merging — Driver Infrastructure vs. IO Layer Placement",
+      "title": "Epoll Interest Merging \u2014 Driver Infrastructure vs. IO Layer Placement",
       "packages": [
         "swift-kernel-primitives",
         "swift-io"
@@ -1837,7 +1837,7 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "spec audit + type relocation shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — spec audit + type relocation shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 spec audit + type relocation shipped"
     },
     {
       "file": "2026-04-13-iso9945-glob-encoding-and-fnmatch-delegation.md",
@@ -1852,12 +1852,12 @@
       "processedDate": "2026-04-13",
       "triageOutcome": "IMPLEMENTED",
       "outcomeDescription": "three-layer glob/fnmatch encoding shipped",
-      "statusRaw": "processed (2026-04-13) IMPLEMENTED — three-layer glob/fnmatch encoding shipped"
+      "statusRaw": "processed (2026-04-13) IMPLEMENTED \u2014 three-layer glob/fnmatch encoding shipped"
     },
     {
       "file": "2026-04-13-kernel-primitives-umbrella-removal.md",
       "date": "2026-04-13",
-      "title": "Kernel Primitives Umbrella Removal — Cross-Ecosystem Migration",
+      "title": "Kernel Primitives Umbrella Removal \u2014 Cross-Ecosystem Migration",
       "packages": [
         "swift-kernel-primitives",
         "swift-linux-primitives",
@@ -1876,7 +1876,7 @@
     {
       "file": "2026-04-14-io-witness-pivot-review-convergence.md",
       "date": "2026-04-14",
-      "title": "IO Witness Pivot — Multi-Agent Review Convergence and the Elided Events/Completions Elephant",
+      "title": "IO Witness Pivot \u2014 Multi-Agent Review Convergence and the Elided Events/Completions Elephant",
       "packages": [
         "swift-io",
         "swift-witnesses"
@@ -1892,11 +1892,11 @@
         },
         {
           "type": "no_action",
-          "description": "[package] Document load-bearing decisions in Package-Insights — generic guidance, no specific insight attached"
+          "description": "[package] Document load-bearing decisions in Package-Insights \u2014 generic guidance, no specific insight attached"
         },
         {
           "type": "no_action",
-          "description": "[skill] Require re-audit when scope generalizes — captured via research stub converged-scope-annotation-protocol.md"
+          "description": "[skill] Require re-audit when scope generalizes \u2014 captured via research stub converged-scope-annotation-protocol.md"
         }
       ]
     },
@@ -1931,7 +1931,7 @@
     {
       "file": "2026-04-15-ecosystem-unsafe-audit.md",
       "date": "2026-04-15",
-      "title": "Ecosystem @unsafe Audit — Full Lifecycle in One Session",
+      "title": "Ecosystem @unsafe Audit \u2014 Full Lifecycle in One Session",
       "packages": [
         "swift-primitives",
         "swift-foundations",
@@ -1944,11 +1944,11 @@
         {
           "type": "skill_update",
           "target": "memory-safety",
-          "description": "Modified [MEM-SAFE-024] — added Category D (structural workaround) with three subpatterns (SP-2 @_rawLayout, SP-4 non-Sendable generic, SP-5 pointer-backed Copyable)"
+          "description": "Modified [MEM-SAFE-024] \u2014 added Category D (structural workaround) with three subpatterns (SP-2 @_rawLayout, SP-4 non-Sendable generic, SP-5 pointer-backed Copyable)"
         },
         {
           "type": "no_action",
-          "description": "[package] swift-executors submodule conversion — execution verification task, commit da39012 is the record"
+          "description": "[package] swift-executors submodule conversion \u2014 execution verification task, commit da39012 is the record"
         },
         {
           "type": "research_topic",
@@ -1983,14 +1983,14 @@
         },
         {
           "type": "no_action",
-          "description": "[experiment] CAS vs FAA measurement — question captured in reflection Pattern section; defer experiment package creation to when the work is undertaken"
+          "description": "[experiment] CAS vs FAA measurement \u2014 question captured in reflection Pattern section; defer experiment package creation to when the work is undertaken"
         }
       ]
     },
     {
       "file": "2026-04-15-executor-primitives-l1-and-l3-compositions.md",
       "date": "2026-04-15",
-      "title": "Executor Primitives L1 and L3 Compositions — Layering Discoveries and ~Copyable Atomics",
+      "title": "Executor Primitives L1 and L3 Compositions \u2014 Layering Discoveries and ~Copyable Atomics",
       "packages": [
         "swift-executor-primitives",
         "swift-executors"
@@ -2015,12 +2015,12 @@
         {
           "type": "skill_update",
           "target": "audit",
-          "description": "Added [AUDIT-018] Receipts-model integrity check — click link, read target, verify demonstration"
+          "description": "Added [AUDIT-018] Receipts-model integrity check \u2014 click link, read target, verify demonstration"
         },
         {
           "type": "skill_update",
           "target": "reflect-session",
-          "description": "Modified [REFL-006] — added re-verify-after-edit requirement for convert-all-X edits"
+          "description": "Modified [REFL-006] \u2014 added re-verify-after-edit requirement for convert-all-X edits"
         },
         {
           "type": "research_topic",
@@ -2032,7 +2032,7 @@
     {
       "file": "2026-04-15-supervise-skill-creation-from-handoff.md",
       "date": "2026-04-15",
-      "title": "/supervise Skill Creation — Handoff vs Convention, Self-Review Yield",
+      "title": "/supervise Skill Creation \u2014 Handoff vs Convention, Self-Review Yield",
       "packages": [
         "swift-institute"
       ],
@@ -2052,7 +2052,7 @@
         },
         {
           "type": "no_action",
-          "description": "[x] handoff reciprocal cross-reference — already resolved in-session per entry's own triage_outcomes"
+          "description": "[x] handoff reciprocal cross-reference \u2014 already resolved in-session per entry's own triage_outcomes"
         }
       ]
     },
@@ -2081,7 +2081,7 @@
         },
         {
           "type": "no_action",
-          "description": "[skill] delegated-research write-discipline — already captured in feedback_agent_output_discipline.md and reflect-session skill"
+          "description": "[skill] delegated-research write-discipline \u2014 already captured in feedback_agent_output_discipline.md and reflect-session skill"
         }
       ]
     },
@@ -2099,12 +2099,12 @@
         {
           "type": "skill_update",
           "target": "supervise",
-          "description": "Modified [SUPER-009] — added three positive verification sources (disk/git, build/test output, current file state)"
+          "description": "Modified [SUPER-009] \u2014 added three positive verification sources (disk/git, build/test output, current file state)"
         },
         {
           "type": "skill_update",
           "target": "handoff",
-          "description": "Added [HANDOFF-015] Audit Handoff Naming — AUDIT-{topic}.md vs HANDOFF-{topic}.md"
+          "description": "Added [HANDOFF-015] Audit Handoff Naming \u2014 AUDIT-{topic}.md vs HANDOFF-{topic}.md"
         },
         {
           "type": "doc_improvement",
@@ -2134,7 +2134,7 @@
         },
         {
           "type": "no_action",
-          "description": "[package] swift-whatwg-url UTF-8 byte percent decoder — specific bug fix, execution task"
+          "description": "[package] swift-whatwg-url UTF-8 byte percent decoder \u2014 specific bug fix, execution task"
         },
         {
           "type": "skill_update",
@@ -2146,7 +2146,7 @@
     {
       "file": "2026-04-16-chase-lev-deque-production-implementation.md",
       "date": "2026-04-16",
-      "title": "Chase-Lev Deque — From Spike to Production L1 Primitive",
+      "title": "Chase-Lev Deque \u2014 From Spike to Production L1 Primitive",
       "packages": [
         "swift-executor-primitives",
         "swift-executors"
@@ -2155,7 +2155,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:testing-swiftlang] [skill:testing] [package:swift-executors]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:testing-swiftlang] [skill:testing] [package:swift-executors]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:testing-swiftlang] [skill:testing] [package:swift-executors]"
     },
     {
       "file": "2026-04-16-cooperative-donation-contract-and-sdk-interface-gap.md",
@@ -2171,7 +2171,7 @@
         {
           "type": "skill_update",
           "target": "existing-infrastructure",
-          "description": "[INFRA-026] Before Conforming to a stdlib Protocol — grep target SDK .swiftinterface before authoring conformance"
+          "description": "[INFRA-026] Before Conforming to a stdlib Protocol \u2014 grep target SDK .swiftinterface before authoring conformance"
         },
         {
           "type": "skill_update",
@@ -2181,7 +2181,7 @@
         {
           "type": "research_topic",
           "target": "stdlib-protocol-sdk-availability.md",
-          "description": "Tier 2 IN_PROGRESS — when do new stdlib protocols appear in SDK .swiftinterface"
+          "description": "Tier 2 IN_PROGRESS \u2014 when do new stdlib protocols appear in SDK .swiftinterface"
         }
       ]
     },
@@ -2203,7 +2203,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "RESEARCH",
       "outcomeDescription": "[no-action] [research:ecosystem] [blog]",
-      "statusRaw": "processed (2026-04-20) RESEARCH — [no-action] [research:ecosystem] [blog]"
+      "statusRaw": "processed (2026-04-20) RESEARCH \u2014 [no-action] [research:ecosystem] [blog]"
     },
     {
       "file": "2026-04-16-executor-deque-peer-review-to-production.md",
@@ -2238,7 +2238,7 @@
     {
       "file": "2026-04-16-executor-main-witness-pattern-four-revision-journey.md",
       "date": "2026-04-16",
-      "title": "Executor.Main Witness Pattern — A Four-Revision Architectural Journey",
+      "title": "Executor.Main Witness Pattern \u2014 A Four-Revision Architectural Journey",
       "packages": [
         "swift-executors",
         "swift-kernel",
@@ -2250,12 +2250,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:supervise] [skill:supervise] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:supervise] [skill:supervise] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:supervise] [skill:supervise] [no-action]"
     },
     {
       "file": "2026-04-16-io-completion-storage-elimination.md",
       "date": "2026-04-16",
-      "title": "IO.Completion.Storage Elimination — Dictionary as Sole Correlation and Lifetime Manager",
+      "title": "IO.Completion.Storage Elimination \u2014 Dictionary as Sole Correlation and Lifetime Manager",
       "packages": [
         "swift-io"
       ],
@@ -2263,12 +2263,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:implementation] [package:swift-io] [experiment:swift-io]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [package:swift-io] [experiment:swift-io]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:implementation] [package:swift-io] [experiment:swift-io]"
     },
     {
       "file": "2026-04-16-parameter-ordering-skill-lifecycle-routing-gap.md",
       "date": "2026-04-16",
-      "title": "Parameter Ordering Conventions — and a Skill-Lifecycle Routing Gap",
+      "title": "Parameter Ordering Conventions \u2014 and a Skill-Lifecycle Routing Gap",
       "packages": [
         "swift-institute"
       ],
@@ -2276,12 +2276,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:skill-lifecycle] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:skill-lifecycle] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:skill-lifecycle] [no-action]"
     },
     {
       "file": "2026-04-16-reflect-session-cleanup-completeness.md",
       "date": "2026-04-16",
-      "title": "/reflect-session Cleanup Completeness — \"Done\" Without Running the Protocol",
+      "title": "/reflect-session Cleanup Completeness \u2014 \"Done\" Without Running the Protocol",
       "packages": [
         "swift-institute"
       ],
@@ -2289,12 +2289,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:reflect-session] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:reflect-session] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:reflect-session] [no-action]"
     },
     {
       "file": "2026-04-16-supervise-in-practice-three-failure-modes.md",
       "date": "2026-04-16",
-      "title": "Supervise-in-Practice — Three Failure Modes Across a Multi-Revision Dispatch",
+      "title": "Supervise-in-Practice \u2014 Three Failure Modes Across a Multi-Revision Dispatch",
       "packages": [
         "swift-executors",
         "swift-kernel",
@@ -2304,12 +2304,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:supervise] [skill:supervise] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:supervise] [skill:supervise] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:supervise] [skill:supervise] [no-action]"
     },
     {
       "file": "2026-04-16-swift-institute-alpha-launch.md",
       "date": "2026-04-16",
-      "title": "Swift Institute Alpha Launch — Claim Triage, HTTPS Kick, Landing-Page Constraints",
+      "title": "Swift Institute Alpha Launch \u2014 Claim Triage, HTTPS Kick, Landing-Page Constraints",
       "packages": [
         "swift-institute"
       ],
@@ -2317,12 +2317,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "INFORMATIONAL",
       "outcomeDescription": "[no-action] [blog]",
-      "statusRaw": "processed (2026-04-20) INFORMATIONAL — [no-action] [blog]"
+      "statusRaw": "processed (2026-04-20) INFORMATIONAL \u2014 [no-action] [blog]"
     },
     {
       "file": "2026-04-17-effect-primitives-ncopyable-widening-silgen-workaround.md",
       "date": "2026-04-17",
-      "title": "Effect-Primitives `~Copyable` Widening — Two-Callback Workaround for a Swift 6.3.1 SILGen Bug",
+      "title": "Effect-Primitives `~Copyable` Widening \u2014 Two-Callback Workaround for a Swift 6.3.1 SILGen Bug",
       "packages": [
         "swift-effect-primitives",
         "swift-equation-primitives",
@@ -2332,7 +2332,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:implementation] [experiment:swift-effect-primitives] [research:ecosystem]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [experiment:swift-effect-primitives] [research:ecosystem]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:implementation] [experiment:swift-effect-primitives] [research:ecosystem]"
     },
     {
       "file": "2026-04-17-institute-repo-split-and-supervise-absentia-review.md",
@@ -2353,7 +2353,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [skill:supervise] [research:ecosystem]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:supervise] [research:ecosystem]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [skill:supervise] [research:ecosystem]"
     },
     {
       "file": "2026-04-17-swift-6-3-1-corpus-completion-and-drift-relocation.md",
@@ -2368,12 +2368,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:experiment-process] [blog] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:experiment-process] [blog] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:experiment-process] [blog] [no-action]"
     },
     {
       "file": "2026-04-17-swift-6-3-1-experiment-revalidation.md",
       "date": "2026-04-17",
-      "title": "Swift 6.3.1 Experiment Re-Run — Memory Drift, Repo Splits, and the Experiment-Header Convention That Saved Time",
+      "title": "Swift 6.3.1 Experiment Re-Run \u2014 Memory Drift, Repo Splits, and the Experiment-Header Convention That Saved Time",
       "packages": [
         "swift-institute",
         "swift-parser-primitives",
@@ -2383,7 +2383,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:experiment-process] [research:compiler]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:experiment-process] [research:compiler]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:experiment-process] [research:compiler]"
     },
     {
       "file": "2026-04-18-ecosystem-index-migration-completion-and-batch-git-edges.md",
@@ -2399,7 +2399,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:reflect-session] [research:ecosystem] [package:swift-institute-Scripts]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:reflect-session] [research:ecosystem] [package:swift-institute-Scripts]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:reflect-session] [research:ecosystem] [package:swift-institute-Scripts]"
     },
     {
       "file": "2026-04-18-json-authoritative-migration-sweep.md",
@@ -2417,7 +2417,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:research-process] [blog] [research:swift-institute.org]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:research-process] [blog] [research:swift-institute.org]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:research-process] [blog] [research:swift-institute.org]"
     },
     {
       "file": "2026-04-18-path-ecosystem-correction-cycle-and-process-distillation.md",
@@ -2434,7 +2434,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [skill:implementation] [research:ecosystem]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:implementation] [research:ecosystem]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [skill:implementation] [research:ecosystem]"
     },
     {
       "file": "2026-04-18-path-type-compliance-audit-refresh-and-architecture-decisions.md",
@@ -2452,12 +2452,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:implementation] [package:swift-paths] [research:swift-paths]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [package:swift-paths] [research:swift-paths]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:implementation] [package:swift-paths] [research:swift-paths]"
     },
     {
       "file": "2026-04-18-two-homepages-mixed-chrome-dashboard.md",
       "date": "2026-04-18",
-      "title": "Two Homepages — DocC-Merge Experiment, Mixed-Chrome Pivot, Dashboard Live",
+      "title": "Two Homepages \u2014 DocC-Merge Experiment, Mixed-Chrome Pivot, Dashboard Live",
       "packages": [
         "swift-institute.org",
         "swift-institute-Research",
@@ -2468,7 +2468,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "RESEARCH",
       "outcomeDescription": "[no-action] [blog] [experiment:swift-institute-Scripts]",
-      "statusRaw": "processed (2026-04-20) RESEARCH — [no-action] [blog] [experiment:swift-institute-Scripts]"
+      "statusRaw": "processed (2026-04-20) RESEARCH \u2014 [no-action] [blog] [experiment:swift-institute-Scripts]"
     },
     {
       "file": "2026-04-20-at-implements-bridge-pattern-and-defensive-l1-walkback.md",
@@ -2485,7 +2485,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:implementation] [experiment:swift-institute] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:implementation] [experiment:swift-institute] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:implementation] [experiment:swift-institute] [no-action]"
     },
     {
       "file": "2026-04-20-consumer-migration-pickup-l3-name-parity-collision.md",
@@ -2517,7 +2517,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [skill:implementation] [skill:reflect-session]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:implementation] [skill:reflect-session]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [skill:implementation] [skill:reflect-session]"
     },
     {
       "file": "2026-04-20-file-system-typed-path-and-l2-l3-io-ambiguity.md",
@@ -2536,7 +2536,7 @@
     {
       "file": "2026-04-20-kernel-error-code-predicates-handoff-premise-audit.md",
       "date": "2026-04-20",
-      "title": "Kernel.Error.Code predicates — handoff premise audit and the test opt-out reading",
+      "title": "Kernel.Error.Code predicates \u2014 handoff premise audit and the test opt-out reading",
       "packages": [
         "swift-iso-9945",
         "swift-windows-standard",
@@ -2548,7 +2548,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [skill:handoff] [no-action]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [skill:handoff] [no-action]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [skill:handoff] [no-action]"
     },
     {
       "file": "2026-04-20-kernel-file-flush-plat-arch-008e-execution.md",
@@ -2565,12 +2565,12 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:platform] [skill:handoff] [package:swift-windows]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:platform] [skill:handoff] [package:swift-windows]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:platform] [skill:handoff] [package:swift-windows]"
     },
     {
       "file": "2026-04-20-l2-l3-same-signature-latent-ambiguity.md",
       "date": "2026-04-20",
-      "title": "Same-signature L2/L3 extensions create latent ambiguity — Phase A was not optional",
+      "title": "Same-signature L2/L3 extensions create latent ambiguity \u2014 Phase A was not optional",
       "packages": [
         "swift-kernel",
         "swift-iso-9945",
@@ -2627,7 +2627,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [research:ecosystem] [skill:platform]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [research:ecosystem] [skill:platform]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [research:ecosystem] [skill:platform]"
     },
     {
       "file": "2026-04-20-socket-unifier-rfc-composition-and-swift-sockets-migration.md",
@@ -2652,12 +2652,12 @@
         },
         {
           "type": "no_action",
-          "description": "Network-byte-order docstring sweep deferred — experiment overhead exceeds value; trigger pending"
+          "description": "Network-byte-order docstring sweep deferred \u2014 experiment overhead exceeds value; trigger pending"
         },
         {
           "type": "research_topic",
           "target": "l3-domain-unifier-vs-kernel-consumption.md",
-          "description": "Tier 2 IN_PROGRESS — when does L3 domain need own unifier surface"
+          "description": "Tier 2 IN_PROGRESS \u2014 when does L3 domain need own unifier surface"
         }
       ]
     },
@@ -2676,7 +2676,7 @@
       "processedDate": "2026-04-20",
       "triageOutcome": "SKILL_UPDATE",
       "outcomeDescription": "[skill:handoff] [no-action] [package:swift-file-system]",
-      "statusRaw": "processed (2026-04-20) SKILL_UPDATE — [skill:handoff] [no-action] [package:swift-file-system]"
+      "statusRaw": "processed (2026-04-20) SKILL_UPDATE \u2014 [skill:handoff] [no-action] [package:swift-file-system]"
     },
     {
       "file": "2026-04-21-danceui-noun-convention-rename-cascade.md",
@@ -2778,7 +2778,7 @@
     {
       "file": "2026-04-21-namespace-only-target-pattern-mod-017.md",
       "date": "2026-04-21",
-      "title": "Namespace-only target pattern — kernel-primitives case study and [MOD-017] codification",
+      "title": "Namespace-only target pattern \u2014 kernel-primitives case study and [MOD-017] codification",
       "packages": [
         "swift-kernel-primitives",
         "swift-primitives",
@@ -2842,7 +2842,7 @@
     {
       "file": "2026-04-21-property-primitives-release-polish-supervised.md",
       "date": "2026-04-21",
-      "title": "swift-property-primitives release polish — supervisor + handoff composition",
+      "title": "swift-property-primitives release polish \u2014 supervisor + handoff composition",
       "packages": [
         "swift-property-primitives",
         "swift-vector-primitives",
@@ -2898,7 +2898,7 @@
     {
       "file": "2026-04-21-swift-test-003-generic-hard-error.md",
       "date": "2026-04-21",
-      "title": "[SWIFT-TEST-003] generic hard error — skill broadening + handoff-prescription reversal",
+      "title": "[SWIFT-TEST-003] generic hard error \u2014 skill broadening + handoff-prescription reversal",
       "packages": [
         "swift-property-primitives",
         "swift-institute/Skills/testing-swiftlang"
@@ -2978,7 +2978,7 @@
     {
       "file": "2026-04-22-cycle-2-close-beta-prime-and-c-representability.md",
       "date": "2026-04-22",
-      "title": "Cycle 2 close — β' mid-cycle Decision revision and @convention(c) representability gap",
+      "title": "Cycle 2 close \u2014 \u03b2' mid-cycle Decision revision and @convention(c) representability gap",
       "packages": [
         "swift-iso-9945",
         "swift-institute/Audits",
@@ -3004,7 +3004,7 @@
     {
       "file": "2026-04-22-investigation-only-cycle-three-doc-pattern.md",
       "date": "2026-04-22",
-      "title": "Investigation-only supervise cycle — three-doc pattern + principal-as-decider enforcement",
+      "title": "Investigation-only supervise cycle \u2014 three-doc pattern + principal-as-decider enforcement",
       "packages": [
         "swift-iso-9945",
         "swift-posix",
@@ -3019,7 +3019,7 @@
     {
       "file": "2026-04-22-iso9945-signal-information-cycle2-beta-prime-revision.md",
       "date": "2026-04-22",
-      "title": "Cycle 2 — ISO 9945.Kernel.Signal.Information: β' revision after @convention(c) representability block",
+      "title": "Cycle 2 \u2014 ISO 9945.Kernel.Signal.Information: \u03b2' revision after @convention(c) representability block",
       "packages": [
         "swift-iso-9945",
         "swift-institute/Audits"
@@ -3031,7 +3031,7 @@
     {
       "file": "2026-04-22-iso9945-socket-message-header-cycle1-and-layer-correction.md",
       "date": "2026-04-22",
-      "title": "ISO 9945 Cycle 1 — Socket.Message.Header typed pointer-field partial close + user-caught layering correction",
+      "title": "ISO 9945 Cycle 1 \u2014 Socket.Message.Header typed pointer-field partial close + user-caught layering correction",
       "packages": [
         "swift-iso-9945",
         "swift-institute"
@@ -3075,7 +3075,7 @@
     {
       "file": "2026-04-22-platform-audit-remediation-cycle-and-advisory-pivot.md",
       "date": "2026-04-22",
-      "title": "Platform audit remediation cycle — 9 to 30/89 then advisory pivot to 38/89",
+      "title": "Platform audit remediation cycle \u2014 9 to 30/89 then advisory pivot to 38/89",
       "packages": [
         "swift-kernel",
         "swift-posix",
@@ -3123,7 +3123,7 @@
     {
       "file": "2026-04-22-standards-org-migration-phases-1-5-execution.md",
       "date": "2026-04-22",
-      "title": "Standards org migration — Phases 1-5 execution with a Do-Not-Touch violation mid-session",
+      "title": "Standards org migration \u2014 Phases 1-5 execution with a Do-Not-Touch violation mid-session",
       "packages": [
         "swift-institute",
         "swift-standards",
@@ -3156,7 +3156,7 @@
     {
       "file": "2026-04-22-supervisor-arc-investigation-through-cycle-two-dispatch.md",
       "date": "2026-04-22",
-      "title": "Supervisor arc — investigation through Cycle 2 dispatch",
+      "title": "Supervisor arc \u2014 investigation through Cycle 2 dispatch",
       "packages": [
         "swift-iso-9945",
         "swift-foundations/swift-posix",
@@ -3195,7 +3195,7 @@
     {
       "file": "2026-04-23-borrow-protocol-unification-full-cascade-and-iso-9899-tail.md",
       "date": "2026-04-23",
-      "title": "Ownership.Borrow.`Protocol` Cascade — Full Execution + ISO 9899 Tail",
+      "title": "Ownership.Borrow.`Protocol` Cascade \u2014 Full Execution + ISO 9899 Tail",
       "packages": [
         "swift-ownership-primitives",
         "swift-identity-primitives",
@@ -3269,7 +3269,7 @@
     {
       "file": "2026-04-23-ci-permission-architecture-path-b-execution.md",
       "date": "2026-04-23",
-      "title": "CI permission architecture — Path B investigation, 3-ground A-override, and 297-caller ecosystem rollout with private-repo billing-state discovery",
+      "title": "CI permission architecture \u2014 Path B investigation, 3-ground A-override, and 297-caller ecosystem rollout with private-repo billing-state discovery",
       "packages": [
         "swift-institute/.github",
         "swift-institute/Scripts",
@@ -3321,7 +3321,7 @@
         },
         {
           "type": "skill_update",
-          "description": "[SUPER-029] Drift Signal Extension — Subordinate-Initiated Plan Restructuring",
+          "description": "[SUPER-029] Drift Signal Extension \u2014 Subordinate-Initiated Plan Restructuring",
           "target": "supervise"
         },
         {
@@ -3350,7 +3350,7 @@
         },
         {
           "type": "skill_update",
-          "description": "[PKG-NAME-010] GitHub Release vs Git Tag — Different Questions",
+          "description": "[PKG-NAME-010] GitHub Release vs Git Tag \u2014 Different Questions",
           "target": "swift-package"
         },
         {
@@ -3395,7 +3395,7 @@
     {
       "file": "2026-04-23-property-view-tagged-refactor-and-lifetime-chain-investigation.md",
       "date": "2026-04-23",
-      "title": "Property.View over Tagged<Ownership.Inout> — refactor drift, compiler-conservatism dead ends, V12 accessor split",
+      "title": "Property.View over Tagged<Ownership.Inout> \u2014 refactor drift, compiler-conservatism dead ends, V12 accessor split",
       "packages": [
         "swift-institute/Blog",
         "swift-identity-primitives",
@@ -3489,7 +3489,7 @@
     {
       "file": "2026-04-24-carrier-precursor-publish-timing-and-paired-post-url-management.md",
       "date": "2026-04-24",
-      "title": "Carrier precursor publish — 0-audience timing inversion, paired-post URL management, DocC deploy verification",
+      "title": "Carrier precursor publish \u2014 0-audience timing inversion, paired-post URL management, DocC deploy verification",
       "packages": [
         "swift-institute/Blog",
         "swift-institute/swift-institute.org"
@@ -3518,7 +3518,7 @@
     {
       "file": "2026-04-24-carrier-primitives-blog-drafting-and-convergence.md",
       "date": "2026-04-24",
-      "title": "Carrier-primitives blog drafting — paired-post reveal discipline, multi-round convergence, and receipt verification",
+      "title": "Carrier-primitives blog drafting \u2014 paired-post reveal discipline, multi-round convergence, and receipt verification",
       "packages": [
         "swift-institute/Blog",
         "swift-primitives/swift-carrier-primitives"
@@ -3530,7 +3530,7 @@
     {
       "file": "2026-04-24-carrier-primitives-code-surface-and-four-layer-split.md",
       "date": "2026-04-24",
-      "title": "Carrier Primitives — /code-surface pass, DocC symbol fix, and four-layer documentation split",
+      "title": "Carrier Primitives \u2014 /code-surface pass, DocC symbol fix, and four-layer documentation split",
       "packages": [
         "swift-primitives/swift-carrier-primitives",
         "swift-institute/Blog"
@@ -3542,7 +3542,7 @@
     {
       "file": "2026-04-24-cycle-3-close-and-inlinable-spi-cascade-non-fire.md",
       "date": "2026-04-24",
-      "title": "Cycle 3 close: writeAll L2→L3 split + @inlinable/@_spi transitive-cascade non-fire",
+      "title": "Cycle 3 close: writeAll L2\u2192L3 split + @inlinable/@_spi transitive-cascade non-fire",
       "packages": [
         "swift-iso-9945",
         "swift-foundations",
@@ -3556,7 +3556,7 @@
       "triage_outcomes": [
         {
           "type": "research_topic",
-          "description": "Tier 2 IN_PROGRESS — direct-reference rule, not transitive call graph",
+          "description": "Tier 2 IN_PROGRESS \u2014 direct-reference rule, not transitive call graph",
           "target": "inlinable-spi-transitive-semantics.md"
         },
         {
@@ -3565,7 +3565,7 @@
         },
         {
           "type": "research_topic",
-          "description": "Tier 2 IN_PROGRESS — three candidate strategies for cross-cycle latent ambiguities",
+          "description": "Tier 2 IN_PROGRESS \u2014 three candidate strategies for cross-cycle latent ambiguities",
           "target": "cross-cycle-verification-strategy.md"
         }
       ]
@@ -3591,7 +3591,7 @@
         {
           "type": "skill_update",
           "target": "audit",
-          "description": "[AUDIT-028] Ghost-Reference Detection — Notation-Variant Coverage (em-dash ranges + level-2 headings + sub-labels)"
+          "description": "[AUDIT-028] Ghost-Reference Detection \u2014 Notation-Variant Coverage (em-dash ranges + level-2 headings + sub-labels)"
         },
         {
           "type": "skill_update",
@@ -3631,7 +3631,7 @@
     {
       "file": "2026-04-24-meta-process-cascade-reflections-to-handoff.md",
       "date": "2026-04-24",
-      "title": "Meta-process cascade: reflections → skills → sweep → rule evolution → handoff",
+      "title": "Meta-process cascade: reflections \u2192 skills \u2192 sweep \u2192 rule evolution \u2192 handoff",
       "packages": [
         "swift-institute/Skills",
         "swift-institute/Research",
@@ -3651,7 +3651,7 @@
         {
           "type": "research_topic",
           "target": "rule-dependency-tracking.md",
-          "description": "IN_PROGRESS Tier 2 — rule-to-assumption dependency tracking; mechanism proposal (frontmatter / per-rule / Scripts / formal graph)"
+          "description": "IN_PROGRESS Tier 2 \u2014 rule-to-assumption dependency tracking; mechanism proposal (frontmatter / per-rule / Scripts / formal graph)"
         },
         {
           "type": "skill_update",
@@ -3663,7 +3663,7 @@
     {
       "file": "2026-04-24-narrow-shape-bug-extrapolation-and-in-package-verification.md",
       "date": "2026-04-24",
-      "title": "Narrow-shape bug extrapolation and in-package verification — Finding #12 inversion from HIGH/HOLD to LOW/watchflag",
+      "title": "Narrow-shape bug extrapolation and in-package verification \u2014 Finding #12 inversion from HIGH/HOLD to LOW/watchflag",
       "packages": [
         "swift-ownership-primitives",
         "swift-property-primitives",
@@ -3714,16 +3714,16 @@
         {
           "type": "skill_update",
           "target": "experiment-process",
-          "description": "[EXP-020] Claim Validation Trap — Synthetic-to-Production Extrapolation (extends [EXP-011] Workaround validation trap with the dual; renumbered from [EXP-018] on 2026-04-30 per [REFL-PROC-016] duplicate-ID resolution)"
+          "description": "[EXP-020] Claim Validation Trap \u2014 Synthetic-to-Production Extrapolation (extends [EXP-011] Workaround validation trap with the dual; renumbered from [EXP-018] on 2026-04-30 per [REFL-PROC-016] duplicate-ID resolution)"
         },
         {
           "type": "no_action",
-          "description": ".docc-build/ pattern in Scripts/sync-gitignore.sh — already complete via commit a7ab681 (2026-04-24, before reflection authored)"
+          "description": ".docc-build/ pattern in Scripts/sync-gitignore.sh \u2014 already complete via commit a7ab681 (2026-04-24, before reflection authored)"
         },
         {
           "type": "research_topic",
           "target": "withUnsafe-borrowing-noncopyable-pattern-reach-survey.md",
-          "description": "IN_PROGRESS — scoped pattern-reach survey for stdlib withUnsafe* family; empirical work deferred until A2 authorized"
+          "description": "IN_PROGRESS \u2014 scoped pattern-reach survey for stdlib withUnsafe* family; empirical work deferred until A2 authorized"
         }
       ]
     },
@@ -3778,7 +3778,7 @@
     {
       "file": "2026-04-24-p29-cycle-4-option-a-unify-and-structural-correctness-framing.md",
       "date": "2026-04-24",
-      "title": "P2.9 Cycle 4 Close — Option A Unify and Structurally-Correct vs Lowest-Risk Framing",
+      "title": "P2.9 Cycle 4 Close \u2014 Option A Unify and Structurally-Correct vs Lowest-Risk Framing",
       "packages": [
         "swift-iso-9945",
         "swift-linux-standard",
@@ -3825,7 +3825,7 @@
         {
           "type": "research_topic",
           "target": "doc-audit-module-import-visibility-preflight.md",
-          "description": "IN_PROGRESS — methodology survey"
+          "description": "IN_PROGRESS \u2014 methodology survey"
         },
         {
           "type": "skill_update",
@@ -3834,14 +3834,14 @@
         },
         {
           "type": "no_action",
-          "description": "D5 swift-linux Random module-import — already RESOLVED 2026-04-24 via 61e52c4"
+          "description": "D5 swift-linux Random module-import \u2014 already RESOLVED 2026-04-24 via 61e52c4"
         }
       ]
     },
     {
       "file": "2026-04-24-post-hoc-api-name-compliance-swap-rename.md",
       "date": "2026-04-24",
-      "title": "Post-hoc [API-NAME-002] compliance: swapAt → swap(at:with:)",
+      "title": "Post-hoc [API-NAME-002] compliance: swapAt \u2192 swap(at:with:)",
       "packages": [
         "swift-array-primitives",
         "swift-buffer-primitives"
@@ -3863,7 +3863,7 @@
         {
           "type": "research_topic",
           "target": "stdlib-naming-beats-ecosystem-naming.md",
-          "description": "IN_PROGRESS Tier 2 — when stdlib naming beats ecosystem naming and when it does not; case-study sweep pending"
+          "description": "IN_PROGRESS Tier 2 \u2014 when stdlib naming beats ecosystem naming and when it does not; case-study sweep pending"
         }
       ]
     },
@@ -3889,7 +3889,7 @@
         {
           "type": "research_topic",
           "target": "value-generic-parameter-naming-convention.md",
-          "description": "IN_PROGRESS Tier 2 — convention selection (Option A single-letter N / Option B semantic / Option C scope-disambiguated / Option D mixed)"
+          "description": "IN_PROGRESS Tier 2 \u2014 convention selection (Option A single-letter N / Option B semantic / Option C scope-disambiguated / Option D mixed)"
         },
         {
           "type": "package_insight",
@@ -3901,7 +3901,7 @@
     {
       "file": "2026-04-24-swift-forums-review-skill-creation-validation-v1.2.md",
       "date": "2026-04-24",
-      "title": "swift-forums-review skill creation and v1.2 validation — corpus, archetype triage, sibling-agent review loop",
+      "title": "swift-forums-review skill creation and v1.2 validation \u2014 corpus, archetype triage, sibling-agent review loop",
       "packages": [
         "swift-institute/Skills/swift-forums-review",
         "swift-institute/Engagement/swift-forums-review-corpus",
@@ -3973,7 +3973,7 @@
         {
           "type": "research_topic",
           "target": "asymmetric-quadrant-ergonomics-as-rejection-criterion.md",
-          "description": "RECOMMENDATION Tier 2 — codifies decision-test procedure for capability-protocol affordance proposals"
+          "description": "RECOMMENDATION Tier 2 \u2014 codifies decision-test procedure for capability-protocol affordance proposals"
         },
         {
           "type": "package_insight",
@@ -3985,7 +3985,7 @@
     {
       "file": "2026-04-26-carrier-integration-retrospective.md",
       "date": "2026-04-26",
-      "title": "Carrier Integration — Session Retrospective",
+      "title": "Carrier Integration \u2014 Session Retrospective",
       "packages": [
         "swift-carrier-primitives",
         "swift-institute"
@@ -3997,7 +3997,7 @@
     {
       "file": "2026-04-26-cross-carrier-utilities-research-defer.md",
       "date": "2026-04-26",
-      "title": "Cross-Carrier Utilities Research — defer-all + the [RES-018] precedent stack",
+      "title": "Cross-Carrier Utilities Research \u2014 defer-all + the [RES-018] precedent stack",
       "packages": [
         "swift-carrier-primitives",
         "swift-institute/Research"
@@ -4008,7 +4008,7 @@
       "triage_outcomes": [
         {
           "type": "no_action",
-          "description": "Carrier ad-hoc consolidation exception (one-time, principal-directed) — action items already landed via Skills/35dce3e and Research/2cc36be per Pass-Out 2026-04-30 against carrier-launch-skill-incorporation-backlog.md"
+          "description": "Carrier ad-hoc consolidation exception (one-time, principal-directed) \u2014 action items already landed via Skills/35dce3e and Research/2cc36be per Pass-Out 2026-04-30 against carrier-launch-skill-incorporation-backlog.md"
         }
       ]
     },
@@ -4033,12 +4033,12 @@
         {
           "type": "skill_update",
           "target": "modularization",
-          "description": "[MOD-RENT] Three-Criteria Primitive-Package Rent Test — capability + consumer + theoretical-content gate; codifies swift-lifetime-primitives deletion as worked example"
+          "description": "[MOD-RENT] Three-Criteria Primitive-Package Rent Test \u2014 capability + consumer + theoretical-content gate; codifies swift-lifetime-primitives deletion as worked example"
         },
         {
           "type": "skill_update",
           "target": "platform",
-          "description": "[PLAT-ARCH-008f] worked example added — Local → Key / Index L2 spec-literal rename (solution (a)) at swift-iso-9945 and swift-windows-standard"
+          "description": "[PLAT-ARCH-008f] worked example added \u2014 Local \u2192 Key / Index L2 spec-literal rename (solution (a)) at swift-iso-9945 and swift-windows-standard"
         },
         {
           "type": "package_insight",
@@ -4050,7 +4050,7 @@
     {
       "file": "2026-04-26-l1-exception-removal-skill-cycle.md",
       "date": "2026-04-26",
-      "title": "L1-exception-removal skill cycle — gate-opening for Descriptor migration",
+      "title": "L1-exception-removal skill cycle \u2014 gate-opening for Descriptor migration",
       "packages": [
         "swift-institute/Skills"
       ],
@@ -4089,12 +4089,12 @@
         {
           "type": "skill_update",
           "target": "audit",
-          "description": "[AUDIT-029] Empirical Census Before Options Matrix — when codifying a layering/composition/classification rule from audit findings, the empirical census across the rule's scope MUST precede the options matrix"
+          "description": "[AUDIT-029] Empirical Census Before Options Matrix \u2014 when codifying a layering/composition/classification rule from audit findings, the empirical census across the rule's scope MUST precede the options matrix"
         },
         {
           "type": "skill_update",
           "target": "audit",
-          "description": "[AUDIT-030] Real-Time Per-Package audit.md Row-Text Updates — distinct from [AUDIT-005] re-audit; remediation sessions update audit.md rows in-session, not deferred"
+          "description": "[AUDIT-030] Real-Time Per-Package audit.md Row-Text Updates \u2014 distinct from [AUDIT-005] re-audit; remediation sessions update audit.md rows in-session, not deferred"
         },
         {
           "type": "research_topic",
@@ -4118,12 +4118,12 @@
         {
           "type": "skill_update",
           "target": "testing-swiftlang",
-          "description": "[SWIFT-TEST-016] Macro Test Framework — Generic Helper, No XCTest, No Foundation; SwiftSyntaxMacrosGenericTestSupport + Swift Testing failureHandler; documents form-vs-site validation gap"
+          "description": "[SWIFT-TEST-016] Macro Test Framework \u2014 Generic Helper, No XCTest, No Foundation; SwiftSyntaxMacrosGenericTestSupport + Swift Testing failureHandler; documents form-vs-site validation gap"
         },
         {
           "type": "skill_update",
           "target": "modularization",
-          "description": "[MOD-023] #externalMacro Module Name Normalization — string literal must match SwiftPM-normalized module identifier (spaces → underscores)"
+          "description": "[MOD-023] #externalMacro Module Name Normalization \u2014 string literal must match SwiftPM-normalized module identifier (spaces \u2192 underscores)"
         },
         {
           "type": "no_action",
@@ -4134,7 +4134,7 @@
     {
       "file": "2026-04-26-typealias-probe-matrix-disambiguation.md",
       "date": "2026-04-26",
-      "title": "Typealias-via-#if probe — matrix disambiguation under supervisor pushback",
+      "title": "Typealias-via-#if probe \u2014 matrix disambiguation under supervisor pushback",
       "packages": [
         "swift-primitives/swift-kernel-primitives"
       ],
@@ -4145,7 +4145,7 @@
         {
           "type": "skill_update",
           "target": "experiment-process",
-          "description": "[EXP-017a] Matrix Disambiguation for #if-Gated Probes — generalizes leg-axis enumeration as third matrix dimension alongside build-mode and module-shape. Provenance-only ID-uniqueness work also resolved pre-existing duplicate [EXP-017]/[EXP-018] in same skill (older Improvement Discovery → [EXP-019]; newer Claim Validation Trap → [EXP-020]) per [REFL-PROC-016]."
+          "description": "[EXP-017a] Matrix Disambiguation for #if-Gated Probes \u2014 generalizes leg-axis enumeration as third matrix dimension alongside build-mode and module-shape. Provenance-only ID-uniqueness work also resolved pre-existing duplicate [EXP-017]/[EXP-018] in same skill (older Improvement Discovery \u2192 [EXP-019]; newer Claim Validation Trap \u2192 [EXP-020]) per [REFL-PROC-016]."
         }
       ]
     },
@@ -4167,12 +4167,12 @@
         {
           "type": "skill_update",
           "target": "supervise",
-          "description": "[SUPER-027] Pre-Dispatch Ecosystem-Constraint Scan — at dispatch authorization time, principal MUST run mechanical check against risk-surface dimensions including namespace ownership, layer-direction, dep graph, ground-rule conflicts in feedback memory, Research-doc recommendation"
+          "description": "[SUPER-027] Pre-Dispatch Ecosystem-Constraint Scan \u2014 at dispatch authorization time, principal MUST run mechanical check against risk-surface dimensions including namespace ownership, layer-direction, dep graph, ground-rule conflicts in feedback memory, Research-doc recommendation"
         },
         {
           "type": "skill_update",
           "target": "platform",
-          "description": "[PLAT-ARCH-018] Typealiased Namespace-Path Conflict Rule — codifies the conflict mode of A.X = ForeignModule.X typealias chains; new declarations at A.X.Z silently add to ForeignModule.X.Z"
+          "description": "[PLAT-ARCH-018] Typealiased Namespace-Path Conflict Rule \u2014 codifies the conflict mode of A.X = ForeignModule.X typealias chains; new declarations at A.X.Z silently add to ForeignModule.X.Z"
         },
         {
           "type": "research_topic",
@@ -4184,7 +4184,7 @@
     {
       "file": "2026-04-28-sub-cycle-1-1-inverted-pattern-a.md",
       "date": "2026-04-28",
-      "title": "Sub-cycle 1.1 — File family INVERTED Pattern A landing",
+      "title": "Sub-cycle 1.1 \u2014 File family INVERTED Pattern A landing",
       "packages": [
         "swift-iso/swift-iso-9945",
         "swift-foundations/swift-kernel",
@@ -4199,17 +4199,17 @@
         {
           "type": "skill_update",
           "target": "platform",
-          "description": "[PLAT-ARCH-019] INVERTED Pattern A — Additive Raw-Alongside-Typed at L2; third compositional shape alongside Pattern A and Phase 1.5 retroactive re-typing"
+          "description": "[PLAT-ARCH-019] INVERTED Pattern A \u2014 Additive Raw-Alongside-Typed at L2; third compositional shape alongside Pattern A and Phase 1.5 retroactive re-typing"
         },
         {
           "type": "skill_update",
           "target": "platform",
-          "description": "[PLAT-ARCH-020] L3-Unifier Shadow Pre-Flight Check — before modifying L2 typed forms, grep L3-unifier sources for parallel extensions; if found, need @_disfavoredOverload"
+          "description": "[PLAT-ARCH-020] L3-Unifier Shadow Pre-Flight Check \u2014 before modifying L2 typed forms, grep L3-unifier sources for parallel extensions; if found, need @_disfavoredOverload"
         },
         {
           "type": "skill_update",
           "target": "handoff",
-          "description": "[HANDOFF-024a] Linux Baseline Pre-Flight — Mandatory-to-Run, Conditional-on-Fix; clean pre-flight proceeds directly without prereq commit"
+          "description": "[HANDOFF-024a] Linux Baseline Pre-Flight \u2014 Mandatory-to-Run, Conditional-on-Fix; clean pre-flight proceeds directly without prereq commit"
         }
       ]
     },
@@ -4230,7 +4230,7 @@
       "triage_outcomes": [
         {
           "type": "no_action",
-          "description": "Carrier ad-hoc consolidation exception (one-time, principal-directed) — action items already landed via Skills/35dce3e and Research/2cc36be per Pass-Out 2026-04-30 against carrier-launch-skill-incorporation-backlog.md"
+          "description": "Carrier ad-hoc consolidation exception (one-time, principal-directed) \u2014 action items already landed via Skills/35dce3e and Research/2cc36be per Pass-Out 2026-04-30 against carrier-launch-skill-incorporation-backlog.md"
         }
       ]
     },
@@ -4248,14 +4248,14 @@
       "triage_outcomes": [
         {
           "type": "no_action",
-          "description": "Carrier ad-hoc consolidation exception (one-time, principal-directed) — action items already landed via Skills/35dce3e and Research/2cc36be per Pass-Out 2026-04-30 against carrier-launch-skill-incorporation-backlog.md"
+          "description": "Carrier ad-hoc consolidation exception (one-time, principal-directed) \u2014 action items already landed via Skills/35dce3e and Research/2cc36be per Pass-Out 2026-04-30 against carrier-launch-skill-incorporation-backlog.md"
         }
       ]
     },
     {
       "file": "2026-04-29-github-metadata-harmonization-execution.md",
       "date": "2026-04-29",
-      "title": "GitHub Metadata Harmonization — investigation, four-wave rollout, and operational quirks",
+      "title": "GitHub Metadata Harmonization \u2014 investigation, four-wave rollout, and operational quirks",
       "packages": [
         "swift-institute",
         "swift-primitives",
@@ -4288,7 +4288,7 @@
     {
       "file": "2026-04-29-handoff-triage-cycle-and-d-to-a-reclassification.md",
       "date": "2026-04-29",
-      "title": "HANDOFF Triage Cycle and D→A Reclassification at Extraction Time",
+      "title": "HANDOFF Triage Cycle and D\u2192A Reclassification at Extraction Time",
       "packages": [
         "swift-institute"
       ],
@@ -4299,12 +4299,12 @@
         {
           "type": "skill_update",
           "target": "reflect-session",
-          "description": "[REFL-009a] In-Flight-File Conservativism for Bulk Triage — codifies the override-vs-matrix priority ambiguity; in-flight Q4=yes wins over annotation override"
+          "description": "[REFL-009a] In-Flight-File Conservativism for Bulk Triage \u2014 codifies the override-vs-matrix priority ambiguity; in-flight Q4=yes wins over annotation override"
         },
         {
           "type": "skill_update",
           "target": "handoff",
-          "description": "[HANDOFF-032] Extraction-Time Material Check — generalizes [HANDOFF-013a] to extraction-time material checks; downgrade to delete if already captured"
+          "description": "[HANDOFF-032] Extraction-Time Material Check \u2014 generalizes [HANDOFF-013a] to extraction-time material checks; downgrade to delete if already captured"
         },
         {
           "type": "research_topic",
@@ -4316,7 +4316,7 @@
     {
       "file": "2026-04-29-path-x-phase-2-windows-mirror-execution.md",
       "date": "2026-04-29",
-      "title": "Path X Phase 2 — windows-standard mirror execution (in absentia, INVERTED Pattern A)",
+      "title": "Path X Phase 2 \u2014 windows-standard mirror execution (in absentia, INVERTED Pattern A)",
       "packages": [
         "swift-microsoft/swift-windows-standard",
         "swift-institute"
@@ -4328,17 +4328,17 @@
         {
           "type": "skill_update",
           "target": "supervise",
-          "description": "[SUPER-028] In-Absentia Decision Matrix — Class-(a) Inaction Before Class-(b) Escalation; composes [SUPER-014a] + [SUPER-024] into two-axis decision procedure"
+          "description": "[SUPER-028] In-Absentia Decision Matrix \u2014 Class-(a) Inaction Before Class-(b) Escalation; composes [SUPER-014a] + [SUPER-024] into two-axis decision procedure"
         },
         {
           "type": "skill_update",
           "target": "supervise",
-          "description": "[SUPER-009a] Verification Scope Sub-Rule — when verification mechanism doesn't fully exercise target, criterion MUST explicitly state what DOES/DOES NOT verify"
+          "description": "[SUPER-009a] Verification Scope Sub-Rule \u2014 when verification mechanism doesn't fully exercise target, criterion MUST explicitly state what DOES/DOES NOT verify"
         },
         {
           "type": "skill_update",
           "target": "handoff",
-          "description": "[HANDOFF-031] Syntactic-vs-Semantic Disclaimer for Regex Enumerations — narrow regex or document false-positive shapes when match-set exceeds semantic scope"
+          "description": "[HANDOFF-031] Syntactic-vs-Semantic Disclaimer for Regex Enumerations \u2014 narrow regex or document false-positive shapes when match-set exceeds semantic scope"
         }
       ]
     },
@@ -4364,7 +4364,7 @@
     {
       "file": "2026-04-30-handoff-lifecycle-execution.md",
       "date": "2026-04-30",
-      "title": "HANDOFF Lifecycle and Retention — Execution",
+      "title": "HANDOFF Lifecycle and Retention \u2014 Execution",
       "packages": [
         "swift-institute/Skills",
         "swift-institute/Research"
@@ -4390,7 +4390,7 @@
         {
           "type": "skill_update",
           "target": "release-readiness",
-          "description": "[RELEASE-002] Phase 6 amended — backlog row status verification MUST re-derive from current source"
+          "description": "[RELEASE-002] Phase 6 amended \u2014 backlog row status verification MUST re-derive from current source"
         },
         {
           "type": "skill_update",
@@ -4517,7 +4517,7 @@
       "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
       "processedDate": "2026-05-10",
       "triageOutcome": "skill-update",
-      "outcomeDescription": "Cluster C — landed [GH-REPO-075] thin-caller schema validation (sync-ci-callers gate + reference-template-movement EXCLUDE staleness); [README-008] pre-tag installation pin extension (from: vs branch: forms); [RELEASE-002] Phase 2 discovery-lens sub-pass amendment (cohort-recurring patterns missed by per-rule audit)."
+      "outcomeDescription": "Cluster C \u2014 landed [GH-REPO-075] thin-caller schema validation (sync-ci-callers gate + reference-template-movement EXCLUDE staleness); [README-008] pre-tag installation pin extension (from: vs branch: forms); [RELEASE-002] Phase 2 discovery-lens sub-pass amendment (cohort-recurring patterns missed by per-rule audit)."
     },
     {
       "file": "2026-05-01-property-readiness-and-ownership-public-flip.md",
@@ -4534,12 +4534,12 @@
       "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
       "processedDate": "2026-05-10",
       "triageOutcome": "mixed",
-      "outcomeDescription": "Cluster E — SkillUpdate [RELEASE-014] post-flip first-public-CI baseline (run-level conclusion vs job-level; cohort-canonical lint-config presence pre-flip). SkillUpdate [FREVIEW-021] post-triage critical re-assessment (anchor-correct vs prescription-correct as orthogonal axes). PackageInsight swift-ownership-primitives Transfer.Retained.Outgoing abandoned-path deinit fix shipped 0d5b399."
+      "outcomeDescription": "Cluster E \u2014 SkillUpdate [RELEASE-014] post-flip first-public-CI baseline (run-level conclusion vs job-level; cohort-canonical lint-config presence pre-flip). SkillUpdate [FREVIEW-021] post-triage critical re-assessment (anchor-correct vs prescription-correct as orthogonal axes). PackageInsight swift-ownership-primitives Transfer.Retained.Outgoing abandoned-path deinit fix shipped 0d5b399."
     },
     {
       "file": "2026-05-01-readme-skill-family-v3-design-and-cleanup.md",
       "date": "2026-05-01",
-      "title": "README skill family v3.0.0 — design convergence and self-review-caught defects",
+      "title": "README skill family v3.0.0 \u2014 design convergence and self-review-caught defects",
       "packages": [
         "readme",
         "swift-institute",
@@ -4555,7 +4555,7 @@
       "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
       "processedDate": "2026-05-10",
       "triageOutcome": "skill-update",
-      "outcomeDescription": "Cluster C — landed [README-162] count-claim consistency lint extension in readme/ci-automation.md; [README-028] speculative family/rule validation discipline in readme/SKILL.md (universal meta-rule); [README-006] composition-claim completeness sub-rule in readme/sub-package.md (canonical 4-of-7-deps swift-geometry-primitives incident)."
+      "outcomeDescription": "Cluster C \u2014 landed [README-162] count-claim consistency lint extension in readme/ci-automation.md; [README-028] speculative family/rule validation discipline in readme/SKILL.md (universal meta-rule); [README-006] composition-claim completeness sub-rule in readme/sub-package.md (canonical 4-of-7-deps swift-geometry-primitives incident)."
     },
     {
       "file": "2026-05-01-spm-stall-comprehensive-mirror-mitigation.md",
@@ -4575,7 +4575,7 @@
       "triagedPhase1Doc": "Research/skills-condensation-triage-phase-1.md",
       "processedDate": "2026-05-10",
       "triageOutcome": "skill-update",
-      "outcomeDescription": "Cluster D — SkillUpdate [ISSUE-026] negative-experiment conclusion MUST cite coverage scope (canonical incident: single-URL mirror false-negative). Companion to 2026-05-08 templates-institute-migration entry; the SwiftPM identity-collision upstream defect class is consumer-side governed by [PKG-DEP-002] (added in companion). Workspace-mirror maintenance protocol deferred to package-local Research/_Package-Insights.md."
+      "outcomeDescription": "Cluster D \u2014 SkillUpdate [ISSUE-026] negative-experiment conclusion MUST cite coverage scope (canonical incident: single-URL mirror false-negative). Companion to 2026-05-08 templates-institute-migration entry; the SwiftPM identity-collision upstream defect class is consumer-side governed by [PKG-DEP-002] (added in companion). Workspace-mirror maintenance protocol deferred to package-local Research/_Package-Insights.md."
     },
     {
       "file": "2026-05-01-wave-4c-completion-and-finding-6-8-rewire.md",
@@ -4621,7 +4621,7 @@
     {
       "file": "2026-05-02-multi-envelope-execution-research-doc-layering-blindspot-and-empirical-classification-corrections.md",
       "date": "2026-05-02",
-      "title": "Multi-envelope execution — research-doc layering blindspot + empirical classification corrections",
+      "title": "Multi-envelope execution \u2014 research-doc layering blindspot + empirical classification corrections",
       "packages": [
         "swift-cpu",
         "swift-kernel",
@@ -4645,7 +4645,7 @@
     {
       "file": "2026-05-02-supervisor-multi-envelope-parallel-dispatch-and-verification-rhythm.md",
       "date": "2026-05-02",
-      "title": "Supervisor reflection — multi-envelope parallel dispatch + empirical-verification rhythm",
+      "title": "Supervisor reflection \u2014 multi-envelope parallel dispatch + empirical-verification rhythm",
       "packages": [
         "swift-cpu",
         "swift-kernel",
@@ -4724,7 +4724,7 @@
     {
       "file": "2026-05-04-principal-side-cicd-centralization-supervision.md",
       "date": "2026-05-04",
-      "title": "Principal-Side Supervisory Reflection — L1 CI/CD Centralization Rollout",
+      "title": "Principal-Side Supervisory Reflection \u2014 L1 CI/CD Centralization Rollout",
       "packages": [
         "swift-institute",
         "swift-primitives"
@@ -4741,7 +4741,7 @@
     {
       "file": "2026-05-04-test-support-spine-strict-rollout-and-mod-024.md",
       "date": "2026-05-04",
-      "title": "Test Support Spine Phase 2a Strict Rollout, [MOD-024] Codification, and Phase β Handoff",
+      "title": "Test Support Spine Phase 2a Strict Rollout, [MOD-024] Codification, and Phase \u03b2 Handoff",
       "packages": [
         "swift-primitives",
         "swift-institute"
@@ -4758,7 +4758,7 @@
     {
       "file": "2026-05-05-centralized-ci-deduplication-cohort-execution.md",
       "date": "2026-05-05",
-      "title": "Centralized CI deduplication — five-step cohort execution (25 commits + 5 labels across two repos)",
+      "title": "Centralized CI deduplication \u2014 five-step cohort execution (25 commits + 5 labels across two repos)",
       "packages": [
         "swift-institute/.github",
         "swift-primitives/.github",
@@ -4786,7 +4786,7 @@
     {
       "file": "2026-05-05-ci-audit-and-pm-cohort-rollout.md",
       "date": "2026-05-05",
-      "title": "CI audit + PM cohort rollout — refactor framework, composite-tech-stack constraints, and the danger of changelog skimming",
+      "title": "CI audit + PM cohort rollout \u2014 refactor framework, composite-tech-stack constraints, and the danger of changelog skimming",
       "packages": [
         "swift-institute/.github",
         "swift-primitives/.github"
@@ -4833,12 +4833,12 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-10",
       "triageOutcome": "mixed",
-      "outcomeDescription": "Cluster E — SkillUpdate [HANDOFF-039] amended with topic-matched parallel-session sibling disposition (search-before-write preamble for /handoff). SkillUpdate [REFL-011] generalized from correction-only to all factual state-claims (first-assertion + correction; canonical first-assertion incident BLOG-IDEA target list staleness). ResearchTopic Tagged SLI conformance fan-out deferred — 3rd consumer cleanup triggers research write-up."
+      "outcomeDescription": "Cluster E \u2014 SkillUpdate [HANDOFF-039] amended with topic-matched parallel-session sibling disposition (search-before-write preamble for /handoff). SkillUpdate [REFL-011] generalized from correction-only to all factual state-claims (first-assertion + correction; canonical first-assertion incident BLOG-IDEA target list staleness). ResearchTopic Tagged SLI conformance fan-out deferred \u2014 3rd consumer cleanup triggers research write-up."
     },
     {
       "file": "2026-05-05-property-rename-phase-5-autonomous-cascade.md",
       "date": "2026-05-05",
-      "title": "Property.{View,View.Read,Consuming} → {Inout,Borrow,Consume} — autonomous Phase 5 cascade",
+      "title": "Property.{View,View.Read,Consuming} \u2192 {Inout,Borrow,Consume} \u2014 autonomous Phase 5 cascade",
       "packages": [
         "swift-carrier-primitives",
         "swift-ownership-primitives",
@@ -4871,12 +4871,12 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-10",
       "triageOutcome": "mixed",
-      "outcomeDescription": "Cluster E — NoAction literal+generic-instantiated regex already covered by [HANDOFF-040] (slab-primitives is the canonical worked example). NoAction mechanical bulk-rename pair-rename atomicity deferred to 2nd-instance trigger (tool-design topic). PackageInsight swift-graph-primitives Vector SIGSEGV deferred to user-side investigation."
+      "outcomeDescription": "Cluster E \u2014 NoAction literal+generic-instantiated regex already covered by [HANDOFF-040] (slab-primitives is the canonical worked example). NoAction mechanical bulk-rename pair-rename atomicity deferred to 2nd-instance trigger (tool-design topic). PackageInsight swift-graph-primitives Vector SIGSEGV deferred to user-side investigation."
     },
     {
       "file": "2026-05-05-sequence-borrowing-protocol-completion.md",
       "date": "2026-05-05",
-      "title": "Sequence.Borrowing.Protocol completion — PAT promotion + iterator-constraint family + local-function scoping for _read yield chains",
+      "title": "Sequence.Borrowing.Protocol completion \u2014 PAT promotion + iterator-constraint family + local-function scoping for _read yield chains",
       "packages": [
         "swift-sequence-primitives",
         "swift-buffer-primitives"
@@ -4885,12 +4885,12 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-10",
       "triageOutcome": "no-action",
-      "outcomeDescription": "Cluster E — NoAction local-function pattern for _read yield chain + @_lifetime(borrow self) per author's explicit gating (3rd call-site triggers [IMPL-*] promotion). Sample size 1 cycle (4 internal call sites in same file). Documented in reflection's Lesson 3."
+      "outcomeDescription": "Cluster E \u2014 NoAction local-function pattern for _read yield chain + @_lifetime(borrow self) per author's explicit gating (3rd call-site triggers [IMPL-*] promotion). Sample size 1 cycle (4 internal call sites in same file). Documented in reflection's Lesson 3."
     },
     {
       "file": "2026-05-05-skill-verification-taxonomy-tier-1-extension-and-parallel-subagent-dispatch.md",
       "date": "2026-05-05",
-      "title": "Skill-verification taxonomy tier-1 extension — parallel subagent dispatch and three new resistant patterns",
+      "title": "Skill-verification taxonomy tier-1 extension \u2014 parallel subagent dispatch and three new resistant patterns",
       "packages": [
         "swift-institute"
       ],
@@ -4898,7 +4898,7 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-10",
       "triageOutcome": "skill-update",
-      "outcomeDescription": "Cluster G — SkillUpdate handoff [HANDOFF-010] step 5 generalization to branching handoffs (sequential HANDOFF.md OR branching HANDOFF-{topic}.md). SkillUpdate reflect-session [REFL-016] commit-shape disposition under inherited dirty working tree (REFL-014 was taken with different content; new rule landed at REFL-016). ResearchTopic parallel-subagent dispatch patterns deferred — pattern reused successfully in tier-2/3 (the reuse itself is validation)."
+      "outcomeDescription": "Cluster G \u2014 SkillUpdate handoff [HANDOFF-010] step 5 generalization to branching handoffs (sequential HANDOFF.md OR branching HANDOFF-{topic}.md). SkillUpdate reflect-session [REFL-016] commit-shape disposition under inherited dirty working tree (REFL-014 was taken with different content; new rule landed at REFL-016). ResearchTopic parallel-subagent dispatch patterns deferred \u2014 pattern reused successfully in tier-2/3 (the reuse itself is validation)."
     },
     {
       "file": "2026-05-05-skill-verification-taxonomy-tier-2-tier-3-and-ecosystem-closure.md",
@@ -4911,7 +4911,7 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-10",
       "triageOutcome": "skill-update",
-      "outcomeDescription": "Cluster G — SkillUpdate [RES-030] explicit-class enumeration in taxonomy-classification subagent prompts. SkillUpdate [HANDOFF-049] stash-edit-commit-pop pattern for cross-session contamination. ResearchTopic Engagement skills classification annex deferred. (Sibling-session note had cited [SUPER-035] for the enumeration rule but that covers principal-side dispatch verification, not subagent-prompt enumeration; the gap was real.)"
+      "outcomeDescription": "Cluster G \u2014 SkillUpdate [RES-030] explicit-class enumeration in taxonomy-classification subagent prompts. SkillUpdate [HANDOFF-049] stash-edit-commit-pop pattern for cross-session contamination. ResearchTopic Engagement skills classification annex deferred. (Sibling-session note had cited [SUPER-035] for the enumeration rule but that covers principal-side dispatch verification, not subagent-prompt enumeration; the gap was real.)"
     },
     {
       "file": "2026-05-05-swift-87136-pr-shipping-and-six-round-adversarial-discussion.md",
@@ -4967,7 +4967,7 @@
     {
       "file": "2026-05-05-track-b-skill-quality-refactor-execution.md",
       "date": "2026-05-05",
-      "title": "Track B Phase B-1 + B-2 — diagnostic-driven skill-quality refactor execution",
+      "title": "Track B Phase B-1 + B-2 \u2014 diagnostic-driven skill-quality refactor execution",
       "packages": [
         "swift-institute/Skills"
       ],
@@ -4975,12 +4975,12 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-10",
       "triageOutcome": "skill-update",
-      "outcomeDescription": "Cluster G — SkillUpdate [SKILL-LIFE-028] ID-suffix scheme conflict-resolution policy for SPLIT operations (KEEP-with-annotation → renumber → topic split; hyphenated forbidden). [EXP-004]/[EXP-004a] is canonical worked example. ResearchTopic Tier-3 Part 27 sub-classification + EXP-004/EXP-006 future-SPLIT readiness deferred."
+      "outcomeDescription": "Cluster G \u2014 SkillUpdate [SKILL-LIFE-028] ID-suffix scheme conflict-resolution policy for SPLIT operations (KEEP-with-annotation \u2192 renumber \u2192 topic split; hyphenated forbidden). [EXP-004]/[EXP-004a] is canonical worked example. ResearchTopic Tier-3 Part 27 sub-classification + EXP-004/EXP-006 future-SPLIT readiness deferred."
     },
     {
       "file": "2026-05-05-workflow-construction-phase-1-reframe-and-fixture-harness.md",
       "date": "2026-05-05",
-      "title": "Workflow construction phase 1 — premise-staleness reframe and audit-script-as-workflow-logic harness",
+      "title": "Workflow construction phase 1 \u2014 premise-staleness reframe and audit-script-as-workflow-logic harness",
       "packages": [
         "swift-institute"
       ],
@@ -5053,7 +5053,7 @@
     {
       "file": "2026-05-06-phase-2-file-based-canonical-migration-completion.md",
       "date": "2026-05-06",
-      "title": "Phase 2 file-based-canonical migration — execution + Phase 2.5 carve-out + push wave + canonical retirement",
+      "title": "Phase 2 file-based-canonical migration \u2014 execution + Phase 2.5 carve-out + push wave + canonical retirement",
       "packages": [
         "swift-foundations/swift-linter",
         "swift-foundations/swift-manifest",
@@ -5070,7 +5070,7 @@
     {
       "file": "2026-05-06-r1r4-cleanup-cycle-evasion-discipline-and-bottom-out-pattern.md",
       "date": "2026-05-06",
-      "title": "R1–R4 cleanup cycle: evasion discipline evolution and the typed-system bottom-out pattern",
+      "title": "R1\u2013R4 cleanup cycle: evasion discipline evolution and the typed-system bottom-out pattern",
       "packages": [
         "swift-primitives"
       ],
@@ -5100,7 +5100,7 @@
     {
       "file": "2026-05-06-swift-linter-ai-harness-mission-staging.md",
       "date": "2026-05-06",
-      "title": "swift-linter AI-harness mission — staged briefs and strategic handoff update",
+      "title": "swift-linter AI-harness mission \u2014 staged briefs and strategic handoff update",
       "packages": [
         "swift-foundations/swift-linter",
         "swift-foundations/swift-linter-rules",
@@ -5115,7 +5115,7 @@
     {
       "file": "2026-05-07-d1-readme-and-driver-repair.md",
       "date": "2026-05-07",
-      "title": "D1' — README Repair + Driver Workspace-Path Removal",
+      "title": "D1' \u2014 README Repair + Driver Workspace-Path Removal",
       "packages": [
         "swift-foundations/swift-linter",
         "swift-primitives/swift-linter-primitives",
@@ -5131,7 +5131,7 @@
     {
       "file": "2026-05-07-d4-linter-rules-predicate-narrowing-and-readme-repair.md",
       "date": "2026-05-07",
-      "title": "D4' — Linter-Rules Predicate Narrowing and README Repair",
+      "title": "D4' \u2014 Linter-Rules Predicate Narrowing and README Repair",
       "packages": [
         "swift-foundations/swift-linter-rules"
       ],
@@ -5144,7 +5144,7 @@
     {
       "file": "2026-05-07-d7-path-filter-runtime-enforcement.md",
       "date": "2026-05-07",
-      "title": "D7' — Path.Filter Runtime Enforcement",
+      "title": "D7' \u2014 Path.Filter Runtime Enforcement",
       "packages": [
         "swift-foundations/swift-linter",
         "swift-primitives/swift-linter-primitives"
@@ -5158,7 +5158,7 @@
     {
       "file": "2026-05-07-d7p-typed-throughout-correction.md",
       "date": "2026-05-07",
-      "title": "D7'' — Typed-Throughout Correction on D7' Rim",
+      "title": "D7'' \u2014 Typed-Throughout Correction on D7' Rim",
       "packages": [
         "swift-primitives/swift-linter-primitives",
         "swift-foundations/swift-linter"
@@ -5195,7 +5195,7 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-07",
       "triageOutcome": "INFORMATIONAL",
-      "outcomeDescription": "Action item 1 ([MOD-025] Dep-Cleanup-Pass Audit Procedure): already-captured — rule landed in modularization skill during cohort execution and cites this reflection as provenance. Action item 2 (sub-product-split-decision rubric research doc): already-captured — Research/sub-product-split-decision-rubric.md authored RECOMMENDATION during cohort. Action item 3 ([MOD-024] Test Support spine-completion gap): already-captured in [MOD-025] (e) Required audit-script behavior + Spine-completion gap section. All three feedback memories cited (split_upstream_not_downstream, no_removal_during_development, test_support_spine_keep) verified present."
+      "outcomeDescription": "Action item 1 ([MOD-025] Dep-Cleanup-Pass Audit Procedure): already-captured \u2014 rule landed in modularization skill during cohort execution and cites this reflection as provenance. Action item 2 (sub-product-split-decision rubric research doc): already-captured \u2014 Research/sub-product-split-decision-rubric.md authored RECOMMENDATION during cohort. Action item 3 ([MOD-024] Test Support spine-completion gap): already-captured in [MOD-025] (e) Required audit-script behavior + Spine-completion gap section. All three feedback memories cited (split_upstream_not_downstream, no_removal_during_development, test_support_spine_keep) verified present."
     },
     {
       "file": "2026-05-07-lint-manifest-drop-and-array-builder-inference.md",
@@ -5211,12 +5211,12 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-07",
       "triageOutcome": "SKILL_UPDATE",
-      "outcomeDescription": "Action item 1 (consumer-syntax research doc v1.0.0 → v1.0.1 patch): already-captured — patch landed during work session; doc currently at v1.0.1 with the fully-qualified Lint.Rule.Configuration.enable(R.self) recommendation and inline correction note. Action item 2 (leading-dot inference at top-level multi-overload buildExpression): IMPLEMENTED via [IMPL-104] in implementation skill (style.md)."
+      "outcomeDescription": "Action item 1 (consumer-syntax research doc v1.0.0 \u2192 v1.0.1 patch): already-captured \u2014 patch landed during work session; doc currently at v1.0.1 with the fully-qualified Lint.Rule.Configuration.enable(R.self) recommendation and inline correction note. Action item 2 (leading-dot inference at top-level multi-overload buildExpression): IMPLEMENTED via [IMPL-104] in implementation skill (style.md)."
     },
     {
       "file": "2026-05-07-pre-publishable-polish-stream-2.md",
       "date": "2026-05-07",
-      "title": "Stream 2 — Pre-publishable polish cohort execution",
+      "title": "Stream 2 \u2014 Pre-publishable polish cohort execution",
       "packages": [
         "swift-institute (Skills repo)",
         "swift-foundations/swift-linter",
@@ -5252,7 +5252,7 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-07",
       "triageOutcome": "SKILL_UPDATE",
-      "outcomeDescription": "Action item 1 (research-process loose-end follow-up requires extant or immediate experiment package): IMPLEMENTED via [RES-027] in research-process skill. Action item 2 (implementation overload-over-shape-wrapper-type pattern): IMPLEMENTED via [IMPL-105] in implementation skill (style.md). Action item 3 (BLOG-IDEA-079 advance through review): INFORMATIONAL — Blog/_index.json notes field (updated during work session) flags the revision-pending state and to-do; full review pass deferred to separate authorized blog dispatch."
+      "outcomeDescription": "Action item 1 (research-process loose-end follow-up requires extant or immediate experiment package): IMPLEMENTED via [RES-027] in research-process skill. Action item 2 (implementation overload-over-shape-wrapper-type pattern): IMPLEMENTED via [IMPL-105] in implementation skill (style.md). Action item 3 (BLOG-IDEA-079 advance through review): INFORMATIONAL \u2014 Blog/_index.json notes field (updated during work session) flags the revision-pending state and to-do; full review pass deferred to separate authorized blog dispatch."
     },
     {
       "file": "2026-05-07-stdlib-map-actor-isolation-investigation.md",
@@ -5265,12 +5265,12 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-07",
       "triageOutcome": "SKILL_UPDATE",
-      "outcomeDescription": "Action item 1 (extend [RES-013a]/[RES-023] for mechanism/causal-explanation claims): IMPLEMENTED via [RES-028] in research-process skill (Smallest-Isolation-First Heuristic) which composes with [RES-013a]/[RES-023] for mechanism-claim verification per the rule's compose-with paragraph. Action item 2 (smallest-isolation-first heuristic for build-target-scoped perf investigations): IMPLEMENTED via [RES-028] (same rule). Action item 3 (sequence-operator-unification.md cross-ref to stdlib-collection-map-actor-isolation-overhead.md): IMPLEMENTED — note added to sequence-operator-unification.md after the lazy-pipeline-release-mode validation table flagging the SE-0423 contributor at small N."
+      "outcomeDescription": "Action item 1 (extend [RES-013a]/[RES-023] for mechanism/causal-explanation claims): IMPLEMENTED via [RES-028] in research-process skill (Smallest-Isolation-First Heuristic) which composes with [RES-013a]/[RES-023] for mechanism-claim verification per the rule's compose-with paragraph. Action item 2 (smallest-isolation-first heuristic for build-target-scoped perf investigations): IMPLEMENTED via [RES-028] (same rule). Action item 3 (sequence-operator-unification.md cross-ref to stdlib-collection-map-actor-isolation-overhead.md): IMPLEMENTED \u2014 note added to sequence-operator-unification.md after the lazy-pipeline-release-mode validation table flagging the SE-0423 contributor at small N."
     },
     {
       "file": "2026-05-07-supervisor-seat-swift-linter-cohort-orchestration.md",
       "date": "2026-05-07",
-      "title": "Supervisor Seat — swift-linter Cohort Orchestration (2-day sprint)",
+      "title": "Supervisor Seat \u2014 swift-linter Cohort Orchestration (2-day sprint)",
       "packages": [
         "swift-foundations/swift-linter",
         "swift-foundations/swift-linter-rules",
@@ -5283,7 +5283,7 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-07",
       "triageOutcome": "SKILL_UPDATE",
-      "outcomeDescription": "Action item 1 (supervise CI-failure-attribution rule): IMPLEMENTED via [SUPER-031] in supervise skill. Action item 2 (handoff multi-cohort orchestration pattern): IMPLEMENTED via [HANDOFF-043] in handoff skill. Action item 3 (research code-sample-compile gate): subsumed by [RELEASE-007] (Empirical Example-Compile Gate) in release-readiness skill — addresses the same systemic gap at the release-readiness layer."
+      "outcomeDescription": "Action item 1 (supervise CI-failure-attribution rule): IMPLEMENTED via [SUPER-031] in supervise skill. Action item 2 (handoff multi-cohort orchestration pattern): IMPLEMENTED via [HANDOFF-043] in handoff skill. Action item 3 (research code-sample-compile gate): subsumed by [RELEASE-007] (Empirical Example-Compile Gate) in release-readiness skill \u2014 addresses the same systemic gap at the release-readiness layer."
     },
     {
       "file": "2026-05-07-swift-linter-architecture-cohort-execution.md",
@@ -5303,12 +5303,12 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-07",
       "triageOutcome": "INFORMATIONAL",
-      "outcomeDescription": "Action item 1 ([PKG-DEP-001] path-form-as-safe-default): already-captured — rule landed in swift-package skill commit bf63961 during cohort execution. Action item 2 (swift-linter README breadcrumb for inert single-file fallback): documented in swift-foundations/swift-linter/Research/_Package-Insights.md as a doc-gap flag for future authorized doc-update dispatch (out of D1' scope per Do-Not-Touch). Action item 3 (canonical-tier rule activation cascade): already-captured — research doc authored during cohort at swift-foundations/swift-linter/Research/2026-05-07-canonical-tier-rule-activation-design.md."
+      "outcomeDescription": "Action item 1 ([PKG-DEP-001] path-form-as-safe-default): already-captured \u2014 rule landed in swift-package skill commit bf63961 during cohort execution. Action item 2 (swift-linter README breadcrumb for inert single-file fallback): documented in swift-foundations/swift-linter/Research/_Package-Insights.md as a doc-gap flag for future authorized doc-update dispatch (out of D1' scope per Do-Not-Touch). Action item 3 (canonical-tier rule activation cascade): already-captured \u2014 research doc authored during cohort at swift-foundations/swift-linter/Research/2026-05-07-canonical-tier-rule-activation-design.md."
     },
     {
       "file": "2026-05-07-swift-linter-code-surface-cleanup-cohort-and-mirror-config-unblock.md",
       "date": "2026-05-07",
-      "title": "Code-surface cleanup cohort + mirror-config unblock — cohort #3",
+      "title": "Code-surface cleanup cohort + mirror-config unblock \u2014 cohort #3",
       "packages": [
         "swift-foundations/swift-linter",
         "swift-foundations/swift-manifests",
@@ -5321,12 +5321,12 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-07",
       "triageOutcome": "SKILL_UPDATE",
-      "outcomeDescription": "Action item 1 (mid-dispatch-infrastructure-unblock discrimination): pattern partially captured by feedback_no_deferral_bundle_ecosystem_fixes qualifier; bundling discipline routed via new [SUPER-032] push-bundle discipline in supervise; full discrimination rule (cheap-reversible-narrow / large-reversible-traceable / large-irreversible-broad) routed as INFORMATIONAL — needs separate skill-update dispatch. Action item 2 (extend [API-NAME-002] with namespace-implicit-prefix-removal): IMPLEMENTED via inline sub-rule in code-surface skill. Action item 3 (swift-primitives 7-package URL→path cleanup): INFORMATIONAL — deferred to separate authorized mechanical-batch-fix dispatch per the action item itself."
+      "outcomeDescription": "Action item 1 (mid-dispatch-infrastructure-unblock discrimination): pattern partially captured by feedback_no_deferral_bundle_ecosystem_fixes qualifier; bundling discipline routed via new [SUPER-032] push-bundle discipline in supervise; full discrimination rule (cheap-reversible-narrow / large-reversible-traceable / large-irreversible-broad) routed as INFORMATIONAL \u2014 needs separate skill-update dispatch. Action item 2 (extend [API-NAME-002] with namespace-implicit-prefix-removal): IMPLEMENTED via inline sub-rule in code-surface skill. Action item 3 (swift-primitives 7-package URL\u2192path cleanup): INFORMATIONAL \u2014 deferred to separate authorized mechanical-batch-fix dispatch per the action item itself."
     },
     {
       "file": "2026-05-07-swift-linter-modularization-cohort-completion.md",
       "date": "2026-05-07",
-      "title": "swift-linter Modularization Cohort Completion — 4 Phases, 12 Commits, 6 Repos",
+      "title": "swift-linter Modularization Cohort Completion \u2014 4 Phases, 12 Commits, 6 Repos",
       "packages": [
         "swift-foundations/swift-linter",
         "swift-foundations/swift-linter-rules",
@@ -5362,7 +5362,7 @@
     {
       "file": "2026-05-07-tagged-primitives-lint-workflow-removal.md",
       "date": "2026-05-07",
-      "title": "Tagged-primitives lint workflow removal — restore centralized CI pattern",
+      "title": "Tagged-primitives lint workflow removal \u2014 restore centralized CI pattern",
       "packages": [
         "swift-primitives/swift-tagged-primitives"
       ],
@@ -5370,12 +5370,12 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-07",
       "triageOutcome": "INFORMATIONAL",
-      "outcomeDescription": "No action items — clean tactical execution; cohort-tail cleanup that restored the centralized + hierarchical CI/CD pattern per [CI-001]–[CI-003]. Recorded for institutional memory."
+      "outcomeDescription": "No action items \u2014 clean tactical execution; cohort-tail cleanup that restored the centralized + hierarchical CI/CD pattern per [CI-001]\u2013[CI-003]. Recorded for institutional memory."
     },
     {
       "file": "2026-05-08-array-bounded-index-retreat-execution-and-target-shape-divergence.md",
       "date": "2026-05-08",
-      "title": "Array.Bounded.Index Retreat Execution — Verdict Conjecture vs Existing Better Shape",
+      "title": "Array.Bounded.Index Retreat Execution \u2014 Verdict Conjecture vs Existing Better Shape",
       "packages": [],
       "status": "processed",
       "processedDate": "2026-05-10",
@@ -5386,7 +5386,7 @@
     {
       "file": "2026-05-08-binding-and-placement-research-arc.md",
       "date": "2026-05-08",
-      "title": "Binding-vs-Placement Research Arc — Cost-Axis vs Semantic-Identity Framing",
+      "title": "Binding-vs-Placement Research Arc \u2014 Cost-Axis vs Semantic-Identity Framing",
       "packages": [],
       "status": "processed",
       "processedDate": "2026-05-10",
@@ -5397,7 +5397,7 @@
     {
       "file": "2026-05-08-orchestrator-cycle-ds-launch-prep.md",
       "date": "2026-05-08",
-      "title": "Orchestrator Cycle — Data-Structure Launch Prep",
+      "title": "Orchestrator Cycle \u2014 Data-Structure Launch Prep",
       "packages": [],
       "status": "processed",
       "processedDate": "2026-05-10",
@@ -5441,7 +5441,7 @@
     {
       "file": "2026-05-08-swift-linter-d5-release-readiness-pilot.md",
       "date": "2026-05-08",
-      "title": "swift-linter D5 Release-Readiness Pilot — Multi-Source Skill Backlog Authoring",
+      "title": "swift-linter D5 Release-Readiness Pilot \u2014 Multi-Source Skill Backlog Authoring",
       "packages": [],
       "status": "processed",
       "processedDate": "2026-05-10",
@@ -5464,12 +5464,12 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-10",
       "triageOutcome": "skill-update",
-      "outcomeDescription": "Cluster D — SkillUpdate [PKG-DEP-002] package-identity audit before path-form sibling deps. Pairs with 2026-05-01 spm-stall entry's [ISSUE-026] coverage-scope rule; together they govern the consumer-side discipline + the conclusion-writing discipline for the same upstream defect class (URL/path-form name collision producing build-planner stall). Upstream filing deferred."
+      "outcomeDescription": "Cluster D \u2014 SkillUpdate [PKG-DEP-002] package-identity audit before path-form sibling deps. Pairs with 2026-05-01 spm-stall entry's [ISSUE-026] coverage-scope rule; together they govern the consumer-side discipline + the conclusion-writing discipline for the same upstream defect class (URL/path-form name collision producing build-planner stall). Upstream filing deferred."
     },
     {
       "file": "2026-05-08-two-l1-layer-reversals-system-and-iso.md",
       "date": "2026-05-08",
-      "title": "Two L1 Layer Reversals: Memory↔System and Algebra↔Iso",
+      "title": "Two L1 Layer Reversals: Memory\u2194System and Algebra\u2194Iso",
       "packages": [
         "swift-memory-primitives",
         "swift-system-primitives",
@@ -5493,7 +5493,7 @@
     {
       "file": "2026-05-08-x2-build-cache-masked-defect-and-supervised-class-c-flow.md",
       "date": "2026-05-08",
-      "title": "X2 — Build-Cache-Masked Defect and the Class-(c) Escalation Flow",
+      "title": "X2 \u2014 Build-Cache-Masked Defect and the Class-(c) Escalation Flow",
       "packages": [],
       "status": "processed",
       "processedDate": "2026-05-10",
@@ -5548,7 +5548,7 @@
     {
       "file": "2026-05-10-bifunctor-home-framework-without-inspection.md",
       "date": "2026-05-10",
-      "title": "Pair↔Either bridge home: framework-without-inspection caught twice",
+      "title": "Pair\u2194Either bridge home: framework-without-inspection caught twice",
       "packages": [],
       "status": "processed",
       "processedDate": "2026-05-10",
@@ -5559,7 +5559,7 @@
     {
       "file": "2026-05-10-centralized-discussion-threads-pilot-and-failure-fix-arc.md",
       "date": "2026-05-10",
-      "title": "Centralized Discussion Threads Pilot — Carrier Canary Failure-and-Fix Arc",
+      "title": "Centralized Discussion Threads Pilot \u2014 Carrier Canary Failure-and-Fix Arc",
       "packages": [
         "swift-carrier-primitives",
         "swift-tagged-primitives",
@@ -5577,7 +5577,7 @@
       "statusRaw": "processed",
       "processedDate": "2026-05-10",
       "triageOutcome": "skill-update",
-      "outcomeDescription": "Cluster K — SkillUpdate [REFL-017] no redundant polling under notification semantics (3 polling tasks spawned during pilot worked example). NoAction [GH-REPO-094] consolidation per author's explicit gating (single instance; defer to 2nd per [SKILL-LIFE-021]). ResearchTopic cohort-expansion architecture for discussion-thread pilot (matrix enumerate-at-runtime vs hard-coded) deferred to next pilot expansion."
+      "outcomeDescription": "Cluster K \u2014 SkillUpdate [REFL-017] no redundant polling under notification semantics (3 polling tasks spawned during pilot worked example). NoAction [GH-REPO-094] consolidation per author's explicit gating (single instance; defer to 2nd per [SKILL-LIFE-021]). ResearchTopic cohort-expansion architecture for discussion-thread pilot (matrix enumerate-at-runtime vs hard-coded) deferred to next pilot expansion."
     },
     {
       "file": "2026-05-10-coproduct-blog-annotations-and-schedule-cascade.md",
@@ -5593,7 +5593,7 @@
     {
       "file": "2026-05-10-wave-2b-finalization-batch-3-4-6-completion.md",
       "date": "2026-05-10",
-      "title": "Wave 2b Finalization Batch 3/4/6 Completion — 17 Lint Rules + Skill Cross-References",
+      "title": "Wave 2b Finalization Batch 3/4/6 Completion \u2014 17 Lint Rules + Skill Cross-References",
       "packages": [
         "swift-foundations/swift-linter-rules",
         "swift-institute"
@@ -5604,7 +5604,7 @@
     {
       "file": "2026-05-11-pointer-arithmetic-miscompile-three-round-investigation-and-issues-repo-canon.md",
       "date": "2026-05-11",
-      "title": "Linux Pointer-Arithmetic Miscompile — Three-Round Investigation Arc + Issues-Repo Canon",
+      "title": "Linux Pointer-Arithmetic Miscompile \u2014 Three-Round Investigation Arc + Issues-Repo Canon",
       "packages": [
         "swift-primitives/swift-affine-primitives",
         "swift-institute/Issues"
@@ -5627,7 +5627,7 @@
     {
       "file": "2026-05-11-wave-3-closure-and-amendment-surface-enumeration.md",
       "date": "2026-05-11",
-      "title": "Wave 3 closure: rule amendments, research docs, aggregate — and the Thread 2 surface-enumeration gap",
+      "title": "Wave 3 closure: rule amendments, research docs, aggregate \u2014 and the Thread 2 surface-enumeration gap",
       "packages": [
         "swift-foundations/swift-linter-rules",
         "swift-foundations/swift-institute-linter-rules",
@@ -5696,7 +5696,7 @@
     {
       "file": "2026-05-14-ci-review-arc-phase-a-c-supervision-gaps.md",
       "date": "2026-05-14",
-      "title": "CI Review Arc — Phase A through Phase C: Supervision Gaps, Verification Discipline, and Relay Patterns",
+      "title": "CI Review Arc \u2014 Phase A through Phase C: Supervision Gaps, Verification Discipline, and Relay Patterns",
       "packages": [
         "swift-institute/.github",
         "swift-institute/Skills",
@@ -5816,7 +5816,7 @@
     {
       "file": "2026-06-01-finish-the-fan-out-collection-iterable-refine-edge.md",
       "date": "2026-06-01",
-      "title": "Finish the Fan-Out — Collection.Protocol: Iterable refine edge + duplicate-iterator drop + .Indexed wrapper removal",
+      "title": "Finish the Fan-Out \u2014 Collection.Protocol: Iterable refine edge + duplicate-iterator drop + .Indexed wrapper removal",
       "packages": [
         "swift-primitives/swift-array-primitives",
         "swift-primitives/swift-collection-primitives",
@@ -5836,7 +5836,7 @@
     {
       "file": "2026-06-02-derive-for-free-tier3-and-operative-gate-verification.md",
       "date": "2026-06-02",
-      "title": "Derive-for-free via capability composition — and four verification misses that shared one root: checking a model of the ground truth instead of the ground truth",
+      "title": "Derive-for-free via capability composition \u2014 and four verification misses that shared one root: checking a model of the ground truth instead of the ground truth",
       "packages": [
         "swift-storage-primitives",
         "swift-buffer-primitives",
@@ -5863,7 +5863,7 @@
     {
       "file": "2026-06-02-span-equatable-hashable-bridge-noncopyable-bug-and-skill-consultation-gap.md",
       "date": "2026-06-02",
-      "title": "Span Equation/Hash bridges were silently Copyable-gated — a [MEM-COPY-004] bug the skill named and the user's ~Copyable-maximally push surfaced",
+      "title": "Span Equation/Hash bridges were silently Copyable-gated \u2014 a [MEM-COPY-004] bug the skill named and the user's ~Copyable-maximally push surfaced",
       "packages": [
         "swift-array-primitives",
         "swift-stack-primitives",
@@ -5896,7 +5896,7 @@
     {
       "file": "2026-06-02-storage-protocol-depointer-merge-and-cross-arc-source-break.md",
       "date": "2026-06-02",
-      "title": "Deleting Storage.Protocol's raw-pointer requirement: a stronger contract, *sounder* value-backed storage, and zero-cost access — the safety/capability/perf trade-offs were artifacts (OutputSpan + mutating _modify + SIL 0-witness disproved each)",
+      "title": "Deleting Storage.Protocol's raw-pointer requirement: a stronger contract, *sounder* value-backed storage, and zero-cost access \u2014 the safety/capability/perf trade-offs were artifacts (OutputSpan + mutating _modify + SIL 0-witness disproved each)",
       "packages": [
         "swift-storage-primitives",
         "swift-storage-slab-primitives",
@@ -5941,7 +5941,7 @@
         "swift-primitives/swift-memory-unbounded-primitives"
       ],
       "status": "processed",
-      "statusRaw": "processed (2026-06-04, reflections-processing session Scribe — 3 capped skill-update items + 3 principal addenda; 9 new/amended rules across 7 skills + 1 Tier-2 DECISION research note)"
+      "statusRaw": "processed (2026-06-04, reflections-processing session Scribe \u2014 3 capped skill-update items + 3 principal addenda; 9 new/amended rules across 7 skills + 1 Tier-2 DECISION research note)"
     },
     {
       "file": "2026-06-04-porter-ci-private-dep-access-arc.md",
@@ -6004,7 +6004,7 @@
       ],
       "status": "processed",
       "statusRaw": "pending",
-      "title": "Storage/Memory Split — Cleave-2 Termination (the close tail through merge + push)"
+      "title": "Storage/Memory Split \u2014 Cleave-2 Termination (the close tail through merge + push)"
     },
     {
       "date": "2026-06-07",
@@ -6036,7 +6036,7 @@
     {
       "date": "2026-06-12",
       "file": "2026-06-12-memory-foreign-arc-third-ownership-regime.md",
-      "title": "Memory.Foreign Arc — the Third Ownership Regime",
+      "title": "Memory.Foreign Arc \u2014 the Third Ownership Regime",
       "packages": [
         "swift-memory-foreign-primitives",
         "swift-buffer-ring-primitives",
@@ -6051,7 +6051,7 @@
     {
       "file": "2026-06-12-tower-phase-3-seat-closeout.md",
       "date": "2026-06-12",
-      "title": "Tower Phase 3: the Seat's Close-Out — Verify → Measure → Fix in One Phase",
+      "title": "Tower Phase 3: the Seat's Close-Out \u2014 Verify \u2192 Measure \u2192 Fix in One Phase",
       "packages": [
         "swift-shared-primitives",
         "swift-hash-table-primitives",
@@ -6070,7 +6070,7 @@
     {
       "date": "2026-06-13",
       "file": "2026-06-13-tower-phase-4-seat-round-m-supervision.md",
-      "title": "Tower Phase 4 — the Round M Seat: Supervision at Multi-Lane Scale",
+      "title": "Tower Phase 4 \u2014 the Round M Seat: Supervision at Multi-Lane Scale",
       "packages": [
         "swift-memory-allocation-primitives",
         "swift-storage-arena-primitives",
@@ -6090,7 +6090,7 @@
     {
       "file": "2026-06-26-swift-linter-closure-cadence-pivot-and-overnight-handoff-race.md",
       "date": "2026-06-26",
-      "title": "swift-linter Closure — the resolve-check cadence pivot, and the overnight-handoff race",
+      "title": "swift-linter Closure \u2014 the resolve-check cadence pivot, and the overnight-handoff race",
       "packages": [
         "swift-primitives",
         "swift-linter-primitives",
@@ -6120,21 +6120,21 @@
     {
       "file": "2026-07-05-origin-state-meta-ecosystem-consolidation.md",
       "date": "2026-07-05",
-      "title": "Origin State — memory dissolution, canon consolidation, and the day the guards started biting",
+      "title": "Origin State \u2014 memory dissolution, canon consolidation, and the day the guards started biting",
       "packages": [],
       "status": "pending"
     },
     {
       "file": "2026-07-05-fable-corpus-review-and-dispositions.md",
       "date": "2026-07-05",
-      "title": "Fable Corpus Review — Findings, Disposition Waves, and Store Triage",
+      "title": "Fable Corpus Review \u2014 Findings, Disposition Waves, and Store Triage",
       "packages": [],
       "status": "pending"
     },
     {
       "file": "2026-07-06-adt-tower-lead-overnight-w16-w4-execution.md",
       "date": "2026-07-06",
-      "title": "ADT Tower Lead — Overnight W1.6→W4 Execution, Six STOPs, Five Parks, One Succession",
+      "title": "ADT Tower Lead \u2014 Overnight W1.6\u2192W4 Execution, Six STOPs, Five Parks, One Succession",
       "packages": [
         "swift-buffer-ring-primitives",
         "swift-buffer-slab-primitives",
@@ -6155,7 +6155,7 @@
     {
       "file": "2026-07-06-completion-arc-fable-orchestration.md",
       "date": "2026-07-06",
-      "title": "Completion Arc — Three Overturned Relay Claims, One Witness-Carrier Adjudication, swift-pdf Green on Windows",
+      "title": "Completion Arc \u2014 Three Overturned Relay Claims, One Witness-Carrier Adjudication, swift-pdf Green on Windows",
       "packages": [
         "swift-tests",
         "swift-w3c-xml",
@@ -6231,6 +6231,23 @@
         "swift-identities-types",
         "swift-favicon",
         "swift-authentication"
+      ],
+      "status": "pending"
+    },
+    {
+      "file": "2026-07-10-overday-master-orchestration-interrupt-protocol-and-relaunch.md",
+      "date": "2026-07-10",
+      "title": "Overday Master Orchestration: Interrupt Protocol, Parallel-Session Convention Churn, and the Re-Launch",
+      "packages": [
+        "swift-testing",
+        "swift-iso-9945",
+        "swift-iso-9899",
+        "swift-io",
+        "swift-kernel",
+        "swift-rfc-6570",
+        "swift-dictionary-ordered-primitives",
+        "swift-process",
+        "swift-linter-rules"
       ],
       "status": "pending"
     }
