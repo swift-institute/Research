@@ -6250,6 +6250,37 @@
         "swift-linter-rules"
       ],
       "status": "pending"
+    },
+    {
+      "file": "2026-07-10-spm-hang-terminal-resolution-mirror-closure-and-alias-safety.md",
+      "date": "2026-07-10",
+      "title": "SPM Hang Terminal Resolution: Mirror Closure, Alias-Safety Laws, and the Patched Tool as Instrument",
+      "packages": [
+        "swift-package-manager",
+        "swift-dependencies",
+        "swift-authentication",
+        "swift-server-foundation",
+        "swift-types-foundation",
+        "swift-records",
+        "swift-linter-rules"
+      ],
+      "status": "pending"
+    },
+    {
+      "file": "2026-07-10-unified-overnight-orchestration-and-hang-supervision.md",
+      "date": "2026-07-10",
+      "title": "Unified Overnight Orchestration and the SPM Hang Supervision Arc",
+      "packages": [
+        "swift-stripe-types",
+        "swift-identities-types",
+        "swift-json-web-token",
+        "swift-server-foundation",
+        "swift-date-parsing",
+        "swift-mailgun-types",
+        "swift-url-routing-translating",
+        "swift-foundation-extensions"
+      ],
+      "status": "pending"
     }
   ]
 }
