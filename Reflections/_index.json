@@ -6345,6 +6345,19 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-11-routing-w2-dsl-restore-wave-close-and-sample-caught-doc-drift.md",
+      "date": "2026-07-11",
+      "title": "Routing W2 close: DSL restore, a sample-caught doc drift, and resume-over-redispatch",
+      "packages": [
+        "swift-url-routing",
+        "swift-parser-primitives",
+        "swift-rfc-6750",
+        "swift-rfc-7617"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
