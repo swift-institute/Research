@@ -6317,6 +6317,20 @@
         "swift-mailgun"
       ],
       "status": "pending"
+    },
+    {
+      "file": "2026-07-11-two-track-orchestrator-census-artifacts-and-identity-conflicts.md",
+      "date": "2026-07-11",
+      "title": "Two-track orchestration: census artifacts, transitive identity conflicts, and a macro's Never default",
+      "packages": [
+        "swift-mailgun-types",
+        "swift-mailgun-live",
+        "swift-mailgun",
+        "swift-environment",
+        "swift-witnesses"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
