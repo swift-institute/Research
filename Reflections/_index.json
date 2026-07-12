@@ -6391,6 +6391,23 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-12-fable-farewell-corpus-boiler-migration-and-resolve-root-cause.md",
+      "date": "2026-07-12",
+      "title": "Fable Farewell: Audit Corpus, Boiler Migration, and the Resolve Root Cause",
+      "packages": [
+        "boiler",
+        "swift-email",
+        "swift-url-routing",
+        "swift-dual",
+        "swift-parser-primitives",
+        "swift-stripe-live",
+        "swift-stripe",
+        "repotraffic-com-server"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
