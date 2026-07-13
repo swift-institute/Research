@@ -1,6 +1,8 @@
 # Comparative analysis: the institute DI idiom vs Point-Free's swift-dependencies
 
-**Status**: analysis, 2026-07-13. Written for the principal's own question — *"is our approach
+**Status**: analysis, 2026-07-13; amended same day after the independent blind assessment
+(`di-comparative-fable-assessment.md`) — its R2/R3/R4/R4b/R5/R6 corrections are incorporated at
+their sections, and the two verdicts CONVERGED blind. Written for the principal's own question — *"is our approach
 actually better?"* — while the institute idiom (`di-composition-root-design.md`, RATIFIED
 2026-07-13) was being executed in the E-2 arc.
 **Verdict in one line**: **the two designs are not competing implementations of the same idea —
@@ -44,7 +46,7 @@ not.
 | Resolution | runtime metatype cast → `liveValue` | static overload resolution → registered value or key default |
 | Production graph is… | **implicit** — scattered across every module's `liveValue` | **explicit** — one closure, readable in one file |
 | Severed boundaries (jobs/workers) | a non-issue (context-free resolution) | must have the root **re-applied**; boiler owns that list |
-| Test-default-served-in-live | **already diagnosed upstream** (see §2) | diagnosed as of 2026-07-13 (W1.3 tripwire) |
+| Test-default-served-in-live | diagnosed in DEBUG only; **silent in RELEASE** (see §2) | named report in RELEASE, trap in DEBUG (W1.3 tripwire, 2026-07-13) |
 | Runtime requirements | existential + metatype casts, a global cache | none — no runtime metadata needed |
 | Interface/Live module split | interface declares `TestDependencyKey`; Live module adds a **retroactive** `DependencyKey` (liveValue), found by the runtime cast | interface declares the key; **nothing** declares liveValue; the app root supplies the value |
 
@@ -56,19 +58,33 @@ the machinery does not.
 
 ## 2. The uncomfortable finding, stated plainly
 
-Two properties the institute spent 2026-07-13 building **already exist upstream**:
+Two properties the institute spent 2026-07-13 building have upstream antecedents — but the
+independent assessment (`di-comparative-fable-assessment.md`, R2/R3) corrected this section's
+first framing, and the corrected reading follows:
 
-1. **The loud test-default diagnostic.** Upstream reports:
+1. **The test-default diagnostic exists upstream — in DEBUG only.** Upstream reports:
    > `@Dependency(…) has no live implementation, but was accessed from a live context.`
-   …and tells you to conform the key to `DependencyKey` or override with `withDependencies`.
-   That is, message-for-message, what the W1.3 tripwire now emits. We re-derived it.
+   …but that reporting is debug-configuration-only; **upstream's RELEASE behavior is the silent
+   masquerade itself** (the test default is served with no report). The institute's W1.3 tripwire
+   reports-once-per-key *in release* (and traps in debug). So the honest framing is not "parity
+   restored" (this document's first draft) — the release-mode loudness is a **genuine advance**
+   over upstream, and it is exactly the configuration where production runs.
 
-2. **Immunity to the split-conformance bug.** The institute's boot SIGSEGV (`\.mainEventLoopGroup`),
-   the `\.router` boot fatal, and the `\.logger` silent channel are all instances of *one* class:
-   an accessor compiled where it cannot see the key's widest conformance. Upstream's runtime cast
-   **cannot have this bug** — it finds the liveValue wherever it was declared, including
-   retroactively in a downstream Live module. The institute needs a co-location rule (§4.3 rule 2)
-   plus a lint to hold the line.
+2. **Immunity to the compile-time split-conformance class.** The institute's boot SIGSEGV
+   (`\.mainEventLoopGroup`), the `\.router` boot fatal, and the `\.logger` silent channel are all
+   instances of *one* class: an accessor compiled where it cannot see the key's widest conformance.
+   Upstream's runtime cast **cannot have this compile-time class** — it finds the liveValue wherever
+   it was declared, including retroactively in a downstream Live module. (It has its own *runtime*
+   failure analogues; the immunity is to this specific static-binding class.) The institute needs a
+   co-location rule (§4.3 rule 2) plus a lint to hold the line.
+
+3. **A deficit this analysis missed entirely** (found by the independent assessment, R4): the
+   **get-modify-set accessor incoherence** — `$0.key = x` followed by `$0.key.property = y` inside
+   one prepare-closure does not do what it reads like: the *get* misses the pending storage and
+   resolves the key, so the mutation lands on a discarded default. This is a design-level deficit of
+   the institute's resolution pipeline (upstream's getter consults in-flight storage first), it
+   produced a real production bug (boiler's env-driven log level never worked), and its structural
+   fix — pending-storage-first getters — is item 1 of the ratified follow-up agenda (§6).
 
 An honest reading: **the institute's static-resolution choice bought a class of silent failure
 that upstream does not have, and today's arc paid the bill.** Any defence of the institute idiom
@@ -100,9 +116,13 @@ nicety. It is the difference between a system you can audit and one you must arc
 **(b) Interface/Live purity is structural, not conventional.** Point-Free's own recommended layout
 (TestDependencyKey in the interface, retroactive DependencyKey in the Live module) exists to stop
 interfaces depending on implementations — but the mechanism that makes it work is a *runtime cast*.
-The institute idiom does not need the trick at all: **no key ever names a live implementation**;
-the app — the one place that legitimately knows every implementation — supplies them. This is the
-cleaner answer to the very problem Point-Free's retroactive conformance is working around.
+The institute idiom does not need the trick: in the pure §4.5 form, **no key names a live
+implementation**; the app — the one place that legitimately knows every implementation — supplies
+them. (Precision, per the assessment's R6: what actually LANDED is a deliberate hybrid — keys with a
+sensible library-owned default are full `Dependency.Key`s co-located with their accessor (the ELG,
+`\.logger`, `\.analytics`), and the root registers the app-decided rest. The hybrid is the right
+design; the pure form describes the app-decided half, not the whole.) This remains the cleaner
+answer to the very problem Point-Free's retroactive conformance is working around.
 
 **(c) It is Embedded-viable — and the upstream mechanism is not. VERIFIED EMPIRICALLY, not assumed.**
 
@@ -147,7 +167,15 @@ upstream depends on. Static overload resolution costs nothing at runtime and is 
 
 **This forecloses the upstream mechanism for the institute's stated Embedded ambitions.** It is the
 strongest single argument in the institute's favour, it is not a matter of taste, and it is now
-evidence rather than assertion.
+evidence rather than assertion — double-verified: the independent assessment ran its own blind
+probe (different probe shape, same toolchain family) and reproduced the foreclosure (R4b).
+Two precision corrections from that adjudication, accepted: (1) the forcing chain has a middle
+step — Embedded forecloses *runtime liveValue discovery*; the composition ROOT is forced by the
+conjunction Embedded + the Interface/Live split + no global registration ([API-IMPL-010]) —
+static resolution with liveValue ON the key is Embedded-viable, it just violates the split;
+(2) the defence never rested on this leg alone — upstream's untyped rethrows ([API-ERR-001]),
+Foundation/ObjC-runtime machinery in its resolver init path, and its process-global mutable cache
+each independently block adoption.
 
 **(d) Resource lifecycle has an owner.** "Process-scoped resources are constructed once in the
 root and resolved — never constructed — at boundaries" (§4.4) is a rule the composition root makes
@@ -187,10 +215,14 @@ down. The institute idiom is one day old and has exactly one consumer.
   state) — but "no globals" is the wrong flag to plant. The accurate claim is: **the resolution
   store stays task-local; the boot configuration is a set-once global.** Upstream also keeps a
   global cache, so on this axis the two are closer than the rhetoric suggests.
-- **"The tripwire is a novel safety feature."** It is a re-derivation of an upstream diagnostic.
-  Its institute-specific value is real (it covers the split-conformance class, which upstream
-  cannot have and therefore never needed to diagnose) — but the framing should be *parity
-  restored*, not *ground broken*.
+- **"The tripwire is a novel safety feature."** This draft first called it a re-derivation of an
+  upstream diagnostic and framed it as *parity restored*. The independent assessment corrected
+  that (R2, accepted): upstream's diagnostic is **debug-only** and its release behavior is the
+  silent masquerade itself — so the institute's release-mode report-once is a genuine advance,
+  not parity. The corrected §2 above is authoritative.
+- **This analysis missed the get-modify-set incoherence** as a design-level deficit (§2 item 3,
+  added post-assessment). An honesty ledger that itself needed a correction pass is the strongest
+  argument for the two-seat blind protocol that produced it.
 
 ---
 
@@ -219,6 +251,20 @@ one gate from closing. But this is the sharpest available refinement, it would d
 one genuine fragility (boundary-list drift), and it belongs on the table the next time the DI idiom
 is opened — most naturally alongside the de-Vapor / de-NIO arc, where boiler's boundary set is
 being rewritten anyway.
+
+**STATUS UPDATE (2026-07-13, post-assessment): RATIFIED AS AGENDA (principal YES).** The
+independent assessment (R5) adjudicated this refinement **sound in essence, unsound as literally
+sketched here**, with three amendments that are now part of the agenda item: (1) the root arm is
+consulted **in `.live` mode only** (as sketched it would outrank mode defaults and invert
+test/preview semantics in any post-boot test scope — a real hole); (2) the slot must live in the
+**witnesses layer** (`Witness.Root`), not boiler — the resolver cannot depend upward; boiler
+*sets* it; (3) the slot holds **materialized `Witness.Values`**, not the app's closure, and the
+prepared-vs-root precedence must be decided explicitly. Alongside it, agenda item 1: the
+pending-storage-first getter fix for the get-modify-set class (§2 item 3). Also priced there:
+per-boundary values (`\.request`) keep their seams — the refinement deletes the *fragility*, not
+the seams — and `Synchronization.Mutex` is unavailable under Embedded, so the slot's guard needs
+an Embedded-conditioned primitive. Both items ride the next DI design round, dispatched by the
+principal ([SUPER-057]).
 
 ---
 
