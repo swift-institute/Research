@@ -6547,6 +6547,24 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-13-networking-stack-research-seat.md",
+      "date": "2026-07-13",
+      "title": "Networking-Stack Research Seat: Five-Lane Census, a Charter Premise Correction, and an Evidence-Driven Ruling Re-Price",
+      "packages": [
+        "swift-sockets",
+        "swift-io",
+        "swift-kernel",
+        "swift-posix",
+        "swift-rfc-8446",
+        "swift-rfc-9112",
+        "swift-whatwg-url",
+        "swift-urlrequest-handler",
+        "swift-transport-layer-security"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
