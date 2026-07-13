@@ -6,6 +6,23 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-07-13-repotraffic-run-arc-orchestration.md",
+      "date": "2026-07-13",
+      "title": "Repotraffic RUN arc: orchestration, the unmask loop, and the B5 honest miss",
+      "packages": [
+        "repotraffic-com-server",
+        "swift-records",
+        "swift-postgresql-standard",
+        "swift-parser-primitives",
+        "swift-stripe",
+        "swift-stripe-live",
+        "swift-mailgun",
+        "swift-server-foundation-vapor"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-07-11-overnight-ci-heal-and-t002-lane-b-close.md",
       "date": "2026-07-11",
       "title": "Overnight CI heal + t002 lane-B close (fleet red root-caused; ledger-vs-detector divergence)",
