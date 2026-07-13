@@ -1,7 +1,7 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-13T20:18:55Z",
+  "generatedAt": "2026-07-14T01:14:02+02:00",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
@@ -6562,6 +6562,20 @@
         "swift-whatwg-url",
         "swift-urlrequest-handler",
         "swift-transport-layer-security"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-14-decomposition-w2-tool-reach-and-linkage-lessons.md",
+      "date": "2026-07-14",
+      "title": "Decomposition W2: Tool-Reach Failures, Transitive Linkage, and the Honest Oracle",
+      "packages": [
+        "swift-url-routing-tagged",
+        "swift-url-routing",
+        "swift-authentication",
+        "swift-types-foundation",
+        "swift-uri-routing"
       ],
       "status": "pending",
       "statusRaw": "pending"
