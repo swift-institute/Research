@@ -104,11 +104,50 @@ The institute idiom does not need the trick at all: **no key ever names a live i
 the app — the one place that legitimately knows every implementation — supplies them. This is the
 cleaner answer to the very problem Point-Free's retroactive conformance is working around.
 
-**(c) It is Embedded-viable.** `(key as? any DependencyKey.Type)?.liveValue` requires existential
-metatypes and runtime metadata — unavailable in Embedded Swift, which the institute explicitly
-targets. Static overload resolution costs nothing at runtime and survives the Embedded restriction.
-**This alone forecloses the upstream mechanism for the institute's stated ambitions.** It is the
-strongest single argument in the institute's favour and it is not a matter of taste.
+**(c) It is Embedded-viable — and the upstream mechanism is not. VERIFIED EMPIRICALLY, not assumed.**
+
+The principal correctly challenged this claim ("Embedded has changed a lot lately — check"). It was
+tested against the **6.3.3 release toolchain** (`swiftc -enable-experimental-feature Embedded -wmo
+-Osize`) with a minimal reproduction of exactly the upstream resolution step:
+
+```swift
+protocol TestKey { static var testValue: Int { get } }
+protocol LiveKey: TestKey { static var liveValue: Int { get } }
+struct HasLive: LiveKey { static var testValue: Int { 1 }; static var liveValue: Int { 42 } }
+
+func resolve(_ key: any TestKey.Type) -> Int {
+    if let live = key as? any LiveKey.Type { return live.liveValue }  // the Point-Free step
+    return key.testValue
+}
+resolve(HasLive.self)
+```
+
+**Normal Swift**: compiles, runs, prints `42` (the live value is found).
+**Embedded Swift, same file, same compiler**:
+
+```
+warning: cannot perform a dynamic cast to a type involving protocol 'LiveKey'
+         in Embedded Swift  [#EmbeddedRestrictions]
+error:   cannot use metatype of type 'HasLive' in embedded Swift
+         [#EmbeddedRestrictions]
+```
+
+Two independent blocks, and the finding is **stronger than "unsupported"**:
+
+1. The **cast is diagnosed as un-performable** (warning) — it does not trap, it is *inert*. Had the
+   metatype reached it, the live value would simply never be found and **every key would silently
+   serve its testValue** — the exact silent-masquerade class that cost us a debug round today,
+   promoted to a whole-program default.
+2. Forming the concrete metatype at the call site is a **hard error** — so in practice the mechanism
+   cannot even be reached.
+
+Recent Embedded relaxations are real (existential *parameter* types like `any TestKey.Type` now
+compile) but they **do not extend to metatype-based dynamic casts**, which is precisely the step
+upstream depends on. Static overload resolution costs nothing at runtime and is unaffected.
+
+**This forecloses the upstream mechanism for the institute's stated Embedded ambitions.** It is the
+strongest single argument in the institute's favour, it is not a matter of taste, and it is now
+evidence rather than assertion.
 
 **(d) Resource lifecycle has an owner.** "Process-scoped resources are constructed once in the
 root and resolved — never constructed — at boundaries" (§4.4) is a rule the composition root makes
