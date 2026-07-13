@@ -6415,6 +6415,15 @@
       "statusRaw": "RECOMMENDATION",
       "tier": 3,
       "scope": "primitives-wide (algebra-primitives, sequence-primitives, range-primitives)"
+    },
+    {
+      "file": "di-comparative-fable-assessment.md",
+      "displayName": "DI Comparative: Independent Fable Assessment",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-07-13): Independent second assessment of the institute DI composition-root idiom vs Point-Free swift-dependencies, written blind then reconciled against di-institute-vs-pointfree-comparative.md. Mechanism: upstream runtime metatype cast + process-global cache vs institute compile-time overload resolution + TaskLocal state. Verdict: institute better for institute constraints; two named deficits (get-modify-set accessor incoherence; boundary tax) with fixes; Embedded foreclosure double-verified by probe; root-slot fallback adjudicated sound-as-amended (mode-gated, witnesses-layer slot).",
+      "status": "RECOMMENDATION",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
     }
   ],
   "narrativeSections": [
