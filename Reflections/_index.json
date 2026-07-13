@@ -1,7 +1,7 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-13T09:28:30Z",
+  "generatedAt": "2026-07-13T10:19:50Z",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
@@ -6450,6 +6450,19 @@
         "swift-stripe-live",
         "swift-email",
         "repotraffic-com-server"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-13-integration-mints-arc-four-institute-native-bridges.md",
+      "date": "2026-07-13",
+      "title": "Integration-Mints Arc: Four Institute-Native Bridges, One Mid-Arc Amendment",
+      "packages": [
+        "swift-url-routing-authentication",
+        "swift-url-routing-vapor",
+        "swift-html-vapor",
+        "swift-email-html"
       ],
       "status": "pending",
       "statusRaw": "pending"
