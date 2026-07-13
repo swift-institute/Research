@@ -1,7 +1,7 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-13T10:19:50Z",
+  "generatedAt": "2026-07-13T12:55:19Z",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
@@ -6463,6 +6463,22 @@
         "swift-url-routing-vapor",
         "swift-html-vapor",
         "swift-email-html"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-13-e2-di-research-seat-boundary-enumeration-and-evidence-pointers.md",
+      "date": "2026-07-13",
+      "title": "E-2 DI Research Seat: Boundary Enumeration, Evidence-Pointer Verification, and a Composed One-Design Ruling",
+      "packages": [
+        "boiler",
+        "swift-server-foundation",
+        "swift-server-foundation-vapor",
+        "swift-url-routing-vapor",
+        "swift-dependencies",
+        "swift-witnesses",
+        "repotraffic-com-server"
       ],
       "status": "pending",
       "statusRaw": "pending"
