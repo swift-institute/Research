@@ -6502,6 +6502,18 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-13-e3-records-r2-native-restoration-and-gate-integrity.md",
+      "date": "2026-07-13",
+      "title": "E-3 Records R2: Native Restoration, a Falsified Gate Premise, and Two Gate-Integrity Incidents",
+      "packages": [
+        "swift-records",
+        "swift-postgresql-standard",
+        "swift-structured-queries-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
