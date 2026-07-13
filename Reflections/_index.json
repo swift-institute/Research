@@ -1,10 +1,23 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-13T13:00:13Z",
+  "generatedAt": "2026-07-13T20:18:55Z",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-07-13-e4-reexport-dissolution-overnight-arc.md",
+      "date": "2026-07-13",
+      "title": "E-4 re-export dissolution: masked-residue onions, active-zone carve-outs, and inherited session watches",
+      "packages": [
+        "swift-parser-primitives",
+        "swift-stripe",
+        "swift-stripe-live",
+        "swift-product-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-07-13-repotraffic-boot-arc-runtime-di-topology-and-loopback-classes.md",
       "date": "2026-07-13",
