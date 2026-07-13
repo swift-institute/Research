@@ -6527,6 +6527,26 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-13-decomposition-w1-di-mints-orchestration.md",
+      "date": "2026-07-13",
+      "title": "Decomposition Wave 1: DI-Integration Mints, Two Structural Deferrals-Averted, and the Trait Cushion",
+      "packages": [
+        "swift-clocks-dependencies",
+        "swift-dependencies",
+        "swift-async",
+        "swift-stripe-live",
+        "swift-github-live",
+        "swift-url-routing-form-coding",
+        "swift-url-form-coding",
+        "swift-stripe-types",
+        "swift-identities-types",
+        "swift-sql-dependencies",
+        "swift-sql"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
