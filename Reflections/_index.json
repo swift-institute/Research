@@ -1,7 +1,7 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-13T12:55:19Z",
+  "generatedAt": "2026-07-13T13:00:13Z",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
@@ -6478,6 +6478,26 @@
         "swift-url-routing-vapor",
         "swift-dependencies",
         "swift-witnesses",
+        "repotraffic-com-server"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-13-e1-integration-cutovers-orchestration.md",
+      "date": "2026-07-13",
+      "title": "E-1 Integration Cutovers: Orchestration Under Live Oracle Pressure",
+      "packages": [
+        "swift-url-routing",
+        "swift-url-routing-authentication",
+        "swift-url-routing-vapor",
+        "swift-html-vapor",
+        "swift-email-html",
+        "swift-stripe-types",
+        "swift-stripe",
+        "swift-stripe-live",
+        "swift-server-foundation-vapor",
+        "boiler",
         "repotraffic-com-server"
       ],
       "status": "pending",
