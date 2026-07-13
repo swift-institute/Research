@@ -6579,6 +6579,21 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-14-networking-n1-n2a-execution-seat.md",
+      "date": "2026-07-14",
+      "title": "Networking N1 + N2a Execution Seat: Write-Only Lanes Under a Single Gate Slot, and a Conditional Grant I Treated as a Standing One",
+      "packages": [
+        "swift-sockets",
+        "swift-rfc-8446",
+        "swift-rfc-6066",
+        "swift-posix",
+        "swift-iso-9945",
+        "swift-rfc-7301"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
