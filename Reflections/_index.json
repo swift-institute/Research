@@ -1,10 +1,25 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-12",
+  "generatedAt": "2026-07-13T09:28:30Z",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
+    {
+      "file": "2026-07-13-repotraffic-boot-arc-runtime-di-topology-and-loopback-classes.md",
+      "date": "2026-07-13",
+      "title": "Repotraffic BOOT arc: runtime DI topology, loopback shadowing, and the fabricated-plausible-value family",
+      "packages": [
+        "repotraffic-com-server",
+        "swift-authentication",
+        "swift-mailgun",
+        "swift-mailgun-live",
+        "swift-dependencies",
+        "boiler"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
     {
       "file": "2026-07-13-repotraffic-run-arc-orchestration.md",
       "date": "2026-07-13",
