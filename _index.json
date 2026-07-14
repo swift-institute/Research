@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "eventing-stack-upstream-networking-vision-alignment.md",
+      "displayName": "Eventing Stack and Upstream Networking Vision Alignment",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-07-14): Verified alignment inventory and gap register (G1-G8) comparing the shipped eventing/IO/networking stack (Polling/Completion executors, Event.Actor/Completion.Actor actor-pinning, IO<Capabilities> strategy witness, swift-sockets, per-RFC address vocabularies) against the upstream Prospective Vision: Networking (forums 85235) and the Standard Network Address types pitch (82288). Finds the stack is a package-level existence proof of the vision eventing direction; gaps: no Darwin completion backend, no Windows eventing (IOCP unbuilt), sockets readiness strategy unwired, timer executor quarantined, io_uring path-op fallback, CI hygiene on the showcase set, in-house IPv4/IPv6 dual sources of truth, incumbent swift-endpoint in the address-types lane.",
+      "date": "2026-07-14",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0. Tier 2 cross-layer. All load-bearing claims verified against live source 2026-07-14 (file:line citations inline); forum/upstream claims verified against the live threads same day. Follow-up remediation ordering tracked internally (Workspace backlog).",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-layer"
+    },
+    {
       "file": "swiftpm-build-concurrency-and-caching.md",
       "displayName": "SwiftPM Build Concurrency and Caching",
       "topic": "Optimal concurrency and caching policy for verifying ~400 interdependent branch-pinned SwiftPM packages on one 8-core/24GB Apple-silicon machine driven by multiple concurrent agent sessions on Swift 6.3.2. Source-verifies (release/6.3 + swift-6.3.2-RELEASE) why cold resolves of ~300-pin all-branch graphs take 20-60 min: PubGrub's serial revision walk with unconditional per-dep git fetch (prefetch skips overridden packages), serial checkout materialization, and a shared manifest cache defeated twice by agent sessions (session-unique CLAUDE_CODE_* env vars fork the cache key-space; the hardcoded 100MB cap DELETE-wipes the whole table). Establishes: -j = llbuild lanes (default ncpu) with N-squared debug frontend fan-out and no cross-invocation jobserver; mirrored-to-local-path deps bypass the shared repository cache by design (cheap: 0.06s hardlinked clones); deleting Package.resolved does NOT advance branch pins while workspace-state survives (swift package update [names] is the lever; --force-resolved-versions --skip-update is the gate mode); SwiftPM never kills competing instances (blocks forever on a $TMPDIR flock) so exit 143 = harness SIGTERM or sibling pkill; umbrella path-dep roots can build-gate but structurally cannot run sibling tests (plus live target-name-collision counterexample); no build-product reuse exists on 6.3.2 (CAS compilation caching is an open 2026-07-06 pitch, PR #10246). Recommends: 3 gate slots x -j 4 under taskpolicy -c utility, sanitized env -i gate environment, resolve-avoidance flags, double-fork+setsid gate runner with marker files, swift-frontend-based load accounting, pkill ban, and a four-point [PKG-BUILD-009] amendment; five experiment specs (E1-E5) cover the PLAUSIBLE residue.",
