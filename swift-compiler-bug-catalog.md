@@ -752,6 +752,7 @@ September-2026 retirement trigger.
 - **`swift-foundations/swift-xml/Tests/XML Tests/{Toolchain.swift, StreamTests.swift, XMLTests.swift}`** — L3 consumer (`XML.parse` / `XML.ND.stream` / `XML` string-literal init → `W3C_XML.parse`); 4 parse-exercising suites (`Stream Tests`, `XML Wrapper Tests`, `XML.Document Tests`, `XML Literal Tests`) gated **2026-07-03**. Was missed in the 2026-06-27 sweep. Note: `XML Literal Tests` parses via `ExpressibleByStringLiteral`/`StringInterpolation` → `Self.fragment`, not obvious from a `parse(` grep.
 - **Likely still-missed**: the plist consumer (same `Byte.Input` machine-parser surface) — audit before the retirement sweep.
 - **`swift-foundations/swift-io/Tests/{Support/Toolchain.swift, IO Event Tests/IO.Event.Driver.Contract.Tests.swift}`** — `SourceContractTests` suite (`Event.Source.Contract`) gated **2026-07-06** (the io `__Dictionary.insert` new site below).
+- **`Compat_Swift_6_3` — the Stripe API Router compat path (PRODUCTION CODE, not a test guard)** — 5 files across `swift-standards/swift-stripe-types` + `swift-foundations/swift-stripe-live`, plus a composition-root registration in `coenttb/repotraffic-com-server`. Landed **2026-07-14** (§A9 new site below). **Grep token: `Compat_Swift_6_3`** — this is the only §A9 mitigation that ships in a request path rather than skipping a suite, so the 6.4 sweep must DELETE it (restoring the generated routers), not merely un-skip a test.
 
 **`@_specialize` real-fix spike (2026-07-03) — NEGATIVE; do not re-run.** Empirically established (minimal 3-package reproducer, 6.3.3): the crash fires whenever the concrete `Byte.Input` metadata / `Input.Protocol` witness table is **materialized at runtime**. Calling `parse` from a *generic* context (Input abstract) dodges it at **`-Onone` only** (debug PASS); under `-O` / `@_specialize` / `@inlinable` the optimizer re-specializes to concrete `Byte.Input` and the crash returns (release CRASH). **Specialization is the trigger, not the cure** — so no `@_specialize`-family source fix exists, and the `-Onone`-only generic-indirection dodge is strictly worse than the gate (it would green a debug build while shipping a guaranteed release crash). This is the empirical basis for the "no source fix, require 6.4+" disposition.
 
@@ -786,6 +787,59 @@ per [ISSUE-001]). **Disposition**: same as the family — no Institute source fi
 `.disabled(if: Toolchain.hasTaggedMetadataSIGSEGV)` gated `compiler(<6.4)` landed on swift-io
 (`90abb792`, mirrors graph's `Tests/Support/Toolchain.swift`); listed in the retirement checklist
 above; require Swift 6.4+.
+
+#### §A9 New Site (2026-07-14) — generated Stripe API Router URL-path parser (`Tagged<…, String>` path components)
+
+Site 5, and the first §A9 site to hit a **production request path rather than a test suite**. Any use
+of a generated Stripe API router (`Stripe.<Feature>.API.Router`, swift-stripe-types) SIGSEGVs on 6.3.3
+at first print. Faulting frames (captured twice, on two different routers):
+
+```
+instantiateWitnessTable → swift::_getWitnessTable →
+lazy protocol witness table accessor for
+  Parser.Converted<URLRouting.Rest<Substring>,
+    Parser.Conversion.Map<Parser.Conversion.String,
+      Parser.Conversion.RawValue<Tagged<Stripe.Customers.Customer, String>>>>
+  → Parse<…> → RFC_3986.URI.Path.Builder.Component<…>
+```
+
+(identical shape with `Tagged<Stripe.Products.Product, String>`). Canonical §A9 signature — `failed
+type lookup` + exit 139. **Trigger is the `{id}` PATH components**, whose parsers close over the
+institute `Tagged<…, String>`; a router is instantiated as a **unit**, so `OneOf`-ing the `{id}` routes
+alongside a literal-path route forces their witness tables even when only the literal-path route is
+ever printed — i.e. `customers.create` (path `/v1/customers`, no `{id}` of its own) crashes anyway.
+The crash is **lazy**: the app boots fine and faults on first router use. It is NOT the `Tagged`
+decode, NOT the mapping dictionaries, NOT the body encoding.
+
+**Dev-toolchain**: PASS-on-dev inherited from the family (fix travels with the 6.4 compiler binary —
+Correction 2026-05-28). **Disposition**: same as the family — no Institute source fix; the §A9
+library-level router workaround was already tried and reverted on correctness grounds (2026-05-23).
+Resolution is **avoidance**.
+
+##### Consumer mitigation — `Compat_Swift_6_3` (RETIRE OR REDISPOSE AT THE 6.4 FLIP)
+
+The 6.4-flip sweep MUST visit these. **Grep token: `Compat_Swift_6_3`** (single token, all repos).
+
+| Repo | File | What it is |
+|---|---|---|
+| `swift-standards/swift-stripe-types` | `Sources/Stripe Customers Types/Stripe Customers Types API.Router.Compat_Swift_6_3.swift` | `Stripe.Customers.API.Router.Compat_Swift_6_3` — create-only parser-printer; route body is a verbatim copy of the generated router's `.create` branch, minus the `{id}` routes |
+| `swift-standards/swift-stripe-types` | `Sources/Stripe Checkout Types/Stripe Checkout Sessions Types/Stripe Checkout Sessions Types API.Router.Compat_Swift_6_3.swift` | `Stripe.Checkout.Sessions.API.Router.Compat_Swift_6_3` — ditto |
+| `swift-foundations/swift-stripe-live` | `Sources/Stripe Live Shared/Compat_Swift_6_3.swift` | base request data (base URL + `Authorization`/`Stripe-Version`/`Content-Type`, reproducing `Authentication.Client.base`) + the `URLRequest` bridge + the named `unsupportedRoute` error |
+| `swift-foundations/swift-stripe-live` | `Sources/Stripe Customers Live/Stripe Customers Client.live.Compat_Swift_6_3.swift` | `Stripe.Customers.compat_Swift_6_3` — `Authenticated` value whose client bypasses the generated router |
+| `swift-foundations/swift-stripe-live` | `Sources/Stripe Checkout Live/Stripe Checkout Sessions Live/Stripe Checkout Sessions Client.live.Compat_Swift_6_3.swift` | `Stripe.Checkout.Sessions.compat_Swift_6_3` — ditto |
+| `coenttb/repotraffic-com-server` | `Sources/com_repotraffic_app/Application.swift` | composition-root registration of the two values over their `liveValue`s, + the two `Stripe_*` imports; `Package.swift` carries the two `swift-stripe` product rows |
+
+**Scope is exactly two endpoints** — `customers.create` and `checkoutSessions.create` (supervisor
+Ruling J, 2026-07-14). Every other endpoint on those two clients throws a named
+`Compat_Swift_6_3.Error.unsupportedRoute` instead of crashing; notably `checkoutSessions.retrieve`
+(the post-payment status read) is NOT covered and is restored only by the 6.4 flip. Wire-shape
+identity holds by construction: the compat routers copy the generated routers' `.create` branches
+verbatim (same `Method`, same `Path` literals, same `Body(.form(…, decoder: .stripe, encoder: .stripe))`),
+and everything downstream — base-URL merge, header injection, `URLRequestData → URLRequest` bridge,
+response decoding, transport — is the same shared code, not a reimplementation.
+
+**At the 6.4 flip**: delete the five tower files and the app's registration + imports; the ordinary
+`liveValue`s are correct again. Nothing else depends on `Compat_Swift_6_3`.
 
 ---
 
