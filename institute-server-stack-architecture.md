@@ -203,6 +203,49 @@ deleting the L4 Live backing. Zero consumer-visible change.
 
 ### Q1 — HTTP model home + shape: adopt the RFC 9110 family; add a thin `swift-http-standard` converger; dissolve `Server Shared`
 
+> ## ✅ ⚑DECISION #1 — RESOLVED (principal, 2026-07-14). RFC 9110 IS CANON.
+>
+> The HTTP-family conflict standing since 2026-07-12 is **ruled**: **RFC 9110 is the canonical HTTP
+> family**; the 723x family is historical. The caveat *"consume NEITHER artifact as unambiguous canon
+> on the HTTP-family question"* is **LIFTED** — this document is canon on it again.
+>
+> **The ruling CONFIRMS this document; it does not overturn it.** The 2026-07-06 ratification below was
+> right. The conflict was never doc-vs-doc — it was **doc-vs-code**, and the code lost.
+>
+> ### ⚠️ ERRATUM — this document under-scoped the 723x transition, and item 5 below was wrong
+>
+> Item 5 says the 7230-family repos are *"not filled"* and prescribes a **README mark**. That is false,
+> and this document already contained the evidence against itself: **line 81 records `swift-rfc-7230` as
+> carrying 1,371 LOC of legacy code.** "Not filled" and "1,371 LOC" cannot both be true.
+>
+> **Measured 2026-07-14, from primary source — not inherited:**
+> - `swift-url-routing/Sources/URLRouting/exports.swift:32-33` — **`@_exported import RFC_7230` and
+>   `@_exported import RFC_7231`.** The router was migrated ONTO the obsolete family in **Nov 2025**,
+>   *before* the 2026-07-06 ratification, and **was never re-pointed**.
+> - The router contains **zero `RFC_9110`** — not one reference in any source file.
+> - **17 direct manifest consumers** depend on the router (`Scripts/eco-probe.sh consumers
+>   swift-url-routing`; 450 manifests / 2,230 edges, controls passed) — and each inherits `RFC_7230`,
+>   `RFC_7231`, and `RFC_6265` through that `@_exported`.
+>
+> **Two islands, zero bridges: the obsolete family has the consumer ring; the blessed family has one
+> package (the membrane).** This was a *sequencing gap*, not defiance — the ratification decided the
+> family and never chartered the router re-point.
+>
+> **⚠️ 17 IS A FLOOR ON SYMPTOMS, NOT A COST.** It counts manifest edges, not decisions. **How many of
+> those 17 actually BIND a 7230/7231 symbol — versus merely inheriting it through an `@_exported` they
+> never touch — is UNMEASURED, and it is the only number that sizes the work.** Do not put "17" into a
+> plan, a charter, or a status line without this sentence attached to it. (See the CLAUDE.md gotcha: a
+> bare number in a table outlives its qualifier in a paragraph.)
+>
+> **Consequence**: the 723x→911x transition is a **consumer-ring re-point arc**, not a README edit.
+> It is unchartered as of this stamp. Its first act must be measuring the real bind-set above.
+>
+> **Rides the same arc — the cookie seam inversion**: `swift-rfc-6265` is a **16-line namespace that
+> owns nothing** (no Cookie type, no attributes, no Set-Cookie model, no cookie-date), yet is
+> `@_exported` at `exports.swift:31` and the whole mechanism lives at the consumer as string-pair
+> parsing. L2 bare while L3 supplies both model and grammar — the inverse of the vocabulary-below
+> doctrine. Evidence: `Audits/fable-farewell-2026-07-12/towers/http.md`.
+
 **Decision**:
 
 1. The HTTP message model's home is the **existing** L2 spec-direct family:
@@ -228,9 +271,18 @@ deleting the L4 Live backing. Zero consumer-visible change.
 | `Server.Headers.Field` | `HTTP.Header.Field` | + typed `Name`/`Value` with field-syntax validation |
 | `Server` (namespace) | stays — L4 chassis namespace | |
 
-5. The 7230-family repos are **not filled**: 9110/9111/9112 obsolete them. README-mark
+5. ~~The 7230-family repos are **not filled**: 9110/9111/9112 obsolete them. README-mark
    7230/7231's legacy content historical; the 7232–7235 placeholders stay dormant
-   reservations under the authority-org completeness pattern.
+   reservations under the authority-org completeness pattern.~~
+   **⚠️ SUPERSEDED 2026-07-14 — this item was WRONG. See the ERRATUM above.** `swift-rfc-7230` is
+   **not** an unfilled placeholder: it carries **1,371 LOC** (this document's own line 81) and is
+   `@_exported` by `swift-url-routing` to **17 direct consumers**. A README mark does not retire a
+   family that an entire consumer ring is built on.
+   **Corrected disposition**: 9110/9111/9112 obsolete the 723x family, and the transition is a
+   **consumer-ring re-point arc** — re-point `swift-url-routing`'s `@_exported` set from
+   `RFC_7230`/`RFC_7231` onto the `HTTP Standard` converger, migrate the real bind-set at the
+   consumers, and only THEN mark 7230/7231 historical. The 7232–7235 placeholders (11 lines each) do
+   stay dormant reservations — that half of the original item survives.
 6. `swift-foundations/swift-http-headers` is **retired** ([ARCH-LAYER-009]: committed empty
    reservation, trivially git-recoverable, verified dead — no Package.swift, no consumers).
    Its would-be mission (header vocabulary, typed field values) is owned by RFC 9110/9111 at
