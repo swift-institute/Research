@@ -6667,6 +6667,64 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-14-html-tower-views-port-and-the-instruments-that-lied.md",
+      "date": "2026-07-14",
+      "title": "HTML-tower wave 1: the port was easy, the instruments were not — scope-mismatch as the unifying instrument failure, and how a true document still misleads",
+      "packages": [
+        "swift-authentication",
+        "swift-stripe",
+        "swift-email-html",
+        "swift-identities-mailgun",
+        "swift-html"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-14-request-key-migration-and-the-invisible-sites.md",
+      "date": "2026-07-14",
+      "title": "The \\.request migration, and the six sites my probe could not see: reach-alignment must live in the instrument, not the operator",
+      "packages": [
+        "swift-server",
+        "swift-server-foundation-vapor",
+        "boiler",
+        "swift-authentication",
+        "swift-nist-sp-800-63b"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-14-stripe-reuse-seat-a9-discriminator-and-snapshot-as-live-state.md",
+      "date": "2026-07-14",
+      "title": "Stripe re-use seat: the §A9 discriminator, and \"a snapshot treated as live state\" at four levels",
+      "packages": [
+        "swift-stripe",
+        "swift-stripe-types",
+        "swift-stripe-live",
+        "repotraffic-com-server"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-14-supervisor-seat-both-goals-closed-and-the-rules-we-already-had.md",
+      "date": "2026-07-14",
+      "title": "Both goals closed — and every rule we broke was already written down",
+      "packages": [
+        "swift-stripe-types",
+        "swift-stripe-live",
+        "swift-authentication",
+        "swift-server",
+        "swift-server-foundation-vapor",
+        "boiler",
+        "swift-html",
+        "repotraffic-com-server"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
