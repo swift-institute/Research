@@ -6657,6 +6657,16 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-14-vacant-seat-resume-and-post-release-watch-residue.md",
+      "date": "2026-07-14",
+      "title": "Vacant-seat resume: watches outlive their context, and close-acceptance misses self-introduced red",
+      "packages": [
+        "swift-windows"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
