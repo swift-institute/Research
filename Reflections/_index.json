@@ -6,6 +6,18 @@
  "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
  "reflections": [
   {
+   "file": "2026-07-14-networking-7301-migration-and-dns-wire-fill.md",
+   "date": "2026-07-14",
+   "title": "Networking 7301 migration + DNS wire fill: channel collision recovery and the oracle-first lane pattern",
+   "packages": [
+    "swift-rfc-7301",
+    "swift-rfc-6066",
+    "swift-rfc-1035"
+   ],
+   "status": "pending",
+   "statusRaw": "pending"
+  },
+  {
    "file": "2026-07-14-w3-ssf-dissolution-orchestrator-seat.md",
    "date": "2026-07-14",
    "title": "W3 ssf dissolution: the calibration case, orchestrated over a ledger channel",
