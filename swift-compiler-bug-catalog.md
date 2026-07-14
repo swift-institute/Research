@@ -790,9 +790,12 @@ above; require Swift 6.4+.
 
 #### §A9 New Site (2026-07-14) — generated Stripe API Router URL-path parser (`Tagged<…, String>` path components)
 
-Site 5, and the first §A9 site to hit a **production request path rather than a test suite**. Any use
-of a generated Stripe API router (`Stripe.<Feature>.API.Router`, swift-stripe-types) SIGSEGVs on 6.3.3
-at first print. Faulting frames (captured twice, on two different routers):
+Site 5, and the first §A9 site to hit a **production request path rather than a test suite**. A
+generated Stripe API router (`Stripe.<Feature>.API.Router`, swift-stripe-types) SIGSEGVs on 6.3.3 at
+first print **if and only if it carries a `{id}` path component whose parser closes over
+`Tagged<…, String>`** — see the DISCRIMINATOR below, which is load-bearing: "it is a generated router"
+is NOT the predicate, and using it as one produces phantom hazards. Faulting frames (captured twice,
+on two different routers):
 
 ```
 instantiateWitnessTable → swift::_getWitnessTable →
@@ -815,6 +818,49 @@ decode, NOT the mapping dictionaries, NOT the body encoding.
 Correction 2026-05-28). **Disposition**: same as the family — no Institute source fix; the §A9
 library-level router workaround was already tried and reverted on correctness grounds (2026-05-23).
 Resolution is **avoidance**.
+
+##### DISCRIMINATOR — what makes a router crash, and what does NOT (added 2026-07-14, post-close)
+
+**This subsection exists because the coarse rule already cost us a false escalation.** A lane inferred
+that `billing.portal.createSession` "would §A9-crash for an existing paid subscriber, because it is a
+separate Stripe client with its own generated router"; the seat amplified that to the principal as a
+live crash hazard on a running instance. **Both were wrong. It was never reproduced — and when it was
+finally tested, it did not crash.** The over-broad rule generates phantom hazards, and at the 6.4 sweep
+someone will grep for "generated routers" and find a hundred of them.
+
+**The predicate is the PATH, not the router:**
+
+> **WRONG:** "it is a generated router, therefore it §A9-crashes."
+> **RIGHT:** the crash requires a **`{id}` path component whose parser closes over `Tagged<…, String>`**
+> (`Parser.Conversion.RawValue<Tagged<_, String>>` inside `RFC_3986.URI.Path.Builder.Component`).
+> A router with no such path component does not crash — including a generated one.
+
+The unit-instantiation mechanic above still holds and is what makes the rule non-obvious: a router with
+even ONE such `{id}` route poisons its literal-path siblings (`customers.create` crashes although
+`/v1/customers` has no `{id}`). But the poison must be *in that router's own `OneOf`*. It does not
+travel between clients.
+
+**NEGATIVE CONTROLS — verified on 6.3.3, each with `failed type lookup` = 0 and the process ALIVE:**
+
+| Surface | Why it does NOT crash | Evidence |
+|---|---|---|
+| `billing.portal.createSession` (`Stripe.Billing.Portal`, a generated router) | its create path is literal; no `Tagged<…, String>` `{id}` component in that router | `GET /checkout` on the paid-subscriber branch → `[BillingLive] ✅ Created portal session` → **HTTP 303** to a real `billing.stripe.com/p/session/test_…`; process alive |
+| the Stripe webhook router (`Stripe.Events.Event.Router`, `swift-stripe` `Stripe Shared/EventRouters.swift`) | hand-written `Parser.Bidirectional.parse`, `Body = Never` — **no path-parser generics at all** | 7 real Stripe-signed events forwarded, **7 × HTTP 200**, event bodies decoded; process alive |
+| app-side `GitHub.Repository.ID.pathParser` (`repotraffic` `Repositories/Tagged+PathParser.swift`) | **Int**-backed `Tagged` via `.convert(apply:unapply:)` — not `String`-backed, not `RawValue` | `GET /api/repositories/traffic/{id}/export/{json,csv}` → 402 then 200; process alive |
+
+The third row is also the **lead worth evaluating FIRST at the 6.4 sweep**: it is a working Tagged path
+parser built on `.convert(apply:unapply:)` rather than `.string.representing(...)`/`RawValue`.
+Respelling the generated routers' `{id}` parsers onto that form **might retire the defect on 6.3.x
+outright**, fixing every endpoint rather than the two the compat path covers — which would make
+`Compat_Swift_6_3` deletable early and for a better reason. **Untested; do not assume it works —
+probe it before shaping anything around it.**
+
+**The only genuinely UNEXERCISED §A9 candidate on this surface is `checkoutSessions.retrieve`** (the
+post-payment status read). It is not covered by the compat path and it has never been driven on 6.3.x.
+Note it did **not** fire in the one place it would have: the post-payment success page renders cleanly
+("Welcome to RepoTraffic Pro!"), so it is a *candidate*, not an observed failure. Everything else on
+this surface is now either proven-crashing (the two endpoints the compat path covers) or
+proven-fine (the three negative controls above).
 
 ##### Consumer mitigation — `Compat_Swift_6_3` (RETIRE OR REDISPOSE AT THE 6.4 FLIP)
 
