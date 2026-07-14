@@ -1,7 +1,7 @@
 {
   "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-14",
+  "generatedAt": "2026-07-14T12:07:47Z",
   "title": "Reflections Index",
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
@@ -6638,6 +6638,22 @@
         "swift-iso-9945",
         "swift-ieee-1003",
         "swift-authentication"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-14-coherence-arc-hardened-probes-and-five-layer-peel.md",
+      "date": "2026-07-14",
+      "title": "Coherence Arc: Hardened Probes and the Five-Layer Peel",
+      "packages": [
+        "swift-comparison-primitives",
+        "swift-hash-primitives",
+        "swift-product-primitives",
+        "swift-either-primitives",
+        "swift-windows",
+        "swift-iso-9945",
+        "swift-ieee-1003"
       ],
       "status": "pending",
       "statusRaw": "pending"
