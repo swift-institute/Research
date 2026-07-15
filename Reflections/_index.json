@@ -6,6 +6,14 @@
   "blurb": "Session reflections captured via the reflect-session skill and processed via the reflections-processing skill.",
   "reflections": [
     {
+      "file": "2026-07-15-orchestrator-detached-rebuild-monitoring-and-stop-merge.md",
+      "date": "2026-07-15",
+      "title": "Monitoring a 6-hour detached rebuild: churn-zeros, a self-inflicted scope-gap, an orphaned loop, and a static marker that read as \"stuck\"",
+      "packages": [],
+      "status": "pending",
+      "statusRaw": "pending"
+    },
+    {
       "file": "2026-07-14-networking-7301-migration-and-dns-wire-fill.md",
       "date": "2026-07-14",
       "title": "Networking 7301 migration + DNS wire fill: channel collision recovery and the oracle-first lane pattern",
