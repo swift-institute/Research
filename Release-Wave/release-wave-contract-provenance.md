@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 0.1.0
+version: 0.2.0
 last_updated: 2026-07-15
 status: DRAFT
 tier: 3
@@ -14,14 +14,13 @@ scope: September 1, 2026 Swift Institute release-wave meta program
 
 This record fixes the authority, evidence boundaries, and derivation rules for
 the September 1, 2026 release-wave contract before any normative skill text is
-changed. It is intentionally not yet the final contract: one issue-specific
-part of the current START acceptance was lost from the model context during
-compaction, and an ASK is outstanding for the literal five enforcement-issue
-names and any issue-specific registry fields or severity requirements.
+changed. The current channel decision has restored the issue-specific contract
+that was lost from model context during compaction. The fleet roster still has
+a separate identity ambiguity, recorded below, so this is not yet the final
+contract.
 
-No missing clause is inferred from historical documents. Policy-independent
-generator, registry-schema, and census-control work may proceed; issue-specific
-contract text remains draft until the durable channel reply is processed.
+No missing clause is inferred from historical documents. Work proceeds only
+from the settled requirements transcribed below and policy-independent controls.
 
 ## Authority order
 
@@ -170,21 +169,100 @@ Directory presence is insufficient. Each row must distinguish at least:
 The run must prove both completeness and uniqueness against the authoritative
 448-repository inventory, preserve placeholders as explicit rows, record local
 Git and read-only GitHub observations separately, and reconcile two equivalent
-runs. Any count other than 448 is a failed baseline, not a near-success.
+runs. Any count other than the finally ruled roster count is a failed baseline,
+not a near-success.
 
-## Outstanding current-policy input
+## Settled enforcement issues
 
-The only known context loss is the literal list of five named enforcement
-issues and any issue-specific registry fields or severity requirements from the
-current START acceptance. ASK command
-`general-release-wave-ask-five-20260715-1` requests that exact information.
-Until its reply is processed:
+Channel decision `decision-release-enforcement-restatement-20260715`
+(`msg-2ddefa9f-5d60-4145-b246-ce5c800733eb`, payload SHA-256
+`3ae04513bee8e4e4a9f52c5b813ffcf6d6373fb35b6167d7d8be8c0bba4a0647`)
+requires the following wording to be preserved verbatim. The Principal called
+these “known enforcement issues” and listed six bullets; all six are retained
+rather than dropping one to force the earlier prose count of five.
 
-- the five issue rows are not invented from corpus search;
-- no historical severity becomes current release severity by implication;
-- issue-specific skill amendments do not begin; and
-- policy-independent schema, provenance, source discovery, and census controls
-  continue.
+1. `[API-NAME-001]` currently enforces compound-type detection but does not
+   mechanically prove meaningful namespace ownership.
+2. `[API-IMPL-006]` currently detects dotless compound filenames but does not
+   fully compare filenames with declared nested type paths.
+3. L2 Standards currently omit compound naming rules bundle-wide; legitimate
+   specification mirroring needs a more precise mechanism that does not exempt
+   invented names.
+4. Modularization contains both structural rules suitable for validators and
+   semantic rules requiring human judgment.
+5. Release readiness needs strict publication-mode behavior rather than
+   accepting migration-pending legacy structures.
+6. Linter severity graduation needs an objective evidence gate.
+
+`code-surface/SKILL.md` is pre-existing modified and MUST NOT be edited. Its
+required amendment is drafted separately under
+`Audits/Release-Wave/proposed-patches/`.
+
+## Settled registry fields
+
+Every normative requirement records:
+
+- canonical rule ID;
+- owning skill;
+- normative strength (`MUST`, `SHOULD`, `heuristic`, or `judgment principle`);
+- applicable layer and package shapes;
+- enforcement mechanism (`compiler/SwiftPM`, `SwiftSyntax/swift-linter`,
+  `filesystem/workflow validator`, `ecosystem graph validator`, or
+  `human/hybrid audit`);
+- implementation status;
+- fixtures and validation status;
+- rule bundle;
+- current severity;
+- CI execution location;
+- whether it actually gates;
+- exclusions and rationale;
+- fleet enrollment and coverage;
+- known residual findings;
+- release-blocking status;
+- pinned tool and rule SHAs; and
+- measurement timestamp.
+
+Missing implementation, missing bundle membership, missing execution, and
+missing CI gating are distinct states. Registry generation is reproducible;
+the registry remains generated evidence subordinate to skills; and positive
+and negative controls prove generator scope.
+
+## Settled severity doctrine
+
+- Deterministic `MUST`/`MUST NOT` rules may graduate warning to error; new rules
+  start at warning.
+- Graduation requires pass/fail/edge fixtures, a full applicable-fleet scan,
+  adjudication of every firing, encoded legitimate exemptions, zero unexplained
+  findings, and a fresh clean rerun.
+- `SHOULD` and heuristic rules remain warnings unless the canonical requirement
+  changes.
+- Semantic design rules remain human/hybrid gates.
+- Permanent legitimate patterns become structural exemptions, not permanent
+  warning residue.
+- Error severity is canonical in the rule definition, never copied into
+  hundreds of package-local overrides.
+- Release certification uses pinned rule and tool identities.
+
+Release finding severity and linter diagnostic severity remain separate axes.
+The audit doctrine governs release-blocking findings; the graduation doctrine
+governs whether a deterministic rule can become an error gate.
+
+## Outstanding fleet-roster identity input
+
+The 16-org depth-1 manifest census produces 448 local paths, but bounded
+read-only GitHub resolution found that
+`swift-primitives/swift-cache-primitives` and
+`swift-foundations/swift-bounded-cache` resolve to the same immutable GitHub
+repository ID `1028863851`, canonically
+`swift-foundations/swift-bounded-cache`. Thus 448 manifest paths currently
+prove at most 447 unique remote repositories.
+
+ASK command `general-release-wave-fleet-identity-20260715-1` requests a ruling
+on whether the row unit is the local manifest root or immutable GitHub
+repository ID, and—if immutable identity is canonical—which omitted intended
+repository restores 448 or whether the unique-repository count must change.
+The expensive fleet census remains paused until that reply. Registry and skill
+work are independent and continue.
 
 ## Tool snapshot
 
