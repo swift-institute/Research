@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "work-status-ledger-multi-agent-supervisor.md",
+      "displayName": "Work-Status Ledger for the Multi-Agent Supervisor System",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-07-15): How the L1/L2/L3 supervisor system should maintain a trustworthy, self-maintaining ledger of work/project status so that (a) a record cannot silently diverge from disk truth, (b) a stale status line cannot mislead the next boot, (c) watch/channel liveness is verifiable, and (d) a work item's OPEN/DONE state is mechanically reconcilable against the disk. Grounds every option in the 2026-07-14 failure catalog (three dissolved waves; stale Project-Status line; dead ||-echo-0 watch; report-against-a-corpse). Recommends a composite: machine-checkable close predicate per work item (git log -S / gate.sh, provenance-linked DONE), a report-only reconciliation gate at boot/close (Kubernetes-controller pattern), Project Status demoted to a generated view (event-sourcing; adds an OBVIATED terminal state), freshness-dated TTL tripwire, and a renewable liveness lease (K8s Lease / Prometheus staleness) for watches. Extends corpus-drift-taxonomy.md; honors the no-auto-mutation and never-batch-triage internal bets. Design-only; implementation and skill amendments are separate follow-ons.",
+      "date": "2026-07-15",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0. Tier 2 ecosystem-wide. Internal prior art ([RES-019]) governs and is cited; external prior art surveyed by parallel subagents against fetched primary sources ([RES-021]/[RES-034]) with per-claim [Verified: 2026-07-15] tags (~103 verified, 7 flagged unverified, none load-bearing). Extends the DEFERRED corpus-drift-taxonomy.md. RECOMMENDATION only — implementation and supervise/handoff skill amendments are separate, later-authorized follow-ons.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
       "file": "eventing-stack-upstream-networking-vision-alignment.md",
       "displayName": "Eventing Stack and Upstream Networking Vision Alignment",
       "topic": "RECOMMENDATION (v1.0.0, 2026-07-14): Verified alignment inventory and gap register (G1-G8) comparing the shipped eventing/IO/networking stack (Polling/Completion executors, Event.Actor/Completion.Actor actor-pinning, IO<Capabilities> strategy witness, swift-sockets, per-RFC address vocabularies) against the upstream Prospective Vision: Networking (forums 85235) and the Standard Network Address types pitch (82288). Finds the stack is a package-level existence proof of the vision eventing direction; gaps: no Darwin completion backend, no Windows eventing (IOCP unbuilt), sockets readiness strategy unwired, timer executor quarantined, io_uring path-op fallback, CI hygiene on the showcase set, in-house IPv4/IPv6 dual sources of truth, incumbent swift-endpoint in the address-types lane.",
