@@ -6725,6 +6725,20 @@
       ],
       "status": "pending",
       "statusRaw": "pending"
+    },
+    {
+      "file": "2026-07-14-supervisor-overnight-three-dissolved-waves-and-a-deleted-rule.md",
+      "date": "2026-07-14",
+      "title": "Three planned waves dissolved on contact with the disk — and the rule that caught the third was one hour old",
+      "packages": [
+        "swift-authentication",
+        "swift-dual",
+        "swift-favicon",
+        "swift-server-foundation-vapor",
+        "repotraffic-com-server"
+      ],
+      "status": "pending",
+      "statusRaw": "pending"
     }
   ]
 }
