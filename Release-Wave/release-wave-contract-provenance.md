@@ -2,31 +2,38 @@
 
 <!--
 ---
-version: 0.2.0
-last_updated: 2026-07-15
-status: DRAFT
+version: 1.0.0
+last_updated: 2026-07-16
+status: DECISION
 tier: 3
 scope: September 1, 2026 Swift Institute release-wave meta program
 ---
 -->
 
-## Purpose
+## Context
 
 This record fixes the authority, evidence boundaries, and derivation rules for
 the September 1, 2026 release-wave contract before any normative skill text is
-changed. The current channel decision has restored the issue-specific contract
-that was lost from model context during compaction. The fleet roster still has
-a separate identity ambiguity, recorded below, so this is not yet the final
-contract.
+changed. The current channel decision restored the issue-specific contract that
+was lost from model context during compaction. The fleet roster has a separate
+identity ambiguity and is now explicitly HOLD; that held input does not prevent
+the enforcement contract from reaching a decision state.
 
 No missing clause is inferred from historical documents. Work proceeds only
 from the settled requirements transcribed below and policy-independent controls.
 
+## Question
+
+What canonical contract, registry schema, missing-state vocabulary, evidence
+gate, and ownership seams are required before a multi-repository release program
+may claim enforcement coverage or publication readiness without turning
+generated evidence into a second policy source?
+
 ## Authority order
 
 1. The Principal-settled 2026-07-15 `/workspace-start` release policy, as
-   relayed through current generation-5 START assignments, is authoritative.
-2. The immutable generation-5 `general` charter defines scope, edit zones,
+   relayed through current generation-6 START assignments, is authoritative.
+2. The immutable generation-6 `general` charter defines scope, edit zones,
    prohibited actions, and acceptance posture.
 3. Canonical skills define requirement IDs and implementation rules. Generated
    registry rows are evidence about those rules, never a second rule source.
@@ -38,7 +45,7 @@ from the settled requirements transcribed below and policy-independent controls.
 
 The current charter file is
 `Workspace/charters/active/general.md`, SHA-256
-`a1b2fe66d9e69ec3e5866df5e12f3400312e9244634839a7473aeff67e35841b`.
+`e74c2bada7f74fa04b0e674b5487e641898d048dd1ff99ca97b116846895389e`.
 The `workspace-control.py` runtime used to receive authority and report through
 the seat channel has SHA-256
 `c4ca7798315ddbe1c59314e7ec01f1bae80f8a69913b3fd3b128f933008710c0`.
@@ -50,12 +57,13 @@ The active START scope is limited to:
 - a canonical release meta-contract and its provenance under
   `Research/Release-Wave/`;
 - a generated enforcement registry and supporting evidence;
-- a measured, reconciled baseline of exactly the authoritative 448-repository
-  fleet; and
 - the generic `release-wave` process skill plus only necessary clean-file
   amendments in the charter-listed skill directories.
 
-`release-plan-inputs` remains HOLD until a later current-generation START.
+`release-fleet-baseline`, `release-plan-inputs`, and inherited non-START work
+remain HOLD until a later current-generation START. The recorded 448-path versus
+447-immutable-identity contradiction is evidence for that HOLD, not authority to
+run or repair the census.
 Broad package remediation is outside scope. Package repositories are read-only.
 No push, tag, GitHub Release, visibility change, deployment, external message,
 history rewrite, CI-history deletion, backup-tag deletion, or package mutation
@@ -121,6 +129,14 @@ constraining this program are:
 - census-by-manifest-or-`Sources/`, never repository-directory presence; and
 - explicit placeholder state rather than clean-by-absence classification.
 
+The complete skill set used for this decision was: `swift-institute-core`,
+`skill-lifecycle`, `release-readiness`, `lint-rule-promotion`, `swift-linter`,
+`code-surface`, `modularization`, `ci-cd-workflows`, `audit`,
+`github-repository`, `social-preview`, `swift-package-heritage`,
+`research-process`, `swift-institute`, `swift-package`, `conversions`,
+`implementation`, and `readme`. Seat-control skills governed execution but do
+not supply release policy.
+
 ## Prior evidence and its disposition
 
 The following prior documents are inputs, not silently-ratified policy:
@@ -135,9 +151,8 @@ The following prior documents are inputs, not silently-ratified policy:
 
 ## Policy-independent registry invariants
 
-The registry generator may implement these invariants before the outstanding
-issue-name reply because they follow from the charter and canonical skills, not
-from an unsettled policy choice:
+The registry generator implements these settled invariants because they follow
+from the current charter, channel decision, and canonical skills:
 
 1. One row is keyed by canonical requirement ID plus canonical source location.
 2. Every row records the source repository commit and exact source blob.
@@ -166,11 +181,12 @@ Directory presence is insufficient. Each row must distinguish at least:
 - missing/unavailable repository, if the authoritative inventory names one that
   cannot be observed.
 
-The run must prove both completeness and uniqueness against the authoritative
-448-repository inventory, preserve placeholders as explicit rows, record local
+The run must prove both completeness and uniqueness against the finally ruled
+authoritative inventory, preserve placeholders as explicit rows, record local
 Git and read-only GitHub observations separately, and reconcile two equivalent
-runs. Any count other than the finally ruled roster count is a failed baseline,
-not a near-success.
+runs. The current 448-path observation is not an authoritative repository count.
+Any count other than the finally ruled roster count is a failed baseline, not a
+near-success.
 
 ## Settled enforcement issues
 
@@ -227,6 +243,11 @@ missing CI gating are distinct states. Registry generation is reproducible;
 the registry remains generated evidence subordinate to skills; and positive
 and negative controls prove generator scope.
 
+SwiftLint uses the primary class `filesystem/workflow validator` because its
+mechanism is a configuration-driven regex/file workflow rather than a
+SwiftSyntax rule executed by swift-linter. `SwiftLint` remains the subtype. This
+is a derivation from the settled mechanism boundary, not a new primary class.
+
 ## Settled severity doctrine
 
 - Deterministic `MUST`/`MUST NOT` rules may graduate warning to error; new rules
@@ -247,7 +268,7 @@ Release finding severity and linter diagnostic severity remain separate axes.
 The audit doctrine governs release-blocking findings; the graduation doctrine
 governs whether a deterministic rule can become an error gate.
 
-## Outstanding fleet-roster identity input
+## Held fleet-roster identity input
 
 The 16-org depth-1 manifest census produces 448 local paths, but bounded
 read-only GitHub resolution found that
@@ -261,8 +282,9 @@ ASK command `general-release-wave-fleet-identity-20260715-1` requests a ruling
 on whether the row unit is the local manifest root or immutable GitHub
 repository ID, and—if immutable identity is canonical—which omitted intended
 repository restores 448 or whether the unique-repository count must change.
-The expensive fleet census remains paused until that reply. Registry and skill
-work are independent and continue.
+The fleet census remains non-executable under the current HOLD. Registry and
+contract work are independent and complete without selecting either identity
+policy.
 
 ## Tool snapshot
 
@@ -277,15 +299,31 @@ The provenance pass ran at `2026-07-15T21:32:00Z`
 Tool versions do not establish compatibility by themselves. Commands and
 positive controls belong in the generated evidence for the claims they support.
 
-## Amendment discipline
+## Outcome
 
-This document remains `DRAFT` until the current-policy gap is closed and the
-full contract receives independent review. Moving it to a decision state
-requires:
+The enforcement contract is settled as a canonical `release-wave` skill plus
+minimal owner-skill amendments. Registry generation is subordinate evidence and
+separates implementation, activation, execution, verification, and gating. The
+objective warning-to-error gate is owned by `lint-rule-promotion`; strict
+publication behavior is owned by `release-readiness`; finding severity and
+per-package verdicts remain owned by `audit` and `release-readiness`.
 
-1. processing the durable channel reply;
-2. recording every accepted current-policy clause without inference;
-3. reconciling prior recommendations against current measured state;
-4. identifying any genuinely unresolved decision as an ASK;
-5. completing an independent review; and
-6. recording exact verification commands and artifact SHAs.
+The immutable fleet identity contradiction is deliberately unresolved and
+HOLD. It is not normalized into a 448-repository claim. `Research/_index.json`
+was already dirty and excluded by charter, so this topical record is not added
+to that index in this change.
+
+Independent review was performed against the contract and owner-skill seams;
+final post-edit review and exact artifact hashes are recorded in
+`Audits/Release-Wave/`.
+
+## Changelog
+
+- **1.0.0 (2026-07-16)** — promoted the settled enforcement contract to
+  DECISION; updated authority to generation 6; made fleet baseline explicitly
+  HOLD; recorded the complete loaded-skill set, SwiftLint class derivation,
+  ownership seams, and outcome.
+- **0.2.0 (2026-07-15)** — recorded the six settled enforcement issues,
+  registry fields, and objective severity doctrine.
+- **0.1.0 (2026-07-15)** — established provenance, source pins, dirty
+  exclusions, and policy-independent registry/fleet invariants.
