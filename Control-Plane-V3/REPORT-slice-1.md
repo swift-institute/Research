@@ -172,11 +172,14 @@ TOOLCHAINS=org.swift.633202606251a swift build --product control-plane
    the institute nested `Tests/Package.swift` ([INST-TEST-001]/[TEST-024]). Reason:
    prototype outside the published orgs; no snapshot-testing need; smaller resolve
    graph for the crash/replay matrix. Migrates at graduation. (design.md §8)
-2. **flock deferred** — swift-file-system vends no flock surface; hand-rolling
-   syscalls here would violate [ARCH-LAYER-011]. Single-instance is by operational
-   convention in slice 1; design amended in place (`7d555e8`). The right fix is a
-   flock surface **in swift-file-system** (upstream improvement candidate; a
-   ready-to-dispatch task chip was raised in-session).
+2. **Single-instance lock deferred** — by operational convention in slice 1; design
+   amended in place (`7d555e8`). *(⚠️ ERRATUM 2026-07-16, Principal pointer: this
+   deviation originally claimed "swift-file-system vends no flock surface" and framed
+   an upstream addition as the fix — a token-grep false zero over the wrong scope.
+   The institute lock surface already exists: `ISO 9945 Kernel Lock` (fcntl record
+   locking with a `~Copyable Token`; releases on process death) + `POSIX Kernel
+   Lock`. The follow-up is CONSUMING it in `Store.File` at the multi-daemon
+   graduation gate, not building it. Corrected in design.md §5 invariant 7.)*
 3. **swift-arguments deferred** — the slice-1 CLI is four subcommands; adoption is
    scheduled with the daemon control API. (design.md §8)
 

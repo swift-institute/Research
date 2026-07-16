@@ -213,12 +213,21 @@ register → loop {
    manual truncation). A torn tail is provably not a committed command (invariant 1 +
    single-writer), so truncation never discards an acknowledged effect.
 7. **Single writer**: the kernel actor serializes decide→append→apply. *(Amended at
-   implementation, 2026-07-16: the planned advisory `flock` at `Store.File` open is
-   DEFERRED — swift-file-system vends no flock surface today, and hand-rolling
-   syscalls in this package would violate [ARCH-LAYER-011]; the right fix is a flock
-   surface added to swift-file-system, flagged as an upstream improvement candidate.
-   Until then single-instance is by operational convention; nothing in slice 1 runs
-   two daemons, and flock auto-release-on-death remains the design for when it lands.)*
+   implementation, 2026-07-16: the single-instance lock at `Store.File` open is
+   DEFERRED in slice 1 — single-instance is by operational convention until then.)*
+   *(CORRECTED 2026-07-16, Principal pointer + re-probe: the first amendment claimed
+   "swift-file-system vends no flock surface" and framed an upstream ADDITION as the
+   fix. That was a token-grep false zero over the wrong scope: the institute lock
+   surface already EXISTS at L2 — `ISO 9945 Kernel Lock` (fcntl record locking:
+   shared/exclusive kinds, whole-file range, blocking F_SETLKW and non-blocking
+   F_SETLK, unlock, and a `~Copyable Token` with deinit-release backstop), wrapped by
+   `POSIX Kernel Lock`, with a multi-process contention harness in ISO 9945 Kernel
+   Test Support. fcntl locks release on process death — exactly the required
+   semantics. The remaining work is CONSUMPTION, not invention: `Store.File` holds an
+   open descriptor for its lifetime and takes the exclusive whole-file lock
+   non-blocking at open (second daemon fails fast). This lands with the
+   multi-daemon/production graduation gate; a File-level convenience in
+   swift-file-system remains a nice-to-have, not a prerequisite.)*
 8. **The event is the receipt**: dedup is derived from event envelopes; there is no
    separate intent/receipt ledger to desynchronize (rejects v2's INTENT→COMPLETED
    two-phase shape; see provenance §rejects). Crash after append, before reply →
