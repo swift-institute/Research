@@ -35,22 +35,25 @@ graceful-then-hard kill, always reaped. No Workspace-v2 integration; no socket A
 - `swift-process`'s public `run` is synchronous full-drain with a
   SIGKILL-child-only deadline: no process group, no TERM grace, no bounded
   capture, not cancellation-aware. Its internal `_spawnWithActions` is not public.
-- CLIs on this machine: `claude` 2.1.211 at `~/.local/bin/claude`
+- CLIs used for live conformance: `claude` 2.1.211 at `~/.local/bin/claude`
   (`-p/--print`, `--output-format json`, `-r/--resume <session-id>`,
-  `--permission-mode`); **`codex` is not installed** (PATH, cargo, brew, local
-  checked).
+  `--permission-mode`); codex-cli 0.144.2 at
+  `/Applications/Codex.app/Contents/Resources/codex` (`exec --json`,
+  `exec resume`). Authentication state is an execution prerequisite, not an
+  adapter capability; the final checkpoint records the actual live outcomes.
 
 ## Process-group ownership: the trampoline decision
 
 Adding spawn-attribute support upstream (ISO 9945 → swift-posix → swift-process)
 is the canonical fix but a three-package cascade mid-slice. Slice 2A instead ships
-a ~20-line trampoline executable in this package:
+a small trampoline executable in this package:
 
-- `control-plane-exec`: `argv = [self, executable, args…]` → `Session.create()`
-  (setsid: new session, new process group, no controlling terminal) →
-  `execve(argv[1], argv[1…], environ)`. The host spawns the trampoline with the
-  already-sanitized envp, so the trampoline's own environ is exactly the child's
-  intended environment.
+- `control-plane-exec`: `argv = [self, directory, executable, args…]` →
+  `Session.create()` (setsid: new session, new process group, no controlling
+  terminal) → reset inherited signal state → attach `/dev/null` to stdin →
+  `chdir(directory)` → `execv(executable, [executable, args…])`. The host spawns
+  the trampoline with the already-sanitized envp, so the trampoline's own environ
+  is exactly the child's intended environment.
 - The child is therefore its own session/group **leader**, pgid == pid, and
   `kill(-pid, SIG*)` owns the entire tree (model CLIs spawn grandchildren).
 - **The trampoline also resets the signal environment to POSIX defaults before
@@ -73,8 +76,9 @@ a ~20-line trampoline executable in this package:
 ## Host engine (`Control.Plane.Runner.Host`)
 
 The process-execution engine both adapters share. New target
-`Control Plane Backend Process` (deps: Kernel, Runner, JSON, Environment,
-POSIX Kernel Process/Signal, ISO 9945 Core).
+`Control Plane Backend Process` depends on Kernel, Runner, JSON, Environment,
+Path Primitives, and the specific POSIX/ISO 9945 file, poll, process, and signal
+modules used by the host.
 
 - **Direct spawn only**: argv arrays end-to-end; no shell anywhere in the adapter
   path. (Test fixtures may exec `/bin/sh` with FIXED literal scripts to obtain
@@ -84,11 +88,10 @@ POSIX Kernel Process/Signal, ISO 9945 Core).
   `Configuration.environment` pairs. Nothing else. Failures and diagnostics may
   name variable NAMES, never values — no secret logging by construction (the
   host has no logging surface at all).
-- **Bounded capture**: stdout/stderr drained concurrently (one blocking-read
-  task per pipe — cancellation-safe because the group kill forces EOF, which
-  unblocks the readers) into per-stream buffers capped at `Configuration.limit`
-  bytes; overflow is discarded with a `truncated` marker. Reader threads: two
-  per running job; acceptable at slice scale, noted as a later `poll(2)` upgrade.
+- **Bounded capture**: stdout/stderr are drained by one `poll(2)` supervision loop
+  on ~50 ms ticks into per-stream buffers capped at `Configuration.limit` bytes;
+  overflow is discarded with a `truncated` marker. The same loop observes task
+  cancellation, so capture and escalation have one owner.
 - **Cancellation escalation**: the supervise loop observes `Task.isCancelled` on
   each poll tick (~50 ms) — on cancel: `kill(-pid, .terminate)`; after
   `Configuration.grace`, `kill(-pid, .kill)`. The child is ALWAYS reaped (`Wait`) —
@@ -120,8 +123,11 @@ over a `Host`. Argv builders are pure functions (unit-tested without spawning).
   (+ `[--resume, <session>]` when the payload carries one). Stdout parses as one
   JSON object; `result` → outcome body (bounded), `session_id` → outcome session,
   `is_error` → failure. Live-verified against claude 2.1.211.
-- **Codex**: `[codex, exec, --json, <prompt>]`
-  (+ resume via `[codex, exec, resume, <thread-id>, --json, <prompt>]`). Stdout is
+- **Codex**: `[codex, exec, --json, <fixed-exec-options…>, <prompt>]`
+  (+ resume via `[codex, exec, <fixed-exec-options…>, resume, <thread-id>,
+  <prompt>, --json]`). Exec-level options such as `--sandbox` must precede the
+  `resume` subcommand; placing them after the thread id is rejected by codex-cli.
+  Stdout is
   JSONL. **VERIFIED LIVE** against codex-cli 0.144.2 (2026-07-16): the continuation
   identifier is `thread.started.thread_id`; the answer is the `text` of the last
   `item.completed` whose `item.type == "agent_message"` (NOT a top-level
@@ -164,17 +170,20 @@ Kernel stays interpretation-free; two vocabulary slots widen:
   runner-loop integration to `succeeded` with session retained in the event log.
 - Kernel: schema round-trips; fingerprint sensitivity to the new fields.
 - Live smoke (opt-in: `CONTROL_PLANE_LIVE_SMOKE=1`, default-out per [TEST-040]
-  discipline; skipped cleanly when the CLI is absent): trivial no-tool prompt in
-  an empty temp zone; assert exit 0, non-empty body, session id captured. Claude:
-  runnable here. Codex: reported absent.
+  discipline; skipped cleanly when the CLI or explicit environment variable is
+  absent): trivial no-tool prompt in an empty temp zone; assert first response is
+  non-empty, capture the provider session/thread id, pass it into the provider's
+  resume argv, and assert the second response is non-empty. The final checkpoint
+  report distinguishes an actual pass from a default-out skip or external
+  authentication failure.
 - Kill/fence/crash properties re-verified at the kernel level are NOT re-proven
   per-adapter (slice-1 suites own them); the process slice proves the OS-side
   halves (group kill, reap, EOF-on-death).
 
 ## Explicitly out of slice 2A
 
-Workspace-v2 integration; socket API; upstream spawn-attributes cascade
-(flagged); poll(2)-based drain; codex live verification (machine lacks the CLI);
-OS-orphan adoption after a daemon crash (lease fencing already makes such
-orphans harmless to correctness — they burn compute only; documented limitation
-for the ops story).
+Workspace-v2 integration; socket API and Slice 2B daemon arguments/locks;
+upstream spawn-attributes cascade (flagged); production isolation; OS-orphan
+adoption after a daemon crash (lease fencing already makes such orphans harmless
+to correctness — they burn compute only; documented limitation for the ops
+story).
