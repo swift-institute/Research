@@ -212,9 +212,13 @@ register → loop {
    truncates a torn final line before reopening for append (improves on v2's fail-closed
    manual truncation). A torn tail is provably not a committed command (invariant 1 +
    single-writer), so truncation never discards an acknowledged effect.
-7. **Single writer**: the kernel actor serializes decide→append→apply. `Store.File`
-   additionally holds an advisory `flock` for the daemon's lifetime so a second daemon
-   instance fails fast at open (lock dies with the process — no stale-lock state).
+7. **Single writer**: the kernel actor serializes decide→append→apply. *(Amended at
+   implementation, 2026-07-16: the planned advisory `flock` at `Store.File` open is
+   DEFERRED — swift-file-system vends no flock surface today, and hand-rolling
+   syscalls in this package would violate [ARCH-LAYER-011]; the right fix is a flock
+   surface added to swift-file-system, flagged as an upstream improvement candidate.
+   Until then single-instance is by operational convention; nothing in slice 1 runs
+   two daemons, and flock auto-release-on-death remains the design for when it lands.)*
 8. **The event is the receipt**: dedup is derived from event envelopes; there is no
    separate intent/receipt ledger to desynchronize (rejects v2's INTENT→COMPLETED
    two-phase shape; see provenance §rejects). Crash after append, before reply →
