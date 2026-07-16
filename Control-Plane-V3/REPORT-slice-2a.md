@@ -2,9 +2,8 @@
 
 Date: 2026-07-16
 
-Status: implementation checkpoint committed; acceptance is pending only the
-external Claude CLI re-authentication and one live continuation-smoke rerun.
-Slice 2B has not started.
+Status: **accepted**. The clean gate and both actual provider continuation
+smokes are green. Slice 2B has not started.
 
 ## Immutable inputs and commits
 
@@ -15,9 +14,11 @@ Slice 2B has not started.
   `e2380f377a8a2f88541b2ab8f171e9c67e995d72`.
 - Slice 2A backend/trampoline/adapters/targets/tests commit:
   `4f61558a8190d9e82baaf22a754bd7bdf79f22cf`.
-- Research checkpoint: the commit containing this report and the accompanying
-  design correction, with parent
-  `4594999b3c595a610bcb513e21e479b7c45ca061`.
+- Research design/checkpoint commit:
+  `131accade5c6a70d224077a85f4e6e5afa080b7e` (parent
+  `4594999b3c595a610bcb513e21e479b7c45ca061`).
+- Final Claude acceptance evidence: the commit containing the current report
+  revision, with parent `131accade5c6a70d224077a85f4e6e5afa080b7e`.
 - No push or other outward mutation was performed.
 
 ## Owned changed files
@@ -141,9 +142,9 @@ thread-id parsing but failed the new second-response assertion because codex-cli
 rejected the misplaced `--sandbox`; it failed 1 test in 2 suites after 6.509
 seconds. The final pass is after the argv correction.
 
-### Claude — external authentication blocker
+### Claude — passed after re-authentication
 
-Required command was run once:
+Command:
 
 ```sh
 CONTROL_PLANE_LIVE_SMOKE=1 CONTROL_PLANE_CLAUDE=$(command -v claude) \
@@ -152,10 +153,9 @@ CONTROL_PLANE_LIVE_SMOKE=1 CONTROL_PLANE_CLAUDE=$(command -v claude) \
   --filter 'live smoke: claude'
 ```
 
-Actual result: the first provider invocation returned `exit 1` with empty
-captured stderr; the live test failed **1 test in 2 suites after 6.079 seconds**.
-No session id existed, so no resume argv or second response could be verified.
-This was not a skip.
+The first attempt returned `exit 1` with empty captured stderr; the live test
+failed **1 test in 2 suites after 6.079 seconds**. No session id existed, so no
+resume argv or second response could be verified. This was not a skip.
 
 The same safe fixed prompt was then reproduced directly against Claude Code
 2.1.211, both with the host-equivalent sanitized environment and with the full
@@ -172,25 +172,23 @@ returned:
 {"loggedIn":false,"authMethod":"none","apiProvider":"firstParty"}
 ```
 
-Per controller disposition, login was not initiated and Claude was not retried
-while logged out. The sole remaining acceptance condition is:
-
-1. The user completes the CLI's interactive prerequisite with
-   `claude auth login` and confirms `claude auth status` reports
-   `"loggedIn": true`.
-2. Run this one-shot smoke command:
+Per controller disposition, Claude was not retried while logged out. After user
+authorization, a stale credential was cleared and the Claude-subscription OAuth
+flow was completed:
 
 ```sh
-CONTROL_PLANE_LIVE_SMOKE=1 CONTROL_PLANE_CLAUDE=$(command -v claude) \
-  env TOOLCHAINS=org.swift.633202606251a swift test \
-  --package-path /Users/coen/Developer/swift-institute/swift-control-plane \
-  --filter 'live smoke: claude'
+claude auth logout
+claude auth login --claudeai
+claude auth status
 ```
 
-Acceptance requires that command to report 1 test in 2 suites passed. The test
-itself requires a non-empty first response, retained session id, successful
-resume, and non-empty second response, so a skipped or first-turn-only result
-cannot satisfy it.
+The authoritative status then reported `"loggedIn": true` with auth method
+`claude.ai`. The exact live-smoke command above was rerun and passed **1 test in
+2 suites after 6.303 seconds**. This was an actual live run, not a default-out
+skip. The passing test proves a non-empty first response, retained Claude
+session id, successful `--resume <session-id>`, and a non-empty second response.
+The fixed harmless response text and full session identifier were not printed
+to the checkpoint log.
 
 ## Independent-review dispositions
 
