@@ -53,6 +53,19 @@ a ~20-line trampoline executable in this package:
   intended environment.
 - The child is therefore its own session/group **leader**, pgid == pid, and
   `kill(-pid, SIG*)` owns the entire tree (model CLIs spawn grandchildren).
+- **The trampoline also resets the signal environment to POSIX defaults before
+  `execv`** (empty signal mask + `SIG_DFL` for TERM/INT/HUP/QUIT/PIPE/TSTP). This is
+  not cosmetic: `posix_spawn` with no attributes makes the child inherit the parent's
+  signal mask and dispositions, and `SIG_IGN` is *preserved across `execv`*. A daemon
+  (or a Swift test host) that blocks or ignores SIGTERM would otherwise pass that
+  onto the model CLI, so a group SIGTERM would be **silently swallowed** and the
+  host's graceful-then-hard escalation would degrade to an always-SIGKILL — slower and
+  ungraceful, and invisible because SIGKILL cannot be blocked. Found and fixed 2026-07-16
+  when the cooperative-TERM test observed SIGKILL after the full grace window even for
+  a direct `/bin/sleep`; the shell reproduced it only under `trap '' TERM`. (Gotcha-corpus
+  candidate: *a subprocess inherits SIG_IGN across exec; a group SIGTERM that "does
+  nothing" is an inherited-ignore, not a delivery failure — SIGKILL working is not
+  evidence that SIGTERM was delivered.*)
 - Flagged upstream improvement (sibling of the flock flag): spawn `Attributes`
   (`POSIX_SPAWN_SETPGROUP`/`SETSID`) in swift-iso-9945 + pass-throughs; the
   trampoline retires when that lands.
@@ -76,15 +89,23 @@ POSIX Kernel Process/Signal, ISO 9945 Core).
   unblocks the readers) into per-stream buffers capped at `Configuration.limit`
   bytes; overflow is discarded with a `truncated` marker. Reader threads: two
   per running job; acceptable at slice scale, noted as a later `poll(2)` upgrade.
-- **Cancellation escalation**: `withTaskCancellationHandler` — on cancel:
-  `kill(-pid, .terminate)`; an escalation task waits `Configuration.grace` then
-  `kill(-pid, .kill)`. The child is ALWAYS reaped (`Wait`) — no zombies; ESRCH
-  races are tolerated.
-- **Edit-zone enforcement**: `Request.directory` must be an existing directory
-  whose normalized absolute path sits under one of `Configuration.roots`
-  (component-boundary prefix check on a pure normalizer — no Foundation). The
-  child chdirs there via a spawn file action. Violations never spawn: terminal
-  failure.
+- **Cancellation escalation**: the supervise loop observes `Task.isCancelled` on
+  each poll tick (~50 ms) — on cancel: `kill(-pid, .terminate)`; after
+  `Configuration.grace`, `kill(-pid, .kill)`. The child is ALWAYS reaped (`Wait`) —
+  no zombies; ESRCH races are tolerated. (Failure mapping: the trampoline's
+  pre-exec sentinel exits — 71 chdir, 72 execv — map to **terminal**, so a missing
+  edit zone or a missing model CLI does not burn the retry budget.)
+- **Edit-zone enforcement**: `Request.directory`'s normalized absolute path must
+  sit under one of `Configuration.roots` (component-boundary prefix check on a pure
+  LEXICAL normalizer — no Foundation, no filesystem access). The trampoline chdirs
+  there before exec. A lexical zone *violation* (outside roots / relative / `..`
+  escape) never spawns — terminal failure. **Two honest limitations (corrected
+  post-review):** (1) the check does NOT resolve symlinks, so a symlink inside a
+  root pointing outside it passes the lexical check and the kernel's `chdir` lands
+  the child outside the zone — the edit zone is a *cooperative* boundary, not a
+  sandbox (a real sandbox/chroot is a later slice); (2) directory *existence* is
+  not checked lexically, so a nonexistent contained path DOES spawn the trampoline,
+  which then fails `chdir` (exit 71) and is classified **terminal** by the provider.
 - **Result**: exit status (exited(code) / signaled(signal)), bounded stdout,
   bounded stderr, truncation flags. Timeouts are NOT host policy — the kernel's
   per-attempt timeout (sweep) and lease loss cancel the backend task, which is
@@ -100,12 +121,17 @@ over a `Host`. Argv builders are pure functions (unit-tested without spawning).
   JSON object; `result` → outcome body (bounded), `session_id` → outcome session,
   `is_error` → failure. Live-verified against claude 2.1.211.
 - **Codex**: `[codex, exec, --json, <prompt>]`
-  (+ resume via `[codex, exec, resume, <session>, <prompt>]`). Stdout is JSONL;
-  the adapter extracts the thread/session identifier and final agent message
-  best-effort, falling back to raw bounded output as the body. **UNVERIFIED-LIVE**
-  (CLI not installed here): shape from the documented interface, fixture-tested;
-  the live control runs on a machine with codex present before this adapter is
-  relied on.
+  (+ resume via `[codex, exec, resume, <thread-id>, --json, <prompt>]`). Stdout is
+  JSONL. **VERIFIED LIVE** against codex-cli 0.144.2 (2026-07-16): the continuation
+  identifier is `thread.started.thread_id`; the answer is the `text` of the last
+  `item.completed` whose `item.type == "agent_message"` (NOT a top-level
+  `last_agent_message` — the original best-effort parser was WRONG and was corrected
+  against captured live output). **No raw-output fallback**: if no `agent_message`
+  is found the adapter returns a FAILURE, so an unparsed response can never
+  masquerade as a completed job (the false-pass the Principal named). Live smoke
+  passes `--sandbox read-only --skip-git-repo-check` (the edit zone is a bare temp
+  dir). The trampoline gives the child `/dev/null` on stdin (codex `exec` reads
+  stdin even with a prompt arg).
 - Failure mapping: spawn-not-found / zone violation / payload missing directory →
   terminal (`retryable: false`); nonzero exit or signal → `retryable: true`
   (bounded by `attempts.max`; stderr tail in the reason, bounded); task
