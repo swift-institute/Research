@@ -2,12 +2,13 @@
 
 <!--
 ---
-version: 0.2.0
+version: 0.3.0
 last_updated: 2026-07-16
 status: RECOMMENDATION
 tier: 3
 scope: ecosystem-wide
 changelog:
+  - 0.3.0 (2026-07-16): Added the immutable RepoTraffic 890c5e6 R2 checkpoint and controlling reconciliation packet.
   - 0.2.0 (2026-07-16): Separated the accepted RepoTraffic checkpoint from a concurrent launch-hardening worktree delta.
   - 0.1.0 (2026-07-16): Initial evidence record and architecture premises for Principal review.
 ---
@@ -319,6 +320,25 @@ rg -n -i --glob 'Package.swift' \
 Internal edges were projected from `dump-package` by retaining dependencies whose names are in the
 31-node non-test target set. The proposed graph is separately recorded as TSV and checked in the
 dependency/layer artifact.
+
+## R2 immutable-checkpoint amendment
+
+The R1 conclusions above remain the historical `0a24898` record. R2 now has an accepted immutable
+RepoTraffic successor: commit `890c5e684e55ba22f072637a987b9ac9b08475d5`, tree
+`13a5816df80e4c3fc3fd0c24531c20bbd3d8784e`. Its `Package.swift`, `Package.resolved`, Sources,
+Tests, and census identities are recorded in
+`reconciliation-r2-principal-decision-packet.md`. That packet is the controlling source for current
+counts, semantic deltas, Ask A recommendations, ServerFoundation dissolution, and next work.
+
+The prior “post-checkpoint concurrent delta” section is retained as audit history only. It must not
+be used as current evidence: the implementation arc subsequently committed its hardening, lock,
+and durable receipt, and R2 independently recensused `890c5e6`. A new concurrent dirty worktree now
+exists over that commit. R2 observed only its path boundary and excluded all uncommitted bytes.
+
+R2 preserves the R1 `proposed-edges.tsv` as a historical 70-node/186-edge proposal. Its executable
+projection is 69 nodes/181 edges because the conditional `RTAnalyticsCache` node has no committed
+materialization read/write demand at `890c5e6`. The 38 lateral asks remain explicit; their R2
+classifications are appended to `lateral-edge-asks.tsv` and are not automatic dispositions.
 
 ## Limits and uncertainties
 

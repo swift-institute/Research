@@ -2,12 +2,13 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-07-16
 status: RECOMMENDATION
 tier: 3
 scope: ecosystem-wide
 changelog:
+  - 1.1.0 (2026-07-16): Recorded the fresh R2 reconciliation review and clean-accept disposition.
   - 1.0.0 (2026-07-16): Recorded the read-only independent architecture review and conditional-accept disposition.
 ---
 -->
@@ -81,6 +82,51 @@ No independent-review defect remains. The evidence and recommendation set are co
 Principal adjudication. Conditional acceptance does not authorize package creation, implementation,
 release, service deployment or any of the 38 lateral edges; those actions remain behind the recorded
 Principal dispositions, edit zones and canaries.
+
+## R2 fresh independent review
+
+The reviewer `/root/r2_fresh_review` performed a new read-only pass after the immutable RepoTraffic
+hardening and networking reconciliation. The review covered the complete R2 packet, exact delta
+ledger, all 38 amended lateral rows, R1 conditional projection, ServerFoundation dissolution,
+network sequencing, Control Plane implications, and the nominated immediate implementation batch.
+It read no uncommitted RepoTraffic content and modified no repository.
+
+### Findings and dispositions
+
+| Finding | Severity | Disposition |
+|---|---|---|
+| Initial `ENV-R2-1` moved public URL/projectRoot/live-file APIs while claiming no consumer edits | Blocking | Replaced with an additive three-target migration: Foundation-free Core, explicit Foundation Integration leaf, and a behavior-free deprecated compatibility facade. New consumers select Core/leaf directly; complete consumer census, compile fixture, exact retirement gate, and separately versioned breaking removal are explicit. |
+| Environment split could hide process-only live reading, Foundation-backed string helpers, or an unused test-support import | Blocking until bounded | Process-only `Environment.read.all()`, the EnvVars dependency key, exact `allowedInsecureHosts` parity, and `EnvVars.TestSupport` import disposition are explicit. Acceptance checks public/re-exported/typealiased/signature API, not import text alone, and validates canonical target/product names and Core←leaf direction. |
+| Restored WaitingList test import wording said ten | Minor | Corrected to nine restored-test non-toolchain imports plus Account's one type-only import, matching the exact +10 delta (`reconciliation-r2-principal-decision-packet.md:176-177`). |
+| Import-count method named only Foundation/Testing exclusions | Minor | Corrected to include the single unchanged SwiftUI platform edge, reproducing 404/412 (`reconciliation-r2-principal-decision-packet.md:131-137`). |
+| Root-quarantine policy row also requested a boot-canary execution authorization | Minor | Separated: Principal ratifies quarantine; the future two-executable boot canary is a distinct execution action (`reconciliation-r2-principal-decision-packet.md:193-200`). |
+
+### R2 final verification
+
+- immutable recensus: 31 products; 45→46 targets; 31→37 root dependencies; 497→434
+  declared rows; 163→162 internal edges; depth 11→9;
+- exact delta ledger: 182 data rows, comprising +1 target, +6 roots, +50/-113 declared rows,
+  and +10/-2 active non-toolchain import edges;
+- R1/R2 proposal arithmetic: 70 nodes/186 edges → 69/181 after omitting conditional
+  `RTAnalyticsCache` and its five incident edges;
+- lateral classifications: 38/38, with 3 policy-blocked, 4 probe-blocked and 31 superseded
+  candidates; no automatic disposition;
+- Ask A and ServerFoundation: recommendations, compatibility, migration, probes, and policy
+  authority remain distinct;
+- networking and Control Plane: committed design evidence only, with no inferred implementation
+  authority or migration machinery;
+- immediate batch: additive, clean-zone, policy-independent, source-compatible in its extraction
+  commit, and bounded away from consumer migration;
+- generic SaaS, billing, identity-service, and service-fleet proposals: rejected for lack of rent;
+- `git diff --check`: pass; reviewer mutations: none.
+
+### R2 outcome
+
+**Status: CLEAN / ACCEPT for Principal review.** No blocker or minor finding remains. This review
+disposition does not decide the three Principal bundles or broaden implementation authority.
+`ENV-R2-1` may begin under the controller's separately stated clean-zone authorization because its
+Foundation boundary is already canonical; all other work remains behind the packet's decisions,
+probes, and concurrency guards.
 
 ## References
 

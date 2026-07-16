@@ -1,0 +1,183 @@
+change	surface	owner	dependency_kind	dependency	package
+add	target	WaitingListLive Tests	-	-	-
+add	root_dependency	-	package	postgres-nio	postgres-nio
+add	root_dependency	-	package	swift-collections	swift-collections
+add	root_dependency	-	package	swift-emailaddress	swift-emailaddress
+add	root_dependency	-	package	swift-log	swift-log
+add	root_dependency	-	package	swift-nio	swift-nio
+add	root_dependency	-	package	swift-svg-render	swift-svg-render
+add	declared_dependency	AccessControl Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	AccessControlLive	product	Logging	swift-log
+add	declared_dependency	Account	product	GitHub Repositories Types	swift-github-types
+add	declared_dependency	Account Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	AccountLive	product	Logging	swift-log
+add	declared_dependency	Analytics Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	Billing Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	BillingLive	product	Logging	swift-log
+add	declared_dependency	Cache Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	CacheLive	product	Logging	swift-log
+add	declared_dependency	CacheLive	product	NIOCore	swift-nio
+add	declared_dependency	CacheLive	product	NIOPosix	swift-nio
+add	declared_dependency	Checkout Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	Checkout Tests	product	URLRouting	swift-url-routing
+add	declared_dependency	Checkout Tests	target	Products	-
+add	declared_dependency	CheckoutLive	product	Logging	swift-log
+add	declared_dependency	Growth Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	GrowthLive	product	Logging	swift-log
+add	declared_dependency	Pricing Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	Products Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	RepoTrafficRouter	product	Stripe Webhooks	swift-stripe
+add	declared_dependency	RepoTrafficRouter Tests	by_name	Account	-
+add	declared_dependency	RepoTrafficRouter Tests	by_name	Analytics	-
+add	declared_dependency	RepoTrafficRouter Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	RepoTrafficRouter Tests	product	OrderedCollections	swift-collections
+add	declared_dependency	RepoTrafficRouter Tests	product	Stripe Types Models	swift-stripe-types
+add	declared_dependency	RepoTrafficRouter Tests	product	URLRouting	swift-url-routing
+add	declared_dependency	Repositories	product	GitHub Types	swift-github-types
+add	declared_dependency	Repositories Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	RepositoriesLive	product	Logging	swift-log
+add	declared_dependency	Syncing Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	WaitingList	product	EmailAddress	swift-emailaddress
+add	declared_dependency	WaitingList Tests	product	EmailAddress	swift-emailaddress
+add	declared_dependency	WaitingList Tests	product	URLRouting	swift-url-routing
+add	declared_dependency	WaitingListLive Tests	by_name	RepoTrafficRouter	-
+add	declared_dependency	WaitingListLive Tests	by_name	RepoTrafficRouterLive	-
+add	declared_dependency	WaitingListLive Tests	product	Dependencies	swift-dependencies
+add	declared_dependency	WaitingListLive Tests	product	Dependencies Test Support	swift-dependencies
+add	declared_dependency	WaitingListLive Tests	product	Mailgun Lists	swift-mailgun
+add	declared_dependency	WaitingListLive Tests	product	Records	swift-records
+add	declared_dependency	WaitingListLive Tests	product	ServerFoundationVapor	swift-server-foundation-vapor
+add	declared_dependency	WaitingListLive Tests	target	WaitingList	-
+add	declared_dependency	WaitingListLive Tests	target	WaitingListLive	-
+add	declared_dependency	WaitingListRemote Tests	product	ServerFoundation	swift-server-foundation
+add	declared_dependency	com_repotraffic	product	SVG Rendering	swift-svg-render
+add	declared_dependency	com_repotraffic_app	by_name	GrowthLive	-
+add	declared_dependency	com_repotraffic_app	product	EmailAddress	swift-emailaddress
+add	declared_dependency	com_repotraffic_app	product	PostgresNIO	postgres-nio
+add	declared_dependency	com_repotraffic_app	product	Stripe Billing	swift-stripe
+add	declared_dependency	com_repotraffic_app	product	Stripe Products	swift-stripe
+remove	declared_dependency	AccessControl	product	IdentitiesTypes	swift-identities-types
+remove	declared_dependency	AccessControl	product	Stripe Checkout Types	swift-stripe-types
+remove	declared_dependency	AccessControl	product	Stripe Customers Types	swift-stripe-types
+remove	declared_dependency	AccessControl	product	Stripe Events Types	swift-stripe-types
+remove	declared_dependency	AccessControl	product	Stripe Products Types	swift-stripe-types
+remove	declared_dependency	AccessControl	target	Billing	-
+remove	declared_dependency	AccessControlLive	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	AccessControlLive	product	Server PostgreSQL	swift-server
+remove	declared_dependency	Account	product	GitHub	swift-github
+remove	declared_dependency	Account	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	Account	product	Server PostgreSQL	swift-server
+remove	declared_dependency	Account	product	Stripe Checkout Types	swift-stripe-types
+remove	declared_dependency	Account	product	Stripe Customers Types	swift-stripe-types
+remove	declared_dependency	Account	product	Stripe Events Types	swift-stripe-types
+remove	declared_dependency	Account	product	Stripe Products Types	swift-stripe-types
+remove	declared_dependency	AccountLive	by_name	BillingLive	-
+remove	declared_dependency	AccountLive	by_name	Growth	-
+remove	declared_dependency	AccountLive	by_name	GrowthLive	-
+remove	declared_dependency	AccountLive	product	GitHub Types	swift-github-types
+remove	declared_dependency	AccountLive	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	AccountLive	product	Server	swift-server
+remove	declared_dependency	AccountLive	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	AccountLive	product	Server PostgreSQL	swift-server
+remove	declared_dependency	Analytics	product	GitHub	swift-github
+remove	declared_dependency	Analytics	product	Stripe Checkout Types	swift-stripe-types
+remove	declared_dependency	Analytics	product	Stripe Customers Types	swift-stripe-types
+remove	declared_dependency	Analytics	product	Stripe Events Types	swift-stripe-types
+remove	declared_dependency	Analytics	product	Stripe Products Types	swift-stripe-types
+remove	declared_dependency	Analytics	target	RepoTrafficUI	-
+remove	declared_dependency	AnalyticsLive	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	AnalyticsLive	product	Server	swift-server
+remove	declared_dependency	AnalyticsLive	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	AnalyticsLive	product	Server PostgreSQL	swift-server
+remove	declared_dependency	Billing	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	Billing	product	Server	swift-server
+remove	declared_dependency	Billing	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	Billing	product	Server PostgreSQL	swift-server
+remove	declared_dependency	Billing	product	Stripe Customers Types	swift-stripe-types
+remove	declared_dependency	BillingLive	product	GitHub	swift-github
+remove	declared_dependency	BillingLive	product	GitHub Types	swift-github-types
+remove	declared_dependency	BillingLive	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	BillingLive	product	Server	swift-server
+remove	declared_dependency	BillingLive	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	BillingLive	product	Server PostgreSQL	swift-server
+remove	declared_dependency	CacheLive	product	Server	swift-server
+remove	declared_dependency	CacheLive	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	Checkout	product	Server	swift-server
+remove	declared_dependency	Checkout	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	CheckoutLive	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	CheckoutLive	product	Server	swift-server
+remove	declared_dependency	CheckoutLive	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	CheckoutLive	product	Server PostgreSQL	swift-server
+remove	declared_dependency	CheckoutLive	product	ServerFoundationVapor	swift-server-foundation-vapor
+remove	declared_dependency	CheckoutLive	product	Stripe Products Types	swift-stripe-types
+remove	declared_dependency	Growth	by_name	Billing	-
+remove	declared_dependency	Growth	product	Stripe Checkout Types	swift-stripe-types
+remove	declared_dependency	Growth	product	Stripe Customers Types	swift-stripe-types
+remove	declared_dependency	Growth	product	Stripe Events Types	swift-stripe-types
+remove	declared_dependency	Growth	product	Stripe Products Types	swift-stripe-types
+remove	declared_dependency	GrowthLive	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	GrowthLive	product	Server PostgreSQL	swift-server
+remove	declared_dependency	GrowthLive	product	Stripe Checkout Types	swift-stripe-types
+remove	declared_dependency	GrowthLive	product	Stripe Customers Types	swift-stripe-types
+remove	declared_dependency	GrowthLive	product	Stripe Events Types	swift-stripe-types
+remove	declared_dependency	GrowthLive	product	Stripe Products Types	swift-stripe-types
+remove	declared_dependency	PricingLive	product	Server	swift-server
+remove	declared_dependency	PricingLive	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	PricingLive	product	Stripe Billing	swift-stripe
+remove	declared_dependency	PricingLive	product	Stripe Products	swift-stripe
+remove	declared_dependency	Products Tests	target	ProductsLive	-
+remove	declared_dependency	ProductsLive	by_name	Billing	-
+remove	declared_dependency	ProductsLive	product	Stripe Billing	swift-stripe
+remove	declared_dependency	ProductsLive	product	Stripe Products	swift-stripe
+remove	declared_dependency	RepoTrafficRecords	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	RepoTrafficRecords	product	Server PostgreSQL	swift-server
+remove	declared_dependency	RepoTrafficRecords	product	TypesFoundation	swift-types-foundation
+remove	declared_dependency	RepoTrafficRouter Tests	product	Dependencies Test Support	swift-dependencies
+remove	declared_dependency	RepoTrafficUI	product	CSS Theming	swift-css
+remove	declared_dependency	RepoTrafficUI	product	Dependencies	swift-dependencies
+remove	declared_dependency	RepoTrafficUI	product	IdentitiesTypes	swift-identities-types
+remove	declared_dependency	RepoTrafficUI	product	Server	swift-server
+remove	declared_dependency	RepoTrafficUI	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	Repositories	product	Server PostgreSQL	swift-server
+remove	declared_dependency	RepositoriesLive	product	IdentitiesTypes	swift-identities-types
+remove	declared_dependency	RepositoriesLive	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	RepositoriesLive	product	Server PostgreSQL	swift-server
+remove	declared_dependency	RepositoriesLive	product	Stripe Checkout Types	swift-stripe-types
+remove	declared_dependency	RepositoriesLive	product	Stripe Customers Types	swift-stripe-types
+remove	declared_dependency	RepositoriesLive	product	Stripe Events Types	swift-stripe-types
+remove	declared_dependency	RepositoriesLive	product	Stripe Products Types	swift-stripe-types
+remove	declared_dependency	Syncing	by_name	Cache	-
+remove	declared_dependency	Syncing	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	Syncing	product	Server PostgreSQL	swift-server
+remove	declared_dependency	Syncing	product	Stripe Checkout Types	swift-stripe-types
+remove	declared_dependency	Syncing	product	Stripe Customers Types	swift-stripe-types
+remove	declared_dependency	Syncing	product	Stripe Events Types	swift-stripe-types
+remove	declared_dependency	Syncing	product	Stripe Products Types	swift-stripe-types
+remove	declared_dependency	SyncingLive	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	SyncingLive	product	Server PostgreSQL	swift-server
+remove	declared_dependency	SyncingLive	product	Stripe Checkout Types	swift-stripe-types
+remove	declared_dependency	SyncingLive	product	Stripe Customers Types	swift-stripe-types
+remove	declared_dependency	SyncingLive	product	Stripe Events Types	swift-stripe-types
+remove	declared_dependency	SyncingLive	product	Stripe Products Types	swift-stripe-types
+remove	declared_dependency	WaitingList Tests	product	Dependencies Test Support	swift-dependencies
+remove	declared_dependency	WaitingListLive	product	PostgreSQL Standard	swift-postgresql-standard
+remove	declared_dependency	WaitingListLive	product	Server	swift-server
+remove	declared_dependency	WaitingListLive	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	WaitingListLive	product	Server PostgreSQL	swift-server
+remove	declared_dependency	WaitingListRemote	product	Server	swift-server
+remove	declared_dependency	WaitingListRemote	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	WaitingListRemote Tests	product	Server	swift-server
+remove	declared_dependency	WaitingListRemote Tests	product	Server Dependencies Integration	swift-server
+remove	declared_dependency	com_repotraffic_app	product	SVG	swift-svg
+add	active_import	Account	module	GitHub_Repositories_Types	-
+add	active_import	WaitingListLive Tests	module	Dependencies	-
+add	active_import	WaitingListLive Tests	module	Dependencies_Test_Support	-
+add	active_import	WaitingListLive Tests	module	Mailgun_Lists	-
+add	active_import	WaitingListLive Tests	module	Records	-
+add	active_import	WaitingListLive Tests	module	RepoTrafficRouter	-
+add	active_import	WaitingListLive Tests	module	RepoTrafficRouterLive	-
+add	active_import	WaitingListLive Tests	module	ServerFoundationVapor	-
+add	active_import	WaitingListLive Tests	module	WaitingList	-
+add	active_import	WaitingListLive Tests	module	WaitingListLive	-
+remove	active_import	Account	module	GitHub	-
+remove	active_import	com_repotraffic_app	module	ConsoleKit	-
