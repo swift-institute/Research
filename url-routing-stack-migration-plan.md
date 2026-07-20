@@ -539,12 +539,15 @@ comparison, and note each normalized site for B2's `Boundary.random()` work.
 
 1. `date` (anchor all report timestamps from it).
 2. `TOOLCHAINS=org.swift.633202606251a swift --version` → must report 6.3.3-RELEASE.
-3. Clean-tree sweep: `git -C <repo> status --porcelain` empty across the 10 stack repos +
-   the consumer set (stripe-types, identities-types, repotraffic, authentication,
+3. Clean-tree sweep: `git -C <repo> status --porcelain` across the 10 stack repos + the
+   consumer set (stripe-types, identities-types, repotraffic, authentication,
    mailgun-types/-live/mailgun, boiler, github-types, favicon, types-foundation,
    stripe-live, github-live, dual) + swift-parser-primitives, swift-byte-parser-primitives,
-   swift-rfc-8259. Dirty tree → list it in the abort report; do NOT stash/clean ([workspace
-   rule: protect user work]).
+   swift-rfc-8259 — empty, MODULO the "Preflight whitelist" section that the pre-overnight
+   prep session appends to HANDOFF-routers-endstate-overnight-2026-07-20.md (known-class
+   untracked files only, e.g. mirror-corrupted untracked Package.resolved). Any dirty
+   TRACKED file, or any untracked file not on the whitelist → list it in the abort report;
+   do NOT stash/clean ([workspace rule: protect user work]).
 4. mirrors.json backup taken; `gh auth status` succeeds.
 5. Confirm-by-absence: no other live session holds these repos (no foreign lock files, no
    in-flight rebase/merge state in any repo).
