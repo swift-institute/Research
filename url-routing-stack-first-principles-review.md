@@ -2,11 +2,18 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-07-20
 status: RECOMMENDATION
 tier: 2
 scope: cross-package
+changelog:
+  - 1.1.0 (2026-07-20): Principal rulings incorporated — HTML.Form.Data / HTML.Form.Coder
+    spellings approved; Form.Coder.URLEncoded rejected, replaced by the enctype-default
+    derivation (Coder default = urlencoded, .Multipart variant); package named
+    swift-html-form-coder; entry-list⇆wire stays L3 (no parser/serializer deps added to
+    WHATWG packages); uri-standard rejected as home. See §Principal rulings.
+  - 1.0.0 (2026-07-20): initial three-track review.
 ---
 -->
 
@@ -150,6 +157,10 @@ Header; no residual [MOD-DOMAIN] concept — fails [MOD-RENT]); per-feature sate
 form-coding lifts) dissolve into core ([MOD-020]: zero-dep-delta satellites fail); server
 adapters are L4 leaves (`swift-url-routing-http`, `-vapor`); URLRequest-handling splits
 (bridging → Foundation Integration leaf; execution → swift-http); per-API preset kits are L4.
+
+*Post-review naming rulings amend this map — the blind record above is preserved as derived;
+see §Principal rulings for the ratified names (`swift-form-coder` → `swift-html-form-coder`,
+variant structure, and the L2 alias mechanics).*
 
 Design-fork adjudications (recommendations): **F1** `Parser.Bidirectional` is the routing
 spine, `Coder.Protocol` is the body-codec shape — they meet at exactly one point (Router Body
@@ -341,12 +352,12 @@ replaceable by composition over L1/L2 — or removable" is:
 |---|---|---|---|
 | swift-url-routing: DSL core (parsers/builders/conversions) | **KEEP** (reshape targets; fix L1 twins upstream) | swift-url-routing Router Core/Path/Query/Header | B2-15, B2-16, B2-17 |
 | swift-url-routing: URI.Request.Data + URLComponents façade | **REPLACE** with RFC_3986-native `Router.Input` (F2) | Router Core | B2-01, B2-02, B3-1/2 |
-| swift-url-routing: Multipart.* + FileUpload.* (~1,035 LoC + files) | **EXTRACT/REPLACE**: wire stays L2; typed coding → form-coder family; contract → http-body | swift-form-coder Multipart / swift-http-body | B2-08…B2-13 |
+| swift-url-routing: Multipart.* + FileUpload.* (~1,035 LoC + files) | **EXTRACT/REPLACE**: wire stays L2; typed coding → form-coder family; contract → http-body | swift-html-form-coder (`.Multipart`) / swift-http-body | B2-08…B2-13 |
 | swift-url-routing: HTTP.Cookie parser family | **MOVE to L2** swift-rfc-6265 (grammar); router keeps only a header-combinator lift | rfc-6265 + Router Header | B2-04 |
 | swift-url-routing: RFC 7230/7231 composition | **REPLACE** with RFC 9110 via http-standard | Router Core deps | B2-14, B1 |
 | swift-url-routing: URLRouting.Client | **SPLIT**: URLRequest bridging → Foundation Integration leaf; execution → swift-http (deferred on networking Wave 3) | FI leaf / swift-http | B3-4, B4-3/5 |
-| swift-url-form-coding (Form.Encoder/Decoder) | **KEEP the concept, reshape**: explicit coders canonical over the WHATWG pair codec + entry-list pivot; Codable machinery → opt-in leaf; strategies unify into ONE vocabulary shared with multipart | swift-form-coder (Core/URL Encoded/Codable) | B2-03, B2-05, B2-06, B4-1 |
-| swift-multipart-form-coding | **ABSORB** into the form-coder Multipart target | swift-form-coder Multipart | B1, B2-10 |
+| swift-url-form-coding (Form.Encoder/Decoder) | **KEEP the concept, reshape**: explicit coders canonical over the WHATWG pair codec + entry-list pivot; Codable machinery → opt-in leaf; strategies unify into ONE vocabulary shared with multipart | swift-html-form-coder (`HTML.Form.Coder` default + Codable leaf) | B2-03, B2-05, B2-06, B4-1 |
+| swift-multipart-form-coding | **ABSORB** into the form coder's Multipart variant | swift-html-form-coder (`HTML.Form.Coder.Multipart`) | B1, B2-10 |
 | swift-form-coding (umbrella) | **DELETE** ([ARCH-LAYER-009] guards) | — | B1 (6 LoC, broken symlink, unused deps; sole manifest edge self-labeled to die) |
 | swift-url-routing-form-coding (bridge) | **DELETE** after de-duplicating `.form` (keep exactly one conversion) | Router Body | B2-20, B1 |
 | swift-url-routing-tagged | **DISSOLVE** into Router Core (a conformance, not a package — [MOD-020]) | Router Core | B1 |
@@ -354,7 +365,7 @@ replaceable by composition over L1/L2 — or removable" is:
 | swift-url-routing-authentication | **DISSOLVE**: grammars already at L2 (rfc-7617/6750 exist); matching → Router Header; URL bridging → FI leaf. Its FI-split pattern is the template for the whole stack | rfc-7617/6750 + Router Header | A3 C15, B3, B4-8 |
 | swift-url-routing-vapor | **KEEP as L4 leaf** until the networking program retires Vapor (Wave 4); fix its double-parse (B3-3) opportunistically | L4 | ratified prior |
 | swift-urlrequest-handler | **SPLIT**: bridging → FI leaf; execution semantics → swift-http when it exists (explicitly deferred Foundation exception until then) | FI leaf / swift-http | B3, A3 |
-| swift-rfc-2388 (L2) | **DISSOLVE**: bracket-notation content → Form Coder Nested; retire the misnamed package | swift-form-coder Nested | A2, A3 §2.2 |
+| swift-rfc-2388 (L2) | **DISSOLVE**: bracket-notation content → the form coder's nested-keys target; retire the misnamed package | swift-html-form-coder (nested keys) | A2, A3 §2.2 |
 | swift-mailgun-types Form.Coder presets | **KEEP** (genuine vendor knowledge; L4-shaped); fix the upward L2→L3 edge when the coder reshape lands; rfc-2822 date-time → L2 gap-fill | per-API preset layer | B2-19 |
 
 ### New capabilities required below L3 (endorsed set)
@@ -365,8 +376,9 @@ OneOf/Optionally (retires B2-16 twins); four trivial Bidirectional refinement de
 L2: RFC 7578 decode side; `RFC_2046.Boundary.random()`; swift-media-type-standard;
 uri-standard drift fix; rfc-6265 cookie grammar; rfc-2822 date-time; (exists already:
 rfc-7617/6750).
-L3: swift-http-body; swift-form-coder (both new packages — repo creation requires Principal
-approval).
+L3: swift-http-body; swift-html-form-coder (both new packages — repo creation requires
+Principal approval). Plus the two L2 alias/re-export mechanics for the ratified `HTML.Form`
+spelling (whatwg-html nest alias; html-standard Forms re-export).
 Rejected (with A3's reasoning): L1 percent codec; L1 query-pair vocabulary; §5 resolution
 (exists); URI-template matching at L2; L1 Codable visitor machinery; a standalone L3
 auth-routing package; printers for closure Map/FlatMap.
@@ -383,16 +395,51 @@ networking program's swift-http lands (Wave 3), and (2) the
 its institute home. Lint-clean is reachable; note the two tooling defects found (SwiftLint
 org-config false-green invocation; swift-format config drift).
 
+## Principal rulings (2026-07-20, post-review)
+
+Adjudicated in the review session after v1.0.0; these amend the ideal map's names, not its
+structure.
+
+1. **Type spellings APPROVED**: `HTML.Form.Data`, `HTML.Form.Coder` — the converged `HTML`
+   nest (via swift-html-standard's existing `typealias HTML = WHATWG_HTML`,
+   exports.swift:20) adopting the L2-owned `Form` type (the WHATWG `<form>` element,
+   `WHATWG HTML Forms/form Form.swift:60`). Answers the "what kind of Form?" distinctiveness
+   concern without minting a new top-level token: `Form` is the spec package's own type;
+   other form domains (e.g. PDF) live under their own spec namespaces per [API-NAME-003]/
+   [API-NAME-014]. Mechanics required: a `WHATWG_HTML.Form` nest alias in swift-whatwg-html
+   (today `Form` is module-top-level in `WHATWG_HTML_Forms`) and Forms-product re-exports in
+   swift-html-standard.
+2. **`Form.Coder.URLEncoded` REJECTED** (compound token; participle-not-noun; any repair via
+   `URL`/`Query` reuses a subject word as a manner label, [API-NAME-001b]). First-principles
+   replacement — the variant axis is the HTML spec's own **enctype axis**, whose default IS
+   the urlencoded state: **`HTML.Form.Coder`** (default; contentType `.formUrlEncoded`) and
+   **`HTML.Form.Coder.Multipart`** (marked variant; contentType `.formData`; `Multipart` is
+   the established spec-mirrored noun). `text/plain` deliberately unimplemented (spec-marked
+   lossy). One strategy vocabulary at `HTML.Form.Coder.Strategy.*` shared by both wire forms.
+3. **Package name**: `swift-html-form-coder` ([PKG-NAME-016] recipient-then-provider;
+   agent-noun per [PKG-NAME-001]; no bare `Form` package token).
+4. **WHATWG dependency posture**: NO parser/serializer deps are added to WHATWG packages —
+   the entry-list⇆wire step stays L3 inside the coder (reverting the v1.0-era L2-move idea;
+   matches the L2 authors' documented intent at Form.Data.swift:18–24). swift-uri-standard
+   REJECTED as a home ([ECO-005] convergers are policy-free; wrong authority). The
+   strict-authority alternative (an L2 Form Submission target) remains recorded with its
+   named cost (package-closure growth for every HTML consumer) and is NOT taken.
+
+The ratified end-state package roster, complete and by layer, is
+`url-routing-stack-migration-plan.md` §Final package roster.
+
 ## Outcome
 
 **Status: RECOMMENDATION** — for Principal adjudication. The companion
 `url-routing-stack-migration-plan.md` stages the path (behavior-neutral batches, parity gates
 captured before movement, consumer-impact per batch, explicit approval gates; deletions
-named). Open questions requiring Principal decisions are enumerated in the plan §Approval
-gates, notably: package-name register for the reshaped router ([PKG-NAME-017] field-noun
-reading of `swift-url-routing` vs strict `swift-url-router`), creation of the two new L3
-packages + one L2 convergence package, the rfc-2388 and satellite dissolutions, and the two
-behavior-changing batches (percent-correct URI engine; Content-Type emission).
+named). Naming for the form-coder family is now ratified (§Principal rulings). Remaining open
+questions are enumerated in the plan §Approval gates, notably: package-name register for the
+reshaped router ([PKG-NAME-017] field-noun reading of `swift-url-routing` vs strict
+`swift-url-router`), creation of the new packages (swift-http-body, swift-html-form-coder,
+swift-media-type-standard), the rfc-2388 and satellite dissolutions, the two
+behavior-changing batches (percent-correct URI engine; Content-Type emission), and the
+swift-url-routing-translating disposition.
 
 ## References
 
