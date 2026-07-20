@@ -2,11 +2,18 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-07-20
 status: RECOMMENDATION
 tier: 2
 scope: cross-package
+changelog:
+  - 1.1.0 (2026-07-20): Principal rulings folded in (see dossier §Principal rulings) —
+    form-coder family named swift-html-form-coder with HTML.Form.Coder (default = urlencoded)
+    + .Multipart; two L2 alias/re-export items added to Batch 2; approval-gate list split
+    into RATIFIED vs OPEN; ratified final package roster + implementation dispatch preamble
+    appended. Prep-only: no implementation started.
+  - 1.0.0 (2026-07-20): initial staged plan.
 ---
 -->
 
@@ -94,6 +101,8 @@ none (ordinary commits).**
 | uri-standard drift fix (delete reimplemented percent free functions; converge 3987) | L2 swift-uri-standard | A2 gap 5 |
 | RFC 2822 §3.3 date-time machinery | L2 swift-rfc-2822 | mailgun preset's hand-rolled `rfc2822Formatter` (B2-19) |
 | Cookie grammar (Set-Cookie/Cookie per RFC 6265) | L2 swift-rfc-6265 | prepares B6's cookie relocation (B2-04) |
+| `WHATWG_HTML.Form` nest alias (one line; `Form` is module-top-level in `WHATWG_HTML_Forms` today) | L2 swift-whatwg-html | makes the RATIFIED `HTML.Form.*` spellings resolve; NO other whatwg change (ruling 4: no parser/serializer deps enter WHATWG packages) |
+| Forms-product re-exports | L2 swift-html-standard | completes the converged `HTML.Form` path for consumers |
 
 Gate B2: each addition lands with its own tests in its own repo; no L3/consumer change;
 Batch-0 corpus untouched. **Approval: creation of `swift-media-type-standard` (new repo) —
@@ -140,31 +149,39 @@ classification first; [TEST-040] mutation census on close). **Approval: new repo
 
 ## Batch 5 — Form/multipart consolidation (the coder family reshape)
 
-1. Create `swift-form-coder` (NEW L3 repo) per the ideal map: Form Coder (typed ⇆ WHATWG
-   entry list), Form Coder URL Encoded (⇆ wire via `WHATWG_Form_URL_Encoded`; conforms
-   `HTTP.Body.Coder`), Form Coder Multipart (⇆ wire via RFC 2046/7578 + Boundary.random();
-   conforms `HTTP.Body.Coder`), Form Coder Nested (bracket-notation convention, relocated
-   from rfc-2388), Form Coder Codable (opt-in visitor bridge — the ONE place stdlib Codable
+Names below are RATIFIED (dossier §Principal rulings): package `swift-html-form-coder`;
+`HTML.Form.Coder` is the coder whose wire form is the HTML spec's DEFAULT enctype
+(`application/x-www-form-urlencoded`, contentType `.formUrlEncoded`);
+`HTML.Form.Coder.Multipart` is the marked variant (contentType `.formData`); `text/plain`
+deliberately unimplemented (spec-marked lossy — typed error, not a variant).
+
+1. Create `swift-html-form-coder` (NEW L3 repo): targets `HTML Form Coder` (typed ⇆
+   `HTML.Form.Data` entry-list pivot + the default urlencoded wire via
+   `WHATWG_Form_URL_Encoded`; conforms `HTTP.Body.Coder`), `HTML Form Coder Multipart`
+   (⇆ wire via RFC 2046/7578 + Boundary.random(); conforms `HTTP.Body.Coder`),
+   `HTML Form Coder Nested` (bracket-notation convention, relocated from rfc-2388),
+   `HTML Form Coder Codable` (opt-in visitor bridge — the ONE place stdlib Codable
    witnesses live; resolves B4's Codable-wall finding structurally).
-2. ONE strategy vocabulary (Bool/date/data/array/nesting) defined once in Form Coder and
-   consumed by both wire targets — retires the RT-030b asymmetry class (B2-06). Parity: the
-   union of both current vocabularies, each preset corpus-verified.
+2. ONE strategy vocabulary (Bool/date/data/array/nesting) defined once at
+   `HTML.Form.Coder.Strategy.*` and consumed by both wire forms — retires the RT-030b
+   asymmetry class (B2-06). Parity: the union of both current vocabularies, each preset
+   corpus-verified.
 3. Extract the ~1,035-line in-router multipart machinery (Multipart.*, FileUpload.*) onto the
    new targets; wire format stays L2; `Multipart.File` unifies with `RFC_7578.Form.Data.File`
    (B2-10); decode drops the JSONSerialization round-trip for the RFC 7578 decode side
    (B2-09); the `RFC_2046` namespace injection ends.
-4. swift-url-form-coding's Form.Encoder/Decoder become the Form Coder URL Encoded + Codable
-   surfaces (compat typealiases in place until consumers migrate); the hand-rolled pair
-   split/serialize (B2-03) delegates to the WHATWG codec. swift-multipart-form-coding is
-   absorbed. De-duplicate `.form` (keep exactly one conversion; B2-20).
-5. rfc-2388 dissolution: content relocates to Form Coder Nested; the L2 package retires
-   ([ARCH-LAYER-009] guards).
+4. swift-url-form-coding's Form.Encoder/Decoder become the `HTML.Form.Coder` (+ Codable
+   leaf) surfaces (compat typealiases in place until consumers migrate); the hand-rolled
+   pair split/serialize (B2-03) delegates to the WHATWG codec. swift-multipart-form-coding
+   is absorbed. De-duplicate `.form` (keep exactly one conversion; B2-20).
+5. rfc-2388 dissolution: content relocates to `HTML Form Coder Nested`; the L2 package
+   retires ([ARCH-LAYER-009] guards).
 
 Gate B5: Batch-0 form + multipart corpora byte-identical (boundary pinned) modulo the
 Batch-4-ratified header additions; strategy-preset parity table complete; consumers green
 (mailgun-types strategy configs, stripe `.bracketsWithIndices`, identities). **Approval: new
-repo `swift-form-coder`; dissolution of swift-rfc-2388; absorption of
-swift-multipart-form-coding.**
+repo `swift-html-form-coder` (name ratified); dissolution of swift-rfc-2388; absorption of
+swift-multipart-form-coding and (via compat shims) swift-url-form-coding.**
 
 ## Batch 6 — Placement and dependency truth
 
@@ -269,22 +286,106 @@ itself done).
 
 Packages: swift-form-coding, swift-url-routing-form-coding, swift-url-routing-tagged,
 swift-url-routing-authentication (dissolved into L2 + core), swift-rfc-2388,
-swift-multipart-form-coding (absorbed), swift-urlrequest-handler (split/absorbed; execution
-successor lives with swift-http). Pending Principal call: swift-url-routing-translating.
+swift-multipart-form-coding (absorbed), swift-url-form-coding (absorbed into
+swift-html-form-coder after the compat-shim period), swift-urlrequest-handler
+(split/absorbed; execution successor lives with swift-http). Pending Principal call:
+swift-url-routing-translating.
 Code: the URLComponents façade, the in-router multipart coder + FileUpload MIME catalog,
 the duplicate `.form` conversion, the hand-rolled pair codec, cookie grammar (moves), dead
 operators, URLRouting.Client.DecodingError shape, RFC 7230/7231 composition.
 
-## Approval gates (consolidated for adjudication)
+## Approval gates
 
-1. New repos: swift-http-body (B4), swift-form-coder (B5), swift-media-type-standard (B2).
+### RATIFIED (Principal, 2026-07-20 — dossier §Principal rulings)
+
+- Type spellings `HTML.Form.Data` / `HTML.Form.Coder`; enctype-default variant structure
+  (`HTML.Form.Coder` = urlencoded default; `.Multipart` marked variant; no `URLEncoded`
+  token anywhere); strategy nest `HTML.Form.Coder.Strategy.*`.
+- Package name `swift-html-form-coder`.
+- Entry-list⇆wire step homed at L3 (no parser/serializer deps enter WHATWG packages;
+  swift-uri-standard rejected as home). WHATWG changes limited to the `WHATWG_HTML.Form`
+  nest alias + html-standard Forms re-exports (Batch 2).
+- The final package roster below as the planning baseline.
+
+### OPEN (require Principal approval before the named batch executes)
+
+1. Repo creations: swift-http-body (B4), swift-html-form-coder (B5, name ratified),
+   swift-media-type-standard (B2), swift-parser-optic-primitives (B2, tiny).
 2. Behavior changes: B3 difference list (percent-correct URI engine); B4 per-consumer
    Content-Type emission.
 3. Dissolutions/deletions: rfc-2388 (B5); the Batch-7 satellite set; multipart-form-coding
-   absorption; urlrequest-handler split.
+   and url-form-coding absorptions; urlrequest-handler split.
 4. Naming: `swift-url-routing` field-register reading vs `swift-url-router`
    ([PKG-NAME-017]); the breaking-rename + compat-shim policy for PointFree-heritage names.
 5. [ARCH-LAYER-007] deferrals: URLSession execution until swift-http; Measurement
    information-storage quantity until its institute home exists (candidate: ISO/IEC 80000-13).
 6. swift-url-routing-translating: real L4 concern or dissolve.
 7. Parity-corpus home (B0) and the canonical swift-format config variant (B1).
+8. Reshape-time dependency adjudication: whether swift-dual / swift-dependencies /
+   swift-logger-dependencies remain deps of the reshaped router (the blind ideal map does
+   not require them).
+
+## Final package roster (ratified planning baseline, 2026-07-20)
+
+Status legend: AS-IS (consumed unchanged) · MOD (in-place addition/fix) · NEW · RESHAPED ·
+ABSORBED · DISSOLVED/DELETED · SPLIT · PENDING.
+
+**L1 (swift-primitives)** — swift-parser-primitives MOD (printer conformances for
+Many/Optionally/Rest/Prefix; value-checkpoint backtracking for OneOf/Optionally; 4
+Bidirectional refinement declarations); swift-optic-primitives MOD (case-path derivation
+macro); swift-parser-optic-primitives NEW-tiny (Prism → Parser.Conversion bridge); AS-IS:
+swift-serializer-primitives, swift-coder-primitives, swift-either-primitives,
+swift-tagged-primitives, swift-input-primitives, byte/ascii/binary-base families.
+
+**L2 (swift-ietf)** — AS-IS: swift-rfc-3986, -3987, -6570 (expansion only), -9110, -9111,
+-9112, -2045, -2183, -7617, -6750. MOD: swift-rfc-2046 (+`Boundary.random()`),
+swift-rfc-7578 (+decode side), swift-rfc-6265 (+cookie grammar, relocated from the router),
+swift-rfc-2822 (+§3.3 date-time). DISSOLVED: swift-rfc-2388.
+
+**L2 (swift-whatwg)** — swift-whatwg-url AS-IS (Form URL Encoded pair codec);
+swift-whatwg-html MOD-alias-only (`WHATWG_HTML.Form` nest; no dependency growth).
+
+**L2 (swift-standards)** — swift-http-standard AS-IS; swift-uri-standard MOD (drift fix);
+swift-html-standard MOD-re-export-only (Forms products); swift-media-type-standard NEW
+(`RFC_2045.ContentType ⇄ RFC_9110.MediaType`).
+
+**L3 (swift-foundations)** — swift-url-routing RESHAPED (engine-free Router over
+`Parser.Bidirectional`; RFC_3986-native Input; targets Core/Path/Query/Header/Body/Client/
+Handler/Template + Foundation Integration leaf + Test Support); swift-http-body NEW
+(`HTTP.Body.Coder` Content-Type-ownership contract + JSON lift); swift-html-form-coder NEW
+(`HTML.Form.Coder` default + `.Multipart`; Strategy vocabulary; Nested keys; Codable leaf);
+swift-json AS-IS; swift-http FUTURE (networking Wave 3 — receives execution).
+ABSORBED: swift-url-form-coding, swift-multipart-form-coding. DELETED: swift-form-coding,
+swift-url-routing-form-coding. DISSOLVED: swift-url-routing-tagged,
+swift-url-routing-authentication. SPLIT: swift-urlrequest-handler.
+
+**L4 (Components)** — swift-url-routing-http NEW (networking Wave 4 deliverable);
+swift-url-routing-vapor retained → DELETED at Vapor retirement;
+swift-url-routing-translating PENDING; vendor preset surfaces stay in their existing
+`*-types` packages (content is L4-shaped; the mailgun-types upward L3-import edge is fixed
+in B6; those packages' own layer location is a separate adjudication).
+
+Net: ten routing-stack repos → three L3 + two L4 (one terminal), carried by two tiny L1
+additions, one new L2 converger, and in-place L2 additions.
+
+## Implementation dispatch preamble (for the executing session — prep artifact, not started)
+
+The implementation arc has NOT begun; nothing in any package repository has been modified by
+the review sessions. A fresh implementation session should:
+
+1. Load skills in order: swift-institute-core, swift-institute, swift-institute-ecosystem,
+   modularization, code-surface, implementation, existing-infrastructure, swift-package,
+   testing (+ swift-package-build for toolchain discipline; testing-institute before any
+   snapshot corpus work).
+2. Read the dossier (`url-routing-stack-first-principles-review.md`) then this plan; treat
+   both as leads, not ground truth — re-verify every file:line anchor against live source
+   before acting ([RES-013a]; all anchors date 2026-07-20).
+3. Enter at Batch 0 (parity corpus). Do not reorder batches; do not begin any batch whose
+   OPEN approval-gate items are unadjudicated.
+4. Toolchain: TOOLCHAINS=org.swift.633202606251a, assert `swift-6.3.3-RELEASE` before any
+   build ([PKG-BUILD]); one swift invocation at a time per repo; never delete or hand-edit
+   Package.resolved (the mirror-corrupted-untracked-lockfile phenomenon is known and
+   incidental — cold-room resolve for probes).
+5. Honor [PKG-DEP-012] (consumer sweep in the same arc as any public-surface change) and
+   [TEST-040] (live-mutating suites out of unattended gates; credential classification
+   before any mailgun/stripe canary; mutation census on close).

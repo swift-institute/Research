@@ -8,9 +8,9 @@
     {
       "file": "url-routing-stack-first-principles-review.md",
       "displayName": "URL-Routing Stack First-Principles Review",
-      "topic": "RECOMMENDATION (v1.0.0, 2026-07-20): Three-track review of the ten-repo URL-routing/form-coding stack. Track A (blind): the derived-minimal L3 set is three packages (swift-url-routing reshaped, swift-http-body, swift-form-coder) over existing L1 parser spine + L2 spec surfaces. Track B: 21 duplication findings, Foundation-binding inventory (34/71 core files; URLComponents fork), rule/lint scorecards, consumer-surface census incl. the RT-030c residual class (44 headerless body routes in mailgun-types). Verdict: the rewrite's routing engine is genuine L3 composition (hypothesis refuted there), the surrounding coder/multipart/client/satellite mass is replaceable, relocatable, or deletable (confirmed).",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-07-20): Three-track review of the ten-repo URL-routing/form-coding stack. Track A (blind): the derived-minimal L3 set is three packages (swift-url-routing reshaped, swift-http-body, swift-html-form-coder) over existing L1 parser spine + L2 spec surfaces. Track B: 21 duplication findings, Foundation-binding inventory (34/71 core files; URLComponents fork), rule/lint scorecards, consumer-surface census incl. the RT-030c residual class (44 headerless body routes in mailgun-types). Principal rulings 2026-07-20 folded in (v1.1.0): HTML.Form.Data/HTML.Form.Coder spellings, enctype-default variant structure, swift-html-form-coder, no WHATWG dep growth. Verdict: the rewrite's routing engine is genuine L3 composition (hypothesis refuted there), the surrounding coder/multipart/client/satellite mass is replaceable, relocatable, or deletable (confirmed).",
       "status": "RECOMMENDATION",
-      "statusDetail": "Dossier for Principal adjudication; companion staged plan in url-routing-stack-migration-plan.md",
+      "statusDetail": "v1.1.0 — Principal naming rulings incorporated; companion staged plan in url-routing-stack-migration-plan.md",
       "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": "cross-package",
@@ -19,9 +19,9 @@
     {
       "file": "url-routing-stack-migration-plan.md",
       "displayName": "URL-Routing Stack Migration Plan (Staged)",
-      "topic": "RECOMMENDATION (v1.0.0, 2026-07-20): Nine-batch staged migration to the reviewed end-state: parity corpus first (B0), mechanical hygiene (B1), additive L1/L2 gap fills (B2), URI-engine truth (B3, ratified-differences gate), the HTTP.Body.Coder Content-Type-ownership contract closing the RT-030 class (B4), form/multipart consolidation into swift-form-coder (B5), placement/dependency truth (B6), satellite dissolution + Foundation-free core (B7), conformance sweep (B8). Every consumer green at every stage; deletions named; consolidated approval-gate list for the Principal.",
+      "topic": "RECOMMENDATION (v1.0.0, 2026-07-20): Nine-batch staged migration to the reviewed end-state: parity corpus first (B0), mechanical hygiene (B1), additive L1/L2 gap fills (B2), URI-engine truth (B3, ratified-differences gate), the HTTP.Body.Coder Content-Type-ownership contract closing the RT-030 class (B4), form/multipart consolidation into swift-html-form-coder (B5), placement/dependency truth (B6), satellite dissolution + Foundation-free core (B7), conformance sweep (B8). Every consumer green at every stage; deletions named; approval gates split RATIFIED vs OPEN, ratified final package roster, and an implementation dispatch preamble (prep only — implementation not started).",
       "status": "RECOMMENDATION",
-      "statusDetail": "Stages but does not execute; every batch names its approval gate",
+      "statusDetail": "v1.1.0 — stages but does not execute; ratified roster + dispatch preamble appended",
       "statusRaw": "RECOMMENDATION",
       "tier": 2,
       "scope": "cross-package",
