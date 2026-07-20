@@ -2,12 +2,20 @@
 
 <!--
 ---
-version: 1.2.0
+version: 1.3.0
 last_updated: 2026-07-20
 status: APPROVED
 tier: 2
 scope: cross-package
 changelog:
+  - 1.3.0 (2026-07-20): Overnight end-to-end execution annex added (Principal directive:
+    whole plan in one unattended run). Every attended stop-point converted to a written
+    auto-rule or completed prep input: B3/B4 delta-class auto-rules; wire canaries excluded
+    per [TEST-040] (morning attended follow-up, non-blocking); GREEN-spike full unification
+    IN scope backed by the 2026-07-20 L1-wide Printer/Bidirectional consumer census;
+    verified-mechanism recipes for new-repo bootstrap and the B7 rename (global
+    mirrors.json reality — the skill-cited sync scripts do NOT exist); preflight
+    assertions; self-paced run protocol (no /goal skill exists on disk).
   - 1.2.0 (2026-07-20): Principal ratified the full gate adjudication → status APPROVED
     (approved to execute per the batch discipline; implementation NOT started). Router
     naming cascade folded in (swift-routers / Router / Routing alias / Routable; L4
@@ -109,7 +117,11 @@ algebras.
 - **GREEN (default outcome)**: `Coder.Protocol` becomes the single canonical bidirectional
   conjunction; `Parser.Bidirectional` is redefined as the law-carrying
   `Coder where Buffer == Input`; `Parser.Printer` retires; the conformance rows below land
-  **Serializer-side**; `Router.Protocol` (B7) refines the constrained form.
+  **Serializer-side**; `Router.Protocol` (B7) refines the constrained form. The
+  [PKG-DEP-012] consumer sweep for the retirement is PRE-ENUMERATED (census 2026-07-20,
+  pruned workspace-wide grep): outside the in-plan repos, the only Printer/Bidirectional
+  consumers are `swift-primitives/swift-byte-parser-primitives` (2 files) and
+  `swift-ietf/swift-rfc-8259` (1 file) — both migrate in the same unification commit wave.
 - **RED**: prepend is proven load-bearing; the dossier F1 role split stands; rows land
   Printer-side; the impossibility record is committed with the experiment.
 
@@ -366,14 +378,16 @@ operators, URLRouting.Client.DecodingError shape, RFC 7230/7231 composition.
   Router core; FI-leaf/Client survival only on B7 evidence.
 - The Coder-unification spike inserted as the B2 entry gate, GREEN outcome default.
 
-### OPEN (execution-time only)
+### OPEN (execution-time only — auto-ruled for the overnight run, v1.3.0)
 
-1. Spike verdict at the B2 entry gate (GREEN/RED — determines conformance spelling and the
-   B7 `Router.Protocol` refinement base).
-2. Concrete-delta sign-off at the B3 gate (the enumerated difference list against the
-   actual corpus deltas) and at the B4 gates (per-consumer header additions).
-3. Each batch's own verification gate; execution-time confirmation stamp on each
-   dissolution commit per workspace rules.
+1. Spike verdict at the B2 entry gate (GREEN/RED — empirical; both outcomes fully scripted,
+   GREEN's consumer sweep pre-enumerated by the 2026-07-20 census).
+2. B3/B4 concrete-delta checks — delegated to the annex auto-rules (delta-class membership
+   for B3; header-only deltas for B4); anything outside the rules is a STOP, not a
+   judgment call.
+3. Each batch's own verification gate; dissolution commits carry the execution stamp;
+   morning items (wire canaries, repo archival, local dir renames, new-repo metadata/CI)
+   are listed in the terminal report and block nothing overnight.
 
 ## Final package roster (ratified planning baseline, 2026-07-20)
 
@@ -446,3 +460,103 @@ the review sessions. A fresh implementation session should:
 5. Honor [PKG-DEP-012] (consumer sweep in the same arc as any public-surface change) and
    [TEST-040] (live-mutating suites out of unattended gates; credential classification
    before any mailgun/stripe canary; mutation census on close).
+
+## Overnight end-to-end execution annex (v1.3.0 — Principal directive 2026-07-20)
+
+The whole plan (B0→B8) executes in ONE unattended overnight run. Every formerly-attended
+stop-point is replaced by the written auto-rules below; the run's only stop condition is a
+red gate or an ambiguity not covered by a written rule (then: STOP + terminal report —
+never improvise). Batches are strictly sequential; commit per logical unit; push per batch
+after an abort-on-delta pre-verify (`git fetch` + rev-list 0 check); a stopped run resumes
+from its last green checkpoint the next night.
+
+### Delegated sign-off auto-rules (replace attended B3/B4 sign-offs)
+
+- **B3 auto-rule**: proceed iff EVERY corpus delta falls in the three ratified classes
+  (`%2F`-in-segment; percent-normalization edge cases; empty-vs-absent query fidelity).
+  Any delta outside them → STOP, stage the annotated delta report, do not commit B3.
+- **B4 auto-rule**: proceed iff each consumer's corpus delta is EXACTLY the addition of the
+  expected `Content-Type` header (value per coder contract) and nothing else. Anything
+  else → STOP for that consumer, stage evidence, continue only if remaining consumers are
+  unaffected (else STOP the batch).
+- **Wire canaries are OUT of the overnight run** ([TEST-040] standing rule; the 2026-07-12
+  mailgun incident is the precedent). Overnight evidence = corpus + builds + provably-
+  offline suites. The attended sandbox canaries are MORNING follow-ups and do NOT block
+  B5–B8 (nothing downstream consumes canary results).
+- **Spike GREEN**: full unification executes overnight, including the `Parser.Printer`
+  retirement, using the pre-enumerated census sweep (B2 entry gate above). Spike RED: F1
+  role split stands; commit the impossibility record; continue with Printer-side rows.
+
+### Live-suite exclusion (hard)
+
+Never execute: `swift-mailgun-live`, `swift-stripe-live`, `swift-github-live` test suites,
+or any suite that reaches an external API with ambient credentials. Gate = build +
+provably-offline suites. If any live call is discovered to have run: record it in the
+mutation census section of the terminal report.
+
+### New-repo bootstrap recipe (verified mechanism — the skill-cited sync scripts do NOT
+exist; the mirror table is the GLOBAL `~/.swiftpm/configuration/mirrors.json`, 1,250
+entries, per-arc backup convention)
+
+For each ratified creation (swift-media-type-standard, swift-parser-optic-primitives,
+swift-http-body, swift-html-form-coder), at the batch that needs it:
+1. `cp ~/.swiftpm/configuration/mirrors.json ~/.swiftpm/configuration/mirrors.json.bak-routers-endstate-<UTC-ts>`
+   (ONCE, at first creation).
+2. Create the local package at its org-correct path (swift-standards/, swift-primitives/,
+   swift-foundations/); nested `Tests/Package.swift` per [INST-TEST-001]; `Lint.swift` with
+   `Bundle.institute` (L3) / `Bundle.primitives` (L1) / `Bundle.standards` (L2); tools
+   6.3.3; platforms .v26.
+3. `gh repo create <org>/<name> --private` + first push (creation is round-2-ratified;
+   PRIVATE until release-readiness).
+4. Append BOTH URL spellings (`.git` and bare) → local path to the global mirrors.json.
+5. Consumers declare the canonical `.git` + `branch: "main"` spelling ([PKG-DEP-009]).
+6. metadata.yaml / CI caller / social preview are morning items (non-blocking).
+
+### B7 rename sequence (identity-safe, verified mechanism)
+
+1. `gh repo rename swift-routers` on swift-url-routing (GitHub redirect persists); same for
+   swift-url-routing-vapor → swift-routers-vapor.
+2. mirrors.json: ADD new-spelling entries (both forms) pointing at the EXISTING local
+   paths; KEEP the old-spelling entries. Do NOT rename the local directories overnight
+   (1,250 mirror entries reference them; dir rename + workspace refs are a morning
+   cosmetic item).
+3. Normalize every consumer manifest to the new canonical spelling IN THE SAME WAVE, then
+   sweep-assert zero old spellings remain in committed manifests:
+   `/usr/bin/grep -rn "swift-url-routing" --include=Package.swift <all consumer roots>`
+   (expected survivors: none, once the satellites are dissolved). One spelling per
+   identity, everywhere, or the resolver's identity-conflict walk fires (catalog §A26).
+4. GitHub-side ARCHIVAL/DELETION of dissolved repos is NOT an overnight action: overnight
+   does content-level dissolution only (consumers migrated, deps removed, README tombstone
+   commit); repo archival is a listed morning item for the Principal.
+
+### B0 determinism rule
+
+Pin the multipart boundary by injection where the encoder API allows; where it does not
+(B0 forbids source changes), normalize the boundary token via regex before snapshot
+comparison, and note each normalized site for B2's `Boundary.random()` work.
+
+### Preflight assertions (run step 0; abort the run on any failure)
+
+1. `date` (anchor all report timestamps from it).
+2. `TOOLCHAINS=org.swift.633202606251a swift --version` → must report 6.3.3-RELEASE.
+3. Clean-tree sweep: `git -C <repo> status --porcelain` empty across the 10 stack repos +
+   the consumer set (stripe-types, identities-types, repotraffic, authentication,
+   mailgun-types/-live/mailgun, boiler, github-types, favicon, types-foundation,
+   stripe-live, github-live, dual) + swift-parser-primitives, swift-byte-parser-primitives,
+   swift-rfc-8259. Dirty tree → list it in the abort report; do NOT stash/clean ([workspace
+   rule: protect user work]).
+4. mirrors.json backup taken; `gh auth status` succeeds.
+5. Confirm-by-absence: no other live session holds these repos (no foreign lock files, no
+   in-flight rebase/merge state in any repo).
+
+### Run protocol (no /goal skill exists on disk — self-paced)
+
+- Completion condition: B8 gate evidence attached, OR first red gate/uncovered ambiguity.
+- After each batch gate: append a checkpoint line (batch, gate result, commit SHAs, `date`)
+  to the terminal report file.
+- Terminal report: `swift-institute/Workspace/handoffs/REPORT-routers-endstate-overnight-<date>.md`
+  — per-batch evidence, corpus-delta summaries, census of pushes, morning-items list
+  (canaries, repo archival, dir renames, metadata/CI for new repos), mutation census
+  (expected: none), and — on a stop — the exact resume point and why.
+- Subagent lanes MAY parallelize within a batch (consumer sweeps, corpus capture); the
+  coordinator itself follows this plan strictly and stays foreground-disciplined.
