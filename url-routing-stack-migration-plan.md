@@ -2,12 +2,18 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-07-20
-status: RECOMMENDATION
+status: APPROVED
 tier: 2
 scope: cross-package
 changelog:
+  - 1.2.0 (2026-07-20): Principal ratified the full gate adjudication → status APPROVED
+    (approved to execute per the batch discipline; implementation NOT started). Router
+    naming cascade folded in (swift-routers / Router / Routing alias / Routable; L4
+    swift-routers-{vapor,http}); Coder-unification spike inserted as the Batch-2 entry
+    gate; translating → DISSOLVE; DI deps default-drop; parity-corpus home and org
+    swift-format canonical fixed; OPEN gate list reduced to execution-time sign-offs.
   - 1.1.0 (2026-07-20): Principal rulings folded in (see dossier §Principal rulings) —
     form-coder family named swift-html-form-coder with HTML.Form.Coder (default = urlencoded)
     + .Multipart; two L2 alias/re-export items added to Batch 2; approval-gate list split
@@ -18,10 +24,13 @@ changelog:
 -->
 
 Companion to `url-routing-stack-first-principles-review.md` (the dossier — findings, ideal
-map, dispositions). This plan stages the migration; it authorizes nothing. Every batch names
-its approval gate; repository creation, dissolution, visibility changes, and behavior-changing
-wire output all require explicit Principal approval before execution (workspace rules;
-[ARCH-LAYER-009] guards for every deletion: commit-first, verify-dead).
+map, dispositions, and the two Principal-rulings rounds). **Fully ratified 2026-07-20**: the
+repo creations, dissolutions, behavior-change classes, naming cascade, deferrals, and batch
+structure below are approved to execute in batch order. What remains execution-time: each
+batch's own verification gate, the concrete-delta sign-offs at B3/B4, and the spike verdict
+at the B2 entry gate. [ARCH-LAYER-009] guards still apply to every deletion (commit-first,
+verify-dead), and dissolution commits carry an execution-time confirmation stamp per
+workspace rules. Implementation has NOT started; this document is the standing work order.
 
 ## Invariants (all batches)
 
@@ -89,11 +98,26 @@ none (ordinary commits).**
 
 ## Batch 2 — L1/L2 gap fills (purely additive; no L3 reshape yet)
 
+**Entry gate (ratified 2026-07-20): the Coder-unification spike.** Before the conformance
+gap-fills land, run a ≤1-day experiment (per /experiment-process, sanctioned location):
+implement forward-order APPEND emission (`serialize`) through the ~10 core parser
+combinators and assert the round-trip laws — including printing into a non-empty rest and
+the `Optionally`/`OneOf`/`Many`-with-separator/`Skip` cases. Context (verified shapes:
+dossier §Principal rulings round 2): `Parser.Printer` ≅ `Serializer.Protocol where
+Buffer == Input` modulo prepend-vs-append; L1 currently maintains two parallel combinator
+algebras.
+- **GREEN (default outcome)**: `Coder.Protocol` becomes the single canonical bidirectional
+  conjunction; `Parser.Bidirectional` is redefined as the law-carrying
+  `Coder where Buffer == Input`; `Parser.Printer` retires; the conformance rows below land
+  **Serializer-side**; `Router.Protocol` (B7) refines the constrained form.
+- **RED**: prepend is proven load-bearing; the dossier F1 role split stands; rows land
+  Printer-side; the impossibility record is committed with the experiment.
+
 | Item | Home | Retires |
 |---|---|---|
-| `Parser.Printer` conformances for `Many` (separator round-trip), `Optionally`, `Rest`/`Prefix` | L1 swift-parser-primitives | enables B5/B7 printer-side consolidation |
+| Bidirectional emission conformances for `Many` (separator round-trip), `Optionally`, `Rest`/`Prefix` — Serializer-side if spike GREEN, Printer-side if RED | L1 swift-parser-primitives | enables B5/B7 printer-side consolidation |
 | Value-checkpoint backtracking for `OneOf`/`Optionally` (Copyable carriers) | L1 swift-parser-primitives | B2-16 combinator twins (retired in B7) |
-| Four `Parser.Bidirectional` refinement declarations | L1 swift-parser-primitives | B2-17 retroactive patches |
+| Four bidirectional refinement declarations (spelling per spike outcome) | L1 swift-parser-primitives | B2-17 retroactive patches |
 | Case-path derivation macro (`Optic.Prism` per enum case) + Prism→`Parser.Conversion` bridge | L1 swift-optic-primitives (+ tiny swift-parser-optic-primitives) | per-case boilerplate in every consumer router |
 | `RFC_2046.Boundary.random()` (validated generator) | L2 swift-rfc-2046 | B2-11 three hand-rolled `__unchecked` sites |
 | RFC 7578 decode side (field/file projection, §5 charset) | L2 swift-rfc-7578 | B2-09's JSON-round-trip decode path |
@@ -221,9 +245,22 @@ ordinary commits, EXCEPT the deferred-exception record (Principal countersigns t
    (matching → Router Header over rfc-7617/6750; FI bridging → the routing FI leaf; compat
    spellings preserved as typealiases until the live consumers — mailgun-live BasicAuth,
    stripe-live BearerAuth, identities Bearer.Router — migrate).
-3. swift-url-routing-translating: re-home as L4 adapter or dissolve — Principal call on
-   whether the localized-routes concern is real ([MOD-DOMAIN]).
-4. Naming/typed-throws remediation rides the reshape: builder-closure typed-throws cluster,
+3. swift-url-routing-translating: **DISSOLVE** (ratified 2026-07-20 — zero importers in the
+   census, test target unbuildable as declared; the localized-routes concept re-enters, if
+   ever ratified real, as the L4 reservation `swift-routers-translation`; no obligation to
+   fill).
+4. **The router rename (ratified)**: repo `swift-url-routing` → **`swift-routers`**;
+   namespace root `Router` with `Router.Protocol`, `typealias Routing = Router.Protocol`
+   ([PKG-NAME-002]), `Router.Witness`, `Router.Input`, attachment protocol `Routable`;
+   `Router.Protocol` refines the spike-ratified canonical shape (`Coder where
+   Buffer == Input` if B2's spike was GREEN). L4 cascade: `swift-url-routing-vapor` →
+   `swift-routers-vapor`; the future HTTP bridge is minted as `swift-routers-http`
+   (supersedes the networking program's reservation — pre-implementation rename licensed by
+   that doc). Old module/package spellings ride the compat module until consumers migrate.
+5. **DI dependency drop (ratified default)**: `swift-dual`, `swift-dependencies`,
+   `swift-logger-dependencies` leave Router core; they may survive only in the FI leaf /
+   Client surfaces on concrete evidence surfaced during this batch's Client split.
+6. Naming/typed-throws remediation rides the reshape: builder-closure typed-throws cluster,
    compound-name renames with the PointFree.Compatibility shim carrying old spellings
    (deprecation period), multi-type file splits (12 files), Sendable fixes (BaseURLPrinter),
    and the Swift 6.3.x SIGSEGV workaround retirement IF the compiler issue is resolved by
@@ -288,8 +325,8 @@ Packages: swift-form-coding, swift-url-routing-form-coding, swift-url-routing-ta
 swift-url-routing-authentication (dissolved into L2 + core), swift-rfc-2388,
 swift-multipart-form-coding (absorbed), swift-url-form-coding (absorbed into
 swift-html-form-coder after the compat-shim period), swift-urlrequest-handler
-(split/absorbed; execution successor lives with swift-http). Pending Principal call:
-swift-url-routing-translating.
+(split/absorbed; execution successor lives with swift-http), swift-url-routing-translating
+(dissolved; reservation `swift-routers-translation` recorded).
 Code: the URLComponents façade, the in-router multipart coder + FileUpload MIME catalog,
 the duplicate `.form` conversion, the hand-rolled pair codec, cookie grammar (moves), dead
 operators, URLRouting.Client.DecodingError shape, RFC 7230/7231 composition.
@@ -307,23 +344,36 @@ operators, URLRouting.Client.DecodingError shape, RFC 7230/7231 composition.
   nest alias + html-standard Forms re-exports (Batch 2).
 - The final package roster below as the planning baseline.
 
-### OPEN (require Principal approval before the named batch executes)
+### RATIFIED round 2 (Principal, 2026-07-20 — full gate adjudication)
 
-1. Repo creations: swift-http-body (B4), swift-html-form-coder (B5, name ratified),
-   swift-media-type-standard (B2), swift-parser-optic-primitives (B2, tiny).
-2. Behavior changes: B3 difference list (percent-correct URI engine); B4 per-consumer
-   Content-Type emission.
-3. Dissolutions/deletions: rfc-2388 (B5); the Batch-7 satellite set; multipart-form-coding
-   and url-form-coding absorptions; urlrequest-handler split.
-4. Naming: `swift-url-routing` field-register reading vs `swift-url-router`
-   ([PKG-NAME-017]); the breaking-rename + compat-shim policy for PointFree-heritage names.
-5. [ARCH-LAYER-007] deferrals: URLSession execution until swift-http; Measurement
-   information-storage quantity until its institute home exists (candidate: ISO/IEC 80000-13).
-6. swift-url-routing-translating: real L4 concern or dissolve.
-7. Parity-corpus home (B0) and the canonical swift-format config variant (B1).
-8. Reshape-time dependency adjudication: whether swift-dual / swift-dependencies /
-   swift-logger-dependencies remain deps of the reshaped router (the blind ideal map does
-   not require them).
+- Repo creations approved: swift-http-body (B4), swift-html-form-coder (B5),
+  swift-media-type-standard (B2), swift-parser-optic-primitives (B2).
+- Behavior-change classes approved: B3 difference list (`%2F`-in-segment,
+  percent-normalization, empty-vs-absent query); B4 per-consumer Content-Type emission.
+- Dissolutions/deletions approved as staged: rfc-2388 (B5); the B7 satellite set incl.
+  swift-url-routing-translating (DISSOLVE; reservation `swift-routers-translation`
+  recorded); multipart-form-coding and url-form-coding absorptions; urlrequest-handler
+  split.
+- Naming cascade: **swift-routers** / `Router` / `Routing` alias / `Routable`; L4
+  `swift-routers-{vapor,http}`; PointFree-heritage renames at B7 behind the compat module,
+  compat retires at the Vapor-retirement boundary. `swift-router-primitives` REJECTED
+  (dossier §rulings round 2 ¶6).
+- [ARCH-LAYER-007] deferrals countersigned: URLSession execution until swift-http (Wave 3);
+  information-storage quantity until its ISO/IEC 80000-13 home.
+- Parity corpus: per-consumer `Tests/` + shared round-trip helpers in Router Test Support.
+- swift-format: the strict variant becomes the org canonical at swift-institute/.github.
+- DI deps (swift-dual / swift-dependencies / swift-logger-dependencies): default-DROP from
+  Router core; FI-leaf/Client survival only on B7 evidence.
+- The Coder-unification spike inserted as the B2 entry gate, GREEN outcome default.
+
+### OPEN (execution-time only)
+
+1. Spike verdict at the B2 entry gate (GREEN/RED — determines conformance spelling and the
+   B7 `Router.Protocol` refinement base).
+2. Concrete-delta sign-off at the B3 gate (the enumerated difference list against the
+   actual corpus deltas) and at the B4 gates (per-consumer header additions).
+3. Each batch's own verification gate; execution-time confirmation stamp on each
+   dissolution commit per workspace rules.
 
 ## Final package roster (ratified planning baseline, 2026-07-20)
 
@@ -349,24 +399,29 @@ swift-whatwg-html MOD-alias-only (`WHATWG_HTML.Form` nest; no dependency growth)
 swift-html-standard MOD-re-export-only (Forms products); swift-media-type-standard NEW
 (`RFC_2045.ContentType ⇄ RFC_9110.MediaType`).
 
-**L3 (swift-foundations)** — swift-url-routing RESHAPED (engine-free Router over
-`Parser.Bidirectional`; RFC_3986-native Input; targets Core/Path/Query/Header/Body/Client/
-Handler/Template + Foundation Integration leaf + Test Support); swift-http-body NEW
-(`HTTP.Body.Coder` Content-Type-ownership contract + JSON lift); swift-html-form-coder NEW
-(`HTML.Form.Coder` default + `.Multipart`; Strategy vocabulary; Nested keys; Codable leaf);
-swift-json AS-IS; swift-http FUTURE (networking Wave 3 — receives execution).
+**L3 (swift-foundations)** — swift-url-routing RESHAPED + RENAMED **swift-routers** at B7
+(engine-free `Router` family over the spike-ratified canonical bidirectional shape;
+`Routing` = `Router.Protocol` alias; `Routable`; RFC_3986-native `Router.Input`; targets
+Core/Path/Query/Header/Body/Client/Handler/Template + Foundation Integration leaf + Test
+Support; DI deps dropped from core); swift-http-body NEW (`HTTP.Body.Coder`
+Content-Type-ownership contract + JSON lift); swift-html-form-coder NEW (`HTML.Form.Coder`
+default + `.Multipart`; Strategy vocabulary; Nested keys; Codable leaf); swift-json AS-IS;
+swift-http FUTURE (networking Wave 3 — receives execution).
 ABSORBED: swift-url-form-coding, swift-multipart-form-coding. DELETED: swift-form-coding,
 swift-url-routing-form-coding. DISSOLVED: swift-url-routing-tagged,
-swift-url-routing-authentication. SPLIT: swift-urlrequest-handler.
+swift-url-routing-authentication, swift-url-routing-translating (reservation
+`swift-routers-translation`). SPLIT: swift-urlrequest-handler.
 
-**L4 (Components)** — swift-url-routing-http NEW (networking Wave 4 deliverable);
-swift-url-routing-vapor retained → DELETED at Vapor retirement;
-swift-url-routing-translating PENDING; vendor preset surfaces stay in their existing
-`*-types` packages (content is L4-shaped; the mailgun-types upward L3-import edge is fixed
-in B6; those packages' own layer location is a separate adjudication).
+**L4 (Components)** — swift-routers-http NEW (networking Wave 4 deliverable; supersedes the
+`swift-url-routing-http` reservation); swift-url-routing-vapor → renamed
+**swift-routers-vapor** at B7, then DELETED at Vapor retirement; vendor preset surfaces
+stay in their existing `*-types` packages (content is L4-shaped; the mailgun-types upward
+L3-import edge is fixed in B6; those packages' own layer location is a separate
+adjudication).
 
-Net: ten routing-stack repos → three L3 + two L4 (one terminal), carried by two tiny L1
-additions, one new L2 converger, and in-place L2 additions.
+Net: ten routing-stack repos → three L3 (swift-routers, swift-http-body,
+swift-html-form-coder) + one terminal L4 bridge + one future L4 bridge, carried by two tiny
+L1 additions, one new L2 converger, and in-place L2 additions.
 
 ## Implementation dispatch preamble (for the executing session — prep artifact, not started)
 
@@ -380,8 +435,10 @@ the review sessions. A fresh implementation session should:
 2. Read the dossier (`url-routing-stack-first-principles-review.md`) then this plan; treat
    both as leads, not ground truth — re-verify every file:line anchor against live source
    before acting ([RES-013a]; all anchors date 2026-07-20).
-3. Enter at Batch 0 (parity corpus). Do not reorder batches; do not begin any batch whose
-   OPEN approval-gate items are unadjudicated.
+3. Enter at Batch 0 (parity corpus). Do not reorder batches. The plan is fully ratified
+   (v1.2.0); the only stop-points are the OPEN execution-time items: run the
+   Coder-unification spike before any Batch-2 conformance work, and obtain the
+   concrete-delta sign-offs at the B3/B4 gates.
 4. Toolchain: TOOLCHAINS=org.swift.633202606251a, assert `swift-6.3.3-RELEASE` before any
    build ([PKG-BUILD]); one swift invocation at a time per repo; never delete or hand-edit
    Package.resolved (the mirror-corrupted-untracked-lockfile phenomenon is known and
