@@ -2,12 +2,19 @@
 
 <!--
 ---
-version: 1.1.0
+version: 1.2.0
 last_updated: 2026-07-20
 status: RECOMMENDATION
 tier: 2
 scope: cross-package
 changelog:
+  - 1.2.0 (2026-07-20): second ratification round — ALL open approval gates adjudicated and
+    Principal-ratified (see §Principal rulings, round 2): swift-routers naming cascade
+    (router over routing), router-primitives rejected, translating dissolution, deferrals
+    countersigned, DI deps default-dropped, Bidirectional/Coder unification spike inserted
+    as a B2 entry gate. Verified-at-source L1 shape record added (Printer ≅
+    Serializer|Buffer==Input modulo prepend/append; Serializer HAS Body/Builder — the
+    leaf-pin is on Coder only). Companion plan status → APPROVED.
   - 1.1.0 (2026-07-20): Principal rulings incorporated — HTML.Form.Data / HTML.Form.Coder
     spellings approved; Form.Coder.URLEncoded rejected, replaced by the enctype-default
     derivation (Coder default = urlencoded, .Multipart variant); package named
@@ -428,18 +435,48 @@ structure.
 The ratified end-state package roster, complete and by layer, is
 `url-routing-stack-migration-plan.md` §Final package roster.
 
+### Round 2 (2026-07-20, gate adjudication — Principal-ratified in full)
+
+5. **Router naming cascade**: L3 package is **`swift-routers`** (plural-field register, the
+   `swift-executors`/`swift-clocks` precedent — the package vends a family of routers);
+   namespace root `Router` (agent noun), `Router.Protocol` + **`typealias Routing =
+   Router.Protocol`** ([PKG-NAME-002] — the gerund lands exactly where conventions put it),
+   `Router.Witness`, `Router.Input`, attachment protocol `Routable`. L4 cascade:
+   `swift-routers-vapor`, `swift-routers-http` (supersedes the networking program's
+   `swift-url-routing-http` reservation — that doc licenses pre-implementation renames).
+   Repo rename executes at B7 behind the compat module. `url` was inaccurate anyway: the
+   router routes requests, not URLs.
+6. **`swift-router-primitives` REJECTED**: the spec-free router concept IS the L1 parser
+   spine (`Coder where Buffer == Input` after unification); the concrete Router's
+   domain-bound Input requires L2 vocabulary → [MOD-PLACE-FLOOR] pins it at L3. An L1
+   router package would duplicate parser-primitives ([MOD-RENT] criterion 2 fails) or
+   import L2 (illegal).
+7. **Bidirectional/Coder unification** (verified shapes recorded in §Track A/A1 and the
+   plan's spike gate): `Parser.Printer` is `Serializer.Protocol` with `Buffer == Input`,
+   differing only in emission discipline (prepend vs append) and traversal order — two
+   contracts invisible to the type system, maintained as two parallel combinator algebras.
+   Target end-state: **`Coder.Protocol` is the single canonical bidirectional conjunction**;
+   the law-carrying constrained form (`Coder where Buffer == Input`) replaces
+   `Parser.Bidirectional`; `Parser.Printer` retires; `Router.Protocol` refines the
+   constrained form. Gated on a ≤1-day forward-append round-trip spike (plan §Batch 2 entry
+   gate); if the spike proves prepend load-bearing, the F1 role split stands with the
+   impossibility record.
+8. **Remaining gate dispositions**: all four repo creations approved; both
+   behavior-change classes approved (concrete-delta sign-off stays at the B3/B4 gates);
+   all dissolutions approved as staged; both [ARCH-LAYER-007] deferrals countersigned;
+   `swift-url-routing-translating` DISSOLVES at B7 (reservation name
+   `swift-routers-translation` recorded, no obligation to fill); parity corpus lives
+   per-consumer + shared helpers in Router Test Support; the strict swift-format variant
+   becomes the org canonical; `swift-dual`/`swift-dependencies`/`swift-logger-dependencies`
+   default-DROP from Router core (FI-leaf/Client survival only on evidence at B7).
+
 ## Outcome
 
-**Status: RECOMMENDATION** — for Principal adjudication. The companion
-`url-routing-stack-migration-plan.md` stages the path (behavior-neutral batches, parity gates
-captured before movement, consumer-impact per batch, explicit approval gates; deletions
-named). Naming for the form-coder family is now ratified (§Principal rulings). Remaining open
-questions are enumerated in the plan §Approval gates, notably: package-name register for the
-reshaped router ([PKG-NAME-017] field-noun reading of `swift-url-routing` vs strict
-`swift-url-router`), creation of the new packages (swift-http-body, swift-html-form-coder,
-swift-media-type-standard), the rfc-2388 and satellite dissolutions, the two
-behavior-changing batches (percent-correct URI engine; Content-Type emission), and the
-swift-url-routing-translating disposition.
+**Status: RECOMMENDATION, fully ratified 2026-07-20** (both rulings rounds — see §Principal
+rulings). The companion `url-routing-stack-migration-plan.md` (status APPROVED) stages the
+path; implementation has NOT started. The only items left open are execution-time:
+concrete-delta sign-offs at the B3/B4 gates, the spike verdict at the B2 entry gate, and
+each batch's own verification gate.
 
 ## References
 
