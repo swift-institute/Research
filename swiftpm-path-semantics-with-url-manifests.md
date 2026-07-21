@@ -2,12 +2,23 @@
 
 <!--
 ---
-version: 1.0.1
+version: 1.1.0
 last_updated: 2026-07-21
 status: RECOMMENDATION
 tier: 2
 scope: ecosystem-wide
 changelog:
+  - 1.1.0 (2026-07-21): principal-ruling round ("local = live trees, CI = resolved
+    versions" ratified; edit-all authorized). Timing on a real 187-pin consumer REFUTES
+    edit-all as the fleet posture (§E5: ~33 s per warm edit, ~1.7 h per arm — each edit
+    re-resolves the whole graph); `swift package clean` verified to PRESERVE edit state.
+    The E4a verdict is scoped: the mesh-fatal error applies only to PARTIAL adoption —
+    an ALL-conditional manifest mesh is legal and delivers one-pass live semantics
+    (§E6: 4.9 s live resolve+build, 0.9 s mode flip, loud-or-conservative mixed states).
+    New ranking: all-conditional mesh = TARGET pending principal ratification of the
+    constraint-2 relaxation + fleet migration; scoped edit-mode = interim + arc posture.
+    Script triple (edit-all/unedit-all/edit-status, Scripts repo) repositioned as the
+    scoped tool; CI never-edited/never-live guard SPEC added (no workflow changes).
   - 1.0.1 (2026-07-21): adversarial verification round (steering session). Two omitted
     candidates fixture-refuted and recorded (§E4): env-conditional manifests (mesh-fatal
     remote-path-dep error; the suspected manifest-cache staleness did NOT reproduce —
@@ -286,6 +297,122 @@ and unknown durability across re-resolutions — a strictly worse version of
 Footgun 2's invisible-state class. Recorded so it is not rediscovered as a
 "trick"; excluded under constraint 1's spirit (generated state is SwiftPM's).
 
+### E5 — Edit-all timing on a REAL consumer (authorized run, 2026-07-21): fleet posture REFUTED
+
+Principal ruling ratified "local = live trees, CI = resolved versions" and authorized
+an edit-all timing run on one real consumer outside the routers arc. Consumer chosen:
+**swift-pdf** — 187-pin resolved closure with ZERO arc-identity overlap (checked
+against url-routing / routers / mailgun / stripe / authentication / form-coding /
+urlrequest / http-body / form-coder patterns), clean tree. 183 of 187 pins are
+mirror-local (externals: swift-cmark, swift-collections, swift-markdown,
+swift-syntax). Toolchain asserted `swift-6.3.3-RELEASE`. [Verified: 2026-07-21]
+
+Measured (script: `Scripts/edit-all.sh`, sequential per [PKG-BUILD-009]):
+
+| Operation | Wall time |
+|---|---|
+| Single `swift package edit` (cold caches) | **7 m 18 s** |
+| First in-batch edit | 150 s |
+| Warm marginal edit | **~33 s each** |
+| Projected full 183-dep arm | **~1.7 h** (batch deliberately aborted at 7 edits once the marginal rate was established) |
+| `swift package unedit` (warm) | ~65 s each (456 s for the 7-dep restore) |
+
+Restore verified: pins mode, zero tracked diff, `Package.resolved` regenerated.
+The structural cause: **each `edit`/`unedit` invocation re-resolves the entire
+graph** (the probe visibly re-resolved unrelated checkouts) — the manifest toll
+([PKG-BUILD-017]/[PKG-BUILD-018]) is paid per dependency, O(N²) per consumer.
+SwiftPM offers no batch edit registration.
+
+**Verdict**: edit-all as the STANDING FLEET POSTURE is refuted on the policy's own
+axis (speed). Scoped edit-mode — a handful of deps per consumer, the routers-arc
+posture — remains fine (minutes). [Verified: 2026-07-21]
+
+**Mitigation verified in the same round**: `swift package clean` PRESERVES edit
+state (fixture: edit-status OK and live markers still visible after a clean); only
+`rm -rf .build` destroys it. Under any edit-mode posture, clean with
+`swift package clean`; reserve `rm -rf .build` for cache-corruption triage and
+expect a re-arm after it. [Verified: 2026-07-21]
+
+### E6 — ALL-conditional manifest mesh: one-pass live semantics; E4a's refutation is scoped to PARTIAL adoption
+
+E4a refuted the env-conditional manifest for MIXED meshes: the hard error fires
+when a *revision-consumed* package declares path deps. If **every** manifest in
+the closure is conditional and the var is set, nothing is revision-consumed —
+every edge is a path edge, and the error has nothing to fire on. Fixture-verified
+(all three manifests conditional on `INSTITUTE_LIVE`, committed):
+
+```swift
+import Foundation  // in Package.swift
+let live = ProcessInfo.processInfo.environment["INSTITUTE_LIVE"] != nil
+// dependencies: live ? [.package(path: "../fix-a")]
+//                    : [.package(url: "https://github.com/fixture-org/fix-a.git", branch: "main")]
+```
+
+| Probe | Result |
+|---|---|
+| P1 var set, resolve+build | Uncommitted A and B content visible, transitively; **one pass, 4.9 s total**; no errors, no conflicting-identity warnings (no URL edges exist to collide) |
+| P2 `swift test`, var set | Works identically — gate vehicle intact; `Package.resolved` ABSENT in live mode (all-path graph) |
+| P3 var unset, same checkout | Byte-identical to today: URL deps, pins honored, `Package.resolved` regenerated pinned |
+| P4 flip back to live | **0.9 s** (manifest evaluation is env-keyed and cached; build artifacts cache per mode) |
+| M1 partial: consumer conditional, intermediate's manifest URL-only | Still LIVE for every dep the consumer declares directly (root-local path deps identity-override the transitive URL edges — and this also evidences that path-consumed packages MAY carry URL deps); undeclared transitives stay pinned. Conservative, not corrupt |
+| M2 partial: consumer URL-only, dep conditional+pinned, var set | **LOUD**: `error: package 'fix-b' is required using a revision-based requirement and it depends on local package 'fix-a', which is not supported` — exit 1, no silent state |
+
+All [Verified: 2026-07-21], 6.3.3, isolated fixture scope.
+
+**This is the only mechanism matching the ratified policy's speed requirement**:
+no arming step at all — `INSTITUTE_LIVE=1` in the developer shell makes every
+build everywhere live (working-tree manifests included, since path-consumed
+manifests are read from the tree); CI, with the var unset, resolves exactly the
+committed URL graph. Externals (swift-syntax etc.) stay URL+pinned in both modes.
+
+**Adoption gates (principal-owned, OPEN)**:
+
+1. Constraint 2's textual reading must be relaxed: committed manifests would carry
+   `path:` spellings inside the env-gated branch. [PKG-DEP-009]'s
+   `validate-dependency-spelling.py` needs a matching amendment (allow the gated
+   branch; keep forbidding unconditional path deps).
+2. One-shot fleet migration wave (~300 manifests) under the mass-rollout
+   discipline; mixed states during the wave are loud (M2) or conservatively
+   pinned (M1), never silent corruption.
+3. CI guard flips from "never-edited" to "never-live" (§CI guard spec below).
+4. Fixture-only so far: a single-consumer PILOT on a real package (post-ratification)
+   before the wave.
+
+## Ratified policy and its verdict on the mechanisms
+
+Principal ruling (2026-07-21): **"local development ALWAYS builds against live
+sibling working trees; committed/resolved versions are CI's concern."**
+
+Against that policy: mirrors+update fails (not live); edit-all fails on speed
+(§E5); scoped edit-mode is a valid interim (and the arc's ruled posture) but
+arms per consumer per dep; the ALL-conditional mesh (§E6) is the only mechanism
+where liveness is ambient — zero arming, one env var, full speed both ways. The
+mesh is therefore the TARGET, gated on the principal decisions listed in §E6.
+
+## CI-side guard (SPEC ONLY — no workflow changes in this round)
+
+The policy's value rests on CI being provably non-live. Add to the universal
+workflow's pre-build preflight (three-tier chain, [CI-*]):
+
+```bash
+# never-live / never-edited preflight (spec)
+test -z "${INSTITUTE_LIVE:-}" || { echo "::error::INSTITUTE_LIVE set in CI"; exit 1; }
+test ! -e Packages || { echo "::error::Packages/ present in CI checkout"; exit 1; }
+# after resolution, assert no edited deps and no path deps in the effective manifest:
+! grep -q '"edited"' .build/workspace-state.json 2>/dev/null || { echo "::error::edited dependency state in CI"; exit 1; }
+swift package dump-package | python3 -c '
+import json,sys
+deps=json.load(sys.stdin).get("dependencies",[])
+assert not [d for d in deps if "fileSystem" in d], "path dependency in CI-effective manifest"
+' || exit 1
+```
+
+Rationale: the first two catch checked-in or cached edit state; the env assert
+catches a leaked live var; the dump-package assert catches a conditional manifest
+whose gate failed open (evaluates path deps despite CI env). Runners must also
+have no mirror table (`~/.swiftpm/configuration/mirrors.json` absent) — already
+true of ephemeral GH runners; assert it where runners are self-hosted.
+
 ## Scored comparison
 
 Criteria: (a) consumer sees uncommitted working-tree changes; (b) setup+teardown
@@ -308,27 +435,31 @@ behavior; (g) failure modes.
 
 **Status**: RECOMMENDATION
 
-**Ranking**:
+**Ranking** (v1.1.0, under the ratified "local = live trees, CI = resolved
+versions" policy):
 
-1. **Edit-mode with `--path`, hardened (RECOMMENDED)** — the only mechanism that
-   delivers working-tree semantics while keeping per-package `swift build` /
-   `swift test` from each package's own checkout as the gate vehicle, with all
-   hard constraints intact. The current ruling stands; what was missing is the
-   hardening below (two verified footguns).
-2. **Root workspace package** — strictly better path semantics (whole graph, zero
-   consumer-repo state, no mirror dependence) but disqualified as a gate vehicle:
-   dependency tests cannot run through it, and the identity override it relies on
-   is deprecation-marked. Legitimate only as an OPTIONAL whole-stack compile
-   smoke (fast "does the whole stack still compile against live trees" signal),
-   never as evidence.
-3. **Mirrors + per-consumer `update`** — the correct steady-state for NON-live
-   work (pins are reproducibility), but not path semantics; per-change cost is a
-   whole-graph re-resolution per consumer.
-4. **Registry redirection** — structurally incapable of working-tree semantics.
-5. **Env-conditional manifests / checkout-symlink tampering** — refuted in the
-   E4 adversarial round: the former is mesh-fatal (remote packages cannot carry
-   path deps) and textually violates constraint 2; the latter is lifecycle-less
-   tampering with SwiftPM-owned state. Neither changes the ranking.
+1. **ALL-conditional manifest mesh (TARGET — pending principal ratification)** —
+   the only mechanism with ambient liveness at full speed: zero arming, one env
+   var, one resolution pass (§E6: 4.9 s live resolve+build, 0.9 s mode flip),
+   per-package `swift test` intact, CI byte-identical to today with the var
+   unset. Gated on: constraint-2 relaxation + validator amendment, a one-shot
+   fleet migration wave, the never-live CI guard, and a real-consumer pilot.
+2. **Scoped edit-mode with `--path`, hardened (INTERIM + arc posture)** — passes
+   all original hard constraints and stays right for small edit sets (minutes),
+   which is exactly the routers arc's use. As a FLEET posture ("edit-all") it is
+   REFUTED by measurement (§E5: ~33 s per warm edit × closure size ≈ hours per
+   consumer; each edit is a whole-graph re-resolution). Script triple
+   (`Scripts/edit-all.sh`, `unedit-all.sh`, `edit-status.sh`) remains the
+   scoped-arming tool and the arc's hardening kit.
+3. **Root workspace package** — full-graph path semantics but disqualified as a
+   gate vehicle (cannot run dependency tests) and deprecation-marked
+   (conflicting-identity escalation). Optional whole-stack compile smoke only.
+4. **Mirrors + per-consumer `update`** — the CI-side/steady-state model; not
+   path semantics locally.
+5. **Registry redirection / checkout-symlink tampering** — structurally
+   incapable / lifecycle-less tampering; unchanged from v1.0.1. E4a's
+   env-conditional refutation is RESCOPED by §E6: it condemns partial adoption,
+   not the all-conditional mesh.
 
 ### Runbook (edit-mode, hardened)
 
@@ -398,20 +529,34 @@ the only candidate with superior path semantics (root workspace package) fails t
 gate-vehicle constraint outright and rides a deprecation-marked override. The arc's
 ruled edit-mode posture is CONFIRMED as optimal under the constraints.
 
-Two additive adoptions are recommended for the arc — they harden, not switch, and
-cost minutes: (1) the **post-clean re-edit guard** (`rm -rf .build` silently drops
-edit state; re-run edits + `edit-status.sh` probe) — adopt IMMEDIATELY, since the
-arc combines edit-mode with clean-build discipline and is exposed to Footgun 2
-today; (2) the optional root-package whole-stack compile smoke — defer to post-B8;
-it is auxiliary signal, not evidence, and adds a second vehicle mid-arc for no
-gate value.
+Three additive adoptions are recommended for the arc — they harden, not switch,
+and cost minutes: (1) the **post-clean re-edit guard** (`rm -rf .build` silently
+drops edit state; re-run edits + `edit-status.sh` probe) — adopt IMMEDIATELY,
+since the arc combines edit-mode with clean-build discipline and is exposed to
+Footgun 2 today; (2) prefer **`swift package clean`** over `rm -rf .build` for
+routine cleans — verified to preserve edit state (§E5), removing most re-arm
+occasions; (3) the optional root-package whole-stack compile smoke — defer to
+post-B8. The §E6 mesh, if ratified, is a POST-B8 workspace migration in any case
+(fleet manifest wave — never a mid-arc move).
 
 ## Residual
 
-**Premises (verified here, none outstanding).** All load-bearing claims above were
-fixture-verified this session on both installed toolchains.
+**Premises (verified).** All load-bearing claims above were fixture-verified this
+session on both installed toolchains, except where marked; the §E5 timings were
+measured on the real swift-pdf consumer under the asserted 6.3.3 toolchain.
+
+**Open premise (experiment owed before the wave, per [RES-027])**: the §E6 mesh
+is fixture-verified only. The post-ratification PILOT on one real consumer (its
+full closure conditional, live + CI modes both gated) is the experiment that
+closes it; until then the mesh recommendation is conditional by construction.
 
 **Directions (not load-bearing; no experiment owed per [RES-027])**:
+
+- Editor/LSP behavior under the mesh: SourceKit-LSP / Xcode resolve with whatever
+  env they inherit — var unset means pins mode in-editor (harmless; builds still
+  live from the shell). Pilot should note the observed behavior.
+- If SwiftPM ever ships batch edit registration or a first-class override file,
+  re-rank §E5/§E6.
 
 - The conflicting-identity warning's promised escalation to an error (affects only
   the auxiliary root-smoke pattern and [PKG-BUILD-014]-class overrides; re-check at
