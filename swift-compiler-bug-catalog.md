@@ -1451,6 +1451,34 @@ func f(_ items: [String]) -> [String] {
 
 ---
 
+### A27. macOS-27 availability gate on new stdlib `Hashable` conformances (`EmptyCollection`, `CollectionOfOne`) — CONFIRMED shipping 6.4-SDK behavior, not snapshot noise
+
+**Component**: 6.4 SDK overlay availability annotations (not a compiler defect — a hard SDK/floor incompatibility). **Versions**: first seen as "macOS 9999" on 6.5-dev (`2026-05-27-a`; recorded under §A24 as "snapshot-noise class 3"); **re-classified 2026-07-21**: on `release/6.4.x` (`swift-6.4.x-DEVELOPMENT-SNAPSHOT-2026-07-17-a`, `org.swift.64202607171a`) the gate is the CONCRETE `macOS 27.0` — i.e. it ships with the 6.4 SDK and will persist at 6.4 RELEASE.
+
+**Symptom**: `error: conformance of 'EmptyCollection<Element>' to 'Hashable' is only available in macOS 27.0 or newer` (same for `CollectionOfOne`) compiling `Hash Primitives Standard Library Integration` — the stdlib's NEW `Hashable` conformances for these types are availability-annotated to macOS 27, unsatisfiable on the ecosystem's `.v26` floor. On 6.4+, `Hash.Protocol` refines `Swift.Hashable`, so any `X: Hash.Protocol` conformance IMPLIES the gated stdlib conformance; witness bodies cannot un-gate an implied conformance, and only the stdlib can own it.
+
+**Fix shape (applied)**: backport-exclusion — swift-hash-primitives `7c66ee0` (2026-07-21): the `#if swift(<6.4)` fork witnesses stay; the 6.4+ branch declares NO conformance. Zero downstream consumers at fix time (workspace grep). Dual-toolchain green (6.3.3 canon + 6.4.x snapshot), behavior-neutral on 6.3.3. Rejected shapes: direct witnesses (structurally impossible per above), bare `@available` gating (drops the capability below macOS 27 on the .v26 floor — principal-forbidden).
+
+**Restoration note**: at the ecosystem's 6.4 canon flip, re-evaluate the two dropped conformances — they return either when the platform floor reaches macOS 27 or via an `@available(macOS 27, *)`-gated declaration IF the Principal then ratifies split availability.
+
+**Source**: routers end-state 6.4 verification spike (relays 1–3, 2026-07-21). Companion observation from the same spike: §A16 (+asserts serializer-leaf ICE) did NOT fire on the 6.4.x +assertions snapshot — first empirical evidence of §A16 absence on release/6.4.x.
+
+---
+
+### A28. PROVISIONAL — swift-frontend `-Onone` crash compiling `Stripe Webhooks Types` on release/6.4.x (unsymbolicated; reduction pending)
+
+**Component**: swift-frontend. **Versions**: `swift-6.4.x-DEVELOPMENT-SNAPSHOT-2026-07-17-a` (`org.swift.64202607171a`) — CRASH, deterministic (reproduced twice: full `swift test` build and scoped `swift build --target "Stripe Webhooks Types"`). 6.3.3-RELEASE compiles the same module green.
+
+**Symptom**: frontend death (exit via abort, signal path through `libsystem_c`; pipe exit 141) with a bare stack dump, NO assertion text, frames unsymbolicated, while compiling primary file `Sources/Stripe Webhooks Types/Stripe Webhook Endpoints Types/Stripe Webhook Endpoints Types API.swift` at `-Onone` (SwiftPM debug default; flags include `MemberImportVisibility`, `StrictUnsafe`, `NonisolatedNonsendingByDefault`, macros via Dual/Witnesses plugins).
+
+**Attribution**: PROVISIONAL — nearest existing class is §A24 (debug-mode frontend crash at `-Onone`, no assertion text) but on different code; unsymbolicated frames block a mechanism match. Per [ISSUE-001] no SAME-CRASH/DISTINCT verdict is licensed without reduction. Symbolication + reduction is a SEPARATE issue-investigation session (principal relay 3, 2026-07-21); a single newer-snapshot build probe of swift-stripe-types is authorized as a side-probe.
+
+**Impact**: with §A9 walling stripe-types at RUNTIME on 6.3.3 and this row walling it at COMPILE on 6.4.x, swift-stripe-types is doubly walled — the basis of the routers-arc stripe carve-out (url-routing-stack-migration-plan.md v1.4.0 flip gate).
+
+**Source**: routers end-state 6.4 verification spike step (d) (relay 2, 2026-07-21).
+
+---
+
 ## B. Type-System Pitfalls and Language-Spec Constraints
 
 ### B1. `Property.View ~Copyable` extension constraint placement
