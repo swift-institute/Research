@@ -2,12 +2,26 @@
 
 <!--
 ---
-version: 1.3.0
-last_updated: 2026-07-20
+version: 1.4.0
+last_updated: 2026-07-21
 status: APPROVED
 tier: 2
 scope: cross-package
 changelog:
+  - 1.4.0 (2026-07-21): Stripe carve-out ratified (Principal relay 3) after the 6.4
+    verification spike closed the snapshot route: stripe is doubly walled — §A9
+    Tagged-metadata SIGSEGV at runtime on 6.3.3 (all 84 routers; production ships
+    single-branch Compat_Swift_6_3 avoidance copies) AND a deterministic swift-frontend
+    -Onone ICE compiling `Stripe Webhooks Types` on org.swift.64202607171a
+    (swift-6.4.x-DEVELOPMENT-SNAPSHOT-2026-07-17-a; provisional new catalog row,
+    nearest §A24). Arc toolchain pin REMAINS org.swift.633202606251a. Spike keepers
+    (permanent dual-toolchain value): swift-hash-primitives 7c66ee0 (macOS-27
+    availability-gate exclusion — the gate is confirmed shipping 6.4-SDK behavior, not
+    main-branch noise), swift-clock-primitives 50d2e0f (withTaskCancellationHandler
+    overload disambiguation), coder-primitives stale-pin cure (SwiftPM update, no
+    commit). §A16 did NOT fire on the 6.4.x +asserts snapshot (catalog-worthy).
+    See §Stripe carve-out (v1.4.0) for the batch-level mechanics and the FLIP GATE
+    definition; the annex's wall-budget concept is retired with the snapshot route.
   - 1.3.0 (2026-07-20): Overnight end-to-end execution annex added (Principal directive:
     whole plan in one unattended run). Every attended stop-point converted to a written
     auto-rule or completed prep input: B3/B4 delta-class auto-rules; wire canaries excluded
@@ -460,6 +474,33 @@ the review sessions. A fresh implementation session should:
 5. Honor [PKG-DEP-012] (consumer sweep in the same arc as any public-surface change) and
    [TEST-040] (live-mutating suites out of unattended gates; credential classification
    before any mailgun/stripe canary; mutation census on close).
+
+## Stripe carve-out (v1.4.0 — Principal relay 3, 2026-07-21)
+
+swift-stripe-types cannot execute its routers on the arc toolchain (§A9) and cannot
+compile on the 6.4.x snapshot (Webhooks ICE), so its corpus-verified slices are
+flip-deferred; the arc otherwise runs to completion on 6.3.3:
+
+- **B0-stripe**: the fb60b1c Router Parity Tests scaffolding stands (fixtures
+  auto-record at the flip). ADD a 6.3.3 micro-corpus of the two production compat
+  branches (customers.create, checkoutSessions.create via the shipped
+  `*.Router.Compat_Swift_6_3` single-branch routers — production prints them daily).
+  Fallbacks in order: capture at repotraffic's HTTP boundary; else record the
+  micro-corpus as unobtainable and stripe proceeds compile-only (reported, not
+  stalling).
+- **B3/B5/B7**: stripe migrations land COMPILE-GREEN on 6.3.3 behind compat
+  typealiases; micro-corpus green required at each batch; full-corpus verification is
+  flip-deferred.
+- **B4**: the stripe slice becomes flip-gated mini-batch **B4-S** — the 143-route
+  header cutover AND stripe-live's blanket-header retirement both wait; stripe wire
+  behavior stays byte-unchanged until the gate. B4 completes ecosystem-wide otherwise.
+- **B8 / FLIP GATE (named close-out gate)**: the first toolchain (6.4 RELEASE or
+  Principal-ratified successor) on which swift-stripe-types COMPILES and the §A9
+  Charges probe PASSES. At the gate: fixtures auto-record → full stripe corpus
+  verifies → B4-S executes → stripe-live compensation retires → the 45 disabled
+  suites re-enable → §A9's catalog row gets its empirical confirmation. Production-
+  side retirement additionally waits for the production builder's (Heroku 6.3.3
+  Jammy) ≥6.4 flip.
 
 ## Overnight end-to-end execution annex (v1.3.0 — Principal directive 2026-07-20)
 
