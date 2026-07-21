@@ -2,12 +2,20 @@
 
 <!--
 ---
-version: 1.4.0
+version: 1.5.0
 last_updated: 2026-07-21
 status: APPROVED
 tier: 2
 scope: cross-package
 changelog:
+  - 1.5.0 (2026-07-21): Consolidation — Principal relays 4, 4-addendum, and 5 folded in
+    as §Consolidated relay rulings (v1.5.0), the now-governing text superseding chat-only
+    relay state: boiler corpus descope; minimum-viable rule for dissolution-bound
+    components; design-sensitive lanes at raised effort; item-scoped STOPs + batched
+    ratification queue; scoped corpus re-runs; EDIT-MODE build posture (arc-scoped,
+    replaces per-gate pin advances) + bounded cross-repo parallelism; worker refresh
+    protocol + successor bootstrap; swift-email-standard one-line fix authorized as a
+    B1-gate unblocker. Advisory-session consolidation for the worker refresh.
   - 1.4.0 (2026-07-21): Stripe carve-out ratified (Principal relay 3) after the 6.4
     verification spike closed the snapshot route: stripe is doubly walled — §A9
     Tagged-metadata SIGSEGV at runtime on 6.3.3 (all 84 routers; production ships
@@ -604,3 +612,74 @@ comparison, and note each normalized site for B2's `Boundary.random()` work.
   (expected: none), and — on a stop — the exact resume point and why.
 - Subagent lanes MAY parallelize within a batch (consumer sweeps, corpus capture); the
   coordinator itself follows this plan strictly and stays foreground-disciplined.
+
+## Consolidated relay rulings (v1.5.0 — governing; supersedes chat-relay state)
+
+Principal relays 4, 4-addendum, and 5 (2026-07-21), consolidated verbatim-in-substance so
+the executing session needs no chat history. Where these conflict with earlier sections,
+THESE govern.
+
+### Ratifications
+
+- **Boiler**: example-corpus DESCOPED. Boiler's parity obligation is compile-green only;
+  its live mount path is covered via repotraffic's corpus. The rotted pre-W2 example
+  packages are excluded from builds; their deletion rides the B7 dissolution wave.
+- **swift-email-standard**: the missing `try` against rfc-5322's typed-throws
+  `Message.init` (cross-repo compile break on main, boiler-lane discovery) — the minimal
+  fix is AUTHORIZED as a B1-gate unblocker (one commit, ordinary push).
+- **Minimum-viable rule** for dissolution-bound components (translating, form-coding,
+  url-routing-form-coding, tagged, boiler examples): only work a batch gate strictly
+  requires. No test repairs, no polish.
+
+### Execution posture
+
+- **Effort tiers**: design-sensitive lanes (B2 unification spike, B3 engine swap, B5
+  extraction, B7 reshape) run at RAISED effort; mechanical lanes stay low.
+- **Item-scoped STOPs**: stage the item's evidence, continue every lane the item does not
+  block, accumulate non-blocking questions in the report's ratification queue; run-scoped
+  STOP only when the item blocks the current batch's gate.
+- **Scoped corpus re-runs**: re-run a consumer's corpus only when the batch touched a
+  repo that consumer imports (engine changes = all; satellite changes = few).
+
+### Build posture: EDIT MODE (arc-scoped; replaces per-gate pin advances)
+
+Mirrors localize fetching, not revision selection — pinned lockfiles made every gate
+re-test stale code until a per-consumer `swift package update`. Therefore, for the arc's
+duration:
+
+1. Spike on one consumer first (swift-mailgun-types): `swift package edit <dep> --path
+   <local clone>` for each stack dep; verify a trivial local url-routing change is
+   visible with no update step; then roll out to the whole gate set.
+2. Gitignore `Packages/` in each consumer BEFORE the first edit command (the
+   swift-form-coding fossil symlink is the precedent). Never commit edit-mode state.
+   Package.resolved files stop churning; stale pins are inert while edited.
+3. Gate discipline: at every batch gate, assert the stack repos' working trees are CLEAN
+   and record their HEAD SHAs in the checkpoint line — edit-mode gates test those SHAs.
+4. ARC CLOSE (B8): `swift package unedit` everywhere, then one final pin-advance wave +
+   commit of tracked lockfiles — the shipping state is fully pinned at final SHAs.
+5. Cross-repo parallelism: the one-swift-invocation rule is PER REPO; up to 4 concurrent
+   consumer lanes across different repos. On SwiftPM shared-cache lock contention, drop
+   to serial and note it.
+6. The Principal may hold a scoped Xcode workspace open over the arc packages. If a gate
+   finds a Package.resolved dirtied by Xcode auto-resolution (and nothing else): note it
+   in the checkpoint, treat the pinned file as inert (edit-mode governs), continue.
+
+### Worker refresh protocol
+
+The executing session is retired and replaced at the next clean point (immediately, if the
+Principal interrupts; otherwise at the current batch gate). Refresh handoff, in order:
+
+a. Push sweep — every touched repo at rev-list 0 vs origin; no uncommitted work anywhere
+   (lanes included; the coder-unification-spike experiment package committed as-is).
+b. Terminal-report hygiene: append a REFRESH CHECKPOINT section (batch position, per-repo
+   SHAs, spike-lane state, ratification queue, exact resume point) and mark the
+   superseded stop-state sections as historical.
+c. Mirror the resume point into the HANDOFF file. Then END the session — no new batch
+   work after the checkpoint.
+
+Successor bootstrap (Principal pastes into the fresh session): read, in order, (1) this
+plan (v1.5.0 — this section governs), (2) the REFRESH CHECKPOINT in the terminal report,
+(3) the HANDOFF file. Load the handoff's skill order. Verify the checkpoint's claims
+against git before acting ([RES-013a]). Resume at the recorded point. All standing rules
+apply: STOP-don't-improvise (item-scoped), live-suite exclusion, protect-user-work, push
+discipline, checkpoint lines, effort tiers per this section.

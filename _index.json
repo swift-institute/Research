@@ -21,7 +21,7 @@
       "displayName": "URL-Routing Stack Migration Plan (Staged)",
       "topic": "APPROVED (v1.2.0, 2026-07-20): Nine-batch staged migration to the reviewed end-state: parity corpus first (B0), mechanical hygiene (B1), additive L1/L2 gap fills (B2), URI-engine truth (B3, ratified-differences gate), the HTTP.Body.Coder Content-Type-ownership contract closing the RT-030 class (B4), form/multipart consolidation into swift-html-form-coder (B5), placement/dependency truth (B6), satellite dissolution + Foundation-free core (B7), conformance sweep (B8). Every consumer green at every stage; deletions named; approval gates split RATIFIED vs OPEN, ratified final package roster, and an implementation dispatch preamble (prep only — implementation not started).",
       "status": "APPROVED",
-      "statusDetail": "v1.3.0 — fully ratified; overnight end-to-end execution annex added (auto-rules, census-backed unification sweep, verified bootstrap/rename recipes); start prompt at Workspace/handoffs/HANDOFF-routers-endstate-overnight-2026-07-20.md",
+      "statusDetail": "v1.5.0 — consolidated: relays 1-5 folded in (stripe carve-out + FLIP GATE, edit-mode build posture, effort tiers, item-scoped STOPs, worker refresh protocol); the plan is again the single governing document",
       "statusRaw": "APPROVED",
       "tier": 2,
       "scope": "cross-package",
