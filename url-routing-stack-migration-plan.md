@@ -2,12 +2,23 @@
 
 <!--
 ---
-version: 1.5.0
+version: 1.6.0
 last_updated: 2026-07-21
 status: APPROVED
 tier: 2
 scope: cross-package
 changelog:
+  - 1.6.0 (2026-07-21): Post-B2 transition rulings (steering consolidation). B2-gate
+    pause RELEASED (resume = B3). Arc build posture FINAL: scoped edit-mode through B8;
+    fleet edit-all REFUTED on speed (path-semantics study v1.1.0 §E5); `swift package
+    clean` replaces `rm -rf .build` (preserves edit state, verified); Scripts arming
+    triple adopted. ARC CLOSE amended: B8 final pin-advance wave SUPERSEDED by
+    unedit sweep + push + CI-green-on-committed-state per the ratified policy
+    ("local = live trees, CI = resolved versions"). Execution model: agent-team
+    session (lead = sole gatekeeper; teammate lanes; concurrency rules unchanged).
+    Ecosystem decisions parked for Principal (xcworkspace rescope, CI never-live
+    guard, SwiftPM feature request, batch-seed pilot). See §Post-B2 transition
+    rulings (v1.6.0).
   - 1.5.0 (2026-07-21): Consolidation — Principal relays 4, 4-addendum, and 5 folded in
     as §Consolidated relay rulings (v1.5.0), the now-governing text superseding chat-only
     relay state: boiler corpus descope; minimum-viable rule for dissolution-bound
@@ -683,3 +694,74 @@ plan (v1.5.0 — this section governs), (2) the REFRESH CHECKPOINT in the termin
 against git before acting ([RES-013a]). Resume at the recorded point. All standing rules
 apply: STOP-don't-improvise (item-scoped), live-suite exclusion, protect-user-work, push
 discipline, checkpoint lines, effort tiers per this section.
+
+## Post-B2 transition rulings (v1.6.0 — steering consolidation, 2026-07-21)
+
+Consolidates the Principal's post-B2 rulings at the agent-team transition. Supersedes the
+"edit-all switchover" advance notice (relay 7): that switchover is CANCELLED — fleet
+edit-all was refuted on speed (swiftpm-path-semantics-with-url-manifests.md v1.1.0 §E5:
+~33 s per warm edit, ~1.7 h to arm one mid-sized consumer). This section governs from B3.
+
+### 1. B2-gate pause released
+
+B0, B1, B2 are GREEN (Workspace terminal report, checkpoint `09ff86b7`). The pause at the
+B2 gate is lifted; the arc resumes at **B3** (raised-effort lane, delta-class auto-rule
+unchanged).
+
+### 2. Arc build posture — FINAL
+
+- **Scoped edit-mode stays through B8.** It is armed across the consumer set, probe-clean
+  (17/17 at B2 close), and pin-ceremony-free. No posture change for the rest of the arc.
+- **Never `rm -rf .build`.** Use `swift package clean` — verified to PRESERVE edit state
+  (study v1.1.0). If `.build` removal ever genuinely happens, re-arm via the Scripts
+  triple and re-run the probe before trusting any build.
+- Arming/teardown/probe are script-owned: `edit-all.sh` / `unedit-all.sh` /
+  `edit-status.sh` (swift-institute/Scripts `0a98201`; dep list derived from mirror
+  table ∩ resolved graph). The empty edit-status probe remains a REQUIRED batch-gate item.
+- Pin advances remain forbidden (item-scoped STOP), unchanged.
+
+### 3. ARC CLOSE (B8) amended
+
+§Consolidated relay rulings item 4 (unedit + final pin-advance wave + tracked-lockfile
+commit) is SUPERSEDED. Under the ratified policy ("local = live trees, CI = resolved
+versions"), local pins carry no evidence weight and `Package.resolved` is untracked in
+the stack repos. B8 close is now:
+
+a. `unedit-all` sweep across the consumer set (tree-preserving), empty-probe verified;
+b. push sweep — every repo rev-list-0-verified, clean trees;
+c. **CI green on committed state** for the stack + consumer set (CI resolves fresh from
+   committed manifests) — this is the close evidence, strictly stronger than a local pin
+   wave. No pin-advance wave; no lockfile commits.
+
+### 4. Execution model — agent-team session
+
+The arc's executor from B3 onward is a single agent-team session
+(CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS). Rules:
+
+- **The lead is the sole gatekeeper**: reads this plan, assigns lanes, verifies every
+  lane's claimed exit status from logs before accepting it, writes all checkpoint lines
+  and all pushes' pre-verification, adjudicates item-scoped STOPs (unresolvable →
+  surface to Principal and hold that item only).
+- Teammates run per-repo lanes (corpus re-runs, consumer sweeps, additive rows). All
+  standing rules bind every teammate: toolchain assert before builds, one swift
+  invocation per repo at a time, ≤4 concurrent build lanes across the team (shared-cache
+  contention → drop to serial and note it), live-suite exclusion, protect-user-work,
+  [RES-013a] verify-before-acting.
+- Gates are SERIALIZED in the lead — no teammate declares or crosses a gate.
+
+### 5. Immediate tasks at resume (before/alongside B3 entry)
+
+1. Create GitHub remotes (PRIVATE, annex bootstrap recipe — already authorized) + first
+   push for the two local-only repos: `swift-standards/swift-media-type-standard`
+   (`86c7b9c`) and `swift-primitives/swift-parser-optic-primitives` (`34b18c3`); then
+   metadata.yaml/CI/social-preview for both (parallel lane).
+2. Enter B3 per §Batch 3 with scoped corpus re-runs (engine change ⇒ all consumers).
+
+### 6. Parked for Principal (NOT arc blockers — do not act)
+
+- Rescoping the Xcode-workspace rejection (local-iteration vehicle vs gate vehicle).
+- Implementing the CI never-live/never-edited guard (spec in the path-semantics study).
+- SwiftPM feature request (batch edit registration / first-class override file).
+- Batch-seeded edit-state pilot (study recommends NO).
+- Ratification queue items 1–8 in the terminal report (incl. the countersign placement
+  deviation and the swift-ietf/ path-table correction).
