@@ -400,6 +400,15 @@ upstream typed-error change to `Identity.OAuth.Client.registerProvider`
 non-local-throws-type exemption would permanently hide the pressure that
 motivates the upstream fix. Ruling-only; no rule change.
 
+**Drained (2026-07-23)**: upstream fix landed — swift-identities-types
+`5af373b` adds `Identity.OAuth.Client.Error` ([API-ERR-002] shape) and types
+`registerProvider` with it; swift-identities-github `0e14256` retypes the 5
+sites (`throws(Identity.OAuth.Client.Error)`). Existential-throws class count
+in swift-identities-github is 0; the accepted class is retired. Unblocking
+rider: swift-url-routing-authentication `f005b1b` adopts url-routing's
+extracted `URL Routing Foundation Integration` product (joint-mains breakage
+predating this drain).
+
 ### Entry III.f — IPv4 adapter rawValue disable at the RFC 791 / ISO network-order boundary
 
 **Class**: `[PATTERN-017]` justified per-site disable; question is whether an
