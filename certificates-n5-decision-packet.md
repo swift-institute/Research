@@ -299,3 +299,59 @@ implementation"). Rulings:
   execute only after the checklist passes, and each is reported to the
   principal on completion. CryptoExtras/RSA, tags/releases, and archive/delete
   remain NOT authorized.
+
+## EXECUTION LOG (2026-07-23)
+
+Pre-execution checklist COMPLETE (probe artifacts in the session scratchpad n5/):
+evidence pins intact (crypto 4.3.0 fa308c07, certificates 1.18.0 24ccdee…, asn1
+1.6.0 9f54261…; upstream ahead at 4.5.1/1.19.3/1.7.1); clean-room resolve of
+crypto exact-4.3.0 confirms swift-asn1 FETCHED NOT PRUNED (floats to 1.7.1 via
+`from: "1.2.0"`), identity set collision-free vs mirrors and workspace; zero
+reservation consumers (org + global code search); rename targets were free.
+Isolation deviation disclosed: the coordinator forbids the isolated-SwiftPM
+flags, so compensating controls were used (no-mirror proof positive-controlled,
+--disable-netrc/--disable-keychain, canonical-URL fetch evidence); byte-identical
+precedent isolation would need a guard exemption.
+
+Rulings + operations:
+1. STOP-flag (reservations were PRIVATE) adjudicated: visibility flips are
+   pre-approved for Institute packages (standing ruling); flip-then-rename
+   satisfies "history public/reachable".
+2. EXECUTED: swift-foundations/swift-crypto → swift-crypto-reservation-2026,
+   PUBLIC; old name redirect verified via API. EXECUTED:
+   swift-foundations/swift-certificates → swift-certificates-reservation-2026,
+   PUBLIC; redirect verified. Canonical names swift-crypto / swift-certificates
+   are now vacated for the N5 publications.
+3. **ASN.1 home SELECTED (principal correction, supersedes the lead's
+   one-repo pick): TWO repos, one per standard** — `swift-iso/swift-iso-8824`
+   (X.680 notation; product `ISO 8824`, module ISO_8824) and
+   `swift-iso/swift-iso-8825` (X.690 BER/CER/DER; product `ISO 8825`, module
+   ISO_8825; depends on swift-iso-8824). The record's one-cohesive-fork
+   preference is SUPERSEDED by the principal's one-repo-per-standard
+   convention; its condition ("until it proves mechanically truthful heritage
+   for one upstream repository split across two owners") is satisfied by the
+   path-filtered history-import mechanism rehearsed and executed for the
+   GitHub types-to-core split (external-service-package-architecture.md
+   §GitHub history-transfer rehearsal): each repo imports the upstream
+   commits touching its paths via reviewed git-filter-repo, with the
+   original-to-filtered commit map retained and a publication commit naming
+   the fork-point SHA. GitHub-native fork badge, if used at all, attaches to
+   at most one repo (8825, the substantive codec mass); the other carries
+   heritage via the filtered import + attribution/NOTICE. Both candidate
+   names were verified free in the probe; module normalization and
+   coexistence with Apple's transitive swift-asn1 are build-proven.
+   Additionally sanctioned by the principal: IF unification proves necessary,
+   a convergence layer in swift-standards (swift-*-standard family, e.g.
+   `swift-asn1-standard`) may be minted over the two authority repos — the
+   swift-http-standard pattern; mint only on demonstrated need, not
+   preemptively.
+4. **Fork-point ruling**: publication parents pin at the REVIEWED release
+   commits (certificates 24ccdeeeed4dfaae7955fcac9dbf5489ed4f1a25 = 1.18.0;
+   asn1 9f542610331815e29cc3821d3b6f488db8715517 = 1.6.0). Newer upstream
+   releases require a content review before adoption. Fork creation waits
+   until the adapted publication trees exist — no raw upstream is parked
+   public in Institute orgs.
+
+Next: the N5 material-adaptation lanes (ASN.1 → swift-iso-8824; certificates →
+swift-certificates) produce publication trees; forks + publication commits per
+[HERITAGE-002] follow, each op reported.
