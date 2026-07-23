@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 0.1.0
+version: 1.0.0
 last_updated: 2026-07-23
-status: DRAFT-FOR-PRINCIPAL
+status: DECISION
 tier: 2
 ---
 -->
@@ -94,7 +94,16 @@ blanket carve-out, since the wire boundary is exactly where a human REASON is
 worth its cost. Expected effect: large reduction of the 3,153 without losing
 the consumer-call-site signal.
 
-**Decision (principal)**: ____________________
+**Decision (final, delegated authority 2026-07-23)**: **Option 1, plus the
+recommendation's wire-boundary disposition.** The implementation contradicted
+its own message text (verified live: `ISO 9945.Kernel.Process.ID.swift:20-28`,
+`GitHub.Owner.ID.swift:1-11` fire inside the declaring `init(rawValue:)`);
+the initializer-boundary reserve is now implemented — no firing when the
+directly enclosing function-like context is an initializer (closures/functions
+nested in inits still fire). Wire-boundary firings in ordinary function bodies
+(samples 3-5) remain accept-as-warning / per-site-disable: the wire boundary
+is exactly where a human REASON earns its cost. Implemented at
+swift-institute-linter-rules `ff5efa2` (`Lint.Rule.Structure.RawValueAccess.swift`).
 
 ### Entry II.2 — PATTERN-004a (canimport conditional): platform trellis
 
@@ -145,7 +154,17 @@ canonical libc trellis, which the skill's own determinism table
 availability. Option 2 is a real architecture change and would need its own
 proposal; Option 3 is 926 disables of a pattern the skill sanctions.
 
-**Decision (principal)**: ____________________
+**Decision (final, delegated authority 2026-07-23)**: **Option 1.** Verified
+live (`ISO 9945.ABI.CChar.swift:25`, darwin-standard probes): every sampled
+firing is the libc trellis, which is module availability — `os(Linux)` cannot
+distinguish Glibc from Musl, so the trellis is inexpressible with `os()`.
+Exempt set: raw C-library / system-SDK modules (Darwin, Glibc, Musl, Bionic,
+Android, WASILibc, WinSDK, ucrt, CRT). Still firing: institute
+platform-prefixed modules (`Darwin_Kernel_Standard` etc., the skill's
+INCORRECT shape) and bare `Linux`/`Windows` (not importable modules;
+always-false `canImport` is platform-identity confusion plus a dead branch).
+Option 2 rejected — a shim mandate is an architecture change needing its own
+proposal. Implemented at `ff5efa2` (`Lint.Rule.Platform.PlatformConditional.swift`).
 
 ### Entry II.3 — API-IMPL-003 (bool public parameter): wire bools
 
@@ -191,7 +210,17 @@ shapes structurally while keeping the rule live on behavioral API surface
 (sample 5's shape) — Option 2 would also silence genuine API-design findings
 inside types packages.
 
-**Decision (principal)**: ____________________
+**Decision (final, delegated authority 2026-07-23)**: **Option 1.** Both
+false-positive shapes verified live (mailgun `AccountManagement.swift:115-124`
+Decodable memberwise; iso-9945 `Kernel.File.Copy.Options.swift:36-44` — the
+rule firing on its own prescribed remedy). Exemption is init-only and
+memberwise-only: a Bool param is exempt iff the init assigns
+`self.<param> = <param>` AND the enclosing type conforms (same-file) to
+Codable/Decodable/Encodable OR is a struct named `Options`. Behavioral Bools
+— including in wire types — still fire; sample 5's shape
+(swift-pool-primitives) remains a live candidate finding. Option 2 rejected:
+package-level exemption would silence genuine API-design findings.
+Implemented at `ff5efa2` (`Lint.Rule.Naming.BoolParameter.swift`).
 
 ---
 
@@ -217,7 +246,16 @@ path, not its flat spelling; (2) keep per-site disables.
 against the workspace's mandated naming pattern; disables here train people
 to suppress the rule.
 
-**Decision (principal)**: ____________________
+**Decision (final, delegated authority 2026-07-23)**: **False positive
+confirmed; mechanism re-attributed; remedied via III.b's allowlist.** The
+detector is nesting-blind — it checks only the declared token
+(`Lint.Rule.Naming.CompoundType.swift`, `check(name:)`), so the ledger's
+"evaluated by its flat spelling" mechanism does not survive verification:
+the firing site is the token `OAuth` itself, whose internal capitals trip the
+acronym word-boundary heuristic. That makes III.a the same defect class as
+III.b (brand-token orthography), and one fix covers both: `OAuth` is in the
+brand-token allowlist. The `759330b` per-site disable can be dropped in the
+drain arc. Implemented at `ff5efa2`.
 
 ### Entry III.b — Brand token "GitHub" flagged as compound type name
 
@@ -238,7 +276,13 @@ the style of the existing `namingCompoundSwiftNativeIdiomCitations` mechanism
 **RECOMMENDATION**: Option 1 — a small, citable allowlist mirrors the rule's
 existing stdlib-vocabulary mechanism and ends a permanent warning class.
 
-**Decision (principal)**: ____________________
+**Decision (final, delegated authority 2026-07-23)**: **Option 1.** Brand-token
+allowlist `namingCompoundTypeBrandTokenCitations` added to the compound-type
+detector, in the style of the existing citation-dict mechanisms; seeded with
+GitHub, OAuth, IPv4, IPv6, PostgreSQL — each citing the authority that fixes
+the spelling. Exact-match only (`GitHubClient` still fires). Additions are
+proposed in lint drains with a citation and ratified per the III.d governance.
+Implemented at `ff5efa2` (`Lint.Rule.Naming.CompoundType.swift`).
 
 ### Entry III.c — Untyped throws in `@Test` function bodies (rule-scope)
 
@@ -269,7 +313,18 @@ migrate the published precedent (36+ sites across three published repos).
 **RECOMMENDATION**: Option 1 — published precedent is uniform, the runner is
 the only consumer, and no skill rule requires the contrary.
 
-**Decision (principal)**: ____________________
+**Decision (final, delegated authority 2026-07-23)**: **Option 1, confirmed.**
+No SWIFT-TEST rule requires typed test throws (verified:
+`Skills/testing-swiftlang/SKILL.md:210-212` is naming-only); the workspace
+typed-throws rule is API-surface; published precedent is uniform (gh-http
+`759330b`, sockets `ca79bb8` — 19-site probe re-confirmed at HEAD,
+identities-github `0205e7f`). Exempt: `@Test`-attributed functions,
+`@Suite`-member declarations, and members of same-file
+extension-of-`@Suite` types ([SWIFT-TEST-002] extension pattern).
+Deliberately NOT exempt: file-scope helper functions in test files (e.g.
+sockets' `private func serverSideEcho`) — they have callers, can adopt typed
+throws, and drain in the follow-up arc. Implemented at `ff5efa2`
+(`Lint.Rule.Throws.Untyped.swift`).
 
 ### Entry III.d — Protocol-witness compound identifiers: witness allowlist mechanism
 
@@ -301,7 +356,21 @@ next to `namingCompoundSwiftNativeIdiomCitations` so the mechanism and review
 path match the existing stdlib-vocabulary precedent. Until then the 7 sites
 stay warnings by the rule's own arm.
 
-**Decision (principal)**: ____________________
+**Decision (final, delegated authority 2026-07-23)**: **Option 1.** The witness
+allowlist IS `namingCompoundProtocolWitnessMethodCitations`, formalized:
+(1) entries are proposed in lint drains and ratified by the principal or a
+session holding delegated adjudication authority, citing the ratifying
+adjudication; (2) each entry cites its `Protocol.requirement` (mandatory);
+(3) allowlisted witnesses stop firing entirely inside their gate. Per-entry
+gate: conformance-gated by default ([RULE-EXEMPT-3]); name-only where the
+one-extension-per-member file convention places the witness in a bare
+extension whose conformance is in a sibling file (the same structural
+limitation that made `Naming.Build.methods` name-only). The dict now also
+gates the property path (previously method-only — `displayName` et al. fired
+ungated). Seeded with the seven `Identity.OAuth.Provider` requirements,
+verified against the protocol declaration
+(swift-identities-types `Identity.OAuth.swift:52-78`). Implemented at
+`ff5efa2` (`Lint.Rule.Naming.Compound.swift`).
 
 ### Entry III.e — Upstream-forced existential throws
 
@@ -324,7 +393,12 @@ the upstream typed-error change as the real fix.
 queue the upstream `registerProvider` typed-error change; option 2 would
 permanently hide the pressure that motivates the upstream fix.
 
-**Decision (principal)**: ____________________
+**Decision (final, delegated authority 2026-07-23)**: **Options 1+3.** The five
+sites stay accept-as-warning (declared under III.g's gate vocabulary), and the
+upstream typed-error change to `Identity.OAuth.Client.registerProvider`
+(swift-identities-types) is queued as the real fix. Option 2 rejected — a
+non-local-throws-type exemption would permanently hide the pressure that
+motivates the upstream fix. Ruling-only; no rule change.
 
 ### Entry III.f — IPv4 adapter rawValue disable at the RFC 791 / ISO network-order boundary
 
@@ -352,7 +426,14 @@ Option 1 acceptable in the interim. Flagged because the principal signaled
 possible preference for the upstream accessor; this is exactly the choice to
 rule on.
 
-**Decision (principal)**: ____________________
+**Decision (final, delegated authority 2026-07-23)**: **Option 2 as the durable
+fix, Option 1 in the interim.** A network-order projection on `IPv4.Address`
+is RFC 791 vocabulary and belongs upstream in swift-rfc-791; queued. Interim:
+the disable's REASON is correct, and with II.1's initializer-boundary reserve
+landed the firing is moot lint-wise (verified by rule unit test
+`brand rawValue consumption inside adapter extension init is NOT flagged`);
+the disable comment can be dropped in the drain arc. Ruling-only; no rule
+change beyond II.1.
 
 ### Entry III.g — Lint-drift ruling: accepted warnings vs the changed-files-lint-clean gate
 
@@ -381,7 +462,12 @@ Note interaction: if II.1-II.3 recalibrations land, several accepted classes
 shrink or vanish; the declarations should be re-derived after recalibration,
 not frozen at today's counts.
 
-**Decision (principal)**: ____________________
+**Decision (final, delegated authority 2026-07-23)**: **Option 1.** The
+accepted-warning gate vocabulary is codified in §V below, to be absorbed by
+the swift-linter skill. Declarations are re-derived AFTER the II.1-III.d
+recalibrations land (several accepted classes shrink or vanish — e.g.
+identities-github's residual drops from 20), not frozen at pre-recalibration
+counts.
 
 ---
 
@@ -408,3 +494,100 @@ this draft covers the three handoff-seeded recalibration classes and the
 seven session seeds only. Entry III.c bears on the API-ERR-001 total (test-
 body firings are a subset of it); Entries III.a/III.b/III.d bear on the
 API-NAME-002 total.
+
+---
+
+## V. Accepted-warning gate vocabulary (Entry III.g, DECISION)
+
+Section written for later absorption into the swift-linter skill
+(consumer-surface phase; [LINT-ACCEPT-*] namespace reserved here).
+
+### [LINT-ACCEPT-001] Accepted-classes declaration
+
+A repo whose HEAD legitimately carries lint warnings MUST declare them as
+**accepted classes**, one declaration per class, each carrying:
+
+- **class ID** — the rule id plus the adjudicated shape
+  (e.g. `untyped throws / test-file helper functions`,
+  `existential throws / upstream-forced (registerProvider)`);
+- **count ceiling** — the maximum number of findings the class may
+  produce in that repo;
+- **adjudication citation** — the commit and/or ledger entry that ruled
+  the class acceptable (e.g. `0205e7f` / #16 Option C Entry III.e).
+
+Per [LINT-SETUP-005] (all-Swift, no sidecars), the declaration rides in
+the repo's `Lint.swift` as Swift values (an `accepting(classes:)`
+narrowing alongside `excluding(rules:)` is the target surface; until the
+engine ships it, the declaration lives as a structured comment block in
+`Lint.swift` with the same three fields).
+
+### [LINT-ACCEPT-002] "Clean" redefined
+
+The changed-files-lint-clean gate passes iff every finding belongs to a
+declared accepted class AND no class exceeds its ceiling. A finding
+outside any declared class, or a count above ceiling, fails the gate. A
+count UNDER ceiling on two consecutive gates SHOULD ratchet the ceiling
+down to the observed count.
+
+### [LINT-ACCEPT-003] Re-derivation after recalibration
+
+Accepted-class declarations are derived from a lint run at the corpus
+HEAD they cite. When the rule corpus is recalibrated (as by this
+ledger's II.1-III.d rulings), declarations MUST be re-derived, not
+carried forward: post-recalibration observed residuals for the three
+seed repos are recorded in §VI.
+
+### [LINT-ACCEPT-004] Governance
+
+Accepting a new class (or raising a ceiling) requires an adjudication —
+a lead ruling recorded in a commit message, or a #16-style ledger entry.
+Lowering a ceiling or removing a class requires none.
+
+---
+
+## VI. Post-recalibration gate evidence (2026-07-23, corpus `ff5efa2`)
+
+Corpus gate: swift-institute-linter-rules package test via the
+coordinator — 1061 tests / 273 suites; all recalibration tests green
+(the 2 `test function naming` fixture failures pre-existed on main,
+verified by stash-rerun, and were fixed separately at `3225268`).
+
+Before/after re-lints (same coordinator, corpus `ff5efa2`+`3225268`),
+seven repos chosen from the sweep's heaviest per class:
+
+| Repo | rule | before | after | Removed / kept |
+|---|---|---|---|---|
+| swift-iso-9945 | canimport conditional | 759 | 0 | class was 100% libc trellis |
+| swift-kernel | canimport conditional | 39 | 0 | same |
+| swift-file-system | canimport conditional | 19 | 0 | same |
+| swift-iso-9945 | raw value access | 276 | 224 | 52 init-boundary reserve firings removed; consumer-site signal kept |
+| swift-kernel | raw value access | 30 | 26 | same shape |
+| swift-file-system | raw value access | 37 | 34 | same shape |
+| swift-github-http | raw value access | 12 | 9 | same shape |
+| swift-mailgun-types | raw value access | 36 | 36 | wire-boundary function-body firings deliberately kept (II.1 ruling) |
+| swift-iso-9945 | bool public parameter | 12 | 9 | the three `Copy.Options` memberwise sites (ledger sample 3) removed |
+| swift-file-system | bool public parameter | 18 | 15 | options-shape removed, behavioral kept |
+| swift-mailgun-types | bool public parameter | 90 | 15 | wire-schema memberwise removed; behavioral kept |
+| swift-iso-9945 | untyped throws | 166 | 8 | @Test/@Suite-member removed; helpers kept |
+| swift-file-system | untyped throws | 383 | 12 | same |
+| swift-kernel | untyped throws | 72 | 14 | same |
+| swift-sockets | untyped throws | 19 | 10 | ca79bb8 precedent class removed; file-scope helpers kept per III.c |
+| swift-github-http | untyped throws | 48 | 5 | same |
+| swift-identities-github | untyped throws | 1 | 0 | the 0205e7f accepted site |
+| swift-identities-github | compound identifier | 7 | 0 | all seven Identity.OAuth.Provider witnesses (III.d) |
+| swift-sockets | compound identifier | 11 | 11 | non-witness compounds kept — genuine signal |
+| swift-github-http | compound identifier | 56 | 56 | same |
+| swift-identities-github | compound type name | 2 | 0 | brand token `GitHub` (III.b) |
+| swift-github-http | compound type name | 7 | 6 | brand token; remaining are genuine |
+| swift-kernel | compound type name | 9 | 9 | genuine signal kept |
+
+Repo totals: iso-9945 1698→726; identities-github 20→9 (residual = 5
+Foundation imports [identities family arc] + 4 existential throws, with
+the 5th `register.swift` site already drained by the in-flight III.e
+upstream lane); sockets 54→45; gh-http 205→158; kernel 307→206;
+file-system 665→269; mailgun-types 1789→1471.
+
+Note (identities-github): the working tree carried the III.e lane's
+uncommitted `throws(Identity.OAuth.Client.Error)` adoption at re-lint
+time; its existential-throws delta (5→4) is that lane's, not this
+recalibration's.
