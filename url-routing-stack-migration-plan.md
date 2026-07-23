@@ -294,6 +294,17 @@ ordinary commits, EXCEPT the deferred-exception record (Principal countersigns t
    census, test target unbuildable as declared; the localized-routes concept re-enters, if
    ever ratified real, as the L4 reservation `swift-routers-translation`; no obligation to
    fill).
+   > **DEFERRED 2026-07-23 (lead ruling, B7 Stage 1b): dissolution waits behind the E-4/W3
+   > app-cutover gate.** The 2026-07-20 zero-importers census is stale at source level. Two
+   > live edges found: (1) swift-foundations/swift-types-foundation — manifest dep
+   > (Package.swift:23,56,68) AND `import URLRoutingTranslating`
+   > (Sources/TypesFoundation/exports.swift:26), whose in-source comment (oracle-verified
+   > 2026-07-13) ties removal to the E-4/W3 app-cutover, not to any shell removal alone;
+   > (2) coenttb/coenttb-server — `@_exported import URLRoutingTranslating`
+   > (Sources/Coenttb Server/exports.swift:18), coenttb/* principal-approval-gated and its
+   > checkout diverged from origin (in-flight work — hands off). Repo left as-is, clean at
+   > 068ecf3 == origin/main (commit-first guard already satisfied). B8 close-out: re-run
+   > this census after the app cutover, then dissolve per [ARCH-LAYER-009].
 4. **The router rename (ratified)**: repo `swift-url-routing` → **`swift-routers`**;
    namespace root `Router` with `Router.Protocol`, `typealias Routing = Router.Protocol`
    ([PKG-NAME-002]), `Router.Witness`, `Router.Input`, attachment protocol `Routable`;
