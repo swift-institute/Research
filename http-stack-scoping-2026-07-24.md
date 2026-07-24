@@ -400,6 +400,19 @@ immediate.**
 and it is blocked on one duplicate-checkout cleanup, not on any HTTP work.** It can proceed
 independently of G0.
 
+**Salvage question CLOSED NEGATIVE.** I had asked whether `swift-rfc-7230` might hold a
+*working* byte-level line parse predating the Foundation strip — which would have been the
+cheapest possible source for the `[Byte]` path Finding F leaves empty. The inventory lane ran
+it, positive-controlled against 7230's own sources: **7230 has no byte-level parse entry point
+at all.** Across its six source files `[Byte]` appears **only as a `body` payload type**.
+**No lines move from rewrite to retain. Retire on the existing schedule and spend no further
+time on it.**
+
+The census lane independently reached the same disposition from the other side (its
+zero-consumer set contains 7230 and 7235 but **not** 9110/9111/9112/`swift-http-standard`,
+which all have consumers) — so the live law and the dead law are cleanly separated in two
+independent datasets.
+
 ⚠️ **Do not shortcut step 1.** The `Tests/`-inclusive requirement earned its keep here: 7 of
 the 19 consuming files are test files, and a `Sources/`-only census would have under-reported
 the duplicate's binding by more than a third.
@@ -520,7 +533,40 @@ The inventory lane reported `swift-rfc-9110` as having **zero** such sites. That
 | `swift-rfc-9110` | `HTTP.Request.swift:148` — `let effectivePath = path ?? (try! RFC_3986.URI.Path("/"))` | **Low risk, real defect** — see below |
 | `swift-rfc-9111` | none | ✅ clean |
 | `swift-http-standard` | none | ✅ clean |
-| `swift-rfc-7230` | `HTTP.Version.swift:159` — `fatalError("Invalid HTTP version literal…")` | obsoleted package; retiring anyway |
+| `swift-rfc-7230` | `HTTP.Version.swift:159` — `fatalError("Invalid HTTP version literal…")` | ⚠️ **NOT the Finding F class** — see below |
+
+⚠️ **A bare `grep fatalError` conflates two unrelated things, and my own table above did it.**
+`swift-rfc-7230/HTTP.Version.swift:159` sits inside the `ExpressibleByStringLiteral`
+conformance opened at `:145`. Trapping on an invalid **literal** is the conventional Swift
+idiom — the compiler supplies the literal, so it is a programmer error, not attacker input.
+That is categorically different from Finding F, where a **runtime `[Byte]` buffer** reaches a
+trap. (Caught by the inventory lane; confirmed against my own earlier read of that file.)
+
+**Consequence for the Step 3 audit predicate:** trap-family sweeps must be filtered by
+*where the input comes from*, not just by keyword. Literal-initializer traps are expected and
+should not be counted; only traps reachable from parsed or received data belong in the finding
+set. Unfiltered, the predicate generates false positives that will train readers to ignore it.
+
+#### Extension 4 — the generalisation, promoted to a Step 3 search predicate
+
+The single cause underneath Findings A and F, and the most useful output of the two lanes'
+exchange:
+
+> **A total signature over a partial operation.**
+>
+> - Finding A — `calculate(…) -> MessageBodyLength`, non-throwing over a failable
+>   operation ⇒ failure collapses into `.none`, **a valid-looking wrong answer**.
+> - Finding F — `parse(_ data: [Byte]) -> Self`, non-throwing over a failable
+>   operation ⇒ failure becomes **a crash**.
+>
+> Same cause, two symptoms. Neither is discoverable from the call site, because in both cases
+> the signature promises totality.
+
+**Step 3 should run this as a search, not read it as an explanation:** *which non-throwing,
+non-`Optional` public functions in the N7 chain can actually fail?* That question would have
+found A and F before either was reported, and it catches the `try!` site in the same pass.
+Recorded as the audit's primary predicate ahead of RFC-section coverage, because section
+coverage cannot see any of the three.
 
 **On the 9110 site, characterised honestly rather than inflated:** it sits in a **non-throwing
 public initializer** of `RFC_9110.Request`, and the argument is the constant `"/"`.
