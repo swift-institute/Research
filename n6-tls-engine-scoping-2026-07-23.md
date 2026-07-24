@@ -96,6 +96,9 @@ These are validated against RFC 8448 logged values in the existing test suite. *
 
 ## 3. Deliverable 2 — Clean-room collision audit (also serves N5 as a standing STOP-condition)
 
+> **⚠️ SUPERSEDED FOR N5 PURPOSES — see [`n5-certificates-publication-gate-2026-07-24.md`](n5-certificates-publication-gate-2026-07-24.md).**
+> This §3 was authored before its author had read `certificates-n5-decision-packet.md` v1.0.0. Since then: **GATE A is CONFIRMED** (E5 resolved), the **reservation renames are EXECUTED** (A1/A3), the **ASN.1 cut is settled as TWO repos — 8824 + 8825 — inverting E1/E2/E3**, and **swift-asn1 pruning is RESOLVED (fetched, not pruned)** (A2/E6). The standalone note carries the reconciled, executable checklist plus a full correction register; use it, not this section, for the N5 publication gate. The framing below (identity-collision mechanics, [HERITAGE-001] results, provenance contact points, STOP conditions) still stands.
+
 This audit is one of the three named N5 publication STOP-conditions that stand even post-authorization (`HANDOFF-team-lead-2026-07-23c.md:66-67`: "HERITAGE-007 keystones, fork-point refresh, **Apple-Crypto clean-room collision audit**"). It is consumable as a checklist by the N5 certificates-fork publication and must be respected by N6's `-crypto` manifest landing (both add the `apple/swift-crypto` edge). Citations `record:` = heritage record; `adj:` = certificate/system-trust adjudication.
 
 ### 3.0 Provenance ledger (physical repo ancestry — raw git-state evidence, 2026-07-23)
