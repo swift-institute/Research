@@ -1033,6 +1033,47 @@ Two distinct defects fall out, and they should be filed separately:
    to distinguish — which is a gate, and I am not running one in Phase 1 without the Lead's
    go-ahead.** Flagged as §5 step 0.
 
+### 3.4d ⚠️ A SECOND CORRECTION TO ME — "your Foundation numbers are now stale" overstated it
+
+After Step 1 landed I told the census lane its Foundation figures were stale. **The headline
+was wrong and the body of the same message conceded it**, which is the worse failure of the
+two: a reader takes the headline.
+
+**What `2beb8d8` actually changed, per the census lane:**
+
+| | Affected? |
+|---|---|
+| Its ~1,330 core-target Foundation-family lines | **No** — its matcher covered the full family from the first run; the 48 `FoundationNetworking` lines were **always inside** that total |
+| The 96.2 / 3.6 split | **No** — a measurement of the tree |
+| *"the guard sees 96.2% of the violation mass"* | **Yes → now 100%** |
+| Any **lint-derived** zero-set from before `2beb8d8` | **Yes — false zero for exactly those 48** |
+
+**No figure in its census is lint-derived** — that lane has never run lint; it attributes the
+Step 0 run to this lane. So BOARD #24 stands unchanged at **39 packages / 1,320 lines**, and
+exactly one derived sentence needed updating. My claim holds only for **lint-derived**
+zero-sets — which is the population the per-rule census will produce, so the caution survives
+where it matters and nowhere else.
+
+**Its formulation is the durable part and is better than mine:**
+
+> **A measurement of the tree and a measurement of what a tool reports about the tree are
+> different objects** — and conflating them is precisely how a tracked "4" survived against
+> 1,330 real lines.
+
+### 3.4e ⚠️ RISK INVERSION in the per-rule census — the census lane's point, recorded
+
+I cautioned that the per-rule census's root list is load-bearing, citing its own `Workspace/`
+gap (426 of 1,273 manifests missed through one accidental boundary, which produced the
+rfc-7230 false zero). **It sharpened this into something worth carrying beyond either lane:**
+
+> In a reporting census a false zero **misreports a number**. In the per-rule severity census
+> a false zero **is ratcheted into `.error` and breaks builds**. **Under-scoping is normally
+> the safe direction; here it is the dangerous one.**
+
+That inversion is why the per-rule census needs an **explicitly stated population in its own
+output**, **both-ended controls** (a rule known to fire *and* a rule known clean), a
+post-`2beb8d8` run, and its result reported as **a count, never as a severity check.**
+
 ### 3.4b ⚠️ CORRECTION TO MY OWN CLAIM — the hole is real but is NOT the mechanism behind #24
 
 I originally wrote that §3.4a was *"the concrete mechanism behind BOARD #24's 61 packages /
@@ -1505,6 +1546,13 @@ from `:167`, plus an in-file comment recording why, so the next reader does not 
    local directories holding `LICENSE.md` and `.github/`, and no reservation exists.** That
    removes the second half of Step 2 entirely, and it sharpens the principal's *"almost
    entirely aspirational"* — at L4 the names are not even reserved remotely.
+
+   **The census lane then measured the whole root and it is broader than my two:**
+   `swift-components` = **25 directories, 1 with `.git`, 24 local-only** (neither `.git` nor
+   `Package.swift`). **Only `swift-server-static` is a git repository at all.** So L4 is not
+   "25 reserved slots awaiting inhabitants" — it is **one real package and 24 local-only
+   directories.** (Remote non-existence is verified only for the two I checked; the other 22
+   are measured as local-`.git`-absent, which is a weaker claim and is recorded as such.)
 
 `swift-foundations/swift-http` is **PRIVATE**, so the corrected mission is not public either.
 
