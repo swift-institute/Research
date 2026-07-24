@@ -1522,6 +1522,64 @@ statics. Anchor on the already-localised defect at `HTTP.Message.Deserializer.sw
 > consumed count · post-limit append · byte loss · incorrect Host/target form · ambiguous
 > reuse. **Design approval, not a build.**
 
+#### 3.0 Claimed section coverage — the mechanical differential
+
+Extracted from the `Section N.N` markers the sources carry, positive-controlled (the probe
+returns markers from `HTTP.Response.Line.swift:5,33,65`).
+
+| File | Sections claimed |
+|---|---|
+| `HTTP.Message.Parser` | 2 · 2.2 · **11.1** |
+| `HTTP.Message.Deserializer` | 3 · 3.2 · 4 |
+| `HTTP.Message.Serializer` | 3 · 4 |
+| `HTTP.Version` | 2.3 |
+| `HTTP.Request.Line` | 3 · 3.1 · 3.2 |
+| `HTTP.Response.Line` | 4 |
+| `HTTP.Host` | 3.2.2 |
+| `HTTP.Field` | 5 · 5.1 · 5.2 · 5.5 · 5.6.2 |
+| `HTTP.TransferEncoding` | 6 · 6.1 |
+| `HTTP.MessageBodyLength` | **6.3** |
+| `HTTP.ChunkedEncoding` | 7.1 · 7.1.1 |
+| `HTTP.Request.Validator` | 6.1 · 6.2 · 7 · **11.2** |
+| `HTTP.Response.Validator` | 6.1 · 6.2 · 6.3 · 7 · **11.1** |
+| `HTTP.Connection` | 9.6 |
+| `HTTP.Connection.State` | 9.3 · 9.3.1 · 9.7 |
+| `HTTP.Pipeline` | 9.4 |
+
+**Top-level sections claimed: 2, 3, 4, 5, 6, 7, 9, 11. Not claimed anywhere: 1, 8, 10.**
+
+**⚠️ §8 — "Handling Incomplete Messages" — has no implementation, and that is not a
+coincidence.** It is the one normative section a **whole-buffer parser cannot implement at
+all**: a parser that requires the entire message before it can act has no representation for
+an incomplete one. **The absent section is precisely the section that requires incremental
+parsing.** This is independent confirmation of §1.0's structural finding, arrived at from the
+opposite direction — and it means §8 is not a gap to be filled *alongside* the incremental
+redesign, it is a gap that the redesign closes by existing.
+
+§10 (enclosing messages as data — the `message/http` and `application/http` media types) is a
+genuine but low-priority absence; nothing on N7's or N8's path needs it. §1 is non-normative.
+
+**⚠️ Two cautions on how to read this table, both of which limit it:**
+
+1. **A section marker is a claim of intent, not evidence of conformance.** The sharpest
+   demonstration is in the table itself: **§6.3 is claimed by two separate files** —
+   `MessageBodyLength` and `Response.Validator` — **and §6.3 is exactly where Findings A, B
+   and C live.** Claimed coverage is a *lower bound on intent*; the inventory lane's
+   clause-by-clause work is what measures correctness. **The two must not be conflated, and a
+   coverage table like this one is precisely the artifact that invites conflating them.**
+2. **Test traceability is effectively absent.** The 237-test corpus references **only §2.2 and
+   §11.2**, against 27 sections claimed in `Sources`. The tests exist and pass; what does not
+   exist is any mechanical way to ask *which clause is covered by which test*. For a security-
+   relevant wire parser that is a real gap, and it is why the inventory lane's §4.5 reject/
+   accept fixture set should be adopted with explicit clause citations rather than folded into
+   the existing suites.
+
+**Subsection-numbering caveat:** I extracted these markers mechanically and have **not**
+verified each against the RFC's actual subsection titles. Some look questionable — `Pipeline`
+claims §9.4 and `Connection` claims §9.6, which may be mis-citations — but I am not asserting
+that from recall. **Verifying the marker-to-title mapping belongs in the inventory lane's
+clause work**, and I have flagged it there rather than guess.
+
 #### 3.1 Incremental framing — design proposal (Step 3 deliverable, FOR REVIEW)
 
 The conformance half of Step 3 is the inventory lane's
