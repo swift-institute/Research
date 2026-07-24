@@ -417,12 +417,54 @@ sweep positive-controlled against the `@_exported` chains.
 |---|---|---|
 | `swift-rfc-7230`, `swift-rfc-7231` | **PUBLIC**, not archived | Archiving/deleting is outward-facing and effectively irreversible on repos the world can already see |
 | `swift-rfc-7232/7233/7234/7235` | PRIVATE, not archived | Lower stakes |
-| Mirror-map entries | **36** (6 per package) | Machine-wide. Remove repos without cleaning these → dangling entries; clean without removing → resolution breaks for anything naming those URLs |
+| Mirror-map entries | ~~36~~ → **24 records / 48 strings** (4 records per package) — corrected, see below | Machine-wide. Remove repos without cleaning these → dangling entries; clean without removing → resolution breaks for anything naming those URLs |
 | `institute.xcworkspace` FileRefs | **6** | Shared integration workspace; stale FileRefs break it for every lane |
 | Internal edge | `swift-rfc-7230` → `swift-rfc-7231` (`Package.swift:23,31`) | They must retire together, or in order |
 
 **Only the first action is what "~1,650 lines" measures.** The decomposition benefit needs all
 four.
+
+#### ⚠️ D17 — my "36 mirror entries" was wrong, and the reason is a reusable probe defect
+
+**The Lead's figure — 24 records / 48 strings — is correct. Its explanation is not**, and the
+difference is the actionable part, so it is recorded rather than silently accepted.
+
+The Lead attributed my **36** to a number that "migrated between probes," the way a stray
+"65" had earlier. **It did not migrate. It has a precise, reproducible cause**, measured
+against a package still in the map (`swift-rfc-9110`, since the 723x entries are now cleaned —
+confirmed at 0):
+
+```
+grep -c 'swift-rfc-9110"'          →  6     ← my pattern
+grep -c 'swift-rfc-9110'           →  8     ← every string
+grep -c '"mirror".*swift-rfc-9110' →  4     ← records
+```
+
+Each package occupies **4 records** — two orgs (`swift-ietf`, `swift-standards`) × two URL
+spellings (bare, `.git`) — and each record names the package **twice** (`mirror` +
+`original`), so **8 strings**. My pattern anchored on a **trailing quote**, which matches the
+4 `mirror` lines and the 2 bare `original` lines but **silently excludes the 2 `.git`
+variants**, whose lines end `.git"`. 6 per package × 6 packages = the 36 I reported.
+
+**Why the distinction matters:** "a number migrated" implies a transcription slip whose remedy
+is care. **A trailing-quote anchor that drops `.git` URL variants is a probe defect that will
+recur for anyone counting mirror entries**, and its remedy is a pattern change. Only the
+second is reusable.
+
+**Two rules fall out, and the second is the one I would put on the board:**
+
+1. **Mirror-map counts must state whether they are records or strings.** They differ by
+   exactly 2× and both are legitimate answers to differently-phrased questions.
+2. ⚠️ **Never anchor a URL probe on a trailing quote.** Every package in this map appears
+   under both a bare and a `.git` spelling; an anchored pattern silently drops half the
+   originals. This is the same family as the BOARD's existing note that mirror *spelling*
+   changes the resolved `PackageReference.Kind` — the map is spelled inconsistently by
+   design, and probes over it must be spelling-agnostic by construction.
+
+Incidental: the 4-records-per-package shape exists because each package is reachable under
+**two orgs**, which is the `swift-standards` → `swift-ietf` rename still present in the map.
+That is directly relevant to any G0-4-style identity audit — a probe that counts orgs would
+double-count these packages.
 
 **This lane is not choosing the mechanism.** `BOARD.md:20` reserves *"archival and destructive
 ops"* for explicit approval; two of the six are **PUBLIC**; and the mirror-map and workspace
