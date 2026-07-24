@@ -1,0 +1,302 @@
+# swift-certificates N5 publication tree — deletions manifest (acceptance artifact)
+# Fork point (publication commit parent): 24ccdeeeed4dfaae7955fcac9dbf5489ed4f1a25 (apple/swift-certificates 1.18.0)
+# Working tree: /Users/coen/Developer/swift-foundations/swift-certificates-n5 branch publication
+# Generated: 2026-07-23 (stage 2). Whole-path deletions:
+.editorconfig
+.github/release.yml
+.github/workflows/main.yml
+.github/workflows/pull_request.yml
+.github/workflows/pull_request_label.yml
+.licenseignore
+.spi.yml
+.swift-format
+Benchmarks/.gitignore
+Benchmarks/Benchmarks/CertificatesBenchmark/Benchmarks.swift
+Benchmarks/Benchmarks/CertificatesBenchmark/CACertificates.swift
+Benchmarks/Benchmarks/CertificatesBenchmark/ParseWebPKI.swift
+Benchmarks/Benchmarks/CertificatesBenchmark/TinyArrayAppend.swift
+Benchmarks/Benchmarks/CertificatesBenchmark/TinyArrayNonAllocationFunctions.swift
+Benchmarks/Benchmarks/CertificatesBenchmark/VerifierBenchmark.swift
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/ca-certificates.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/ACCVRAIZ1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/AC_RAIZ_FNMT-RCM.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/AC_RAIZ_FNMT-RCM_SERVIDORES_SEGUROS.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/ANF_Secure_Server_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Actalis_Authentication_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/AffirmTrust_Commercial.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/AffirmTrust_Networking.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/AffirmTrust_Premium.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/AffirmTrust_Premium_ECC.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Amazon_Root_CA_1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Amazon_Root_CA_2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Amazon_Root_CA_3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Amazon_Root_CA_4.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Atos_TrustedRoot_2011.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Autoridad_de_Certificacion_Firmaprofesional_CIF_A62634068.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Autoridad_de_Certificacion_Firmaprofesional_CIF_A62634068_2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Baltimore_CyberTrust_Root.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Buypass_Class_2_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Buypass_Class_3_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/CA_Disig_Root_R2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/CFCA_EV_ROOT.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/COMODO_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/COMODO_ECC_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/COMODO_RSA_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Certainly_Root_E1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Certainly_Root_R1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Certigna.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Certigna_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Certum_EC-384_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Certum_Trusted_Network_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Certum_Trusted_Network_CA_2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Certum_Trusted_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Comodo_AAA_Services_root.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/D-TRUST_BR_Root_CA_1_2020.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/D-TRUST_EV_Root_CA_1_2020.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/D-TRUST_Root_Class_3_CA_2_2009.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/D-TRUST_Root_Class_3_CA_2_EV_2009.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/DigiCert_Assured_ID_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/DigiCert_Assured_ID_Root_G2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/DigiCert_Assured_ID_Root_G3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/DigiCert_Global_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/DigiCert_Global_Root_G2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/DigiCert_Global_Root_G3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/DigiCert_High_Assurance_EV_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/DigiCert_TLS_ECC_P384_Root_G5.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/DigiCert_TLS_RSA4096_Root_G5.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/DigiCert_Trusted_Root_G4.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/E-Tugra_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/E-Tugra_Global_Root_CA_ECC_v3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/E-Tugra_Global_Root_CA_RSA_v3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Entrust.net_Premium_2048_Secure_Server_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Entrust_Root_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Entrust_Root_Certification_Authority_-_EC1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Entrust_Root_Certification_Authority_-_G2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Entrust_Root_Certification_Authority_-_G4.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GDCA_TrustAUTH_R5_ROOT.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GLOBALTRUST_2020.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GTS_Root_R1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GTS_Root_R2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GTS_Root_R3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GTS_Root_R4.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GlobalSign_ECC_Root_CA_-_R4.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GlobalSign_ECC_Root_CA_-_R5.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GlobalSign_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GlobalSign_Root_CA_-_R3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GlobalSign_Root_CA_-_R6.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GlobalSign_Root_E46.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/GlobalSign_Root_R46.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Go_Daddy_Class_2_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Go_Daddy_Root_Certificate_Authority_-_G2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/HARICA_TLS_ECC_Root_CA_2021.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/HARICA_TLS_RSA_Root_CA_2021.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Hellenic_Academic_and_Research_Institutions_ECC_RootCA_2015.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Hellenic_Academic_and_Research_Institutions_RootCA_2015.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/HiPKI_Root_CA_-_G1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Hongkong_Post_Root_CA_1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Hongkong_Post_Root_CA_3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/ISRG_Root_X1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/ISRG_Root_X2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/IdenTrust_Commercial_Root_CA_1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/IdenTrust_Public_Sector_Root_CA_1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Izenpe.com.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Microsec_e-Szigno_Root_CA_2009.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Microsoft_ECC_Root_Certificate_Authority_2017.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Microsoft_RSA_Root_Certificate_Authority_2017.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/NAVER_Global_Root_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/NetLock_Arany_=Class_Gold=_Fotanusitvany.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/OISTE_WISeKey_Global_Root_GB_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/OISTE_WISeKey_Global_Root_GC_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/QuoVadis_Root_CA_1_G3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/QuoVadis_Root_CA_2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/QuoVadis_Root_CA_2_G3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/QuoVadis_Root_CA_3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/QuoVadis_Root_CA_3_G3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/SSL.com_EV_Root_Certification_Authority_ECC.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/SSL.com_EV_Root_Certification_Authority_RSA_R2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/SSL.com_Root_Certification_Authority_ECC.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/SSL.com_Root_Certification_Authority_RSA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/SZAFIR_ROOT_CA2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/SecureSign_RootCA11.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/SecureTrust_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Secure_Global_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Security_Communication_ECC_RootCA1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Security_Communication_RootCA2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Security_Communication_RootCA3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Security_Communication_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Starfield_Class_2_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Starfield_Root_Certificate_Authority_-_G2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Starfield_Services_Root_Certificate_Authority_-_G2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/SwissSign_Gold_CA_-_G2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/SwissSign_Silver_CA_-_G2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/T-TeleSec_GlobalRoot_Class_2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/T-TeleSec_GlobalRoot_Class_3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/TUBITAK_Kamu_SM_SSL_Kok_Sertifikasi_-_Surum_1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/TWCA_Global_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/TWCA_Root_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/TeliaSonera_Root_CA_v1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Telia_Root_CA_v2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Trustwave_Global_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Trustwave_Global_ECC_P256_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/Trustwave_Global_ECC_P384_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/TunTrust_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/UCA_Extended_Validation_Root.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/UCA_Global_G2_Root.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/USERTrust_ECC_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/USERTrust_RSA_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/XRamp_Global_CA_Root.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/certSIGN_ROOT_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/certSIGN_Root_CA_G2.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/e-Szigno_Root_CA_2017.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/ePKI_Root_Certification_Authority.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/emSign_ECC_Root_CA_-_C3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/emSign_ECC_Root_CA_-_G3.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/emSign_Root_CA_-_C1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/emSign_Root_CA_-_G1.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/vTrus_ECC_Root_CA.crt
+Benchmarks/Benchmarks/CertificatesBenchmark/ca-certificates/mozilla/vTrus_Root_CA.crt
+Benchmarks/Package.swift
+Benchmarks/Thresholds/6.0/CertificatesBenchmark.Parse_WebPKI_Roots_from_DER.p90.json
+Benchmarks/Thresholds/6.0/CertificatesBenchmark.Parse_WebPKI_Roots_from_PEM_files.p90.json
+Benchmarks/Thresholds/6.0/CertificatesBenchmark.Parse_WebPKI_Roots_from_multi_PEM_file.p90.json
+Benchmarks/Thresholds/6.0/CertificatesBenchmark.TinyArray.append.p90.json
+Benchmarks/Thresholds/6.0/CertificatesBenchmark.TinyArray_non-allocating_functions.p90.json
+Benchmarks/Thresholds/6.0/CertificatesBenchmark.Verifier.p90.json
+Benchmarks/Thresholds/6.1/CertificatesBenchmark.Parse_WebPKI_Roots_from_DER.p90.json
+Benchmarks/Thresholds/6.1/CertificatesBenchmark.Parse_WebPKI_Roots_from_PEM_files.p90.json
+Benchmarks/Thresholds/6.1/CertificatesBenchmark.Parse_WebPKI_Roots_from_multi_PEM_file.p90.json
+Benchmarks/Thresholds/6.1/CertificatesBenchmark.TinyArray.append.p90.json
+Benchmarks/Thresholds/6.1/CertificatesBenchmark.TinyArray_non-allocating_functions.p90.json
+Benchmarks/Thresholds/6.1/CertificatesBenchmark.Verifier.p90.json
+Benchmarks/Thresholds/6.2/CertificatesBenchmark.Parse_WebPKI_Roots_from_DER.p90.json
+Benchmarks/Thresholds/6.2/CertificatesBenchmark.Parse_WebPKI_Roots_from_PEM_files.p90.json
+Benchmarks/Thresholds/6.2/CertificatesBenchmark.Parse_WebPKI_Roots_from_multi_PEM_file.p90.json
+Benchmarks/Thresholds/6.2/CertificatesBenchmark.TinyArray.append.p90.json
+Benchmarks/Thresholds/6.2/CertificatesBenchmark.TinyArray_non-allocating_functions.p90.json
+Benchmarks/Thresholds/6.2/CertificatesBenchmark.Verifier.p90.json
+Benchmarks/Thresholds/nightly-main/CertificatesBenchmark.Parse_WebPKI_Roots_from_DER.p90.json
+Benchmarks/Thresholds/nightly-main/CertificatesBenchmark.Parse_WebPKI_Roots_from_PEM_files.p90.json
+Benchmarks/Thresholds/nightly-main/CertificatesBenchmark.Parse_WebPKI_Roots_from_multi_PEM_file.p90.json
+Benchmarks/Thresholds/nightly-main/CertificatesBenchmark.TinyArray.append.p90.json
+Benchmarks/Thresholds/nightly-main/CertificatesBenchmark.TinyArray_non-allocating_functions.p90.json
+Benchmarks/Thresholds/nightly-main/CertificatesBenchmark.Verifier.p90.json
+Benchmarks/Thresholds/nightly-next/CertificatesBenchmark.Parse_WebPKI_Roots_from_DER.p90.json
+Benchmarks/Thresholds/nightly-next/CertificatesBenchmark.Parse_WebPKI_Roots_from_PEM_files.p90.json
+Benchmarks/Thresholds/nightly-next/CertificatesBenchmark.Parse_WebPKI_Roots_from_multi_PEM_file.p90.json
+Benchmarks/Thresholds/nightly-next/CertificatesBenchmark.TinyArray.append.p90.json
+Benchmarks/Thresholds/nightly-next/CertificatesBenchmark.TinyArray_non-allocating_functions.p90.json
+Benchmarks/Thresholds/nightly-next/CertificatesBenchmark.Verifier.p90.json
+CMakeLists.txt
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+Package.swift
+README.md
+SECURITY.md
+Sources/X509/CMakeLists.txt
+Sources/X509/CSR/CSRAttribute.swift
+Sources/X509/CSR/CSRAttributes.swift
+Sources/X509/CSR/CSRVersion.swift
+Sources/X509/CSR/CertificateSigningRequest.swift
+Sources/X509/CSR/CertificationRequestInfo.swift
+Sources/X509/CSR/ExtensionRequest.swift
+Sources/X509/CertificatePrivateKey.swift
+Sources/X509/CryptographicMessageSyntax/CMSAttribute.swift
+Sources/X509/CryptographicMessageSyntax/CMSContentInfo.swift
+Sources/X509/CryptographicMessageSyntax/CMSEncapsulatedContentInfo.swift
+Sources/X509/CryptographicMessageSyntax/CMSIssuerAndSerialNumber.swift
+Sources/X509/CryptographicMessageSyntax/CMSOperations.swift
+Sources/X509/CryptographicMessageSyntax/CMSSignature.swift
+Sources/X509/CryptographicMessageSyntax/CMSSignedData.swift
+Sources/X509/CryptographicMessageSyntax/CMSSignerIdentifier.swift
+Sources/X509/CryptographicMessageSyntax/CMSSignerInfo.swift
+Sources/X509/CryptographicMessageSyntax/CMSVersion.swift
+Sources/X509/Curve25519+DER.swift
+Sources/X509/CustomPrivateKey.swift
+Sources/X509/DistinguishedNameBuilder/CommonName.swift
+Sources/X509/DistinguishedNameBuilder/CountryName.swift
+Sources/X509/DistinguishedNameBuilder/DNBuilder.swift
+Sources/X509/DistinguishedNameBuilder/DomainComponent.swift
+Sources/X509/DistinguishedNameBuilder/EmailAddress.swift
+Sources/X509/DistinguishedNameBuilder/LocalityName.swift
+Sources/X509/DistinguishedNameBuilder/OrganizationName.swift
+Sources/X509/DistinguishedNameBuilder/OrganizationalUnitName.swift
+Sources/X509/DistinguishedNameBuilder/StateOrProvinceName.swift
+Sources/X509/DistinguishedNameBuilder/StreetAddress.swift
+"Sources/X509/Docs.docc/Creating Certificates.md"
+"Sources/X509/Docs.docc/Examining Certificates.md"
+Sources/X509/Docs.docc/index.md
+Sources/X509/ExtensionsBuilder.swift
+Sources/X509/Lock.swift
+Sources/X509/LockedValueBox.swift
+Sources/X509/OCSP/BasicOCSPResponse.swift
+Sources/X509/OCSP/DirectoryString.swift
+Sources/X509/OCSP/OCSPCertID.swift
+Sources/X509/OCSP/OCSPCertStatus.swift
+Sources/X509/OCSP/OCSPExtensionID.swift
+Sources/X509/OCSP/OCSPNonce.swift
+Sources/X509/OCSP/OCSPPolicy.swift
+Sources/X509/OCSP/OCSPRequest.swift
+Sources/X509/OCSP/OCSPResponse.swift
+Sources/X509/OCSP/OCSPResponseBytes.swift
+Sources/X509/OCSP/OCSPResponseData.swift
+Sources/X509/OCSP/OCSPResponseStatus.swift
+Sources/X509/OCSP/OCSPSignature.swift
+Sources/X509/OCSP/OCSPSingleRequest.swift
+Sources/X509/OCSP/OCSPSingleResponse.swift
+Sources/X509/OCSP/OCSPTBSRequest.swift
+Sources/X509/OCSP/OCSPVersion.swift
+Sources/X509/PKCS8PrivateKey.swift
+Sources/X509/PromiseAndFuture.swift
+Sources/X509/RandomNumberGenerator+bytes.swift
+Sources/X509/SEC1PrivateKey.swift
+Sources/X509/SecKeyWrapper.swift
+Sources/X509/Verifier/TrustRootLoading.swift
+Sources/X509/X509BaseTypes/RSAPKCS1PublicKey.swift
+Sources/_CertificateInternals/CMakeLists.txt
+Tests/X509Tests/CMSTests.swift
+"Tests/X509Tests/CSR Vectors/cryptography/LICENSE.APACHE"
+"Tests/X509Tests/CSR Vectors/cryptography/bad-version.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/basic_constraints.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/challenge-invalid.der"
+"Tests/X509Tests/CSR Vectors/cryptography/challenge-multi-valued.der"
+"Tests/X509Tests/CSR Vectors/cryptography/challenge-unstructured.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/challenge.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/ec_sha256.der"
+"Tests/X509Tests/CSR Vectors/cryptography/ec_sha256.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/freeipa-bad-critical.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/invalid_signature.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/long-form-attribute.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/rsa_md4.der"
+"Tests/X509Tests/CSR Vectors/cryptography/rsa_md4.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/rsa_sha1.der"
+"Tests/X509Tests/CSR Vectors/cryptography/rsa_sha1.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/rsa_sha256.der"
+"Tests/X509Tests/CSR Vectors/cryptography/rsa_sha256.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/san_rsa_sha1.der"
+"Tests/X509Tests/CSR Vectors/cryptography/san_rsa_sha1.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/two_basic_constraints.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/unsupported_extension.pem"
+"Tests/X509Tests/CSR Vectors/cryptography/unsupported_extension_critical.pem"
+Tests/X509Tests/CSRTests.swift
+Tests/X509Tests/CustomPrivateKeyTests.swift
+Tests/X509Tests/DistinguishedNameBuilderTests.swift
+Tests/X509Tests/ExtensionBuilderTests.swift
+"Tests/X509Tests/OCSP Test Resources/www.apple.com.der"
+"Tests/X509Tests/OCSP Test Resources/www.apple.com.intermediate.der"
+"Tests/X509Tests/OCSP Test Resources/www.apple.com.intermediate.ocsp-response.der"
+"Tests/X509Tests/OCSP Test Resources/www.apple.com.ocsp-response.der"
+"Tests/X509Tests/OCSP Test Resources/www.apple.com.root.der"
+Tests/X509Tests/OCSPPolicyVerifierTests.swift
+Tests/X509Tests/OCSPTests.swift
+Tests/X509Tests/PEMTestRSACertificate.pem
+Tests/X509Tests/PEMTests.swift
+Tests/X509Tests/SecKeyWrapperTests.swift
+Tests/X509Tests/ca-certificates.crt
+cmake/modules/CMakeLists.txt
+cmake/modules/SwiftCertificatesConfig.cmake.in
+cmake/modules/SwiftSupport.cmake
+dev/git.commit.template
+dev/update-benchmark-thresholds
+
+# Renames: Sources/X509/OCSP/DirectoryString.swift -> Sources/X509/X509BaseTypes/DirectoryString.swift (RFC 5280 DirectoryString, misfiled upstream)
+# In-file strips: Certificate.swift (PEM ext, Security bridge, 3 issuance inits); Signature.swift (_CryptoExtras, RSA arms, private-key ops); CertificatePublicKey.swift (_CryptoExtras, RSA arms/case/init/unwrap, PEM, CSR overload); CertificateSerialNumber.swift (random-serial inits); Verifier/CertificateStore.swift (systemTrustStore plumbing incl. cachedSystemTrustRootsFuture ref, dead Array helper)

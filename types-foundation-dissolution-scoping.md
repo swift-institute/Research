@@ -105,3 +105,73 @@ Per-question rulings:
 Interim guard: no new surface enters the shell (exports.swift:15 directive
 stands); candidate B (re-export strip) executes only if the post-C10 →
 app-cutover gap proves long.
+
+## ADDENDUM 2026-07-23b — combined TypesFoundation + ssf edge-cut confirmation
+
+Principal directive (Opus session): schedule full TypesFoundation removal (incl. from
+ssf) and ssf removal; "could very well be an edge cut — trust prior adjudication if it
+exists." It exists (ssf: Decomposition Wave-3, 2026-07-14, Reflections/2026-07-14-w3-ssf-
+dissolution-orchestrator-seat.md; TypesFoundation: W2). Two fresh censuses (types-foundation
++ ssf) at main confirm and refine:
+
+**TypesFoundation = pure edge-cut.** Zero original code (exports.swift only). SOLE live
+consumer = swift-server-foundation (Package.swift:54,77 dep + exports.swift:22
+`@_exported import TypesFoundation`). repotraffic: ZERO hits. identities-types ref is
+commented-dead. → C10 removes the last manifest consumer.
+
+**ssf = consumer edge-cut DONE, archival GATED on 3 parked originals.** No ecosystem
+Package.swift depends on ssf (manifest edge-cut already complete ecosystem-wide;
+repotraffic repointed to swift-urlrequest-handler at Package.swift:211). But ssf is NOT
+an empty shell — 3 TRUE originals are intentionally parked by the Wave-3 adjudication:
+- `MainEventLoopGroup` (Sources/ServerFoundation/EventLoopGroup.swift:6) — DI co-location
+  constraint (di-composition-root-design §4.3 rule 2).
+- `InMemoryStore` (InMemoryStore.swift:14) — W3-PARKED C5, header: stays pending the
+  swift-time-to-live stub population (principal ⚑); Any-erasure defect dropped at the fill.
+- `URL.canonical` + `URLCanonicalError` (URLOptional.canonical.swift:12,20) — W3-PARKED C6,
+  header: home is the swift-uri fill (RFC 3986 canonicalization), ASK-3 ruling 22:41.
+Remaining ecosystem `import ServerFoundation` sites: 1 active in coenttb/boiler example
+(hands-off, likely dead like repotraffic's — unproven) + 1 dead commented import in
+repotraffic. `-vapor` companion (pkg swift-server-vapor): zero ssf edges, not a consumer.
+
+**C10 branch state:** `c10-umbrella-deletion` tip 5e5deca, +1 over main (92b196d); touches
+only Package.swift + ServerFoundation/exports.swift; removes the swift-types-foundation dep
++ `@_exported import TypesFoundation`. On main TODAY the TypesFoundation edge is STILL PRESENT.
+Branch note: "branch-held for the RepoTraffic gate."
+
+### Derived schedule (from trusting the prior adjudication — no new principal decision needed)
+
+1. **repotraffic app cutover → green** (spawned compile session, task chip). This IS the
+   RepoTraffic gate. The macro-plugin/module-cache failure is the current blocker.
+2. **Merge C10 to main** once repotraffic compiles green (gate = green consumer, not merely
+   repointed). Drops ssf's swift-types-foundation dep + `@_exported`. After this: TypesFoundation
+   has ZERO manifest consumers; only its URLRouting/URLRoutingTranslating linkage stub remains,
+   gated on the app cutover (step 1).
+3. **Archive TypesFoundation shell** (W-3-STUB) once step 1 kills the linkage stub — principal-gated
+   archival; tombstone→archive per prior DECISION.
+4. **ssf stays a MINIMAL RESIDENCE package** holding the 3 parked originals. Full ssf archival is
+   NOT in this arc — it is gated on the downstream fills:
+   - swift-time-to-live fill → relocate InMemoryStore (principal ⚑ — fill not yet scheduled).
+   - swift-uri fill → relocate URL.canonical (design item — fill not yet scheduled).
+   - MainEventLoopGroup → its DI home (co-location constraint).
+   These fills are the real ssf-archival unblockers; track as their own future arc, not here.
+5. Prove/remove the coenttb/boiler example `import ServerFoundation` (hands-off; owner-adjudicated).
+
+### Fills SCHEDULED 2026-07-23b (principal: "schedule those two package fills") — overnight
+
+Both fill targets EXIST (fills, not repo creation): swift-time-to-live + swift-uri /
+swift-uri-standard (all under swift-foundations/swift-standards). Dedicated boot-and-hold
+sessions spawned (task chips):
+- swift-time-to-live fill (task #16) → typed TTL store, drop InMemoryStore's Any-erasure at
+  the fill, then relocate ssf InMemoryStore out. Phase-2 relocation on lead GO.
+- swift-uri fill (task #17) → RFC 3986 §6 canonicalization (law in swift-uri-standard if
+  Foundation-free; URL convenience in swift-uri FI), then relocate ssf URL.canonical out.
+- MainEventLoopGroup (3rd parked original) → DI-home adjudication folded into the grab-bag
+  edge-cut execution session.
+Net: ssf archival is now SCHEDULED (not deferred) — it completes once #16 + #17 land their
+Phase-2 relocations and MainEventLoopGroup finds its DI home, after which the ssf shell is
+empty and archival is a principal-gated action.
+
+Net: the "removal" the principal asked to schedule is, for the immediate arc, (1) repotraffic
+green → (2) C10 merge → (3) TypesFoundation archival. ssf archival is a LATER arc gated on two
+package fills that do not yet exist; trusting the prior adjudication means ssf remains as a
+minimal residence package until then, exactly as its own headers instruct.
