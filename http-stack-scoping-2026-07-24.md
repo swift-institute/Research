@@ -1402,6 +1402,54 @@ The record requires this *before* filling (`:305`, "update stale repository miss
 
 ---
 
+**Step 2a — ✅ DONE: the two dead `[Byte]` overloads are deleted.** *(Lead-authorised
+2026-07-24, folded into Step 2)*
+
+`swift-rfc-9112` `9ccfb80` — removes `HTTP.Request.Line.parse(_: [Byte])` (was `:73`) and
+`HTTP.Response.Line.parse(_: [Byte])` (was `:85`), plus the `public import Byte_Primitives`
+each file no longer needed. 21 lines deleted.
+
+**Deleted rather than implemented**, on the Lead's ruling and for the reason in Extension 4:
+the intended non-throwing `-> Self` shape is *the same* total-signature-over-a-partial-
+operation defect that makes `MessageBodyLength.calculate` collapse invalid framing to
+`.none`. **Filling the bodies would move the trap, not close it.** The byte-level entry
+belongs to the incremental framing layer, which must own locating the line delimiter.
+
+> **Gate — all three run, evidence not exit status:**
+> - **build GREEN** — exit 0, **0 errors**, `Build complete! (250.00s)`, **freshly compiled**
+>   (1,832 compile steps; coordinator cross-check: *"every instrument agrees … freshly
+>   compiled"*). Not a cache read.
+> - **test GREEN** — exit 0, **237 tests in 12 suites passed**, 0 errors, **0 warnings**.
+> - **lint** — exit 0, 90 active rules, 32 files linted, **118 violations, all pre-existing**:
+>   `API-IMPL-005/006`, `PLAT-ARCH-022`, single-type-per-file, none import-related in
+>   `Sources`, and all at lines never edited (the change is deletion-only, which cannot
+>   create those rule classes).
+>
+> ⚠️ **Labelled honestly: I did not capture a numeric pre-change lint baseline.** "118, all
+> pre-existing" rests on rule-class reasoning and on the build's zero warnings, not on a
+> before/after count. Unmeasured, not zero.
+
+**The gate earned its keep on a point I declined to guess.** After the deletion both files
+still carried `public import Byte_Primitives` with no remaining `Byte` use. I chose not to
+remove it on inspection — a `public import` participates in the module's re-export surface —
+and let the build answer. It did, precisely: *"warning: public import of 'Byte_Primitives' was
+not used in public declarations or inlinable code"* at both sites, and **only** those two
+warnings across the whole build. Removed; the follow-up build/test came back at zero warnings.
+`import INCITS_4_1986` was never warned, so it is still in use and stayed.
+
+⚠️ **Push blocked, and the distinction matters here.** `git push` was denied by the
+environment's permission classifier; **the commit is local and unpushed.** Under this
+ecosystem's resolution model that is *not* the same as unreleased: consumers resolve
+`swift-rfc-9112` through the mirror map **at the local repository's committed HEAD** (§1.3),
+so **the local commit is already the propagating act** and the push only updates the remote of
+record. Flagged for the Lead; needs operator approval to complete.
+
+**Incidental corroboration of §3.2:** the lint's 2 `PRIM-FOUND-001`/`ARCH-LAYER-007` findings
+are both in `Tests/` (`HTTP.Connection.Tests.swift:4`, `HTTP.TransferEncoding.Tests.swift:4`).
+The Foundation-in-tests caveat is now confirmed by an independent instrument.
+
+---
+
 **Step 3 — RFC 9112 differential audit + incremental-framing design.** *(needs G0; no source
 edits in this step)*
 
@@ -1525,6 +1573,7 @@ every one carries the evidence that established it.
 | D13 | ⚠️ **zsh does NOT word-split unquoted parameter expansions — multi-path probes silently search NOTHING and exit 0.** `ROOTS="/a /b"; grep -r … $ROOTS` passes one non-existent path, prints **no stderr**, and returns a clean zero. Measured: unquoted `$R` → **0**; `${=R}` → **7**; literal paths → **7**, same query. **This invalidated my entire first RFC-7230 census.** Fix: use an array `("${ROOTS[@]}")`, `${=VAR}`, or literal paths. | §1.4a; diagnosis run three ways on one query | **High** — sibling of the `${PIPESTATUS[0]}` rule already in the BOARD; produces confident false absences with no error |
 | D14 | **`grep -r` without `--exclude-dir` descends into `.build` and can exceed the timeout, yielding partial or empty output that reads as a zero.** My second census attempt died at **exit 143 (SIGTERM)** after 2 min having printed only a header. A timeout is not a result. Fix: `--exclude-dir='.build' --include='*.swift'`, and check the exit status. | §1.4a | Medium |
 | D15 | **`swift-institute/Research` is a PUBLIC repository** (`gh repo view` → `"visibility":"PUBLIC"`, `isPrivate:false`), and the fleet had been treating it as internal scratch space. | verified by resolving the remote, not by reading `.git/config` | **High** — governance; see §6.2 |
+| D16 | **`Request.Line.validate(maxLength: 8000)` is a POST-parse call on the re-`formatted` line** (`HTTP.Request.Line.swift:91`), so it cannot prevent over-long input from being accepted first. **A limit checkable only post hoc is not a limit.** Second instance of the shape (with Finding E's whole-buffer limits), which makes it structural rather than a slip. | §1.5b; inventory lane, confirmed here | **High** — DoS surface, and RFC 9112 §3 is the clause it purports to implement |
 | D12 | **The heritage record's own self-description is stale.** `:881-884` says *"Both Research records remain untracked … No commit or push is authorized."* It is now **tracked** (`git ls-files --error-unmatch` succeeds). | this section | Low — but it is the authority document for N7/N8; its status line should not mislead |
 
 ### 6.2 ⚠️ This document lives in a PUBLIC repository
