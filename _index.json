@@ -6,6 +6,17 @@
   "blurb": "This directory contains research documents analyzing design decisions, exploring architectural trade-offs, and documenting reasoning for the Swift Institute ecosystem.",
   "documents": [
     {
+      "file": "declarative-frameworks-for-continuous-render-targets.md",
+      "displayName": "Declarative Frameworks for Continuous Render Targets",
+      "topic": "RECOMMENDATION (2026-07-24): Design findings for swift-user-interface when the render target is a continuously re-rendered frame rather than a discrete document. Records six findings — additive time-indexed animation, explicit time as the load-bearing testability property, structural dense-integer identity with a lexicographic sibling sort key, label-addressable rendered output, the four-phase node model with animation-gated pruning, and a failure catalogue. Also reconciles the swift-user-interface planning chain and finds it rests on five package names that do not resolve and three cited decision documents that are absent from the corpus.",
+      "date": "2026-07-24",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Design findings offered as input to swift-user-interface; Finding 2 (explicit time parameter) recommended for unconditional adoption. Substrate gaps re-verified against live source rather than carried forward. The prior-chain reconciliation is the operative section: danceui-architectural-analysis.md and swift-user-interface-primitive-audit.md both cite non-existent packages and are not safe to plan from; the audit's rendering rows are superseded by render-machine-dissolution.md, whose target-split differs materially from the audit's package-split. No package, manifest, or source was changed.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
       "file": "swiftpm-path-semantics-with-url-manifests.md",
       "displayName": "SwiftPM Path Semantics with URL Manifests",
       "topic": "RECOMMENDATION (v1.1.0, 2026-07-21): Empirical study of path-based dependency semantics (consumers building/testing live sibling working trees) with URL manifests and generated-only Package.resolved. Re-verifies mirrors localize fetching, not revision selection. v1.1.0 principal round: \"local = live trees, CI = resolved versions\" ratified; edit-all timing on real 187-pin swift-pdf REFUTES the fleet edit posture (~33 s per warm edit — whole-graph re-resolution per dep — ~1.7 h per arm; swift package clean preserves edit state, only rm -rf .build destroys it); the ALL-conditional manifest mesh (env-gated path/URL branch in every manifest) is verified as the one-pass live mechanism (4.9 s live resolve+build, 0.9 s flip, loud-or-conservative mixed states) and becomes the TARGET pending constraint-2 relaxation + fleet migration wave + never-live CI guard + real-consumer pilot. Scoped edit-mode (with --path, hardened, script triple in Scripts/) stays the interim and routers-arc posture; root workspace package = compile smoke only; registry structurally fails.",
