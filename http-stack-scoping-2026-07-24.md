@@ -396,6 +396,41 @@ immediate.**
 2. Re-run this census. With #30 gone, expected live consumers = **zero**.
 3. Retire `swift-rfc-7230` and the five stubs, or archive with a redirect note to 9110/9112.
 
+#### 1.4b BOARD #30's premise was wrong — retirement unblocked, but it is NOT one action
+
+**#30 dissolved rather than resolved.** The control-plane lane established that
+`swift-institute/Workspace/Packages/swift-url-routing` is **gitignored** (`.gitignore:4`, zero
+tracked files), **inert** (no manifest references it; all 18 global mirror entries resolve to
+the canonical `swift-foundations` path), and **declared** in `Workspace.json` with
+`"scope": "proof"` — not a stray. Its generalisation is worth keeping:
+***a `Package.swift` sitting in a gitignored scratch clone is not a dependency edge.***
+
+So its 5 references to `swift-rfc-7230/7231` are **a stale clone's text, not a live edge**,
+and my pre-#30 / post-#30 framing collapses: **there was only ever the post-#30 state.** Zero
+external consumers is now confirmed three independent ways — my source census, the census
+lane's manifest census on the widened population, and the control-plane lane's source-side
+sweep positive-controlled against the `@_exported` chains.
+
+**⚠️ But "retire six packages" is four coupled actions, two outward-facing. Measured:**
+
+| Fact | Value | Consequence |
+|---|---|---|
+| `swift-rfc-7230`, `swift-rfc-7231` | **PUBLIC**, not archived | Archiving/deleting is outward-facing and effectively irreversible on repos the world can already see |
+| `swift-rfc-7232/7233/7234/7235` | PRIVATE, not archived | Lower stakes |
+| Mirror-map entries | **36** (6 per package) | Machine-wide. Remove repos without cleaning these → dangling entries; clean without removing → resolution breaks for anything naming those URLs |
+| `institute.xcworkspace` FileRefs | **6** | Shared integration workspace; stale FileRefs break it for every lane |
+| Internal edge | `swift-rfc-7230` → `swift-rfc-7231` (`Package.swift:23,31`) | They must retire together, or in order |
+
+**Only the first action is what "~1,650 lines" measures.** The decomposition benefit needs all
+four.
+
+**This lane is not choosing the mechanism.** `BOARD.md:20` reserves *"archival and destructive
+ops"* for explicit approval; two of the six are **PUBLIC**; and the mirror-map and workspace
+edits are **machine-wide state with seven lanes live**. Recommendation put to the Lead:
+**archive rather than delete** — 1,370 lines of real RFC 7230 implementation exist nowhere
+else — sequence mirror-map and workspace cleanup **before** any repo state change, and
+approve the two public repos specifically rather than "six packages" collectively.
+
 **This is a genuinely clean decomposition win — six packages, ~1,650 lines of obsoleted law —
 and it is blocked on one duplicate-checkout cleanup, not on any HTTP work.** It can proceed
 independently of G0.
@@ -1447,6 +1482,31 @@ record. Flagged for the Lead; needs operator approval to complete.
 **Incidental corroboration of §3.2:** the lint's 2 `PRIM-FOUND-001`/`ARCH-LAYER-007` findings
 are both in `Tests/` (`HTTP.Connection.Tests.swift:4`, `HTTP.TransferEncoding.Tests.swift:4`).
 The Foundation-in-tests caveat is now confirmed by an independent instrument.
+
+---
+
+**Step 2b — ✅ DONE: the stale repository mission is corrected.** `swift-http` `7d5aaf2`.
+
+`.github/metadata.yaml` read *"Core HTTP protocol types (methods, headers, status codes) for
+Swift."* — the obsolete mission the record flags at `:107`. Replaced with the drive mission
+from `:167`, plus an in-file comment recording why, so the next reader does not restore it.
+
+**Two corrections to my own §1.1 and §2.3 fell out of doing it:**
+
+1. **The remote description was already harmless** — `gh repo view` returns *"HTTP for
+   Swift."*, not the stale claim. **The obsolete mission lived only in the local
+   `metadata.yaml`, which is the propagating source of truth.** So this change *prevents an
+   obsolete mission being published*; it does not retract a published one. Worth stating
+   because the two are easy to conflate and only one is outward-facing.
+2. ⚠️ **`swift-components/swift-http-cache` and `swift-http-middleware` do not exist.** Not
+   merely unpopulated — **not git repositories locally, and `gh repo view` returns *"Could not
+   resolve to a Repository"* for both.** §2.3 called them "reserved names at L4 whose missions
+   need reconciling against N8's scope boundary." **There is nothing to reconcile: they are
+   local directories holding `LICENSE.md` and `.github/`, and no reservation exists.** That
+   removes the second half of Step 2 entirely, and it sharpens the principal's *"almost
+   entirely aspirational"* — at L4 the names are not even reserved remotely.
+
+`swift-foundations/swift-http` is **PRIVATE**, so the corrected mission is not public either.
 
 ---
 
