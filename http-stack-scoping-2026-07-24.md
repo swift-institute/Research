@@ -1622,11 +1622,49 @@ genuine but low-priority absence; nothing on N7's or N8's path needs it. §1 is 
    accept fixture set should be adopted with explicit clause citations rather than folded into
    the existing suites.
 
-**Subsection-numbering caveat:** I extracted these markers mechanically and have **not**
-verified each against the RFC's actual subsection titles. Some look questionable — `Pipeline`
-claims §9.4 and `Connection` claims §9.6, which may be mis-citations — but I am not asserting
-that from recall. **Verifying the marker-to-title mapping belongs in the inventory lane's
-clause work**, and I have flagged it there rather than guess.
+#### 3.0a ⚠️ The markers were VERIFIED, and 4 of 5 in §9 were wrong — `5d72920` corrects six
+
+I extracted the markers mechanically, noticed `Pipeline` claiming §9.4 and `Connection`
+claiming §9.6 looked questionable, and **declined to assert mis-citation from recall.** The
+inventory lane verified against the RFC text; this lane corroborated and applied the fixes.
+
+**Authoritative RFC 9112 §9:** 9.1 Establishment · 9.2 Associating a Response to a Request ·
+9.3 Persistence · 9.3.1 Retrying Requests · 9.3.2 **Pipelining** · 9.4 **Concurrency** ·
+9.5 Failures and Timeouts · 9.6 **Tear-down** · 9.7 TLS Connection Initiation · 9.8 TLS
+Connection Closure. **(§9 runs to 9.8.)**
+
+| Marker | Claimed | Actual | Verdict |
+|---|---|---|---|
+| `Pipeline.swift:8` | §9.4 "Pipelining" | 9.4 = Concurrency | ❌ → **§9.3.2** |
+| `Pipeline.swift:36` | §9.4, for the non-idempotent-method rule | that rule is §9.3.2 | ❌ → **§9.3.2** |
+| `Connection.swift` (×4, incl. the ABNF and the reference link) | RFC 9112 §9.6 "Connection" | the `Connection` **field** and its grammar are **RFC 9110 §7.6.1** | ❌ → **9110 §7.6.1** |
+| `Connection.State.swift:38` | §9.3.1 "close connection option" | 9.3.1 = Retrying Requests | ❌ → **§9.6 Tear-down** |
+| `Connection.State.swift:93` | §9.7 "Upgrade" | 9.7 = TLS Connection Initiation; the `Upgrade` **field** is **RFC 9110 §7.8** | ❌ → **9110 §7.8** |
+| `Connection.State.swift:6` | §9.3 "Persistence" | correct | ✅ unchanged |
+
+**Two of the four are in the wrong RFC, not merely the wrong section — and both are header
+fields.** That is the `@_exported` boundary showing up in prose: because this module
+re-exports RFC 9110, a type can sit in the 9112 package while its law lives in 9110, and the
+marker drifts to the *enclosing package's* RFC. Same mechanism as the manifest-invisibility
+caveat in §1.6, one layer up.
+
+**A wrong number under a right title is the worst combination**, because the prose confirms
+the reader's expectation while the link takes them elsewhere. `Pipeline` was exactly that.
+
+**Method note:** after correcting the five reported, a re-sweep of the token family found
+**one more** (`Pipeline.swift:36`) plus a mis-titled reference link — per the standing rule
+that *a reported list is a lower bound; enumerate the family and re-run after each fix.* The
+family is now exhausted (`RFC 9112 Section 9.4|9.7|9.3.1` → no matches in `Sources` or
+`Tests`).
+
+**This strengthens §3.0's caveat rather than merely amending it.** I wrote that a section
+marker is *a claim of intent, not evidence of conformance.* **The measured mis-citation rate
+in the one section anyone checked is 4/5** — so markers are not merely insufficient evidence
+of conformance, they are **unreliable as navigation**, which is the weaker job they were
+doing. Combined with §3.0's traceability finding (tests cite 2 sections against 27 claimed),
+the position is worse than "unanswerable": **the available answers are actively misleading.**
+Hence the inventory lane's §4.5 fixtures should be cited by clause **with verified numbers**,
+and any marker should be verified before it is relied on.
 
 #### 3.1 Incremental framing — design proposal (Step 3 deliverable, FOR REVIEW)
 
