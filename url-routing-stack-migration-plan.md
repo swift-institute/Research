@@ -497,6 +497,15 @@ the review sessions. A fresh implementation session should:
    (v1.2.0); the only stop-points are the OPEN execution-time items: run the
    Coder-unification spike before any Batch-2 conformance work, and obtain the
    concrete-delta sign-offs at the B3/B4 gates.
+   **[GOVERNANCE ADDENDUM 2026-07-24 — principal rulings]** (a) The item-4 reorder
+   (Batch-7 item-2, the swift-url-routing-authentication dissolution) AHEAD of B3–B6 is
+   BLESSED as a justified one-time exception — it was the repotraffic unblocker and
+   invariant #1 (every consumer green + repointed before the tombstone) held at every
+   stage; the batch order remains the default for all other batches. (b) RS-3 ("re-base
+   swift-url-routing onto swift-url-standard") is CLOSED: THIS ratified plan governs the
+   url-routing `Router.Input` basis as RFC_3986-native (RFC 3986 EXISTS; the WHATWG
+   swift-url-standard does not). See BACKLOG "Routing-standards architecture" work-item (3)
+   for the closure rationale + revisit seam.
 4. Toolchain: TOOLCHAINS=org.swift.633202606251a, assert `swift-6.3.3-RELEASE` before any
    build ([PKG-BUILD]); one swift invocation at a time per repo; never delete or hand-edit
    Package.resolved (the mirror-corrupted-untracked-lockfile phenomenon is known and
