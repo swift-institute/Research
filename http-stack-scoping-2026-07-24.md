@@ -1522,6 +1522,84 @@ statics. Anchor on the already-localised defect at `HTTP.Message.Deserializer.sw
 > consumed count · post-limit append · byte loss · incorrect Host/target form · ambiguous
 > reuse. **Design approval, not a build.**
 
+#### 3.1 Incremental framing — design proposal (Step 3 deliverable, FOR REVIEW)
+
+The conformance half of Step 3 is the inventory lane's
+`Research/rfc-9110-9112-law-inventory-2026-07-24.md`; this is the API half, which is this
+lane's. **Proposed, not settled** — design approval is a gate, and this is what goes into it.
+
+**The central decision: the framer owns the buffer.**
+
+Every one of the four framing defects found today is a *consumed-count* defect in disguise.
+`Deserializer.swift:119` estimates consumed bytes from decoded size; `ChunkedEncoding.DecodeResult`
+cannot express a consumed count at all; and a caller reusing a socket connection must know
+where the next message begins. **If the framer owns the byte buffer and retains the remainder
+itself, there is no consumed count to return and therefore none to get wrong.** The caller
+never computes an offset into its own buffer, so the entire defect class is structurally
+unreachable rather than merely fixed.
+
+That is the difference between correcting Finding D and eliminating the conditions that
+produced it — and it is why this is a redesign rather than a repair.
+
+```swift
+extension RFC_9112 {
+    /// Incremental HTTP/1.1 message framer over a caller-supplied byte stream.
+    /// Sans-I/O: it never reads a socket, it is fed by one.
+    public struct Framer: ~Copyable {
+        public init(role: Role, limits: Limits)
+
+        /// Appends received bytes. Enforces `limits` DURING the append and
+        /// throws before retaining anything over budget.
+        public mutating func append(_ bytes: borrowing [Byte]) throws(Error)
+
+        /// Yields the next complete message, or nil when more bytes are needed.
+        /// The unconsumed remainder stays owned by the framer.
+        public mutating func next() throws(Error) -> Frame?
+
+        /// End-of-stream disposition. Distinguishes a clean close from a
+        /// truncated message, which a `nil` from `next()` cannot.
+        public consuming func finish() throws(Error) -> Terminal
+    }
+}
+
+extension RFC_9112.Framer {
+    public enum Role: Sendable { case request, response }
+    public struct Limits: Sendable { /* line, field-section, body, chunk-extension */ }
+    public enum Terminal: Sendable { case clean, truncated(Error) }
+}
+```
+
+**How each defect and STOP condition is addressed structurally, not by discipline:**
+
+| Defect / STOP | Mechanism |
+|---|---|
+| **Finding A** — invalid framing collapses to `.none` | `Frame` has **no case that doubles as both "no body" and "malformed"**. Invalid framing is `throws(Error)`, so it cannot be returned as a valid-looking value. This is the direct fix for *a total signature over a partial operation*. |
+| **Finding B** — chunked-not-final undetected; request/response dispositions differ | `Role` is a **construction parameter**, so a single shared code path that is wrong for one of them cannot be written. Chunked finality is checked with the already-shipped finality accessor (`ChunkedEncoding` `:198-200`), not membership. |
+| **Finding C** — TE+CL coexistence unreported | The coexistence is a **typed error case**, not a silent preference for `.chunked`. An intermediary can then comply with the MUST to strip `Content-Length`. |
+| **Finding D** — inexact consumed count | **Eliminated by construction** — no consumed count crosses the API boundary. |
+| **Finding E / D16** — limits checkable only post hoc | `limits` are enforced **inside `append`**, which throws *before retaining* over-budget bytes. A limit that can only be checked after acceptance is not a limit; this one is checked before. |
+| **STOP: byte loss** · **ambiguous reuse** | The framer retains the remainder across messages, so pipelined messages and connection reuse are the same code path as the first message — nothing is discarded between them. |
+| **GO: split-at-every-byte** | `append` accepts any chunking including one byte at a time; `next()` returning `nil` is the normal path, not an error. |
+| **GO: EOF / terminal disposition** | `finish()` is `consuming` and distinguishes **clean close from truncation**, which `next() == nil` cannot. Making it consuming means a framer cannot be used after its stream ends. |
+
+**Open questions for the design gate — flagged rather than silently decided:**
+
+1. **`~Copyable` vs a class.** `~Copyable` matches the record's ownership discipline (`:695-700`
+   adopts move-only leases from the Apple prior art) and prevents accidental framer duplication
+   mid-stream. It also makes the type awkward to hold in an actor's storage. **Recommend
+   `~Copyable`; flagging that N8 will feel the cost first.**
+2. **Where `Role` lives.** Request and response framing share the field-section and chunked
+   grammar but differ in start-line and in body-length disposition. One type with a `Role`, or
+   two types? **Recommend one type** — two types duplicate the grammar and re-open the
+   possibility of them drifting apart, which is how B happened.
+3. **Whether `Frame` carries the body or streams it.** Carrying it is simpler and matches
+   today's `[Byte]?` bodies; streaming is required eventually for backpressure. The record
+   says *"keep this internal foundation and later expose a streaming API"* (`:699`).
+   **Recommend body-carrying now with the streaming seam internal**, per that instruction.
+4. **Placement.** This is L2 wire law and belongs in `swift-rfc-9112`. The *drive* — exchange
+   sequencing, reuse eligibility, shutdown — is L3 `swift-http` over an injected duplex.
+   **The boundary is: the framer knows about messages; the drive knows about connections.**
+
 ---
 
 **Step 4 — Implement bounded incremental framing in `swift-rfc-9112` (L2).**
