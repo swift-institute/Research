@@ -37,7 +37,33 @@ Each entry is grounded in actual files. Verdicts:
 - **NEEDS EXTENSION** — right shape, specific named piece missing
 - **NEEDS VERIFICATION EXPERIMENT** — fit not obvious from the surface alone
 
-*Verified: 2026-04-21 against `~/Developer/swift-primitives/`.*
+*Verified: 2026-04-21 against the primitives root.*
+
+> ⚠️ **Re-verification 2026-07-24 (control-plane lane): three verdicts below name
+> packages that DO NOT EXIST, and nothing in the table distinguishes them from the
+> ones that do.** Resolved against both disk and GitHub, the cited names fall into
+> three buckets that need three different responses:
+>
+> - **Exists, merely not checked out locally — the citation is fine.**
+>   `swift-state-primitives` (private), `swift-lifetime-primitives` (private),
+>   `swift-positioning-primitives` (public), `swift-transform-primitives`.
+>   *Absent from disk is not absent.*
+> - **Never existed — not on disk, not on GitHub.** `swift-driver-primitives`,
+>   `swift-reactive-primitives`, `swift-attribute-graph-primitives`,
+>   `swift-document-rendering-primitives`, `swift-graphics-rendering-primitives`.
+> - **Naming error.** `swift-rendering-primitives` does not exist; the real package
+>   is **`swift-render-primitives`**. Its *type* inventory as described elsewhere in
+>   this chain is accurate — only the package name is wrong.
+>
+> **Consequence for the table: `NEEDS EXTENSION` against `swift-driver-primitives`
+> is UNACTIONABLE AS WRITTEN — it asks for an extension to a package that was never
+> created.** The identically-worded verdict against `swift-state-primitives` *is*
+> actionable, because that repository is real. **Two verdicts that read the same on
+> the page, one impossible.** That ambiguity is the defect, more than any single row.
+>
+> Deliberately **not** converted into a package-creation proposal: an audit verdict
+> is not a mint authorisation, and treating one as the other is how a reservation
+> name becomes a package by accident. Whoever owns this arc decides.
 
 ### Per-primitive findings
 

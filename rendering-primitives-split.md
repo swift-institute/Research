@@ -362,7 +362,14 @@ Order of operations within Phase 1 (to keep the repo compilable):
 - `swift-foundations/Research/swift-user-interface-graph-transactions.md` v1.1 — dependency-delta criterion in action
 - `swift-institute/Research/package-namespace-noun-convention.md` — convention research
 - `swift-institute/Skills/swift-package/SKILL.md` — `[PKG-NAME-001]`–`[PKG-NAME-006]`
-- `~/Developer/HANDOFF-package-noun-rename.md` — execution plan (Phase 1 is this split)
+- ⚠️ `HANDOFF-package-noun-rename.md` — cited as the execution plan (Phase 1 is this
+  split). **MISSING AND NOT RECOVERABLE.** Never tracked in any institute repository,
+  and absent from the 659-file corpus destroyed 2026-07-16 (indexed at
+  `Internal/handoffs/RECOVERY-INDEX-trash-2026-07-16.md`). It was cited by a bare
+  workspace-root path — outside every repository, so nothing ever versioned it.
+  Any step here described as following that plan is **unsupported until re-derived**.
+  Recorded 2026-07-24, control-plane lane; the path form is deliberately not
+  reproduced, since `Research` is a public repository.
 - [PostScript Language Reference Manual, Adobe 1985, Ch. 4 "Imaging Model"] — prior art for the Image vocabulary
 - [Porter & Duff 1984, "Compositing Digital Images"] — compositing algebra
 - [ISO 8879:1986 SGML] — tree-bracketed markup vocabulary ancestry
