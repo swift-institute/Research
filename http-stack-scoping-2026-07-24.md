@@ -463,6 +463,108 @@ Its fifth point is worth carrying into the N7 design: a whole-buffer parser **ha
 accepted the bytes before it can object to a limit**, so bounded field/line/body limits are a
 **DoS surface**, not merely a conformance gap.
 
+### 1.5b ⚠️ FINDING F — two public entry points are `fatalError` in shipped RFC 9112 source
+
+Reported by the inventory lane; **verified here at source, then extended in two directions
+that change its disposition.**
+
+**Confirmed verbatim.** `swift-rfc-9112/Sources/RFC 9112/`:
+
+```swift
+// HTTP.Request.Line.swift:73
+public static func parse(_ data: [Byte]) -> Self { fatalError("Not implemented") }
+
+// HTTP.Response.Line.swift:85
+public static func parse(_ data: [Byte]) -> Self { fatalError("Not implemented") }
+```
+
+Real bodies are present but commented out, referencing `String(data:encoding:)` — a Foundation
+API removed by the Foundation strip. The signature is **total and non-throwing** (`-> Self`),
+so nothing at a call site suggests the call cannot return. **The trapping overload is the
+`[Byte]` one — precisely what a socket-driven parser calls**, since bytes are what arrive from
+a socket.
+
+#### Extension 1 — caller census: **zero callers.** This is a landmine, not a live crash.
+
+Censused across `swift-foundations`, `swift-standards`, `swift-ietf`, `repotraffic`
+(`.build`/`checkouts` excluded). **24 call sites of `Request.Line.parse` /
+`Response.Line.parse`, and every one passes a `String`:**
+
+- 22 in `Tests/RFC 9112 Tests/` — all string literals.
+- 2 internal, in the deserializer itself: `HTTP.Message.Deserializer.swift:42`
+  (`try RFC_9110.Request.Line.parse(requestLineString)`) and `:233`
+  (`…parse(statusLineString)`).
+
+(One apparent hit, `swift-diagnostics/Diagnostics.Parser.swift:46`, is an unrelated `Line`
+type returning an optional. Not a consumer.)
+
+**Disposition consequence: deleting the two `[Byte]` overloads breaks nothing.** There is no
+live caller to migrate, and any future caller is currently guaranteed to crash. This upgrades
+the inventory lane's "I'd delete" from a judgement call to a **no-cost** change — and it is
+the only item in this packet that is both zero-risk and worth doing before anything else.
+
+⚠️ **But it does not become urgent.** With zero callers it is **not** a live remote-DoS today;
+it becomes one the moment N7's redesigned socket-driven parser calls the byte-level entry
+point, which is exactly what N7 is *for*. **Correct framing: a trap laid directly across N7's
+path, disarmable now at zero cost.**
+
+#### Extension 2 — the trap census the `fatalError`-only probe missed
+
+The inventory lane reported `swift-rfc-9110` as having **zero** such sites. That is true for
+`fatalError` and **not true** for the trap family. Sweeping
+`fatalError|preconditionFailure|try!|as!|.unsafelyUnwrapped` across the whole N7 chain:
+
+| Package | Site | Assessment |
+|---|---|---|
+| `swift-rfc-9112` | `HTTP.Request.Line.swift:73`, `HTTP.Response.Line.swift:85` | **Finding F** — delete |
+| `swift-rfc-9110` | `HTTP.Request.swift:148` — `let effectivePath = path ?? (try! RFC_3986.URI.Path("/"))` | **Low risk, real defect** — see below |
+| `swift-rfc-9111` | none | ✅ clean |
+| `swift-http-standard` | none | ✅ clean |
+| `swift-rfc-7230` | `HTTP.Version.swift:159` — `fatalError("Invalid HTTP version literal…")` | obsoleted package; retiring anyway |
+
+**On the 9110 site, characterised honestly rather than inflated:** it sits in a **non-throwing
+public initializer** of `RFC_9110.Request`, and the argument is the constant `"/"`.
+`RFC_3986.URI.Path.init(_:)` is `throws(Error)` (`RFC_3986.URI.Path.swift:280`), but `"/"` is
+a valid path, so this will not trap in practice — and the source already carries
+`// swiftlint:disable:next force_try`, i.e. it was a known, accepted shortcut.
+
+**It is therefore a robustness/quality item, not a security finding, and I am not going to
+dress it up as one.** It matters only because it is a crash channel in a non-throwing public
+initializer in **the most-consumed package in the HTTP chain** (131 files reference
+`RFC_9110`). The correct fix is a validated `static let` constructed once, not a `try!` at
+each call. Filed for the Step 3 audit, not escalated.
+
+#### Extension 3 — salvage-boundary corrections (inventory lane, accepted)
+
+I proposed a retain/replace boundary for `swift-rfc-9112` and asked for early warning where
+declarative law is entangled with the whole-buffer assumption. **Two points are, and both
+move to the replace side:**
+
+1. **`ChunkedEncoding` — grammar retainable, API not.**
+   `decode(_ data: [Byte]) throws -> DecodeResult` (`:177`), and `DecodeResult` (`:80`) carries
+   `data` / `chunkExtensions` / `trailers` — **no consumed count.** This is the *cause* of
+   Finding D: `Deserializer.swift:119` estimates from decoded size **because the type it calls
+   gives it nothing better.** So D is not local sloppiness that could be tightened in place —
+   fixing it **requires changing `DecodeResult`**, which sat on my retain side. Neither of us
+   had this: I had the line, the inventory lane had the reason, the cause was one level down.
+   **`decode`/`DecodeResult` move to replace; the chunked grammar stays.**
+2. **`Request.Line` / `Response.Line` — half-retainable.** `String` overloads are genuinely
+   declarative: keep. `[Byte]` overloads are Finding F *and* conceptually framing rather than
+   parsing (given raw bytes they must locate the line delimiter, which the redesigned layer
+   owns). **Keep `String`, delete `[Byte]`.**
+
+**Confirmed retainable, no entanglement:** `Version.parse(String)`,
+`TransferEncoding.parse(String)`, both validators.
+
+⚠️ One caveat carried forward: `Request.Line.validate(maxLength: 8000)` (`:91`) is a
+**separate call after** parsing, operating on the re-`formatted` line — so it cannot prevent
+over-long input from being accepted first. **A limit checkable only post hoc is not a limit**,
+which is Finding E's DoS point in miniature and confirms it is not an isolated slip.
+
+**Net sizing effect: the rewrite grows, but narrowly and specifically** — one result type and
+two dead overloads, not a category. The large declarative surfaces survive the cut, so §1.0's
+retain/replace split holds with these two amendments.
+
 ### 1.6 Answers to the inventory lane's three open verification items
 
 Closed here because this lane had already surveyed the files; recorded so the answers survive
