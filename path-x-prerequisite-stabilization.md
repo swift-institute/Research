@@ -106,7 +106,7 @@ per-target cycles dispatch from a clean baseline.
 `swift-kernel-primitives/Sources/`):
 
 ```bash
-for f in ~/Developer/swift-primitives/swift-kernel-primitives/Sources/*/exports.swift; do
+for f in [local-workspace]/swift-primitives/swift-kernel-primitives/Sources/*/exports.swift; do
   tgt=$(basename "$(dirname "$f")")
   echo "[$tgt]"
   grep "^@_exported" "$f" 2>/dev/null
@@ -438,15 +438,15 @@ Path X Cycles 1-23 on Phase 1 + Phase 2 completion.
 ## 6. Cross-references
 
 - **Path X destination plan**:
-  `~/Developer/swift-primitives/swift-kernel-primitives/Research/path-x-removal-plan.md`
+  `[local-workspace]/swift-primitives/swift-kernel-primitives/Research/path-x-removal-plan.md`
   v1.2.0 RECOMMENDATION (commit `4a49837`).
 - **Cascade investigation (SUPERSEDED, re-cited as diagnosis)**:
-  `~/Developer/swift-primitives/swift-kernel-primitives/Research/l1-types-only-no-exceptions-l2-cascade.md`
+  `[local-workspace]/swift-primitives/swift-kernel-primitives/Research/l1-types-only-no-exceptions-l2-cascade.md`
   v2.0.2 SUPERSEDED. The cascade's empirical Pattern A enumeration
   (§ 3.2) and Cycle B sub-cycle decomposition (§ 4.2) carry forward
   to Phase 1 / Phase 2 sub-cycle structure here.
 - **Within-L3 sub-tier framework**:
-  `~/Developer/swift-institute/Research/lateral-l3-to-l3-composition-options.md`
+  `[local-workspace]/swift-institute/Research/lateral-l3-to-l3-composition-options.md`
   STAMPED 2026-04-26. Path X prerequisite stabilization operates
   within this framework (Hybrid B+C; swift-posix L3-policy;
   swift-kernel L3-unifier).

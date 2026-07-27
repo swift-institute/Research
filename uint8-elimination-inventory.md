@@ -631,6 +631,6 @@ as migration lands) rather than adding one large rule that cannot hold.
 - `broader-l2-l3-byte-typing-gap-plan.md` v1.0.0 — parent W2/W3 cascade plan + six `[API-BYTE-*]` rules.
 - `binary-byte-namespace-domain-foundations.md` v3.1.0; `byte-primitive-extraction-and-domain-naming.md` v1.0.1; `byte-protocol-capability-marker.md` v1.1.0; `byte-arithmetic-conformance.md` v1.0.0.
 - `byte-discipline` skill `[API-BYTE-001..007]`; memories `feedback_byte_canonical_minimize_uint8`, `feedback_domain_classify_before_cohort_retype`, `feedback_convention_vs_typesystem_constraint`.
-- Empirical spike: `/tmp/byte_enum_spike.swift` — `enum E: <struct with Byte's conformances>` type-checks (`swiftc -typecheck`, 2026-05-25).
+- Empirical spike: `[temporary-path]/byte_enum_spike.swift` — `enum E: <struct with Byte's conformances>` type-checks (`swiftc -typecheck`, 2026-05-25).
 - `swift-byte-primitives/Sources/Byte Protocol Primitives/Byte.Protocol+Bitwise.swift:70,80` — the `rhs: UInt8` shift definitions.
 - `swift-iso-32000/Sources/ISO 32000 3 Terms and definitions/3.7 byte.swift:26` — `typealias Byte = UInt8` (highest-leverage repoint).

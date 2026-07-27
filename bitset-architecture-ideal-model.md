@@ -394,6 +394,6 @@ The evolution of Swift Collections confirms this empirically: the most experienc
 - Prior research: [bitset-naming-literature-study](bitset-naming-literature-study.md)
 - Prior research: [bit-vector-type-organization](bit-vector-type-organization.md)
 - Prior research: [bit-vector-primitives-reducibility](bit-vector-primitives-reducibility.md)
-- Bit.Pack source: `~/Developer/swift-primitives/swift-bit-pack-primitives/Sources/Bit Pack Primitives/`
-- Bit.Vector source: `~/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Primitives/`
-- Current Set<Bit>.Vector: `~/Developer/swift-primitives/swift-set-primitives/Sources/Set Bit Vector Primitives/`
+- Bit.Pack source: `[local-workspace]/swift-primitives/swift-bit-pack-primitives/Sources/Bit Pack Primitives/`
+- Bit.Vector source: `[local-workspace]/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Primitives/`
+- Current Set<Bit>.Vector: `[local-workspace]/swift-primitives/swift-set-primitives/Sources/Set Bit Vector Primitives/`

@@ -6,8 +6,8 @@ version: 1.3.0
 last_updated: 2026-06-01
 changelog:
   - 1.3.0 (2026-06-01): EXECUTED. Relaxed the enumerated phantom sites across 22 committed swift-primitives/swift-foundations packages (G1→G6; per-package 6.3 build gate; index/property/tree embedded-confirmed on 6.5-dev nightly — note the installed nightly rolled 6.4→6.5-dev). pool/byte-parser rebuild-verified transparent. Termination scan (G-B/G-D/G-NP/G-RISK + phantom-scan-v3) → zero in-scope non-maximal phantom sites remain (termination caught 3 missed Tier-1b sites — parser Located/Spanned + Tree.Position — now relaxed); G-RISK invariant held throughout. Companion edits the build gate surfaced (§4 under-stated): conditional conformances must restate suppression (`where Tag: ~Copyable & ~Escapable`), the `Ordinal.Protocol.Domain` phantom associatedtype + the `Ratio<From,To>` decl needed relaxing. Deliberate non-relax: hash (`Hash.Protocol: Swift.Hashable` requires Escapable on <6.4; conformance excluded on 6.4+). Deferred uncommitted (unrelated in-flight-arc baselines): link (own-test `__unchecked`-init overload regression), kernel (iso-9945 Memory.Map L2 skew), identities (RFC_4122 baseline). Skill [API-NAME-010b]/[IDX-001] + advisory lint `Lint.Rule.Naming.PhantomSuppression` landed. SHAs in §7.
-  - 1.2.0 (2026-06-01): GENUINELY ecosystem-complete. (1) Reconciled the now-COMPLETED `.Indexed` consumer arc: Array.Indexed/Array.Fixed.Indexed are DELETED (confirmed gone) → the one positive phantom-marker constraint the §4 proof reasoned around is gone, STRENGTHENING the proof to zero; graph/pool/byte-parser are migrated + EDITABLE (held-exclusion dropped). (2) Added a BARE-PHANTOM pass (v1.1.0 caught only ~Copyable-suppressed phantoms + 2 hand-known bare roots): extended the scanner (/tmp/phantom-scan-v3.py) to bare generic params, with full-type-body stored-detection + per-candidate positive confirmation. +13 bare-phantom sites: swift-graph-primitives (10: Sequential/Node/Index/Adjacency.List/Adjacency.Extract/Remappable.Remap/Traversal.First.Breadth/Depth/Topological + Default.list — `Tag` proven never-a-value package-wide) and swift-dimension-primitives (3: abs/min/max<Tag,T>). Property/Identity.ID re-confirmed mechanically. Tier-0 4→13, Tier-1b 59→63, total ~138→~151, packages 24→26 (+graph, +dimension); pool/byte-parser enter as downstream rebuild-only consumers (0 relax sites). Re-derived order: G6 migrated consumers (graph relaxes AFTER the bridge leaf). Stored-value EXCLUSIONS enumerated (§1.6). Non-breaking (the bare pass's critical safety axis): re-ran §4 risk over all new sites — zero positive phantom-marker constraints.
-  - 1.1.0 (2026-06-01): HARDENED the Tier-1b inventory. The v1.0.0 G-D grep keyed on the literal param name `Tag`, missing phantom params spelled otherwise (`T`/`Element`/`From`/`To`) — a [HANDOFF-040] name-keyed pattern-incompleteness. Re-ran NAME-AGNOSTICALLY (any identifier) single-line + multi-line-complete via /tmp/phantom-scan.py across all institute orgs. +21 new phantom op-sites (ordinal/cardinal/affine arithmetic + retag/scale; swift-parser-primitives Located/Spanned; Tree.Position), excluding stored-value Storage `<Element>` / pointer `<Pointee>` per §4. Tier-1b 38→59; total ~117→~138; packages 23→24 (+swift-parser-primitives). Non-breaking completeness fix (a missed site stays at its status-quo bound and still builds).
+  - 1.2.0 (2026-06-01): GENUINELY ecosystem-complete. (1) Reconciled the now-COMPLETED `.Indexed` consumer arc: Array.Indexed/Array.Fixed.Indexed are DELETED (confirmed gone) → the one positive phantom-marker constraint the §4 proof reasoned around is gone, STRENGTHENING the proof to zero; graph/pool/byte-parser are migrated + EDITABLE (held-exclusion dropped). (2) Added a BARE-PHANTOM pass (v1.1.0 caught only ~Copyable-suppressed phantoms + 2 hand-known bare roots): extended the scanner ([temporary-path]/phantom-scan-v3.py) to bare generic params, with full-type-body stored-detection + per-candidate positive confirmation. +13 bare-phantom sites: swift-graph-primitives (10: Sequential/Node/Index/Adjacency.List/Adjacency.Extract/Remappable.Remap/Traversal.First.Breadth/Depth/Topological + Default.list — `Tag` proven never-a-value package-wide) and swift-dimension-primitives (3: abs/min/max<Tag,T>). Property/Identity.ID re-confirmed mechanically. Tier-0 4→13, Tier-1b 59→63, total ~138→~151, packages 24→26 (+graph, +dimension); pool/byte-parser enter as downstream rebuild-only consumers (0 relax sites). Re-derived order: G6 migrated consumers (graph relaxes AFTER the bridge leaf). Stored-value EXCLUSIONS enumerated (§1.6). Non-breaking (the bare pass's critical safety axis): re-ran §4 risk over all new sites — zero positive phantom-marker constraints.
+  - 1.1.0 (2026-06-01): HARDENED the Tier-1b inventory. The v1.0.0 G-D grep keyed on the literal param name `Tag`, missing phantom params spelled otherwise (`T`/`Element`/`From`/`To`) — a [HANDOFF-040] name-keyed pattern-incompleteness. Re-ran NAME-AGNOSTICALLY (any identifier) single-line + multi-line-complete via [temporary-path]/phantom-scan.py across all institute orgs. +21 new phantom op-sites (ordinal/cardinal/affine arithmetic + retag/scale; swift-parser-primitives Located/Spanned; Tree.Position), excluding stored-value Storage `<Element>` / pointer `<Pointee>` per §4. Tier-1b 38→59; total ~117→~138; packages 23→24 (+swift-parser-primitives). Non-breaking completeness fix (a missed site stays at its status-quo bound and still builds).
   - 1.0.0 (2026-06-01): initial plan.
 status: EXECUTED
 tier: 3
@@ -40,7 +40,7 @@ The verdict (`phantom-parameter-suppressed-protocol-bound.md`): a **phantom** (n
 
 ## 1. Complete Site Inventory
 
-Completeness is earned by the greps below, not asserted. Every command excludes `.build/` mirror checkouts and `Tests/Experiments/Research` trees, and excludes already-maximal (`& ~Escapable`) sites. All run from `~/Developer`, 2026-06-01, Swift 6.3.2.
+Completeness is earned by the greps below, not asserted. Every command excludes `.build/` mirror checkouts and `Tests/Experiments/Research` trees, and excludes already-maximal (`& ~Escapable`) sites. All run from `[local-workspace]`, 2026-06-01, Swift 6.3.2.
 
 ### 1.1 Generating commands
 
@@ -69,7 +69,7 @@ grep -rnE '<[^<>]*: ~Copyable[^<>]*>' \
   swift-primitives swift-foundations swift-standards swift-iso swift-microsoft swift-linux-foundation \
   --include="*.swift" | grep -v '/.build/' | grep -vE '/(Tests|Experiments|Research)/' | grep -v '& ~Escapable' \
   | grep -E 'Tagged<|Index<|Index_Primitives\.Index<|Property<|\.Indexed<' | grep -vE '\bTag: ~Copyable\b'
-#   (ii) multi-line-complete (generic clause and wrapper-use on different lines) via /tmp/phantom-scan.py: per
+#   (ii) multi-line-complete (generic clause and wrapper-use on different lines) via [temporary-path]/phantom-scan.py: per
 #   declaration it accumulates the full signature, extracts every ~Copyable param (any name != Tag), KEEPS those used
 #   as a Tagged/Index/Property/.Indexed first type-arg, and FLAGS params also used as a stored value
 #   (consuming/borrowing/inout/`: P`/`-> P`) — the §4 phantom-vs-stored discriminator.
@@ -96,7 +96,7 @@ grep -rnE '<Element: (Copyable|Escapable)[,>]' swift-primitives --include="*.swi
 #   Unsafe*Pointer<Pointee>, P?) than a phantom; relaxing a stored param to ~Escapable BREAKS builds.
 #   So EVERY candidate is POSITIVELY confirmed pure-phantom (used ONLY as a Tagged/Index/Property/
 #   .Indexed discriminator; NEVER a stored prop, by-value param/return, [P], Container<P>, P?,
-#   consuming/borrowing/inout P). Mechanized in /tmp/phantom-scan-v3.py, which (a) anchors the generic
+#   consuming/borrowing/inout P). Mechanized in [temporary-path]/phantom-scan-v3.py, which (a) anchors the generic
 #   clause to the DECLARED NAME (the <...> before '(' '=' '{' 'where' — not a <...> in a value type),
 #   (b) scans the FULL brace-balanced type body so stored properties are seen, (c) keeps
 #   phantom-wrapper-use ∧ ¬stored-use. Survivors are READ BY HAND — the scanner does not strip `///`,
@@ -156,7 +156,7 @@ Per-package file:line enumeration (complete; from G-B + G-B'):
 
 ### 1.4 RELAX — Tier 1b: free func/init/subscript operation sites, NAME-AGNOSTIC, suppressed `<IDENT: ~Copyable>` + bare `<IDENT>` (63 sites)
 
-> Enumerated name-agnostically (v1.1.0 hardening, G-D′ + `/tmp/phantom-scan.py`, §1.1): any `~Copyable` generic param used **only** as a `Tagged`/`Index`/`Property` discriminator — not just params literally named `Tag`. **Bold** file:lines are the v1.1.0 additions (params named `T`/`Element`/`From`/`To`). Storage `<Element>` and pointer `<Pointee>` op-sites are **excluded** — there the param is the stored/pointed-to value type (§4, §1.6), not a pure phantom.
+> Enumerated name-agnostically (v1.1.0 hardening, G-D′ + `[temporary-path]/phantom-scan.py`, §1.1): any `~Copyable` generic param used **only** as a `Tagged`/`Index`/`Property` discriminator — not just params literally named `Tag`. **Bold** file:lines are the v1.1.0 additions (params named `T`/`Element`/`From`/`To`). Storage `<Element>` and pointer `<Pointee>` op-sites are **excluded** — there the param is the stored/pointed-to value type (§4, §1.6), not a pure phantom.
 
 | Package | File:lines | n |
 |---------|-----------|---|
@@ -236,7 +236,7 @@ TOOLCHAINS=$(defaults read ~/Library/Developer/Toolchains/<nightly>.xctoolchain/
 ```
 
 **End-of-cascade termination criterion (per `[HANDOFF-035]`):**
-1. **Workspace-wide re-grep** — re-run G-B, G-B', G-D, G-NP **and G-BARE** (§1.1). After the cascade, all must return **zero** un-relaxed phantom sites (the `Array.*.Indexed` doomed types are already deleted). Cover literal + generic-instantiated + conformance-position forms per `[HANDOFF-040]` (the G-B' multi-line grep is part of this); re-run `/tmp/phantom-scan-v3.py` and confirm the `phantom-BARE` + `phantom-supp` buckets are empty (every prior site now carries `& ~Escapable`).
+1. **Workspace-wide re-grep** — re-run G-B, G-B', G-D, G-NP **and G-BARE** (§1.1). After the cascade, all must return **zero** un-relaxed phantom sites (the `Array.*.Indexed` doomed types are already deleted). Cover literal + generic-instantiated + conformance-position forms per `[HANDOFF-040]` (the G-B' multi-line grep is part of this); re-run `[temporary-path]/phantom-scan-v3.py` and confirm the `phantom-BARE` + `phantom-supp` buckets are empty (every prior site now carries `& ~Escapable`).
 2. **Ecosystem build on the CI matrix** — every touched package + every transitive consumer, on macOS Swift 6.3 (`swift build --build-tests`) AND Linux release via Docker `swift:6.3` (`[PKG-BUILD-005]`) AND 6.4-dev nightly (`swiftlang/swift:nightly-main-jammy`, `continue-on-error`) AND L1 embedded. Serial. Green across the matrix = cascade complete.
 
 ---
@@ -302,7 +302,7 @@ The Collection.Protocol/Iterable relaxation has **settled** (HEAD commit `9c226f
 
 ## 7. Status
 
-**EXECUTED 2026-06-01.** Run G1→G6 with the §3 per-package 6.3 build gate and the §3/[HANDOFF-035] termination scan (G-B/G-D/G-NP/G-RISK + `/tmp/phantom-scan-v3.py`). The G-RISK non-breaking invariant held throughout (zero production sites positively require a phantom's Copyable/Escapable-ness).
+**EXECUTED 2026-06-01.** Run G1→G6 with the §3 per-package 6.3 build gate and the §3/[HANDOFF-035] termination scan (G-B/G-D/G-NP/G-RISK + `[temporary-path]/phantom-scan-v3.py`). The G-RISK non-breaking invariant held throughout (zero production sites positively require a phantom's Copyable/Escapable-ness).
 
 **Committed — 22 packages (swift-primitives + swift-foundations), all main-green on Swift 6.3.2; index/property/tree additionally embedded-confirmed on the 6.5-dev nightly (the installed `nightly-main` rolled 6.4→6.5-dev):**
 - **G1** — tagged-primitives `d3caae5`, cardinal `335e064`, ordinal `0d33fe8`, affine `8d4bdfb`, comparison `0484243`, equation `3b23647`
@@ -329,5 +329,5 @@ The Collection.Protocol/Iterable relaxation has **settled** (HEAD commit `9c226f
 - **Prior art (extended per `[HANDOFF-013]`):** `swift-institute/Research/phantom-typed-value-wrappers-literature-study.md` (RECOMMENDATION v1.0.0, Tier 3) — phantom Tag never affects the substructural classification (S3, soundness #5); `protocol-abstraction-for-phantom-typed-wrappers.md`; `collection-index-escapable-consumer-fallout.md` (DECISION v1.3.0, the value-index a-fortiori predecessor); `byte-protocol-capability-marker.md`.
 - **Governing rules:** `[ARCH-LAYER-008]` + `feedback_correctness_and_evergreen` (correctness sole driver; demand excluded); `[PKG-BUILD-004]`/`[PKG-BUILD-009]`/`[PKG-BUILD-010]`/`[PKG-BUILD-011]`/`[PKG-BUILD-008]` (build gates, embedded); `[HANDOFF-035]`/`[HANDOFF-040]` (cascade termination + generic-instantiated/conformance-position grep coverage); `[SKILL-LIFE-001/002/003]`, `[SKILL-CREATE-012/013]` (codification); `[IDX-001]`, `[API-NAME-010]`/`[API-NAME-010a]`, `[MEM-LIFE-001]`.
 - **In-flight arcs:** `project_indexed_wrapper_consolidation` (memory); `swift-array-primitives` commits `45d0a5a`, `9c226f5`.
-- **Enumeration:** all greps §1.1, run 2026-06-01, Apple Swift 6.3.2 / arm64, from `~/Developer`.
+- **Enumeration:** all greps §1.1, run 2026-06-01, Apple Swift 6.3.2 / arm64, from `[local-workspace]`.
 ```

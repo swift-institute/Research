@@ -555,7 +555,7 @@ ascii/binary/byte/leb128 spine, binary-cursor, memory-cursor).
 [PKG-NAME-001/-005/-009/-011/-015/-016]; the two handoffs; seat census 2026-06-12;
 local file:line cites inline.
 
-**Apple primary (local clone `~/Developer/swiftlang/`)**: `swift/stdlib/public/
+**Apple primary (local clone `[local-workspace]/swiftlang/`)**: `swift/stdlib/public/
 {Observation,Synchronization,Distributed,StringProcessing}`;
 `Observation/Sources/Observation/Observable.swift:45`, `ObservationRegistrar.swift:17`;
 `Synchronization/Mutex/Mutex.swift`, `Atomics/Atomic.swift:20`;

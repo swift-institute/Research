@@ -60,9 +60,9 @@
 | swift-tests/.../Tests.History.Storage.swift | 181 | `File(path)` | Same |
 | swift-tests/.../Test.Snapshot.Inline.Rewriter.swift | 52 | `File(File.Path(stringLiteral: filePath))` | **Double-wrapping** — String to Path to File |
 | swift-tests/.../Test.Snapshot.Inline.Rewriter.swift | 82 | `File(File.Path(stringLiteral: filePath))` | Same |
-| swift-pdf/.../PDF Tests.swift | 58 | `File("/tmp/swift-pdf/markdown-to-pdf-test.pdf")` | **Direct string literal to File** — very clean |
-| swift-pdf/.../PDF Tests.swift | 97 | `File("/tmp/swift-pdf/markdown-table-to-pdf-test.pdf")` | Same |
-| swift-pdf/.../PDF Tests.swift | 189 | `File("/tmp/swift-pdf/markdown-complex-to-pdf-test.pdf")` | Same |
+| swift-pdf/.../PDF Tests.swift | 58 | `File("[temporary-path]/swift-pdf/markdown-to-pdf-test.pdf")` | **Direct string literal to File** — very clean |
+| swift-pdf/.../PDF Tests.swift | 97 | `File("[temporary-path]/swift-pdf/markdown-table-to-pdf-test.pdf")` | Same |
+| swift-pdf/.../PDF Tests.swift | 189 | `File("[temporary-path]/swift-pdf/markdown-complex-to-pdf-test.pdf")` | Same |
 
 **Count**: ~14 occurrences.
 
@@ -141,7 +141,7 @@
 
 **Count**: 3 occurrences in swift-pdf tests.
 
-**Ergonomic assessment**: The `doc.write(to: File.Path(...))` pattern is the dominant PDF output pattern. `doc.write(to: File("/tmp/file.pdf"), createIntermediates: true)` with a string literal is very clean.
+**Ergonomic assessment**: The `doc.write(to: File.Path(...))` pattern is the dominant PDF output pattern. `doc.write(to: File("[temporary-path]/file.pdf"), createIntermediates: true)` with a string literal is very clean.
 
 ---
 
@@ -353,7 +353,7 @@ These are not `File_System` consumers but use the lower-level `Path_Primitives` 
 
 1. **`/` operator**: The most natural and ergonomic API. `path / "component" / "file.json"` reads cleanly. Used ~13 times.
 
-2. **`File(path)` and `File("/literal")`**: Clean construction. `File("/tmp/output.pdf")` is the most ergonomic file construction pattern.
+2. **`File(path)` and `File("/literal")`**: Clean construction. `File("[temporary-path]/output.pdf")` is the most ergonomic file construction pattern.
 
 3. **Instance-method chains**: `file.read.full { }`, `file.write.atomic()`, `dir.create.recursive()` form a consistent, discoverable API.
 

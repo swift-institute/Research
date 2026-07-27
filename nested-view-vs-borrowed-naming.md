@@ -56,7 +56,7 @@ scope: cross-package
     — NOT introduced by this rename, queued for separate Tagged-surface
     cleanup cycle: array-primitives Tagged.rawValue + `__unchecked` →
     `_unchecked` rename, kernel-foundations Int-literal-to-Tagged
-    conversion errors. Drafts at `/tmp/property-cascade-followups/`.
+    conversion errors. Drafts at `[temporary-path]/property-cascade-followups/`.
 - **1.2.0 (2026-05-01)** — Adopted semantic-invariant framework with
   governing-axis identification + axis-based decision table. Supersedes
   v1.1.0's Pattern 2 keep-`.View` ruling for the access-mode-discriminated
@@ -73,7 +73,7 @@ scope: cross-package
   `Collection.Remove.View` remain in category (b) — preserved pending
   separate audit. Framework derived in collaborative discussion
   (Claude × ChatGPT, 3 rounds CONVERGED, transcript at
-  `/tmp/property-naming-rename-transcript.md`).
+  `[temporary-path]/property-naming-rename-transcript.md`).
 - **1.1.0 (2026-04-23)** — ISO_9899.String.View cascade executed per this
   taxonomy's recommendation. Two commits:
   - `df80861` in swift-iso-9899: file rename + type rename + conformance adoption (`extension ISO_9899.String: Ownership.Borrow.\`Protocol\` {}`) + Package.swift dep on swift-ownership-primitives
@@ -127,7 +127,7 @@ Ownership.Borrow.`Protocol` unification, and what principle decides?
 ### Inventory (workspace-wide grep, production only)
 
 Filter: `public struct View:` declarations across
-`~/Developer/` excluding `.build/`, `Experiments/`,
+`[local-workspace]/` excluding `.build/`, `Experiments/`,
 compiler test inputs, issue-reproduction packages. 12 production
 matches, separable into four patterns:
 
@@ -424,8 +424,8 @@ defect rather than principled distinction.
 
 Framework derived 2026-05-01 in collaborative discussion between
 Claude (Anthropic) and ChatGPT (OpenAI) — 3 rounds, CONVERGED.
-Transcript: `/tmp/property-naming-rename-transcript.md`. Converged
-plan: `/tmp/property-naming-rename-converged.md`. User confirmed
+Transcript: `[temporary-path]/property-naming-rename-transcript.md`. Converged
+plan: `[temporary-path]/property-naming-rename-converged.md`. User confirmed
 framework adoption and authorised rename execution scoped to the
 Property family + `Property.Consuming → Property.Consume` for
 internal consistency. Rename execution itself (the ~183-consumer-file
@@ -457,7 +457,7 @@ Reproducible census:
 
 ```bash
 grep -rn -E "^\s*(@safe\s+)?public\s+struct\s+View\b" \
-  ~/Developer/ --include="*.swift" 2>/dev/null \
+  [local-workspace]/ --include="*.swift" 2>/dev/null \
   | grep -v ".build/" | grep -v "Experiments/" | grep -v ".git/" \
   | sort
 ```

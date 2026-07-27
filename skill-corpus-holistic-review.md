@@ -252,10 +252,10 @@ Some are deliberately burned or subsumed; the defect is that references/template
 | Projection | Current result | Verdict |
 |---|---|---|
 | Source roots | 65 skills | canonical |
-| ~/Developer/.claude/skills | 65 links, 0 broken | source-complete Claude workspace view |
+| [local-workspace]/.claude/skills | 65 links, 0 broken | source-complete Claude workspace view |
 | ~/.claude/skills | 11 links, 6 broken | incorrect user projection |
-| ~/Developer/swift-primitives/.claude/skills | primitives link broken | incorrect repo projection |
-| ~/Developer/swift-standards/.claude/skills | 65 links, healthy | complete but broad |
+| [local-workspace]/swift-primitives/.claude/skills | primitives link broken | incorrect repo projection |
+| [local-workspace]/swift-standards/.claude/skills | 65 links, healthy | complete but broad |
 | swift-institute.org repo-local projection | 19 links, all broken | incorrect checked-in projection |
 | project/user .agents/skills | absent | no current Codex project/user projection |
 

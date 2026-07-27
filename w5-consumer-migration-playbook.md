@@ -26,7 +26,7 @@ queue leg-5 · deque leg-6 · linked W3b · slots W3b · Q3-B Fixed reshape); th
 
 [RES-019] prior-art check: no existing W5/consumer-migration doc in Research/ (closest structural
 precedent: `collection-index-escapable-consumer-fallout.md`). All greps run 2026-06-10 against the live
-trees of `~/Developer/{swift-primitives,swift-standards,swift-foundations}`; the set/dict family is
+trees of `[local-workspace]/{swift-primitives,swift-standards,swift-foundations}`; the set/dict family is
 mid-edit by the leg-8 executor, so its counts are snapshots, not commitments.
 
 ## Question

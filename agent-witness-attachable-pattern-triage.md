@@ -161,4 +161,4 @@ Not for pilot:
 
 ## Source
 
-Survey conducted 2026-05-22 by listing `~/Developer/swift-primitives/` and applying the Category A/B/C/D framework defined in `agent-witness-attachable-pattern.md`. Primary classification done by package name + brief Sources/ inspection where ambiguous. Adjustments to the initial automated classification documented above.
+Survey conducted 2026-05-22 by listing `[local-workspace]/swift-primitives/` and applying the Category A/B/C/D framework defined in `agent-witness-attachable-pattern.md`. Primary classification done by package name + brief Sources/ inspection where ambiguous. Adjustments to the initial automated classification documented above.

@@ -4,7 +4,7 @@
 
 This record answers the immutable `pure-institute-networking` generation-1 charter as reset by the Principal to direct, audit-only operation. The work is research and architecture only. Existing repositories, manifests, lockfiles, source, tests, scripts, skills, product configuration, and deployments remained read-only. New files are confined to:
 
-`~/Developer/swift-institute/Research/Pure-Institute-Networking/`
+`[local-workspace]/swift-institute/Research/Pure-Institute-Networking/`
 
 The Research repository already contained unrelated modified and untracked work. It was not staged, cleaned, amended, reset, stashed, or edited. The task-specific charter requires separately reviewable files in the directory above; therefore the general research-index workflow does not authorize editing the pre-existing root `_index.json`.
 
@@ -79,7 +79,7 @@ This distinction matters for AsyncHTTPClient: RepoTraffic has zero direct import
 
 ## Reproducible commands
 
-All aggregate counts in this research use the commands below or a command printed beside the table that it supports. Commands were run from `~/Developer/repotraffic/repotraffic-com-server` unless an absolute path says otherwise.
+All aggregate counts in this research use the commands below or a command printed beside the table that it supports. Commands were run from `[local-workspace]/repotraffic/repotraffic-com-server` unless an absolute path says otherwise.
 
 ### Snapshot and mutation controls
 
@@ -194,17 +194,17 @@ find "$package/Sources" -type f -name '*.swift' 2>/dev/null | wc -l
 
 ```sh
 rg -n 'static func (events|completions)|\.events\(|\.completions\(' \
-  ~/Developer/swift-foundations/swift-sockets/Sources -g '*.swift'
+  [local-workspace]/swift-foundations/swift-sockets/Sources -g '*.swift'
 
 rg -n -i '\b(AEAD|seal|open|encrypt|decrypt|verification|trust|root|hostname|TLSInnerPlaintext|TLSCiphertext)\b' \
-  '~/Developer/swift-ietf/swift-rfc-8446/Sources/RFC 8446' -g '*.swift'
+  '[local-workspace]/swift-ietf/swift-rfc-8446/Sources/RFC 8446' -g '*.swift'
 ```
 
 The socket search returned no production event/completion factory. TLS hits were individually inspected: they are codecs/formulas or names, not a live session/record-protection/trust engine.
 
 ### Dependency graph attempt and fallback
 
-`swift package show-dependencies --format json --output-path /tmp/repotraffic-dependencies.json` was attempted read-only. SwiftPM did not produce the file after 5 minutes 42 seconds, so the process was interrupted. `Package.swift` and `Package.resolved` hashes remained unchanged. Even if it had completed, the command's own help describes a resolved dependency graph and offers no product selector; it cannot distinguish `com_repotraffic_app` from test/resolution-only targets. The graph in this research is instead proven from frozen root product selections and exact resolved checkout manifests. The attempted command is not counted as graph evidence. Future release proof keeps it only as a resolved superset and adds a target-aware manifest traversal plus actual product build/link/container evidence.
+`swift package show-dependencies --format json --output-path [temporary-path]/repotraffic-dependencies.json` was attempted read-only. SwiftPM did not produce the file after 5 minutes 42 seconds, so the process was interrupted. `Package.swift` and `Package.resolved` hashes remained unchanged. Even if it had completed, the command's own help describes a resolved dependency graph and offers no product selector; it cannot distinguish `com_repotraffic_app` from test/resolution-only targets. The graph in this research is instead proven from frozen root product selections and exact resolved checkout manifests. The attempted command is not counted as graph evidence. Future release proof keeps it only as a resolved superset and adds a target-aware manifest traversal plus actual product build/link/container evidence.
 
 ## Primary external sources
 

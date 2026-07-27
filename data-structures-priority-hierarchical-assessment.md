@@ -270,7 +270,7 @@ In both cases, the raw `Int` is converted to typed `Index<T>` at a single bounda
 
 ### Priority 1: Fix Graph `__HeapOrdering` (CRITICAL)
 
-**File**: `~/Developer/swift-primitives/swift-graph-primitives/Sources/Graph Primitives/Graph.Sequential.Path.Weighted.swift`, line 9
+**File**: `[local-workspace]/swift-primitives/swift-graph-primitives/Sources/Graph Primitives/Graph.Sequential.Path.Weighted.swift`, line 9
 
 The `Entry` struct conforms to `__HeapOrdering`, a protocol that has no Swift source definition. This will prevent Graph from compiling when the weighted path module is exercised.
 

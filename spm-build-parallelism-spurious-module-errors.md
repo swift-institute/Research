@@ -18,7 +18,7 @@ Supersedes [`docker-linux-parallel-build-race.md`](docker-linux-parallel-build-r
 
 ## Context
 
-Large-graph SPM `swift build --build-tests` invocations across the Swift Institute primitives + foundations + platform-stack ecosystem (typical scale: 1500–3300 compilation steps, 60+ transitive packages, ~13 monorepos under `~/Developer/`) intermittently emit `error: no such module '<X>'` or `error: missing required module '<X>'` diagnostics that **do not represent structural Package.swift target-dependency or product-export gaps**. The same package, on the same toolchain, with the same source tree, will succeed under `-j 1` (single-job sequential build) and may also succeed on a re-run with default `-j` if the build cache from a prior partial-success build supplies the missing module artifacts.
+Large-graph SPM `swift build --build-tests` invocations across the Swift Institute primitives + foundations + platform-stack ecosystem (typical scale: 1500–3300 compilation steps, 60+ transitive packages, ~13 monorepos under `[local-workspace]/`) intermittently emit `error: no such module '<X>'` or `error: missing required module '<X>'` diagnostics that **do not represent structural Package.swift target-dependency or product-export gaps**. The same package, on the same toolchain, with the same source tree, will succeed under `-j 1` (single-job sequential build) and may also succeed on a re-run with default `-j` if the build cache from a prior partial-success build supplies the missing module artifacts.
 
 This pattern has cost the audit corpus at least one D-series row that turned out to be a false positive (D6 `Standard_Library_Extensions`, logged 2026-04-24, RESOLVED-FALSE-POSITIVE 2026-04-25) and it shaped two other audit entries that were also re-derived as RESOLVED-PREMISE-STALE on the same day (D2 `_Lock Test Process` linker symbols, D3 `Binary.Bytes.Machine.u8Parser` target-dep gap). This note exists so future `/audit` and `/platform` cycles do not repeat the false-positive trap.
 
@@ -56,7 +56,7 @@ Variables that suppress reproduction:
 
 ## Evidence
 
-Six concrete transient observations from cycles 2026-04-24 → 2026-04-25, all on Docker `swift:6.3.1` aarch64 against the local monorepo workspace at `~/Developer`:
+Six concrete transient observations from cycles 2026-04-24 → 2026-04-25, all on Docker `swift:6.3.1` aarch64 against the local monorepo workspace at `[local-workspace]`:
 
 | # | Date | Cycle | Observed error | Cited file | Re-verification | Outcome |
 |---|------|-------|----------------|------------|-----------------|---------|
@@ -100,5 +100,5 @@ For `/platform` Cycle gates (b)(c)(d)/Phase 3 terminal-gate verification, prefer
 
 - **Hypothesis, not root-causal proof.** The "emit-module artifact race" explanation is a high-confidence working hypothesis based on observed correlations (default-`-j` failure, `-j 1` success, cache-warm success). I have not instrumented the SPM scheduler or read SPM source to confirm. A definitive root-cause investigation would belong in a separate `/issue-investigation` cycle and could surface as an upstream `swiftlang/swift-package-manager` bug report.
 - **Toolchain scope.** All six observations were on `swift-6.3.1-RELEASE` (Docker `swift:6.3.1` aarch64). Whether this class of error reproduces on macOS arm64, Linux x86_64, swift:6.3 floating tag, or swift:6.4 nightly is unverified.
-- **Workspace scope.** All observations were on the local monorepo workspace at `~/Developer/` with `.package(path: "../...")` deps. Whether registry-resolved deps or remote git-resolved deps reproduce identically is unverified.
+- **Workspace scope.** All observations were on the local monorepo workspace at `[local-workspace]/` with `.package(path: "../...")` deps. Whether registry-resolved deps or remote git-resolved deps reproduce identically is unverified.
 - **`-j 1` performance cost.** Single-job builds of the swift-kernel scale (~3300 steps) take 2-3 minutes vs ~1 minute on default `-j`. For routine local development this is meaningful; for terminal-gate verification once per cycle, it is acceptable insurance.

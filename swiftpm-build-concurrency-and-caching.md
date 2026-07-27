@@ -134,7 +134,7 @@ L314–316); `cacheLocalPackages` is init-only, documented "For testing purposes
 `Workspace.swift` never passes it. Local confirmation: the shared cache holds 141 bare
 clones, all with real GitHub origins; swift-stripe-types' `.build/repositories` holds
 148, of which only 41 overlap with the cache — the ~107 institute mirrors are re-cloned
-per consumer with `origin = ~/Developer/...`. This explains "nothing is shared
+per consumer with `origin = [local-workspace]/...`. This explains "nothing is shared
 across sibling packages" for repositories. It is however the *cheap* part of the
 problem: those per-package clones are 0.06 s hardlinked copies (1a), and checkouts are
 `git clone --shared --no-checkout` from the local bare repo (GitRepository.swift L267).
@@ -234,7 +234,7 @@ file lives in `$TMPDIR` (path-munged name; TSC
 L194–235); `.build/.lock` is only a PID sidecar (observed containing `22735`). On
 contention SwiftPM prints exactly the message observed four times in tonight's sibling
 logs — "Another instance of SwiftPM (PID: 14024) is already running using
-'~/Developer/swift-standards/swift-pdf-standard/.build', waiting until that
+'[local-workspace]/swift-standards/swift-pdf-standard/.build', waiting until that
 process has finished execution..." — then blocks **forever** (no timeout;
 [SwiftCommandState.swift](https://github.com/swiftlang/swift-package-manager/blob/release/6.3/Sources/CoreCommands/SwiftCommandState.swift)
 L1143–1194). flock releases on process death, so stale PIDs cannot deadlock; a live

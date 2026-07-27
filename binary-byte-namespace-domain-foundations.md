@@ -117,7 +117,7 @@ The architecture writ in one place.
 
 ```bash
 grep -rl "binary-primitives\|byte-primitives\|bit-primitives\|binary-parser\|binary-serializer" \
-  ~/Developer/swift-institute/Research/ 2>/dev/null
+  [local-workspace]/swift-institute/Research/ 2>/dev/null
 ```
 
 [Verified: 2026-05-20] 26 ecosystem-wide research docs match. The load-bearing ones, in chronological order:

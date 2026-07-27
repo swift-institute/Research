@@ -889,7 +889,7 @@ v1.1.0 incorporates findings from an independent outside-view review
 (`HANDOFF-multi-format-serialization-fresh-review.md` — a firewalled investigation
 that the parent session dispatched without source-of-truth access to this doc, to
 `swift-foundations/swift-json/Research/family-codable-convention.md`, or to any
-file under `~/Developer/`). The review delivered:
+file under `[local-workspace]/`). The review delivered:
 
 - a 36-system external survey (Rust serde; Haskell aeson/cassava/binary/cereal/serialise;
   OCaml ppx_deriving + atdgen; Scala circe/play-json/upickle/scodec/avro4s/scala-pickling;

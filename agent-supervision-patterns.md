@@ -88,7 +88,7 @@ When the principal must surface a question to the user rather than answer it its
 
 ### The Handoff/Supervise Boundary
 
-These two skills solve different problems and compose cleanly. The existing `/handoff` skill (see `~/Developer/swift-institute/Skills/handoff/SKILL.md` and `~/Developer/swift-institute/Research/agent-handoff-patterns.md`) is built on the *handoff paradox*: the agent writing the handoff is the one whose quality has degraded. Its mitigations — progressive capture, tool-assisted population, fixed-field templates, user review — all address that discrete transfer moment.
+These two skills solve different problems and compose cleanly. The existing `/handoff` skill (see `[local-workspace]/swift-institute/Skills/handoff/SKILL.md` and `[local-workspace]/swift-institute/Research/agent-handoff-patterns.md`) is built on the *handoff paradox*: the agent writing the handoff is the one whose quality has degraded. Its mitigations — progressive capture, tool-assisted population, fixed-field templates, user review — all address that discrete transfer moment.
 
 | | Handoff | Supervise |
 |---|---|---|
@@ -105,7 +105,7 @@ The clean boundary: `/handoff` writes a file; `/supervise` governs a posture. Di
 
 ### Lived Example
 
-The parent session of `~/Developer/swift-foundations/swift-io/HANDOFF.md` was in supervisory mode for the whole of Phase 2 of the swift-sockets consumption of swift-io. The handoff's line 55 — *"Supervisor constraints #1–#4: all verified end-to-end"* — is the supervisor's post-hoc attestation.
+The parent session of `[local-workspace]/swift-foundations/swift-io/HANDOFF.md` was in supervisory mode for the whole of Phase 2 of the swift-sockets consumption of swift-io. The handoff's line 55 — *"Supervisor constraints #1–#4: all verified end-to-end"* — is the supervisor's post-hoc attestation.
 
 Reverse-engineering from the Key Decisions (lines 58–79) and Constraints (lines 150–166) sections, the four supervisor constraints were almost certainly:
 
@@ -180,7 +180,7 @@ The `/supervise` skill should encode seven orthogonal axes, producing a compress
 
 ### Skill Translation
 
-The skill as shipped at `~/Developer/swift-institute/Skills/supervise/SKILL.md` is the canonical numbering. The table below reflects the shipped IDs (this section was updated post-authoring to match):
+The skill as shipped at `[local-workspace]/swift-institute/Skills/supervise/SKILL.md` is the canonical numbering. The table below reflects the shipped IDs (this section was updated post-authoring to match):
 
 | ID | Title | Anchor |
 |---|---|---|
@@ -224,6 +224,6 @@ Section ordering within the skill mirrors the axis sequence: Scope → Strictnes
 - [Magentic Agent Orchestration — Microsoft Learn (Semantic Kernel)](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-orchestration/magentic)
 - [OpenAI Swarm — GitHub](https://github.com/openai/swarm)
 - [Orchestrating Agents: Routines and Handoffs — OpenAI Cookbook](https://developers.openai.com/cookbook/examples/orchestrating_agents)
-- Internal: `~/Developer/swift-institute/Skills/handoff/SKILL.md`
-- Internal: `~/Developer/swift-institute/Research/agent-handoff-patterns.md`
-- Internal: `~/Developer/swift-foundations/swift-io/HANDOFF.md` (parent session lived example)
+- Internal: `[local-workspace]/swift-institute/Skills/handoff/SKILL.md`
+- Internal: `[local-workspace]/swift-institute/Research/agent-handoff-patterns.md`
+- Internal: `[local-workspace]/swift-foundations/swift-io/HANDOFF.md` (parent session lived example)

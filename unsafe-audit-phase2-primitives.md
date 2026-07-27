@@ -90,7 +90,7 @@ Expected: ~177 edits. Actual: 175. Delta: 2 (1.1%) — within 5% tolerance.
 
 ## Branch State
 
-- Parent repo: `unsafe-audit` branch in `~/Developer/swift-primitives/`
+- Parent repo: `unsafe-audit` branch in `[local-workspace]/swift-primitives/`
 - Each submodule: `unsafe-audit` branch
 - Not pushed to remote (per audit protocol — push after review).
 

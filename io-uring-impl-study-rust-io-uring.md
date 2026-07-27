@@ -428,6 +428,6 @@ The entire kernel interface is three functions: `io_uring_setup`, `io_uring_ente
 
 - Repository: https://github.com/tokio-rs/io-uring (v0.7.11)
 - Kernel documentation: https://www.kernel.org/doc/html/latest/userspace-api/io_uring.html
-- Companion study (Zig): `~/Developer/swift-primitives/Research/io-uring-impl-study-zig-std.md`
-- API reference: `~/Developer/swift-primitives/Research/linux-io-uring-api-reference.md`
-- Atomic ordering study: `~/Developer/swift-primitives/Research/kernel-atomic-memory-ordering.md`
+- Companion study (Zig): `[local-workspace]/swift-primitives/Research/io-uring-impl-study-zig-std.md`
+- API reference: `[local-workspace]/swift-primitives/Research/linux-io-uring-api-reference.md`
+- Atomic ordering study: `[local-workspace]/swift-primitives/Research/kernel-atomic-memory-ordering.md`

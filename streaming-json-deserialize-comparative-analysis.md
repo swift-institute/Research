@@ -1907,7 +1907,7 @@ by parallel subagent per `[RES-020]` during Phase 1:
 ## Provenance
 
 Investigation invoked via the supervisor handoff at
-`~/Developer/HANDOFF-streaming-json-deserialize-research.md`
+`[local-workspace]/HANDOFF-streaming-json-deserialize-research.md`
 (Phase 2; 2026-05-14). Phase 2 is the prescription follow-on
 to Phase 1's descriptive characterisation. Parent session
 closed the parse-performance arc (Tier 0/1/3/4 landed; v2 arc

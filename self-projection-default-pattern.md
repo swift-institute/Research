@@ -403,7 +403,7 @@ ground-rule #6.
 - **Borrow execution plan**: `swift-primitives/Research/ownership-borrow-protocol-unification-implementation-plan.md` (v1.0.0, 2026-04-22, tier 2, cross-package, RECOMMENDATION).
 - **Borrow experiment (CONFIRMED)**: `swift-primitives/Experiments/ownership-borrow-protocol-unification/Sources/main.swift` (Apple Swift 6.3.1, 2026-04-22) — the experiment from which this meta-pattern was extracted.
 - **This investigation's experiment (CONFIRMED)**: `swift-primitives/Experiments/self-projection-default-pattern/Sources/main.swift` (Apple Swift 6.3.1, 2026-04-22) — six variants probing the meta-pattern's applicability.
-- **Originating handoff**: `~/Developer/HANDOFF-self-projection-default-pattern.md` — the investigation brief that scoped this work.
+- **Originating handoff**: `[local-workspace]/HANDOFF-self-projection-default-pattern.md` — the investigation brief that scoped this work.
 
 ### Ecosystem candidates examined
 

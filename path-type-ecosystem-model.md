@@ -201,7 +201,7 @@ L1 PRIMITIVES
 
 ### Protocol location and shape
 
-- **Declared**: `~/Developer/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.Protocol.swift:50` — nested as `Path.Protocol` (backtick-escaped keyword).
+- **Declared**: `[local-workspace]/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.Protocol.swift:50` — nested as `Path.Protocol` (backtick-escaped keyword).
 - **Requirements (static)**:
   - `static func parent(of view: borrowing Self) -> Span<Char>?` with `@_lifetime(copy view)` (line 64-65)
   - `static func component(of view: borrowing Self) -> Span<Char>` with `@_lifetime(copy view)` (line 74-75)
@@ -216,7 +216,7 @@ L1 PRIMITIVES
 
 | Conformer | Location | Status |
 |---|---|---|
-| `Path_Primitives.Path.View` via POSIX retroactive | `~/Developer/swift-iso/swift-iso-9945/Sources/ISO 9945 Kernel File/ISO 9945.Kernel.Path.View+Path.Protocol.swift:20` (`extension Path.View: @retroactive Path.Protocol`) | **DONE** (commit `a90491b`, 2026-04-07) |
+| `Path_Primitives.Path.View` via POSIX retroactive | `[local-workspace]/swift-iso/swift-iso-9945/Sources/ISO 9945 Kernel File/ISO 9945.Kernel.Path.View+Path.Protocol.swift:20` (`extension Path.View: @retroactive Path.Protocol`) | **DONE** (commit `a90491b`, 2026-04-07) |
 | `Path_Primitives.Path.View` via Windows retroactive | (not present) | **MISSING — Phase 4a Windows pending** |
 | `Paths.Path` (L3) | — | **Does NOT conform.** No `extension Paths.Path: Path.Protocol` anywhere in swift-paths. |
 | `Paths.Path.View` (L3) | — | **Does NOT conform.** L3 `Path.View` has its own `pointer` + `length`-computed API, incompatible shape with the protocol. |
@@ -230,7 +230,7 @@ L1 PRIMITIVES
 
 ### What the handoff says about Phase 4b constraints
 
-From `~/Developer/HANDOFF-path-decomposition.md` line 74:
+From `[local-workspace]/HANDOFF-path-decomposition.md` line 74:
 - Migrate `parent`, `lastComponent`, `appending` to delegate to `Path.View.parent` / `.component` / `.appending`.
 - Migration should be incremental; existing tests must keep passing.
 - Note `lastComponent` is compound — [API-NAME-002] flag pending.
@@ -239,7 +239,7 @@ From `~/Developer/HANDOFF-path-decomposition.md` line 74:
 
 ## 5. Phase 4b Input Surface — Method-by-Method
 
-The four target methods all live in `~/Developer/swift-foundations/swift-paths/Sources/Paths/Path.Navigation.swift`. Verified against source.
+The four target methods all live in `[local-workspace]/swift-foundations/swift-paths/Sources/Paths/Path.Navigation.swift`. Verified against source.
 
 ### 5.1 `var parent: Path?` — lines 78-117
 
@@ -400,50 +400,50 @@ Handoff open question 1 (line 68): `component` returns `Span<Char>` but [IMPL-08
 
 ```
 L1 primitive:
-  ~/Developer/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.swift
-  ~/Developer/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.View.swift
-  ~/Developer/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.Protocol.swift
-  ~/Developer/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.String.swift
-  ~/Developer/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.Resolution.Error.swift
-  ~/Developer/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.Canonical.swift
-  ~/Developer/swift-primitives/swift-path-primitives/Sources/Path Primitives/Tagged+Path.swift
+  [local-workspace]/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.swift
+  [local-workspace]/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.View.swift
+  [local-workspace]/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.Protocol.swift
+  [local-workspace]/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.String.swift
+  [local-workspace]/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.Resolution.Error.swift
+  [local-workspace]/swift-primitives/swift-path-primitives/Sources/Path Primitives/Path.Canonical.swift
+  [local-workspace]/swift-primitives/swift-path-primitives/Sources/Path Primitives/Tagged+Path.swift
 
 L1 tagged:
-  ~/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel Path Primitives/Kernel.Path.swift
-  ~/Developer/swift-primitives/swift-identity-primitives/Sources/Identity Primitives/Tagged+Viewable.swift
+  [local-workspace]/swift-primitives/swift-kernel-primitives/Sources/Kernel Path Primitives/Kernel.Path.swift
+  [local-workspace]/swift-primitives/swift-identity-primitives/Sources/Identity Primitives/Tagged+Viewable.swift
 
 L2 POSIX conformance:
-  ~/Developer/swift-iso/swift-iso-9945/Sources/ISO 9945 Kernel File/ISO 9945.Kernel.Path.View+Path.Protocol.swift
-  ~/Developer/swift-iso/swift-iso-9945/Sources/ISO 9945 Kernel File/ISO 9945.Kernel.Path.Canonical.swift
+  [local-workspace]/swift-iso/swift-iso-9945/Sources/ISO 9945 Kernel File/ISO 9945.Kernel.Path.View+Path.Protocol.swift
+  [local-workspace]/swift-iso/swift-iso-9945/Sources/ISO 9945 Kernel File/ISO 9945.Kernel.Path.Canonical.swift
 
 L2 Windows (Path.Protocol missing):
-  ~/Developer/swift-microsoft/swift-windows-standard/Sources/Windows Kernel File Standard/Windows.Kernel.Path.Canonical.swift
+  [local-workspace]/swift-microsoft/swift-windows-standard/Sources/Windows Kernel File Standard/Windows.Kernel.Path.Canonical.swift
 
 L3 paths:
-  ~/Developer/swift-foundations/swift-paths/Sources/Paths/Path.swift
-  ~/Developer/swift-foundations/swift-paths/Sources/Paths/Path.View.swift
-  ~/Developer/swift-foundations/swift-paths/Sources/Paths/Path.Component.swift
-  ~/Developer/swift-foundations/swift-paths/Sources/Paths/Path.Component.Extension.swift
-  ~/Developer/swift-foundations/swift-paths/Sources/Paths/Path.Component.Stem.swift
-  ~/Developer/swift-foundations/swift-paths/Sources/Paths/Path.Navigation.swift
-  ~/Developer/swift-foundations/swift-paths/Sources/Paths/Path.Introspection.swift
-  ~/Developer/swift-foundations/swift-paths/Sources/Paths/Path.Operators.swift
-  ~/Developer/swift-foundations/swift-paths/Sources/Paths/Path.Binary.swift
-  ~/Developer/swift-foundations/swift-paths/Sources/Paths/Path.Error.swift
-  ~/Developer/swift-foundations/swift-paths/Package.swift
+  [local-workspace]/swift-foundations/swift-paths/Sources/Paths/Path.swift
+  [local-workspace]/swift-foundations/swift-paths/Sources/Paths/Path.View.swift
+  [local-workspace]/swift-foundations/swift-paths/Sources/Paths/Path.Component.swift
+  [local-workspace]/swift-foundations/swift-paths/Sources/Paths/Path.Component.Extension.swift
+  [local-workspace]/swift-foundations/swift-paths/Sources/Paths/Path.Component.Stem.swift
+  [local-workspace]/swift-foundations/swift-paths/Sources/Paths/Path.Navigation.swift
+  [local-workspace]/swift-foundations/swift-paths/Sources/Paths/Path.Introspection.swift
+  [local-workspace]/swift-foundations/swift-paths/Sources/Paths/Path.Operators.swift
+  [local-workspace]/swift-foundations/swift-paths/Sources/Paths/Path.Binary.swift
+  [local-workspace]/swift-foundations/swift-paths/Sources/Paths/Path.Error.swift
+  [local-workspace]/swift-foundations/swift-paths/Package.swift
 
 L3 file-system typealiases:
-  ~/Developer/swift-foundations/swift-file-system/Sources/File System Core/File.Path.swift
-  ~/Developer/swift-foundations/swift-file-system/Sources/File System Core/File.Path.Component.swift
-  ~/Developer/swift-foundations/swift-file-system/Sources/File System/File.Path.Property.swift
+  [local-workspace]/swift-foundations/swift-file-system/Sources/File System Core/File.Path.swift
+  [local-workspace]/swift-foundations/swift-file-system/Sources/File System Core/File.Path.Component.swift
+  [local-workspace]/swift-foundations/swift-file-system/Sources/File System/File.Path.Property.swift
 ```
 
 ## Appendix B — Phase 4a evidence
 
 - swift-path-primitives commit `a96dddf`: "Add Path.Protocol decomposition API [IMPL-023] [IMPL-081]"
 - swift-iso-9945 commit `a90491b`: "Add POSIX Path.Protocol conformance on Path.View [API-IMPL-007]"
-- HANDOFF: `~/Developer/HANDOFF-path-decomposition.md`
-- Ecosystem audit: `~/Developer/swift-institute/Audits/audit.md` lines 914-915, 1066, 1073.
+- HANDOFF: `[local-workspace]/HANDOFF-path-decomposition.md`
+- Ecosystem audit: `[local-workspace]/swift-institute/Audits/audit.md` lines 914-915, 1066, 1073.
 - Confirmed: **no Windows Path.Protocol file** (`Grep 'Path\.`?Protocol`?' swift-microsoft/swift-windows-standard` — zero matches).
 
 ---

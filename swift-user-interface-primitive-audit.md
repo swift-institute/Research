@@ -209,7 +209,7 @@ existing primitive packages. This research doc captures the target shape.
 
 ## References
 
-- `~/Developer/swift-primitives/` — all surveyed primitives
+- `[local-workspace]/swift-primitives/` — all surveyed primitives
 - `danceui-architectural-analysis.md` — parent research
 - `swift-user-interface-graph-transactions.md` — attribute-graph placement
 - `swift-user-interface-tree-traversal.md` — witness vs visitor decision

@@ -12,7 +12,7 @@ status: RECOMMENDATION
 
 The public alpha site at `swift-institute.org` is live and DocC-rendered. A prior pass (`documentation-docc-alpha-launch.md`, status DECISION) established the content scope and alpha-conservative voice, but `HANDOFF.md` records that the resulting root page reads as API documentation rather than a project landing: reader-intent routing is weak, the blog — named as the alpha's primary purpose — is buried at the bottom of Topics, and the five-principles block carries too much weight above the fold.
 
-This synthesis document consolidates three parallel research perspectives, all in `~/Developer/swift-institute/Research/`:
+This synthesis document consolidates three parallel research perspectives, all in `[local-workspace]/swift-institute/Research/`:
 
 | Perspective | File | Focus |
 |-------------|------|-------|
@@ -293,12 +293,12 @@ No decision requires a feature DocC doesn't have, no decision bypasses DocC's ch
 Per the handoff constraint "Verify changes locally with `xcrun docc convert` first":
 
 ```bash
-cd "~/Developer/swift-institute"
+cd "[local-workspace]/swift-institute"
 xcrun docc convert "Swift Institute.docc" \
-  --output-path /tmp/si-docs \
+  --output-path [temporary-path]/si-docs \
   --transform-for-static-hosting \
   --hosting-base-path /
-cd /tmp/si-docs && python3 -m http.server 8080
+cd [temporary-path]/si-docs && python3 -m http.server 8080
 # Inspect http://localhost:8080/documentation/swift_institute/
 ```
 

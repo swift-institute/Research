@@ -71,7 +71,7 @@ to cascade to `~Copyable`.
 
 ### Diagnostic emission site
 
-**File**: `~/Developer/swiftlang/swift/include/swift/AST/DiagnosticsSIL.def:886`
+**File**: `[local-workspace]/swiftlang/swift/include/swift/AST/DiagnosticsSIL.def:886`
 
 **Diagnostic ID**: `sil_movechecking_capture_consumed`
 
@@ -104,7 +104,7 @@ to avoid use-after-free.
 
 ### Test fixtures showing valid `consuming get` patterns
 
-Swift compiler's test suite at `~/Developer/swiftlang/swift/test/` contains:
+Swift compiler's test suite at `[local-workspace]/swiftlang/swift/test/` contains:
 
 - `/test/SILGen/moveonly_consuming_get_on_rvalue.swift` — Tests consuming get on r-value receivers (no borrow-scope issue).
 - `/test/SILOptimizer/moveonly_accessors.swift` — Test coverage for `var p2: Int { consuming get { 666 } }`.
@@ -209,22 +209,22 @@ is out-of-scope for the current phase; the workaround is stable and the recommen
 ## References
 
 - Diagnostic emission:
-  - `~/Developer/swiftlang/swift/include/swift/AST/DiagnosticsSIL.def:886` (sil_movechecking_capture_consumed)
-  - `~/Developer/swiftlang/swift/include/swift/AST/DiagnosticsSIL.def:880` (sil_movechecking_guaranteed_value_consumed, adjacent pattern)
+  - `[local-workspace]/swiftlang/swift/include/swift/AST/DiagnosticsSIL.def:886` (sil_movechecking_capture_consumed)
+  - `[local-workspace]/swiftlang/swift/include/swift/AST/DiagnosticsSIL.def:880` (sil_movechecking_guaranteed_value_consumed, adjacent pattern)
 
 - Experiment results:
-  - `~/Developer/swift-primitives/swift-parser-primitives/Experiments/owned-consuming-get-on-protocol-extension/EXPERIMENT.md` (v1.0.0, 2026-05-14)
+  - `[local-workspace]/swift-primitives/swift-parser-primitives/Experiments/owned-consuming-get-on-protocol-extension/EXPERIMENT.md` (v1.0.0, 2026-05-14)
   - Toolchain matrix: V1-V4 PASS on 6.4-dev wrapping variants; V1-V4 FAIL on 6.3.1/6.3.2 (`@_owned` unknown attribute); V5 FAIL with "borrowed by non-Escapable type"; V5d CRASH (SIL verifier).
 
 - Prior research:
-  - `~/Developer/swift-institute/Research/2026-05-13-parser-protocol-noncopyable-escapable-relaxation.md` (v1.2.1, 2026-05-18; Tier-3 recommendation executed)
-  - `~/Developer/swift-institute/Research/noncopyable-property-extract-via-underscore-owned.md` (v1.1.0, 2026-05-09; DECISION: Phase 1 ships, Phase 2 deferred)
-  - `~/Developer/swift-institute/Research/feature-flags-coroutine-borrow-accessors.md` (foundational `consuming get` research)
-  - `~/Developer/swift-institute/Research/swift-compiler-bug-catalog.md` (2026-05-10; reference to swiftlang/swift#88986)
+  - `[local-workspace]/swift-institute/Research/2026-05-13-parser-protocol-noncopyable-escapable-relaxation.md` (v1.2.1, 2026-05-18; Tier-3 recommendation executed)
+  - `[local-workspace]/swift-institute/Research/noncopyable-property-extract-via-underscore-owned.md` (v1.1.0, 2026-05-09; DECISION: Phase 1 ships, Phase 2 deferred)
+  - `[local-workspace]/swift-institute/Research/feature-flags-coroutine-borrow-accessors.md` (foundational `consuming get` research)
+  - `[local-workspace]/swift-institute/Research/swift-compiler-bug-catalog.md` (2026-05-10; reference to swiftlang/swift#88986)
 
 - Related compiler source:
-  - `~/Developer/swiftlang/swift/test/SILGen/resilient_consuming_getter_nonescapable_test.swift` (test validation of intended rejection)
-  - `~/Developer/swiftlang/swift/test/SILGen/moveonly_consuming_get_on_rvalue.swift` (valid patterns on r-values)
+  - `[local-workspace]/swiftlang/swift/test/SILGen/resilient_consuming_getter_nonescapable_test.swift` (test validation of intended rejection)
+  - `[local-workspace]/swiftlang/swift/test/SILGen/moveonly_consuming_get_on_rvalue.swift` (valid patterns on r-values)
 
 - Swift compiler commits:
   - `645e2dc3bad` (2026-04-30) — consuming-accessor resilient base PR
@@ -232,8 +232,8 @@ is out-of-scope for the current phase; the workaround is stable and the recommen
   - `f0a8437191b` — MoveOnlyChecker: look through convert_function borrow-scope closing
 
 - Phase 4 execution (Row 11 closure):
-  - `~/Developer/swift-primitives/swift-parser-machine-primitives` commits `41c691e`, `f685f53` (2026-05-18)
-  - `~/Developer/swift-institute/Research/2026-05-13-parser-protocol-noncopyable-escapable-relaxation.md` v1.2.1 changelog
+  - `[local-workspace]/swift-primitives/swift-parser-machine-primitives` commits `41c691e`, `f685f53` (2026-05-18)
+  - `[local-workspace]/swift-institute/Research/2026-05-13-parser-protocol-noncopyable-escapable-relaxation.md` v1.2.1 changelog
 
 ---
 

@@ -931,7 +931,7 @@ the prescription.
 ## Provenance
 
 Investigation invoked via the supervisor handoff at
-`~/Developer/HANDOFF-streaming-json-deserialize-research.md`
+`[local-workspace]/HANDOFF-streaming-json-deserialize-research.md`
 (Phase 1; 2026-05-14). Phase 1 is a descriptive characterisation;
 Phase 2 (separate `/research-process` invocation) produces the
 prescription. The parent session closed the parse-performance arc

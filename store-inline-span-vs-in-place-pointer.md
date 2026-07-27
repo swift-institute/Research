@@ -86,7 +86,7 @@ pointer. That is what the probe below establishes.
 ## Empirical Probe (Swift 6.3.2, `org.swift.632202605101a`)
 
 Toolchain confirmed: `Apple Swift version 6.3.2 (swift-6.3.2-RELEASE)`.
-Scratch only (`/tmp/inline-span-probe/`); **no real package edited**. The probe
+Scratch only (`[temporary-path]/inline-span-probe/`); **no real package edited**. The probe
 struct mirrors the committed `Store.Inline` exactly — nested
 `@_rawLayout(likeArrayOf: Element, count: n)` `_Raw` struct, the
 `[MEM-SAFE-027]` `_deinitWorkaround: AnyObject?` first field, a count/ledger,
@@ -150,7 +150,7 @@ the borrow.
 recomputed inside `withUnsafePointer(to:)` and re-anchored with
 `_overrideLifetime`. No wall.
 
-**Repro:** `/tmp/inline-span-probe/{probe.swift, escape.swift, excl.swift}`.
+**Repro:** `[temporary-path]/inline-span-probe/{probe.swift, escape.swift, excl.swift}`.
 
 ### The crux finding: Span makes the surface safe-by-construction, but is NOT pointer-free
 
@@ -345,6 +345,6 @@ deliberate, consumer-driven decision, not an automatic follow-on.
 - `swift-institute/Research/occupancy-lives-in-the-leaf.md` — Tier 3 placement law: inline/heap leaves stay distinct; copyability flows from the leaf (blocks Option 3 type collapse).
 - `swift-institute/Research/Reflections/2026-06-02-storage-protocol-depointer-merge-and-cross-arc-source-break.md` — the canonical pointer→span migration; the inline `&self`-exclusivity soundness hinge.
 - `swift-institute/Research/Reflections/2026-04-06-unsafe-pointer-audit-span-migration.md` — Span as the ecosystem's safe view type; migration is pulling an existing API up the stack.
-- `~/Developer/.handoffs/HANDOFF-tower-cross-module-spike.md` (probe 5) and `HANDOFF-tower-rich-fidelity-spike.md` (B-finding) — the inline move-dangle empirical record this doc builds on.
-- Probe repro: `/tmp/inline-span-probe/{probe.swift, escape.swift, excl.swift}` (Swift 6.3.2, `org.swift.632202605101a`).
+- `[local-workspace]/.handoffs/HANDOFF-tower-cross-module-spike.md` (probe 5) and `HANDOFF-tower-rich-fidelity-spike.md` (B-finding) — the inline move-dangle empirical record this doc builds on.
+- Probe repro: `[temporary-path]/inline-span-probe/{probe.swift, escape.swift, excl.swift}` (Swift 6.3.2, `org.swift.632202605101a`).
 - SE-0446 (Nonescapable Types); SE-0465 (Nonescapable Standard Library Primitives — pointer-pointee deferral); SE-0485 (OutputSpan).

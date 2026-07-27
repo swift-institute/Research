@@ -422,7 +422,7 @@ primitives, not construction of new ones.
 - [DanceUI](https://github.com/bytedance/DanceUI) — public repository
 - [DanceUIGraph](https://github.com/bytedance/DanceUIGraph) — attribute graph
 - [DanceUIRuntime](https://github.com/bytedance/DanceUIRuntime) — C++ runtime
-- Local clone: `~/Developer/bytedance/DanceUI`
+- Local clone: `[local-workspace]/bytedance/DanceUI`
 - `Sources/DanceUI/UIElements/View/View.swift` — View protocol definition
 - `Sources/DanceUI/Internal/Graph/_Graph.swift` — graph host entry
 - `Sources/DanceUI/Internal/Layout/Layout.swift` — Layout protocol

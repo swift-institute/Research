@@ -724,7 +724,7 @@ None — I did not execute `swift build` per the ground rules.
 
 - `swift-foundations/swift-io-state-investigation/` — confirmed excluded. I did not grep or read that directory.
 - Tests/, Experiments/, Benchmarks/, Research/ — skipped per scope rule; Sources/ only.
-- No hits found in `~/Developer/swift-foundations/swift-sockets/Sources` or `~/Developer/swift-primitives/swift-reference-primitives/Sources` (the only matches there are within existing doc comments, not actual `@unchecked Sendable` conformances).
+- No hits found in `[local-workspace]/swift-foundations/swift-sockets/Sources` or `[local-workspace]/swift-primitives/swift-reference-primitives/Sources` (the only matches there are within existing doc comments, not actual `@unchecked Sendable` conformances).
 
 ---
 

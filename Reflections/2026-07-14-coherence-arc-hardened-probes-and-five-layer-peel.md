@@ -38,7 +38,7 @@ Channel: 12+ ledger ASK/ANSWER rounds at minutes-latency, one standing class gra
 principal relay (an L2-orchestrator directive) was declined rather than executed — ACKing
 another seat's channel would have falsely certified its dead watch.
 
-Artifact cleanup: root HANDOFF scan clean (0 files at ~/Developer root). check-handoffs.sh
+Artifact cleanup: root HANDOFF scan clean (0 files at [local-workspace] root). check-handoffs.sh
 reports the known red-by-design WIP overage (57>40) plus one out-of-authority resident
 (PROGRAM-repotraffic-endstate — other program, in flight); this arc's records
 (CHARTER-ecosystem-coherence + INVENTORY-coherence) are drain-eligible per the per-arc-close

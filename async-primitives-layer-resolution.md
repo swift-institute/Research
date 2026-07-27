@@ -26,7 +26,7 @@ changelog:
 
 ## Context
 
-`~/Developer/swift-primitives/swift-async-primitives` is the
+`[local-workspace]/swift-primitives/swift-async-primitives` is the
 L1 launch in the coenttb-cohort total-order
 (`swift-institute/Research/coenttb-stage-1-dep-visibility-audit.md`
 v1.0.0; sequence #1; gates Phase-2 transfer of `swift-renderable` →
@@ -64,7 +64,7 @@ package's build graph (no dependency declared) and the Synchronization
 branch above it satisfies the typealias for non-Apple targets.
 
 The investigation handoff at
-`~/Developer/HANDOFF-async-primitives-l1-layer-violation.md`
+`[local-workspace]/HANDOFF-async-primitives-l1-layer-violation.md`
 asked four questions in priority order with an early-stop instruction:
 **Q1 — Is the fallback even necessary?** If the answer is "vestigial,"
 stop and recommend the minimal fix. Q2–Q4 (L1-pure alternatives,
@@ -121,7 +121,7 @@ default branch `main`, last updated 2026-04-30, 2026-05-04 fetch) ships
 ```
 
 A workspace-wide grep
-(`grep -rn "Kernel_Thread_Primitives" ~/Developer/`,
+(`grep -rn "Kernel_Thread_Primitives" [local-workspace]/`,
 2026-05-04, excluding `.build/`) returns the symbol only in
 `Async.Mutex.swift` itself and the corresponding research note
 `swift-async-primitives/Research/mutex-cross-platform-state-2026-04-24.md`.
@@ -138,10 +138,10 @@ fallback at any of them would be a fresh layer violation rather than a
 resolution (see Option 5 below).
 
 The local workspace has no
-`~/Developer/swift-primitives/swift-kernel-primitives` clone
-(`ls ~/Developer/swift-primitives/`, 2026-05-04). The only
+`[local-workspace]/swift-primitives/swift-kernel-primitives` clone
+(`ls [local-workspace]/swift-primitives/`, 2026-05-04). The only
 on-disk artifact named "swift-kernel-primitives" is an unrelated
-coenttb fork at `~/Developer/coenttb/swift-kernel-primitives`
+coenttb fork at `[local-workspace]/coenttb/swift-kernel-primitives`
 (swift-tools-version 6.2, three C-shim targets, no
 `Kernel Thread Primitives`). The fork is irrelevant to
 swift-primitives-org dependency resolution and would not be picked up
@@ -607,18 +607,18 @@ arc per the cohort plan continues forward unaltered.
 ### Primary sources cited
 
 - **Source code (read-only inspection, 2026-05-04)**:
-  - `~/Developer/swift-primitives/swift-async-primitives/Sources/Async Mutex Primitives/Async.Mutex.swift` (lines 12, 13, 139–157, 160–192)
-  - `~/Developer/swift-primitives/swift-async-primitives/Sources/Async Mutex Primitives/Async.Mutex+Ownership.swift` (line 23 — `canImport(Synchronization)` gating)
-  - `~/Developer/swift-primitives/swift-async-primitives/Sources/Async Mutex Primitives/Async.Mutex+Deque.swift` (lines 12–14)
-  - `~/Developer/swift-primitives/swift-async-primitives/Sources/Async Publication Primitives/Async.Publication.swift:63` (Kernel.Handoff.Cell doc reference)
-  - `~/Developer/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async Primitives.docc/Semantics.md` (Async/Mutex row, Fairness column)
-  - `~/Developer/swift-primitives/swift-async-primitives/Package.swift` (lines 1, 7–13, 77–85, 99–103, 227)
+  - `[local-workspace]/swift-primitives/swift-async-primitives/Sources/Async Mutex Primitives/Async.Mutex.swift` (lines 12, 13, 139–157, 160–192)
+  - `[local-workspace]/swift-primitives/swift-async-primitives/Sources/Async Mutex Primitives/Async.Mutex+Ownership.swift` (line 23 — `canImport(Synchronization)` gating)
+  - `[local-workspace]/swift-primitives/swift-async-primitives/Sources/Async Mutex Primitives/Async.Mutex+Deque.swift` (lines 12–14)
+  - `[local-workspace]/swift-primitives/swift-async-primitives/Sources/Async Publication Primitives/Async.Publication.swift:63` (Kernel.Handoff.Cell doc reference)
+  - `[local-workspace]/swift-primitives/swift-async-primitives/Sources/Async Primitives/Async Primitives.docc/Semantics.md` (Async/Mutex row, Fairness column)
+  - `[local-workspace]/swift-primitives/swift-async-primitives/Package.swift` (lines 1, 7–13, 77–85, 99–103, 227)
 
 - **Remote authoritative source**: `gh api repos/swift-primitives/swift-kernel-primitives/contents/Package.swift` (2026-05-04, default branch `main`, last updated 2026-04-30 per `gh repo view --json updatedAt`).
 
 - **Repo state queries (2026-05-04)**:
   - `gh repo view swift-primitives/swift-kernel-primitives --json visibility,isArchived,nameWithOwner` → `{"isArchived":false,"nameWithOwner":"swift-primitives/swift-kernel-primitives","visibility":"PRIVATE"}`
-  - `ls ~/Developer/swift-primitives/swift-kernel-primitives` → no such file or directory (confirms no local clone)
+  - `ls [local-workspace]/swift-primitives/swift-kernel-primitives` → no such file or directory (confirms no local clone)
 
 ### Skills cited
 
@@ -630,10 +630,10 @@ arc per the cohort plan continues forward unaltered.
 
 ### Related research and audit artifacts
 
-- `~/Developer/HANDOFF-async-primitives-l1-layer-violation.md` — investigation handoff and Q1–Q4 dispatch.
-- `~/Developer/swift-primitives/swift-async-primitives/AUDIT-0.1.0-release-readiness.md` — L1 brief, Phase 1 §#4 (RETRACTED disposition).
-- `~/Developer/swift-primitives/swift-async-primitives/Research/mutex-cross-platform-state-2026-04-24.md` — package's own prior premise-correction on Mutex cross-platform state; identifies branch 3 as "Pre-Synchronization-module fallback" and enumerates the Darwin-branch decision space (a'/b/c) cited in this doc's secondary observation.
-- `~/Developer/swift-institute/Research/mutex-inventory.md` (2026-03-30) — cross-repo Mutex inventory; documents the typealias-only state of `Async.Mutex` prior to the os_unfair_lock @_rawLayout shift.
-- `~/Developer/swift-institute/Research/async-mutex-rawlayout-inline-storage.md` — DEFERRED Tier-2 research on the os_unfair_lock @_rawLayout pattern.
-- `~/Developer/AUDIT-coenttb-launch-cohort-readiness.md` — cohort handoff (parent workstream).
-- `~/Developer/swift-institute/Research/coenttb-stage-1-dep-visibility-audit.md` (v1.0.0, 2026-05-04) — cohort sequencing; Dest J context.
+- `[local-workspace]/HANDOFF-async-primitives-l1-layer-violation.md` — investigation handoff and Q1–Q4 dispatch.
+- `[local-workspace]/swift-primitives/swift-async-primitives/AUDIT-0.1.0-release-readiness.md` — L1 brief, Phase 1 §#4 (RETRACTED disposition).
+- `[local-workspace]/swift-primitives/swift-async-primitives/Research/mutex-cross-platform-state-2026-04-24.md` — package's own prior premise-correction on Mutex cross-platform state; identifies branch 3 as "Pre-Synchronization-module fallback" and enumerates the Darwin-branch decision space (a'/b/c) cited in this doc's secondary observation.
+- `[local-workspace]/swift-institute/Research/mutex-inventory.md` (2026-03-30) — cross-repo Mutex inventory; documents the typealias-only state of `Async.Mutex` prior to the os_unfair_lock @_rawLayout shift.
+- `[local-workspace]/swift-institute/Research/async-mutex-rawlayout-inline-storage.md` — DEFERRED Tier-2 research on the os_unfair_lock @_rawLayout pattern.
+- `[local-workspace]/AUDIT-coenttb-launch-cohort-readiness.md` — cohort handoff (parent workstream).
+- `[local-workspace]/swift-institute/Research/coenttb-stage-1-dep-visibility-audit.md` (v1.0.0, 2026-05-04) — cohort sequencing; Dest J context.

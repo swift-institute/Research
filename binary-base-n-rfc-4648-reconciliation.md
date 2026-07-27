@@ -29,7 +29,7 @@ supersedes: binary-base-n-encoding-family-architecture.md (Phase 2 only)
 }
 ```
 
-Local mirror at `~/Developer/swift-ietf/swift-rfc-4648/` shows recent active development:
+Local mirror at `[local-workspace]/swift-ietf/swift-rfc-4648/` shows recent active development:
 
 ```
 3117583 ci: migrate to L1-uniform thin-caller shape via swift-standards layer wrapper

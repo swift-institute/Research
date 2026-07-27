@@ -307,5 +307,5 @@ Implement `nextSpan` for `Bitset.Iterator`, `Bitset.Small.Iterator`, `Windows.Ke
 - `swift-reference-primitives/Sources/Reference Primitives/` — Checked: not applicable
 - `swift-sequence-primitives/Experiments/optional-inline-span/` — Optional<T> ABI layout verified (6 variants, all CONFIRMED)
 - `swift-sequence-primitives/Experiments/batch-vs-single-element-span/` — Batch vs single-element throughput (single 2-3x faster)
-- `/tmp/iterator-inventory.md` — Full 97-iterator ecosystem inventory
-- `/tmp/sequence-protocol-inventory.md` — Full 65-type Sequence.Protocol inventory
+- `[temporary-path]/iterator-inventory.md` — Full 97-iterator ecosystem inventory
+- `[temporary-path]/sequence-protocol-inventory.md` — Full 65-type Sequence.Protocol inventory

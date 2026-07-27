@@ -67,7 +67,7 @@ proof + information-theoretic lower bound.
 ### Constraints
 
 - **No wall claim without a 6.3.2 repro.** All load-bearing layout/diagnostic claims are
-  reproduced on Apple Swift 6.3.2 (`swift-6.3.2-RELEASE`); artifacts in `/tmp/occ-proof/`.
+  reproduced on Apple Swift 6.3.2 (`swift-6.3.2-RELEASE`); artifacts in `[temporary-path]/occ-proof/`.
 - Research only — no tower edits. `/tmp` scratch only.
 - Tier-3 rigor per [RES-020]/[RES-022]/[RES-023]/[RES-024]/[RES-026]: formal semantics inline,
   prior-art contextualization, every empirical claim verified at write time.
@@ -636,7 +636,7 @@ conditionally-`Copyable` inline teardown — a frontier collapsed by, and only b
 - C++: `std::optional`/`std::variant` conditionally-trivial destructors (P0848R3) — the lone destructor/copyability *decoupling*; not portable to Swift (companion note).
 
 ### Empirical artifacts ([RES-023] — every load-bearing layout/diagnostic claim verified on Swift 6.3.2, `swift-6.3.2-RELEASE`, `TOOLCHAINS=org.swift.632202605101a`, 2026-06-08)
-- `/tmp/occ-proof/inhabit.swift` — extra-inhabitant niche measurement (Thm I.3 table): class/Bool/enum/pointer → 0 marginal; UInt8 → +1B; Int → +8B.
-- `/tmp/occ-proof/walls.swift` — S2+S5+S7 assembly compiles + runs ("MoveOnly(7) deinit fired" / "copied ok: 1, 42") — the dense-leaf composition shape (AX-3).
-- `/tmp/occ-proof/wall1.swift` — S1 Wall-1 repro: `error: deinitializer cannot be declared in generic struct 'Wrapper' that conforms to 'Copyable'` (AX-1).
-- `/tmp/occ-proof/density.swift` — bit-density: bitmap 1.0 bit/slot vs tombstone(Int) 64 bit/slot vs tombstone(niche) 0 marginal bit/slot (Thm I.3 dominance; (B) frontier).
+- `[temporary-path]/occ-proof/inhabit.swift` — extra-inhabitant niche measurement (Thm I.3 table): class/Bool/enum/pointer → 0 marginal; UInt8 → +1B; Int → +8B.
+- `[temporary-path]/occ-proof/walls.swift` — S2+S5+S7 assembly compiles + runs ("MoveOnly(7) deinit fired" / "copied ok: 1, 42") — the dense-leaf composition shape (AX-3).
+- `[temporary-path]/occ-proof/wall1.swift` — S1 Wall-1 repro: `error: deinitializer cannot be declared in generic struct 'Wrapper' that conforms to 'Copyable'` (AX-1).
+- `[temporary-path]/occ-proof/density.swift` — bit-density: bitmap 1.0 bit/slot vs tombstone(Int) 64 bit/slot vs tombstone(niche) 0 marginal bit/slot (Thm I.3 dominance; (B) frontier).

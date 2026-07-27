@@ -1,7 +1,7 @@
 # Generics Manifesto — Implementation Inventory as of Swift 6.4
 
 **Date**: 2026-07-02
-**Verified against**: local clone `~/Developer/swiftlang/swift`, branch `release/6.4.x`, HEAD `d4b6546ae0d9463a76057eb9b0f22cc05ffe12ca` (2026-06-30)
+**Verified against**: local clone `[local-workspace]/swiftlang/swift`, branch `release/6.4.x`, HEAD `d4b6546ae0d9463a76057eb9b0f22cc05ffe12ca` (2026-06-30)
 **Source document**: [`docs/GenericsManifesto.md`](https://github.com/swiftlang/swift/blob/main/docs/GenericsManifesto.md) (line numbers below reference the clone's copy)
 
 Of the manifesto's 28 items: **16 not implemented, 4 partially implemented, 11 implemented** (nested generics counted once with its carve-out noted).

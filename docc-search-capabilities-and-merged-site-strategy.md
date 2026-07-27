@@ -10,9 +10,9 @@ status: RECOMMENDATION
 
 ## Context
 
-`docc merge` is the selected mechanism for combining swift-institute.org's main catalog with two new per-repo archives (`Research.docc`, `Experiments.docc`) on the site deploy. Before committing to Phase 2 implementation, experiment `docc-merge-multi-archive-hosting/` ([EXP-*] placement in `~/Developer/swift-institute/Experiments/docc-merge-multi-archive-hosting/`) ran three article-only throwaway catalogs through `docc convert` → `docc merge` → `docc process-archive transform-for-static-hosting` on Swift 6.3.1 / macOS 26.2, then served the result locally.
+`docc merge` is the selected mechanism for combining swift-institute.org's main catalog with two new per-repo archives (`Research.docc`, `Experiments.docc`) on the site deploy. Before committing to Phase 2 implementation, experiment `docc-merge-multi-archive-hosting/` ([EXP-*] placement in `[local-workspace]/swift-institute/Experiments/docc-merge-multi-archive-hosting/`) ran three article-only throwaway catalogs through `docc convert` → `docc merge` → `docc process-archive transform-for-static-hosting` on Swift 6.3.1 / macOS 26.2, then served the result locally.
 
-The experiment's three acceptance criteria from the handoff at `~/Developer/swift-institute/swift-institute.org/HANDOFF.md`:
+The experiment's three acceptance criteria from the handoff at `[local-workspace]/swift-institute/swift-institute.org/HANDOFF.md`:
 
 | Acceptance criterion | Result |
 |----------------------|--------|
@@ -353,4 +353,4 @@ The three are not mutually exclusive. In particular: **Option 1b can ship now**,
 
 ### Handoff
 
-- `~/Developer/swift-institute/swift-institute.org/HANDOFF.md`
+- `[local-workspace]/swift-institute/swift-institute.org/HANDOFF.md`

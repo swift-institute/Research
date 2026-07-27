@@ -51,7 +51,7 @@ Source: `Experiments/result-builder-map-investigation/`. Re-run on Swift 6.3.1 /
 
 #### Config B — Single-file `swiftc -O` (no SwiftPM, no Swift 6 strict-concurrency main wrapping)
 
-Source: `/tmp/map-sil-spike/bench.swift` [Verified: 2026-05-07, this session]:
+Source: `[temporary-path]/map-sil-spike/bench.swift` [Verified: 2026-05-07, this session]:
 
 | Variant | ns/iter |
 |---------|--------:|
@@ -63,7 +63,7 @@ The gap **does not reproduce** in single-file `swiftc -O`. Cause is therefore no
 
 #### Config C — SwiftPM target, same source as Config B, with the call-site routed through a `nonisolated` function
 
-Source: `/tmp/map-spm-spike/Sources/MapSpike/main.swift` [Verified: 2026-05-07, this session]:
+Source: `[temporary-path]/map-spm-spike/Sources/MapSpike/main.swift` [Verified: 2026-05-07, this session]:
 
 | Variant | ns/iter | Notes |
 |---------|--------:|-------|
@@ -79,7 +79,7 @@ Wrapping the call site in a `nonisolated` function eliminates the gap entirely f
 
 ### SIL Inspection
 
-Release-mode SIL emitted by SwiftPM for the closure body of V8 [Verified: 2026-05-07, `/tmp/map-spm-spike/main.sil`, scope 343, lines 1176–1212]:
+Release-mode SIL emitted by SwiftPM for the closure body of V8 [Verified: 2026-05-07, `[temporary-path]/map-spm-spike/main.sil`, scope 343, lines 1176–1212]:
 
 ```sil
 %62 = metatype $@thick MainActor.Type
@@ -129,7 +129,7 @@ The PR was closed because the executor-check insertion is *correct* under SE-042
 
 #### Stdlib `Collection.map` declaration
 
-[`stdlib/public/core/Collection.swift:1191–1214`](https://github.com/swiftlang/swift/blob/main/stdlib/public/core/Collection.swift) [Verified: 2026-05-07, local clone at `~/Developer/swiftlang/swift/`]:
+[`stdlib/public/core/Collection.swift:1191–1214`](https://github.com/swiftlang/swift/blob/main/stdlib/public/core/Collection.swift) [Verified: 2026-05-07, local clone at `[local-workspace]/swiftlang/swift/`]:
 
 ```swift
 @inlinable

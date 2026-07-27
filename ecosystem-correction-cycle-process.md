@@ -22,9 +22,9 @@ bounded to one layer, or cosmetic renames.
 ### Phase 0 — Survey (5 min, direct)
 
 Quick tour of the ecosystem to scope the analysis. Grep / ls across:
-- L1 primitives (`~/Developer/swift-primitives/swift-*-primitives/`)
-- L2 standards (`~/Developer/swift-iso/`, `swift-microsoft/`)
-- L3 foundations (`~/Developer/swift-foundations/`)
+- L1 primitives (`[local-workspace]/swift-primitives/swift-*-primitives/`)
+- L2 standards (`[local-workspace]/swift-iso/`, `swift-microsoft/`)
+- L3 foundations (`[local-workspace]/swift-foundations/`)
 
 Output: a short list of candidate packages the model agent should inspect.
 Done directly by the orchestrating agent, not delegated.
@@ -32,7 +32,7 @@ Done directly by the orchestrating agent, not delegated.
 ### Phase 1 — Model (30 min, one agent)
 
 Launch **one** general-purpose agent to produce the reference model at
-`~/Developer/swift-institute/Research/{domain}-type-ecosystem-model.md`.
+`[local-workspace]/swift-institute/Research/{domain}-type-ecosystem-model.md`.
 
 **Template**: read the path model at `path-type-ecosystem-model.md` —
 the string / time / error models mirror its structure.
@@ -290,7 +290,7 @@ cycle.
 
 ## Required reading
 
-1. Your skill: ~/Developer/swift-institute/Skills/{skill}/SKILL.md
+1. Your skill: [local-workspace]/swift-institute/Skills/{skill}/SKILL.md
 2. Model: Research/{domain}-type-ecosystem-model.md
 3. Relevant source files (list absolute paths)
 

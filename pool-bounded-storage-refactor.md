@@ -251,6 +251,6 @@ Add `Buffer.Linear.Bounded.Indexed<Tag>` to buffer-primitives (mirroring `Buffer
 
 ## References
 
-- `Array.Fixed.Indexed<Tag>`: `~/Developer/swift-primitives/swift-array-primitives/Sources/Array Fixed Primitives/Array.Fixed.Indexed.swift`
-- `Buffer.Slab.Bounded.Indexed<Tag>` (pattern precedent): `~/Developer/swift-primitives/swift-buffer-primitives/Sources/Buffer Slab Primitives/Buffer.Slab.Bounded.Indexed.swift`
-- Pool audit: `~/Developer/swift-institute/Research/async-pool-primitives-audit.md`
+- `Array.Fixed.Indexed<Tag>`: `[local-workspace]/swift-primitives/swift-array-primitives/Sources/Array Fixed Primitives/Array.Fixed.Indexed.swift`
+- `Buffer.Slab.Bounded.Indexed<Tag>` (pattern precedent): `[local-workspace]/swift-primitives/swift-buffer-primitives/Sources/Buffer Slab Primitives/Buffer.Slab.Bounded.Indexed.swift`
+- Pool audit: `[local-workspace]/swift-institute/Research/async-pool-primitives-audit.md`

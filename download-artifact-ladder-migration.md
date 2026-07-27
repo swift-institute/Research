@@ -24,13 +24,13 @@ For each consumer:
 -      - uses: actions/download-artifact@v4
 +      - uses: actions/download-artifact@v8
          with:
-           path: /tmp/counts
+           path: [temporary-path]/counts
 ```
 
 Plus, in each consumer's report-job aggregation script:
 
 ```diff
--          for f in /tmp/counts/*/*-counts.txt; do
+-          for f in [temporary-path]/counts/*/*-counts.txt; do
 -            [[ -e "$f" ]] || continue
 -            artifact_dir=$(basename "$(dirname "$f")")
 -            org="${artifact_dir#<consumer-prefix>-}"
@@ -39,7 +39,7 @@ Plus, in each consumer's report-job aggregation script:
 +            org=$(basename "$f" | sed 's/-counts\.txt$//')
              ...
 -          done
-+          done < <(find /tmp/counts -type f -name '*-counts.txt')
++          done < <(find [temporary-path]/counts -type f -name '*-counts.txt')
 ```
 
 The same shape applies to `*-failures.txt` / `*-extra.txt` loops.
@@ -55,14 +55,14 @@ against `download-artifact@v8`, with v4 single-artifact as control.
 
 | Case | Layout produced by v8 | Original glob `<path>/*/*-counts.txt` | Path A `find -name '*-counts.txt'` | Path A === v4-original? |
 |------|----------------------|---------------------------------------|------------------------------------|-------------------------|
-| Single artifact (production matrix-leg shape) | **flat:** `/tmp/counts/<file>` | **0 matches (miss)** | 1 match ✓ | ✓ matches v4-control's 1-match |
-| Multi-artifact (N=2; future expansion shape) | nested: `/tmp/counts/<artifact-name>/<file>` | 2 matches ✓ | 2 matches ✓ | ✓ matches v4 |
-| **Control** v4 single-artifact | nested: `/tmp/counts/<artifact-name>/<file>` | 1 match ✓ | 1 match ✓ | ✓ baseline |
+| Single artifact (production matrix-leg shape) | **flat:** `[temporary-path]/counts/<file>` | **0 matches (miss)** | 1 match ✓ | ✓ matches v4-control's 1-match |
+| Multi-artifact (N=2; future expansion shape) | nested: `[temporary-path]/counts/<artifact-name>/<file>` | 2 matches ✓ | 2 matches ✓ | ✓ matches v4 |
+| **Control** v4 single-artifact | nested: `[temporary-path]/counts/<artifact-name>/<file>` | 1 match ✓ | 1 match ✓ | ✓ baseline |
 
 Per-file org extraction sanity-check (Path A → basename + suffix-strip):
-in the v8 single-artifact case, the file at `/tmp/counts/swift-primitives-counts.txt`
+in the v8 single-artifact case, the file at `[temporary-path]/counts/swift-primitives-counts.txt`
 yields `org=swift-primitives` correctly. In the multi-artifact case,
-files at `/tmp/counts/depgraph-counts-multi-swift-{standards,foundations}/swift-{standards,foundations}-counts.txt`
+files at `[temporary-path]/counts/depgraph-counts-multi-swift-{standards,foundations}/swift-{standards,foundations}-counts.txt`
 yield `org=swift-{standards,foundations}` correctly. The basename/suffix
 shape is layout-independent.
 
@@ -76,7 +76,7 @@ the original 2-artifact research workflow:
 
 | Canary | Run ID | Conclusion | Failure mode |
 |--------|--------|-----------|--------------|
-| `submit-dep-graph-weekly.yml` (dry-run) | [25377628270](https://github.com/swift-institute/.github/actions/runs/25377628270) | **failure** | `report` job: `/tmp/counts/*/*-counts.txt: No such file or directory`, exit 1 |
+| `submit-dep-graph-weekly.yml` (dry-run) | [25377628270](https://github.com/swift-institute/.github/actions/runs/25377628270) | **failure** | `report` job: `[temporary-path]/counts/*/*-counts.txt: No such file or directory`, exit 1 |
 | `lint-license-header-weekly.yml` (calls cron-audit-base.yml) | [25377635397](https://github.com/swift-institute/.github/actions/runs/25377635397) | success | **silent false-positive**: `[[ -e "$f" ]] \|\| continue` guard absorbed the empty glob; report job emitted "All counts zero across orgs — no tracking issue needed." despite the actual sweep finding violations |
 
 Both commits were reverted at `1092349` + `d2c7e3d`. Post-revert
@@ -101,7 +101,7 @@ revealed regressions invisible to the original research workflow:
 
 | Canary | Run ID | Conclusion | Failure mode |
 |--------|--------|-----------|--------------|
-| `submit-dep-graph-weekly.yml` (dry-run) | [25377628270](https://github.com/swift-institute/.github/actions/runs/25377628270) | **failure** | `report` job: `/tmp/counts/*/*-counts.txt: No such file or directory`, exit 1 |
+| `submit-dep-graph-weekly.yml` (dry-run) | [25377628270](https://github.com/swift-institute/.github/actions/runs/25377628270) | **failure** | `report` job: `[temporary-path]/counts/*/*-counts.txt: No such file or directory`, exit 1 |
 | `lint-license-header-weekly.yml` (calls cron-audit-base.yml) | [25377635397](https://github.com/swift-institute/.github/actions/runs/25377635397) | success | **silent false-positive**: `[[ -e "$f" ]] \|\| continue` guard absorbed the empty glob; report job emitted "All counts zero across orgs — no tracking issue needed." despite the actual sweep finding violations |
 
 Both commits were reverted at `1092349` + `d2c7e3d`. Post-revert
@@ -181,7 +181,7 @@ original glob silently misses it. That is the entire point.
 
 | Variant | On-disk layout |
 |---------|----------------|
-| `@v8` + `merge-multiple: true` | `/tmp/<path>/<file>` (flat) |
+| `@v8` + `merge-multiple: true` | `[temporary-path]/<path>/<file>` (flat) |
 
 This was captured in the v1.0.0 research run (25377059431). It is
 NOT the chosen migration target because it would force flat layout

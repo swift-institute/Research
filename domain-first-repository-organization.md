@@ -812,7 +812,7 @@ Per the Cognitive Dimensions Framework (Green & Petre, 1996), we evaluate the pr
 
 **Model D (Hybrid)** — layer-aligned orgs with the language-agnostic `reality-` prefix, domain-first naming within each org. Execute via script before launch.
 
-*Validated via Claude–ChatGPT collaborative discussion (4 rounds, converged). Transcript: `/tmp/domain-first-repo-org-transcript.md`.*
+*Validated via Claude–ChatGPT collaborative discussion (4 rounds, converged). Transcript: `[temporary-path]/domain-first-repo-org-transcript.md`.*
 
 #### Rationale: Structural Invariants
 

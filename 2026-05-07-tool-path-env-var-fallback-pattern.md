@@ -14,7 +14,7 @@ applies_to:
 
 The 2026-05-07 swift-linter pre-publishable discovery investigation
 surfaced a runtime-resolution defect: `Lint.Driver` carried a hardcoded
-fallback to `~/Developer/swift-foundations/swift-linter` when
+fallback to `[local-workspace]/swift-foundations/swift-linter` when
 the `SWIFT_LINTER_PATH` environment variable was unset. The fallback
 worked perfectly in the developer's local workspace and would have
 silently misbehaved on the first non-developer adopter run — adopter
@@ -62,7 +62,7 @@ Specifically:
 4. **Detection at release-readiness time**: should the
    release-readiness skill enforce a check for hardcoded
    developer-workspace paths in tool source? (Mechanical: grep for
-   `/Users/`, `/home/<username>/`, `~/Developer/` patterns in tool
+   `[local-user-path]/`, `[local-home-path]/<username>/`, `[local-workspace]/` patterns in tool
    source.)
 
 # Prior Work

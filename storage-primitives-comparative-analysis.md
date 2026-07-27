@@ -961,12 +961,12 @@ Shared-memory storage (cross-process, using offset-based handles) is a niche req
 
 ### Swift Primitives Internal
 
-- `~/Developer/swift-primitives/Research/integration-maximization-comparative-analysis.md`
-- `~/Developer/swift-primitives/swift-storage-primitives/Research/per-slot-initialization-tracking.md`
-- `~/Developer/swift-primitives/swift-storage-primitives/Research/storage-contiguous-api-design.md`
-- `~/Developer/swift-primitives/swift-storage-primitives/Research/storage-inline-invariants.md`
-- `~/Developer/swift-primitives/swift-storage-primitives/Research/Collection Primitives Architecture.md`
-- `~/Developer/swift-primitives/swift-ownership-primitives/` — Ownership.Unique, Ownership.Slot, Ownership.Shared (conceptual lineage analysis in §7.3)
+- `[local-workspace]/swift-primitives/Research/integration-maximization-comparative-analysis.md`
+- `[local-workspace]/swift-primitives/swift-storage-primitives/Research/per-slot-initialization-tracking.md`
+- `[local-workspace]/swift-primitives/swift-storage-primitives/Research/storage-contiguous-api-design.md`
+- `[local-workspace]/swift-primitives/swift-storage-primitives/Research/storage-inline-invariants.md`
+- `[local-workspace]/swift-primitives/swift-storage-primitives/Research/Collection Primitives Architecture.md`
+- `[local-workspace]/swift-primitives/swift-ownership-primitives/` — Ownership.Unique, Ownership.Slot, Ownership.Shared (conceptual lineage analysis in §7.3)
 
 ---
 

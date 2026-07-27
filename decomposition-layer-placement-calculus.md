@@ -775,10 +775,10 @@ were run.
   sibling + dual-conformance, not refinement (the express-by-compose directive).
 - `swift-institute/Research/data-structures-variant-catalog-{data-structures,infrastructure,parsers,systems}.md`
   + `variant-naming-audit.md` — the variant inventory (§5.4).
-- `~/Developer/.probe-bank/prism-capacity/findings.md` (+ ADDENDUM, 2026-06-05) — case study 3 (the capacity
+- `[local-workspace]/.probe-bank/prism-capacity/findings.md` (+ ADDENDUM, 2026-06-05) — case study 3 (the capacity
   axes; the named *too-low* inverse).
-- `~/Developer/.probe-bank/prism-wart/findings.md` — case study 2 receipts (leaf-private ledger; leak floor).
-- `~/Developer/.probe-bank/prism-endstate/end-state-research-note.md` (v1.0.0, Tier 2) — the consolidated
+- `[local-workspace]/.probe-bank/prism-wart/findings.md` — case study 2 receipts (leaf-private ledger; leak floor).
+- `[local-workspace]/.probe-bank/prism-endstate/end-state-research-note.md` (v1.0.0, Tier 2) — the consolidated
   end-state inventory + the governing lens + the two honest floors (proposed home:
   `swift-institute/Research/msb-tower-end-state.md`, pending filing).
 

@@ -67,7 +67,7 @@ section ("confirm `SwiftPM.Package.Version` defers to a future
 
 - Verified [Verified: 2026-05-12] that NO existing
   `swift-version-primitives` or `swift-semver-primitives` package
-  exists in `~/Developer/swift-primitives/`.
+  exists in `[local-workspace]/swift-primitives/`.
 - Verified [Verified: 2026-05-12] that NO prior research exists on
   SemVer typing in `swift-institute/Research/` (greenfield).
 

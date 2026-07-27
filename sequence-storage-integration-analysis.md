@@ -569,22 +569,22 @@ extension MyType: Swift.Sequence {
 
 ### Internal Research
 
-- `~/Developer/swift-primitives/Research/range-sequence-collection-semantic-analysis.md` — RES-014, Sequence/Collection/Range semantic relationships
-- `~/Developer/swift-primitives/Research/storage-primitives-comparative-analysis.md` — State of the art analysis for storage-primitives
-- `~/Developer/swift-primitives/Research/integration-maximization-comparative-analysis.md` — Integration methodology and metrics
-- `~/Developer/swift-primitives/swift-storage-primitives/Research/storage-ownership-reference-synthesis.md` — Three-layer model (Storage → Buffer → ADT)
-- `~/Developer/swift-primitives/swift-storage-primitives/Research/Collection Primitives Architecture.md` — ADT storage patterns, variant system
+- `[local-workspace]/swift-primitives/Research/range-sequence-collection-semantic-analysis.md` — RES-014, Sequence/Collection/Range semantic relationships
+- `[local-workspace]/swift-primitives/Research/storage-primitives-comparative-analysis.md` — State of the art analysis for storage-primitives
+- `[local-workspace]/swift-primitives/Research/integration-maximization-comparative-analysis.md` — Integration methodology and metrics
+- `[local-workspace]/swift-primitives/swift-storage-primitives/Research/storage-ownership-reference-synthesis.md` — Three-layer model (Storage → Buffer → ADT)
+- `[local-workspace]/swift-primitives/swift-storage-primitives/Research/Collection Primitives Architecture.md` — ADT storage patterns, variant system
 
 ### Package Sources
 
-- `~/Developer/swift-primitives/swift-sequence-primitives/` — Sequence protocols and Property.View operations
-- `~/Developer/swift-primitives/swift-storage-primitives/` — Storage.Heap, Storage.Inline, tracked accessors
-- `~/Developer/swift-primitives/swift-bit-vector-primitives/` — Bit.Vector, Ones.View, Ones.Static (implements Sequence.Protocol)
-- `~/Developer/swift-primitives/swift-collection-primitives/` — Collection.Protocol bridging
+- `[local-workspace]/swift-primitives/swift-sequence-primitives/` — Sequence protocols and Property.View operations
+- `[local-workspace]/swift-primitives/swift-storage-primitives/` — Storage.Heap, Storage.Inline, tracked accessors
+- `[local-workspace]/swift-primitives/swift-bit-vector-primitives/` — Bit.Vector, Ones.View, Ones.Static (implements Sequence.Protocol)
+- `[local-workspace]/swift-primitives/swift-collection-primitives/` — Collection.Protocol bridging
 
 ### Experiments
 
-- `~/Developer/swift-primitives/swift-bit-vector-primitives/Experiments/sequence-protocol-conformance/` — Validates Sequence.Protocol + Swift.Sequence conformance, underestimatedCount disambiguation, and forEach-on-temporary behavior
+- `[local-workspace]/swift-primitives/swift-bit-vector-primitives/Experiments/sequence-protocol-conformance/` — Validates Sequence.Protocol + Swift.Sequence conformance, underestimatedCount disambiguation, and forEach-on-temporary behavior
 
 ### Swift Evolution
 
@@ -594,5 +594,5 @@ extension MyType: Swift.Sequence {
 
 ### Architectural Documents
 
-- `~/Developer/swift-primitives/Documentation.docc/Primitives Tiers.md` — Tier constraint and current assignments
-- `~/Developer/swift-institute/Documentation.docc/Five Layer Architecture.md` — Layer model
+- `[local-workspace]/swift-primitives/Documentation.docc/Primitives Tiers.md` — Tier constraint and current assignments
+- `[local-workspace]/swift-institute/Documentation.docc/Five Layer Architecture.md` — Layer model

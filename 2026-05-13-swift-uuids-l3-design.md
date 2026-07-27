@@ -18,7 +18,7 @@ class-(c) ecosystem-wide escalation: `swift-rfc-4122` does not build standalone.
 Concretely, four defects in its current shape:
 
 1. **L2-to-L2 lateral dependencies** declared in `Package.swift`
-   ([`~/Developer/swift-ietf/swift-rfc-4122/Package.swift:24-26`](file://~/Developer/swift-ietf/swift-rfc-4122/Package.swift)):
+   ([`[local-workspace]/swift-ietf/swift-rfc-4122/Package.swift:24-26`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-4122/Package.swift)):
    ```swift
    .package(path: "../../swift-standards/swift-darwin-standard"),
    .package(path: "../../swift-linux-foundation/swift-linux-standard"),
@@ -30,7 +30,7 @@ Concretely, four defects in its current shape:
 
 2. **Stale `Darwin_Primitives` / `Linux_Primitives` / `Windows_Primitives`
    imports** in
-   [`RFC_4122.UUID.swift:7-16`](file://~/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.swift):
+   [`RFC_4122.UUID.swift:7-16`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.swift):
    ```swift
    #if os(macOS) || os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
    import Darwin_Primitives
@@ -47,19 +47,19 @@ Concretely, four defects in its current shape:
    no longer ships separate `*-Primitives` packages.
 
 3. **Stale `"Linux Kernel Standard"` product reference** in
-   [`Package.swift:37-38`](file://~/Developer/swift-ietf/swift-rfc-4122/Package.swift):
+   [`Package.swift:37-38`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-4122/Package.swift):
    ```swift
    .product(name: "Linux Kernel Standard", package: "swift-linux-standard", ...)
    ```
    `swift-linux-standard` decomposed its monolithic `"Linux Kernel Standard"`
    product into per-domain granular products
-   ([`swift-linux-standard/Package.swift:16-31`](file://~/Developer/swift-linux-foundation/swift-linux-standard/Package.swift)).
+   ([`swift-linux-standard/Package.swift:16-31`](file://[local-workspace]/Developer/swift-linux-foundation/swift-linux-standard/Package.swift)).
    The UUID parse surface lives in the `"Linux Kernel System Standard"`
    product at
-   [`Linux Kernel System Standard/Linux.Identity.UUID.swift`](file://~/Developer/swift-linux-foundation/swift-linux-standard/Sources/Linux%20Kernel%20System%20Standard/Linux.Identity.UUID.swift).
+   [`Linux Kernel System Standard/Linux.Identity.UUID.swift`](file://[local-workspace]/Developer/swift-linux-foundation/swift-linux-standard/Sources/Linux%20Kernel%20System%20Standard/Linux.Identity.UUID.swift).
 
 4. **Body-level call-site staleness**:
-   [`RFC_4122.UUID.swift:153-163`](file://~/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.swift)
+   [`RFC_4122.UUID.swift:153-163`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.swift)
    references `Darwin_Primitives.Darwin.Identity.UUID.parse(string)` etc., none
    of which resolve in the current ecosystem.
 
@@ -67,7 +67,7 @@ The L2 spec encoding (`RFC_4122.UUID`, `RFC_4122.Random`, `RFC_4122.Hash`,
 `RFC_4122.UUID.v3/v4/v5`) is otherwise sound — the spec-mirroring is faithful
 to RFC 4122 (and RFC 9562 builds cleanly on top via a typealias
 `RFC_9562.UUID = RFC_4122.UUID` at
-[`swift-rfc-9562/Sources/RFC 9562/RFC_9562.swift:23`](file://~/Developer/swift-ietf/swift-rfc-9562/Sources/RFC%209562/RFC_9562.swift)).
+[`swift-rfc-9562/Sources/RFC 9562/RFC_9562.swift:23`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-9562/Sources/RFC%209562/RFC_9562.swift)).
 
 The principal direction is a new L3 unifier `swift-uuids` composing the
 spec-faithful L2 encoding with platform-specific L3-policy random sources per
@@ -78,7 +78,7 @@ shape.
 
 The L3-unifier composition pattern is already proven by the canonical
 `swift-random` package
-([`swift-foundations/swift-random/Sources/Random/Exports.swift`](file://~/Developer/swift-foundations/swift-random/Sources/Random/Exports.swift)),
+([`swift-foundations/swift-random/Sources/Random/Exports.swift`](file://[local-workspace]/Developer/swift-foundations/swift-random/Sources/Random/Exports.swift)),
 which composes the three L3-policy packages exactly per [PLAT-ARCH-009]:
 
 ```swift
@@ -99,13 +99,13 @@ wrappers:
 
 | L3-policy | L2 syscall wrapper | C primitive |
 |-----------|--------------------|-------------|
-| [`swift-darwin/Sources/Darwin Kernel/Darwin.Random.swift:38`](file://~/Developer/swift-foundations/swift-darwin/Sources/Darwin%20Kernel/Darwin.Random.swift) | `Darwin.Kernel.Random.arc4random(_:)` | `arc4random_buf` |
-| [`swift-linux/Sources/Linux Kernel Random/Linux.Random.swift:42`](file://~/Developer/swift-foundations/swift-linux/Sources/Linux%20Kernel%20Random/Linux.Random.swift) | `Linux.Kernel.Random.getrandom(_:)` | `getrandom(2)` (EINTR retry, entropyNotReady mapping) |
-| [`swift-windows/Sources/Windows Kernel/Windows.Random.swift:30`](file://~/Developer/swift-foundations/swift-windows/Sources/Windows%20Kernel/Windows.Random.swift) | `Windows.\`32\`.Kernel.Random.bCryptGenRandom(_:)` | `BCryptGenRandom` (NTSTATUS mapping) |
+| [`swift-darwin/Sources/Darwin Kernel/Darwin.Random.swift:38`](file://[local-workspace]/Developer/swift-foundations/swift-darwin/Sources/Darwin%20Kernel/Darwin.Random.swift) | `Darwin.Kernel.Random.arc4random(_:)` | `arc4random_buf` |
+| [`swift-linux/Sources/Linux Kernel Random/Linux.Random.swift:42`](file://[local-workspace]/Developer/swift-foundations/swift-linux/Sources/Linux%20Kernel%20Random/Linux.Random.swift) | `Linux.Kernel.Random.getrandom(_:)` | `getrandom(2)` (EINTR retry, entropyNotReady mapping) |
+| [`swift-windows/Sources/Windows Kernel/Windows.Random.swift:30`](file://[local-workspace]/Developer/swift-foundations/swift-windows/Sources/Windows%20Kernel/Windows.Random.swift) | `Windows.\`32\`.Kernel.Random.bCryptGenRandom(_:)` | `BCryptGenRandom` (NTSTATUS mapping) |
 
 A higher-level L3 package `swift-identities` ALREADY composes
 `swift-rfc-9562` × `swift-random` to deliver typed identifier surface
-([`swift-identities/Sources/Identities/Identity.UUID.swift:49`](file://~/Developer/swift-foundations/swift-identities/Sources/Identities/Identity.UUID.swift)):
+([`swift-identities/Sources/Identities/Identity.UUID.swift:49`](file://[local-workspace]/Developer/swift-foundations/swift-identities/Sources/Identities/Identity.UUID.swift)):
 
 ```swift
 public static func random() throws(Random.Error) -> Self {
@@ -134,7 +134,7 @@ composing spec + random — and migrating `swift-identities` to consume it.
 Internal grep of `swift-institute/Research/` for `uuid`, `rfc-4122`,
 `rfc_4122`, `swift-uuids`, `platform random`, `Identity.UUID`, and `UUID
 layering` returns ZERO matches in
-[`~/Developer/swift-institute/Research/`](file://~/Developer/swift-institute/Research/).
+[`[local-workspace]/swift-institute/Research/`](file://[local-workspace]/Developer/swift-institute/Research/).
 This is greenfield design — no superseded prior recommendation, no parallel
 analysis, no existing decision to extend. The closest adjacent precedent is
 the `swift-random` package architecture itself, which is implicit (not
@@ -143,7 +143,7 @@ sources above.
 
 [RES-019] grep summary (executed 2026-05-13):
 ```bash
-grep -rl -i "uuid\|rfc-4122\|rfc_4122\|swift-uuids" ~/Developer/swift-institute/Research/
+grep -rl -i "uuid\|rfc-4122\|rfc_4122\|swift-uuids" [local-workspace]/swift-institute/Research/
 # 0 matches in Research/*.md
 ```
 
@@ -217,9 +217,9 @@ Mapped to current granular L2 products:
 
 | Platform | C primitive | L2 spec package | L2 product | L3-policy wrapper |
 |----------|-------------|-----------------|------------|-------------------|
-| Darwin (macOS/iOS/tvOS/watchOS/visionOS) | `arc4random_buf` | `swift-darwin-standard` | `Darwin Kernel Standard` | [`swift-darwin/.../Darwin.Random.fill`](file://~/Developer/swift-foundations/swift-darwin/Sources/Darwin%20Kernel/Darwin.Random.swift) |
-| Linux | `getrandom(2)` (EINTR retry, EAGAIN→entropyNotReady) | `swift-linux-standard` | `Linux Kernel System Standard` | [`swift-linux/.../Linux.Random.fill`](file://~/Developer/swift-foundations/swift-linux/Sources/Linux%20Kernel%20Random/Linux.Random.swift) |
-| Windows | `BCryptGenRandom` (CNG; NTSTATUS mapping) | `swift-windows-32` | `Windows 32 Kernel System` | [`swift-windows/.../Windows.Random.fill`](file://~/Developer/swift-foundations/swift-windows/Sources/Windows%20Kernel/Windows.Random.swift) |
+| Darwin (macOS/iOS/tvOS/watchOS/visionOS) | `arc4random_buf` | `swift-darwin-standard` | `Darwin Kernel Standard` | [`swift-darwin/.../Darwin.Random.fill`](file://[local-workspace]/Developer/swift-foundations/swift-darwin/Sources/Darwin%20Kernel/Darwin.Random.swift) |
+| Linux | `getrandom(2)` (EINTR retry, EAGAIN→entropyNotReady) | `swift-linux-standard` | `Linux Kernel System Standard` | [`swift-linux/.../Linux.Random.fill`](file://[local-workspace]/Developer/swift-foundations/swift-linux/Sources/Linux%20Kernel%20Random/Linux.Random.swift) |
+| Windows | `BCryptGenRandom` (CNG; NTSTATUS mapping) | `swift-windows-32` | `Windows 32 Kernel System` | [`swift-windows/.../Windows.Random.fill`](file://[local-workspace]/Developer/swift-foundations/swift-windows/Sources/Windows%20Kernel/Windows.Random.swift) |
 
 All three are exposed via the unified L3 surface `Random.fill(_:)` in the
 canonical `swift-random` package — which is exactly the affordance an
@@ -245,7 +245,7 @@ this ecosystem?
 |---------|----------------------|---------------|
 | Apple Foundation: single type, single package | NO | Would couple L2 spec encoding to L1/L2 platform random; violates [ARCH-LAYER-001]. Apple Foundation is not layered; we are. |
 | Rust uuid: separate crates, feature flags | **YES** | Maps directly: `swift-rfc-4122` = spec crate (no platform); `swift-uuids` = the feature-gated platform-random layer. Rust's `getrandom` crate is functionally equivalent to our `swift-random`. The feature-flag mechanism is just SwiftPM dependency selection. |
-| Boost UUID: spec + URNG template parameter | **YES** | Already the shape of `RFC_4122.UUID.v4(using: R)` and `RFC_4122.UUID.v4(fillRandom:)` ([`RFC_4122.UUID.Generation.swift:256, 290`](file://~/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.Generation.swift)). The L2 spec is already parameterised; we just need an L3 to bind the parameter. |
+| Boost UUID: spec + URNG template parameter | **YES** | Already the shape of `RFC_4122.UUID.v4(using: R)` and `RFC_4122.UUID.v4(fillRandom:)` ([`RFC_4122.UUID.Generation.swift:256, 290`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.Generation.swift)). The L2 spec is already parameterised; we just need an L3 to bind the parameter. |
 | Go: spec + io.ReadFull on platform random | **YES** | Same separation; the Swift equivalent is `RandomProvider.fill(_:)`. |
 | Node crypto.randomUUID: monolithic binding | NO | Single non-decomposable binding; loses the spec/random separation that makes v3/v5 (pure-compute) consumable on Embedded targets without random. |
 | OpenSSL: spec inlined at every consumer | NO | What `swift-identities` currently does — and the exact pain point swift-uuids exists to eliminate. |
@@ -372,7 +372,7 @@ honor that parameterisation by binding it at L3, not drop it.
      The bodies are 2-line wrappers: bind `fillRandom: Random.fill` and
      delegate to the existing L2 parametric `v4(fillRandom:)` /
      `v7(unixMilliseconds:fillRandom:)` overloads
-     ([`RFC_4122.UUID.Generation.swift:290`](file://~/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.Generation.swift), [`RFC_9562.UUID.Generation.swift:121`](file://~/Developer/swift-ietf/swift-rfc-9562/Sources/RFC%209562/RFC_9562.UUID.Generation.swift)).
+     ([`RFC_4122.UUID.Generation.swift:290`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.Generation.swift), [`RFC_9562.UUID.Generation.swift:121`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-9562/Sources/RFC%209562/RFC_9562.UUID.Generation.swift)).
    - **`Exports.swift`** re-exports all three deps via `@_exported public import`:
      ```swift
      @_exported public import RFC_4122
@@ -418,7 +418,7 @@ honor that parameterisation by binding it at L3, not drop it.
   Identity.UUID.random() inline pattern collapses to a 1-line delegate.
 - **Removes the latent CSPRNG defect at L2** — currently
   `RFC_4122.Random.liveValue` uses non-cryptographic `UInt8.random(in:)`
-  ([`RFC_4122.Random.swift:54`](file://~/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.Random.swift));
+  ([`RFC_4122.Random.swift:54`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.Random.swift));
   moving the live binding to L3 (where the real CSPRNG lives) is a security
   win as a side effect of the layering repair.
 
@@ -748,7 +748,7 @@ During this analysis, two additional ecosystem-wide observations surfaced
 beyond the originating Thread H.3 defect set:
 
 1. **Latent CSPRNG defect at L2**: `RFC_4122.Random.liveValue` in
-   [`RFC_4122.Random.swift:54`](file://~/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.Random.swift)
+   [`RFC_4122.Random.swift:54`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.Random.swift)
    uses `UInt8.random(in: .min...max)` — backed by Swift's
    `SystemRandomNumberGenerator`. On Apple platforms this is documented as
    CSPRNG; on Linux Swift 6.3 it is documented as CSPRNG (uses
@@ -794,22 +794,22 @@ arc.
 - Microsoft `BCryptGenRandom` —
   [learn.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptgenrandom](https://learn.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptgenrandom)
 - Internal sources (verified 2026-05-13):
-  - [`swift-ietf/swift-rfc-4122/Package.swift`](file://~/Developer/swift-ietf/swift-rfc-4122/Package.swift)
+  - [`swift-ietf/swift-rfc-4122/Package.swift`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-4122/Package.swift)
     (current defect site)
-  - [`swift-ietf/swift-rfc-4122/Sources/RFC 4122/RFC_4122.UUID.swift`](file://~/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.swift)
+  - [`swift-ietf/swift-rfc-4122/Sources/RFC 4122/RFC_4122.UUID.swift`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.swift)
     (stale imports + native-syscall fast-path)
-  - [`swift-ietf/swift-rfc-4122/Sources/RFC 4122/RFC_4122.UUID.Generation.swift`](file://~/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.Generation.swift)
+  - [`swift-ietf/swift-rfc-4122/Sources/RFC 4122/RFC_4122.UUID.Generation.swift`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-4122/Sources/RFC%204122/RFC_4122.UUID.Generation.swift)
     (v3/v4/v5 parametric generators — REUSED at swift-uuids unchanged)
-  - [`swift-ietf/swift-rfc-9562/Sources/RFC 9562/RFC_9562.UUID.Generation.swift`](file://~/Developer/swift-ietf/swift-rfc-9562/Sources/RFC%209562/RFC_9562.UUID.Generation.swift)
+  - [`swift-ietf/swift-rfc-9562/Sources/RFC 9562/RFC_9562.UUID.Generation.swift`](file://[local-workspace]/Developer/swift-ietf/swift-rfc-9562/Sources/RFC%209562/RFC_9562.UUID.Generation.swift)
     (v7 parametric generator — REUSED at swift-uuids unchanged)
-  - [`swift-foundations/swift-random/Sources/Random/Exports.swift`](file://~/Developer/swift-foundations/swift-random/Sources/Random/Exports.swift)
+  - [`swift-foundations/swift-random/Sources/Random/Exports.swift`](file://[local-workspace]/Developer/swift-foundations/swift-random/Sources/Random/Exports.swift)
     (canonical L3-unifier composition shape; swift-uuids mirrors this)
-  - [`swift-foundations/swift-darwin/Sources/Darwin Kernel/Darwin.Random.swift`](file://~/Developer/swift-foundations/swift-darwin/Sources/Darwin%20Kernel/Darwin.Random.swift)
-  - [`swift-foundations/swift-linux/Sources/Linux Kernel Random/Linux.Random.swift`](file://~/Developer/swift-foundations/swift-linux/Sources/Linux%20Kernel%20Random/Linux.Random.swift)
-  - [`swift-foundations/swift-windows/Sources/Windows Kernel/Windows.Random.swift`](file://~/Developer/swift-foundations/swift-windows/Sources/Windows%20Kernel/Windows.Random.swift)
-  - [`swift-foundations/swift-identities/Sources/Identities/Identity.UUID.swift`](file://~/Developer/swift-foundations/swift-identities/Sources/Identities/Identity.UUID.swift)
+  - [`swift-foundations/swift-darwin/Sources/Darwin Kernel/Darwin.Random.swift`](file://[local-workspace]/Developer/swift-foundations/swift-darwin/Sources/Darwin%20Kernel/Darwin.Random.swift)
+  - [`swift-foundations/swift-linux/Sources/Linux Kernel Random/Linux.Random.swift`](file://[local-workspace]/Developer/swift-foundations/swift-linux/Sources/Linux%20Kernel%20Random/Linux.Random.swift)
+  - [`swift-foundations/swift-windows/Sources/Windows Kernel/Windows.Random.swift`](file://[local-workspace]/Developer/swift-foundations/swift-windows/Sources/Windows%20Kernel/Windows.Random.swift)
+  - [`swift-foundations/swift-identities/Sources/Identities/Identity.UUID.swift`](file://[local-workspace]/Developer/swift-foundations/swift-identities/Sources/Identities/Identity.UUID.swift)
     (current dead-code inline duplication; collapses to delegate at Phase 4.2)
-  - [`swift-foundations/swift-file-system/Sources/File System Core/File.Path.Temporary.swift`](file://~/Developer/swift-foundations/swift-file-system/Sources/File%20System%20Core/File.Path.Temporary.swift)
+  - [`swift-foundations/swift-file-system/Sources/File System Core/File.Path.Temporary.swift`](file://[local-workspace]/Developer/swift-foundations/swift-file-system/Sources/File%20System%20Core/File.Path.Temporary.swift)
     (Thread H.3 adoption site)
 - Skill rules cited:
   - [ARCH-LAYER-001] (dependency direction)

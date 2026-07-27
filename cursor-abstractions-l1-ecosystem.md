@@ -91,10 +91,10 @@ Per `[RES-023]` Kitchenham-style review.
 
 **Internal corpus** (per `[RES-019]` Step-0):
 
-- `grep -rl <keyword> ~/Developer/swift-institute/Research/`
-- `grep -rl <keyword> ~/Developer/swift-primitives/*/Research/`
-- Mechanical scan: `grep -rnE 'public struct [A-Za-z_]+: *~Copyable, *~Escapable|public struct [A-Za-z_]+: *~Escapable, *~Copyable' ~/Developer/swift-primitives/*/Sources/`
-- Mechanical scan: `grep -rnE 'Span<UInt8>|Span<U?Int8>' ~/Developer/swift-primitives/*/Sources/`
+- `grep -rl <keyword> [local-workspace]/swift-institute/Research/`
+- `grep -rl <keyword> [local-workspace]/swift-primitives/*/Research/`
+- Mechanical scan: `grep -rnE 'public struct [A-Za-z_]+: *~Copyable, *~Escapable|public struct [A-Za-z_]+: *~Escapable, *~Copyable' [local-workspace]/swift-primitives/*/Sources/`
+- Mechanical scan: `grep -rnE 'Span<UInt8>|Span<U?Int8>' [local-workspace]/swift-primitives/*/Sources/`
 - Mechanical scan: cursor / scanner / pull-stream / reader / writer / cursor-shaped names across L1, L2, L3 source trees
 
 **External corpus**:

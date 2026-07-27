@@ -224,4 +224,4 @@ All follow [API-NAME-001] `Nest.Name` pattern:
 
 - SE-0390: Noncopyable structs and enums
 - SE-0427: Noncopyable generics
-- Swift Institute Documentation: `~/Developer/swift-institute/Documentation.docc/`
+- Swift Institute Documentation: `[local-workspace]/swift-institute/Documentation.docc/`

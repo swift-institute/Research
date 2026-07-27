@@ -97,9 +97,9 @@ no source changes are proposed here.
 **Pass 1 — Inventory**. Two parallel Explore subagents enumerated every
 `public protocol` declaration across:
 
-- `~/Developer/swift-primitives/` (~70 packages, ~265 protocols)
-- `~/Developer/swift-standards/` (~25 packages)
-- `~/Developer/swift-foundations/` (~120 packages, ~25 protocols)
+- `[local-workspace]/swift-primitives/` (~70 packages, ~265 protocols)
+- `[local-workspace]/swift-standards/` (~25 packages)
+- `[local-workspace]/swift-foundations/` (~120 packages, ~25 protocols)
 
 Out-of-scope per the dispatching handoff: `Tests/`, `Experiments/`,
 `Examples/`, DocC catalogs, and spec-implementation packages

@@ -551,6 +551,6 @@ rather than analysed):
 - https://www.pointfree.co/ — Pointfree
 
 Source documents consulted:
-- ~/Developer/swift-institute/HANDOFF.md
-- ~/Developer/swift-institute/Swift Institute.docc/Swift Institute.md
-- ~/Developer/swift-institute/Research/documentation-docc-alpha-launch.md
+- [local-workspace]/swift-institute/HANDOFF.md
+- [local-workspace]/swift-institute/Swift Institute.docc/Swift Institute.md
+- [local-workspace]/swift-institute/Research/documentation-docc-alpha-launch.md

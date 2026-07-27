@@ -313,4 +313,4 @@ Per `[HANDOFF-010]` step 5: each supervisor ground-rule entry verified against w
 - `swift-institute/Scripts/sync-swift-settings.sh` + `sync-skills.sh` + `sync-dependabot.sh` — sync-script family pattern references.
 - [Apple swift-format Rules.md](https://github.com/apple/swift-format/blob/main/Documentation/RuleDocumentation.md) — `ValidateDocumentationComments` is a linter rule (not auto-fix-capable).
 - [SwiftLint README](https://github.com/realm/SwiftLint/blob/main/README.md) — `parent_config:` URL chaining semantics (verified 2026-05-05).
-- `~/Developer/HANDOFF-rollout-phase-1.md` — dispatch brief + Live Revisions sections.
+- `[local-workspace]/HANDOFF-rollout-phase-1.md` — dispatch brief + Live Revisions sections.

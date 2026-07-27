@@ -51,7 +51,7 @@ the `Codable` / `Encodable` / `Decodable` protocol contract: `throws` (which
 is `throws(any Error)` under typed-throws-by-default).
 
 The institute's [API-ERR-006] forbids untyped throws on public API surface
-(`~/Developer/swift-foundations/swift-foundations/Skills/code-surface/SKILL.md`):
+(`[local-workspace]/swift-foundations/swift-foundations/Skills/code-surface/SKILL.md`):
 
 > All throwing functions MUST use typed throws. Untyped throws (or
 > existential `throws(any Error)`) on public API are forbidden.

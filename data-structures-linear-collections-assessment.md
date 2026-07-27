@@ -12,11 +12,11 @@ status: DECISION
 
 The three foundational packages (buffer-primitives, storage-primitives, memory-primitives) have been refactored and now compile and pass tests. This assessment audits the five Linear Collections data structure packages that build on top of them:
 
-1. **swift-array-primitives** at `~/Developer/swift-primitives/swift-array-primitives/`
-2. **swift-list-primitives** at `~/Developer/swift-primitives/swift-list-primitives/`
-3. **swift-stack-primitives** at `~/Developer/swift-primitives/swift-stack-primitives/`
-4. **swift-queue-primitives** at `~/Developer/swift-primitives/swift-queue-primitives/`
-5. **swift-cyclic-primitives** at `~/Developer/swift-primitives/swift-cyclic-primitives/`
+1. **swift-array-primitives** at `[local-workspace]/swift-primitives/swift-array-primitives/`
+2. **swift-list-primitives** at `[local-workspace]/swift-primitives/swift-list-primitives/`
+3. **swift-stack-primitives** at `[local-workspace]/swift-primitives/swift-stack-primitives/`
+4. **swift-queue-primitives** at `[local-workspace]/swift-primitives/swift-queue-primitives/`
+5. **swift-cyclic-primitives** at `[local-workspace]/swift-primitives/swift-cyclic-primitives/`
 
 ## Question
 
@@ -731,9 +731,9 @@ This file uses the Xcode auto-generated header ("File.swift") instead of the sta
 
 ## References
 
-- Buffer Primitives: `~/Developer/swift-primitives/swift-buffer-primitives/`
-- Storage Primitives: `~/Developer/swift-primitives/swift-storage-primitives/`
-- Memory Primitives: `~/Developer/swift-primitives/swift-memory-primitives/`
-- Index Primitives: `~/Developer/swift-primitives/swift-index-primitives/`
+- Buffer Primitives: `[local-workspace]/swift-primitives/swift-buffer-primitives/`
+- Storage Primitives: `[local-workspace]/swift-primitives/swift-storage-primitives/`
+- Memory Primitives: `[local-workspace]/swift-primitives/swift-memory-primitives/`
+- Index Primitives: `[local-workspace]/swift-primitives/swift-index-primitives/`
 - Swift compiler bug (value generic ~Copyable): Referenced in source comments
 - Swift compiler bug (deinit cleanup): https://github.com/swiftlang/swift/issues/86652

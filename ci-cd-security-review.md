@@ -112,7 +112,7 @@ All under `swift-institute/.github/.github/actions/` and consumed via
 | Script | Used by | Sparse-checked-out at runtime? | Risk surface |
 |---|---|---|---|
 | `audit-license-header.py` | `lint-license-header-weekly.yml` via `cron-audit-base.yml` | YES (sparse-checkout of `swift-institute/.github@main`) | Pure read of consumer Sources/**.swift; no shell exec; no network. |
-| `audit-test-support-spine.py` | `lint-test-support-spine-weekly.yml` via `cron-audit-base.yml` | YES | Calls `swift package dump-package` (subprocess, controlled args); reads JSON. **Hardcodes principal-mode org dirs at `~/Developer/swift-{primitives,standards,foundations,iso}` (lines 32–37); harmless when invoked in CI mode (`--package-dir`) but a finger-print of the dual-use script.** |
+| `audit-test-support-spine.py` | `lint-test-support-spine-weekly.yml` via `cron-audit-base.yml` | YES | Calls `swift package dump-package` (subprocess, controlled args); reads JSON. **Hardcodes principal-mode org dirs at `[local-workspace]/swift-{primitives,standards,foundations,iso}` (lines 32–37); harmless when invoked in CI mode (`--package-dir`) but a finger-print of the dual-use script.** |
 | `build-dep-graph-snapshot.py` | `submit-dep-graph-weekly.yml` | YES | Reads `swift package show-dependencies` JSON output, emits snapshot JSON for `POST /repos/<target>/dependency-graph/snapshots`. Pure data transformation. |
 | `generate-metadata.sh` | `generate-metadata.yml` | YES (full checkout, not sparse) | **Performs `git push` and `gh api repos/<target>/pulls --method POST` — write operations. Highest-impact script in the stack.** |
 | `patch-umbrella-symbol-graph.py` | `swift-docs.yml` | YES | Pure JSON transformation on symbol graph; no shell exec; no network. |

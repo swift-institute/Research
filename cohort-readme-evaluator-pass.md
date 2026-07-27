@@ -15,8 +15,8 @@ Carrier (the pilot, post-cleanup 2026-04-29) demonstrates the right discipline; 
 
 ## Provenance
 
-- **Discussion artifact**: `/tmp/cohort-readme-pattern-converged.md` (3-round Claude/ChatGPT collaborative discussion, 2026-05-01).
-- **Discussion transcript**: `/tmp/cohort-readme-pattern-transcript.md`.
+- **Discussion artifact**: `[temporary-path]/cohort-readme-pattern-converged.md` (3-round Claude/ChatGPT collaborative discussion, 2026-05-01).
+- **Discussion transcript**: `[temporary-path]/cohort-readme-pattern-transcript.md`.
 - **Memory**: `feedback_readme_evaluator_audience.md` — durable rule for future README authoring.
 
 ## Verdict taxonomy
@@ -179,7 +179,7 @@ The remediation grounds in three concurrent rule changes to the readme skill:
 2. Add new conditional [README-027] Stability Section Operational Form (must be operational *if* present; SHOULD for infrastructure packages).
 3. Extend [README-010] Architecture with the consumer-question earning sub-rule (every row answers a consumer dependency / import / capability / adoption question; "When to import" recommended for product tables).
 
-See `/tmp/cohort-readme-pattern-converged.md` for the verbatim amendment text.
+See `[temporary-path]/cohort-readme-pattern-converged.md` for the verbatim amendment text.
 
 ## Outcome
 

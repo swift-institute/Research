@@ -301,7 +301,7 @@ exactly when the institute's gate bump makes stdlib `Hashable & ~Copyable` avail
 
 | Item | Class | Disposition |
 |---|---|---|
-| The sparse hashed leaf compiles + tears down cross-module on 6.3.2 in the tower's composed shape (incl. [MEM-SAFE-027]/#86652 exposure for any inline variant) | **premise** for the executor's build | The executor's own gated build IS the verification (HALT-on-wall with repro per its GOAL); the heap-leaf shape additionally has the shipping `Storage.Arena` existence proof and `/tmp/tower-cow-spike`→`Experiments` lineage. No design reliance precedes that build. |
+| The sparse hashed leaf compiles + tears down cross-module on 6.3.2 in the tower's composed shape (incl. [MEM-SAFE-027]/#86652 exposure for any inline variant) | **premise** for the executor's build | The executor's own gated build IS the verification (HALT-on-wall with repro per its GOAL); the heap-leaf shape additionally has the shipping `Storage.Arena` existence proof and `[temporary-path]/tower-cow-spike`→`Experiments` lineage. No design reliance precedes that build. |
 | Backward-shift vs sentinels for the position-index engine (positions must be updated when buckets move) | direction | Evaluate at the W5 `Hash.Table` re-spell; `rehash()` compaction is the extant fallback |
 | Robin Hood displacement for the new leaf's engine | direction | Optional later; flag-gated precedent in s-c |
 | Seed plumbing through the institute `Hash.Protocol` (seeded `_rawHashValue` analogue) | direction | Surface when the executor builds the engine; both upstreams are seed-parametric |

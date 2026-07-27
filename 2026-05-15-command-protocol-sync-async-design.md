@@ -114,7 +114,7 @@ the cited source at write time per [RES-023].
 #### `Parser.\`Protocol\`` — single, sync, `~Copyable`-capable
 
 Cited at
-`~/Developer/swift-primitives/swift-parser-primitives/Sources/Parser Primitives Core/Parser.Parser.swift:90`
+`[local-workspace]/swift-primitives/swift-parser-primitives/Sources/Parser Primitives Core/Parser.Parser.swift:90`
 [Verified: 2026-05-15]:
 
 ```swift
@@ -136,24 +136,24 @@ async-ly). The parser surface stays effect-free.
 
 This is precedent — verified across grep for `Parser.Async`,
 `Serializer.Async`, `Coder.Async` in
-`~/Developer/swift-primitives/`: no async siblings exist.
+`[local-workspace]/swift-primitives/`: no async siblings exist.
 
 #### `Serializer.Protocol` — same pattern
 
 Cited at
-`~/Developer/swift-primitives/swift-serializer-primitives/Sources/Serializer Primitives Core/Serializer.Protocol.swift:49-82`
+`[local-workspace]/swift-primitives/swift-serializer-primitives/Sources/Serializer Primitives Core/Serializer.Protocol.swift:49-82`
 [Verified: 2026-05-15]. Single, sync, no async sibling.
 
 #### `Coder.Protocol` — same pattern
 
 Cited at
-`~/Developer/swift-primitives/swift-coder-primitives/Sources/Coder Primitives/Coder.Protocol.swift:32`
+`[local-workspace]/swift-primitives/swift-coder-primitives/Sources/Coder Primitives/Coder.Protocol.swift:32`
 [Verified: 2026-05-15]. Single, sync, no async sibling.
 
 #### `Console.Events` — DUAL SIBLING TYPES (not protocols)
 
 Cited at
-`~/Developer/swift-foundations/swift-console/Research/async-sync-event-api.md`
+`[local-workspace]/swift-foundations/swift-console/Research/async-sync-event-api.md`
 v2.0.0 DECISION (2026-03-03) [Verified: 2026-05-15].
 
 The console library ships BOTH a `Console.Events.Stream` (async) and a
@@ -179,7 +179,7 @@ by ownership/typestate.
 #### `actor-run-noncopyable-return` experiment — async + typed throws + `~Copyable` + `sending` composes
 
 Cited at
-`~/Developer/swift-institute/Experiments/actor-run-noncopyable-return/Sources/main.swift`
+`[local-workspace]/swift-institute/Experiments/actor-run-noncopyable-return/Sources/main.swift`
 [Verified: 2026-05-15, revalidated Swift 6.3.1 on 2026-04-17].
 
 Experiment confirms (V6 + V8 variants):
@@ -200,21 +200,21 @@ substrate for D8 (`Command.Resource.Protocol` with `~Copyable` Self +
 
 `consuming func f() async throws(E) -> T` is used productionally in
 `swift-io-primitives` (
-`~/Developer/swift-primitives/swift-io-primitives/Research/io-witness-capability-runner-split.md:137`
+`[local-workspace]/swift-primitives/swift-io-primitives/Research/io-witness-capability-runner-split.md:137`
 [Verified: 2026-05-15]) and
 `swift-async-primitives` (
-`~/Developer/swift-primitives/swift-async-primitives/Research/barrier-api-investigation-2026-04-25.md:132`
+`[local-workspace]/swift-primitives/swift-async-primitives/Research/barrier-api-investigation-2026-04-25.md:132`
 [Verified: 2026-05-15]). Pattern is settled.
 
 #### Empirical institute CLI usage — all `AsyncParsableCommand`
 
 Searched all institute foundation CLIs:
 
-- `~/Developer/swift-foundations/swift-dependency-analysis/Sources/Dependency Analysis CLI/CLI.swift:6`
+- `[local-workspace]/swift-foundations/swift-dependency-analysis/Sources/Dependency Analysis CLI/CLI.swift:6`
   — `struct CLI: AsyncParsableCommand` [Verified: 2026-05-15]
-- `~/Developer/swift-foundations/swift-impact/Sources/Impact CLI/SwiftImpact.swift:36`
+- `[local-workspace]/swift-foundations/swift-impact/Sources/Impact CLI/SwiftImpact.swift:36`
   — `struct SwiftImpact: AsyncParsableCommand` [Verified: 2026-05-15]
-- `~/Developer/swift-foundations/swift-package-graph/Sources/Package Graph CLI/PackageGraph.swift:52`
+- `[local-workspace]/swift-foundations/swift-package-graph/Sources/Package Graph CLI/PackageGraph.swift:52`
   — `struct PackageGraph: AsyncParsableCommand` [Verified: 2026-05-15]
   (8 subcommands; all `AsyncParsableCommand`)
 
@@ -226,7 +226,7 @@ dispositive on structural correctness.
 ### §1.2 swift-argument-parser — split rationale from commit history
 
 Cited at
-`~/Developer/swiftlang/swift-argument-parser/Sources/ArgumentParser/Parsable Types/AsyncParsableCommand.swift`
+`[local-workspace]/swiftlang/swift-argument-parser/Sources/ArgumentParser/Parsable Types/AsyncParsableCommand.swift`
 [Verified: 2026-05-15]:
 
 ```swift
@@ -256,7 +256,7 @@ Key observations:
 #### The commit creating the split — toolchain-driven, not structural
 
 `git log --diff-filter=A` on
-`~/Developer/swiftlang/swift-argument-parser/`:
+`[local-workspace]/swiftlang/swift-argument-parser/`:
 
 ```
 1141ed1 2022-03-14 Support an `async` entry point for commands (#404)
@@ -457,7 +457,7 @@ Cross-ecosystem patterns:
 
 Swift today has **no general mechanism to abstract over the `async`
 effect** at the protocol level. Citing SE-0413 Typed Throws review thread (
-`~/Developer/swift-institute/Engagement/swift-forums-review-corpus/threads/evolution/proposal-reviews/68507.json:541`
+`[local-workspace]/swift-institute/Engagement/swift-forums-review-corpus/threads/evolution/proposal-reviews/68507.json:541`
 [Verified: 2026-05-15]):
 
 > "Yes there is [a proposal under review for AsyncSequence]; it's under
@@ -1135,7 +1135,7 @@ maintain, vs. a permanent shape that admits a known defect class.
 - swift-argument-parser PR #404 commit 1141ed1 (2022-03-14): "Support an
   `async` entry point for commands" — toolchain rationale (Swift 5.5/5.6
   availability) [Verified: 2026-05-15 from local clone at
-  `~/Developer/swiftlang/swift-argument-parser/`].
+  `[local-workspace]/swiftlang/swift-argument-parser/`].
 - swift-argument-parser
   `Sources/ArgumentParser/Parsable Types/AsyncParsableCommand.swift:15`
   — `@available(macOS 10.15, …)` annotation on `AsyncParsableCommand`

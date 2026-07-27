@@ -749,7 +749,7 @@ Apache 2.0 LICENSE and SE-0292 reference in DocC.**
 
 Verified against `swiftlang/swift-package-manager@main` (revision
 `e1ced73eb`, 2026-05-12). Local checkout at
-`~/Developer/swiftlang/swift-package-manager`:
+`[local-workspace]/swiftlang/swift-package-manager`:
 
 - `Sources/PackageModel/PackageIdentity.swift:130-294` — `Scope` / `Name` validators (SE-0292)
 - `Sources/PackageModel/Manifest/Manifest.swift:31, 113-134` — unvalidated `displayName`

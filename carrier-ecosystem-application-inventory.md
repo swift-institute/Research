@@ -87,21 +87,21 @@ Per [HANDOFF-013] reader-side prior-research grep applied first
 
 ```bash
 # Baseline counts
-ls ~/Developer/swift-primitives/  | grep -E '^swift-' | wc -l   # 134
-ls ~/Developer/swift-standards/   | grep -E '^swift-' | wc -l   # 21
-ls ~/Developer/swift-foundations/ | grep -E '^swift-' | wc -l   # 137
+ls [local-workspace]/swift-primitives/  | grep -E '^swift-' | wc -l   # 134
+ls [local-workspace]/swift-standards/   | grep -E '^swift-' | wc -l   # 21
+ls [local-workspace]/swift-foundations/ | grep -E '^swift-' | wc -l   # 137
 
 # Hoisted-protocol declarations
 grep -rln "public protocol \`Protocol\`" \
-  ~/Developer/swift-primitives/*/Sources/ \
-  ~/Developer/swift-standards/*/Sources/ \
-  ~/Developer/swift-foundations/*/Sources/
+  [local-workspace]/swift-primitives/*/Sources/ \
+  [local-workspace]/swift-standards/*/Sources/ \
+  [local-workspace]/swift-foundations/*/Sources/
 
 # Tagged-aliased typealiases
 grep -rn "typealias.*= Tagged<" \
-  ~/Developer/swift-primitives/*/Sources/ \
-  ~/Developer/swift-standards/*/Sources/ \
-  ~/Developer/swift-foundations/*/Sources/
+  [local-workspace]/swift-primitives/*/Sources/ \
+  [local-workspace]/swift-standards/*/Sources/ \
+  [local-workspace]/swift-foundations/*/Sources/
 ```
 
 Output: 26 hoisted-protocol declarations across primitives + standards;

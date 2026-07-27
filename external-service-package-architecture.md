@@ -947,7 +947,7 @@ compared commit-by-commit; that provider-specific evidence gate does not block G
 ### GitHub history-transfer rehearsal (2026-07-22)
 
 This rehearsal ran only in local clones under
-`/private/tmp/github-heritage-rehearsal.DBKrgL`. It changed no real repository history,
+`[temporary-path]/github-heritage-rehearsal.DBKrgL`. It changed no real repository history,
 remote, manifest, product, or release. The source repositories were clean on `main`
 and matched their `origin/main` branches at:
 
@@ -960,11 +960,11 @@ The types-to-core rehearsal used a path-limited rewritten branch and an explicit
 unrelated-history merge:
 
 ```sh
-git clone --no-local ~/Developer/swift-standards/swift-github-types types-client-filter
+git clone --no-local [local-workspace]/swift-standards/swift-github-types types-client-filter
 git filter-repo --force \
   --path 'Sources/GitHub Repositories Types/GitHub.Repositories.Client.swift' \
   --path-rename 'Sources/GitHub Repositories Types/:Sources/GitHub Repositories/'
-git clone --no-local ~/Developer/swift-foundations/swift-github core-import
+git clone --no-local [local-workspace]/swift-foundations/swift-github core-import
 git remote add types-client ../types-client-filter
 git fetch types-client main
 git merge --allow-unrelated-histories --no-ff types-client/main \
@@ -994,7 +994,7 @@ The substantive execution repository is already the approved HTTP successor, so 
 same-repository path move is sufficient:
 
 ```sh
-git clone --no-local ~/Developer/swift-foundations/swift-github-live http-successor
+git clone --no-local [local-workspace]/swift-foundations/swift-github-live http-successor
 git mv 'Sources/GitHub Repositories Live' 'Sources/GitHub Repositories HTTP'
 git commit -m 'Rehearsal: route repository execution source to HTTP target'
 ```
@@ -1215,8 +1215,8 @@ their historical directory basenames:
 
 | Canonical repository | Current local path | Intended local path |
 |---|---|---|
-| `swift-standards/swift-github-standard` | `~/Developer/swift-standards/swift-github-types` | `~/Developer/swift-standards/swift-github-standard` |
-| `swift-foundations/swift-github-http` | `~/Developer/swift-foundations/swift-github-live` | `~/Developer/swift-foundations/swift-github-http` |
+| `swift-standards/swift-github-standard` | `[local-workspace]/swift-standards/swift-github-types` | `[local-workspace]/swift-standards/swift-github-standard` |
+| `swift-foundations/swift-github-http` | `[local-workspace]/swift-foundations/swift-github-live` | `[local-workspace]/swift-foundations/swift-github-http` |
 
 This does not weaken the anonymous canonical clean-room evidence, but it is local
 topology debt. It can reintroduce identity confusion into mirror-backed builds,
@@ -1297,7 +1297,7 @@ the final HTTP process was stopped, and every package was rerun with isolated an
 SwiftPM state. Publication claims above rely only on the isolated rerun.
 
 The final HTTP command ran from the fresh anonymous clone
-`/private/tmp/github-content-cleanroom.wIPZOB/http` and exited zero:
+`[temporary-path]/github-content-cleanroom.wIPZOB/http` and exited zero:
 
 ```sh
 env TOOLCHAINS=org.swift.633202606251a swift test --disable-netrc --disable-keychain \
@@ -1641,12 +1641,12 @@ Mailgun package cuts remain deferred, non-blocking evidence questions.
 
 ### Live source roots
 
-- `~/Developer/swift-standards/swift-github-types`
-- `~/Developer/swift-foundations/swift-github-live`
-- `~/Developer/swift-foundations/swift-github`
-- `~/Developer/swift-standards/swift-stripe-types`
-- `~/Developer/swift-foundations/swift-stripe-live`
-- `~/Developer/swift-foundations/swift-stripe`
-- `~/Developer/swift-standards/swift-mailgun-types`
-- `~/Developer/swift-foundations/swift-mailgun-live`
-- `~/Developer/swift-foundations/swift-mailgun`
+- `[local-workspace]/swift-standards/swift-github-types`
+- `[local-workspace]/swift-foundations/swift-github-live`
+- `[local-workspace]/swift-foundations/swift-github`
+- `[local-workspace]/swift-standards/swift-stripe-types`
+- `[local-workspace]/swift-foundations/swift-stripe-live`
+- `[local-workspace]/swift-foundations/swift-stripe`
+- `[local-workspace]/swift-standards/swift-mailgun-types`
+- `[local-workspace]/swift-foundations/swift-mailgun-live`
+- `[local-workspace]/swift-foundations/swift-mailgun`

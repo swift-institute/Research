@@ -158,7 +158,7 @@ All tiers now match the original plan.
 
 ## References
 
-- `~/Developer/swift-primitives/Research/algebra-primitives-package-split.md`
+- `[local-workspace]/swift-primitives/Research/algebra-primitives-package-split.md`
 - `~/.claude/plans/abstract-stargazing-kahan.md`
-- `~/Developer/swift-primitives/Documentation.docc/Computed Primitives Tiers.md`
-- `~/Developer/swift-primitives/Documentation.docc/Primitives Tiers.md`
+- `[local-workspace]/swift-primitives/Documentation.docc/Computed Primitives Tiers.md`
+- `[local-workspace]/swift-primitives/Documentation.docc/Primitives Tiers.md`

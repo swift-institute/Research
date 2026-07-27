@@ -246,6 +246,6 @@ Most consumers (bit, dimension, complex, region, linear, geometry) only need the
 
 ## References
 
-- `~/Developer/swift-primitives/Research/algebra-primitives-package-split.md`
-- `~/Developer/swift-primitives/Research/algebra-split-tier-analysis.md`
-- `~/Developer/swift-primitives/Documentation.docc/Computed Primitives Tiers.md`
+- `[local-workspace]/swift-primitives/Research/algebra-primitives-package-split.md`
+- `[local-workspace]/swift-primitives/Research/algebra-split-tier-analysis.md`
+- `[local-workspace]/swift-primitives/Documentation.docc/Computed Primitives Tiers.md`

@@ -72,7 +72,7 @@ rule.
 
 ## Method and evidence discipline
 
-The review read `~/Developer/AGENTS.md` and the canonical architecture,
+The review read `[local-workspace]/AGENTS.md` and the canonical architecture,
 platform, byte, memory-safety, implementation, code-surface, modularization,
 existing-infrastructure, Swift-package/build/heritage, research, experiment,
 testing, and release-readiness skills before evaluating live source. It then used
@@ -325,7 +325,7 @@ evidence.
 
 | Capability / cost | Exact upstream evidence | Utilization verdict |
 |---|---|---|
-| Products/dependencies | Products are `Crypto`, legacy `_CryptoExtras`, and `CryptoExtras` (`/private/tmp/swift-crypto-4.3.0-wave3/Package.swift:88`–`:98`). The only package dependency is `apple/swift-asn1` from 1.2 (`:248`–`:256`). `CryptoExtras` always adds BoringSSL, Crypto, and SwiftASN1 (`:181`–`:202`). | Minimum TLS should depend on `Crypto`, adding `CryptoExtras` only if RSA certificate verification is required and adjudicated. |
+| Products/dependencies | Products are `Crypto`, legacy `_CryptoExtras`, and `CryptoExtras` (`[temporary-path]/swift-crypto-4.3.0-wave3/Package.swift:88`–`:98`). The only package dependency is `apple/swift-asn1` from 1.2 (`:248`–`:256`). `CryptoExtras` always adds BoringSSL, Crypto, and SwiftASN1 (`:181`–`:202`). | Minimum TLS should depend on `Crypto`, adding `CryptoExtras` only if RSA certificate verification is required and adjudicated. |
 | Backend/platforms | On Apple, `Crypto` delegates to CryptoKit; Linux/Android/Windows/WASI/OpenBSD build vendored BoringSSL/shims/wrapper/CXKCP (`Package.swift:43`–`:73`; BoringSSL commit `0226f304…` at `:16`–`:23`; README `:25`–`:37`). | Accept as the sanctioned backend/security-maintenance cost. Do not copy code. |
 | Hash/HMAC/HKDF | `SHA256`/`SHA384` conform to Sendable `HashFunction` and accept raw buffers (`Sources/Crypto/Digests/HashFunctions.swift:57`–`:172`); HMAC is Sendable (`Sources/Crypto/Message Authentication Codes/HMAC/HMAC.swift:54`–`:178`); HKDF is Sendable (`Sources/Crypto/Key Derivation/HKDF.swift:44`–`:168`). | Required TLS key-schedule adapter APIs. Translate to/from Institute Byte/Span without exposing backend data/errors. |
 | Symmetric/key agreement | `SymmetricKey` is `ContiguousBytes, Sendable` (`Sources/Crypto/Keys/Symmetric/SymmetricKeys.swift:69`–`:114`); X25519 keys are Sendable/ContiguousBytes and yield Sendable `SharedSecret` (`Sources/Crypto/Keys/EC/X25519Keys.swift:35`–`:129`; `Sources/Crypto/Key Agreement/DH.swift:44`–`:85`). | Use X25519 initially; keep private keys/secrets behind Institute move-only resource ownership. |

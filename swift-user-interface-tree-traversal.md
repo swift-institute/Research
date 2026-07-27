@@ -34,11 +34,11 @@ in a view-tree pass?
 
 ### 1. `Machine.Node` is a typed heterogeneous AST
 
-`~/Developer/swift-primitives/swift-machine-primitives/Sources/Machine Node Primitives/Machine.Node.swift` models a graph of nodes with **statically-typed** child references via phantom-tagged `ID`s. Cases include `leaf`, `pure`, `map`, `flatMap`, `sequence`, `oneOf`, `many`, `fold`, `optional`, `ref`, `hole`. Heterogeneous composition is supported: `sequence(a: ID, b: ID, combine: Combine.Erased<Mode>)` composes two distinct machine expressions with a witness-closure combiner (`Machine.Combine.Erased`). Erasure happens at the combiner closure level, not at the node level — the walker remains statically typed.
+`[local-workspace]/swift-primitives/swift-machine-primitives/Sources/Machine Node Primitives/Machine.Node.swift` models a graph of nodes with **statically-typed** child references via phantom-tagged `ID`s. Cases include `leaf`, `pure`, `map`, `flatMap`, `sequence`, `oneOf`, `many`, `fold`, `optional`, `ref`, `hole`. Heterogeneous composition is supported: `sequence(a: ID, b: ID, combine: Combine.Erased<Mode>)` composes two distinct machine expressions with a witness-closure combiner (`Machine.Combine.Erased`). Erasure happens at the combiner closure level, not at the node level — the walker remains statically typed.
 
 ### 2. `Rendering.View` is a typed tree walk with witness dispatch
 
-`~/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.View.swift`:
+`[local-workspace]/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.View.swift`:
 
 ```swift
 public protocol View: ~Copyable {
@@ -64,7 +64,7 @@ View`, no protocol-conformance lookup at each step.
 
 ### 3. `Rendering._Tuple<each Content>` covers TupleView natively
 
-`~/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering._Tuple.swift`:
+`[local-workspace]/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering._Tuple.swift`:
 
 ```swift
 @resultBuilder
@@ -105,7 +105,7 @@ dispatch is to a concrete type. No `any View` appears.
 
 ### 5. Witnesses over protocols, already in the ecosystem
 
-`~/Developer/swift-primitives/swift-parser-machine-primitives/Sources/Parser Machine Compile Primitives/Parser.Machine.Compile.Witness.swift`:
+`[local-workspace]/swift-primitives/swift-parser-machine-primitives/Sources/Parser Machine Compile Primitives/Parser.Machine.Compile.Witness.swift`:
 
 ```swift
 public struct Witness<P: Parser_Primitives.Parser.Protocol> {
@@ -189,12 +189,12 @@ typed composition, `~Copyable` compatibility, and typed throws for free.
 
 ## References
 
-- `~/Developer/swift-primitives/swift-machine-primitives/Sources/Machine Node Primitives/Machine.Node.swift`
-- `~/Developer/swift-primitives/swift-machine-primitives/Sources/Machine Combine Primitives/Machine.Combine.Erased.swift`
-- `~/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.View.swift`
-- `~/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering._Tuple.swift`
-- `~/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.Conditional.swift`
-- `~/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.Thunk.swift`
-- `~/Developer/swift-primitives/swift-parser-machine-primitives/Sources/Parser Machine Compile Primitives/Parser.Machine.Compile.Witness.swift`
-- `~/Developer/bytedance/DanceUI/Sources/DanceUI/Internal/_VariadicView/`
-- `~/Developer/bytedance/DanceUI/Sources/DanceUI/Internal/Visitor/`
+- `[local-workspace]/swift-primitives/swift-machine-primitives/Sources/Machine Node Primitives/Machine.Node.swift`
+- `[local-workspace]/swift-primitives/swift-machine-primitives/Sources/Machine Combine Primitives/Machine.Combine.Erased.swift`
+- `[local-workspace]/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.View.swift`
+- `[local-workspace]/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering._Tuple.swift`
+- `[local-workspace]/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.Conditional.swift`
+- `[local-workspace]/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/Rendering.Thunk.swift`
+- `[local-workspace]/swift-primitives/swift-parser-machine-primitives/Sources/Parser Machine Compile Primitives/Parser.Machine.Compile.Witness.swift`
+- `[local-workspace]/bytedance/DanceUI/Sources/DanceUI/Internal/_VariadicView/`
+- `[local-workspace]/bytedance/DanceUI/Sources/DanceUI/Internal/Visitor/`

@@ -62,7 +62,7 @@ The remaining sections analyze the corrected question. Per [SUPER-002] ground ru
 
 ### Owner: `swift-iso-9945` `ISO 9945 Glob` target (L2)
 
-Located at `~/Developer/swift-iso/swift-iso-9945/Sources/ISO 9945 Glob/`. Contents:
+Located at `[local-workspace]/swift-iso/swift-iso-9945/Sources/ISO 9945 Glob/`. Contents:
 
 **Vocabulary (`ISO_9945.Kernel.Glob.*` namespace — 13 files):**
 

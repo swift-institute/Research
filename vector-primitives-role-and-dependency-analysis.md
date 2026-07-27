@@ -165,7 +165,7 @@ Currently it wraps `Vector<Scalar, N>.Inline` but only touches `.elements` (the 
 
 ### The algebra-linear dependency problem
 
-Examining `Linear.Vector<N>` at `~/Developer/swift-primitives/swift-algebra-linear-primitives/Sources/Algebra Linear Primitives/Linear.Vector.swift:20-39`:
+Examining `Linear.Vector<N>` at `[local-workspace]/swift-primitives/swift-algebra-linear-primitives/Sources/Algebra Linear Primitives/Linear.Vector.swift:20-39`:
 
 ```swift
 public struct Vector<let N: Int> {

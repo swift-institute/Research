@@ -328,8 +328,8 @@ Note: `Bit.Vector` (the ~Copyable base type) at line 134 uses `popcount == capac
 ### 7. Duplicate `init(normalizing:)` in Bit Primitives
 
 `Bit.init(normalizing value: UInt8)` is defined in both:
-- `~/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives/Bit.swift:16`
-- `~/Developer/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit+Normalizing.swift:12`
+- `[local-workspace]/swift-primitives/swift-bit-primitives/Sources/Bit Primitives/Bit.swift:16`
+- `[local-workspace]/swift-primitives/swift-bit-primitives/Sources/Bit Primitives Standard Library Integration/Bit+Normalizing.swift:12`
 
 Since `Bit Primitives` imports `Bit Primitives Standard Library Integration` (transitively through the umbrella), this creates a duplicate definition. The implementation is identical in both files. One should be removed.
 

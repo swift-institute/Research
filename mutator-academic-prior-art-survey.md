@@ -47,7 +47,7 @@ relevant existing packages:
 
 ### `swift-optic-primitives`
 
-Path: `~/Developer/swift-primitives/swift-optic-primitives/`.
+Path: `[local-workspace]/swift-primitives/swift-optic-primitives/`.
 Ships `Optic.Lens<Whole, Part>`, `Optic.Prism<Whole, Part>`,
 `Optic.Iso<Whole, Part>`, `Optic.Affine<Whole, Part>`, and
 `Optic.Traversal<Whole, Part>` as concrete witness structs (Sendable +
@@ -74,7 +74,7 @@ optics do not*.
 
 ### `swift-algebra-primitives` family
 
-Path: `~/Developer/swift-primitives/swift-algebra-*/`. The
+Path: `[local-workspace]/swift-primitives/swift-algebra-*/`. The
 namespace `Algebra` hosts:
 
 | Algebraic structure | Package | Captures |
@@ -449,7 +449,7 @@ combination Swift implements. The closest published direct accounts:
   2026-04-25, citation only]** Affine ownership + lexical lifetimes
   in Iris separation logic.
 - **Wagner, K. et al. (2025). "From Linearity to Borrowing." *OOPSLA
-  2025*.** [Northeastern PDF](http://www.ccs.neu.edu/home/amal/papers/borrowing.pdf).
+  2025*.** [Northeastern PDF](http://www.ccs.neu.edu[local-home-path]/amal/papers/borrowing.pdf).
   **[Verified: 2026-04-25]** Introduces *BoCa*, a lightweight
   extension of linear λ-calculus with immutable and mutable borrows
   + lexical lifetimes. Most recent and most direct formal account

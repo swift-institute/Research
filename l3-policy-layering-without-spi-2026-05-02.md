@@ -9,7 +9,7 @@ The `Tagged + Carrier with constrained-extension nested-type typealiases` recomm
 
 The toy approach-12 + 13 experiments missed this because they had ONE Tagged variant in scope. Production scale (where swift-memory-primitives' `Tagged<Memory, Ordinal>.Error` and the proposed `Tagged<POSIX, Stats>.Error` coexist transitively) hits the ambiguity at every consumer.
 
-Empirical refutation: `swift-institute/Experiments/tagged-cross-instantiation-nested-type-ambiguity/` (CONFIRMED 2026-05-02, minimal 4-target repro). Recorded as a known Swift limitation in `~/.claude/projects/-Users-coen-Developer/memory/swift-6.3-fix-status.md` "Still Broken on 6.3.1" table. Branching investigation `HANDOFF-constrained-extension-nested-type-lookup-prior-art.md` queued at `~/Developer/` to map upstream + cross-language prior art and decide whether to file SE-discussion.
+Empirical refutation: `swift-institute/Experiments/tagged-cross-instantiation-nested-type-ambiguity/` (CONFIRMED 2026-05-02, minimal 4-target repro). Recorded as a known Swift limitation in `~/.claude/projects/-Users-coen-Developer/memory/swift-6.3-fix-status.md` "Still Broken on 6.3.1" table. Branching investigation `HANDOFF-constrained-extension-nested-type-lookup-prior-art.md` queued at `[local-workspace]/` to map upstream + cross-language prior art and decide whether to file SE-discussion.
 
 The migration agent pivoted to **Path β** (fresh nominal enums at swift-posix for Stats / Open / Memory.Map; plain typealias for Time per `feedback_no_gratuitous_l3_delegation`). Path β is the empirically-correct production pattern as of 2026-05-02.
 **Date**: 2026-05-02 (revised in same session per principal feedback; followup added same day)
@@ -222,7 +222,7 @@ Documentation-only investigation. Grep results:
 
 ```
 $ grep -rln "@_spi\|@_implementationOnly\|@_disfavoredOverload\|@_exported" \
-    ~/Developer/rule-legal/ ~/Developer/rule-law/
+    [local-workspace]/rule-legal/ [local-workspace]/rule-law/
 ```
 
 Findings: only `@_exported import` for the standard re-export chain pattern (`[PLAT-ARCH-006]`). No `@_spi`, no `@_implementationOnly`, no `@_disfavoredOverload`. The legal architecture's four layers (Namespace, Legislature, Judiciary, Composition, Products) compose ADDITIVELY — each layer adds NEW types/methods on NEW namespaces. The Layer N package never overrides Layer N-1's same-signature method on the same type. The recalled precedent does not address the same-name method-wrapping problem.

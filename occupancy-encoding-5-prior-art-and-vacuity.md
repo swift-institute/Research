@@ -101,7 +101,7 @@ move-only; together they make the exclusion doubly robust. The only way to recov
 This is exactly the "one honest residual" of `occupancy-lives-in-the-leaf.md`, now confirmed with a
 concrete bit-dense leaf rather than the prior note's abstract `Inner<T>` field.
 
-Scratch artifacts: `/tmp/occ-vacuity/{probes,corner,s1,tombstone}.swift` (Swift 6.3.2, 2026-06-08).
+Scratch artifacts: `[temporary-path]/occ-vacuity/{probes,corner,s1,tombstone}.swift` (Swift 6.3.2, 2026-06-08).
 
 ---
 
@@ -374,15 +374,15 @@ prior-art and vacuity *evidence* the placement law asserted as its "one honest r
   experiment owed — the corner is empirically uninhabited (§2.2), so there is no premise to refute.
 - **Verified empirical claims** (this doc): all consumer-backing rows (§2.1) cite file:line; the
   zero-inline-consumer result (§2.2) is a live grep across three orgs; the 6.3.2 compile results (Part
-  0) are reproduced in `/tmp/occ-vacuity/`. [Verified: 2026-06-08].
+  0) are reproduced in `[temporary-path]/occ-vacuity/`. [Verified: 2026-06-08].
 
 ## References
 
 ### Primary — Swift compiler / 6.3.2 repro
 - Toolchain `org.swift.632202605101a` = Swift 6.3.2 (`swift-6.3.2-RELEASE`), verified `swift --version`.
-- `copyable_illegal_deinit` diagnostic — reproduced on 6.3.2; scratch `/tmp/occ-vacuity/corner.swift`, `s1.swift`.
-- `@_rawLayout` non-`Copyable`-storage poison — reproduced on 6.3.2; `/tmp/occ-vacuity/corner.swift`.
-- The achievable corners (S2/S5/assembled/tombstone) — reproduced on 6.3.2; `/tmp/occ-vacuity/probes.swift`, `tombstone.swift`.
+- `copyable_illegal_deinit` diagnostic — reproduced on 6.3.2; scratch `[temporary-path]/occ-vacuity/corner.swift`, `s1.swift`.
+- `@_rawLayout` non-`Copyable`-storage poison — reproduced on 6.3.2; `[temporary-path]/occ-vacuity/corner.swift`.
+- The achievable corners (S2/S5/assembled/tombstone) — reproduced on 6.3.2; `[temporary-path]/occ-vacuity/probes.swift`, `tombstone.swift`.
 
 ### Primary — cross-language sources ([Verified: 2026-06-08])
 - Rust `slotmap` — orlp/slotmap `src/lib.rs` (deprecated `Slottable`: "slotmap now supports all types on stable"; `SlotMap` `(value, version)` slots vs `DenseSlotMap` "two indirections … slots contain indices used to access the contiguous memory"); https://docs.rs/slotmap/ ; https://github.com/orlp/slotmap.

@@ -237,4 +237,4 @@ Two opt-in extensions:
 
 - `curl https://raw.githubusercontent.com/vapor/vapor/main/.github/workflows/test.yml | grep -i "swift package"` → confirms line 36 `swift package --package-path ./provider edit vapor --path ./vapor`.
 - `curl https://raw.githubusercontent.com/tokio-rs/tokio/master/.github/workflows/ci.yml | sed -n '880,945p'` → confirms `test-hyper` job structure with `git checkout $(git describe --abbrev=0 --tags)` and `[patch.crates-io]` block.
-- `ls ~/Developer/swift-primitives/` → 141 directory entries (vs the user's stated "61" — discrepancy noted; the proposal scales to either count).
+- `ls [local-workspace]/swift-primitives/` → 141 directory entries (vs the user's stated "61" — discrepancy noted; the proposal scales to either count).

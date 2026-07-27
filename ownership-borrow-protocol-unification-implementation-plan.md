@@ -56,7 +56,7 @@ scope: cross-package
   **Defect 1 — Incomplete consumer sweep (~100 Sources + ~8 Tests sites
   across 6 packages).** The plan's Consumer Sweep grep scope covered only
   swift-primitives, swift-standards, and swift-foundations top-level dirs.
-  It did NOT include the parallel org-level repos under ~/Developer/:
+  It did NOT include the parallel org-level repos under [local-workspace]/:
 
   | Package | Sources sites | Build status |
   |---------|---------------|--------------|
@@ -73,7 +73,7 @@ scope: cross-package
 
   Principal attribution: plan's grep scope was too narrow; it scoped to
   the three top-level ecosystem repos rather than the full
-  `~/Developer/` workspace.
+  `[local-workspace]/` workspace.
 
   **Defect 2 — v1.1.0 attribution misleading.** The v1.1.0 entry stated
   "Principal accepted the plan and resolved both open questions" and then
@@ -658,23 +658,23 @@ Mechanical `Kernel.Path.View` → `Kernel.Path.Borrowed` and
 ```bash
 # Conformance / constraint / doc sites (protocol dispatch):
 grep -rn -E ": Viewable|extension Viewable|Viewable &|Viewable,|: *Viewable$" \
-  ~/Developer/swift-primitives \
-  ~/Developer/swift-standards \
-  ~/Developer/swift-foundations \
+  [local-workspace]/swift-primitives \
+  [local-workspace]/swift-standards \
+  [local-workspace]/swift-foundations \
   --include="*.swift" | grep -v Experiments
 
 # Nested-type references (Path.View / String.View / Kernel.Path.View / Tagged.View):
 grep -rn -E "\bPath\.View\b|\bString\.View\b|Tagged.*\.View\b|\.View<" \
-  ~/Developer/swift-primitives \
-  ~/Developer/swift-standards \
-  ~/Developer/swift-foundations \
+  [local-workspace]/swift-primitives \
+  [local-workspace]/swift-standards \
+  [local-workspace]/swift-foundations \
   --include="*.swift" | grep -v Experiments
 
 # Extension declarations on the renamed types:
 grep -rn -E "extension Path\.View|extension String\.View|: Path\.View|: String\.View" \
-  ~/Developer/swift-primitives \
-  ~/Developer/swift-standards \
-  ~/Developer/swift-foundations \
+  [local-workspace]/swift-primitives \
+  [local-workspace]/swift-standards \
+  [local-workspace]/swift-foundations \
   --include="*.swift" | grep -v Experiments
 ```
 
@@ -867,7 +867,7 @@ rebuilt, and 4 of them fail to compile against the renamed types.
 ### Ground rules for Phase 9 dispatch
 
 1. **fact:** 10 commits from Phases 1–7 are landed and valid. Phase 9 extends the cascade; it does not revisit Phases 1–7.
-2. **MUST:** Expand the grep scope to the full `~/Developer/` workspace, not just the three top-level ecosystem repos. The v1.2.0 defect was rooted in too-narrow grep.
+2. **MUST:** Expand the grep scope to the full `[local-workspace]/` workspace, not just the three top-level ecosystem repos. The v1.2.0 defect was rooted in too-narrow grep.
 3. **MUST:** Verify via `swift build` in EACH affected consumer package before marking its commit green. Isolated-per-sub-repo-build is insufficient for transitive-consumer cascades.
 4. **MUST:** Tests also build (not only Sources). Tests that reference the renamed types must migrate in the same commit.
 5. **MUST NOT:** Touch the DECISION doc or Phases 1–7 commit history. Phase 9 is additive.
@@ -877,12 +877,12 @@ rebuilt, and 4 of them fail to compile against the renamed types.
 
 1. Each of the 6 packages' `swift build` returns exit 0 (verified by principal running the commands).
 2. Each of the 6 packages' `swift build --build-tests` returns exit 0 (Tests included).
-3. Ecosystem-wide verification: `swift build` in every transitive consumer of ownership-primitives / string-primitives / path-primitives / kernel-primitives succeeds. (Scope: all packages under `~/Developer/` whose Package.swift references any of those primitives, directly or transitively.)
+3. Ecosystem-wide verification: `swift build` in every transitive consumer of ownership-primitives / string-primitives / path-primitives / kernel-primitives succeeds. (Scope: all packages under `[local-workspace]/` whose Package.swift references any of those primitives, directly or transitively.)
 4. No residual `.View` references on the renamed namespace surface. Grep cleanup across the full workspace yields zero matches for: `Path.View`, `String.View` (String_Primitives-qualified), `Kernel.Path.View`, `Kernel.String.View`, `Tagged.View`. (`ISO_9899.String.View` is out of scope — separate parallel type.)
 
 ### Phase 9 handoff
 
-Detailed Phase 9 execution brief: `~/Developer/HANDOFF-borrow-protocol-unification-phase-9.md` (drafted 2026-04-22, pending user authorization before subordinate dispatch).
+Detailed Phase 9 execution brief: `[local-workspace]/HANDOFF-borrow-protocol-unification-phase-9.md` (drafted 2026-04-22, pending user authorization before subordinate dispatch).
 
 ## Principal Resolutions
 

@@ -13,7 +13,7 @@ status: RECOMMENDATION
 
 - v1.1.0 (2026-05-21): Added Option E (@_implements escape hatch)
   inspired by `Blog/Published/2026-04-20-associated-type-trap.md`.
-  Empirically tested in `/tmp/at-implements-test/` and REFUTED — the
+  Empirically tested in `[temporary-path]/at-implements-test/` and REFUTED — the
   blog's two-stamp pattern solves the two-protocol AT-unification case
   (HTML.Document conforming to both Rendering.View and SwiftUI.View),
   not the single-protocol nested-type default-override case (Ordinal/
@@ -356,7 +356,7 @@ The pre-existing nested `Ordinal.Error` enum would remain intact for
 operation-domain failures; the AT witness would be `Never`; no
 ecosystem renames needed.
 
-**Empirical test** (2026-05-21, `/tmp/at-implements-test/`):
+**Empirical test** (2026-05-21, `[temporary-path]/at-implements-test/`):
 
 Reproduced the original Ordinal collision with a minimal package, then
 added the `@_implements` stamp. **Result**: the stamp does not
@@ -398,7 +398,7 @@ the nested enum that the stamp was trying to dodge.
 self-conformer with a same-named nested type) is not solvable by it.
 
 **Recovery from this exploration**: the empirical test stayed in
-`/tmp/at-implements-test/`, isolated from the workspace. Cleaned up
+`[temporary-path]/at-implements-test/`, isolated from the workspace. Cleaned up
 after verification.
 
 ### Comparison table

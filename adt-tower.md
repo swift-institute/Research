@@ -1689,7 +1689,7 @@ compacted here. "Extract carried" names what this document absorbed.
 | Path | Disposition | Extract carried (→ this doc) |
 |---|---|---|
 | `Research/adt-buffer-storage-decoupling-shape.md` | EXTRACT-THEN-DELETE | Carry forward: (1) the F-A..F-I verified source-fact table (file:line, 2026-06-18); (2) the [MEM-COPY-018] same-type-pin caveat + the Step-2 union confirmation spec (builds x2 / 0-warn / … |
-| `Research/universal-adt-shape.md` | EXTRACT-THEN-DELETE | Carry forward: the GATE-1 verdict table verbatim (positive x2 builds, negative controls with exact missing-conformance errors, keyed-storage admission, 0-witness SIL) with its /tmp/uadt +… |
+| `Research/universal-adt-shape.md` | EXTRACT-THEN-DELETE | Carry forward: the GATE-1 verdict table verbatim (positive x2 builds, negative controls with exact missing-conformance errors, keyed-storage admission, 0-witness SIL) with its [temporary-path]/uadt +… |
 | `Research/cross-layer-capability-protocol-model.md` | ALIVE | The backbone cross-layer model: minimal orthogonal cores, R/C/D edge kinds, specialization boundary, Set.Protocol elevation; amended with span lift and post-split store stack. |
 | `Research/occupancy-lives-in-the-leaf.md` | EXTRACT-THEN-DELETE | Carry forward: the Law text verbatim + the placement matrix table; the located-bug file:line (Buffer.Slab.Header.swift:27 / Buffer.Slab.swift:53-57); the S2+S5 assembly argument and why S… |
 | `Research/occupancy-encoding-1-adt-cell-layout.md` | KEEP-EVIDENCE | Cell-layout angle: Slot<E>=Optional<E> is the maximal ADT-layer point — A/C/D/E unconditional, B iff xi(E)>=1; measured niche taxonomy; manual bit-stealing escape. |
@@ -1834,7 +1834,7 @@ Aligned/Unbounded are raw regions, GAP-O — is carried in §9.3/§10.4);
 `AUDIT-round-m-warts.md`, `unsafe-pointer-inventory.md` → KEEP-EVIDENCE (active audits with open
 phases); the four seat reflections → reflections corpus (out of this ledger).
 
-### 10.3 Operational archive (A.5, ~150 files in `~/Developer/.handoffs/`)
+### 10.3 Operational archive (A.5, ~150 files in `[local-workspace]/.handoffs/`)
 
 **Concurrent-execution note (2026-07-02)**: while this document was being written, a parallel
 session retired **94** of these files to `.handoffs/.trash/` (suffix `-retired-20260702`) —

@@ -55,8 +55,8 @@ What is the architectural shape — namespace, package layering, type-system con
 
 ```bash
 $ grep -rl -i "base16\|base32\|base58\|base62\|base64\|base85\|baseN\|RFC.*4648\|Crockford\|Z85\|Ascii85" \
-    ~/Developer/swift-institute/Research \
-    ~/Developer/swift-primitives/Documentation.docc/Research
+    [local-workspace]/swift-institute/Research \
+    [local-workspace]/swift-primitives/Documentation.docc/Research
 ```
 
 [Verified: 2026-05-07] No prior internal research on base-N encoding family architecture. The grep matches in `claude-code-swift-rewrite-feasibility.md`, `pdf-standard-case-study.md`, `release-roadmap-swift-file-system.md`, and others are coincidental substring hits, not topical research. This is the first ecosystem-wide research document on the topic.
@@ -89,7 +89,7 @@ Cross-system observations:
 
 - **swift-base62-primitives** [Verified: 2026-05-07]: ships only base62, with stale `swift-standards` URLs, module-name-as-type-name namespace, mixed file naming, and a tier-15 dependency footprint (depends on swift-binary-primitives at tier 14 for `Binary Primitives Core` + `Binary Serializable Primitives`). Cannot be the substrate of a coherent baseN family without a wholesale rewrite that is indistinguishable from "ship a new package and archive base62."
 - **swift-binary-primitives** [Verified: 2026-05-07]: ships `Binary` namespace (`Sources/Binary Namespace/Binary.swift`), `Binary.Cursor`, `Binary.LEB128`, `Binary.Format`, `Binary.Serializable` — byte-cursor / serialization machinery, not text encoding. Conceptually adjacent but algorithmically independent (encoding bytes-to-text doesn't need a Cursor). Adding baseN to this package would widen its mission from "binary data manipulation" to "...and text encodings."
-- **No other package** in the ecosystem implements base16, base32, base58, base64, base85, RFC 4648, Bitcoin base58, Z85, or Ascii85. [Verified: 2026-05-07 via `find ~/Developer -maxdepth 3 -type d -iname "*base*"`].
+- **No other package** in the ecosystem implements base16, base32, base58, base64, base85, RFC 4648, Bitcoin base58, Z85, or Ascii85. [Verified: 2026-05-07 via `find [local-workspace] -maxdepth 3 -type d -iname "*base*"`].
 
 The compose-existing-primitives path does not exist. This is a genuine gap.
 

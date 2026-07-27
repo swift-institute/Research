@@ -241,9 +241,9 @@ Move all types to bit-vector-primitives. Use `Sequence.Protocol` (already a depe
 
 ## References
 
-- Tier architecture: `~/Developer/swift-primitives/Documentation.docc/Primitives Tiers.md`
-- Bit.Vector source: `~/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Primitives/`
-- Array<Bit>.Vector source: `~/Developer/swift-primitives/swift-array-primitives/Sources/Array Bit Primitives/`
-- Storage.Inline usage: `~/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Primitives Core/Storage.swift:185`
-- Memory.Pool usage: `~/Developer/swift-primitives/swift-memory-primitives/Sources/Memory Pool Primitives/Memory.Pool.swift:75`
-- Buffer.Slab usage: `~/Developer/swift-primitives/swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.swift:347`
+- Tier architecture: `[local-workspace]/swift-primitives/Documentation.docc/Primitives Tiers.md`
+- Bit.Vector source: `[local-workspace]/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Primitives/`
+- Array<Bit>.Vector source: `[local-workspace]/swift-primitives/swift-array-primitives/Sources/Array Bit Primitives/`
+- Storage.Inline usage: `[local-workspace]/swift-primitives/swift-storage-primitives/Sources/Storage Primitives Core/Storage.swift:185`
+- Memory.Pool usage: `[local-workspace]/swift-primitives/swift-memory-primitives/Sources/Memory Pool Primitives/Memory.Pool.swift:75`
+- Buffer.Slab usage: `[local-workspace]/swift-primitives/swift-buffer-primitives/Sources/Buffer Primitives Core/Buffer.swift:347`

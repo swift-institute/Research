@@ -266,7 +266,7 @@ institute-side fix landed AND upstream-issue artifacts staged.
 
 - Parent investigation: `swift-foundations/swift-json/Research/parse-performance-canada-anomaly.md`
   v1.4.1 (2026-05-20).
-- Dispatch handoff: `~/Developer/HANDOFF-typed-index-specialization-audit.md`.
+- Dispatch handoff: `[local-workspace]/HANDOFF-typed-index-specialization-audit.md`.
 - Audit run on Apple Swift 6.3.1 (default toolchain), macOS 26
   arm64, `caffeinate -i` + release mode + 8-warmup + 32-measured
   iters. Symbol inspection via `nm | swift demangle` on the
@@ -274,7 +274,7 @@ institute-side fix landed AND upstream-issue artifacts staged.
 
 ## References
 
-- Brief: `~/Developer/HANDOFF-typed-index-specialization-audit.md`
+- Brief: `[local-workspace]/HANDOFF-typed-index-specialization-audit.md`
 - Parent: `swift-foundations/swift-json/Research/parse-performance-canada-anomaly.md` v1.4.1
 - Reproducer scaffold: `swift-institute/Experiments/typed-index-specialization-reproducer/` (this audit; placeholder pending principal disposition on filing)
 - Sibling research: `swift-institute/Research/inlinable-spi-transitive-semantics.md`

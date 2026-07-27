@@ -78,7 +78,7 @@ on **Apple Swift 6.3.2** (`swift-6.3.2-RELEASE`, `TOOLCHAINS=org.swift.632202605
 arm64-apple-macosx26.0) — never a dev snapshot; no compiler-wall claim without a minimal
 repro. Tier-3 rigor per [RES-020]/[RES-023]/[RES-024]/[RES-026]; probe the real compiler before
 any "impossible"/"can't be expressed" claim per `feedback_convention_vs_typesystem_constraint`.
-Research only — no tower-package edits; `/tmp/occ-cell/` scratch.
+Research only — no tower-package edits; `[temporary-path]/occ-cell/` scratch.
 
 ## Question
 
@@ -136,7 +136,7 @@ that are not valid `E` values). Define:
 free(E)  ⟺  MemoryLayout<E?>.size == MemoryLayout<E>.size   ⟺   xi(E) ≥ 1
 ```
 
-Measured on Swift 6.3.2 (`/tmp/occ-cell/layout.swift`, `swiftc -O`), the **full element-class
+Measured on Swift 6.3.2 (`[temporary-path]/occ-cell/layout.swift`, `swiftc -O`), the **full element-class
 taxonomy** — broader than AX-4's six rows:
 
 | Element class | `E` size/stride/align | `E?` size/stride | Verdict |
@@ -161,7 +161,7 @@ Two engineering facts beyond AX-4's leaf-type table:
    recursive*: the optimizer reuses a spare inhabitant from *any* field. The `Bool` field uses
    2 of its 256 byte-patterns, and `Optional` folds `.none` into that byte (confirmed
    precisely: `struct{Ref,Bool}` = 9 B and `struct{Ref,Bool}?` = 9 B — the discriminator
-   reuses the `Bool` byte, not fresh storage; `/tmp/occ-cell/mixed.swift`).
+   reuses the `Bool` byte, not fresh storage; `[temporary-path]/occ-cell/mixed.swift`).
 2. **The `xi=0` tag is stride-rounded, not bit-sized.** For word-aligned `Int`/`UInt64`, the
    single logical discriminator bit forces `E?` to **16 B stride** — the tag rounds up a whole
    word. This is *why* the cell loses catastrophically on density for full-domain integers
@@ -172,7 +172,7 @@ Two engineering facts beyond AX-4's leaf-type table:
 The brief asks whether a `SpareBit`/`BitPackable` protocol "exposing a usable extra-inhabitant
 when E has one … can be made automatic/derivable." **For the FREE case it already is — with no
 protocol at all.** The compiler's extra-inhabitant machinery derives the niche structurally and
-recursively (`/tmp/occ-cell/composition.swift`):
+recursively (`[temporary-path]/occ-cell/composition.swift`):
 
 | Construct | `Optional` size | Niche survives? |
 |---|---|---|
@@ -195,7 +195,7 @@ optimizer is the derivation. (The protocol earns its keep only in the `xi=0` *ma
 
 `Slot<E> = Optional<E>` carries **zero custom `deinit`**, yet its automatic value-witness
 deinitializes the `.some` payload at exactly the right moments. Verified end-to-end on 6.3.2
-(`/tmp/occ-cell/selfclean.swift`) with a `Tracked` class element across a 3-slot slab (slot 1
+(`[temporary-path]/occ-cell/selfclean.swift`) with a `Tracked` class element across a 3-slot slab (slot 1
 vacant):
 
 ```
@@ -213,7 +213,7 @@ own* value-witness — there is no occupancy oracle to walk, hence no buffer `de
 The cell is `BitwiseCopyable` / trivially-destructible **exactly when `E` is** — so when `E` is
 trivial, teardown is a genuine no-op (the witness truly does nothing); when `E` is a resource,
 the witness runs the payload's destructor. Verified by overload-resolution probe
-(`/tmp/occ-cell/selfclean.swift`):
+(`[temporary-path]/occ-cell/selfclean.swift`):
 
 | `E` | `E` `BitwiseCopyable` | `Optional<E>` `BitwiseCopyable` |
 |---|---|---|
@@ -249,7 +249,7 @@ extension Swift.Optional : Swift.Sendable        where Wrapped : Swift.Sendable,
 @_preInverseGenerics extension Swift.Optional : Swift.ExpressibleByNilLiteral where Wrapped : ~Copyable, Wrapped : ~Escapable {}
 ```
 
-**End-to-end behavioral proof** (`/tmp/occ-cell/q1b.swift`) — a `~Copyable` resource element
+**End-to-end behavioral proof** (`[temporary-path]/occ-cell/q1b.swift`) — a `~Copyable` resource element
 with a `deinit`, held in stdlib `Optional`, reassigned and consumed:
 
 ```
@@ -259,7 +259,7 @@ got 2
 dealloc 2        <- consume o: the moved-out payload tore down
 ```
 
-**And the layout discipline is preserved for `~Copyable` E** (`/tmp/occ-cell/q1c.swift`):
+**And the layout discipline is preserved for `~Copyable` E** (`[temporary-path]/occ-cell/q1c.swift`):
 
 ```
 Optional<struct{UInt8}:~Copyable>      size = 2   (TAG — xi=0)
@@ -274,7 +274,7 @@ the conditional-Copyable property.
 ### II.4 A custom `Slot` enum reproduces stdlib `Optional` exactly (and is therefore unnecessary)
 
 For completeness, a hand-rolled `~Copyable`-aware cell was built and measured
-(`/tmp/occ-cell/noncopyable.swift`):
+(`[temporary-path]/occ-cell/noncopyable.swift`):
 
 ```swift
 @frozen public enum Slot<E: ~Copyable>: ~Copyable { case vacant; case occupied(E) }
@@ -283,7 +283,7 @@ extension Slot: Copyable where E: Copyable {}
 
 It **compiles on 6.3.2**, **self-cleans with no `deinit`** (payload `dealloc` fires on `.vacant`
 reassignment and on `consume`), **enforces conditional Copyable** (copying a `Slot<Copyable>`
-compiles; copying a `Slot<~Copyable>` is rejected — `/tmp/occ-cell/q5.swift`), and has **layout
+compiles; copying a `Slot<~Copyable>` is rejected — `[temporary-path]/occ-cell/q5.swift`), and has **layout
 identical to stdlib `Optional`**:
 
 | `E` | custom `Slot<E>` | stdlib `Optional<E>` |
@@ -307,7 +307,7 @@ elements (§IV), which is a different type with a different contract.
 For `E` with **no** extra inhabitant — full-domain integers (`Int`, `UInt64`, `UInt8`),
 padding-free PODs (`Pair2`) — the cell *cannot* be bit-dense. The discriminator must occupy
 fresh, alignment-rounded storage. The density cost, measured at `N=64`
-(`/tmp/occ-cell/composition.swift`):
+(`[temporary-path]/occ-cell/composition.swift`):
 
 | Encoding | Per cell | Total (N=64) | Occupancy cost | (B) ≤1 bit/slot? |
 |---|---|---|---|---|
@@ -349,7 +349,7 @@ protocol SpareBearing: ~Copyable {
 }
 ```
 
-Measured on 6.3.2 (`/tmp/occ-cell/bitsteal.swift`), for a `UInt`-backed handle reserving `0`:
+Measured on 6.3.2 (`[temporary-path]/occ-cell/bitsteal.swift`), for a `UInt`-backed handle reserving `0`:
 
 ```
 Handle{bits: UInt}              size = 8
@@ -396,11 +396,11 @@ an invariant.
 
 | Property | Cell path (`Slot<E> = Optional<E>`) | Evidence |
 |---|---|---|
-| **(A)** one neutral `Store.\`Protocol\``, no `Store.Sparse` | **YES, unconditionally.** A store of `Optional<E>` cells conforms a neutral element-store protocol (capacity + slot r/w) with **no** `firstVacant`/bitmap/`allocate` requirement; occupancy is in-band `cell == nil`. | `/tmp/occ-cell/storeconform.swift` (compiles with `SuppressedAssociatedTypes`; `~Copyable` element, conditional Copyable; self-cleans `dealloc 1`/`dealloc 3` with no `deinit`) |
+| **(A)** one neutral `Store.\`Protocol\``, no `Store.Sparse` | **YES, unconditionally.** A store of `Optional<E>` cells conforms a neutral element-store protocol (capacity + slot r/w) with **no** `firstVacant`/bitmap/`allocate` requirement; occupancy is in-band `cell == nil`. | `[temporary-path]/occ-cell/storeconform.swift` (compiles with `SuppressedAssociatedTypes`; `~Copyable` element, conditional Copyable; self-cleans `dealloc 1`/`dealloc 3` with no `deinit`) |
 | **(B)** ≤1-bit density | **CONDITIONAL: yes iff `xi(E) ≥ 1`.** 0 marginal bits for niche-bearing E (class/Bool/enum/ptr/aggregate-with-spare); **64× worse than a bitmap** for `xi=0` E (Int=64 bit/slot). Manual bit-stealing recovers 0-bit for `xi=0` E at a semantic cost. | §I.2, §III, §IV |
 | **(C)** value-semantics / conditional `Copyable`, carve-out types dissolved | **YES, unconditionally for all E** — stdlib `Optional` is `~Copyable`-aware with conditional `Copyable`; no custom cell type. The cell is one generic; no `.Inline`/`.Small` *cell* types. | §II.3, interface 16176–16188 |
 | **(D)** self-cleaning, no `deinit`, Wall-1 avoided | **YES, unconditionally for all E.** The cell's automatic value-witness tears down the payload; no custom `deinit` ⟹ no `copyable_illegal_deinit` (AX-1). | §II.1–II.2 |
-| **(E)** maximal decomposition + clean composition | **YES, unconditionally.** The cell is a leaf-element atom; `Optional<E>` composes into the existing `Memory.Inline`/`Storage.Contiguous` leaf with no leaf `deinit` (a `MiniLeaf<Optional<Resource>>` deallocates only occupied slots). | `/tmp/occ-cell/composition.swift` |
+| **(E)** maximal decomposition + clean composition | **YES, unconditionally.** The cell is a leaf-element atom; `Optional<E>` composes into the existing `Memory.Inline`/`Storage.Contiguous` leaf with no leaf `deinit` (a `MiniLeaf<Optional<Resource>>` deallocates only occupied slots). | `[temporary-path]/occ-cell/composition.swift` |
 
 **Summary:** the cell path achieves **(A), (C), (D), (E) unconditionally for all E**, and **(B)
 exactly on the niche-bearing E** (free) / costed-by-manual-sentinel on `xi=0` E. The single
@@ -520,7 +520,7 @@ explosion and **not** any cell-ADT impossibility.
 ### Prior art ([RES-021] — contextualization step)
 - **Rust niche optimization** — `Option<&T>` / `Option<NonNull<T>>` / `Option<Box<T>>` are the *identical* mechanism: the niche (null) folds `None` into the pointer's bytes at 0 marginal bits, while `Option<usize>` (full-domain) costs a word. `NonZero*` / `NonNull` are Rust's *declared*-niche types — the analog of the manual `SpareBearing` sentinel, promoted into the type layout. The free/costed boundary is **language-independent**: it tracks the existence of a layout niche, not the language. (Consumed from the companion note's primary-source-verified Rust survey; corroborated by this note's 6.3.2 `MemoryLayout` measurements, which match Rust's niche behavior class-for-class.)
 
-### Empirical artifacts ([RES-023]/[RES-024] — every load-bearing layout/diagnostic/behavioral claim compiled & run on Apple Swift 6.3.2, `swift-6.3.2-RELEASE`, `TOOLCHAINS=org.swift.632202605101a`, arm64-apple-macosx26.0, 2026-06-08; `/tmp/occ-cell/`)
+### Empirical artifacts ([RES-023]/[RES-024] — every load-bearing layout/diagnostic/behavioral claim compiled & run on Apple Swift 6.3.2, `swift-6.3.2-RELEASE`, `TOOLCHAINS=org.swift.632202605101a`, arm64-apple-macosx26.0, 2026-06-08; `[temporary-path]/occ-cell/`)
 - `layout.swift` — the full element-class FREE/TAG taxonomy table (§I.2) + nesting probe.
 - `selfclean.swift` — (D) self-cleaning of `Optional<E>` with no `deinit` + `BitwiseCopyable` coupling (§II.1–II.2).
 - `noncopyable.swift`, `q5.swift` — custom `~Copyable`-aware `Slot` enum: compiles, self-cleans, conditional-Copyable enforced, layout == stdlib `Optional` (§II.4).

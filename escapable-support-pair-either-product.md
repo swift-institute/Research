@@ -89,7 +89,7 @@ extension Either where Left: ~Copyable & ~Escapable, Right: ~Copyable & ~Escapab
 }
 ```
 
-Build clean. `[Verified: 2026-05-09]` `/tmp/escapable-research/` test target. The result's lifetime is `copy of either` — the result Either holds the moved payload, lifetime-anchored to the input.
+Build clean. `[Verified: 2026-05-09]` `[temporary-path]/escapable-research/` test target. The result's lifetime is `copy of either` — the result Either holds the moved payload, lifetime-anchored to the input.
 
 ### Empirical: Closure-bearing methods hit Gap A on full ~Escapable
 
@@ -273,7 +273,7 @@ For swift-pair-primitives' Phase 1:
   - `noncopyable-property-extract-via-underscore-owned.md` (this session, 2026-05-09) — companion research on `@_owned` property accessor
 - Memory entries:
   - `pack-expand-on-consuming-param-property.md` (this session) — explains the move-checker bug and the let-binding workaround
-- Empirical reproductions: `/tmp/escapable-research/` (PairNE + Either ~Escapable variants)
+- Empirical reproductions: `[temporary-path]/escapable-research/` (PairNE + Either ~Escapable variants)
 - swiftlang/swift HEAD `e578b3a1e17`:
   - `include/swift/AST/AccessorKinds.def` — accessor kind enumeration
   - `test/SILGen/Inputs/resilient_consuming_getter_nonescapable.swift` — `~Escapable & ~Copyable` accessor patterns referenced for technique

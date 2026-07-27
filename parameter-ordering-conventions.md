@@ -280,7 +280,7 @@ Ordering is orthogonal to these annotations: `func f(x: consuming T, body: sendi
 
 Four rules promoted to `code-surface` on 2026-04-16 as [API-IMPL-012] closure-trail, [API-IMPL-013] multi-closure lifecycle, [API-IMPL-014] configuration placement, [API-IMPL-015] struct-over-builder. All four are validated by zero-violation ecosystem surveys, external consistency with stdlib and SE-0286, and non-interference with existing `code-surface`, `implementation`, and `memory-safety` rules.
 
-**Implementation**: `~/Developer/swift-institute/Skills/code-surface/SKILL.md` — new "## Parameter Ordering" section between `[API-IMPL-011]` and the Post-Implementation Checklist; checklist extended with four new items.
+**Implementation**: `[local-workspace]/swift-institute/Skills/code-surface/SKILL.md` — new "## Parameter Ordering" section between `[API-IMPL-011]` and the Post-Implementation Checklist; checklist extended with four new items.
 
 **Residual open question**: [API-IMPL-014]'s first/last dichotomy requires the author to classify configuration as "primary input" vs. "modifier." The ecosystem survey showed this classification is stable in practice, but boundary cases may arise. If classification drift appears across future reflections, revisit with a single-rule alternative (Option C always-first or Option D always-last).
 

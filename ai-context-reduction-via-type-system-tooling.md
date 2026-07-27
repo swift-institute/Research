@@ -79,7 +79,7 @@ SDK=$(xcrun --show-sdk-path) && swift symbolgraph-extract \
   -F .build/debug/PackageFrameworks \
   -sdk "$SDK" \
   -target arm64-apple-macosx26.0 \
-  -output-dir /tmp/symbolgraph \
+  -output-dir [temporary-path]/symbolgraph \
   -pretty-print \
   -minimum-access-level public
 ```

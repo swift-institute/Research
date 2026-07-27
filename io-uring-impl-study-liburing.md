@@ -376,4 +376,4 @@ This is architecturally the most important section. liburing is a deliberately m
 - `src/setup.c` -- ring setup and teardown (709 lines)
 - `src/queue.c` -- submission/completion queue operations (497 lines)
 - Kernel documentation: https://docs.kernel.org/userspace-api/io_uring.html
-- Existing local reference: `~/Developer/swift-primitives/Research/linux-io-uring-api-reference.md`
+- Existing local reference: `[local-workspace]/swift-primitives/Research/linux-io-uring-api-reference.md`

@@ -39,7 +39,7 @@ Is there ANY non-method, non-init form for `~Copyable` consume-extract from a pr
 
 ### Verified mechanism: `@_owned` + `consuming get` + `UnderscoreOwned` experimental feature
 
-The Swift compiler source at HEAD `e578b3a1e17` (May 2026, ~/Developer/swiftlang/swift) ships an `@_owned` attribute gated behind the experimental feature `UnderscoreOwned`. When applied to a property whose getter is `consuming get`, the receiver is consumed at the call site and the body can move out of stored fields or pattern-bind enum case payloads.
+The Swift compiler source at HEAD `e578b3a1e17` (May 2026, [local-workspace]/swiftlang/swift) ships an `@_owned` attribute gated behind the experimental feature `UnderscoreOwned`. When applied to a property whose getter is `consuming get`, the receiver is consumed at the call site and the body can move out of stored fields or pattern-bind enum case payloads.
 
 **Primary-source citations**:
 
@@ -64,7 +64,7 @@ public struct NC: ~Copyable {
 
 ### Empirical verification — minimum-shape reproductions
 
-Three test variants exercised on Swift 6.3.1 + Swift 6.4-dev nightly 2026-03-16-a, all with `-enable-experimental-feature UnderscoreOwned`. Test files at `/tmp/either-checks/`.
+Three test variants exercised on Swift 6.3.1 + Swift 6.4-dev nightly 2026-03-16-a, all with `-enable-experimental-feature UnderscoreOwned`. Test files at `[temporary-path]/either-checks/`.
 
 | Variant | Shape | 6.3.1 | 6.4-dev 2026-03-16 | Notes |
 |---|---|---|---|---|
@@ -113,7 +113,7 @@ The Apr 2026 wave of consuming-accessor fixes in swiftlang/swift (HEAD `e578b3a1
 
 The 2026-04-30 PR #88699 merged AFTER the workspace's installed nightly was built (2026-03-16). The "copy of noncopyable typed value" diagnostic is a known move-checker emit point; the recent SILGen fixes plausibly address the generic-enum case but this requires a newer nightly to verify empirically.
 
-`[Verified: 2026-05-09]` — git log dates retrieved from ~/Developer/swiftlang/swift; verification pending re-run on a post-2026-04-30 nightly.
+`[Verified: 2026-05-09]` — git log dates retrieved from [local-workspace]/swiftlang/swift; verification pending re-run on a post-2026-04-30 nightly.
 
 ### Why the institute's earlier UnderscoreOwned skip is now stale
 
@@ -262,4 +262,4 @@ If a future package vends an enum with a `Never`-eliminated accessor (or any ana
   - `noncopyable-ecosystem-state.md` — broader ~Copyable ergonomics state (unaffected by this finding)
 - Institute prior experiment:
   - `swift-institute/Experiments/property-consuming-get-and-read/` — V1-V5 REFUTED, V6 CONFIRMED for stored-property struct extraction. This research extends the experiment by demonstrating that V3-shape (`consuming get` alone) DOES work when paired with `@_owned` + `UnderscoreOwned` for non-generic shapes.
-- Empirical reproductions: `/tmp/either-checks/` (struct, non-generic enum, generic-enum tests)
+- Empirical reproductions: `[temporary-path]/either-checks/` (struct, non-generic enum, generic-enum tests)

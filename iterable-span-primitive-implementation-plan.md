@@ -71,7 +71,7 @@ shows the scalar-primitive shape (see V1) while both design docs describe the sp
 | **V4** | `Span<~Copyable>` exists + subscript is a **borrowing addressor** (no move-out) | `Span/Span.swift:29` (`public struct Span<Element: ~Copyable>: ~Escapable, Copyable, BitwiseCopyable`) + `:455-461` (`subscript(_:) -> Element { unsafeAddress { … } }` — borrow, never moves out) | **VERIFIED** |
 | **V5** | `Span.Protocol`'s `span` is `~Copyable`-capable | `Span.Protocol.swift` (`protocol Protocol: ~Copyable { associatedtype Element: ~Copyable; var span: Span<Element> { get } }`) + `Set.Ordered+Iteration.swift:27-34` (span witness `where Element: ~Copyable`) | **VERIFIED** |
 
-### V6 — Independent confirmation from the `swiftlang/swift` clone (`~/Developer/swiftlang/swift`)
+### V6 — Independent confirmation from the `swiftlang/swift` clone (`[local-workspace]/swiftlang/swift`)
 
 `BorrowingSequence.swift` is 8164 bytes (matches the alignment doc's cited size). Confirmed:
 
@@ -126,7 +126,7 @@ forms (the institute `Iterable` is unparameterized).
 
 **Verification mechanism (re-runnable, [HANDOFF-021]):**
 ```bash
-cd ~/Developer
+cd [local-workspace]
 grep -rnE "extension .*:.*\bIterable\b" --include="*.swift" swift-primitives swift-standards \
   swift-foundations swift-institute 2>/dev/null | grep -v "/.build/" | grep -v "CaseIterable"
 ```
@@ -248,7 +248,7 @@ deprecate; **git work-forward, stage explicit paths, never `git add -A`**; commi
   clean). Ground Rule 5 forbids revert/delete.
 - **Gates:** build-verify gate passed (above); `swift test` green **debug AND release** (set-ordered is
   release-clean via field-reorder); **SIL re-prove 0-`witness_method`** on the hot path (cross-module `-O`
-  probe, recipe `/tmp/set-decouple-sil/SIL-RECEIPT.md`, arc §10.5); test counts not regressed.
+  probe, recipe `[temporary-path]/set-decouple-sil/SIL-RECEIPT.md`, arc §10.5); test counts not regressed.
 
 ### Acceptance criteria (arc §0 acceptance 1–7 — each verified from disk/git/SIL/build, [SUPER-009])
 

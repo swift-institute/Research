@@ -226,11 +226,11 @@ The current organization is correct. No types need to be relocated.
 ## References
 
 - Prior consolidation research: [bit-vector-type-organization](bit-vector-type-organization.md)
-- Primitives definition: `~/Developer/swift-primitives/Documentation.docc/Primitives Requirements.md`
-- Tier architecture: `~/Developer/swift-primitives/Documentation.docc/Primitives Tiers.md`
-- Layering philosophy: `~/Developer/swift-primitives/Documentation.docc/Primitives Layering.md`
-- Five Layer Architecture: `~/Developer/swift-institute/Documentation.docc/Five Layer Architecture.md`
-- Bit.Vector source: `~/Developer/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Primitives/`
-- Array precedent: `~/Developer/swift-primitives/swift-array-primitives/Sources/Array Primitives Core/Array.swift`
-- Buffer precedent: `~/Developer/swift-primitives/swift-buffer-primitives/Sources/Buffer Linear Primitives/Buffer.Linear.swift`
-- Storage precedent: `~/Developer/swift-primitives/swift-storage-primitives/Sources/Storage Primitives Core/Storage.swift`
+- Primitives definition: `[local-workspace]/swift-primitives/Documentation.docc/Primitives Requirements.md`
+- Tier architecture: `[local-workspace]/swift-primitives/Documentation.docc/Primitives Tiers.md`
+- Layering philosophy: `[local-workspace]/swift-primitives/Documentation.docc/Primitives Layering.md`
+- Five Layer Architecture: `[local-workspace]/swift-institute/Documentation.docc/Five Layer Architecture.md`
+- Bit.Vector source: `[local-workspace]/swift-primitives/swift-bit-vector-primitives/Sources/Bit Vector Primitives/`
+- Array precedent: `[local-workspace]/swift-primitives/swift-array-primitives/Sources/Array Primitives Core/Array.swift`
+- Buffer precedent: `[local-workspace]/swift-primitives/swift-buffer-primitives/Sources/Buffer Linear Primitives/Buffer.Linear.swift`
+- Storage precedent: `[local-workspace]/swift-primitives/swift-storage-primitives/Sources/Storage Primitives Core/Storage.swift`

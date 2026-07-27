@@ -492,5 +492,5 @@ Per-agent findings files:
 - Skill: [audit](../../Developer/.claude/skills/audit) — [AUDIT-006] methodology
 - [ownership-transfer-conventions.md](ownership-transfer-conventions.md) — canonical ecosystem convention doc
 - [tilde-sendable-semantic-inventory.md](tilde-sendable-semantic-inventory.md) — SUPERSEDED; retained for rationale on 3 Tier 1 thread-confined types
-- Handoff: `~/Developer/HANDOFF-ecosystem-unsafe-audit.md`
+- Handoff: `[local-workspace]/HANDOFF-ecosystem-unsafe-audit.md`
 - SE-0458 (Strict Memory Safety), SE-0518 (`~Sendable`)

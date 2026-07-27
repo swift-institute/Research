@@ -164,7 +164,7 @@ public @inlinable init(... value: borrowing Value) where Value: ~Copyable {
 - `swift-ownership-primitives` `Ownership.Borrow.init(borrowing: ~Copyable Value)` — fixed via non-`@inlinable`, commit `ece5d7e`.
 - `swift-property-primitives` `Property.View.@unsafe init(_ base: borrowing Base)` — fixed via non-`@inlinable`, commit `764db07`.
 
-**Evidence**: experiment V1/V7 (crash in single-file), `/tmp/borrow-repro.swift` minimal V1-vs-V2 contrast. Audit: `swift-institute/Audits/borrow-pointer-storage-release-miscompile.md`. Unfiled upstream as of 2026-04-24; filing authorized per A2; V13 runs first to characterise the discriminator.
+**Evidence**: experiment V1/V7 (crash in single-file), `[temporary-path]/borrow-repro.swift` minimal V1-vs-V2 contrast. Audit: `swift-institute/Audits/borrow-pointer-storage-release-miscompile.md`. Unfiled upstream as of 2026-04-24; filing authorized per A2; V13 runs first to characterise the discriminator.
 
 **Review heuristic**: `public @inlinable` + `borrowing value: borrowing Value` parameter + `withUnsafePointer(to: value)` in body + result stored/returned past closure. Treat as a latent miscompile site. Check whether any cross-module release-mode test exercises it. If not, absence of failure is absence of evidence.
 
@@ -269,7 +269,7 @@ public static func map<each NewElement, E: Swift.Error>(
 | `Product` | Yes (`<repeat each Element>`) | **Instance** — static-canonical requires the local-let workaround which adds indirection; user explicitly preferred instance-canonical for Product over the workaround. "performance and memory allocations is more important [than static-canonical]" — 2026-05-09. |
 
 **Filed upstream (2026-05-09)**:
-- [`swiftlang/swift#88985`](https://github.com/swiftlang/swift/issues/88985) — pack-expand on consuming-PARAMETER member-access (the original failure shape above). Reproduces on Swift 6.4-dev nightly 2026-05-07-a; minimal repro at `/tmp/swift-bug-1-pack-expand-consuming.swift`. CSE-pass assertion failure.
+- [`swiftlang/swift#88985`](https://github.com/swiftlang/swift/issues/88985) — pack-expand on consuming-PARAMETER member-access (the original failure shape above). Reproduces on Swift 6.4-dev nightly 2026-05-07-a; minimal repro at `[temporary-path]/swift-bug-1-pack-expand-consuming.swift`. CSE-pass assertion failure.
 - [`swiftlang/swift#88987`](https://github.com/swiftlang/swift/issues/88987) — pack-expand on instance-self (`each values` from `consuming func`). The cohort's *workaround* for `#88985` ALSO crashes under release-mode optimization. Manifestation appears in CSE on minimal repro and SILCombine on the full Product Tests function. Filed as a sibling issue; likely the same underlying parameter-pack-lowering bug.
 - [`swiftlang/swift#88986`](https://github.com/swiftlang/swift/issues/88986) — `@_owned consuming get` on generic `~Copyable` enum (separate but session-related; coverage gap in move-checker for generic-enum consuming getters).
 
@@ -303,7 +303,7 @@ public static func map<each NewElement, E: Swift.Error>(
 
 **Pattern**: 3 shutdown tests in swift-io fail in `-c release` because WMO + CopyToBorrowOptimization causes `guard state == .running` to be constant-folded to `true` after shutdown.
 
-**Self-contained reproducer**: `swift-institute/Experiments/copytoborrow-actor-state-mutex-miscompile/` (moved 2026-04-17 from `~/Developer/swift-copytoborrow-bug-standalone/`). 87 lines total, zero external deps. `swift build -c release && .build/release/BugTest` → BUG. Confirmed still failing 100/100 iterations on Swift 6.3.1 (Xcode 26.4.1).
+**Self-contained reproducer**: `swift-institute/Experiments/copytoborrow-actor-state-mutex-miscompile/` (moved 2026-04-17 from `[local-workspace]/swift-copytoborrow-bug-standalone/`). 87 lines total, zero external deps. `swift build -c release && .build/release/BugTest` → BUG. Confirmed still failing 100/100 iterations on Swift 6.3.1 (Xcode 26.4.1).
 
 **Essential trigger conditions** (all six required):
 1. `enum State` on actor (Bool doesn't trigger — needs `select_enum` SIL pattern).
@@ -473,14 +473,14 @@ Each fix preserves the typed surface (callers pass and receive `Kernel.Event.ID`
 
 ```bash
 # Reproducer-side
-cd ~/Developer/swift-foundations/swift-executors/Experiments/sigsegv-repro
+cd [local-workspace]/swift-foundations/swift-executors/Experiments/sigsegv-repro
 rm -rf .build && swift build && ./.build/arm64-apple-macosx/debug/sigsegv-repro
 # expect: "advanced -> 0,1,2,0,1" and "PASSED"; exit 0
 
 # Consumer-side, all three packages must complete without signal 11
-( cd ~/Developer/swift-foundations/swift-executors && rm -rf .build && swift test )
-( cd ~/Developer/swift-foundations/swift-threads && rm -rf .build && swift test )
-( cd ~/Developer/swift-foundations/swift-io && rm -rf .build && swift test )
+( cd [local-workspace]/swift-foundations/swift-executors && rm -rf .build && swift test )
+( cd [local-workspace]/swift-foundations/swift-threads && rm -rf .build && swift test )
+( cd [local-workspace]/swift-foundations/swift-io && rm -rf .build && swift test )
 # expect: each prints a final "Test run with N tests in M suites passed" line.
 ```
 
@@ -522,7 +522,7 @@ The three handoff-flagged packages (swift-executors, swift-threads, swift-io) cu
 
 **Bare-`swiftc` reduction — five-shape attempt; v1 untested** (refines the `Upstream filing status: NOT YET FILED` paragraph's "should wait for a bare-`swiftc` reduction" note):
 
-Arc 4 attempted bare-`swiftc` reduction across five shapes (full source in `/tmp/sigsegv-bare/`, not committed):
+Arc 4 attempted bare-`swiftc` reduction across five shapes (full source in `[temporary-path]/sigsegv-bare/`, not committed):
 
 | Shape | Description | Result on 6.3.2 |
 |-------|-------------|-----------------|
@@ -545,7 +545,7 @@ The canonical reproducer preserves `import Tagged_Primitives` (with `Ordinal_Pri
 - **Trigger A** — `Atomic<Tagged<SimpleTag, Int>>.load(ordering: .relaxed)` (production-verbatim Tagged declaration with `@_lifetime(copy underlying)`, `package(set)`, `~Escapable` storage, full conditional Copyable/Escapable/Sendable/BitwiseCopyable/Equatable/Hashable/Comparable conformance chain, `modify` extension, inline `AtomicRepresentable` conformance). Result: **PASS** (compile + run + exit 0).
 - **Trigger B** — `Atomic<Tagged<SimpleTag, UInt>>.bumpZero(within:)` with a generic-extension whose where-clause chain (`Value.AtomicRepresentation == UInt.AtomicRepresentation` + `C.AtomicRepresentation == UInt.AtomicRepresentation`) mirrors production `.advance(within:)`'s metadata-forcing same-type-constraint shape. Result: **PASS** (compile + run + exit 0).
 
-Files at `/tmp/sigsegv-v1/v1_trigger_a.swift` (123 lines) and `/tmp/sigsegv-v1/v1_trigger_b.swift` (164 lines), not committed (empirical scratch).
+Files at `[temporary-path]/sigsegv-v1/v1_trigger_a.swift` (123 lines) and `[temporary-path]/sigsegv-v1/v1_trigger_b.swift` (164 lines), not committed (empirical scratch).
 
 With v1 added, the empirical record now reads: all five bare-`swiftc` reduction shapes (v1 full-attribute single-file + v2 simplified single-file + v3 two-module split + v4 three-module retroactive-conformance split + v5 four-module split with generic Atomic extension) PASS on 6.3.2 — none of the five reproduces. Combined with Arc 3's nine-candidate `Tagged.swift` single-file bisection (also fails to fix the crash) and Arc 1's local-wrapper-shape non-reproduction, the production `Tagged_Primitives.Tagged` symbol with its production module structure is **strongly supported** as the load-bearing trigger — not just consistent with prior evidence but empirically tested against the strongest single-file approximation that fits the bare-`swiftc` budget.
 
@@ -638,7 +638,7 @@ failed type lookup for �$: unknown error
 [exit 139]
 ```
 
-The `failed type lookup … unknown error` warning is the exact §A9 `swift_getTypeByMangledName` → `TypeLookupError("unknown error")` signature; exit 139 is the SIGSEGV. (Reproducer kept at `/tmp/setord-tagged-repro/`, not committed — empirical scratch.)
+The `failed type lookup … unknown error` warning is the exact §A9 `swift_getTypeByMangledName` → `TypeLookupError("unknown error")` signature; exit 139 is the SIGSEGV. (Reproducer kept at `[temporary-path]/setord-tagged-repro/`, not committed — empirical scratch.)
 
 **Dev-toolchain status (PASS-on-dev — inherited, not re-run)**: no 6.4-dev+ snapshot is currently installed (only 6.3.1-RELEASE / 6.3.2). This site inherits the §A9 family fix established in the §A9 Update (2026-05-23 Arc 4) toolchain matrix and the §A9 Correction (2026-05-28) controlled compiler/runtime swap: the defect is incomplete `SuppressedAssociatedTypes` codegen on 6.3 (the insert path is constrained on the suppressed `Ordinal.Domain: ~Copyable`, `Ordinal.Protocol.swift:65`), the fix travels with the **binary**, and the feature's codegen is complete by 6.4-dev. §A9 axis-B already established the trigger is container-agnostic (stdlib `Swift.Dictionary` and institute `Dictionary` both crash), so `Hash.Table`-backed `Set.Ordered` is a predicted new surface, not new ground. A per-container 6.4-dev re-confirm was deemed low marginal value (orchestrator decision 2026-06-01); the accurate version gate for this family is `compiler(<6.4)`, not `<6.5` (the `<6.5` gate used in older §A9 records predates the 2026-05-23 version-label correction that pinned `2026-03-16-a` as 6.4-dev).
 
@@ -1074,7 +1074,7 @@ public func run<T>(_ x: T) -> UInt8 { do { return try parse(x) } catch { return 
 
 **NOT synthetically reproducible** — a faithful 5-package /tmp model (Element→MemLeaf→StoreSeam→BufTier→Holder→consumer) does NOT reproduce the deinit-skip in debug (passes where prod fails) and release-ICEs on the `@_rawLayout`+deinit LLVM verifier ("Instruction does not dominate all uses"). Consistent with §A9/§A11/§A12: this bug class is context-sensitive; the **production tree is the only faithful bed**.
 
-**Evidence**: Cleave-7 session 2026-06-06; spike + restoration receipts (commit SHAs, deinit-entry-print diagnostic confirming the body is skipped) in `~/Developer/.handoffs/cleave-7-PROGRESS.md`. Original production reproduction: `swift-list-linked-primitives` "List - Deinit" (6 inline-mode leaks, `deinitCount → 0`) — **NOTE: those tests were dissolved with `List.Linked.Inline`/`.Small` in Cleave-7 §C.1** (the in-tower cross-package consumers were removed, so the skip no longer manifests in the tower). The bug remains reproducible by ANY cross-package consumer of a kept `Buffer.{Slab,Linked,Arena}.Inline` (a `.disabled(swift#86652)` canary is the recommended removal-gate tripwire).
+**Evidence**: Cleave-7 session 2026-06-06; spike + restoration receipts (commit SHAs, deinit-entry-print diagnostic confirming the body is skipped) in `[local-workspace]/.handoffs/cleave-7-PROGRESS.md`. Original production reproduction: `swift-list-linked-primitives` "List - Deinit" (6 inline-mode leaks, `deinitCount → 0`) — **NOTE: those tests were dissolved with `List.Linked.Inline`/`.Small` in Cleave-7 §C.1** (the in-tower cross-package consumers were removed, so the skip no longer manifests in the tower). The bug remains reproducible by ANY cross-package consumer of a kept `Buffer.{Slab,Linked,Arena}.Inline` (a `.disabled(swift#86652)` canary is the recommended removal-gate tripwire).
 
 **Source**: 2026-06-06 Cleave-7 family-2 cross-package seam-fix investigation (`/goal`; DESIGN-FIRST; surfaced to the seat as a genuine wall).
 
@@ -1358,7 +1358,7 @@ Found ownership error?!  →  signal 6
 
 **Swift versions**: 6.3.2 (`swiftlang-6.3.2.1.108`, Xcode default) — **CRASH** at `-Onone` (the SwiftPM debug default; no `-O` flags present in the failing frontend invocation). 6.5-dev (`swift-DEVELOPMENT-SNAPSHOT-2026-05-27-a` / `swift-latest`, `Apple Swift version 6.5-dev (LLVM 8f81a64f6a8bcf6, Swift 4d0c97fa5b05711)`) — **INCONCLUSIVE**, not (re-)tested at the crash site: both a full `swift build` and a target-scoped `swift build --target "RFC 9293"` on this snapshot abort *before* reaching the crash file, in an unrelated transitive dependency (`swift-hash-primitives`, `Hash.Protocol+Swift.EmptyCollection.swift:22` / `Hash.Protocol+Swift.CollectionOfOne.swift:23`): `error: conformance of 'EmptyCollection<Element>' to 'Hashable' is only available in macOS 9999 or newer`. This is a **third class** of dev-snapshot noise (a forward-versioned stdlib retroactive-conformance availability gate) — distinct from the two previously catalogued snapshot-noise classes (`#if swift(>=6.4)` forward gates; stricter `~Copyable`-param ownership errors) — and per [ISSUE-001] ("blocked by unrelated crash is not evidence of distinctness") does NOT license a CRASH-GONE or SAME-CRASH verdict. Reaching a verdict would require a standalone reducer to bypass the blocker, which is out of scope for this cheap-checks-only pass (no reduction attempted).
 
-**Command**: `swift build` (SwiftPM, debug config) in `~/Developer/swift-ietf/swift-rfc-9293` (dirty tree — uncommitted lint edits, unrelated to this crash).
+**Command**: `swift build` (SwiftPM, debug config) in `[local-workspace]/swift-ietf/swift-rfc-9293` (dirty tree — uncommitted lint edits, unrelated to this crash).
 
 **Symptom**: `error: compile command failed due to signal 11` — no assertion text, bare stack dump, while lowering AST→SIL:
 ```
@@ -1378,7 +1378,7 @@ Found ownership error?!  →  signal 6
 
 **Status**: NEW, UNFIXED-on-6.3.2, UNVERIFIED-on-6.4/6.5-dev (blocked by unrelated snapshot noise, see above). No standalone reducer, no ingredient verification, no upstream duplicate search performed — this is a first-pass characterization only ([ISSUE-008]: "unfixed (clear OR unclear root cause) → stage a terminal dossier" — **deferred**, no dossier staged this pass; reduction owed per [ISSUE-002]/[ISSUE-003] before a dossier can be filed).
 
-**Evidence**: reproduced live via `TOOLCHAINS=org.swift.632202605101a swift build` in `~/Developer/swift-ietf/swift-rfc-9293` (2026-07-07); no experiment or Issues entry created (in-place build only, per this pass's read-only-on-repos constraint).
+**Evidence**: reproduced live via `TOOLCHAINS=org.swift.632202605101a swift build` in `[local-workspace]/swift-ietf/swift-rfc-9293` (2026-07-07); no experiment or Issues entry created (in-place build only, per this pass's read-only-on-repos constraint).
 
 **Source**: 2026-07-07 issue-investigation cheap-checks pass (two-item toolchain-verification lane).
 
@@ -1580,7 +1580,7 @@ The namespace enum gives:
 
 **Reproducer**: `swift-institute/Experiments/tagged-cross-instantiation-nested-type-ambiguity/` — 4-target minimal repro. Diagnostic: `error: ambiguous type name 'Error' in 'Tagged<TagA, RawA>'` with both LegA's typealias (NestedAError) and LegB's typealias (NestedBError) listed as candidates despite LegB's where-clause being `RawValue == RawB`. Type-check error (debug + release both fail; not optimization-dependent).
 
-**Branching investigation**: `HANDOFF-constrained-extension-nested-type-lookup-prior-art.md` queued at `~/Developer/` to map upstream + cross-language prior art and decide whether to file SE-discussion. Comparison: Rust impls / C++ template specializations / Haskell type families all DO discriminate at this lookup point.
+**Branching investigation**: `HANDOFF-constrained-extension-nested-type-lookup-prior-art.md` queued at `[local-workspace]/` to map upstream + cross-language prior art and decide whether to file SE-discussion. Comparison: Rust impls / C++ template specializations / Haskell type families all DO discriminate at this lookup point.
 
 **Source: `tagged-nested-type-ambiguity-pitfall.md` (deleted 2026-05-10 in Wave 6).**
 
@@ -1624,7 +1624,7 @@ upstream-filed (the dossier/catalog is the terminal record per the workspace rul
 3. Init body uses unqualified `Underlying` to refer to the generic parameter: `self.init(_unchecked: Underlying(underlying))`.
 4. `@_lifetime(copy underlying)` is on the protocol declaration only; conformers don't repeat.
 
-**Verification**: 3-deep nesting spike at `/tmp/underlying-shadowing-spike/spike-final.swift` using `-enable-experimental-feature Lifetimes -enable-experimental-feature SuppressedAssociatedTypes` on Swift 6.3.1.
+**Verification**: 3-deep nesting spike at `[temporary-path]/underlying-shadowing-spike/spike-final.swift` using `-enable-experimental-feature Lifetimes -enable-experimental-feature SuppressedAssociatedTypes` on Swift 6.3.1.
 
 **Why this surfaced**: Initial spike used in-body conformance with unqualified `Underlying` — produced "candidate has non-matching type 'Underlying'" because Swift binds unqualified `Underlying` to the generic parameter. Concluded incorrectly that the rename couldn't work and proposed renaming the generic param to `Wrapped`. User pushed back saying prior research validated this works. They were right; the spike was structurally wrong.
 

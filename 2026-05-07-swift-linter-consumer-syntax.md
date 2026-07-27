@@ -53,8 +53,8 @@ The dispatching handoff's "Current State" §Lint.Manifest declaration
 shape describes the initializer
 `Lint.Manifest(enabledRuleIDs:, disabledRuleIDs:, excludedPaths:)` with
 String-typed rule IDs — a partial-state description. Empirical state
-verified at HEAD of `~/Developer/swift-foundations/swift-linter`
-and `~/Developer/swift-primitives/swift-linter-primitives` on
+verified at HEAD of `[local-workspace]/swift-foundations/swift-linter`
+and `[local-workspace]/swift-primitives/swift-linter-primitives` on
 2026-05-07:
 
 - `Lint.Manifest` (defined at
@@ -1287,7 +1287,7 @@ authoritative until a separate dispatch is signed off.
 
 ### v1 change 1 — drop redundant Manifest from PoC's main.swift
 
-`~/Developer/swift-primitives/swift-tagged-primitives/Lint/Sources/Lint/main.swift`:
+`[local-workspace]/swift-primitives/swift-tagged-primitives/Lint/Sources/Lint/main.swift`:
 
 - Remove lines 49–79 (the `let manifest = Lint.Manifest(...)` declaration
   and the `let enabled = Swift.Set(manifest.enabledRuleIDs)` derivation).
@@ -1316,7 +1316,7 @@ result-builder accepts multiple `buildExpression` shapes.
 
 ### v1 change 2 — add Manifest.validate()
 
-`~/Developer/swift-foundations/swift-linter/Sources/Linter Core/Lint.Manifest.swift`:
+`[local-workspace]/swift-foundations/swift-linter/Sources/Linter Core/Lint.Manifest.swift`:
 
 - Add nested `enum Error: Swift.Error { case unknownRuleID(Lint.Rule.ID,
   available: [Lint.Rule.ID]); case duplicateID(Lint.Rule.ID); ... }`.

@@ -201,7 +201,7 @@ products + 8 RFC packages + WHATWG + the form/multipart codecs. Notable drift, a
   form-coding:38, multipart-form-coding:61 — MemberImportVisibility never actually enabled.
 - `swift-form-coding` is a 6-LoC umbrella with two declared-unused deps (Package.swift:19–20),
   an abandoned traits block, and a git-tracked symlink to the retired
-  `~/Developer/coenttb/` org path.
+  `[local-workspace]/coenttb/` org path.
 - `swift-url-routing-form-coding` (2-file bridge, extracted 07-13) vends a
   `public static func form<Value>` **byte-identical** to swift-url-routing's own
   `URLRouting.Conversion+form.swift:59` — importing both risks extension ambiguity; the bridge

@@ -23,7 +23,7 @@ depends_on:
   - swift-primitives/swift-buffer-primitives/Research/buffer-core-pattern-unification.md (INV-INLINE-004a + the named unlock)
   - swift-primitives/swift-storage-primitives/Research/storage-inline-invariants.md (the INV-INLINE family)
   - .handoffs/HANDOFF-msb-tower-followups.md §A (#4/#5/#5a/#6); .handoffs/HANDOFF-tower-endstate.md (the dispatch + ADDENDUM)
-receipts: ~/Developer/.probe-bank/cleave-3/ (G1-wall-reprobe/, Small-mitigations/, enumerations/, baseline-verification.txt)
+receipts: [local-workspace]/.probe-bank/cleave-3/ (G1-wall-reprobe/, Small-mitigations/, enumerations/, baseline-verification.txt)
 ---
 -->
 
@@ -81,7 +81,7 @@ G1 is unaffected (§0 — wall HOLDS, recorded). §2.2 below records the origina
 **The `bd04f32` wall STILL HOLDS** — `deinitializer cannot be declared in generic struct that conforms
 to 'Copyable'` — verified identical on **6.3.2, 6.4-dev (2026-03-16), and 6.5-dev (2026-05-27)**. A
 conditionally-Copyable generic struct cannot carry a user `deinit`; an unconditionally `~Copyable` one
-can. Receipt: `~/Developer/.probe-bank/cleave-3/G1-wall-reprobe/RECEIPT.txt` (Shape A rejected on all
+can. Receipt: `[local-workspace]/.probe-bank/cleave-3/G1-wall-reprobe/RECEIPT.txt` (Shape A rejected on all
 three; Shape B compiles on all three; live `swift --version` confirmed per
 `feedback_snapshot_labels_must_match_empirical_version` — the 2026-05-27 "swift-latest" is 6.5-dev).
 
@@ -225,7 +225,7 @@ verbatim) should Route 2 ever regress on a future toolchain.
   (bitmap sparse occupancy) tension and the `Buffer<Storage<E>.Arena>.Arena` doubled name are truth-
   intermediate; a rename is a separate vocabulary pass. **Surfaced, not decided silently.**
 
-## 5. Probe receipts (CLCPM §3.3 protocol; all banked to `~/Developer/.probe-bank/cleave-3/`)
+## 5. Probe receipts (CLCPM §3.3 protocol; all banked to `[local-workspace]/.probe-bank/cleave-3/`)
 
 | Probe | Verdict | Receipt |
 |---|---|---|
@@ -288,5 +288,5 @@ successful — proceeding autonomously to E1 + E2.** No silent scope expansion (
 - CLCPM §3.3/§12: `swift-institute/Research/cross-layer-capability-protocol-model.md`
 - INV-INLINE-004a + unlock: `swift-primitives/swift-buffer-primitives/Research/buffer-core-pattern-unification.md:194`; `swift-primitives/swift-storage-primitives/Research/storage-inline-invariants.md`
 - Prior-art shape: `swift-primitives/swift-buffer-ring-primitives/Sources/Buffer Ring Small Primitive/Buffer.Ring.Small.swift`
-- Receipts: `~/Developer/.probe-bank/cleave-3/`
+- Receipts: `[local-workspace]/.probe-bank/cleave-3/`
 - Dispatch + ADDENDUM: `.handoffs/HANDOFF-tower-endstate.md`; queue: `.handoffs/HANDOFF-msb-tower-followups.md` §A

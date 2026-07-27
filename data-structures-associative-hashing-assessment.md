@@ -19,10 +19,10 @@ catalogs all types, storage mechanisms, dependencies, and convention compliance.
 
 | Package | Path |
 |---------|------|
-| swift-hash-primitives | `~/Developer/swift-primitives/swift-hash-primitives/` |
-| swift-hash-table-primitives | `~/Developer/swift-primitives/swift-hash-table-primitives/` |
-| swift-set-primitives | `~/Developer/swift-primitives/swift-set-primitives/` |
-| swift-dictionary-primitives | `~/Developer/swift-primitives/swift-dictionary-primitives/` |
+| swift-hash-primitives | `[local-workspace]/swift-primitives/swift-hash-primitives/` |
+| swift-hash-table-primitives | `[local-workspace]/swift-primitives/swift-hash-table-primitives/` |
+| swift-set-primitives | `[local-workspace]/swift-primitives/swift-set-primitives/` |
+| swift-dictionary-primitives | `[local-workspace]/swift-primitives/swift-dictionary-primitives/` |
 
 ---
 
@@ -30,7 +30,7 @@ catalogs all types, storage mechanisms, dependencies, and convention compliance.
 
 ### [F-001] UnsafePointer escape in Hash.Occupied.View -- HIGH
 
-**File**: `~/Developer/swift-primitives/swift-hash-table-primitives/Sources/Hash Table Primitives Core/Hash.Table+occupied.swift`, lines 26-27
+**File**: `[local-workspace]/swift-primitives/swift-hash-table-primitives/Sources/Hash Table Primitives Core/Hash.Table+occupied.swift`, lines 26-27
 
 ```swift
 let hashes: UnsafePointer<Int> = unsafe _buffer.withMetadataPointer { unsafe UnsafePointer($0) }
@@ -49,7 +49,7 @@ Raw pointers are extracted from `Buffer<Int>.Slots<Int>` and stored in the `Hash
 
 ### [F-002] Raw Int in Dictionary subscripts and withValue methods -- MEDIUM
 
-**File**: `~/Developer/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Primitives Core/Dictionary.Ordered Copyable.swift`
+**File**: `[local-workspace]/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Primitives Core/Dictionary.Ordered Copyable.swift`
 
 Lines 151-155 (`Dictionary.Ordered`):
 ```swift
@@ -75,7 +75,7 @@ public subscript(index index: Int) -> (key: Key, value: Value) {
     precondition(index >= 0 && index < Int(bitPattern: count), "Index out of bounds")
 ```
 
-**File**: `~/Developer/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Primitives Core/Dictionary.Ordered ~Copyable.swift`
+**File**: `[local-workspace]/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Primitives Core/Dictionary.Ordered ~Copyable.swift`
 
 Lines 408-412 (`Dictionary.Ordered.Static.withValue(atIndex:_:)`):
 ```swift
@@ -101,7 +101,7 @@ public func withValue<R>(atIndex index: Int, _ body: (borrowing Value) -> R) -> 
 
 ### [F-003] Raw Int as Collection.Index typealias -- MEDIUM
 
-**File**: `~/Developer/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Ordered Primitives/Dictionary.Ordered Copyable.swift`, line 99
+**File**: `[local-workspace]/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Ordered Primitives/Dictionary.Ordered Copyable.swift`, line 99
 
 ```swift
 public typealias Index = Int
@@ -119,13 +119,13 @@ The `Swift.Collection` conformance uses `typealias Index = Int` rather than a ty
 
 ### [F-004] Multiple error types per file (hoisted errors) -- MEDIUM
 
-**File**: `~/Developer/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Primitives Core/Dictionary.Ordered.Error.swift`
+**File**: `[local-workspace]/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Primitives Core/Dictionary.Ordered.Error.swift`
 - `__DictionaryOrderedError<Key>` (line 28)
 - `__DictionaryOrderedBoundedError<Key>` (line 79)
 - `__DictionaryOrderedInlineError<Key>` (line 99)
 - Plus nested payload structs, Sendable/Equatable conformances, and typealiases
 
-**File**: `~/Developer/swift-primitives/swift-set-primitives/Sources/Set Primitives Core/Set.Ordered.Error.swift`
+**File**: `[local-workspace]/swift-primitives/swift-set-primitives/Sources/Set Primitives Core/Set.Ordered.Error.swift`
 - `__SetOrderedError<Element>` (line 22)
 - `__SetOrderedFixedError<Element>` (line 58)
 - `__SetOrderedInlineError<Element>` (line 118)
@@ -141,7 +141,7 @@ The `Swift.Collection` conformance uses `typealias Index = Int` rather than a ty
 
 ### [F-005] Hash.Table unconditional @unchecked Sendable -- MEDIUM
 
-**File**: `~/Developer/swift-primitives/swift-hash-table-primitives/Sources/Hash Table Primitives Core/Hash.Table.swift`, line 315
+**File**: `[local-workspace]/swift-primitives/swift-hash-table-primitives/Sources/Hash Table Primitives Core/Hash.Table.swift`, line 315
 
 ```swift
 extension Hash.Table: @unchecked Sendable where Element: ~Copyable {}
@@ -159,7 +159,7 @@ extension Hash.Table: @unchecked Sendable where Element: ~Copyable {}
 
 ### [F-006] Symmetric difference uses O(n^2) linear scan -- LOW
 
-**File**: `~/Developer/swift-primitives/swift-set-primitives/Sources/Set Ordered Primitives/Set.Ordered.Algebra.Symmetric.swift`, lines 61-78
+**File**: `[local-workspace]/swift-primitives/swift-set-primitives/Sources/Set Ordered Primitives/Set.Ordered.Algebra.Symmetric.swift`, lines 61-78
 
 ```swift
 // Elements in other but not in self
@@ -191,11 +191,11 @@ The first pass (lines 50-58) correctly uses `other.contains(element)` which is O
 
 ### [F-007] Multiple conformances per file in Hash Primitives Standard Library Integration -- LOW
 
-**File**: `~/Developer/swift-primitives/swift-hash-primitives/Sources/Hash Primitives Standard Library Integration/Hash.Protocol+Swift.Range.swift`
+**File**: `[local-workspace]/swift-primitives/swift-hash-primitives/Sources/Hash Primitives Standard Library Integration/Hash.Protocol+Swift.Range.swift`
 - `Range: Hash.Protocol` (line 4)
 - `ClosedRange: Hash.Protocol` (line 19)
 
-**File**: `~/Developer/swift-primitives/swift-hash-primitives/Sources/Hash Primitives Standard Library Integration/Hash.Protocol+Swift.PartialRange.swift`
+**File**: `[local-workspace]/swift-primitives/swift-hash-primitives/Sources/Hash Primitives Standard Library Integration/Hash.Protocol+Swift.PartialRange.swift`
 - `PartialRangeFrom: Hash.Protocol` (line 4)
 - `PartialRangeThrough: Hash.Protocol` (line 15)
 - `PartialRangeUpTo: Hash.Protocol` (line 26)
@@ -210,7 +210,7 @@ The first pass (lines 50-58) correctly uses `other.contains(element)` which is O
 
 ### [F-008] Template artifact in exports.swift header -- LOW
 
-**File**: `~/Developer/swift-primitives/swift-hash-primitives/Sources/Hash Primitives Core/exports.swift`, lines 1-6
+**File**: `[local-workspace]/swift-primitives/swift-hash-primitives/Sources/Hash Primitives Core/exports.swift`, lines 1-6
 
 ```swift
 //
@@ -231,7 +231,7 @@ Uses the Xcode auto-generated "File.swift" header instead of the standard projec
 
 ### [F-009] Duplicate re-export in Dictionary Ordered Primitives exports -- LOW
 
-**File**: `~/Developer/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Ordered Primitives/exports.swift`, lines 12-13
+**File**: `[local-workspace]/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Ordered Primitives/exports.swift`, lines 12-13
 
 ```swift
 @_exported public import Dictionary_Primitives_Core
@@ -251,8 +251,8 @@ Uses the Xcode auto-generated "File.swift" header instead of the standard projec
 ### [CW-001] _deinitWorkaround: AnyObject?
 
 **Files**:
-- `~/Developer/swift-primitives/swift-set-primitives/Sources/Set Primitives Core/Set.swift`, line 115 (`Set.Ordered.Static`)
-- `~/Developer/swift-primitives/swift-set-primitives/Sources/Set Primitives Core/Set.swift`, line 154 (`Set.Ordered.Small`)
+- `[local-workspace]/swift-primitives/swift-set-primitives/Sources/Set Primitives Core/Set.swift`, line 115 (`Set.Ordered.Static`)
+- `[local-workspace]/swift-primitives/swift-set-primitives/Sources/Set Primitives Core/Set.swift`, line 154 (`Set.Ordered.Small`)
 
 **Bug**: swiftlang/swift#86652 -- deinit element cleanup fails for `~Copyable` structs containing only value-type stored properties. The `AnyObject?` field forces reference-type-like deinit semantics.
 
@@ -263,7 +263,7 @@ Uses the Xcode auto-generated "File.swift" header instead of the standard projec
 ### [CW-002] Exclusivity analysis crash workaround
 
 **Files**:
-- `~/Developer/swift-primitives/swift-set-primitives/Sources/Set Ordered Primitives/Set.Ordered.Small.swift`, lines ~122, ~143, ~270
+- `[local-workspace]/swift-primitives/swift-set-primitives/Sources/Set Ordered Primitives/Set.Ordered.Small.swift`, lines ~122, ~143, ~270
 
 Pattern: extract `_heapHashTable` to a local `var ht` before calling chained Property.View.Typed accessors (`.positions.decrement(after:)`, `.remove.all()`). Direct access crashes the `DiagnoseStaticExclusivity` SIL pass on generic `~Copyable` structs.
 
@@ -274,9 +274,9 @@ Pattern: extract `_heapHashTable` to a local `var ht` before calling chained Pro
 ### [CW-003] Nested type with value generics not inheriting ~Copyable
 
 **Files**:
-- `~/Developer/swift-primitives/swift-hash-table-primitives/Sources/Hash Table Primitives Core/Hash.Table.swift`, lines 184-308 (`Hash.Table.Static<let bucketCapacity: Int>` declared inside `Hash.Table` body)
-- `~/Developer/swift-primitives/swift-set-primitives/Sources/Set Primitives Core/Set.swift` (`Set.Ordered.Static<let capacity: Int>` and `Set.Ordered.Small<let inlineCapacity: Int>` declared inside `Set.Ordered` body)
-- `~/Developer/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Primitives Core/Dictionary.Ordered.swift` (`Dictionary.Ordered.Static<let capacity: Int>` and `Dictionary.Ordered.Small<let inlineCapacity: Int>` declared inside `Dictionary.Ordered` body)
+- `[local-workspace]/swift-primitives/swift-hash-table-primitives/Sources/Hash Table Primitives Core/Hash.Table.swift`, lines 184-308 (`Hash.Table.Static<let bucketCapacity: Int>` declared inside `Hash.Table` body)
+- `[local-workspace]/swift-primitives/swift-set-primitives/Sources/Set Primitives Core/Set.swift` (`Set.Ordered.Static<let capacity: Int>` and `Set.Ordered.Small<let inlineCapacity: Int>` declared inside `Set.Ordered` body)
+- `[local-workspace]/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Primitives Core/Dictionary.Ordered.swift` (`Dictionary.Ordered.Static<let capacity: Int>` and `Dictionary.Ordered.Small<let inlineCapacity: Int>` declared inside `Dictionary.Ordered` body)
 
 **Bug**: Swift compiler does not properly propagate `~Copyable` constraints from outer generic type to extension-declared nested types that have value generic parameters. Declaring these types inside the parent struct body works around this.
 
@@ -334,7 +334,7 @@ No untyped `throws` anywhere.
 
 The v1 assessment noted `Dictionary.Ordered.Small._count` used raw `Int`. This has been resolved:
 
-**File**: `~/Developer/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Primitives Core/Dictionary.Ordered.swift`, line 309
+**File**: `[local-workspace]/swift-primitives/swift-dictionary-primitives/Sources/Dictionary Primitives Core/Dictionary.Ordered.swift`, line 309
 
 ```swift
 @usableFromInline

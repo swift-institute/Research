@@ -29,7 +29,7 @@ These trees cannot be unified under the current design.
 
 **Prior research**: `swift-array-primitives/Research/array-protocol-unification.md` (v1.0.0, 2026-02-16) identified `associatedtype Element: ~Copyable` as unsupported and deferred element access unification to "Phase 4 — when Swift gains support." `SuppressedAssociatedTypes` (adopted 2026-02-12 in sequence-primitives) now enables this. The current `__ArrayProtocol` already has `associatedtype Element: ~Copyable` and subscript access.
 
-**Collaborative discussion**: Claude (Anthropic) + ChatGPT (OpenAI), 5 rounds, converged. Transcript at `/tmp/collection-protocol-hierarchy-transcript.md`.
+**Collaborative discussion**: Claude (Anthropic) + ChatGPT (OpenAI), 5 rounds, converged. Transcript at `[temporary-path]/collection-protocol-hierarchy-transcript.md`.
 
 ## Question
 
@@ -189,7 +189,7 @@ All 23 tests pass. Results:
 
 ### Implementation Plan
 
-**Collaborative review**: Claude (Anthropic) + ChatGPT (OpenAI), 4 rounds, converged (2026-02-23). Transcript at `/tmp/collection-sequence-detachment-impl-transcript.md`. Converged plan at `/tmp/collection-sequence-detachment-impl-converged.md`.
+**Collaborative review**: Claude (Anthropic) + ChatGPT (OpenAI), 4 rounds, converged (2026-02-23). Transcript at `[temporary-path]/collection-sequence-detachment-impl-transcript.md`. Converged plan at `[temporary-path]/collection-sequence-detachment-impl-converged.md`.
 
 **Key decisions from implementation review**:
 - `min.index(by:)` / `max.index(by:)` ship with detachment — return `Index?`, canonical for ~Copyable elements
@@ -256,8 +256,8 @@ swift test    # across all affected packages
 - `swift-sequence-primitives/Research/sequence-protocol-surface-simplification.md` v1.0.0 — six sequence protocols, each distinct
 - `swift-array-primitives/Research/array-protocol-unification.md` v1.0.0 → v1.1.0 — Phase 4 now unlocked
 - `swift-span-primitives/Sources/Span Protocol Primitives/Span.Protocol.swift` — existing span access protocol
-- Collaborative discussion 1 (design): `/tmp/collection-protocol-hierarchy-transcript.md`
-- Converged plan 1 (design): `/tmp/collection-protocol-hierarchy-converged.md`
-- Collaborative discussion 2 (implementation): `/tmp/collection-sequence-detachment-impl-transcript.md`
-- Converged plan 2 (implementation): `/tmp/collection-sequence-detachment-impl-converged.md`
+- Collaborative discussion 1 (design): `[temporary-path]/collection-protocol-hierarchy-transcript.md`
+- Converged plan 1 (design): `[temporary-path]/collection-protocol-hierarchy-converged.md`
+- Collaborative discussion 2 (implementation): `[temporary-path]/collection-sequence-detachment-impl-transcript.md`
+- Converged plan 2 (implementation): `[temporary-path]/collection-sequence-detachment-impl-converged.md`
 - [SE-0427: Noncopyable Generics](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0427-noncopyable-generics.md)

@@ -534,7 +534,7 @@ Key decisions from discussion:
 - Enum naming: `Dispatch` preferred over `RenderWorkItem` (compound) and `Work` (too generic) (ChatGPT Round 3)
 - Case naming: `.render(Any)` preferred over `.value(Any)` for parallel verb structure (ChatGPT Round 3)
 
-Transcript: `/tmp/worklist-rendering-dispatch-transcript.md`
+Transcript: `[temporary-path]/worklist-rendering-dispatch-transcript.md`
 
 ## References
 

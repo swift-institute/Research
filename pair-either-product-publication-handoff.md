@@ -348,7 +348,7 @@ If any match: re-run `swift build` + `swift test` + `swift-format lint` + `swift
 Pair was extracted from `swift-algebra-primitives` (commit message: `Initial commit, extracted from swift-algebra-primitives`). Verify `swift-algebra-primitives` no longer imports the original `Pair` (Pair is now its own package and re-imported via `import Pair_Primitives`). The extraction has already been done; this is a verification step at flip time.
 
 ```sh
-grep -rn "import Pair" ~/Developer/swift-primitives/swift-algebra-primitives/Sources/
+grep -rn "import Pair" [local-workspace]/swift-primitives/swift-algebra-primitives/Sources/
 ```
 
 Should resolve to `import Pair_Primitives` (the new package), not internal Pair references.
@@ -356,7 +356,7 @@ Should resolve to `import Pair_Primitives` (the new package), not internal Pair 
 ### F9 — Pair has 5 consumers in the workspace (algebra/finite/region/symmetry/compass-primitives)
 
 ```sh
-grep -rln "import Pair_Primitives" ~/Developer/swift-primitives/swift-{algebra,finite,region,symmetry}-primitives/Sources/
+grep -rln "import Pair_Primitives" [local-workspace]/swift-primitives/swift-{algebra,finite,region,symmetry}-primitives/Sources/
 ```
 
 Stream A's consumer survey confirmed **zero call sites** invoke any of Pair's transformation methods (`map`, `mapFirst`, `mapSecond`, `bimap`, `swapped`, `apply`, `tuple`, `allFirsts`); consumers use Pair only as a **typealias target** (e.g., `typealias Quadrant = Pair<Vertical, Horizontal>`). Method renames + `allFirsts` deletion are **zero-call-site-affecting**; consumer-package CI will be unaffected by the rename.

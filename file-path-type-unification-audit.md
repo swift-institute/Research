@@ -244,7 +244,7 @@ API: `path.with(.extension, "txt")`, `path.removing(.extension)`.
 | Call site | Chain | Validation |
 |-----------|-------|------------|
 | `File(path)` | Stores `path` directly | None — Path already validated |
-| `File("/tmp/x")` | String literal → `Path.init(stringLiteral:)` → `try Path.init(_:)` → fatalError if invalid | Path validates, crashes on failure |
+| `File("[temporary-path]/x")` | String literal → `Path.init(stringLiteral:)` → `try Path.init(_:)` → fatalError if invalid | Path validates, crashes on failure |
 | `File(try Path(str))` | Caller validates, File stores | Path validates, throws on failure |
 
 **No** `File.init(_ string:) throws` exists. Users must create a `Path` first if they want safe construction from runtime strings.
@@ -254,7 +254,7 @@ API: `path.with(.extension, "txt")`, `path.removing(.extension)`.
 | Call site | Chain | Validation |
 |-----------|-------|------------|
 | `File.Directory(path)` | Stores `path` directly | None — Path already validated |
-| `File.Directory("/tmp/x")` | String literal → `Path.init(stringLiteral:)` → passed to `File.Directory.init(_: File.Path)` | Path validates, crashes on failure |
+| `File.Directory("[temporary-path]/x")` | String literal → `Path.init(stringLiteral:)` → passed to `File.Directory.init(_: File.Path)` | Path validates, crashes on failure |
 | `try File.Directory(str)` | `File.Directory.init(_ string:) throws(Path.Error)` → `try File.Path(str)` → stores result | Path validates, throws on failure |
 
 ### Creating a `Path`
@@ -262,17 +262,17 @@ API: `path.with(.extension, "txt")`, `path.removing(.extension)`.
 | Call site | Chain | Validation |
 |-----------|-------|------------|
 | `try Path(string)` | Validates: non-empty, no control chars, no interior NUL | Throws `Path.Error` |
-| `Path("/tmp/x")` | `ExpressibleByStringLiteral` → `try Path(string)`, fatalError on failure | Crashes on invalid |
+| `Path("[temporary-path]/x")` | `ExpressibleByStringLiteral` → `try Path(string)`, fatalError on failure | Crashes on invalid |
 | `Path("\(name)")` | `ExpressibleByStringInterpolation` → same as literal | Crashes on invalid |
 
 ### The asymmetry
 
 `File.Directory` has `init(_ string:) throws` but `File` does not. This means:
-- `try File.Directory("/tmp/x")` — works, validates
-- `try File("/tmp/x")` — does NOT compile (no throwing String init)
-- `File("/tmp/x")` — works as a literal (Path's `ExpressibleByStringLiteral` kicks in, crashes on invalid)
+- `try File.Directory("[temporary-path]/x")` — works, validates
+- `try File("[temporary-path]/x")` — does NOT compile (no throwing String init)
+- `File("[temporary-path]/x")` — works as a literal (Path's `ExpressibleByStringLiteral` kicks in, crashes on invalid)
 
-When `ExpressibleByStringLiteral` is added to `File.Directory`, the call `File.Directory("/tmp/x")` becomes ambiguous: should it use the literal conformance (which crashes on invalid) or the throwing init (which surfaces errors)? In practice, Swift selects the literal conformance for string literals, silently overriding the throwing init at those call sites.
+When `ExpressibleByStringLiteral` is added to `File.Directory`, the call `File.Directory("[temporary-path]/x")` becomes ambiguous: should it use the literal conformance (which crashes on invalid) or the throwing init (which surfaces errors)? In practice, Swift selects the literal conformance for string literals, silently overriding the throwing init at those call sites.
 
 ---
 
@@ -402,7 +402,7 @@ Consumers of `File(` across the workspace (excluding internal swift-file-system)
 | Package | Usage pattern | Count |
 |---------|--------------|-------|
 | swift-tests | `File(path)`, `File(File.Path(stringLiteral: ...))` | ~12 |
-| swift-pdf | `File("/tmp/...")` (literal via Path coercion) | 3 |
+| swift-pdf | `File("[temporary-path]/...")` (literal via Path coercion) | 3 |
 
 Consumers of `File.Directory(` outside swift-file-system:
 
@@ -418,7 +418,7 @@ All consumers use either `File(path)` (with a pre-constructed Path) or `File("li
 
 - **Breaking changes**: None.
 - **Pros**: No ambiguity. Throwing init on File.Directory works as expected for runtime strings.
-- **Cons**: Doc comments show `let file: File = "/tmp/data.txt"` but this doesn't compile. The asymmetry between File (no string init) and File.Directory (has string init) is confusing.
+- **Cons**: Doc comments show `let file: File = "[temporary-path]/data.txt"` but this doesn't compile. The asymmetry between File (no string init) and File.Directory (has string init) is confusing.
 - **Alignment**: The doc comments are aspirational lies.
 
 ### Option B: Remove throwing init from File.Directory
@@ -426,7 +426,7 @@ All consumers use either `File(path)` (with a pre-constructed Path) or `File("li
 **Remove `File.Directory.init(_ string:) throws`. Users must construct a Path first.**
 
 - **Breaking changes**: `try File.Directory(string)` no longer compiles. Must change to `File.Directory(try File.Path(string))`.
-- **Impact**: 2 test call sites (`try File.Directory("/tmp/mydir")` and `try File.Directory("")`), plus 1 internal call site. Low impact.
+- **Impact**: 2 test call sites (`try File.Directory("[temporary-path]/mydir")` and `try File.Directory("")`), plus 1 internal call site. Low impact.
 - **Pros**: File and File.Directory become symmetric. Both only accept `File.Path`.
 - **Cons**: Loses the convenience of `try File.Directory(string)`.
 
@@ -455,9 +455,9 @@ All consumers use either `File(path)` (with a pre-constructed Path) or `File("li
 **Add `ExpressibleByStringLiteral` to `File` and `File.Directory`. Rename `File.Directory.init(_ string:) throws` to `File.Directory.init(validating:) throws`.**
 
 - **Breaking changes**: `try File.Directory(string)` must become `try File.Directory(validating: string)`. 2 test call sites + 1 internal.
-- **Impact**: Low breakage. All existing `File(path)` and `File.Directory(path)` continue to work. `File("/tmp/x")` already works via Path coercion; literal conformance makes it explicit and documented.
+- **Impact**: Low breakage. All existing `File(path)` and `File.Directory(path)` continue to work. `File("[temporary-path]/x")` already works via Path coercion; literal conformance makes it explicit and documented.
 - **Pros**:
-  - Doc comments (`let file: File = "/tmp/data.txt"`) finally work.
+  - Doc comments (`let file: File = "[temporary-path]/data.txt"`) finally work.
   - Symmetric: both File and File.Directory support literals.
   - Runtime validation has explicit API: `try File.Directory(validating: string)`.
   - No ambiguity: `File.Directory("literal")` uses the literal conformance. `try File.Directory(validating: runtimeString)` throws.
@@ -556,18 +556,18 @@ extension File {
 
 ```swift
 // Before:
-let dir = try File.Directory("/tmp/mydir")
+let dir = try File.Directory("[temporary-path]/mydir")
 _ = try File.Directory("")
 
 // After:
-let dir = try File.Directory(validating: "/tmp/mydir")
+let dir = try File.Directory(validating: "[temporary-path]/mydir")
 _ = try File.Directory(validating: "")
 ```
 
 ### Rationale
 
 - Follows the established pattern across `Path`, `Path.Component`, `Extension`, `Stem`.
-- Makes doc comments truthful (`let file: File = "/tmp/data.txt"` compiles).
+- Makes doc comments truthful (`let file: File = "[temporary-path]/data.txt"` compiles).
 - The `validating:` label clearly communicates "this can fail" vs unlabeled literal "this crashes".
 - Low breaking change surface (2 test sites + 1 internal).
 - Preserves the wrapper types' value as API organization namespaces.
@@ -575,4 +575,4 @@ _ = try File.Directory(validating: "")
 ### Deferred
 
 - `File.Path.Property` could move to swift-paths if functional Path APIs become a pattern. No urgency.
-- Consider adding `ExpressibleByStringInterpolation` to `File` and `File.Directory` as well, matching Path's conformance. This enables `let file: File = "/tmp/\(name).txt"`.
+- Consider adding `ExpressibleByStringInterpolation` to `File` and `File.Directory` as well, matching Path's conformance. This enables `let file: File = "[temporary-path]/\(name).txt"`.

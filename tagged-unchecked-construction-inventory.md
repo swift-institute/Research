@@ -57,7 +57,7 @@ this document.
 ## Methodology
 
 1. Enumerated every line matching `__unchecked:` via
-   `grep -rn "__unchecked:" ~/Developer/swift-primitives --include="*.swift" | grep -v /.build/`
+   `grep -rn "__unchecked:" [local-workspace]/swift-primitives --include="*.swift" | grep -v /.build/`
    (952 matches on 2026-04-22).
 
 2. Bucketed every line by two axes:
@@ -597,7 +597,7 @@ is made here.
 ## References
 
 ### Source Documents
-- `~/Developer/swift-primitives/HANDOFF-tagged-unchecked-inventory.md`
+- `[local-workspace]/swift-primitives/HANDOFF-tagged-unchecked-inventory.md`
   — investigation brief.
 - `swift-tagged-primitives/Sources/Tagged Primitives/Tagged.swift`
   — `init(__unchecked: Void, _ rawValue: consuming RawValue)` declaration.
@@ -627,7 +627,7 @@ is made here.
   Unchecked.
 
 ### Tooling
-- Grep baseline: `grep -rn "__unchecked:" ~/Developer/swift-primitives --include="*.swift" | grep -v /.build/`
+- Grep baseline: `grep -rn "__unchecked:" [local-workspace]/swift-primitives --include="*.swift" | grep -v /.build/`
   (952 matches on 2026-04-22).
 
 ## Appendix A: Representative Raw Sites

@@ -16,15 +16,15 @@ builds_on:
   - swift-institute/Research/derive-for-free-capability-composition.md # the warranted-refinement test (C1–C4) — applied here to the occupancy/allocation question for the first time
   - swift-institute/Research/cross-layer-capability-protocol-model.md  # the logical/physical capability split (Buffer HAS-A Storage)
 companion_to: occupancy-encoding-2-category-theory-composition is the category-theory angle of a multi-angle occupancy-encoding study
-provenance: research dispatch (category-theory angle); /tmp/occ-cat spikes 1–4 + cross-module, all compiled+run on 6.3.2
+provenance: research dispatch (category-theory angle); [temporary-path]/occ-cat spikes 1–4 + cross-module, all compiled+run on 6.3.2
 ---
 -->
 
 **Coen ten Thije Boonkkamp · Swift Institute · June 2026**
 
 > **RESEARCH ONLY** — no tower edits. All empirical claims compiled and run on **Apple Swift 6.3.2**
-> (`TOOLCHAINS=org.swift.632202605101a`); spike sources + binaries at `/tmp/occ-cat/` (spikes 1–4) and
-> `/tmp/occ-cat/xmod/` (cross-module). Every load-bearing claim carries a `[Verified: 2026-06-08]` tag.
+> (`TOOLCHAINS=org.swift.632202605101a`); spike sources + binaries at `[temporary-path]/occ-cat/` (spikes 1–4) and
+> `[temporary-path]/occ-cat/xmod/` (cross-module). Every load-bearing claim carries a `[Verified: 2026-06-08]` tag.
 
 ## Abstract
 
@@ -195,7 +195,7 @@ protocol left pure.
 
 ### 2.2 The proof (Spike 2, [Verified: 2026-06-08])
 
-`/tmp/occ-cat/spike2_occupancy.swift` declares:
+`[temporary-path]/occ-cat/spike2_occupancy.swift` declares:
 
 ```swift
 protocol StoreProtocol: ~Copyable { /* the 4 ops, occupancy-blind */ }
@@ -534,7 +534,7 @@ composition cannot give.
    **rejected**: comonad-of-liveness (decorative — no `extend`/`duplicate` consumer; [RES-021]).
 3. **A–E achieved on 6.3.2**; the lone residual is the copyability of the inline corner (SE-0427
    Wall-1), which is non-vacuous and identical to the boundary `conditional-deinit-…` mapped.
-4. **No production edits.** The proofs are `/tmp/occ-cat` spikes. If the seat adopts the conjunction
+4. **No production edits.** The proofs are `[temporary-path]/occ-cat` spikes. If the seat adopts the conjunction
    reading of `Store.Sparse`, the change is a *protocol-shape* note for the leaf packages, not a tower
    edit — sequenced by the principal.
 
@@ -561,11 +561,11 @@ and corrects only the *reading* of `Store.Sparse.Protocol` (composition product,
 - `swift-memory-inline-primitives/Sources/Memory Inline Primitives/Memory.Inline.swift:38-90` — `@_rawLayout` move-only inline leaf; `_initialization` ledger; self-cleaning `deinit`; `_deinitWorkaround` for `#86652`.
 
 ### Empirical artifacts (Swift 6.3.2, [Verified: 2026-06-08])
-- `/tmp/occ-cat/spike1_tensor.swift` — the product `Split<Lanes, Elements>`; `𝖢(A⊗B)=𝖢(A)∧𝖢(B)`; thin no-deinit buffer. Output `tensor copy read: 42 lane: 1`.
-- `/tmp/occ-cat/spike2_occupancy.swift` — occupancy as a **non-refining** sibling; generic buffer pure-4-op; allocation by `where S: Occupancy`. Output `slots: 0 1 2 occupied: 2`.
-- `/tmp/occ-cat/spike3_onebuffer.swift` — ONE `Slab<S>` over inline-sparse (move-only) AND heap-sparse (cond-Copyable); `sumLive<S: Store & Occupancy>` specialises. Output `inline-sparse … sumLive: 400`, `heap-sparse … copy.sumLive: 6`.
-- `/tmp/occ-cat/spike4_laws.swift` — lens laws (get-put/put-get/put-put), partial-monoid laws (free∘alloc=id, monotone, rollback), plane non-interference. Output `SPIKE4 OK`.
-- `/tmp/occ-cat/xmod/{Lib,Client}.swift` — cross-module composite; **zero `witness_method` in the client driver**; output `xmod occupied: 2 total: 44`.
+- `[temporary-path]/occ-cat/spike1_tensor.swift` — the product `Split<Lanes, Elements>`; `𝖢(A⊗B)=𝖢(A)∧𝖢(B)`; thin no-deinit buffer. Output `tensor copy read: 42 lane: 1`.
+- `[temporary-path]/occ-cat/spike2_occupancy.swift` — occupancy as a **non-refining** sibling; generic buffer pure-4-op; allocation by `where S: Occupancy`. Output `slots: 0 1 2 occupied: 2`.
+- `[temporary-path]/occ-cat/spike3_onebuffer.swift` — ONE `Slab<S>` over inline-sparse (move-only) AND heap-sparse (cond-Copyable); `sumLive<S: Store & Occupancy>` specialises. Output `inline-sparse … sumLive: 400`, `heap-sparse … copy.sumLive: 6`.
+- `[temporary-path]/occ-cat/spike4_laws.swift` — lens laws (get-put/put-get/put-put), partial-monoid laws (free∘alloc=id, monotone, rollback), plane non-interference. Output `SPIKE4 OK`.
+- `[temporary-path]/occ-cat/xmod/{Lib,Client}.swift` — cross-module composite; **zero `witness_method` in the client driver**; output `xmod occupied: 2 total: 44`.
 
 ### Prior art [RES-021] (contextualization; primary-source)
 - **SE-0427 Noncopyable Generics**, § "Conformance to `Copyable`" — "A conditional `Copyable` conformance is not permitted if the struct or enum declares a `deinit`. Deterministic destruction requires the type to be unconditionally noncopyable." (the Wall-1 law; the residual's root.)

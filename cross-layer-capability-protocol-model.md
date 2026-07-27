@@ -330,7 +330,7 @@ orthogonality stance. (`Set.Protocol: Iterable` was considered and rejected — 
 
 ## 6. Set.Ordered pilot (acceptance criterion #3)
 
-A `/tmp` prototype (`/tmp/set-capability-pilot`) replicates the proven `storage-protocol-specialization`
+A `/tmp` prototype (`[temporary-path]/set-capability-pilot`) replicates the proven `storage-protocol-specialization`
 harness at the set layer, in the **corrected decomposition**: a `SetCore` module (`SetProtocol` =
 `{contains, count}` core; `BuildableSet` refinement; a reduced `Iterating`≈`Iterable` enumeration
 concern; the predicate + constructive algebra composed **`where Self: SetProtocol & Iterating`** /
@@ -374,7 +374,7 @@ membership core + the enumeration concern), all specializing to 0-witness (§6.2
 
 Method: `swift-institute/Experiments/storage-protocol-specialization` ([EXP-017]). Two modules; `-O`;
 cross-module SIL of the consumer importing the built `SetCore`. **Receipt:**
-`/tmp/set-capability-pilot/Outputs/{consumer.sil, whole.sil, SIL-RECEIPT.md, run-release.txt}`.
+`[temporary-path]/set-capability-pilot/Outputs/{consumer.sil, whole.sil, SIL-RECEIPT.md, run-release.txt}`.
 
 | Build | Total `witness_method` | Location of any residual |
 |-------|------------------------|--------------------------|
@@ -601,7 +601,7 @@ is landed; no live package or worktree edited; execution is sequenced by the pri
 - Handoffs: `HANDOFF-buffer-protocol-v2.md`; `HANDOFF-capability-protocol-model.md` (this investigation).
 - Experiments: `swift-institute/Experiments/storage-protocol-specialization` (CONFIRMED);
   `swift-property-primitives/Experiments/property-inout-specialization` (CONFIRMED);
-  pilot `/tmp/set-capability-pilot` (this investigation — PASS, §6).
+  pilot `[temporary-path]/set-capability-pilot` (this investigation — PASS, §6).
 - Prior art: Rust `std::collections::{HashSet,BTreeSet}`; C++ `std::set`/`<algorithm>` set ops; Swift
   stdlib `SetAlgebra`/`Collection`; Haskell `Data.Set`/`Foldable`.
 - Skills: [DS-001], [DS-020], [DS-021]; [RES-018], [RES-020]–[RES-029]; [SUPER-042];

@@ -15,7 +15,7 @@ normative: false
 
 - **v1.3.0 (2026-05-05)**: Implementation lessons appendix (§3.5) added after empirical Phase β + γ-1a + γ-1b + γ-1c + γ-2 + γ-2b + γ-3 + γ-4 rollout to swift-institute/.github + swift-primitives/.github layer wrapper. Seven runtime-correctness corrections to the v1.1.0/v1.2.0 spec, each backed by a specific failed CI run and a fix commit. The most consequential: `continue-on-error: true` at the calling site of a `workflow_call` job is INVALID YAML in GitHub Actions — only regular jobs and steps support it. The advisory/gating switch must live as an `advisory: bool` input on the called reusable, gated inside the run step's `exit 1` line. §1.4-§1.5 reference text is annotated with the correction; the canonical pattern lives in §3.5. Phase β + γ-1a/b/c + γ-2 + γ-4 all landed advisory and verified green on swift-carrier-primitives + swift-tagged-primitives canaries on 2026-05-05. γ-2b dep-graph submission DEFERRED again (different reason than v1.1.0): the called workflow's `permissions: contents: write` declaration causes `startup_failure` across the consumer→layer-wrapper→universal call chain when the outer levels don't grant it; resolution requires either (a) declaring `contents: write` at every call-chain level, OR (b) a non-reusable invocation pattern (per-package opt-in workflow). γ-3 Wasm SDK landed in the swift-primitives layer wrapper; SDK install succeeds, `swift build --swift-sdk swift-6.3-RELEASE_wasm-embedded` fails with "module compiled with Swift 6.3 cannot be imported by 6.3.1" — classified as B (toolchain) under the four-class soak. The advisory captures it correctly; mismatch resolves when the published Wasm SDK matches the container's Swift version.
 - **v1.2.0 (2026-05-04)**: Principal-driven correction post-convergence. The v1.1.0 deferral of GH dependency-graph submission was over-calibrated against a static "private packages stay private" reading; the principal clarified that intra-Institute private packages will go public on a near-term timeline. Re-analysis decomposes the original privacy concern into three sub-concerns (Sub-1: name leakage of currently-private packages BEFORE they go public — time-bounded; Sub-2: relationship disclosure between two public packages — generally a feature, not a bug; Sub-3: pre-1.0 refactor churn — not specific to dep-graph submission). Only Sub-1 was load-bearing for the deferral; it dissolves on the publish-wave timeline. **Resolution**: GH dep-graph submission promoted from DEFERRED to **γ-2b** (advisory now, alongside γ-2 mechanical hygiene). New §3.4.5b documents the design (separate `submit-dep-graph.yml` reusable; SHA-pinned `vapor-community/swift-dependency-submission`; push-to-main only; `permissions: contents: write` at calling site per `[CI-026]` Path B; public-only via `[CI-032]`). §3.4.1 roadmap table updated; §3.4.8 retained but reframed as "what remains deferred" (now empty). §Outcome updated. §3.4.10 graduation table updated (judgment-based: monthly review of submission success rate + Dependabot signal-to-noise). The collaborative-discussion conclusion at v1.1.0 stays in the historical record — it represents what the 4-round Claude+ChatGPT conversation concluded under the framing it had; v1.2.0 represents the principal's post-discussion correction with the additional information about the publish wave.
-- **v1.1.0 (2026-05-04)**: Converged plan after collaborative discussion (Claude + ChatGPT, 4 rounds, transcript at `/tmp/ci-improvements-catalog-transcript.md`, converged artifact at `/tmp/ci-improvements-catalog-converged.md`). User selected 8 capabilities from §3.1's catalog: Foundation-import, License-header, broken-symlink, YAML lint, commit-lint, Embedded Wasm SDK, Static SDK Linux musl. Discussion produced material refinements: γ-1 split into γ-1a (Foundation) / γ-1b (License-header three-step) / γ-1c (API-breakage advisory pilot, four-class tracking — promoted from P3 deferred); Foundation rule extended to family (`Foundation`, `FoundationEssentials`, `FoundationInternationalization`) with full attribute matrix including `@preconcurrency`; License-header surfaced as advisory→codemod→gate three-step (empirical: L1 source files currently lack Apache 2.0 headers); commit-lint reframed as PR-title lint at γ-4 (squash-merge alignment); Static SDK Linux musl lifted from "P5 unfit" to "γ-3b advisory if cheap" after the unlimited-public-minutes correction reframed cost calculus from minutes-constrained to signal-constrained; GH dep-graph submission DEFERRED — sharper, not weaker, given private-package leakage from public consumers' graphs (verified: `swift-property-primitives` is public and depends on private siblings); two-track audit model (public CI + principal-side periodic on-disk audit) bridges the public-only-CI ecosystem-coverage gap; graduation models formalized per check class (deterministic / pilot-classified / fidelity-classified / judgment-based). §3 fully rewritten; §Outcome updated. §1 and §2 unchanged from v1.0.0. **NOTE**: v1.1.0's GH dep-graph deferral SUPERSEDED by v1.2.0 per principal correction — see v1.2.0 changelog.
+- **v1.1.0 (2026-05-04)**: Converged plan after collaborative discussion (Claude + ChatGPT, 4 rounds, transcript at `[temporary-path]/ci-improvements-catalog-transcript.md`, converged artifact at `[temporary-path]/ci-improvements-catalog-converged.md`). User selected 8 capabilities from §3.1's catalog: Foundation-import, License-header, broken-symlink, YAML lint, commit-lint, Embedded Wasm SDK, Static SDK Linux musl. Discussion produced material refinements: γ-1 split into γ-1a (Foundation) / γ-1b (License-header three-step) / γ-1c (API-breakage advisory pilot, four-class tracking — promoted from P3 deferred); Foundation rule extended to family (`Foundation`, `FoundationEssentials`, `FoundationInternationalization`) with full attribute matrix including `@preconcurrency`; License-header surfaced as advisory→codemod→gate three-step (empirical: L1 source files currently lack Apache 2.0 headers); commit-lint reframed as PR-title lint at γ-4 (squash-merge alignment); Static SDK Linux musl lifted from "P5 unfit" to "γ-3b advisory if cheap" after the unlimited-public-minutes correction reframed cost calculus from minutes-constrained to signal-constrained; GH dep-graph submission DEFERRED — sharper, not weaker, given private-package leakage from public consumers' graphs (verified: `swift-property-primitives` is public and depends on private siblings); two-track audit model (public CI + principal-side periodic on-disk audit) bridges the public-only-CI ecosystem-coverage gap; graduation models formalized per check class (deterministic / pilot-classified / fidelity-classified / judgment-based). §3 fully rewritten; §Outcome updated. §1 and §2 unchanged from v1.0.0. **NOTE**: v1.1.0's GH dep-graph deferral SUPERSEDED by v1.2.0 per principal correction — see v1.2.0 changelog.
 - **v1.0.0 (2026-05-04)**: Initial RECOMMENDATION. Phase β advisory CI gate design for `[MOD-024]`; literature survey of 9 Swift orgs at verified main-SHAs; improvements catalog (20 capabilities, 6 priority bands P0–P5).
 
 ## Context
@@ -48,7 +48,7 @@ The `ci-cd-workflows` skill ([CI-001]–[CI-060]) codifies the architecture in p
 - Universal reusable: `swift-institute/.github/.github/workflows/swift-ci.yml` carries macos-release + linux-release + linux-nightly + windows-release + format + lint (6 jobs); 211 lines.
 - Layer wrapper: `swift-primitives/.github/.github/workflows/swift-ci.yml` carries `matrix` (delegates to universal) + `embedded` (L1 invariant); 86 lines.
 - Per-package caller: ~16 lines, two `uses:` jobs (`ci` + `docs`), `secrets: inherit` on both per [CI-059].
-- Audit script: `swift-institute/Scripts/preflight-test-support-spine.py` (329 lines) — emits per-target `OK | VIOLATION | MISSING`, JSON output via `--json`. Currently keyed on hardcoded `ORG_DIRS` map (`~/Developer/swift-{primitives,standards,foundations,iso}`); for CI use, needs per-package mode.
+- Audit script: `swift-institute/Scripts/preflight-test-support-spine.py` (329 lines) — emits per-target `OK | VIOLATION | MISSING`, JSON output via `--json`. Currently keyed on hardcoded `ORG_DIRS` map (`[local-workspace]/swift-{primitives,standards,foundations,iso}`); for CI use, needs per-package mode.
 - Existing tracking-issue reusables (mimic patterns): `link-check.yml` + `link-check-weekly.yml` (per-repo report → cross-org cron); `lint-readme-presence.yml` + `lint-readme-presence-weekly.yml` (aggregated tracking issue); `sync-metadata.yml` + `sync-metadata-nightly.yml` (the canonical shape per [README-167]).
 
 ---
@@ -188,22 +188,22 @@ jobs:
       - name: Fetch audit script
         run: |
           set -euo pipefail
-          curl -fsSL -o /tmp/preflight-test-support-spine.py \
+          curl -fsSL -o [temporary-path]/preflight-test-support-spine.py \
             https://raw.githubusercontent.com/swift-institute/Scripts/main/preflight-test-support-spine.py
-          chmod +x /tmp/preflight-test-support-spine.py
+          chmod +x [temporary-path]/preflight-test-support-spine.py
 
       - name: Run audit
         id: audit
         shell: bash
         run: |
           set -euo pipefail
-          python3 /tmp/preflight-test-support-spine.py \
+          python3 [temporary-path]/preflight-test-support-spine.py \
             --package-dir . \
-            --json /tmp/audit.json \
-            | tee /tmp/audit.log
-          ok=$(jq -r '.totals.ok_findings' /tmp/audit.json)
-          viol=$(jq -r '.totals.violation_findings' /tmp/audit.json)
-          miss=$(jq -r '.totals.missing_findings' /tmp/audit.json)
+            --json [temporary-path]/audit.json \
+            | tee [temporary-path]/audit.log
+          ok=$(jq -r '.totals.ok_findings' [temporary-path]/audit.json)
+          viol=$(jq -r '.totals.violation_findings' [temporary-path]/audit.json)
+          miss=$(jq -r '.totals.missing_findings' [temporary-path]/audit.json)
           echo "ok-count=$ok"        >> "$GITHUB_OUTPUT"
           echo "violation-count=$viol" >> "$GITHUB_OUTPUT"
           echo "missing-count=$miss"   >> "$GITHUB_OUTPUT"
@@ -218,7 +218,7 @@ jobs:
               echo "### Findings"
               echo ""
               echo '```'
-              cat /tmp/audit.log
+              cat [temporary-path]/audit.log
               echo '```'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
@@ -331,7 +331,7 @@ jobs:
       - name: Fetch audit script
         run: |
           set -euo pipefail
-          curl -fsSL -o /tmp/preflight-test-support-spine.py \
+          curl -fsSL -o [temporary-path]/preflight-test-support-spine.py \
             https://raw.githubusercontent.com/swift-institute/Scripts/main/preflight-test-support-spine.py
 
       - name: Sweep org
@@ -351,13 +351,13 @@ jobs:
             git clone --depth 1 --quiet \
               "https://x-access-token:${GH_TOKEN}@github.com/${target}.git" \
               "$workdir" 2>/dev/null || { rm -rf "$workdir"; continue; }
-            python3 /tmp/preflight-test-support-spine.py \
+            python3 [temporary-path]/preflight-test-support-spine.py \
               --package-dir "$workdir" \
-              --json "/tmp/${target//\//__}.json" 2>/dev/null || true
+              --json "[temporary-path]/${target//\//__}.json" 2>/dev/null || true
             v=$(jq -r '.aggregate.totals.violation_findings // 0' \
-                "/tmp/${target//\//__}.json" 2>/dev/null || echo 0)
+                "[temporary-path]/${target//\//__}.json" 2>/dev/null || echo 0)
             m=$(jq -r '.aggregate.totals.missing_findings // 0' \
-                "/tmp/${target//\//__}.json" 2>/dev/null || echo 0)
+                "[temporary-path]/${target//\//__}.json" 2>/dev/null || echo 0)
             total_viol=$((total_viol + v))
             total_miss=$((total_miss + m))
             rm -rf "$workdir"
@@ -366,12 +366,12 @@ jobs:
           echo "- VIOLATION total: $total_viol" >> "$GITHUB_STEP_SUMMARY"
           echo "- MISSING total:   $total_miss" >> "$GITHUB_STEP_SUMMARY"
           # Persist counts as artifacts for the report job
-          echo "${total_viol},${total_miss}" > "/tmp/${ORG}-counts.txt"
+          echo "${total_viol},${total_miss}" > "[temporary-path]/${ORG}-counts.txt"
 
       - uses: actions/upload-artifact@v4
         with:
           name: spine-counts-${{ matrix.org }}
-          path: /tmp/${{ matrix.org }}-counts.txt
+          path: [temporary-path]/${{ matrix.org }}-counts.txt
 
   report:
     needs: sweep
@@ -390,7 +390,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          path: /tmp/counts
+          path: [temporary-path]/counts
 
       - name: Open or update tracking issue
         env:
@@ -402,7 +402,7 @@ jobs:
           total_viol=0
           total_miss=0
           per_org=()
-          for f in /tmp/counts/*/*.txt; do
+          for f in [temporary-path]/counts/*/*.txt; do
             org=$(basename "$(dirname "$f")" | sed 's/^spine-counts-//')
             IFS=',' read -r v m < "$f"
             total_viol=$((total_viol + v))
@@ -644,7 +644,7 @@ The original v1.0.0 bundle proposal (`lint-no-foundation-import.yml` + license +
 
 #### 3.4 Converged plan (v1.1.0 — authoritative)
 
-Source: 4-round Claude+ChatGPT collaborative discussion, 2026-05-04. Transcript: `/tmp/ci-improvements-catalog-transcript.md`. Converged artifact: `/tmp/ci-improvements-catalog-converged.md`. Both parties marked CONVERGED at Round 4.
+Source: 4-round Claude+ChatGPT collaborative discussion, 2026-05-04. Transcript: `[temporary-path]/ci-improvements-catalog-transcript.md`. Converged artifact: `[temporary-path]/ci-improvements-catalog-converged.md`. Both parties marked CONVERGED at Round 4.
 
 ##### 3.4.1 Phased roadmap
 

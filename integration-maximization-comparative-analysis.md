@@ -46,7 +46,7 @@ Per [RES-001], this research was triggered by a design question that could not b
 
 ### 1.2 Scope Definition
 
-Per [RES-002a], this research is **primitives-wide** (affecting packages at Tiers 10, 11, and 12) and belongs in `~/Developer/swift-primitives/Research/`.
+Per [RES-002a], this research is **primitives-wide** (affecting packages at Tiers 10, 11, and 12) and belongs in `[local-workspace]/swift-primitives/Research/`.
 
 | Criterion | Assessment |
 |-----------|------------|
@@ -1010,19 +1010,19 @@ The recommendations are successfully implemented when:
 
 ### Swift Primitives Documentation
 
-- `~/Developer/swift-primitives/Documentation.docc/Primitives Tiers.md`
-- `~/Developer/swift-primitives/Documentation.docc/Primitives Layering.md`
-- `~/Developer/swift-primitives/Research/storage-primitives-design.md`
-- `~/Developer/swift-primitives/Research/unified-storage-primitive.md`
-- `~/Developer/swift-primitives/Research/Typed Index Integration Audit.md`
+- `[local-workspace]/swift-primitives/Documentation.docc/Primitives Tiers.md`
+- `[local-workspace]/swift-primitives/Documentation.docc/Primitives Layering.md`
+- `[local-workspace]/swift-primitives/Research/storage-primitives-design.md`
+- `[local-workspace]/swift-primitives/Research/unified-storage-primitive.md`
+- `[local-workspace]/swift-primitives/Research/Typed Index Integration Audit.md`
 
 ### Package Sources
 
-- `~/Developer/swift-primitives/swift-memory-primitives/`
-- `~/Developer/swift-primitives/swift-pointer-primitives/`
-- `~/Developer/swift-primitives/swift-storage-primitives/`
-- `~/Developer/swift-primitives/swift-index-primitives/`
-- `~/Developer/swift-primitives/swift-affine-primitives/`
+- `[local-workspace]/swift-primitives/swift-memory-primitives/`
+- `[local-workspace]/swift-primitives/swift-pointer-primitives/`
+- `[local-workspace]/swift-primitives/swift-storage-primitives/`
+- `[local-workspace]/swift-primitives/swift-index-primitives/`
+- `[local-workspace]/swift-primitives/swift-affine-primitives/`
 
 ---
 

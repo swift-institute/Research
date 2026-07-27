@@ -324,12 +324,12 @@ Known rough edges from Apple's published renderer and community reports:
 **Recommended verification**: after any addition, run locally:
 
 ```bash
-cd "~/Developer/swift-institute"
+cd "[local-workspace]/swift-institute"
 xcrun docc convert "Swift Institute.docc" \
-  --output-path /tmp/si-docs \
+  --output-path [temporary-path]/si-docs \
   --transform-for-static-hosting \
   --hosting-base-path /
-# then: python3 -m http.server --directory /tmp/si-docs 8080
+# then: python3 -m http.server --directory [temporary-path]/si-docs 8080
 ```
 
 ---
@@ -406,4 +406,4 @@ All three are 5-10 minute local builds away from being verified.
 - theme-settings schema — `https://github.com/swiftlang/swift-docc/blob/main/Sources/SwiftDocC/SwiftDocC.docc/Resources/ThemeSettings.spec.json`
 - Appearance customization — `https://www.swift.org/documentation/docc/customizing-the-appearance-of-your-documentation-pages`
 - `@Links` pitch (Swift Forums) — `https://forums.swift.org/t/highlighting-documentation-pages-outside-of-topics-sections-in-swift-docc-links-directive/59919`
-- Handoff — `~/Developer/swift-institute/HANDOFF.md`
+- Handoff — `[local-workspace]/swift-institute/HANDOFF.md`

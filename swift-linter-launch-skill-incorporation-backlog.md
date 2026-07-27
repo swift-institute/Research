@@ -155,10 +155,10 @@ post-tag dispatch.
 ## Procedure for landing a Tier 1 item
 
 1. Update the relevant skill file in
-   `~/Developer/swift-institute/Skills/<skill>/`
+   `[local-workspace]/swift-institute/Skills/<skill>/`
    (or the appropriate sub-file for cohorted skills).
 2. Bump the skill's `last_reviewed` per `[SKILL-LIFE-004]`.
-3. Run `~/Developer/swift-institute/Scripts/sync-skills.sh`
+3. Run `[local-workspace]/swift-institute/Scripts/sync-skills.sh`
    to regenerate the `~/.claude/skills/` symlinks.
 4. Annotate the matching row in this backlog: change `Status` from
    `OPEN` to `LANDED <commit-sha> <date>`.

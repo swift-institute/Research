@@ -99,7 +99,7 @@ Realized on the exemplar:
 
 ## 5. Verification (LOCAL/unpushed)
 
-- **forEach disambiguator**: sequence-primitives `dcd748a`; spike `/tmp/set-foreach-disambig-spike` PASS
+- **forEach disambiguator**: sequence-primitives `dcd748a`; spike `[temporary-path]/set-foreach-disambig-spike` PASS
   (dual→Iterable, seq-only/triple→bridge, cross-module `-O` 0 `witness_method`); 160 tests green debug+release.
 - **Set.Ordered**: per-type forEach deleted (`ff73329`), with*-elimination (`8a7d7b8`+`44b36af`), §2.9 reverted
   (`f84450d`), §2.8 comment reconciled (`9881605`); **108 tests green debug AND release**, warning-clean.

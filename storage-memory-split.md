@@ -31,7 +31,7 @@ depends_on:
 > **Coordination (seat relay, 2026-06-04): the span DESIGN BASELINE is POST-collapse.** A parallel
 > arc ("Unify", follow-up #1, `HANDOFF-span-protocol-collapse.md`) is landing the
 > `Span.Borrowed.Protocol` → single **`Span.Protocol: ~Copyable, ~Escapable` + `borrow self`**
-> collapse (proven `/tmp/msb-span-unify`, 0-witness identical). Every `Span.Protocol` reference in
+> collapse (proven `[temporary-path]/msb-span-unify`, 0-witness identical). Every `Span.Protocol` reference in
 > this packet means the unified single-protocol form. **swift-span-primitives is Unify's zone —
 > this arc does not touch it**; the leaf's conformance and Contiguous's conditional forwarding are
 > spelled against whatever migrated conformance shape Unify lands (the protocol NAME is unchanged,
@@ -262,7 +262,7 @@ pressure now; (iii) feasibility is banked (P2), so deferral loses nothing and av
 | Thin leaf (ledger in discipline, cleanup closure / synced count in leaf) | — | bd04f32 (no discipline deinit) + the Slab lesson ("the 'redundant' sync was oracle maintenance") + Ring's two-segment ledger doesn't reduce to a count. |
 | No split (status quo) | — | Contradicts the principal's named first post-push priority and the model's true shape (#5a(i)). |
 
-### 10. Phase E plan (fires on ratification; worktrees under `~/Developer/.split-wt/`; per-step commits; no push/tag)
+### 10. Phase E plan (fires on ratification; worktrees under `[local-workspace]/.split-wt/`; per-step commits; no push/tag)
 
 - **W-A — swift-store-primitives**: add `Store Initialization Primitives` (ledger, relocated) +
   `Store Tracked Primitives` (`__StoreTrackedProtocol` + namespace alias). Tests. Suite green.
@@ -286,7 +286,7 @@ pressure now; (iii) feasibility is banked (P2), so deferral loses nothing and av
   2026-06-04)** — those packages are VERIFY-ONLY here, and any red traced to this arc is a STOP. Expected source edits outside the three owned packages: **zero**
   (typealias-first; receipts above). Pool/Arena: build+test only (ripple bar: zero edits).
 - **W-E — receipts + gates**: fresh 0-`witness_method` receipt on the REAL modules (the
-  `/tmp/msb-real-tower-receipt` harness re-pointed at `Contiguous<Memory.Heap<Int>>`); the
+  `[temporary-path]/msb-real-tower-receipt` harness re-pointed at `Contiguous<Memory.Heap<Int>>`); the
   [HANDOFF-035] termination greps incl. Package.swift declarations; honest-record receipt form.
 - **Acceptance criteria** (all disk/build-verifiable): (1) every W-D package at its ratified bar
   with zero source edits outside {store, memory-heap, storage} except none; (2) `Storage<E>.Heap`
@@ -315,8 +315,8 @@ pressure now; (iii) feasibility is banked (P2), so deferral loses nothing and av
 
 | Probe | Where | Verdict |
 |---|---|---|
-| P1 — composed shape, layered conditional conformances, oracle placement, generic ledger sync, CoW chain, typealias + 209-pin class, 0-witness | `/tmp/split-probe` (4 modules mirroring the package boundaries + exe) · `Outputs/SIL-RECEIPT.md`, `run-{debug,release}.txt`, `consumer.sil` (1905 lines; hot driver = 0 `witness_method`), `negative-copy.log` (SIL-level move-only rejection) | **ALL PASS** (21 runtime checks, debug + release) + C6 wall documented (unbound `extension Storage.Heap` rejected → pinned spelling; zero consumer impact *[superseded v1.1.1: exactly 2 consumer files — see Changelog]*) |
-| P2 — open (b): tracked value leaf, @_rawLayout, value-generic typealias, release | `/tmp/split-probe-inline` · `Outputs/RECEIPT.md`, `run-{debug,release}.txt` | **ALL PASS** (6 checks, debug + release) |
+| P1 — composed shape, layered conditional conformances, oracle placement, generic ledger sync, CoW chain, typealias + 209-pin class, 0-witness | `[temporary-path]/split-probe` (4 modules mirroring the package boundaries + exe) · `Outputs/SIL-RECEIPT.md`, `run-{debug,release}.txt`, `consumer.sil` (1905 lines; hot driver = 0 `witness_method`), `negative-copy.log` (SIL-level move-only rejection) | **ALL PASS** (21 runtime checks, debug + release) + C6 wall documented (unbound `extension Storage.Heap` rejected → pinned spelling; zero consumer impact *[superseded v1.1.1: exactly 2 consumer files — see Changelog]*) |
+| P2 — open (b): tracked value leaf, @_rawLayout, value-generic typealias, release | `[temporary-path]/split-probe-inline` · `Outputs/RECEIPT.md`, `run-{debug,release}.txt` | **ALL PASS** (6 checks, debug + release) |
 
 ## Outcome
 
@@ -332,10 +332,10 @@ publication is its own later principal gate).
 - Orthogonality: `swift-institute/Research/memory-byte-bit-domain-orthogonality.md` v1.0.0
 - Converged plan: `.handoffs/msb-tower-converged.md` (+ the element-level-seam amendment)
 - Follow-ups index: `.handoffs/HANDOFF-msb-tower-followups.md` §A #3/#2/#5a(i), #18, #5-Q2
-- Span collapse (the design baseline): `.handoffs/HANDOFF-span-protocol-collapse.md` (#1 Unify; proven `/tmp/msb-span-unify`)
+- Span collapse (the design baseline): `.handoffs/HANDOFF-span-protocol-collapse.md` (#1 Unify; proven `[temporary-path]/msb-span-unify`)
 - W3 record: `.handoffs/msb-tower-PROGRESS.md` (bd04f32: :66–67; ASK-1 (b′): :90; A2-addendum: :119; Slab Box: :91)
 - Production sources: file:line citations inline in §Empirical State Verification
-- Probes: `/tmp/split-probe`, `/tmp/split-probe-inline` (receipts inside)
+- Probes: `[temporary-path]/split-probe`, `[temporary-path]/split-probe-inline` (receipts inside)
 - Cross-language: Rust `RawVec`/`Vec`, C++ `std::vector<T, A>`, Swift `_ContiguousArrayStorage` ([DS-022])
 
 ## Appendix (W-E close, 2026-06-04)
@@ -453,7 +453,7 @@ follow-up #27 (`/experiment-process`, gated on this arc's landing; text relayed 
   (b′) discipline-side sanction formally superseded · `swift-memory-heap-primitives` per-action
   YES carried · converged-doc Memory-wording refinement · Inline stays fused, P2 banked toward
   follow-up #5 · CLCPM §3.4 fold-back drafts inside W-C). Probes banked to
-  `~/Developer/.probe-bank/`. **Phase E GO**: W-A executed + seat-verified PASS
+  `[local-workspace]/.probe-bank/`. **Phase E GO**: W-A executed + seat-verified PASS
   (`.split-wt/swift-store-primitives` @ `storage-memory-split`: `c34fd64` ledger relocation,
   `a03f547` Store.Tracked.Protocol; suite 20/6; 0-witness receipt banked to
   `.probe-bank/wa-receipt`). W-B/W-C HOLD for the seat's Unify-merge signal (span baseline =

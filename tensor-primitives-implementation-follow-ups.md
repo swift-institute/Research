@@ -26,7 +26,7 @@ The second-opinion review proposed three rule amendments to address lint finding
 
 #### A.1 — `[IMPL-033]` typed-throws exemption shape
 
-**Status (2026-05-17): RESOLVED via Item B Property-accessor adapter** — `var forEach: Property<Range.ForEach, Range<Bound>>` on `Swift.Range` coexists with stdlib's inherited `func forEach(_:) rethrows` from `Sequence`; Swift's overload resolution selects the direct-extension Property path for typed-throws closures while non-throwing call sites continue to resolve to the inherited method. No exemption needed; `[IMPL-033]` applies uniformly because typed-throws contexts now have a working institute-canonical iteration verb on the same `forEach` name. Empirical validation in [`~/Developer/swift-institute/Experiments/range-property-typed-throws-iteration/`](../Experiments/range-property-typed-throws-iteration/) (CONFIRMED, cross-module debug + release; ForEachVariant target confirms the `forEach`-named accessor wins typed-throws resolution).
+**Status (2026-05-17): RESOLVED via Item B Property-accessor adapter** — `var forEach: Property<Range.ForEach, Range<Bound>>` on `Swift.Range` coexists with stdlib's inherited `func forEach(_:) rethrows` from `Sequence`; Swift's overload resolution selects the direct-extension Property path for typed-throws closures while non-throwing call sites continue to resolve to the inherited method. No exemption needed; `[IMPL-033]` applies uniformly because typed-throws contexts now have a working institute-canonical iteration verb on the same `forEach` name. Empirical validation in [`[local-workspace]/swift-institute/Experiments/range-property-typed-throws-iteration/`](../Experiments/range-property-typed-throws-iteration/) (CONFIRMED, cross-module debug + release; ForEachVariant target confirms the `forEach`-named accessor wins typed-throws resolution).
 
 **Observation (historical).** `[IMPL-033]` "counter loop iteration" forbids `for i in 0..<n { ... }` in favor of `.forEach { ... }`. The rule's premise is intent-over-mechanism: a counter loop describes how to iterate; `forEach` describes that we iterate.
 
@@ -70,7 +70,7 @@ This is the right fix in tensor-primitives — `try!` is itself a code smell whe
 
 ### Item B — Typed-throws iteration ceremony gap
 
-**Status (2026-05-17): RESOLVED via Property-accessor adapter on the `forEach` verb.** Phase A of Option (a) (institute `func forEach<E>(...)` extension on `Range`) was empirically refuted: Swift 6.3.1 overload resolution prefers stdlib's `rethrows` over the typed-throws variant when both are methods on the same type, erasing `throws(E)` to `any Error`. The Property pattern declares `forEach` as a *computed property* returning `Property<Range.ForEach, Range<Bound>>` (rather than a method), which coexists with stdlib's inherited `func forEach(_:) rethrows` — different member kinds. At a typed-throws call site, Swift selects the direct-extension Property accessor; at a non-throwing call site, stdlib's inherited method resolves as before. No call-site syntax change: `(0..<n).forEach { (i) throws(E) in ... }` and `(0..<n).forEach { (i) in ... }` both work, with typed-throws preservation only in the first form. Adapter at `swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Swift.Range+ForEach.swift`. Empirical evidence: [`~/Developer/swift-institute/Experiments/range-property-typed-throws-iteration/`](../Experiments/range-property-typed-throws-iteration/) (CONFIRMED — `ForEachVariant` target empirically demonstrates property-vs-method coexistence works). Tensor-primitives' 2 ceremony sites migrated; build + tests + lint green.
+**Status (2026-05-17): RESOLVED via Property-accessor adapter on the `forEach` verb.** Phase A of Option (a) (institute `func forEach<E>(...)` extension on `Range`) was empirically refuted: Swift 6.3.1 overload resolution prefers stdlib's `rethrows` over the typed-throws variant when both are methods on the same type, erasing `throws(E)` to `any Error`. The Property pattern declares `forEach` as a *computed property* returning `Property<Range.ForEach, Range<Bound>>` (rather than a method), which coexists with stdlib's inherited `func forEach(_:) rethrows` — different member kinds. At a typed-throws call site, Swift selects the direct-extension Property accessor; at a non-throwing call site, stdlib's inherited method resolves as before. No call-site syntax change: `(0..<n).forEach { (i) throws(E) in ... }` and `(0..<n).forEach { (i) in ... }` both work, with typed-throws preservation only in the first form. Adapter at `swift-primitives/swift-vector-primitives/Sources/Vector Primitives Core/Swift.Range+ForEach.swift`. Empirical evidence: [`[local-workspace]/swift-institute/Experiments/range-property-typed-throws-iteration/`](../Experiments/range-property-typed-throws-iteration/) (CONFIRMED — `ForEachVariant` target empirically demonstrates property-vs-method coexistence works). Tensor-primitives' 2 ceremony sites migrated; build + tests + lint green.
 
 **Call site (after resolution)**:
 
@@ -146,11 +146,11 @@ The Property-accessor pattern for stdlib types (the resolution shape adopted for
 ### Internal
 
 - [`tensor-primitives-and-tensors-package-decomposition.md`](tensor-primitives-and-tensors-package-decomposition.md) v1.2.0 — parent doc.
-- `~/Developer/swift-primitives/swift-tensor-primitives/` — the implemented package.
+- `[local-workspace]/swift-primitives/swift-tensor-primitives/` — the implemented package.
 
 ### Skill rules cited
 
-- `[IMPL-033]` counter-loop iteration (in `~/Developer/swift-institute/Skills/implementation/`)
-- `[API-NAME-001]` Nest.Name pattern; `[API-NAME-002]` no compound identifiers; `[API-NAME-003]` specification-mirroring names (in `~/Developer/swift-institute/Skills/code-surface/`)
-- `[API-ERR-001]` typed throws; `[API-ERR-004]` closure typed-throws annotation; `[API-ERR-005]` stdlib typed-throws compatibility (in `~/Developer/swift-institute/Skills/code-surface/`)
-- `[CONV-*]` typed-index conventions (in `~/Developer/swift-institute/Skills/conversions/`)
+- `[IMPL-033]` counter-loop iteration (in `[local-workspace]/swift-institute/Skills/implementation/`)
+- `[API-NAME-001]` Nest.Name pattern; `[API-NAME-002]` no compound identifiers; `[API-NAME-003]` specification-mirroring names (in `[local-workspace]/swift-institute/Skills/code-surface/`)
+- `[API-ERR-001]` typed throws; `[API-ERR-004]` closure typed-throws annotation; `[API-ERR-005]` stdlib typed-throws compatibility (in `[local-workspace]/swift-institute/Skills/code-surface/`)
+- `[CONV-*]` typed-index conventions (in `[local-workspace]/swift-institute/Skills/conversions/`)

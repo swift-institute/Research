@@ -351,4 +351,4 @@ Then: invite company to `swift-foundations` org, grant team access to swift-file
 - [git-subtree-publication-pattern.md](git-subtree-publication-pattern.md) — Repo structure confirmation
 - [Transferring a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository)
 - [GitHub API: Transfer a repository](https://docs.github.com/en/rest/repos/repos#transfer-a-repository)
-- Collaborative discussion transcript: `/tmp/github-org-migration-transcript.md`
+- Collaborative discussion transcript: `[temporary-path]/github-org-migration-transcript.md`

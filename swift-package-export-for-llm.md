@@ -286,7 +286,7 @@ The skill should:
 2. Detect package root by finding `Package.swift`
 3. Generate file tree using `find` or similar
 4. Concatenate files in deterministic order (alphabetical by path)
-5. Output to `/tmp/{package-name}-sources.swift` (and optionally `/tmp/{package-name}-tests.swift`)
+5. Output to `[temporary-path]/{package-name}-sources.swift` (and optionally `[temporary-path]/{package-name}-tests.swift`)
 6. Report token estimate (character count / 4)
 7. Warn if estimated tokens exceed 32K (ChatGPT Plus limit)
 

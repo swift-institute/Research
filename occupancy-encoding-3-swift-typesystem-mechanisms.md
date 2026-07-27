@@ -27,8 +27,8 @@ sibling_angles:
 
 > **RESEARCH ONLY** — no tower edits. Every load-bearing compile/diagnostic claim was produced on
 > **Apple Swift 6.3.2** (`TOOLCHAINS=org.swift.632202605101a` → `swift-6.3.2-RELEASE`,
-> `arm64-apple-macosx26.0`); sources + binaries at `/tmp/occ3-mechanisms/` (the `N`/`M` spikes) and
-> `/tmp/occ3-mechanisms/SparseMacro/` (a *working* macro package). Each such claim carries
+> `arm64-apple-macosx26.0`); sources + binaries at `[temporary-path]/occ3-mechanisms/` (the `N`/`M` spikes) and
+> `[temporary-path]/occ3-mechanisms/SparseMacro/` (a *working* macro package). Each such claim carries
 > `[Verified: 2026-06-08]`. No wall is claimed without a minimal repro on 6.3.2.
 
 ## Abstract
@@ -68,7 +68,7 @@ from one author-written type, dissolving the carve-out at SOURCE level?
 4. **Macros mechanize the leaf but cannot dissolve the carve-out.** A `@SparseLeaf` attached
    member+extension macro *does* synthesize a complete tombstone sparse leaf — storage, seam, AND the
    conditional-`Copyable` conformance — from a one-line annotation, building and running on 6.3.2
-   (`/tmp/occ3-mechanisms/SparseMacro/`). But the *language-level* impossibility survives macro
+   (`[temporary-path]/occ3-mechanisms/SparseMacro/`). But the *language-level* impossibility survives macro
    expansion: two same-named specializations are an `invalid redeclaration` (M0), there is **no
    type-level predicate on element layout/spare-bits** for a macro (or anything) to branch on (M3), and
    macros are purely syntactic — they never see `T`'s layout (`macro-composition-architecture.md`). The
@@ -119,7 +119,7 @@ level?"
 ### Constraints
 
 - **No wall claim without a 6.3.2 repro** (`TOOLCHAINS=org.swift.632202605101a`). All load-bearing
-  diagnostics reproduced; artifacts `/tmp/occ3-mechanisms/`.
+  diagnostics reproduced; artifacts `[temporary-path]/occ3-mechanisms/`.
 - Research only — no tower edits; `/tmp` scratch only.
 - Tier-3 rigor per [RES-020]/[RES-022]/[RES-023]/[RES-024]/[RES-026]: formal semantics inline, prior-art
   contextualization, every empirical claim verified at write time, parallel-source-verified citations.
@@ -174,7 +174,7 @@ template that builds on 6.3.2), `storage-small-substrate.md` §2.2 + the v1.0.1 
 | AX-5 (`Store.Protocol` neutrality) | The 4-op seam (`capacity`, `subscript{get set}`, `initialize`, `move`) is pointer-free, copyability-agnostic (`associatedtype Element: ~Copyable`), cross-module-specializing. | `Store.Protocol.swift:20-69`. | Read directly. |
 
 The S1–S8 baseline re-verification (the ground I extend) is captured at
-`/tmp/cdspikes/` and re-run 2026-06-08: S1/S3/S4/S6/S8 fail with the documented diagnostics; S2/S5/S7
+`[temporary-path]/cdspikes/` and re-run 2026-06-08: S1/S3/S4/S6/S8 fail with the documented diagnostics; S2/S5/S7
 compile; S7 runs with conditional auto-teardown. **I add nothing to the S-series; the N/M series are new.**
 
 ---
@@ -408,7 +408,7 @@ constraint on any `InlineArray`-based leaf, *independent of the macro* (my bare 
 
 ### II.2 A `@SparseLeaf` macro CAN synthesize the whole leaf (the positive result)
 
-`/tmp/occ3-mechanisms/SparseMacro/` declares:
+`[temporary-path]/occ3-mechanisms/SparseMacro/` declares:
 
 ```swift
 @attached(member, names: named(slots), named(init()), named(occupiedCount), named(insert(_:at:)), named(remove(at:)))
@@ -630,7 +630,7 @@ the macro question is answered with a working artifact:
 
 5. **Macros mechanize the leaf but cannot dissolve the carve-out (Findings II.2–II.4, formal note).** A
    `@SparseLeaf` member+extension macro *does* synthesize a complete conditionally-`Copyable` tombstone
-   sparse leaf from one annotation, built+run on 6.3.2 (`/tmp/occ3-mechanisms/SparseMacro/`). But (a)
+   sparse leaf from one annotation, built+run on 6.3.2 (`[temporary-path]/occ3-mechanisms/SparseMacro/`). But (a)
    two same-named copyability modes are an `invalid redeclaration` (M0); (b) there is no type-level
    layout predicate for a macro to branch on (M3); (c) a macro is transparent to the copyability
    predicate (formal note) — the expanded source hits AX-1 (S1) and the `@_rawLayout` rule (N4) like any
@@ -732,15 +732,15 @@ sparse + value-semantics + no-niche — needs two coordinated language changes, 
 - `macro-composition-architecture.md`'s PointFree survey (`@CasePathable`, `@DependencyClient`) — "accepted the duplication; no macro composition."
 
 ### Empirical artifacts ([RES-023] — every load-bearing compile/diagnostic claim produced on Swift 6.3.2, `swift-6.3.2-RELEASE`, `TOOLCHAINS=org.swift.632202605101a`, `arm64-apple-macosx26.0`, 2026-06-08)
-- `/tmp/cdspikes/` — S1–S8 baseline (companion note's), re-verified 2026-06-08 (S1/S3/S4/S6/S8 fail as documented; S2/S5/S7 compile; S7 runs).
-- `/tmp/occ3-mechanisms/n1_moveonly_class.swift` — `error: classes cannot be '~Copyable'`.
-- `/tmp/occ3-mechanisms/n2_conditional_class_field.swift` — Box-relocation compiles (AX-2).
-- `/tmp/occ3-mechanisms/n3_…`, `n4_rawlayout_copyable_inner.swift` — `error: type with '@_rawLayout' cannot be copied and must be declared ~Copyable` (Finding I.3).
-- `/tmp/occ3-mechanisms/n5_…`, `n7_…`, `n7b_…`, `n13_…` — `InlineArray` conditional `Copyable` + `~Copyable`-element `_read`/`_modify` seam; runtime: conditional auto-teardown fires, copies succeed (Findings I.4).
-- `/tmp/occ3-mechanisms/n6b_…`, `n8_tombstone_sparse_run.swift`, `n9_sparebit_density.swift` — tombstone sparse leaf (run) + spare-bit density survey (Findings I.5).
-- `/tmp/occ3-mechanisms/n10_discard.swift`, `n11_…`, `n12_specialize.swift` — `discard`/`~Escapable`/`@_specialize` all fail to move the frontier (Finding I.7).
-- `/tmp/occ3-mechanisms/n14c_enum_inplace.swift` — enum-held `InlineArray` value-semantics mutation (run: `slot2=7`); the `storage-small-substrate.md` v1.0.1 reconciliation (Finding I.6).
-- `/tmp/occ3-mechanisms/m0_two_specializations_one_name.swift` — `error: invalid redeclaration of 'Foo'` (M0).
-- `/tmp/occ3-mechanisms/m2_macro_would_emit_two_named.swift` — two distinctly-named types compile (the macro's legal limit; M2).
-- `/tmp/occ3-mechanisms/m3_no_typelevel_layout_branch.swift` — `error: expected ',' separator` (no type-level layout predicate; M3).
-- `/tmp/occ3-mechanisms/SparseMacro/` — the **working** `@SparseLeaf` member+extension macro; `swift run SparseClient` on 6.3.2 (platform `.macOS("26.0")`) prints the conditional-teardown + conditional-copy output (Finding II.2). The `macOS 26.0` `InlineArray`-setter availability caveat surfaced here (§II.1).
+- `[temporary-path]/cdspikes/` — S1–S8 baseline (companion note's), re-verified 2026-06-08 (S1/S3/S4/S6/S8 fail as documented; S2/S5/S7 compile; S7 runs).
+- `[temporary-path]/occ3-mechanisms/n1_moveonly_class.swift` — `error: classes cannot be '~Copyable'`.
+- `[temporary-path]/occ3-mechanisms/n2_conditional_class_field.swift` — Box-relocation compiles (AX-2).
+- `[temporary-path]/occ3-mechanisms/n3_…`, `n4_rawlayout_copyable_inner.swift` — `error: type with '@_rawLayout' cannot be copied and must be declared ~Copyable` (Finding I.3).
+- `[temporary-path]/occ3-mechanisms/n5_…`, `n7_…`, `n7b_…`, `n13_…` — `InlineArray` conditional `Copyable` + `~Copyable`-element `_read`/`_modify` seam; runtime: conditional auto-teardown fires, copies succeed (Findings I.4).
+- `[temporary-path]/occ3-mechanisms/n6b_…`, `n8_tombstone_sparse_run.swift`, `n9_sparebit_density.swift` — tombstone sparse leaf (run) + spare-bit density survey (Findings I.5).
+- `[temporary-path]/occ3-mechanisms/n10_discard.swift`, `n11_…`, `n12_specialize.swift` — `discard`/`~Escapable`/`@_specialize` all fail to move the frontier (Finding I.7).
+- `[temporary-path]/occ3-mechanisms/n14c_enum_inplace.swift` — enum-held `InlineArray` value-semantics mutation (run: `slot2=7`); the `storage-small-substrate.md` v1.0.1 reconciliation (Finding I.6).
+- `[temporary-path]/occ3-mechanisms/m0_two_specializations_one_name.swift` — `error: invalid redeclaration of 'Foo'` (M0).
+- `[temporary-path]/occ3-mechanisms/m2_macro_would_emit_two_named.swift` — two distinctly-named types compile (the macro's legal limit; M2).
+- `[temporary-path]/occ3-mechanisms/m3_no_typelevel_layout_branch.swift` — `error: expected ',' separator` (no type-level layout predicate; M3).
+- `[temporary-path]/occ3-mechanisms/SparseMacro/` — the **working** `@SparseLeaf` member+extension macro; `swift run SparseClient` on 6.3.2 (platform `.macOS("26.0")`) prints the conditional-teardown + conditional-copy output (Finding II.2). The `macOS 26.0` `InlineArray`-setter availability caveat surfaced here (§II.1).

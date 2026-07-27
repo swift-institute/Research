@@ -235,7 +235,7 @@ The change touches multiple files in `swift-tagged-primitives` and may ripple in
 
 - **53 files** in `swift-tagged-primitives/` itself contain `__unchecked` (171 total occurrences)
 - **262 files** in other `swift-primitives/swift-*` packages contain `__unchecked` — these are Tagged-aliased consumer call sites at `Index(__unchecked: (), Ordinal(...))` and similar shapes
-- **188 files** across the entire `~/Developer/` workspace `import Tagged_Primitives`
+- **188 files** across the entire `[local-workspace]/` workspace `import Tagged_Primitives`
 
 Grepped a sample to confirm: e.g., `swift-index-primitives/Sources/Index Primitives Core/Index.swift` uses `Index(__unchecked: (), Ordinal(UInt(5)))` — that's a Tagged-derived call (Index<Element> is a typealias for `Tagged<Element, Ordinal>`). The 262-file figure is dominated by these Tagged-aliased consumer uses.
 
@@ -289,17 +289,17 @@ Before the redesign lands, the following commands MUST produce live counts; the 
 
 ```bash
 # Direct consumer-site usages of __unchecked:
-grep -rln "__unchecked" ~/Developer/swift-primitives/ ~/Developer/swift-foundations/ ~/Developer/swift-standards/ 2>/dev/null
+grep -rln "__unchecked" [local-workspace]/swift-primitives/ [local-workspace]/swift-foundations/ [local-workspace]/swift-standards/ 2>/dev/null
 
 # Direct consumer-site usages of .rawValue on Tagged-aliased types
-grep -rln "\.rawValue" ~/Developer/swift-primitives/ 2>/dev/null
+grep -rln "\.rawValue" [local-workspace]/swift-primitives/ 2>/dev/null
 # (false positives: rawValue is a stdlib idiom, RawRepresentable.rawValue, etc.; needs filtering)
 
 # Tagged imports across the workspace
-grep -rln "import Tagged_Primitives" ~/Developer/ 2>/dev/null
+grep -rln "import Tagged_Primitives" [local-workspace]/ 2>/dev/null
 
 # RawValue as a generic-parameter reference in extensions on Tagged
-grep -rln "where.*RawValue" ~/Developer/swift-primitives/swift-tagged-primitives/ 2>/dev/null
+grep -rln "where.*RawValue" [local-workspace]/swift-primitives/swift-tagged-primitives/ 2>/dev/null
 ```
 
 ### Migration shape

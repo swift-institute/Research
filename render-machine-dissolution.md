@@ -40,7 +40,7 @@ This constraint entered the investigation late (Round 5) and materially reframed
 analysis; it is recorded here as binding.
 
 **Method.** Collaborative discussion with ChatGPT per [COLLAB-001]–[COLLAB-014], seven
-rounds, CONVERGED. Full transcript: `/tmp/render-as-machine-transcript.md` (session-local).
+rounds, CONVERGED. Full transcript: `[temporary-path]/render-as-machine-transcript.md` (session-local).
 Claude's analysis was primary per [COLLAB-014]; every claim entering a Position was
 verified against source first.
 

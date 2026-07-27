@@ -230,8 +230,8 @@ This belongs in the root page's Foundation independence principle and in Getting
 
 ## References
 
-- Handoff: `~/Developer/swift-institute/HANDOFF.md`
+- Handoff: `[local-workspace]/swift-institute/HANDOFF.md`
 - Prior research: `documentation-skill-design.md` (SUPERSEDED)
 - Prior research: `skill-based-documentation-architecture.md` (SUPERSEDED)
-- Documentation skill: `~/Developer/.claude/skills/documentation/SKILL.md`
-- Blog process skill: `~/Developer/.claude/skills/blog-process/SKILL.md`
+- Documentation skill: `[local-workspace]/.claude/skills/documentation/SKILL.md`
+- Blog process skill: `[local-workspace]/.claude/skills/blog-process/SKILL.md`

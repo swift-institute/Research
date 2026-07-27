@@ -19,7 +19,7 @@ Are there other sites in the ecosystem with the same misconfiguration class?
 
 ```bash
 # Enumerate every sub-repo's .git file and target:
-for base in ~/Developer/swift-{primitives,standards,foundations,institute} ~/Developer/swift-*/; do
+for base in [local-workspace]/swift-{primitives,standards,foundations,institute} [local-workspace]/swift-*/; do
   for d in "$base"/*/; do
     [[ -f "$d/.git" ]] || continue
     printf "%s -> %s\n" "$d" "$(head -1 "$d/.git")"

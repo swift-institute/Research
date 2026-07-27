@@ -121,10 +121,10 @@ the skill system. They belong to the Carrier audit's Phase 1.
 ## Procedure for landing a Tier 1 item
 
 1. Update the relevant skill file in
-   `~/Developer/swift-institute/Skills/<skill>/SKILL.md`
+   `[local-workspace]/swift-institute/Skills/<skill>/SKILL.md`
    (or sub-file).
 2. Bump the skill version per `[SKILL-LIFE-*]`.
-3. Run `~/Developer/swift-institute/Scripts/sync-skills.sh`
+3. Run `[local-workspace]/swift-institute/Scripts/sync-skills.sh`
    to regenerate the `~/.claude/skills/` symlinks.
 4. Annotate the matching row in this backlog: change `Status` from
    `OPEN` to `LANDED <commit-sha> <date>`.

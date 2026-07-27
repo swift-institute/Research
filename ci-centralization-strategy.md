@@ -513,7 +513,7 @@ per [META-016].
 
 Verified during this investigation:
 
-- [HANDOFF-ci-centralization.md](~/Developer/HANDOFF-ci-centralization.md) — Phase 0/0b execution record
+- [HANDOFF-ci-centralization.md]([local-workspace]/HANDOFF-ci-centralization.md) — Phase 0/0b execution record
 - [git-subtree-publication-pattern.md](git-subtree-publication-pattern.md) — prior rejection of subtree for adjacent problem
 - [gitignore-sync-strategy.md](gitignore-sync-strategy.md) — sync-script precedent
 - [multi-repo-automation-design-patterns.md](multi-repo-automation-design-patterns.md) — batch-automation state-axis design

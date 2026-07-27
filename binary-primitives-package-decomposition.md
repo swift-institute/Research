@@ -64,8 +64,8 @@ Each candidate decomposes into:
 
 ```bash
 grep -rln -i "leb128\|binary.format\|formatter\|binary.serializable\|binary.serializer\|binary.coder" \
-  ~/Developer/swift-institute/Research/ \
-  ~/Developer/swift-primitives/swift-binary-primitives/Research/
+  [local-workspace]/swift-institute/Research/ \
+  [local-workspace]/swift-primitives/swift-binary-primitives/Research/
 ```
 
 [Verified: 2026-05-07] Prior art surfaced:

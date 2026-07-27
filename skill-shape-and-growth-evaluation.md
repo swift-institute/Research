@@ -160,7 +160,7 @@ cross-references.
 ### Sync Infrastructure Impact
 
 Verified 2026-04-24:
-`.claude/skills/implementation → ~/Developer/swift-institute/Skills/implementation`
+`.claude/skills/implementation → [local-workspace]/swift-institute/Skills/implementation`
 is a directory-level symlink. All sibling files (`accessors.md`,
 `concurrency.md`, etc.) are reachable through the symlink. The
 `Scripts/sync-skills.sh` script discovers skills by checking for

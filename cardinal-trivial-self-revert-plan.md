@@ -287,7 +287,7 @@ independent and can be reverted in parallel.
 
 ```bash
 # Enumerate all current Cardinal.`Protocol` usage across the workspace
-grep -rln "Cardinal\.\`Protocol\`" ~/Developer/swift-primitives/swift-*-primitives/Sources \
+grep -rln "Cardinal\.\`Protocol\`" [local-workspace]/swift-primitives/swift-*-primitives/Sources \
   | sort
 ```
 
@@ -324,7 +324,7 @@ Apply per Mechanism A:
 2. Delete `Sources/Cardinal Primitives Core/Cardinal.Protocol.swift` (revert of `208805d`).
 3. Revert `20886c5` SLI bridges: restore `Carrier.\`Protocol\`<Cardinal>`-constrained
    bridge signatures.
-4. Verify: `cd ~/Developer/swift-primitives/swift-cardinal-primitives && swift build && swift test`.
+4. Verify: `cd [local-workspace]/swift-primitives/swift-cardinal-primitives && swift build && swift test`.
 
 Estimated diff: ~150 lines net change (delete Cardinal.Protocol.swift
 ~150 lines; net partial-revert across Cardinal+Carrier.swift, Cardinal.swift
@@ -359,7 +359,7 @@ Apply per Mechanism A:
 3. Revert `4def264` (Remove @_disfavoredOverload from cross-type +/+=/%):
    restore `@_disfavoredOverload` on cross-type comparison/arithmetic
    operators in `Ordinal+Cardinal.swift`.
-4. Verify: `cd ~/Developer/swift-primitives/swift-ordinal-primitives && swift build && swift test`.
+4. Verify: `cd [local-workspace]/swift-primitives/swift-ordinal-primitives && swift build && swift test`.
 
 Estimated diff: ~200 lines net deletion (the cascade's split-into-pairs
 adds ~100 lines that collapse back; the trivial-self restore is ~80 lines
@@ -382,7 +382,7 @@ Apply per Mechanism A:
    import from public back to internal.
 3. Revert `3a2248c` (Add @_disfavoredOverload to bare-Vector +/+=):
    drop `@_disfavoredOverload` from bare-Vector arithmetic.
-4. Verify: `cd ~/Developer/swift-primitives/swift-affine-primitives && swift build && swift test`.
+4. Verify: `cd [local-workspace]/swift-primitives/swift-affine-primitives && swift build && swift test`.
 
 Estimated diff: ~120 lines net change.
 
@@ -396,7 +396,7 @@ No changes. Current state aligns with the post-revert target (the cascade
 deleted the `Ordinal+Cardinal.Bare.swift` workaround — under post-revert
 that file is correctly absent).
 
-Verify: `cd ~/Developer/swift-primitives/swift-cyclic-primitives && swift build && swift test`.
+Verify: `cd [local-workspace]/swift-primitives/swift-cyclic-primitives && swift build && swift test`.
 
 ##### 3b. swift-sequence-primitives
 
@@ -405,13 +405,13 @@ correctly absent under post-revert because the upstream
 `Carrier<Cardinal>`-constrained operator covers both bare-Cardinal and
 Tagged-of-Cardinal RHS.
 
-Verify: `cd ~/Developer/swift-primitives/swift-sequence-primitives && swift build && swift test`.
+Verify: `cd [local-workspace]/swift-primitives/swift-sequence-primitives && swift build && swift test`.
 
 ##### 3c. swift-finite-primitives
 
 No changes (same reasoning as sequence-primitives).
 
-Verify: `cd ~/Developer/swift-primitives/swift-finite-primitives && swift build && swift test`.
+Verify: `cd [local-workspace]/swift-primitives/swift-finite-primitives && swift build && swift test`.
 
 ##### 3d. swift-bit-vector-primitives
 
@@ -419,7 +419,7 @@ Revert `8e26916` ("Restore .one"). Under post-revert with disfavor
 rebalances reverted, the original `.one` ambiguity returns; restore the
 explicit `Index<UInt>.Count.one` disambig at the five call sites.
 
-Verify: `cd ~/Developer/swift-primitives/swift-bit-vector-primitives && swift build && swift test`.
+Verify: `cd [local-workspace]/swift-primitives/swift-bit-vector-primitives && swift build && swift test`.
 
 ##### 3e. swift-binary-primitives
 
@@ -430,7 +430,7 @@ Cardinal.Protocol to Carrier<Cardinal>" is forward progress (NOT in
 revert scope); it represents a previous, unrelated migration AWAY from
 an older pre-2026-04-26 Cardinal.Protocol that was already removed.
 
-Verify: `cd ~/Developer/swift-primitives/swift-binary-primitives && swift build && swift test`.
+Verify: `cd [local-workspace]/swift-primitives/swift-binary-primitives && swift build && swift test`.
 
 ##### 3f. swift-bit-primitives
 
@@ -438,7 +438,7 @@ Revert `72b14f5` ("Migrate FixedWidthInteger shift operators to
 Cardinal.\`Protocol\`"). The pre-cascade target state is captured by
 `7c70ebe` "Migrate FixedWidthInteger+Cardinal shifts to Carrier<Cardinal>".
 
-Verify: `cd ~/Developer/swift-primitives/swift-bit-primitives && swift build && swift test`.
+Verify: `cd [local-workspace]/swift-primitives/swift-bit-primitives && swift build && swift test`.
 
 ##### 3g. swift-memory-primitives
 
@@ -446,7 +446,7 @@ Revert `c629f07` ("Migrate Memory to Cardinal.\`Protocol\`"). The
 pre-cascade target state is captured by `9ed2a84` "Migrate Memory.Shift
 and Memory.Alignment.Align to Carrier<Cardinal>".
 
-Verify: `cd ~/Developer/swift-primitives/swift-memory-primitives && swift build && swift test`.
+Verify: `cd [local-workspace]/swift-primitives/swift-memory-primitives && swift build && swift test`.
 
 #### Phase 4 — swift-io discovery cascade repos (one targeted fix)
 
@@ -460,7 +460,7 @@ needs adjustment per Open Question #1's resolved name.
 Single-file edit: `Sources/Buffer Primitives Core/Buffer.Unbounded.swift`
 (or wherever `resize` lives — verify path before editing).
 
-Verify: `cd ~/Developer/swift-primitives/swift-buffer-primitives && swift build && swift test`.
+Verify: `cd [local-workspace]/swift-primitives/swift-buffer-primitives && swift build && swift test`.
 
 #### Phase 5 — Workspace-wide verification (per [HANDOFF-035])
 
@@ -475,10 +475,10 @@ and swift-foundations layers that depend on these primitives):
 ```bash
 # Workspace-wide grep — should return zero hits
 grep -rln "Cardinal\.\`Protocol\`" \
-  ~/Developer/swift-primitives/ \
-  ~/Developer/swift-standards/ \
-  ~/Developer/swift-foundations/ \
-  ~/Developer/swift-institute/ 2>/dev/null
+  [local-workspace]/swift-primitives/ \
+  [local-workspace]/swift-standards/ \
+  [local-workspace]/swift-foundations/ \
+  [local-workspace]/swift-institute/ 2>/dev/null
 ```
 
 Per-repo `swift build --build-tests` across the full transitive consumer

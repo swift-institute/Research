@@ -355,8 +355,8 @@ Order of operations within Phase 1 (to keep the repo compilable):
 
 ## References
 
-- `~/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/` — existing infrastructure + document vocabulary (to be split)
-- `~/Developer/swift-primitives/swift-rendering-primitives/Package.swift` — current deps
+- `[local-workspace]/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/` — existing infrastructure + document vocabulary (to be split)
+- `[local-workspace]/swift-primitives/swift-rendering-primitives/Package.swift` — current deps
 - `swift-foundations/Research/danceui-architectural-analysis.md` — DanceUI's own DanceUI/DanceUICompose split (validates infra-vs-vocabulary separation)
 - `swift-foundations/Research/swift-user-interface-package-decomposition.md` v1.1 — upstream decomposition research
 - `swift-foundations/Research/swift-user-interface-graph-transactions.md` v1.1 — dependency-delta criterion in action

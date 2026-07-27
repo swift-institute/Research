@@ -19,7 +19,7 @@ related:
 ## 1. Context
 
 **Trigger.** A fresh experiment at
-`~/Developer/swift-foundations/swift-io/Experiments/io-algebra/`
+`[local-workspace]/swift-foundations/swift-io/Experiments/io-algebra/`
 (committed 2026-04-17) proposes a monadic `IO<Environment, LeafError, Value>`
 type built around linear (`~Copyable`) semantics, zero `@Sendable`
 function-type attributes, and three load-bearing value-level `Sendable`
@@ -952,21 +952,21 @@ qualities that make each useful.
 
 ### Packages and source code
 
-- `~/Developer/swift-primitives/swift-effect-primitives/`
+- `[local-workspace]/swift-primitives/swift-effect-primitives/`
   — the L1 package under analysis.
-- `~/Developer/swift-primitives/swift-effect-primitives/Research/Algebraic Effects in Swift.md`
+- `[local-workspace]/swift-primitives/swift-effect-primitives/Research/Algebraic Effects in Swift.md`
   — package's own theoretical positioning document (2026-01-18).
-- `~/Developer/swift-foundations/swift-effects/`
+- `[local-workspace]/swift-foundations/swift-effects/`
   — the L3 runtime built on effect-primitives; Effect.perform impl at
   `Sources/Effects/Effect.perform.swift:13-41`.
-- `~/Developer/swift-foundations/swift-io/Experiments/io-algebra/`
+- `[local-workspace]/swift-foundations/swift-io/Experiments/io-algebra/`
   — the fresh experiment (2026-04-17).
-- `~/Developer/swift-foundations/swift-io/Research/io-witness-design-literature-study.md`
+- `[local-workspace]/swift-foundations/swift-io/Research/io-witness-design-literature-study.md`
   — prior L3 analysis of IO+witness+effects interplay.
 
 ### Peer document
 
-- `~/Developer/swift-foundations/Research/effects-and-io-algebra-relation.md`
+- `[local-workspace]/swift-foundations/Research/effects-and-io-algebra-relation.md`
   — the foundations-side counterpart (simultaneous).
 
 ### Academic prior art
@@ -1028,7 +1028,7 @@ qualities that make each useful.
 
 Execution of the `swift-effect-primitives` modernization prescribed
 in §4 and §10.1. Handoff:
-`~/Developer/swift-primitives/HANDOFF-effect-primitives-ncopyable-modernization.md`.
+`[local-workspace]/swift-primitives/HANDOFF-effect-primitives-ncopyable-modernization.md`.
 
 ### 14.1 What landed
 
@@ -1141,7 +1141,7 @@ recommendation: keep.
 ### 14.5 Downstream cascade inventory (for the L3 handoff)
 
 The parallel L3 handoff
-`~/Developer/swift-foundations/HANDOFF-effects-modernization.md`
+`[local-workspace]/swift-foundations/HANDOFF-effects-modernization.md`
 owns the `swift-effects` fixes. These are the specific cascade sites
 the L1 modernization surfaces, in one place so the L3 agent doesn't
 have to rediscover them:

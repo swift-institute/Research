@@ -70,9 +70,9 @@ The two priors compose: Shape A's `Storage` parameter is a Pattern 1 borrow-view
 **Verified empirical claim per [RES-023]**:
 
 ```bash
-grep -rln "struct Borrowed" ~/Developer/swift-primitives/swift-byte-primitives/
+grep -rln "struct Borrowed" [local-workspace]/swift-primitives/swift-byte-primitives/
 # Result: (no matches, 2026-05-18)
-grep -rln ": Ownership\.Borrow\.\`Protocol\`" ~/Developer/swift-primitives/
+grep -rln ": Ownership\.Borrow\.\`Protocol\`" [local-workspace]/swift-primitives/
 # Result: String, Path, Tagged (conditional). NOT byte.
 ```
 

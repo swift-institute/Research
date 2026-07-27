@@ -631,7 +631,7 @@ Skills don't sync between Claude.ai / API / Claude Code). *Description-budget
 truncation* when many skills load. *Stale skills* — body says one thing, code
 behaves differently. The user's existing `skill-lifecycle` skill addresses
 the staleness failure with explicit review cadences [Verified: 2026-05-10
-against `~/Developer/swift-institute/Skills/skill-lifecycle/`].
+against `[local-workspace]/swift-institute/Skills/skill-lifecycle/`].
 
 #### 3.10 Hooks / Middleware
 
@@ -1269,7 +1269,7 @@ is intentionally not made here.
    the 4-skill workflow pipeline `/handoff` → `/supervise` → `/reflect-session`
    → `/reflections-processing`, the auto-memory MEMORY.md system, the CI
    stack, the type-system-as-context-reduction tooling) against components 1–20.
-2. **The user's existing routing guardrail** in `~/Developer/CLAUDE.md`
+2. **The user's existing routing guardrail** in `[local-workspace]/CLAUDE.md`
    (skills-canonical, memory-narrow, propose-skill-update-before-saving-memory)
    independently re-derives Anthropic's official routing rule. The MEMORY.md
    24.4KB-cap overflow is therefore a *discipline failure*, not an

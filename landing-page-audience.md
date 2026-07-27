@@ -269,11 +269,11 @@ Derived from §1–§7, ordered by priority:
 
 ## References
 
-- `~/Developer/swift-institute/Research/landing-page-marketing-perspective.md` — 3-persona analysis; §5 recommended keeping Tagged as hero
-- `~/Developer/swift-institute/Research/landing-page-user-journey.md` — synthesis with 11 decisions
-- `~/Developer/swift-institute/Research/landing-page-docc-capabilities.md` — DocC 6.3 directive matrix
-- `~/Developer/swift-institute/Research/landing-page-comparative-study.md` — 14 comparator sites (to be re-integrated in v1.1)
-- `~/Developer/swift-institute/Research/documentation-docc-alpha-launch.md` — DECISION status, alpha voice lock
-- `~/Developer/swift-institute/HANDOFF.md` — task brief
+- `[local-workspace]/swift-institute/Research/landing-page-marketing-perspective.md` — 3-persona analysis; §5 recommended keeping Tagged as hero
+- `[local-workspace]/swift-institute/Research/landing-page-user-journey.md` — synthesis with 11 decisions
+- `[local-workspace]/swift-institute/Research/landing-page-docc-capabilities.md` — DocC 6.3 directive matrix
+- `[local-workspace]/swift-institute/Research/landing-page-comparative-study.md` — 14 comparator sites (to be re-integrated in v1.1)
+- `[local-workspace]/swift-institute/Research/documentation-docc-alpha-launch.md` — DECISION status, alpha voice lock
+- `[local-workspace]/swift-institute/HANDOFF.md` — task brief
 - `https://www.swift.org` — design referent, fetched 2026-04-16
 - `https://www.pointfree.co` — cultural analog reference class

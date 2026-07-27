@@ -246,8 +246,8 @@ None of these happen until the user authorizes touching the package.
 
 ## References
 
-- `~/Developer/swift-primitives/swift-graph-primitives/Sources/` — actual surface
-- `~/Developer/bytedance/DanceUI/Sources/DanceUI/Internal/Graph/` — DanceUI transaction machinery
+- `[local-workspace]/swift-primitives/swift-graph-primitives/Sources/` — actual surface
+- `[local-workspace]/bytedance/DanceUI/Sources/DanceUI/Internal/Graph/` — DanceUI transaction machinery
 - `danceui-architectural-analysis.md` — parent research
 - Swift Institute primitive decomposition pattern (`swift-state-primitives`
   vs `swift-property-primitives`) — cited as precedent for the split

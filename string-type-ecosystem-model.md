@@ -578,84 +578,84 @@ The handoff says `swift-file-system` has a `Swift.String(Kernel.String)` compile
 
 ```
 L1 string-primitives:
-  ~/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/String.swift
-  ~/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/String.View.swift
-  ~/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/String.Char.swift
-  ~/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/String.Length.swift
-  ~/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/Tagged+String.swift
-  ~/Developer/swift-primitives/swift-string-primitives/Sources/String Primitives/Tagged+String.View.swift
-  ~/Developer/swift-primitives/swift-string-primitives/Package.swift
+  [local-workspace]/swift-primitives/swift-string-primitives/Sources/String Primitives/String.swift
+  [local-workspace]/swift-primitives/swift-string-primitives/Sources/String Primitives/String.View.swift
+  [local-workspace]/swift-primitives/swift-string-primitives/Sources/String Primitives/String.Char.swift
+  [local-workspace]/swift-primitives/swift-string-primitives/Sources/String Primitives/String.Length.swift
+  [local-workspace]/swift-primitives/swift-string-primitives/Sources/String Primitives/Tagged+String.swift
+  [local-workspace]/swift-primitives/swift-string-primitives/Sources/String Primitives/Tagged+String.View.swift
+  [local-workspace]/swift-primitives/swift-string-primitives/Package.swift
 
 L1 kernel-primitives (Kernel.String tagged wrapper):
-  ~/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel String Primitives/Kernel.String.swift
-  ~/Developer/swift-primitives/swift-kernel-primitives/Sources/Kernel String Primitives/exports.swift
+  [local-workspace]/swift-primitives/swift-kernel-primitives/Sources/Kernel String Primitives/Kernel.String.swift
+  [local-workspace]/swift-primitives/swift-kernel-primitives/Sources/Kernel String Primitives/exports.swift
 
 L1 ascii-primitives:
-  ~/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.swift
-  ~/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Byte.swift
-  ~/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Classification.swift
-  ~/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Validation.swift
-  ~/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Character.Control.swift
-  ~/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Character.Graphic.swift
-  ~/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Case.Conversion.swift
-  ~/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/UInt8+ASCII.swift
-  ~/Developer/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/Character+ASCII.swift
+  [local-workspace]/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.swift
+  [local-workspace]/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Byte.swift
+  [local-workspace]/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Classification.swift
+  [local-workspace]/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Validation.swift
+  [local-workspace]/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Character.Control.swift
+  [local-workspace]/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Character.Graphic.swift
+  [local-workspace]/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/ASCII.Case.Conversion.swift
+  [local-workspace]/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/UInt8+ASCII.swift
+  [local-workspace]/swift-primitives/swift-ascii-primitives/Sources/ASCII Primitives/Character+ASCII.swift
 
 L1 text / token / lexer primitives (auxiliary):
-  ~/Developer/swift-primitives/swift-text-primitives/Sources/Text Primitives/Text.swift
-  ~/Developer/swift-primitives/swift-text-primitives/Sources/Text Primitives/Text.Position.swift
-  ~/Developer/swift-primitives/swift-text-primitives/Sources/Text Primitives/Text.Line.swift
-  ~/Developer/swift-primitives/swift-token-primitives/Sources/Token Primitives/Token.swift
-  ~/Developer/swift-primitives/swift-lexer-primitives/Sources/Lexer Primitives/Lexer.Scanner.swift
+  [local-workspace]/swift-primitives/swift-text-primitives/Sources/Text Primitives/Text.swift
+  [local-workspace]/swift-primitives/swift-text-primitives/Sources/Text Primitives/Text.Position.swift
+  [local-workspace]/swift-primitives/swift-text-primitives/Sources/Text Primitives/Text.Line.swift
+  [local-workspace]/swift-primitives/swift-token-primitives/Sources/Token Primitives/Token.swift
+  [local-workspace]/swift-primitives/swift-lexer-primitives/Sources/Lexer Primitives/Lexer.Scanner.swift
 
 L2 ISO 9899:
-  ~/Developer/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.swift
-  ~/Developer/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.View.swift
-  ~/Developer/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.Char.swift
-  ~/Developer/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.Length.swift
-  ~/Developer/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.Comparison.swift
-  ~/Developer/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.Copy.swift
-  ~/Developer/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.Search.swift
+  [local-workspace]/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.swift
+  [local-workspace]/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.View.swift
+  [local-workspace]/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.Char.swift
+  [local-workspace]/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.Length.swift
+  [local-workspace]/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.Comparison.swift
+  [local-workspace]/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.Copy.swift
+  [local-workspace]/swift-iso/swift-iso-9899/Sources/ISO 9899 Core/ISO_9899.String.Search.swift
 
 L2 ISO 9945 (POSIX Kernel.String consumers):
-  ~/Developer/swift-iso/swift-iso-9945/Sources/ISO 9945 Kernel Environment/ISO 9945.Kernel.Environment.swift
-  ~/Developer/swift-iso/swift-iso-9945/Sources/ISO 9945 Kernel File/ISO 9945.Kernel.Path.Canonical.swift
+  [local-workspace]/swift-iso/swift-iso-9945/Sources/ISO 9945 Kernel Environment/ISO 9945.Kernel.Environment.swift
+  [local-workspace]/swift-iso/swift-iso-9945/Sources/ISO 9945 Kernel File/ISO 9945.Kernel.Path.Canonical.swift
 
 L2 INCITS 4-1986:
-  ~/Developer/swift-incits/swift-incits-4-1986/Sources/INCITS_4_1986/INCITS_4_1986.swift
-  ~/Developer/swift-incits/swift-incits-4-1986/Sources/INCITS_4_1986/INCITS_4_1986.ASCII.swift
-  ~/Developer/swift-incits/swift-incits-4-1986/Sources/INCITS_4_1986/INCITS_4_1986.ByteArray.swift
+  [local-workspace]/swift-incits/swift-incits-4-1986/Sources/INCITS_4_1986/INCITS_4_1986.swift
+  [local-workspace]/swift-incits/swift-incits-4-1986/Sources/INCITS_4_1986/INCITS_4_1986.ASCII.swift
+  [local-workspace]/swift-incits/swift-incits-4-1986/Sources/INCITS_4_1986/INCITS_4_1986.ByteArray.swift
 
 L2 IETF (URI / IRI / ABNF / Punycode / IDN):
-  ~/Developer/swift-ietf/swift-rfc-3986/Sources/RFC 3986/RFC_3986.URI.Scheme.swift
-  ~/Developer/swift-ietf/swift-rfc-3987/Sources/RFC 3987/IRI.swift
-  ~/Developer/swift-ietf/swift-rfc-3492/Sources/RFC 3492/Punycode.swift
-  ~/Developer/swift-ietf/swift-rfc-5234/Sources/RFC_5234/RFC_5234.Rule.swift
-  ~/Developer/swift-ietf/swift-rfc-5890/Sources/RFC 5890/IDNA.swift
+  [local-workspace]/swift-ietf/swift-rfc-3986/Sources/RFC 3986/RFC_3986.URI.Scheme.swift
+  [local-workspace]/swift-ietf/swift-rfc-3987/Sources/RFC 3987/IRI.swift
+  [local-workspace]/swift-ietf/swift-rfc-3492/Sources/RFC 3492/Punycode.swift
+  [local-workspace]/swift-ietf/swift-rfc-5234/Sources/RFC_5234/RFC_5234.Rule.swift
+  [local-workspace]/swift-ietf/swift-rfc-5890/Sources/RFC 5890/IDNA.swift
 
 L2 WHATWG:
-  ~/Developer/swift-whatwg/swift-whatwg-url/Sources/WHATWG URL/WHATWG_URL.URL.swift
+  [local-workspace]/swift-whatwg/swift-whatwg-url/Sources/WHATWG URL/WHATWG_URL.URL.swift
 
 L2 ECMA 48:
-  ~/Developer/swift-ecma/swift-ecma-48/Sources/ECMA 48/ECMA_48.swift
+  [local-workspace]/swift-ecma/swift-ecma-48/Sources/ECMA 48/ECMA_48.swift
 
 L2 Windows standard (absent Kernel.String):
-  ~/Developer/swift-microsoft/swift-windows-standard/Sources/Windows Kernel Environment Standard/Windows.Kernel.Environment.swift
-  ~/Developer/swift-microsoft/swift-windows-standard/Sources/Windows Kernel File Standard/Windows.Kernel.Path.Canonical.swift
+  [local-workspace]/swift-microsoft/swift-windows-standard/Sources/Windows Kernel Environment Standard/Windows.Kernel.Environment.swift
+  [local-workspace]/swift-microsoft/swift-windows-standard/Sources/Windows Kernel File Standard/Windows.Kernel.Path.Canonical.swift
 
 L3 strings / ascii / kernel:
-  ~/Developer/swift-foundations/swift-strings/Sources/Strings/Swift.String+Primitives.swift
-  ~/Developer/swift-foundations/swift-strings/Sources/Strings/Swift.String+ISO_9899.swift
-  ~/Developer/swift-foundations/swift-strings/Sources/Strings/ISO_9899.String+Primitives.swift
-  ~/Developer/swift-foundations/swift-strings/Sources/Strings/Swift.String+StrictDecode.swift
-  ~/Developer/swift-foundations/swift-strings/Sources/Strings/exports.swift
-  ~/Developer/swift-foundations/swift-ascii/Sources/ASCII/String_Primitives.String+ASCII.swift
-  ~/Developer/swift-foundations/swift-ascii/Sources/ASCII/exports.swift
-  ~/Developer/swift-foundations/swift-kernel/Sources/Kernel File/Swift.String+Kernel.swift
+  [local-workspace]/swift-foundations/swift-strings/Sources/Strings/Swift.String+Primitives.swift
+  [local-workspace]/swift-foundations/swift-strings/Sources/Strings/Swift.String+ISO_9899.swift
+  [local-workspace]/swift-foundations/swift-strings/Sources/Strings/ISO_9899.String+Primitives.swift
+  [local-workspace]/swift-foundations/swift-strings/Sources/Strings/Swift.String+StrictDecode.swift
+  [local-workspace]/swift-foundations/swift-strings/Sources/Strings/exports.swift
+  [local-workspace]/swift-foundations/swift-ascii/Sources/ASCII/String_Primitives.String+ASCII.swift
+  [local-workspace]/swift-foundations/swift-ascii/Sources/ASCII/exports.swift
+  [local-workspace]/swift-foundations/swift-kernel/Sources/Kernel File/Swift.String+Kernel.swift
 
 L3 lexer / parsers (auxiliary; scope-borderline):
-  ~/Developer/swift-foundations/swift-lexer/Sources/Lexer/Lexer.Tokenized.swift
-  ~/Developer/swift-foundations/swift-parsers/Sources/Parsers/exports.swift
+  [local-workspace]/swift-foundations/swift-lexer/Sources/Lexer/Lexer.Tokenized.swift
+  [local-workspace]/swift-foundations/swift-parsers/Sources/Parsers/exports.swift
 ```
 
 ---

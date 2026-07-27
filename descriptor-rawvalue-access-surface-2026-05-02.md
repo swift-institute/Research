@@ -312,7 +312,7 @@ deserve a separate cycle.
    - Phase 3: address swift-file-system's `File.Descriptor.rawValue` (separate
      versioned-API cycle if Phase 1 chose Option D).
 4. **Unblock the deferred Event.ID(descriptor:) relocation handoff**
-   (`~/Developer/swift-institute/HANDOFF-event-id-descriptor-conversion-relocation-2026-05-02.md`)
+   (`[local-workspace]/swift-institute/HANDOFF-event-id-descriptor-conversion-relocation-2026-05-02.md`)
    once the surface decision lands.
 
 ## Origin

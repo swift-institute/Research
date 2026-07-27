@@ -74,7 +74,7 @@ approved. This proposal does not reopen those decisions.
 
 The source and manifest census was reverified at:
 
-- repository: `~/Developer/repotraffic/repotraffic-com-server`
+- repository: `[local-workspace]/repotraffic/repotraffic-com-server`
 - branch state: `main` at `0a2489838e515405562c417a10647691442f9d20`, 12 commits ahead of
   `origin/main`
 - `Package.swift` blob: `6ce95f37f7177ff0472adf7693ab4f13952c5d21`
@@ -210,7 +210,7 @@ linter target containing “Audit,” which is not an audit-domain package. It r
 package/product name for the claimed gaps. This supports “no implemented/vended package found”; it
 does not claim that no source file or future reservation could express an adjacent concept.
 
-`~/Developer/swift-components/` contains 25 reserved component directories, including
+`[local-workspace]/swift-components/` contains 25 reserved component directories, including
 cache, jobs, metrics, tracing, worker, and mail names, but no `Package.swift` anywhere beneath that
 root. Those directories are design reservations, not reusable implementations. They do not
 supersede the implemented Scheduler/Server Jobs products or establish package boundaries.
@@ -279,7 +279,7 @@ censuses must run from a clean checkout of the accepted commit—not the concurr
 worktree—and do not require reading protected user documents:
 
 ```sh
-cd ~/Developer/repotraffic/repotraffic-com-server
+cd [local-workspace]/repotraffic/repotraffic-com-server
 git rev-parse 0a2489838e515405562c417a10647691442f9d20 \
   0a2489838e515405562c417a10647691442f9d20:Package.swift \
   0a2489838e515405562c417a10647691442f9d20:Sources \
@@ -305,16 +305,16 @@ rg -l '^import (Tracing|Instrumentation)$' Sources --glob '*.swift' | wc -l
 rg -l '^import Foundation$' Sources --glob '*.swift' | wc -l
 
 # Bounded ecosystem package/product-name census and positive controls.
-rg --files ~/Developer/swift-primitives -g 'Package.swift' | wc -l
-rg --files ~/Developer/swift-standards -g 'Package.swift' | wc -l
-rg --files ~/Developer/swift-foundations -g 'Package.swift' | wc -l
-rg --files ~/Developer/swift-components -g 'Package.swift' | wc -l
+rg --files [local-workspace]/swift-primitives -g 'Package.swift' | wc -l
+rg --files [local-workspace]/swift-standards -g 'Package.swift' | wc -l
+rg --files [local-workspace]/swift-foundations -g 'Package.swift' | wc -l
+rg --files [local-workspace]/swift-components -g 'Package.swift' | wc -l
 rg -n -i --glob 'Package.swift' \
   'commerce|billing|subscription|entitlement|message[ _-]?delivery|notification|feature[ _-]?flag|audit' \
-  ~/Developer/swift-primitives \
-  ~/Developer/swift-standards \
-  ~/Developer/swift-foundations \
-  ~/Developer/swift-components
+  [local-workspace]/swift-primitives \
+  [local-workspace]/swift-standards \
+  [local-workspace]/swift-foundations \
+  [local-workspace]/swift-components
 ```
 
 Internal edges were projected from `dump-package` by retaining dependencies whose names are in the
@@ -382,17 +382,17 @@ record live in the companion artifacts.
 
 ## References
 
-- [Swift Institute architecture skill](~/Developer/swift-institute/Skills/swift-institute/SKILL.md)
-- [Swift Institute ecosystem skill](~/Developer/swift-institute/Skills/swift-institute-ecosystem/SKILL.md)
-- [Modularization skill](~/Developer/swift-institute/Skills/modularization/SKILL.md)
-- [Layer placement](~/Developer/swift-institute/Skills/modularization/layer-placement.md)
-- [Package decomposition](~/Developer/swift-institute/Skills/modularization/package-decomposition.md)
-- [Cross-package integration](~/Developer/swift-institute/Skills/modularization/cross-package.md)
-- [Swift package skill](~/Developer/swift-institute/Skills/swift-package/SKILL.md)
-- [Research-process skill](~/Developer/swift-institute/Skills/research-process/SKILL.md)
-- [Institute server-stack architecture](~/Developer/swift-institute/Research/institute-server-stack-architecture.md)
-- [RepoTraffic Package.swift](~/Developer/repotraffic/repotraffic-com-server/Package.swift)
-- [RepoTraffic launch assessment](~/Developer/repotraffic/repotraffic-com-server/Assessment/2026-07-16-substrate-assessment.md)
-- [RepoTraffic Sources](~/Developer/repotraffic/repotraffic-com-server/Sources/)
-- [Local ecosystem repositories](~/Developer/)
+- [Swift Institute architecture skill]([local-workspace]/swift-institute/Skills/swift-institute/SKILL.md)
+- [Swift Institute ecosystem skill]([local-workspace]/swift-institute/Skills/swift-institute-ecosystem/SKILL.md)
+- [Modularization skill]([local-workspace]/swift-institute/Skills/modularization/SKILL.md)
+- [Layer placement]([local-workspace]/swift-institute/Skills/modularization/layer-placement.md)
+- [Package decomposition]([local-workspace]/swift-institute/Skills/modularization/package-decomposition.md)
+- [Cross-package integration]([local-workspace]/swift-institute/Skills/modularization/cross-package.md)
+- [Swift package skill]([local-workspace]/swift-institute/Skills/swift-package/SKILL.md)
+- [Research-process skill]([local-workspace]/swift-institute/Skills/research-process/SKILL.md)
+- [Institute server-stack architecture]([local-workspace]/swift-institute/Research/institute-server-stack-architecture.md)
+- [RepoTraffic Package.swift]([local-workspace]/repotraffic/repotraffic-com-server/Package.swift)
+- [RepoTraffic launch assessment]([local-workspace]/repotraffic/repotraffic-com-server/Assessment/2026-07-16-substrate-assessment.md)
+- [RepoTraffic Sources]([local-workspace]/repotraffic/repotraffic-com-server/Sources/)
+- [Local ecosystem repositories]([local-workspace]/)
 - [Independent review record](independent-review-record.md)

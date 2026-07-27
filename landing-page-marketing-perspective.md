@@ -217,8 +217,8 @@ These are not answerable from marketing reasoning alone — they require either 
 
 ## References
 
-- `~/Developer/swift-institute/HANDOFF.md` — full task brief and constraints
-- `~/Developer/swift-institute/Research/documentation-docc-alpha-launch.md` — locked alpha voice (status: DECISION)
-- `~/Developer/swift-institute/Swift Institute.docc/Swift Institute.md` — root page under analysis (lines cited above)
-- `~/Developer/swift-institute/Swift Institute.docc/Blog/Blog.md` — blog index, currently a single-link placeholder
-- `~/Developer/swift-institute/Swift Institute.docc/Blog/Restarting-the-Blog.md` — the single existing blog post, the dated content the landing page should be surfacing
+- `[local-workspace]/swift-institute/HANDOFF.md` — full task brief and constraints
+- `[local-workspace]/swift-institute/Research/documentation-docc-alpha-launch.md` — locked alpha voice (status: DECISION)
+- `[local-workspace]/swift-institute/Swift Institute.docc/Swift Institute.md` — root page under analysis (lines cited above)
+- `[local-workspace]/swift-institute/Swift Institute.docc/Blog/Blog.md` — blog index, currently a single-link placeholder
+- `[local-workspace]/swift-institute/Swift Institute.docc/Blog/Restarting-the-Blog.md` — the single existing blog post, the dated content the landing page should be surfacing

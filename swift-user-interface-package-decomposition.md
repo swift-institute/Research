@@ -283,6 +283,6 @@ swift-{html,pdf,markdown-html,css-html,pdf-html,svg}-rendering
 - `swift-user-interface-graph-transactions.md` — attribute-graph L1 decision
 - `swift-user-interface-tree-traversal.md` — witness-based tree walk
 - `swift-user-interface-primitive-audit.md` — per-primitive coverage table
-- `~/Developer/bytedance/DanceUI/Modules/DanceUICompose/` — DanceUI's rendering module
-- `~/Developer/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/` — existing document-rendering infrastructure (reusable pattern, document-specific vocabulary)
-- `~/Developer/swift-foundations/swift-{html,pdf,css-html,markdown-html,pdf-html,svg}-rendering/` — existing consumers of the document-rendering substrate
+- `[local-workspace]/bytedance/DanceUI/Modules/DanceUICompose/` — DanceUI's rendering module
+- `[local-workspace]/swift-primitives/swift-rendering-primitives/Sources/Rendering Primitives Core/` — existing document-rendering infrastructure (reusable pattern, document-specific vocabulary)
+- `[local-workspace]/swift-foundations/swift-{html,pdf,css-html,markdown-html,pdf-html,svg}-rendering/` — existing consumers of the document-rendering substrate

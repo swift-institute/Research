@@ -72,7 +72,7 @@ self-caught and switched to `-print0 | xargs -0`, but a lane without that reflex
 graded real packages EMPTY. (3) The first L2 lane dispatch scoped only `swift-standards/` —
 the per-authority sub-orgs (swift-ietf, swift-whatwg) where the real content lives surfaced
 only from the standards-gap erratum mid-run, costing a fifth lane dispatch. Charter said
-"HTTP family" without naming orgs; the seat should have listed `~/Developer` org dirs before
+"HTTP family" without naming orgs; the seat should have listed `[local-workspace]` org dirs before
 dispatching lanes.
 
 ## Patterns and Root Causes

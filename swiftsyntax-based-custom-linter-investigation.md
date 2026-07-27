@@ -772,7 +772,7 @@ strength under Option C.
 `swift-primitives-lint` (working name; final name per
 [API-NAME-001] and the package-naming skill, candidates include
 `swift-institute-lint`, `swift-typed-system-lint`) at
-`~/Developer/swift-primitives-lint/` per the
+`[local-workspace]/swift-primitives-lint/` per the
 `developer-tool-package-architecture.md` Option-C precedent
 (standalone Swift package in `Developer/`, future-promotable to a
 `swift-tools/` superrepo).
@@ -1008,5 +1008,5 @@ Either way, the rule populations migrate.
 
 ### Tier-2 SwiftLint canonical config (current state)
 
-- `https://raw.githubusercontent.com/swift-primitives/.github/main/.swiftlint.yml` — the 9-rule Tier 2 canonical (Foundation imports + L1 platform conditionals + R1–R4 + 2 evasion companions). Local copy at `~/Developer/swift-primitives/.github/.swiftlint.yml` HEAD `c252a39`.
+- `https://raw.githubusercontent.com/swift-primitives/.github/main/.swiftlint.yml` — the 9-rule Tier 2 canonical (Foundation imports + L1 platform conditionals + R1–R4 + 2 evasion companions). Local copy at `[local-workspace]/swift-primitives/.github/.swiftlint.yml` HEAD `c252a39`.
 - Tier 2 evasion-companion commits: `7622a8b` (paren-wrap + typename-swap broadening), `c252a39` (cast-outside + algebraic-flip companion).

@@ -392,4 +392,4 @@ These findings are promoted from this note into the canonical skills (skills ove
 - *(pending — Strata→modularization track)* `[MOD-PLACE]` — the placement-calculus hard-floor exception (cross-referenced, not encoded here).
 
 ### Empirical artifacts
-- Spikes S1–S8 + flag probe + s7 runtime: `/tmp/cdspikes/` (Swift 6.3.2 and 6.4-dev, 2026-06-06).
+- Spikes S1–S8 + flag probe + s7 runtime: `[temporary-path]/cdspikes/` (Swift 6.3.2 and 6.4-dev, 2026-06-06).

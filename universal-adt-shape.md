@@ -14,7 +14,7 @@ builds_on:
   - swift-institute/Research/derive-for-free-capability-composition.md             # the warranted-refinement test (C1–C4)
   - swift-institute/Research/cross-layer-capability-protocol-model.md              # Buffer HAS-A storage; doesn't refine it
 supersedes_partially: the tree-recomposition corrected-E SHAPE (its ENGINE is reused; only the skeleton is superseded)
-provenance: principal direction (2026-06-17); GATE-1 validation probe (executor), seat-verified on 6.3.2 (2026-06-18); scratch /tmp/uadt/
+provenance: principal direction (2026-06-17); GATE-1 validation probe (executor), seat-verified on 6.3.2 (2026-06-18); scratch [temporary-path]/uadt/
 ---
 -->
 
@@ -62,7 +62,7 @@ was an artifact of the hard `S: Store.Protocol` bound; removing it dissolves the
 
 ## Proof (GATE-1 validation probe; seat-verified on 6.3.2, 2026-06-18)
 
-Scratch: `/tmp/uadt/`. One `Container<S>` (`S: ~Copyable`, `Copyable where S: Copyable`) carrying a slot
+Scratch: `[temporary-path]/uadt/`. One `Container<S>` (`S: ~Copyable`, `Copyable where S: Copyable`) carrying a slot
 capability (mirroring the 4-op `__StoreProtocol` verbatim) and a child capability (per-conformer
 `Address`: `Int` for ordinal trees, `Key` for keyed) — both as conditional extensions, neither refining
 the other, neither bounding `Container`.
@@ -104,4 +104,4 @@ move-only (SE-0427). It is a property of one leaf instantiation, not of the shap
 - `swift-institute/Research/occupancy-encoding-2-category-theory-composition.md` — DECISION/RECOMMENDATION (Tier 3): composition over refinement; the mechanism this generalizes.
 - `swift-institute/Research/derive-for-free-capability-composition.md` — RECOMMENDATION (Tier 3): the warranted-refinement test C1–C4, applied here to the base seam.
 - `swift-institute/Research/cross-layer-capability-protocol-model.md` — RECOMMENDATION (Tier 3, APPROVED): Buffer HAS-A storage.
-- `.handoffs/HANDOFF-tree-universal-shape.md` § GATE 1 — the executor receipts; `/tmp/uadt/` — sources + binaries + SIL (seat-verified 2026-06-18).
+- `.handoffs/HANDOFF-tree-universal-shape.md` § GATE 1 — the executor receipts; `[temporary-path]/uadt/` — sources + binaries + SIL (seat-verified 2026-06-18).

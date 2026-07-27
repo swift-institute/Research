@@ -6,7 +6,7 @@
 
 ## Context
 
-The 2026-04-18 JSON-authoritative migration completed the Research + Experiments + Reflections + Audits + Blog indexes as canonical JSON served from sibling repos' `main` branches, with the swift-institute.org dashboard fetching `raw.githubusercontent.com` directly at runtime (CORS-verified, 5-minute cache TTL). The handoff for the ecosystem-wide per-package migration landed at `~/Developer/HANDOFF.md` (since executed per reflection `2026-04-18-ecosystem-index-migration-completion-and-batch-git-edges.md`).
+The 2026-04-18 JSON-authoritative migration completed the Research + Experiments + Reflections + Audits + Blog indexes as canonical JSON served from sibling repos' `main` branches, with the swift-institute.org dashboard fetching `raw.githubusercontent.com` directly at runtime (CORS-verified, 5-minute cache TTL). The handoff for the ecosystem-wide per-package migration landed at `[local-workspace]/HANDOFF.md` (since executed per reflection `2026-04-18-ecosystem-index-migration-completion-and-batch-git-edges.md`).
 
 The dashboard currently displays two corpora (swift-institute's own Research + Experiments). Post-migration, ~150 additional `_index.json` files exist across `swift-primitives`, `swift-foundations`, `swift-standards` per-package repos. The question of *how* to expose those in the dashboard is unresolved.
 

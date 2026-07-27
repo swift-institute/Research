@@ -13,7 +13,7 @@ scope: ecosystem-wide
 ## Context
 
 The five-layer container tower (Memory → `Memory.Allocator` → `Storage<Allocation>.Contiguous<Element>` →
-`Buffer<S>` → ADTs) was ratified 2026-06-09 (`~/Developer/.handoffs/PROPOSAL-tower-perfected-design.md`):
+`Buffer<S>` → ADTs) was ratified 2026-06-09 (`[local-workspace]/.handoffs/PROPOSAL-tower-perfected-design.md`):
 move-only substrate (R-1), CoW value semantics entering at the ADT tier via the column combinator
 `Shared<Element, B>` (R-2), the binding drain-box rule (R-5), a deferred upstream filing for the `-O`
 deinit-omission miscompile (R-6), and an accepted 2-allocation CoW cost with single-allocation fusion held
@@ -33,7 +33,7 @@ justification sentence misattributes it.
 ### Ref discovery and pinning
 
 The dispatch asked for "6.4, 6.5, main", guessing `release/6.4` / `release/6.5`. Reality in the reference
-clone (`~/Developer/swiftlang/swift`, fetched 2026-06-09):
+clone (`[local-workspace]/swiftlang/swift`, fetched 2026-06-09):
 
 | Asked | Actual ref pinned | SHA | Date | Notes |
 |---|---|---|---|---|
@@ -42,7 +42,7 @@ clone (`~/Developer/swiftlang/swift`, fetched 2026-06-09):
 | "6.5" | **does not exist** | — | — | No `release/6.5*` branch upstream (ls-remote) and no 6.5 tags. `main` is the 6.5-dev trunk. |
 | "main" | local `main` — **"main"** | `6f5d855aedf` | 2026-06-10 | Trunk (= 6.5-dev). |
 
-Method: three detached `git worktree`s under `/tmp/swift-arch/{632,64x,main}`; read-only throughout (no
+Method: three detached `git worktree`s under `[temporary-path]/swift-arch/{632,64x,main}`; read-only throughout (no
 checkout of the primary tree, no builds, no commits). All file:line citations below are against these three
 pinned SHAs; paths are relative to the worktree root, defaulting to `stdlib/public/core/`.
 
@@ -439,7 +439,7 @@ GitHub issue search found no existing upstream report of the R-6 shape (`-O` + `
   whose payload has a user deinit. The drain-box rule (R-5) remains the institute's own, stdlib-*convergent*
   (§Q3) mitigation, and the ratified posture (preserve the repro durably; file upstream when ready) is
   unchanged — when filed, it will be novel, not a duplicate.
-- The repro at `/tmp/cow-skip-repro/` is still in `/tmp` — the ratification (R-6) requires moving it into
+- The repro at `[temporary-path]/cow-skip-repro/` is still in `/tmp` — the ratification (R-6) requires moving it into
   `Experiments/` durably; that action is pending and should ride the next tower commit wave.
 
 **Annotation inventory** (main; the toolbox stdlib brings to the CoW path):
@@ -487,7 +487,7 @@ snapshots shortly (name-collision check for the tower's vocabulary: institute ty
 | 5 | `ManagedBuffer<Header, Element: ~Copyable>` on 6.3.2; tail-alloc mechanism fully documented; malloc-size capacity reclaim | Deferred single-alloc fusion; allocator leaf | Fusion door exists today for both element kinds; stays future/internal per ratification (layer-collapse tension recorded). Malloc-size reclaim + immortal empty singleton adoptable independently |
 | 6 | `mutableSpan` runs `_makeMutableAndUnique()` before vending; stdlib uses `_overrideLifetime` in returning accessors; SE-0465 pointer-pointee deferral still open | Span-canonical (ACCEPTED); W4 scoped span at box hop | **CONFIRMED**; `ensureUnique()` must precede any mutable-span vend on the `Shared` column; `_overrideLifetime` debt is stdlib-idiomatic parity, not deviation |
 | 7 | `Builtin.FixedArray` is a managed aggregate ⇒ InlineArray needs no deinit ⇒ conditional Copyable; userland `@_rawLayout` is unmanaged ⇒ Wall 1 | `Store.Inline` move-only law; `occupancy-lives-in-the-leaf.md` | **CONFIRMED with mechanism identified**; the dissolving feature (userland managed fixed-size aggregate) is proposed nowhere |
-| 8 | R-6 shape unexercised by stdlib; no upstream issue exists; no guarding idiom to copy | R-6 deferred filing + durable repro | **Posture confirmed**; repro still in `/tmp/cow-skip-repro` — move to `Experiments/` (pending ratified action) |
+| 8 | R-6 shape unexercised by stdlib; no upstream issue exists; no guarding idiom to copy | R-6 deferred filing + durable repro | **Posture confirmed**; repro still in `[temporary-path]/cow-skip-repro` — move to `Experiments/` (pending ratified action) |
 | 9 | `@_lifetime` (632) vs `@lifetime` (64x+) spelling split | All institute `~Escapable` surfaces | Pin `@_lifetime` until the 6.4 gate bump; plan a mechanical sweep then |
 
 ## Outcome
@@ -515,17 +515,17 @@ dispatch).
    — `0506` is Advanced Observation Tracking; the OutputSpan proposal is `0485-outputspan.md`.
 6. **Watch items**: SE-0527 re-land on main (re-verify `swift-array-primitives` shadow-resolution then);
    SE-0516 `Iterable` review closes 2026-06-18; lifetime-annotation rename at the 6.4 gate bump;
-   `/tmp/cow-skip-repro` → `Experiments/` (ratified R-6 action, still pending).
+   `[temporary-path]/cow-skip-repro` → `Experiments/` (ratified R-6 action, still pending).
 
 ## Residual (per [RES-027])
 
 | Item | Class | Disposition |
 |---|---|---|
-| ManagedBuffer-based single-alloc fusion *compiles and behaves* for the `Shared` shape (subclass + drain deinit + conditional-Copyable wrapper) on 6.3.2 — note R-6 lurks in exactly this composition | **direction** (not load-bearing now: 2-alloc is ratified; fusion gated on future measurement) | When fusion is considered: ≤1h spike extending `/tmp/tower-cow-spike` (swap `Box` for a `ManagedBuffer` subclass; re-run the 14-test suite + the R-6 oracle in `-O`) **before** any design reliance |
+| ManagedBuffer-based single-alloc fusion *compiles and behaves* for the `Shared` shape (subclass + drain deinit + conditional-Copyable wrapper) on 6.3.2 — note R-6 lurks in exactly this composition | **direction** (not load-bearing now: 2-alloc is ratified; fusion gated on future measurement) | When fusion is considered: ≤1h spike extending `[temporary-path]/tower-cow-spike` (swap `Box` for a `ManagedBuffer` subclass; re-run the 14-test suite + the R-6 oracle in `-O`) **before** any design reliance |
 | Malloc-size capacity reclaim at the tower's heap leaf (does our allocation path expose `malloc_size`-equivalent slack?) | direction | Allocator-tier check when touched next |
 | `@exclusivity(unchecked)` / `@_eagerMove` adoption on `Box`/`Shared` | direction | Measure at W4; both underscored/semi-official — record toolchain-risk if adopted |
 | Whether stdlib's `beginCOWMutation`-flag machinery ever becomes userland-reachable (would upgrade `Shared`'s check) | direction | None — watch Swift Evolution |
-| R-6 repro durability | **premise** (the drain-box rule's backing evidence) | Extant artifact: `/tmp/cow-skip-repro/` + `/tmp/tower-cow-spike/` (seat-verified 2026-06-09 per the ratification). Action already ratified (R-6): move into `Experiments/` — flagged in Outcome 6; this doc adds no new unverified premise |
+| R-6 repro durability | **premise** (the drain-box rule's backing evidence) | Extant artifact: `[temporary-path]/cow-skip-repro/` + `[temporary-path]/tower-cow-spike/` (seat-verified 2026-06-09 per the ratification). Action already ratified (R-6): move into `Experiments/` — flagged in Outcome 6; this doc adds no new unverified premise |
 
 ## References
 
@@ -584,7 +584,7 @@ dispatch).
 
 ### Internal ([RES-019])
 
-- `~/Developer/.handoffs/PROPOSAL-tower-perfected-design.md` (RATIFIED 2026-06-09) +
+- `[local-workspace]/.handoffs/PROPOSAL-tower-perfected-design.md` (RATIFIED 2026-06-09) +
   `HANDOFF-tower-flag-day-migration.md` — R-1…R-7; the corrected §0 phrase.
 - `conditional-deinit-conditionally-copyable-generics.md` (Tier 3) — Wall 1/Wall 2; SE-0427 law; S1–S8.
 - `occupancy-lives-in-the-leaf.md` (Tier 3, DECISION) — placement law this note's Q6 confirms.

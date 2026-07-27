@@ -414,8 +414,8 @@ Any future package proposal must cite compliance with these requirements.
 - `swift-foundations/Research/swift-user-interface-package-decomposition.md` — trigger
 - `swift-foundations/Research/danceui-architectural-analysis.md` — upstream context
 - [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/)
-- `~/Developer/swift-primitives/swift-parser-primitives/Sources/Parser Primitives Core/Parser.Parser.swift` — Parser.\`Protocol\` pattern
-- `~/Developer/swift-primitives/swift-array-primitives/Sources/Array Primitives Core/Array.Protocol.swift` — hoisted-protocol variant
-- `~/Developer/swift-primitives/swift-algebra-group-primitives/Sources/Algebra Group Primitives/` — Algebra.Group.\`Protocol\`
-- `~/Developer/swift-institute/Skills/code-surface/SKILL.md` — existing naming conventions (Nest.Name, compound-identifier prohibition)
-- `~/Developer/swift-institute/Skills/primitives/SKILL.md` — primitives-specific conventions
+- `[local-workspace]/swift-primitives/swift-parser-primitives/Sources/Parser Primitives Core/Parser.Parser.swift` — Parser.\`Protocol\` pattern
+- `[local-workspace]/swift-primitives/swift-array-primitives/Sources/Array Primitives Core/Array.Protocol.swift` — hoisted-protocol variant
+- `[local-workspace]/swift-primitives/swift-algebra-group-primitives/Sources/Algebra Group Primitives/` — Algebra.Group.\`Protocol\`
+- `[local-workspace]/swift-institute/Skills/code-surface/SKILL.md` — existing naming conventions (Nest.Name, compound-identifier prohibition)
+- `[local-workspace]/swift-institute/Skills/primitives/SKILL.md` — primitives-specific conventions

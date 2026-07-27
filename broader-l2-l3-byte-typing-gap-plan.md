@@ -1198,7 +1198,7 @@ the 7 rules' `findings` closure on `Lint.Source.Parsed`, accumulates
 per-rule per-package findings with typed `Text.Line.Number` /
 `Text.Line.Column` locations from text-primitives (the typed forms
 preserve identity through to the formatter; stringification only at
-render). Output written to `/tmp/byte-lint-validation-arc-g.md`.
+render). Output written to `[temporary-path]/byte-lint-validation-arc-g.md`.
 
 Skips: `.build/` artifacts, `.claude/worktrees/`.
 
@@ -1311,7 +1311,7 @@ it — consistent with `feedback_clean_build_before_compiler_limitation_claim.md
 | Artifact | Path |
 |---|---|
 | Validation harness (temporary) | `swift-foundations/swift-institute-linter-rules/Tests/Institute Linter Rule Byte Tests/Lint.Rule.Byte.ArcG.Validation.swift` |
-| Per-run finding stamp | `/tmp/byte-lint-validation-arc-g.md` |
+| Per-run finding stamp | `[temporary-path]/byte-lint-validation-arc-g.md` |
 | Existing per-rule validation receipts (authoring baseline; this arc EXTENDS with real-world findings, does not replace) | `swift-foundations/swift-linter/Research/promote-API-BYTE-001..007-validation-2026-05-{19,20}.md` |
 
 ### Phase 7 addendum — [API-BYTE-003] coverage extension (2026-05-20)
@@ -1453,8 +1453,8 @@ rfc-7519 was cleared by Arc D (2026-05-20); the Arc C-continuation's rfc-7519 wo
 
 ## References
 
-- Parent arc: `~/Developer/HANDOFF-ascii-domain-retyping.md` (Phase-2 execution sections + principal direction 2026-05-19)
-- Original program brief (superseded by overview + wave files): `~/Developer/HANDOFF-broader-l2-l3-byte-typing-gap-program.md`
+- Parent arc: `[local-workspace]/HANDOFF-ascii-domain-retyping.md` (Phase-2 execution sections + principal direction 2026-05-19)
+- Original program brief (superseded by overview + wave files): `[local-workspace]/HANDOFF-broader-l2-l3-byte-typing-gap-program.md`
 - `swift-institute/Research/byte-arithmetic-conformance.md` v1.0.0 RECOMMENDATION ζ
 - `swift-institute/Research/byte-protocol-capability-marker.md` v1.1.0 RECOMMENDATION
 - `swift-institute/Research/byte-primitive-extraction-and-domain-naming.md` v1.0.1

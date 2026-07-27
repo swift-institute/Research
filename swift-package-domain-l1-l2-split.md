@@ -287,7 +287,7 @@ Today's count: 1 immediate consumer (swift-package-graph). Future consumers may 
 - Compact at 18 characters; avoids the doubled-"swift" awkwardness of `swift-swift-package-manager-standard`.
 - The principal noted "for now" — open to renaming if a more consistent ecosystem-wide convention emerges.
 
-**Placement**: `~/Developer/swift-standards/swift-spm-standard/`
+**Placement**: `[local-workspace]/swift-standards/swift-spm-standard/`
 
 - L2 home is swift-standards (per CLAUDE.md "L2 Standards").
 - No sub-org (no swift-apple org exists or is planned).
@@ -361,14 +361,14 @@ Phase 0a and 0b can run in parallel (each modifies a different package). Phase 0
 
 ### Verified primary sources (2026-05-14)
 
-- `~/Developer/swift-primitives/swift-package-primitives/Sources/Package Primitives/Package.swift` — namespace docstring; "generic rather than brand-flavored"; lists `Package.Identity` + `Package.Manifest` as future siblings.
-- `~/Developer/swift-primitives/swift-package-primitives/Sources/Package Primitives/Package.Dependency.swift` — current Source variants (.path/.urlFrom/.urlRange); explicitly notes "Future sibling Source variants (registry-form per SE-0292; revision/branch constraints) MAY extend the enum additively per typed-identifier-naming Axiom 3."
-- `~/Developer/swift-primitives/swift-package-primitives/Sources/Package Primitives/Product.swift` — Product namespace docstring; "sibling to Package and Target rather than nested"; lists `Product.Kind` + `Product.LibraryType` as future.
-- `~/Developer/swift-primitives/swift-package-primitives/Sources/Package Primitives/Target.swift` — Target namespace docstring; lists `Target.Kind` + `Target.ModuleName` as future.
-- `~/Developer/swift-primitives/swift-version-primitives/Sources/Version Primitives/` — `Version.Semantic`, `Version.Calendar`, `Version.Tools`, `Version.Range` confirmed.
-- `~/Developer/swift-foundations/swift-manifests/Sources/Manifest Loader/Manifest.Load.swift` — confirms swift-manifests is for Institute DSL manifests, NOT SwiftPM Package.swift.
-- `~/Developer/swift-foundations/swift-process/Sources/` — Process.Spawn confirmed for future loader implementations.
-- `~/Developer/swift-foundations/swift-json/Sources/` — JSON.Serializable + JSON.parse confirmed for Codable wire format.
+- `[local-workspace]/swift-primitives/swift-package-primitives/Sources/Package Primitives/Package.swift` — namespace docstring; "generic rather than brand-flavored"; lists `Package.Identity` + `Package.Manifest` as future siblings.
+- `[local-workspace]/swift-primitives/swift-package-primitives/Sources/Package Primitives/Package.Dependency.swift` — current Source variants (.path/.urlFrom/.urlRange); explicitly notes "Future sibling Source variants (registry-form per SE-0292; revision/branch constraints) MAY extend the enum additively per typed-identifier-naming Axiom 3."
+- `[local-workspace]/swift-primitives/swift-package-primitives/Sources/Package Primitives/Product.swift` — Product namespace docstring; "sibling to Package and Target rather than nested"; lists `Product.Kind` + `Product.LibraryType` as future.
+- `[local-workspace]/swift-primitives/swift-package-primitives/Sources/Package Primitives/Target.swift` — Target namespace docstring; lists `Target.Kind` + `Target.ModuleName` as future.
+- `[local-workspace]/swift-primitives/swift-version-primitives/Sources/Version Primitives/` — `Version.Semantic`, `Version.Calendar`, `Version.Tools`, `Version.Range` confirmed.
+- `[local-workspace]/swift-foundations/swift-manifests/Sources/Manifest Loader/Manifest.Load.swift` — confirms swift-manifests is for Institute DSL manifests, NOT SwiftPM Package.swift.
+- `[local-workspace]/swift-foundations/swift-process/Sources/` — Process.Spawn confirmed for future loader implementations.
+- `[local-workspace]/swift-foundations/swift-json/Sources/` — JSON.Serializable + JSON.parse confirmed for Codable wire format.
 
 ### Internal cross-references
 

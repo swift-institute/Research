@@ -232,7 +232,7 @@ returns for Principal disposition rather than padding a grab-bag to satisfy the 
 Reproduction:
 
 ```sh
-cd ~/Developer/swift-institute/Research/SaaS-Vertical-Substrate
+cd [local-workspace]/swift-institute/Research/SaaS-Vertical-Substrate
 tail -n +2 proposed-edges.tsv | cut -f1,2 | tsort >/dev/null
 awk -F '\t' 'NR==1{next} {
   a=$3; b=$4; sub(/^L/,"",a); sub(/^L/,"",b)

@@ -269,7 +269,7 @@ Note the asymmetry this resolves in the brief's "defensible middle": the middle 
 
 ## References
 
-Internal (paths relative to `~/Developer/`):
+Internal (paths relative to `[local-workspace]/`):
 - `swift-primitives/swift-memory-primitives/Sources/Memory Region Primitives/Memory.Region.swift` · `Memory {Tracked,Allocatable,Unique} Primitives/*.Protocol.swift`
 - `swift-primitives/swift-storage-primitives/Sources/Storage Contiguous Primitives/Storage.Contiguous{,+Span}.swift` (the owned typed region, formerly `Memory.Contiguous`) · `swift-primitives/swift-span-primitives/Sources/Span Protocol Primitives/Span.Protocol.swift` (the span-vending capability, formerly `Memory.Contiguous.Protocol`)
 - `swift-primitives/swift-memory-heap-primitives/Sources/Memory Heap Primitives/Memory.Heap{, ~Copyable}.swift`

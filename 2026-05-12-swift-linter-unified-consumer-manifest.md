@@ -109,7 +109,7 @@ Twelve systems, organized into three groups by ecosystem affinity. Each surveyed
 
 #### 1.1 SwiftPM `Package.swift` (gold standard)
 
-**Consumer-facing syntax** (from `~/Developer/swift-foundations/swift-linter/Package.swift`, abridged):
+**Consumer-facing syntax** (from `[local-workspace]/swift-foundations/swift-linter/Package.swift`, abridged):
 
 ```swift
 // swift-tools-version: 6.3.1
@@ -1142,17 +1142,17 @@ The remaining open questions (Q-OPEN-3, 4, 5, 6, 7, 8) are answered in the body 
 - [Deno configuration file](https://docs.deno.com/runtime/manual/getting_started/configuration_file/)
 
 ### Local files
-- `~/Developer/swift-foundations/swift-linter/Package.swift`
-- `~/Developer/swift-foundations/swift-linter/Sources/Linter Core/Lint.Driver.swift`
-- `~/Developer/swift-foundations/swift-linter/Sources/Linter Core/Lint.Manifest.swift`
-- `~/Developer/swift-foundations/swift-manifests/Sources/Manifest Loader/Manifest.Load.swift`
-- `~/Developer/swift-primitives/swift-linter-primitives/Sources/Linter Primitives/Lint.Rule.swift`
-- `~/Developer/swift-primitives/swift-linter-primitives/Sources/Linter Primitives/Lint.Configuration.swift`
-- `~/Developer/swift-primitives/swift-linter-primitives/Sources/Linter Primitives/Lint.Rule.Configuration.swift`
-- `~/Developer/swift-primitives/swift-linter-primitives/Sources/Linter Primitives/Lint.Rule.Bundle.swift`
-- `~/Developer/swift-primitives/swift-carrier-primitives/Lint/Package.swift`
-- `~/Developer/swift-primitives/swift-carrier-primitives/Lint/Sources/Lint/main.swift`
-- `~/Developer/swift-primitives/swift-tagged-primitives/Lint/Package.swift`
-- `~/Developer/swift-primitives/swift-tagged-primitives/Lint/Sources/Lint/main.swift`
-- `~/Developer/swift-institute/.github/Lint.swift`
-- `~/Developer/swift-primitives/.github/Lint.swift`
+- `[local-workspace]/swift-foundations/swift-linter/Package.swift`
+- `[local-workspace]/swift-foundations/swift-linter/Sources/Linter Core/Lint.Driver.swift`
+- `[local-workspace]/swift-foundations/swift-linter/Sources/Linter Core/Lint.Manifest.swift`
+- `[local-workspace]/swift-foundations/swift-manifests/Sources/Manifest Loader/Manifest.Load.swift`
+- `[local-workspace]/swift-primitives/swift-linter-primitives/Sources/Linter Primitives/Lint.Rule.swift`
+- `[local-workspace]/swift-primitives/swift-linter-primitives/Sources/Linter Primitives/Lint.Configuration.swift`
+- `[local-workspace]/swift-primitives/swift-linter-primitives/Sources/Linter Primitives/Lint.Rule.Configuration.swift`
+- `[local-workspace]/swift-primitives/swift-linter-primitives/Sources/Linter Primitives/Lint.Rule.Bundle.swift`
+- `[local-workspace]/swift-primitives/swift-carrier-primitives/Lint/Package.swift`
+- `[local-workspace]/swift-primitives/swift-carrier-primitives/Lint/Sources/Lint/main.swift`
+- `[local-workspace]/swift-primitives/swift-tagged-primitives/Lint/Package.swift`
+- `[local-workspace]/swift-primitives/swift-tagged-primitives/Lint/Sources/Lint/main.swift`
+- `[local-workspace]/swift-institute/.github/Lint.swift`
+- `[local-workspace]/swift-primitives/.github/Lint.swift`

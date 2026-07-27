@@ -115,11 +115,11 @@ Claude's opening position:
 ```
 Claude Code
     ↓ (PostToolUse hook on Write)
-  /tmp/{session}-chatgpt-input.txt → pbcopy
+  [temporary-path]/{session}-chatgpt-input.txt → pbcopy
     ↓ (manual paste to ChatGPT)
   ChatGPT Web
     ↓ (manual copy response)
-  pbpaste → /tmp/{session}-chatgpt-response.txt
+  pbpaste → [temporary-path]/{session}-chatgpt-response.txt
     ↓ (hook notifies Claude)
   Claude Code reads response
 ```
@@ -135,7 +135,7 @@ Claude Code
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": { "tool_name": "Write", "path": "/tmp/*-chatgpt-input.txt" },
+        "matcher": { "tool_name": "Write", "path": "[temporary-path]/*-chatgpt-input.txt" },
         "command": "cat $TOOL_OUTPUT_PATH | pbcopy && osascript -e 'display notification \"Ready for ChatGPT\" with title \"Claude\"'"
       }
     ]
@@ -493,10 +493,10 @@ Use `[COLLAB-*]` for requirement IDs:
 
 | File | Purpose |
 |------|---------|
-| `/tmp/{topic}-round-{N}-claude.md` | Claude's response for copying to ChatGPT |
-| `/tmp/{topic}-round-{N}-gpt.md` | Placeholder for pasting GPT's response |
-| `/tmp/{topic}-transcript.md` | Full conversation history |
-| `/tmp/{topic}-convergence.md` | Final agreed plan |
+| `[temporary-path]/{topic}-round-{N}-claude.md` | Claude's response for copying to ChatGPT |
+| `[temporary-path]/{topic}-round-{N}-gpt.md` | Placeholder for pasting GPT's response |
+| `[temporary-path]/{topic}-transcript.md` | Full conversation history |
+| `[temporary-path]/{topic}-convergence.md` | Final agreed plan |
 
 ### Claude Code Hook (Phase 2)
 
@@ -507,7 +507,7 @@ Use `[COLLAB-*]` for requirement IDs:
       {
         "matcher": {
           "tool_name": "Write",
-          "path_pattern": "/tmp/*-round-*-claude.md"
+          "path_pattern": "[temporary-path]/*-round-*-claude.md"
         },
         "command": "cat \"$CLAUDE_TOOL_OUTPUT_PATH\" | pbcopy && osascript -e 'display notification \"Round ready - paste to ChatGPT\" with title \"Collaborative Discussion\"'"
       }

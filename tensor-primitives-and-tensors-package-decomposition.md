@@ -28,7 +28,7 @@ L1 swift-tensor-primitives **implemented**; status promoted RECOMMENDATION → I
 3. **`swift-vector-primitives` added to L1 deps.** Required for typed-throws-aware iteration in `Tensor.Broadcast.align` and `Tensor.Index.Position.validate`. Stdlib `Range<Int>.forEach` does not preserve typed throws per [API-ERR-005]; `Vector<Int>` from `swift-vector-primitives` provides typed-throws-aware `forEach` that does. Surfaced as an infrastructure-ceremony concern in the v1.2.0 follow-up doc — a thinner adapter (typed-throws `Swift.Range` extension or `Vector.Int.range(_:)` convenience init) is a candidate institute-wide cleanup; not in tensor-primitives scope.
 
 Implementation outcome:
-- `swift-tensor-primitives` at `~/Developer/swift-primitives/swift-tensor-primitives/` — 51 source files, 5 SwiftPM targets per the v1.1.0 decomposition.
+- `swift-tensor-primitives` at `[local-workspace]/swift-primitives/swift-tensor-primitives/` — 51 source files, 5 SwiftPM targets per the v1.1.0 decomposition.
 - `swift build` clean. `swift test` 21/21 passing in 15 suites.
 - `swift-linter`: **0 findings** after iterative cleanup (initial 207 → cleanup 5 → second-opinion remediation 0).
 - Repository remains private and untagged (no `.git` directory; per principal directive).
@@ -94,9 +94,9 @@ What is the right L1/L2/L3 package decomposition for tensor primitives in the in
 Searched `swift-institute/Research/` and all per-package `Research/` directories on 2026-05-16:
 
 ```bash
-grep -rli "tensor" ~/Developer/swift-institute/Research/
+grep -rli "tensor" [local-workspace]/swift-institute/Research/
 # → only zip-primitive-placement.md (incidental)
-grep -ril "tensor" ~/Developer/swift-primitives/*/Research/
+grep -ril "tensor" [local-workspace]/swift-primitives/*/Research/
 # → swift-pair-primitives/Research/pair-prior-art-survey.md (incidental)
 # → swift-range-primitives/Research/parallel-iteration-primitives.md (incidental)
 # → swift-storage-primitives/Research/split-storage-naming.md (incidental)
@@ -1276,4 +1276,4 @@ Per the v1.1.0 user request: explicit, mechanical audit of this design against t
 
 ### Comparator (Swift-specific)
 
-- `acemoglu/SwiftMetalNumerics` — local clone at `~/Developer/acemoglu/SwiftMetalNumerics/`.
+- `acemoglu/SwiftMetalNumerics` — local clone at `[local-workspace]/acemoglu/SwiftMetalNumerics/`.

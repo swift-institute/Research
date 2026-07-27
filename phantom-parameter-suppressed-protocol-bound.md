@@ -77,7 +77,7 @@ This extends the literature study's soundness point #5 — *"`Tagged` is `Copyab
 
 ### Type-system probe (Apple Swift 6.3.2, `swiftlang-6.3.2.1.108`, arm64)
 
-A faithful single-file model mirroring `Tagged`'s exact bounds (`/tmp/phantom-bound-probe/`; `swiftc -typecheck -enable-experimental-feature Lifetimes`):
+A faithful single-file model mirroring `Tagged`'s exact bounds (`[temporary-path]/phantom-bound-probe/`; `swiftc -typecheck -enable-experimental-feature Lifetimes`):
 
 | Probe | Construct | Result |
 |-------|-----------|--------|
@@ -227,7 +227,7 @@ The protocol-abstraction work records that `associatedtype Domain: ~Copyable & ~
 - `swift-ordinal-primitives/.../Ordinal.Protocol.swift:104,110`; `swift-affine-primitives/.../Tagged+Affine.swift:61`; `swift-array-primitives/.../Array.Fixed.Indexed.swift:23`.
 
 ### Empirical artifact
-- `/tmp/phantom-bound-probe/{model,positive,negative}.swift` — Apple Swift 6.3.2; Probe A `exit 0`, Probe B `error: type 'NonEscTag' does not conform to protocol 'Escapable'`.
+- `[temporary-path]/phantom-bound-probe/{model,positive,negative}.swift` — Apple Swift 6.3.2; Probe A `exit 0`, Probe B `error: type 'NonEscTag' does not conform to protocol 'Escapable'`.
 
 ### Swift Evolution
 - SE-0446: Nonescapable types (`~Escapable`). https://github.com/swiftlang/swift-evolution/blob/main/proposals/0446-non-escapable.md

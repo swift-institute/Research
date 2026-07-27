@@ -50,7 +50,7 @@ The parent session is on the `swift-primitives` 0.1.0 release-cohort path (carri
 Inventory generated at 2026-04-29T10:45:36Z UTC by:
 
 ```bash
-mkdir -p /tmp/github-metadata-inventory
+mkdir -p [temporary-path]/github-metadata-inventory
 for org in swift-primitives swift-standards swift-foundations \
           swift-ietf swift-iso swift-ieee swift-iec swift-w3c swift-whatwg swift-ecma swift-incits \
           swift-linux-foundation swift-microsoft swift-arm-ltd swift-intel swift-riscv \
@@ -58,7 +58,7 @@ for org in swift-primitives swift-standards swift-foundations \
   gh repo list "$org" --limit 500 \
     --json name,description,repositoryTopics,homepageUrl,licenseInfo,isArchived,visibility,\
 hasIssuesEnabled,hasDiscussionsEnabled,hasWikiEnabled,defaultBranchRef,isTemplate,createdAt,pushedAt \
-    > "/tmp/github-metadata-inventory/${org}.json"
+    > "[temporary-path]/github-metadata-inventory/${org}.json"
 done
 ```
 
@@ -959,5 +959,5 @@ Daily cron was chosen over weekly because the autopilot writes drift back automa
 - `swift-institute/Skills/code-surface/SKILL.md` — `[API-NAME-003]` specification-mirroring names
 - `swift-institute/Skills/skill-lifecycle/SKILL.md` — `[SKILL-CREATE-005]`, `[SKILL-CREATE-005a]`, `[SKILL-LIFE-002]`, `[SKILL-LIFE-021]`
 - `swift-institute/Skills/handoff/SKILL.md` — `[HANDOFF-013a]`, `[HANDOFF-021]`, `[HANDOFF-023]`
-- Inventory fixture: `/tmp/github-metadata-inventory/` (17 JSON files, sha256 `4dbe3489de5b88978d645071bcc47c7c9d9a141fb2f68fc862a1989e5f155240`, generated 2026-04-29T10:45:36Z UTC)
+- Inventory fixture: `[temporary-path]/github-metadata-inventory/` (17 JSON files, sha256 `4dbe3489de5b88978d645071bcc47c7c9d9a141fb2f68fc862a1989e5f155240`, generated 2026-04-29T10:45:36Z UTC)
 - External convention sources (sampled via `gh repo view --json ...`): `apple/swift-collections`, `apple/swift-system`, `apple/swift-nio`, `apple/swift-numerics`, `apple/swift-async-algorithms`, `apple/swift-atomics`, `apple/swift-argument-parser`, `apple/swift-syntax`, `apple/swift-format`, `apple/swift-crypto`; `pointfreeco/swift-composable-architecture`, `pointfreeco/swift-dependencies`, `pointfreeco/swift-parsing`, `pointfreeco/swift-snapshot-testing`, `pointfreeco/swift-tagged`; `vapor/vapor`, `vapor/fluent`, `vapor/jwt`; `swift-server/swift-aws-lambda-runtime`; `apollographql/apollo-ios`. All values cited inline in § 2 are verbatim from the `gh repo view` output at 2026-04-29.

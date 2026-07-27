@@ -29,7 +29,7 @@ Should the ecosystem convention change from unlabeled `init(_ : SourceType)` to 
 
 ### 1. Inventory of `init(_ :)` Patterns on Tagged Types
 
-A comprehensive search of `~/Developer/swift-primitives/` across all `Sources/` directories identified the following `init(_ :)` patterns on Tagged types or their typealiases.
+A comprehensive search of `[local-workspace]/swift-primitives/` across all `Sources/` directories identified the following `init(_ :)` patterns on Tagged types or their typealiases.
 
 #### Category A: Same-Domain Identity Wrapping (no transformation)
 

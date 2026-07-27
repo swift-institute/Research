@@ -99,7 +99,7 @@ Worked through findings in five severity-batched waves. Status snapshot:
 
 ### A.4 — CLAUDE.md handoff row mentions only "handing off to a new session or spinning off investigation" — no mention that /handoff is composable with /supervise
 
-**Skill / location**: `~/Developer/CLAUDE.md:94-95`
+**Skill / location**: `[local-workspace]/CLAUDE.md:94-95`
 **Severity**: LOW
 **Issue**: The Skill Routing table row for **handoff** says *"Handing off to a new session or spinning off investigation"*. The newly added **supervise** row sits immediately below. Neither hints that the two compose. Given the recent addition of [HANDOFF-012], routing by the table alone makes the composition invisible — a reader picks one or the other.
 **Why it matters**: This is the top-of-funnel routing table. If a principal agent has non-obvious constraints and is about to hand off, nothing in the routing cues them to invoke /supervise first.

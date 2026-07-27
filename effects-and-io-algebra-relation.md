@@ -1112,47 +1112,47 @@ other:
 
 ### Ecosystem — Sources examined
 
-- `~/Developer/swift-foundations/swift-effects/Package.swift`
-- `~/Developer/swift-foundations/swift-effects/Sources/Effects/exports.swift`
-- `~/Developer/swift-foundations/swift-effects/Sources/Effects/EffectWithHandler.swift`
-- `~/Developer/swift-foundations/swift-effects/Sources/Effects/Effect.perform.swift`
-- `~/Developer/swift-foundations/swift-effects/Sources/Effects Built-in/Effect.Exit.swift`
-- `~/Developer/swift-foundations/swift-effects/Sources/Effects Built-in/Effect.Yield.swift`
-- `~/Developer/swift-foundations/swift-effects/Sources/Effects Testing/Effect.Test.Handler.swift`
-- `~/Developer/swift-foundations/swift-effects/Sources/Effects Testing/Effect.Test.Recorder.swift`
-- `~/Developer/swift-foundations/swift-effects/Sources/Effects Testing/Effect.Test.Spy.swift`
-- `~/Developer/swift-foundations/swift-effects/Audits/audit.md`
-- `~/Developer/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.swift`
-- `~/Developer/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Protocol.swift`
-- `~/Developer/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Handler.swift`
-- `~/Developer/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Context.swift`
-- `~/Developer/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Continuation.swift`
-- `~/Developer/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Continuation.One.swift`
-- `~/Developer/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Continuation.Multi.swift`
-- `~/Developer/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Outcome.swift`
-- `~/Developer/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.perform.swift`
-- `~/Developer/swift-primitives/swift-dependency-primitives/Sources/Dependency Primitives/Dependency.Key.swift`
-- `~/Developer/swift-primitives/swift-dependency-primitives/Sources/Dependency Primitives/Dependency.Scope.swift`
-- `~/Developer/swift-foundations/swift-io/Experiments/io-algebra/Package.swift`
-- `~/Developer/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.swift`
-- `~/Developer/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Monad.swift`
-- `~/Developer/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Error.swift`
-- `~/Developer/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Factories.swift`
-- `~/Developer/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Reader.swift`
-- `~/Developer/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Applicative.swift`
-- `~/Developer/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Traversal.swift`
-- `~/Developer/swift-foundations/swift-io/Experiments/io-algebra/Sources/main.swift`
+- `[local-workspace]/swift-foundations/swift-effects/Package.swift`
+- `[local-workspace]/swift-foundations/swift-effects/Sources/Effects/exports.swift`
+- `[local-workspace]/swift-foundations/swift-effects/Sources/Effects/EffectWithHandler.swift`
+- `[local-workspace]/swift-foundations/swift-effects/Sources/Effects/Effect.perform.swift`
+- `[local-workspace]/swift-foundations/swift-effects/Sources/Effects Built-in/Effect.Exit.swift`
+- `[local-workspace]/swift-foundations/swift-effects/Sources/Effects Built-in/Effect.Yield.swift`
+- `[local-workspace]/swift-foundations/swift-effects/Sources/Effects Testing/Effect.Test.Handler.swift`
+- `[local-workspace]/swift-foundations/swift-effects/Sources/Effects Testing/Effect.Test.Recorder.swift`
+- `[local-workspace]/swift-foundations/swift-effects/Sources/Effects Testing/Effect.Test.Spy.swift`
+- `[local-workspace]/swift-foundations/swift-effects/Audits/audit.md`
+- `[local-workspace]/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.swift`
+- `[local-workspace]/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Protocol.swift`
+- `[local-workspace]/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Handler.swift`
+- `[local-workspace]/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Context.swift`
+- `[local-workspace]/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Continuation.swift`
+- `[local-workspace]/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Continuation.One.swift`
+- `[local-workspace]/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Continuation.Multi.swift`
+- `[local-workspace]/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.Outcome.swift`
+- `[local-workspace]/swift-primitives/swift-effect-primitives/Sources/Effect Primitives/Effect.perform.swift`
+- `[local-workspace]/swift-primitives/swift-dependency-primitives/Sources/Dependency Primitives/Dependency.Key.swift`
+- `[local-workspace]/swift-primitives/swift-dependency-primitives/Sources/Dependency Primitives/Dependency.Scope.swift`
+- `[local-workspace]/swift-foundations/swift-io/Experiments/io-algebra/Package.swift`
+- `[local-workspace]/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.swift`
+- `[local-workspace]/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Monad.swift`
+- `[local-workspace]/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Error.swift`
+- `[local-workspace]/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Factories.swift`
+- `[local-workspace]/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Reader.swift`
+- `[local-workspace]/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Applicative.swift`
+- `[local-workspace]/swift-foundations/swift-io/Experiments/io-algebra/Sources/IO.Traversal.swift`
+- `[local-workspace]/swift-foundations/swift-io/Experiments/io-algebra/Sources/main.swift`
 
 ### Ecosystem — Related research
 
-- `~/Developer/swift-foundations/swift-io/Research/io-witness-design-literature-study.md` (v4.0) — witness vs effects equivalence; runners calculus; evidence passing
-- `~/Developer/swift-primitives/swift-effect-primitives/Research/Algebraic Effects in Swift.md` (v1.0) — implementation-level rationale for hoisted protocol pattern, `Reference.Box` workaround
-- `~/Developer/swift-foundations/Research/io-driver-witness-composition.md`
-- `~/Developer/swift-foundations/Research/io-witness-experiment-results.md`
+- `[local-workspace]/swift-foundations/swift-io/Research/io-witness-design-literature-study.md` (v4.0) — witness vs effects equivalence; runners calculus; evidence passing
+- `[local-workspace]/swift-primitives/swift-effect-primitives/Research/Algebraic Effects in Swift.md` (v1.0) — implementation-level rationale for hoisted protocol pattern, `Reference.Box` workaround
+- `[local-workspace]/swift-foundations/Research/io-driver-witness-composition.md`
+- `[local-workspace]/swift-foundations/Research/io-witness-experiment-results.md`
 
 ### Governance and constraints
 
-- `[API-ERR-001]` — Typed throws (`~/Developer/CLAUDE.md`)
+- `[API-ERR-001]` — Typed throws (`[local-workspace]/CLAUDE.md`)
 - `[API-IMPL-005]` — One type per file
 - `[MEM-COPY-001]` — Noncopyable type declaration
 - `[MEM-COPY-004]` — Extension constraints for `~Copyable`

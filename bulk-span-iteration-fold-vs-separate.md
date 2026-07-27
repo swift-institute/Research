@@ -16,7 +16,7 @@ changelog:
      optional fast-path, kept as a SEPARATE refining protocol, or something else. Extends
      (does not duplicate) unified-iteration-design.md, sequencer-primitives-
      reconciliation-refactor.md, collection-sequence-protocol-detachment.md, and the
-     /tmp/iter-bulk-spike findings (Swift 6.3.2). The principal decides; this doc presents
+     [temporary-path]/iter-bulk-spike findings (Swift 6.3.2). The principal decides; this doc presents
      evidence + implications only."
 ---
 -->
@@ -30,7 +30,7 @@ changelog:
 
 ## Context
 
-A 2026-05-26 `/tmp` spike (`/tmp/iter-bulk-spike/findings.md`, Apple Swift 6.3.2,
+A 2026-05-26 `/tmp` spike (`[temporary-path]/iter-bulk-spike/findings.md`, Apple Swift 6.3.2,
 `swiftlang-6.3.2.1.108`) tested whether a **folded** iterator design works: one move-only
 (`~Copyable & ~Escapable`) protocol with `next()` *plus* an optional defaulted bulk hook
 `withNextChunk<R>(maximumCount:_:) -> R?`. The folded shape **compiles and runs**, and a
@@ -333,7 +333,7 @@ still requires `Escapable`. The institute should not treat that claim as settled
 
 ## References
 
-### Local stdlib clone (`~/Developer/swiftlang/swift/stdlib/public/core/`)
+### Local stdlib clone (`[local-workspace]/swiftlang/swift/stdlib/public/core/`)
 - `Span/Span.swift:25-29` — `public struct Span<Element: ~Copyable>: ~Escapable, …` (the crux: no `~Escapable` element). `Verified: 2026-05-26`.
 - `BorrowingSequence.swift:15-72` — `BorrowingIteratorProtocol<Element>: ~Copyable, ~Escapable`, `associatedtype Element: ~Copyable`, `nextSpan(maximumCount:) -> Span<Element>`, `skip(by:)`. `Verified: 2026-05-26`.
 - `BorrowingSequence.swift:99-140` — `SpanIterator<Element>` (the contiguous-storage bulk iterator). `Verified: 2026-05-26`.
@@ -358,7 +358,7 @@ still requires `Escapable`. The institute should not treat that claim as settled
 - [Pitch: Introduce `for borrow` and `for inout`](https://forums.swift.org/t/pitch-introduce-for-borrow-and-for-inout-to-provide-non-copying-collection-iteration/62549) — language-level, index-based, scalar; older (2023-01-13); not an accepted resolution.
 
 ### Empirical input
-- `/tmp/iter-bulk-spike/findings.md` (Apple Swift 6.3.2, `swiftlang-6.3.2.1.108`) — FOLD compiles + dispatches; mandatory caveat `Element: ~Copyable` (NOT `~Copyable & ~Escapable`) because `Span<Element>` requires `Element: Escapable`; verbatim error captured. Fallback shapes (b) `next(maximumCount:) -> Span` + `providesBulk`, (c) separate refining protocol — both compile + run.
+- `[temporary-path]/iter-bulk-spike/findings.md` (Apple Swift 6.3.2, `swiftlang-6.3.2.1.108`) — FOLD compiles + dispatches; mandatory caveat `Element: ~Copyable` (NOT `~Copyable & ~Escapable`) because `Span<Element>` requires `Element: Escapable`; verbatim error captured. Fallback shapes (b) `next(maximumCount:) -> Span` + `providesBulk`, (c) separate refining protocol — both compile + run.
 
 ### Internal prior art extended (not duplicated)
 - `iterator-span-buffer-elimination.md` (DECISION, v5.0.0) — `nextSpan` bulk surface; zero-heap reducibility.

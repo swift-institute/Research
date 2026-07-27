@@ -358,7 +358,7 @@ Specialization-friendly use sites should prefer `some <Agent>.\`Protocol\`<I, O>
 
 The witness lives at module top level, named after the bare verb. This can collide with existing top-level types in other institute packages (e.g., a `Format<…>` witness in `swift-formatter-primitives` collides by name with a pre-existing `Format` empty-enum namespace in `swift-format-primitives` that hosts concrete formatter types like `Format.Case`, `Format.Decimal`, `Format.Numeric`). Per §12.8, the resolution depends on whether the existing type is a value-shape consumer of the agent (in which case rename it to free the witness name), a sibling namespace (in which case module-qualified coexistence), or genuinely unrelated (rename one or the other).
 
-When adding a new top-level witness, grep `~/Developer/swift-primitives/` for `struct <Verb>`, `enum <Verb>`, and `typealias <Verb>` first. Surface any collision to the principal before committing the witness.
+When adding a new top-level witness, grep `[local-workspace]/swift-primitives/` for `struct <Verb>`, `enum <Verb>`, and `typealias <Verb>` first. Surface any collision to the principal before committing the witness.
 
 ---
 
@@ -575,7 +575,7 @@ If the agent currently has a facet the audit says it doesn't need, surface to th
 - [ ] **Verify agent name** conforms to verb-er noun form (`Parser`, `Sequencer`, …). Rename package if needed.
 - [ ] **Verify agent enum** exists as `enum <Agent> {}`. Empty namespace.
 - [ ] **Verify agent protocol** exists at `<Agent>.\`Protocol\`<Input, Output, Failure>` with primary associated types and typed throws. Additional facets per Phase A.0 audit: `~Copyable` protocol self, `Body: ~Copyable` + result builder, `borrowing` method modifier, `inout` first parameter.
-- [ ] **Witness name-collision check** (per §6.x and §12.8): before promoting the witness to top level, grep `~/Developer/swift-primitives/` for existing `struct <Verb>` / `enum <Verb>` / `typealias <Verb>` declarations. If a collision exists, surface to the principal — choose between renaming the existing type (if subordinate), module-qualified-only coexistence (no umbrella re-export), or — last resort — renaming the witness.
+- [ ] **Witness name-collision check** (per §6.x and §12.8): before promoting the witness to top level, grep `[local-workspace]/swift-primitives/` for existing `struct <Verb>` / `enum <Verb>` / `typealias <Verb>` declarations. If a collision exists, surface to the principal — choose between renaming the existing type (if subordinate), module-qualified-only coexistence (no umbrella re-export), or — last resort — renaming the witness.
 - [ ] **Promote witness to top level** if currently nested as `<Agent>.Witness`. New file: `Sources/<Agent> Primitives Core/<Verb>.swift`. Old nested name can stay as deprecated typealias for source compat during migration.
 - [ ] **Verify attachable protocol** exists at top level as `<Verb>able` with the appropriate static/instance accessor.
 
@@ -802,6 +802,6 @@ Existing implementations:
   - §11 migration checklist — added Phase A.0 shape-subset audit, witness-collision check in Phase A, Pair-semantics design step + cross-package cycle pre-flight in Phase B, lint pass in Phase D.
   - §12.8 added — Top-level witness name collision with existing institute package, with the known `Format` collision and its module-qualified-coexistence resolution.
   - §13 split into 13.1 (parser-primitives partial), 13.2 (formatter-primitives pilot complete), 13.3 (new pilots).
-- **2026-05-25**: Refinements from the iterator-package decision (per `/tmp/handoff-vector-sequence-map-iterator.md` §C):
+- **2026-05-25**: Refinements from the iterator-package decision (per `[temporary-path]/handoff-vector-sequence-map-iterator.md` §C):
   - §3 added a witness-identifier sub-rule for **method-stem divergence** — when the agent's canonical method name doesn't share a stem with the agent name (Iterator's `next()`), the witness takes the verb form of the *agent name* (`Iterate`), not the method (`Next`).
   - §12.8 added a fifth classification — **existing top-level name is itself a separate agent with its own codec-triple in its own package**. Resolution is peer packages with appropriate dependency direction, not collision-resolution. Example: iterator-primitives + sequencer-primitives as peer atomic packages rather than `Sequencer.Iterator` nesting (which would invert the real dependency).

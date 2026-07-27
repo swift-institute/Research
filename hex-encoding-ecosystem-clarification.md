@@ -107,7 +107,7 @@ This settles Q2 from the handoff: no `Byte.Base*` namespace.
 
 ## Survey — current ecosystem state
 
-[Verified: 2026-05-18 against file system at `~/Developer/`]
+[Verified: 2026-05-18 against file system at `[local-workspace]/`]
 
 ### swift-primitives/swift-binary-base-primitives (L1)
 
