@@ -126,10 +126,78 @@ backend.
 | CertificateStore Tests.swift | 6 | issuance-generated store contents + trust-root loading | B rewire; trust-root-loading cases → darwin/linux arc |
 | PolicyBuilder Tests.swift | 24 | issuance-generated policy inputs | B rewire (gate) + C-defer edge |
 
-## Rewired (B) — essence tests moved to frozen fixtures
+## Rewired (B) — essence tests restored
 
-_(execution in progress)_
+### Increment 2, batch 1 — builder-DSL decoupling (no fixtures required)
+
+Both files were deferred at increment 1 because they referenced the deleted
+`DistinguishedNameBuilder` DSL (`CountryName`/`OrganizationName`/…), not because
+they needed issuance-generated PKI. Decoupling them from the DSL restores pure
+DN/RDN essence coverage without touching the frozen corpus.
+
+| file | restored | method |
+|---|---|---|
+| DistinguishedName Tests.swift | 17 of 19 | DSL was confined to the final 2 cases; remaining 17 are DN/RDN essence (sorting, remove, representation, attribute values, round-trip, serialization). Also renamed 10 stale `ASN1UTF8String`/`ASN1PrintableString`/`ASN1IA5String` tokens the Sources-only string-type pass had missed. |
+| NameConstraints Tests.swift | 2 of 2 | The DSL appeared only in the `names` fixture-static; rewritten with the array-form `DistinguishedName([RelativeDistinguishedName.Attribute…])` initializer, preserving the DSL's attribute encodings (countryName → PrintableString, others → UTF8String) so the equality semantics under test are unchanged. |
+
+Deferred from these files (A / prune — tests of the excluded surface itself):
+
+| file | case (@Test name) | excluded surface | reactivation arc |
+|---|---|---|---|
+| DistinguishedName Tests.swift | `distinguished name builder` | DistinguishedNameBuilder DSL | issuance |
+| DistinguishedName Tests.swift | `distinguished name builder flow` | DistinguishedNameBuilder DSL (result-builder control flow) | issuance |
+
+### Increment 2, batch 2 — PolicyBuilder restored; CertificateStore fully deferred
+
+| file | disposition | detail |
+|---|---|---|
+| PolicyBuilder Tests.swift | 24 of 24 RESTORED | A single issuance-built self-signed cert served all 24 cases purely as a vehicle for exercising policy composition — the policies under test never inspect it. Rebound to the frozen `root-ca` fixture; the Crypto/Date/DN-DSL dependencies fell away with it. Separately, `RFC5280Policy()` now requires `validationTime:` (Q4 injected-time ruling removed the system-clock default), so the compile-time composition check supplies the corpus's frozen 2026-01-01 instant. |
+| CertificateStore Tests.swift | 6 of 6 DEFERRED | See split below. |
+
+CertificateStore splits into two deferral causes, neither rewireable in slice 1:
+
+| case (@Test name) | cause | reactivation arc |
+|---|---|---|
+| `loading fails gracefully if files do not exist` | `CertificateStore.loadTrustRoots` — system-trust acquisition | linux (swift-certificates-linux) |
+| `loading fails gracefully if first file does not exist` | `loadTrustRoots` + the deleted `ca-certificates.crt` PEM trust bundle | linux |
+| `loading default trust roots` (os(Linux) variant) | `CertificateStore.systemTrustRoots` | linux |
+| `loading default trust roots` (non-Linux variant) | `CertificateStore.systemTrustRoots` | darwin |
+| `custom certificate store` | **C-EXPAND CANDIDATE — needs lead confirm.** Not rewireable onto the current corpus: the test deliberately encodes the CA's DN as PrintableString and the leaf's *issuer* DN as UTF8String, and exercises the store's DN normalization across that mismatch. Every frozen fixture uses consistent encodings, so rewiring would silently delete the assertion rather than preserve it. | comprehensive verifier coverage — OR a targeted 2-fixture add (a CA/leaf pair with deliberately mismatched DN string encodings) if the lead judges CustomCertificateStore normalization worth a corpus slot. Note it is **not** one of the enumerated N5 gate rows, which is why I did not add it unilaterally. |
+| `custom certificate store deprecated` | as above (deprecated-API twin) | as above |
+
+### Increment 2, batch 3 — ServerIdentityPolicy restored on 5 new frozen vectors
+
+| file | restored | method |
+|---|---|---|
+| ServerIdentityPolicy Tests.swift | 56 of 56 | Its 5 in-test issued certificates replaced by 5 lead-confirmed additive fixtures (see §Corpus expansion). Every assertion preserved verbatim — no hostname, SAN or expectation was rewritten. |
 
 ## Corpus expansion (C) — new frozen DER vectors
+
+**Increment 2, batch 3 (lead-confirmed 2026-07-24): 28 → 33, additive.** The original
+28 are byte-identical and untouched — ECDSA signing uses randomized nonces, so a
+wholesale regeneration would rewrite every fixture's bytes for no semantic gain.
+
+| fixture | gate row(s) served |
+|---|---|
+| `leaf-weirdo-sans` | wildcard boundaries · IDNA policy · encoding/NUL rejection |
+| `leaf-multi-san-hosts` | SAN DNS/IP |
+| `leaf-multi-cn` | CN-fallback rejection |
+| `leaf-no-cn` | CN-fallback rejection |
+| `leaf-unicode-cn` | IDNA policy · CN-fallback |
+
+**Two fidelity defects caught by gating on `package test` rather than the build** —
+recorded because both are the silent-coverage-loss class:
+
+1. **Critical basicConstraints.** The generator helper emitted `Critical(BasicConstraints…)`,
+   copied from the leaf helper; the suite's originals leave it **non-critical**.
+   `ServerIdentityPolicy` declares no `verifyingCriticalExtensions`, so the verifier
+   rejected every leaf as carrying an *unhandled critical extension* before any policy
+   ran — 30 failures whose reason was an **empty** policy-failure list. The 26 cases that
+   appeared to pass were the failure-expecting ones, passing for the wrong reason: a
+   build-only gate, or a pass-count glance, would have certified this as working.
+2. **Dropped `rfc822Name` SAN.** Initially omitted from `leaf-multi-san-hosts`. No case
+   asserts on it, so it was behaviourally inert — but it is retained anyway, both to avoid
+   silent divergence from the original and because it keeps the policy's
+   ignore-non-DNS/IP-SAN path exercised.
 
 _(execution in progress; each addition is additive to the original 28, re-frozen and documented)_

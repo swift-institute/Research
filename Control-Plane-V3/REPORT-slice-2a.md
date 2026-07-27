@@ -60,7 +60,7 @@ command:
 
 ```sh
 rm -rf ~/Developer/swift-institute/swift-control-plane/.build
-~/Developer/swift-institute/REDACTED/gate.sh --test ~/Developer/swift-institute/swift-control-plane
+~/Developer/swift-institute/Scripts/gate.sh --test ~/Developer/swift-institute/swift-control-plane
 ```
 
 Final result:

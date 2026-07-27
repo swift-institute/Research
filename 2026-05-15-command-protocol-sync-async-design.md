@@ -457,7 +457,7 @@ Cross-ecosystem patterns:
 
 Swift today has **no general mechanism to abstract over the `async`
 effect** at the protocol level. Citing SE-0413 Typed Throws review thread (
-`~/Developer/swift-institute/REDACTED/swift-forums-review-corpus/threads/evolution/proposal-reviews/68507.json:541`
+`~/Developer/swift-institute/Engagement/swift-forums-review-corpus/threads/evolution/proposal-reviews/68507.json:541`
 [Verified: 2026-05-15]):
 
 > "Yes there is [a proposal under review for AsyncSequence]; it's under

@@ -2,334 +2,683 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-04-30
+version: 2.0.0
+last_updated: 2026-07-15
 status: RECOMMENDATION
 tier: 2
 scope: ecosystem-wide
 ---
 -->
 
-## Context
-
-The Swift Institute skill corpus has grown to **37 skills** across **4 layers** (1 meta, 3 architecture, 14 implementation, 19 process). Recent work — particularly the carrier-primitives 0.1.0 launch arc (April 2026) — has both added significant new content and exposed places where the corpus has accumulated drift, weak rules, ghost references, and gaps.
-
-This review was triggered by an explicit principal request after the carrier-launch case-study landed: *"Holistic review of our skills to see which skill might have accrued weak areas, superseded sections, mistakes, or areas that can be improved. Or skills that should be split, or missing skills even."*
-
-The review is Tier 2 per [RES-020]: cross-package analysis with reversible-precedent recommendations. The output is a categorized findings inventory plus a prioritized triage of follow-up work.
-
-**Step 0 prior-research grep** (per [RES-019]) identified ~12 prior research documents on skill-corpus topics:
-
-- `agent-workflow-skill-consistency-audit.md` (2026-04-15) — prior cluster audit of the agent-workflow cluster (handoff / supervise / reflect-session / skill-lifecycle); verified to inform Cluster G review
-- `skill-shape-and-growth-evaluation.md` — corpus shape analysis; cited by `[SKILL-CREATE-005a]` multi-file navigation-hub exception
-- `skill-loading-reliability.md`, `skill-creation-process.md`, `skill-based-documentation-architecture.md`, `skill-as-input-composition-pattern.md`, `compose-then-trace-skill-design-phase.md` — design rationale for how skills are structured
-- `documentation-skill-design.md`, `readme-skill-design.md`, `generalized-audit-skill-design.md`, `audit-finding-triage-taxonomy.md` — per-skill design records
-- `implementation-patterns-skill.md` — pattern absorption history
-
-Findings below cite these prior docs by name where relevant. This review **extends** the prior cluster audit (2026-04-15) rather than replaces it; persistent findings from that audit are tracked in Cluster G.
-
-## Question
-
-Across the 37 skills in the corpus, which exhibit:
-
-1. **Weak areas** — vague rules, missing examples, weak rationale
-2. **Superseded sections** — rules contradicted or duplicated by newer rules
-3. **Mistakes** — factually wrong claims, broken examples, ghost references, ID drift
-4. **Improvements** — clarifications without normative-force changes
-5. **Split candidates** — single-file skills that have grown to deserve a multi-file navigation hub per `[SKILL-CREATE-005a]`, or single skills covering multiple distinct domains
-6. **Missing skills** — categories implied by ecosystem need but not yet codified
-
-What are the prioritized remediation actions, and which clusters warrant `[SKILL-LIFE-031]` cluster-review treatment?
-
-## Methodology
-
-The review used three parallel mechanisms:
-
-1. **Eight cluster-assessment agents** dispatched in parallel via `Explore` subagent. Each was briefed to read its assigned skills in full, identify findings under the six categories, and produce a structured report with line-number citations. Agents covered: A (architecture, 4 skills), B (code-surface + ownership, 4), C (platform + infrastructure, 6), D (testing + benchmark, 4), E (documentation + readme + github, 3), F (audit + research + forums + evolution, 5), G (session + handoff + skill-lifecycle, 5), H (tooling + misc, 8). Total: 39 skill-coverage assignments (some skills covered by multiple agents for cross-validation).
-
-2. **Mechanical cross-skill scan** for duplicate IDs, ghost references, and `last_reviewed` staleness, using the procedures in `[AUDIT-028]` (notation-variant coverage) and `[REFL-PROC-016]` (pre-commit ID-uniqueness scan), extended to cover the full corpus.
-
-3. **Prior-research synthesis** per `[RES-013a]` — each finding inherited from `agent-workflow-skill-consistency-audit.md` (2026-04-15) was verified against the current state and marked as `RE-VERIFIED`, `RESOLVED`, or `STILL OPEN`.
-
-The review produces no skill amendments; each finding is a candidate for follow-up per `[SKILL-LIFE-002]` (provenance-tracked update). Remediation is the principal's call.
-
-## Analysis
-
-### Mechanical scan results
-
-**Duplicate IDs across all skills**: zero detected. The `[REFL-PROC-016]` discipline (added 2026-04-24) and the `[SKILL-CREATE-012]` ID-uniqueness grep have held the corpus collision-free since the April-24 cluster audit's renumbering wave.
-
-**`last_reviewed` staleness** (>30 days from 2026-04-30; cadence per `[SKILL-LIFE-012]` is 90 days for implementation, 180 for process/architecture, on-demand for meta — none are past cadence):
-
-| Skill | Last reviewed | Days | Layer | Verdict |
-|---|---|---|---|---|
-| collaborative-discussion | 2026-03-20 | 40 | process | Stable; no content drift expected. Bump after carrier validation acknowledged. |
-| document-markup | 2026-03-20 | 40 | implementation | Possibly stale: rendering ecosystem (PDF, HTML, Markdown) consolidated April; verify package-import paths. |
-| ecosystem-data-structures | 2026-03-26 | 34 | implementation | Possibly stale: missing `Carrier` entry; verify Storage variants. |
-| package-export | 2026-03-20 | 40 | process | Stable; format is language-agnostic. Bump only. |
-| swift-institute | 2026-03-20 | 40 | architecture | Content gaps — see Cluster A. Needs revalidation, not just bump. |
-| swift-pull-request | 2026-03-24 | 36 | process | Stable: workflow unchanged; `[SWIFT-PR-011]` is recent valuable addition. Bump only. |
-| testing-institute | 2026-03-27 | 33 | process | Has structural defect (ghost rules); see Cluster D. |
-| testing-swiftlang | 2026-03-27 | 33 | implementation | Has content gaps (`.snapshot` trait, `.buildWithoutRunning`); see Cluster D. |
-
-**Verdict**: 4 of 8 stale skills need only a `last_reviewed` bump (acknowledging stability). 4 need content updates: `document-markup`, `ecosystem-data-structures`, `swift-institute`, `testing-swiftlang`. Plus `testing-institute` carries a structural defect.
-
-### Per-cluster findings
-
-Findings are categorized by severity. Severity definitions:
-
-- **CRITICAL**: blocks a skill's correct application; reader following the skill produces wrong output
-- **HIGH**: structural defect; broken cross-reference, ghost rule, false obligation
-- **MEDIUM**: confusing or incomplete; workable but adds reader friction
-- **LOW**: cosmetic, opinion-shaped, or polish
-
-#### Cluster A — Architecture (4 skills)
-
-| # | Skill | Severity | Finding | Citation |
-|---|---|---|---|---|
-| A1 | primitives | **CRITICAL** | `requires:` lists `naming`, `errors`, `memory` — three skills that no longer exist (absorbed into `code-surface` and `memory-safety` per `swift-institute-core` lines 80–84). Dangling skill dependencies will silently fail to load. | `swift-primitives/Skills/primitives/SKILL.md:10–14` |
-| A2 | swift-institute | HIGH | 91 lines, 40 days stale, weak architecture capture: five-layer diagram present but no codified rules for layer-classification, license-per-layer, or layer-boundary cases. Five referenced sub-skills depend on it. | `swift-institute/Skills/swift-institute/SKILL.md` |
-| A3 | swift-institute | MEDIUM | `[SEM-DEP-006]/[008]/[009]` referenced but rule text lives in `implementation/patterns.md`. Reading order problem: a user reading swift-institute first cannot apply rules without `implementation` loaded. | `swift-institute/Skills/swift-institute/SKILL.md:69–79` |
-| A4 | swift-package | LOW | `[PKG-NAME-007]`/`[PKG-NAME-008]` describe procedures without explaining underlying causes (Swift lexical-shadowing rules). Cause-explanation would strengthen rule. | `swift-package/SKILL.md:366–407` |
-
-#### Cluster B — Code surface + ownership (4 skills)
-
-| # | Skill | Severity | Finding | Citation |
-|---|---|---|---|---|
-| B1 | memory-safety | **WITHDRAWN** | ~~`[MEM-LIFE-001]` in `advanced-ownership.md` describes "~Escapable class stored property limitation"...~~ **WITHDRAWN 2026-04-30**: placement is intentional per `[SKILL-CREATE-005b]` worked example (`skill-lifecycle/SKILL.md:225` explicitly cites `MEM-LIFE-001` as the canonical case for "Compiler-limitation rule (lifetime, but topically in advanced-ownership)" — thematic split chosen over prefix split). Cluster-B agent's finding superseded by pre-existing design decision. | `memory-safety/advanced-ownership.md:91`; `skill-lifecycle/SKILL.md:225` |
-| B2 | implementation | MEDIUM | `[IMPL-030]/[IMPL-031]/[IMPL-032]` marked as subsumed by `[IMPL-EXPR-001]`/`[IMPL-033]` per `style.md`. Verify no ghost references exist in other skills before declaring subsumption complete. | `implementation/style.md` |
-| B3 | conversions | LOW | 944 lines / 40 rules — at the `[SKILL-CREATE-005a]` 40-rule boundary for multi-file SPLIT. Currently coherent; thematic clusters present (typed arithmetic, raw-value access, conversion APIs, bounds checking). Monitor for further growth. | `conversions/SKILL.md` |
-| B4 | code-surface | — | No defects detected. Recent `[API-IMPL-007]` amendment (2026-04-30) clean; no contradictions found. | — |
-
-#### Cluster C — Platform + infrastructure (6 skills)
-
-| # | Skill | Severity | Finding | Citation |
-|---|---|---|---|---|
-| C1 | platform | **HIGH (split candidate)** | 1574 lines, 22 rule families. Three thematically separable domains: `[PLAT-ARCH-*]` (placement architecture, ~860 lines), `[PATTERN-*]` (C-shim + compilation mechanics, ~430 lines), Swift-6/build-infra (~280 lines). Largest single-file skill in corpus. Multi-file split per `[SKILL-CREATE-005a]` warranted. | `platform/SKILL.md` |
-| C2 | ecosystem-data-structures | MEDIUM | 35 days stale; missing `Carrier` entry; should reference `Carrier<E>` as variant or sibling concept. Verify Storage variants (e.g., `.Split<Lane>`) post-April-17. | `ecosystem-data-structures/SKILL.md:237` |
-| C3 | document-markup | MEDIUM | 41 days stale (oldest in cluster). Rendering-package consolidation in April may have changed import paths cited in lines 24–25. | `document-markup/SKILL.md:24–25` |
-| C4 | memory-arithmetic | LOW | Frontmatter requires `primitives-conversions` — that name was absorbed into `conversions` per `swift-institute-core` line 81. Possible typo. | `memory-arithmetic/SKILL.md:1–5` |
-| C5 | modularization | — | 898 lines, cohesive single-domain content; no split needed. | — |
-| C6 | existing-infrastructure | — | 1173-line catalog skill; tightly organized, no cruft, current. Catalog shape is intentional — not a split candidate. | — |
-
-#### Cluster D — Testing + benchmark (4 skills)
-
-| # | Skill | Severity | Finding | Citation |
-|---|---|---|---|---|
-| D1 | testing-institute + benchmark | **CRITICAL** | `[INST-TEST-006]` and `[INST-TEST-007]` cited by `benchmark/SKILL.md:137` as origin rules but **do not exist** in `testing-institute`. Either restore the rules or correct the cross-reference. | `benchmark/SKILL.md:137`, `testing-institute/SKILL.md` (rules end at `[INST-TEST-012]`) |
-| D2 | testing-swiftlang | HIGH | Missing `.snapshot` trait pattern (Swift Testing now exposes it); missing `.buildWithoutRunning` trait. 33 days stale. Per `swift-testing-api-migration-map.md` (2026-04-22). | `testing-swiftlang/SKILL.md` |
-| D3 | testing-swiftlang | MEDIUM | `[TEST-015]` cited as origin in `[SWIFT-TEST-003]` provenance but not found in `testing/SKILL.md`. Cite is `swiftlang/swift-testing#1508`; bug closed 2026-04-21 with patch landing in Swift 6.1 — provenance needs `status: fixed-in-6.1` annotation. | `testing-swiftlang/SKILL.md:167` |
-| D4 | testing | LOW | Test Support sub-canon (`[TEST-010]`, `[TEST-018]`–`[TEST-026]`) is large (~9 rules, ~350 lines) but does not warrant a `testing-support` split — testing skill is architected as routing hub; standalone Test Support skill would orphan testing-swiftlang and testing-institute. | — |
-| D5 | benchmark | — | Recent `[BENCH-010]` Tier-0 deferral (2026-04-30) integrates cleanly with `[BENCH-001]` placement decision tree. No defects. | — |
-| D6 | **cluster** | — | **Recommendation**: `[SKILL-LIFE-031]` cluster-review candidate. Interdependencies are material (benchmark cites testing-institute); D1 + D2 + D3 are cluster-specific; no prior cluster review on this slice. | — |
-
-#### Cluster E — Documentation + readme + github (3 skills)
-
-| # | Skill | Severity | Finding | Citation |
-|---|---|---|---|---|
-| E1 | documentation | LOW | `[DOC-023]` cross-references list `[DOC-028]/[DOC-029]` but not `[DOC-101]`. `[DOC-101]` is the rule that forbids `## Research`/`## Experiments` in per-symbol articles; should be in `[DOC-023]` cross-refs. | `documentation/catalogue.md:242` |
-| E2 | documentation | LOW | Sibling-file balance: `visual.md` (86 lines, ~4 rules) is dramatically smaller than `catalogue.md` (501) and `style.md` (404). Candidate for merge with `landing.md` or elevation to short SKILL.md section. Not urgent. | `documentation/visual.md` |
-| E3 | readme | — | No defects. Recent `[README-026]` and `[README-014]` extension (2026-04-30) integrated cleanly. 1013-line single-file is at threshold-acceptable; meta-rules + structural rules are inseparable, no split warranted. | — |
-| E4 | github-repository | — | Recent `[GH-REPO-074]` thin-caller workflow rule (2026-04-30) sits flat in numeric namespace. Sub-prefix `[GH-REPO-WF-*]` not yet needed; defer until 2+ workflow-specific rules accumulate. | — |
-
-#### Cluster F — Audit + research + forums + evolution (5 skills)
-
-| # | Skill | Severity | Finding | Citation |
-|---|---|---|---|---|
-| F1 | swift-forums-review | **HIGH** | `[FREVIEW-017]` codified as a mandatory rule but marked "pending data; no calibration has run." Creates false obligation — a consumer reading the rule may attempt to follow it without the data it depends on. Either move to "Future Work" section or stub as `[FREVIEW-017-PENDING]`. | `swift-forums-review/SKILL.md:424–440` |
-| F2 | swift-forums-review | MEDIUM | `[FREVIEW-017]` placed at end-of-file out of numerical order (after `[FREVIEW-016]`, gap 015→017). Suggests recent edit slip. | `swift-forums-review/SKILL.md` |
-| F3 | research-process | MEDIUM | ID numbering has gaps: `[RES-001]/[001a]/[004]/[004a]/[004b]/[005]–[010]/[010a]–[010c]/[020]–[026]`. Workflow separation (investigation vs discovery) explains some gaps; not all. Reader friction. | `research-process/SKILL.md` |
-| F4 | research-process | LOW | `[RES-006a]` Documentation Promotion is terse — no decision criteria for promote-vs-keep-as-research. | `research-process/SKILL.md:340–344` |
-| F5 | experiment-process | LOW | Stale provenance dates: `[EXP-006]/[EXP-007a]` reference 2026-04-17 Swift 6.3.1 sweep that has now passed. Rules are durable; provenance stamps are dated. | `experiment-process/SKILL.md` |
-| F6 | swift-evolution | LOW | Pitch-phase-only stub by design. Post-pitch phases (formal proposal, review, decision, implementation) deferred. Honest scope statement; not a defect. | `swift-evolution/SKILL.md:27–32` |
-| F7 | **cluster** | MEDIUM | Mutual cross-references incomplete: audit ↔ research-process ↔ experiment-process ↔ swift-evolution ↔ swift-forums-review form a workflow pipeline. Forward links present (audit cites release-readiness, etc.); back-links missing (research-process does not link audit; experiment-process does not link audit or forums-review). Recommendation: each skill add a "Workflow integration" or "Triggers This Skill" section. | various |
-
-#### Cluster G — Session + handoff + skill-lifecycle (5 skills, prior cluster-audited 2026-04-15)
-
-| # | Skill | Severity | Finding | Citation |
-|---|---|---|---|---|
-| G1 | handoff | **CRITICAL** | `[HANDOFF-028]` slot is **orphaned**. Sequence runs `[HANDOFF-021]–[HANDOFF-030]` with `[HANDOFF-028]` missing. Either an ID should exist or numbering needs explanation. | `handoff/SKILL.md` |
-| G2 | handoff + supervise + reflect-session | **WITHDRAWN** | ~~PERSISTENT from 2026-04-15 audit B.1: heading spelling drift...~~ **WITHDRAWN 2026-04-30**: the heading-vs-prose distinction is **intentional and documented** at `handoff/SKILL.md:126–131`. The literal markdown heading IS `### Supervisor Ground Rules` (Title Case, no hyphen, matching template style); prose form IS `"supervisor ground-rules block"` (hyphenated compound modifier); `[REFL-009]` MUST match the literal heading exactly when scanning. Cluster G agent's finding superseded by skill-self-documented convention. The 2026-04-15 B.1 finding was resolved by documenting the convention rather than canonicalizing it. | `handoff/SKILL.md:126–131` (convention); `reflect-session/SKILL.md` (REFL-009 matches literal) |
-| G3 | skill-lifecycle | MEDIUM | `[SKILL-LIFE-026]` and `[SKILL-LIFE-027]` exist but use 026/027 numbering — does not align with the stated convention "020–029 reserved for deprecation, 030–031 for cluster review." Numbering convention drift. | `skill-lifecycle/SKILL.md:454, 731–766` |
-| G4 | reflections-processing | — | Recent (2026-04-30) carrier-exception note properly bounded. `[REFL-PROC-016]` ID-uniqueness scan (2026-04-24) sound. | — |
-| G5 | reflect-session | — | 30-day age. Stable since prior cluster audit. | — |
-| G6 | **cluster** | — | 2026-04-15 cluster audit findings: many resolved (E.1 success-mode verification stamp, C.4 re-handoff procedure, E.2 supervisor-role wording). G2 (B.1 heading spelling) persists. | per `agent-workflow-skill-consistency-audit.md` |
-
-#### Cluster H — Tooling + miscellaneous process (8 skills)
-
-| # | Skill | Severity | Finding | Citation |
-|---|---|---|---|---|
-| H1 | release-readiness | MEDIUM | Newly-created skill (2026-04-30) has 3 obvious gaps: `[RELEASE-007]` changelog/release-notes authoring (deferred during carrier work), `[RELEASE-008]` documentation/docstring drift handling, `[RELEASE-006a]` rollback procedures for CONDITIONAL GO acceptances. | `release-readiness/SKILL.md` |
-| H2 | corpus-meta-analysis | MEDIUM | Lacks rule for **corpus-altering events like package launches**. Carrier-launch is exactly the kind of event `[META-*]` should track. Missing `[META-027]` for Discovery Completion Post-Launch. | `corpus-meta-analysis/SKILL.md` |
-| H3 | blog-process | LOW | Lacks explicit rule for **precursor-post → launch-post sequencing**. Carrier arc tested `[BLOG-021]` (paired-post URL) and `[BLOG-022]` (DocC verify) — both added after gap discovery. `[BLOG-023]` for closing-bridge discipline would prevent re-derivation. | `blog-process/SKILL.md` |
-| H4 | quick-commit-and-push-all | LOW | `[SAVE-002]` script has hardcoded ecosystem-directory list (lines 107–124). Refactor into `[SAVE-002a]` (per-repo logic) + `[SAVE-002b]` (ecosystem-catalog iteration) would enable other ecosystem-wide scripts. **Not absorption candidate** — independent consumers (user invokes directly). | `quick-commit-and-push-all/SKILL.md:85–180` |
-| H5 | collaborative-discussion | — | 41 days stale but VERIFIED ACTIVE (carrier blog drafting validated `[COLLAB-013]` round-2-pushback). Bump only. | — |
-| H6 | swift-pull-request | — | 36 days stale but stable; `[SWIFT-PR-011]` recent valuable addition. Bump only. | — |
-| H7 | package-export | — | 40 days stale but single-purpose and stable. Bump only. | — |
-| H8 | issue-investigation | — | Current; `[ISSUE-022]`, `[ISSUE-025]` recent additions reflect April-2026 lessons. | — |
-
-### Cross-cluster patterns
-
-Three patterns recur across multiple clusters:
-
-#### Pattern 1: Ghost references
-
-Five distinct ghost-reference defects across the corpus:
-
-1. **A1** — `primitives` requires `naming`, `errors`, `memory` (absorbed/non-existent skills)
-2. **B1** — `[MEM-LIFE-001]` in wrong file (`advanced-ownership.md`, semantically belongs in `safety-isolation.md` as `[MEM-ESCAPE-001]`)
-3. **D1** — `[INST-TEST-006]` and `[INST-TEST-007]` cited by `benchmark` but undefined in `testing-institute`
-4. **D3** — `[TEST-015]` cited but not found
-5. **G1** — `[HANDOFF-028]` numerical slot orphaned
-
-**Prior coverage**: `[AUDIT-028]` (notation-variant ghost-reference detection, 2026-04-24) covers em-dash ranges, level-2 vs level-3 headings, and sub-label citations. The five defects above slip through because they're either (a) frontmatter `requires:` (not in scan scope) or (b) cite IDs that simply don't exist (different from notation variance).
-
-**Recommendation**: extend `[AUDIT-028]` (or add a sibling rule) to cover frontmatter dependency validation and ID-existence scan, not just notation variants. Alternatively, ship a CI script `Scripts/check-skill-references.sh` that runs the ID-existence scan as a hook.
-
-#### Pattern 2: Stale skills with mixed verdicts
-
-Of 8 skills past 30-day review, 4 need only a `last_reviewed` bump (stable content): `collaborative-discussion`, `package-export`, `swift-pull-request`, `quick-commit-and-push-all`. The other 4 carry actual content gaps: `swift-institute` (architecture capture), `document-markup` (rendering-package consolidation), `ecosystem-data-structures` (Carrier catalog), `testing-swiftlang` (snapshot trait).
-
-**Pattern signal**: the `last_reviewed` field conflates two distinct concepts — "content verified current" vs "content updated for new ecosystem state." Per `[SKILL-LIFE-005]` (mechanical drift check, 2026-04-24), automation now flags drift; but the trigger doesn't distinguish stable-from-stable from stale-needs-content.
-
-**Recommendation**: low-priority. The current discipline (manual triage on drift signal) is workable; adding a second metadata field (`content_verified_against:` ecosystem version?) would be over-engineering.
-
-#### Pattern 3: Workflow-pipeline cross-reference asymmetry
-
-Five process skills (audit, research-process, experiment-process, swift-forums-review, swift-evolution) form a workflow pipeline: audit findings → research investigations → experiment validations → swift-evolution pitches; release-readiness Phase 4 invokes swift-forums-review. Forward links are present (audit cites release-readiness; release-readiness cites audit/forums-review). **Back-links are missing** (research-process does not cite audit; experiment-process does not cite audit or forums-review; swift-evolution does not cite forums-review).
-
-**Recommendation**: each skill in the pipeline adds a "Workflow integration" or "Triggers This Skill" sub-section listing which prior-workflow outcomes call it. Not a normative rule change — a discoverability improvement. Defer to Tier 3.
-
-### Split candidates
-
-**Strong (recommend split)**:
-
-- **platform** (1574 lines, 22 rule families) — split into `platform-architecture` (PLAT-ARCH placement rules, ~920 lines) and `platform-compilation` (PATTERN compilation mechanics + Swift-6 + build infra, ~470 lines). Each new skill stands alone; cross-references exist for a `platform` umbrella to retain.
-
-**Borderline (monitor; do not split yet)**:
-
-- **conversions** (944 lines, 40 rules) — at `[SKILL-CREATE-005a]` boundary. Currently coherent; `[CONV-016]` master preference hierarchy ties rules together. Monitor; if >1000 lines, extract `[IDX-*]` rules to sibling.
-- **testing** (914 lines) — large, but Test Support sub-canon (~9 rules) doesn't justify standalone `testing-support` skill that would orphan testing-swiftlang/testing-institute/benchmark. Status quo defensible.
-- **swift-institute** (91 lines) — has the OPPOSITE problem: too small + content gaps. Expand, don't split.
-
-### Missing skills
-
-Four candidates:
-
-1. **`changelog` / `release-notes`** — deferred during carrier work. Should govern GitHub Releases content (distinct from CHANGELOG.md). `[README-016]` forbids changelogs in READMEs and directs them to "CHANGELOG.md or GitHub Releases" but no skill governs those artifacts.
-
-2. **`github-org`** — explicitly named as future work in `github-repository` skill (line ~80 `[GH-REPO-080]`). Would govern org-level community-health files (FUNDING.yml, CODE_OF_CONDUCT.md, profile/README.md) currently handled by `Scripts/sync-community-health.sh` without skill backing.
-
-3. **`platform-compilation`** (split from `platform`) — see Split Candidates above.
-
-4. **`platform-architecture`** (split from `platform`) — see Split Candidates above.
-
-A fifth candidate was discussed and rejected:
-
-- **`testing-support`** — Test Support sub-canon could spin out, but doing so would orphan testing-swiftlang/testing-institute/benchmark from the umbrella router. Status quo is architecturally sound.
-
-### Persistent findings from 2026-04-15 audit
-
-Per `[RES-013a]` Synthesis Verification, every prior finding was checked:
-
-| Finding | Status | Notes |
+## Executive verdict
+
+The current corpus is valuable but not yet a reliable system of authority. It contains 65 skills, not the 70 suggested by the intake hint: 52 under Swift Institute, 4 under Rule Institute, and 9 under Engagement. The complete corpus is 124 Markdown files, 49,121 lines, 3,120,050 bytes, and 1,596 canonical requirement definitions.
+
+Only 3 skills meet the Strong rubric without material qualification. 28 are Medium and 34 are Weak. The weakness is not that the corpus lacks thought. It is that substantial thought has accumulated faster than ownership normalization, discovery repair, validator activation, and removal of obsolete topology/runtime assumptions.
+
+The recommended end state keeps every current skill name, adds one new meta skill (engagement-core), performs four internal file splits, replaces two unsafe operational implementations in place, and tightens the other 56 skills. No current merge, absorption, rename, root move, deprecation, or removal passes the formal lifecycle tests. End-state count: 66 skills.
+
+The most important correction to the initial enforcement premise is categorical: mechanically decidable does not automatically mean swift-linter. Swift syntax predicates belong in swift-linter; compiler/SwiftPM-native facts should remain native; Markdown, JSON, YAML, filesystem, GitHub, release, and control-state predicates belong in purpose-built validators. Every candidate below is adjudicated individually.
+
+## Authority, safety, and method
+
+This is a read-only architecture review of live skills, control state, discovery projections, gates, and Git history. The only writes are this recommendation, its index entry, the formal findings appended to Audits/audit.md, and that audit index entry. No skill, control file, script, CI file, symlink, baseline, allowlist, commit, or remote state was changed.
+
+The review read every Markdown file in every skill directory. It also read the required control files, all applicable AGENTS.md and CLAUDE.md files, the gate scripts before executing read-only modes, the predecessor research, the current audit, the system skill-creator guidance, and current first-party Codex skill-discovery documentation. Independent agents covered architecture/implementation, quality/tooling, process/control, legal/Engagement, structural lifecycle tests, and enforcement; the coordinator rechecked every finding retained here.
+
+Rating is deliberately strict:
+
+- Strong means exclusive ownership, precise trigger, current references, sound composition, bounded context, appropriate enforcement, and demonstrated use.
+- Medium means useful and substantially correct, with a concrete bounded path to Strong.
+- Weak means conflicting authority, incorrect or obsolete facts, broken discovery, unsafe operational guidance, unbounded context, or missing effective enforcement.
+
+## Coverage receipt
+
+| Root | Skills | Markdown files | Lines | Bytes | Canonical rules |
+|---|---:|---:|---:|---:|---:|
+| Swift Institute Skills | 52 | 110 | 45,616 | 2,975,987 | 1,525 |
+| Rule Institute Skills | 4 | 4 | 2,067 | 75,757 | 71 |
+| Engagement Skills | 9 | 10 | 1,438 | 68,306 | 0 |
+| Total | 65 | 124 | 49,121 | 3,120,050 | 1,596 |
+
+The 1,596 definitions reconcile as 1,560 unique heading IDs plus 36 legitimate registry/body definitions. There are 1,566 heading sites because six SEM-DEP definitions are intentionally mirrored in Workspace/CLAUDE.md; site count is therefore not definition count.
+
+No skills were excluded. Scripts and non-Markdown assets were inspected where they implemented or contradicted a skill, but they are not counted as skill files.
+
+## Corpus scorecard
+
+| Dimension | Rating | Verified reason | Path to Strong |
+|---|---|---|---|
+| Canonical ownership | Medium | 1,596 definitions reconcile; PATTERN is the only multi-owner prefix, but several one-way or contradictory seams remain. | Repair the 22 RESHAPE_FIRST rules and add bilateral owner seams. |
+| Dependency DAG | Medium | 65 nodes, 92 declared edges, no cycle and no missing declared skill; Engagement declares no edges. | Add engagement-core and explicit component dependencies; correct stale loading-order prose. |
+| Trigger quality | Weak | Broad ALWAYS triggers collide; Engagement has nine independent triggers without shared schema authority; several process triggers are vendor-specific. | Narrow predicates and make composition explicit through requires and routing tables. |
+| Requirement quality | Weak | 12 unresolved burned/demoted/ghost tokens, contradictory status models, stale topology and runtime assumptions. | Resolve contradictions before mechanization; keep burned IDs explicit. |
+| Enforcement | Medium | 173 declarations exist, but 349 selected candidates still need adjudicated action; one declared AST rule is unbundled and 19 validators are authored/deferred. | Execute the sequential queue in this report one rule at a time. |
+| Context efficiency | Weak | 12,824 description characters; names plus descriptions are 13,829 characters, 72.9% above Codex's 8,000-character initial listing budget before formatting. Eight legacy files exceed 1,000 lines under prune-only baselines. | Tighten descriptions, evict rationale, and perform only the four qualifying splits. |
+| Discovery | Weak | Source and workspace Claude projection align, but user Claude projection has six broken links and Codex has no project/user projection in its current discovery locations. | Repair primitives, remove five retired links, generate Claude and Codex projections from one registry. |
+| Lifecycle/gates | Weak | Size and description gates pass; canon enforce reports baselined debt, but documentation says report-only, the baseline contains orphans, and Engagement has no CI. | Make mode truthful, prune baselines, and add concern-root gate coverage. |
+| Multi-agent architecture | Weak | The conceptual hub topology is sound; the live general seat is unhealthy, closed charter placement is wrong, status omits required edit zones, and role boundaries are prose-only. | Transactional state changes, capability checks, pinned charters, dormant general identity, and terminology cleanup. |
+| Fresh-agent comprehensibility | Weak | A new agent sees stale layer/loading prose, broken personal routes, 65 broad descriptions, and three different L1/L2/L3 meanings. | Generate registry views and use unambiguous workspace/general/arc vocabulary. |
+
+## Inventory A — identity, trigger, ownership, shape
+
+Abbreviations: SI = Swift Institute, RI = Rule Institute, E = Engagement; SF = single file, H = routed multi-file hub. Review shows last_reviewed; dash means absent. Rule counts are canonical, not a naive heading grep.
+
+| Skill | Root | Layer | Actual purpose and trigger | Prefixes | Shape; lines/bytes; rules | Review |
+|---|---|---|---|---|---|---|
+| audit | SI | process | Compliance audits and standardized findings | AUDIT | SF; 1114/86509; 40 | 2026-07-12 |
+| benchmark | SI | implementation | Performance-test construction and review | BENCH | SF; 426/23416; 12 | 2026-07-05 |
+| blog-process | SI | process | Blog ideation, drafting, evidence, publishing | BLOG | SF; 838/53643; 27 | 2026-05-10 |
+| byte-discipline | SI | implementation | UInt8/Byte boundary decisions | API-BYTE | SF; 340/33140; 8 | 2026-07-05 |
+| ci-cd-workflows | SI | process | Reusable CI architecture and rollout | CI | H(8); 1249/131039; 61 | 2026-07-14 |
+| code-navigation | SI | process | Cross-package cclsp navigation/index maintenance | NAV | SF; 165/8831; 8 | 2026-07-14 |
+| code-surface | SI | implementation | API names, errors, declarations, file shape | API-NAME, API-ERR, API-IMPL, API-BRAND | SF; 1421/99153; 50 | 2026-07-07 |
+| collaborative-discussion | SI | process | Cross-agent design discussion | COLLAB | SF; 534/16868; 13 | 2026-07-05 |
+| conversions | SI | implementation | Typed indices and conversion boundaries | IDX, CONV | SF; 976/41886; 34 | 2026-07-06 |
+| corpus-meta-analysis | SI | process | Research/experiment corpus health | META | SF; 876/43764; 28 | 2026-07-05 |
+| document-markup | SI | implementation | HTML/PDF/Markdown document creation | DOC-MARKUP | SF; 722/20314; 17 | 2026-07-15 |
+| documentation | SI | implementation | DocC comments and catalogues | DOC | H(8); 2148/104352; 63 | 2026-07-06 |
+| ecosystem-data-structures | SI | implementation | Data-structure catalog and selection | DS | SF; 740/58101; 21 | 2026-07-06 |
+| existing-infrastructure | SI | implementation | Reuse catalog before new mechanisms | INFRA | SF; 1225/55593; 26 | 2026-06-02 |
+| experiment-process | SI | process | Experiment hypothesis, execution, lifecycle | EXP | SF; 895/58129; 42 | 2026-07-05 |
+| github-repository | SI | implementation | GitHub metadata, settings, automation | GH-REPO | SF; 1003/56904; 44 | 2026-07-05 |
+| handoff | SI | process | Same-seat continuation across generations | HANDOFF | H(7); 1514/118973; 56 | 2026-07-15 |
+| implementation | SI | implementation | General Swift implementation discipline | IMPL, IMPL-EXPR, COPY-FIX, COPY-REM, PATTERN, API-LAYER, SEM-DEP | H(8); 2269/155904; 124 | 2026-07-06 |
+| issue-investigation | SI | process | Compiler/toolchain issue reduction | ISSUE | SF; 876/59378; 32 | 2026-07-06 |
+| lint-rule-promotion | SI | process | One-rule mechanical promotion lifecycle | PROMOTE | SF; 659/58851; 11 | 2026-07-07 |
+| memory-safety | SI | implementation | Ownership, lifetime, safety, concurrency | MEM-COPY/OWN/LINEAR/SAFE/SEND/REF/LIFE/SPAN/UNSAFE | H(9); 2494/159218; 91 | 2026-07-05 |
+| modularization | SI | implementation | Target decomposition and import placement | MOD, MOD-EXCEPT | H(7); 1730/154419; 49 | 2026-07-13 |
+| package-export | SI | process | Export a package for LLM review | PKG-EXPORT | SF; 340/9487; 11 | 2026-03-20 |
+| platform | SI | architecture | Platform placement, shims, compilation | PLAT-ARCH, PATTERN | H(6); 2053/136288; 59 | 2026-07-05 |
+| primitives | SI | architecture | Primitives tier/layer constraints | PRIM-ARCH, PRIM-FOUND, PRIM-NAME | SF; 292/14098; 8 | 2026-07-14 |
+| quick-commit-and-push-all | SI | process | Fleet save/push operation | SAVE | SF; 217/10476; 5 | 2026-07-05 |
+| readme | SI | implementation | README family routing and contracts | README | H(7); 3251/185825; 87 | 2026-07-06 |
+| reflect-session | SI | process | Session reflection and artifact triage | REFL | SF; 604/56373; 18 | 2026-07-05 |
+| reflections-processing | SI | process | Turn reflections into maintained artifacts | REFL-PROC | SF; 629/36760; 19 | 2026-07-05 |
+| release-readiness | SI | process | Pre-release scan and authorization gates | RELEASE | SF; 787/85437; 21 | 2026-07-02 |
+| research-process | SI | process | Research documents, rigor, discovery | RES | SF; 1075/83507; 52 | 2026-07-05 |
+| rule-exemptions | SI | process | Linter exemption shapes | RULE-EXEMPT | SF; 577/24604; 7 | 2026-05-12 |
+| seat-channel | SI | process | Workspace-seat JSONL transport | CHANNEL | SF; 171/8375; 13 | 2026-07-15 |
+| seat-runtime | SI | process | General/arc executor runtime contract | SEAT | SF; 149/7578; 13 | 2026-07-15 |
+| skill-lifecycle | SI | process | Skill creation/update/review/deprecation | SKILL-CREATE, SKILL-LIFE | SF; 1021/69670; 39 | 2026-07-06 |
+| social-preview | SI | implementation | GitHub preview-card pipeline | SOC | SF; 629/27736; 11 | 2026-05-10 |
+| supervise | SI | process | Tactical oversight of bounded execution | SUPER | H(7); 1974/156997; 77 | 2026-07-15 |
+| swift-evolution | SI | process | Swift Evolution pitch phase | PITCH-PROC | SF; 427/13587; 7 | 2026-05-10 |
+| swift-forums-review | SI | process | Simulated Forums review/pressure test | FREVIEW | SF; 540/34262; 21 | 2026-07-05 |
+| swift-institute-core | SI | meta | Manifest, registry, loading authority | registry | SF; 261/19899; 4 | 2026-07-15 |
+| swift-institute-ecosystem | SI | architecture | Orientation and layer tour | ECO | SF; 225/18229; 9 | 2026-07-14 |
+| swift-institute | SI | architecture | Five-layer architecture/core conventions | ARCH-LAYER, SEM-DEP | SF; 303/31445; 14 | 2026-07-14 |
+| swift-linter | SI | implementation | Consumer-side linter setup/bundles | LINT-* | SF; 525/38089; 19 | 2026-07-07 |
+| swift-package-build | SI | process | Toolchain/build troubleshooting | PKG-BUILD | SF; 612/58144; 22 | 2026-07-14 |
+| swift-package-heritage | SI | architecture | External-upstream lineage decisions | HERITAGE | SF; 430/21891; 7 | 2026-04-30 |
+| swift-package-index | SI | process | SPI onboarding and collections | SPI | SF; 314/13533; 16 | 2026-07-03 |
+| swift-package | SI | architecture | Package/name/dependency conventions | PKG-NAME, PKG-DEP | SF; 1036/73731; 29 | 2026-07-12 |
+| swift-pull-request | SI | process | Upstream Swift PR workflow | SWIFT-PR | SF; 466/19653; 12 | 2026-07-05 |
+| testing-institute | SI | process | Nested test package/snapshot isolation | INST-TEST | SF; 369/17558; 10 | 2026-07-11 |
+| testing-swiftlang | SI | implementation | Apple Swift Testing patterns | SWIFT-TEST | SF; 710/29535; 16 | 2026-07-12 |
+| testing | SI | implementation | Test routing/support/file conventions | TEST | SF; 1169/60024; 27 | 2026-07-12 |
+| workspace-orchestration | SI | process | Workspace work ledger and seat authority | WORK | SF; 246/14811; 15 | 2026-07-15 |
+| dutch-law | RI | process | Dutch statute/case lookup | NL-WET | SF; 521/19895; 17 | 2026-07-05 |
+| legal-encoding | RI | implementation | Executable legal types | LEG/JUD/COMP/PROD-ENC | SF; 993/37725; 36 | 2026-07-11 |
+| legal-testing | RI | implementation | Legal truth-table/witness tests | LEG-TEST | SF; 352/9928; 11 | 2026-07-05 |
+| rule-law-core | RI | meta | Legal corpus manifest and routing | RL-CORE | SF; 201/8209; 7 | 2026-07-05 |
+| engagement-actionables | E | process | User-facing actionable queue view | none | SF; 85/2615; 0 | — |
+| engagement-compose | E | process | Compose quick-reply drafts | none | SF; 144/7475; 0 | — |
+| engagement-process | E | process | Orchestrate engagement pipeline | none | SF; 213/9541; 0 | — |
+| engagement-review | E | process | Read-only queue review | none | SF; 75/2872; 0 | — |
+| engagement-themes | E | process | Theme/coverage view | none | SF; 254/12689; 0 | — |
+| engagement-triage | E | process | Route ingested posts | none | SF; 167/10608; 0 | — |
+| ingest-swift-forums | E | process | Ingest Swift Forums topics | none | SF; 132/4640; 0 | — |
+| ingest-x-feeds | E | process | Poll X feed aggregators | none | SF; 135/5841; 0 | — |
+| ingest-x | E | process | Fetch X posts into queue | none | H(2); 233/12025; 0 | 2026-07-05 |
+
+All existing skills remain in their declared source root and layer in the recommendation. Structural weakness is corrected inside those boundaries; no evidence justified a layer or root move.
+
+## Inventory B — graph, enforcement, usage, overlap, assessment
+
+Enforcement codes: AST = swift-linter/SwiftLint declaration; V = purpose-built validator or CI; N = compiler/SwiftPM/test-native; M = manual/process judgment; P = prose only. Usage is a 90-day Git commit/file-reference proxy, not invocation telemetry. The Claude doctor report supplies separate invocation counts where stated below.
+
+| Skill | Declared requires; direct dependents | Current enforcement | Usage proxy (commits/refs) and main overlap | Rating | Primary disposition |
+|---|---|---|---|---|---|
+| audit | swift-institute; 1 | V+M | 24/854; taxonomy/status authority conflicts internally | Weak | SPLIT |
+| benchmark | testing; 0 | AST(partial)+N | 10/163; performance ownership overlaps testing-institute | Weak | TIGHTEN |
+| blog-process | swift-institute; 0 | V(partial)+M | 8/35; publication/release doctrine leaks in | Medium | TIGHTEN |
+| byte-discipline | swift-institute, code-surface; 0 | AST(partial)+M | 11/53; overlaps code-surface and conversions | Weak | TIGHTEN |
+| ci-cd-workflows | swift-institute-core; 1 | V+CI | 41/98; thin-caller authority overlaps GitHub skill | Medium | TIGHTEN |
+| code-navigation | swift-institute-core; 0 | N+M | 2/6; exclusive cclsp boundary | Strong | KEEP |
+| code-surface | swift-institute; 12 | AST+V | 57/188; byte and declaration seams incomplete | Medium | SPLIT |
+| collaborative-discussion | core, package-export; 0 | M | 4/38; Claude/ChatGPT-specific roles | Weak | TIGHTEN |
+| conversions | institute, code-surface; 2 | AST(partial)+N | 7/173; arithmetic/byte ownership overlaps | Weak | TIGHTEN |
+| corpus-meta-analysis | research, experiment, reflect; 0 | V(partial)+M | 6/79; research/experiment lifecycle conflicts | Weak | TIGHTEN |
+| document-markup | institute, code-surface; 0 | N+M | 2/19; clean exclusive artifact boundary | Strong | KEEP |
+| documentation | institute, code-surface; 0 | V+AST(partial) | 14/419; README and style ownership seams | Medium | TIGHTEN |
+| ecosystem-data-structures | institute; 0 | AST(partial)+M | 16/59; catalog vs implementation/memory prescriptions | Weak | TIGHTEN |
+| existing-infrastructure | institute, implementation, conversions; 0 | AST(partial)+M | 7/57; depends on its own dependent implementation | Weak | TIGHTEN |
+| experiment-process | institute; 2 | V(partial)+N | 13/55; lifecycle conflicts META | Medium | TIGHTEN |
+| github-repository | institute, readme; 2 | V+API | 26/40; CI/README/social ownership seams | Weak | SPLIT |
+| handoff | core; 0 | V(partial)+M | 38/671; old file/state authority overlaps WORK | Medium | TIGHTEN |
+| implementation | institute, code-surface, conversions; 4 | AST+N+M | 23/1041; catch-all pattern and memory seams | Weak | TIGHTEN |
+| issue-investigation | core, experiment; 0 | N+M | 12/83; experiment output seam | Medium | TIGHTEN |
+| lint-rule-promotion | core, audit; 0 | V+M | 7/82; author-side boundary is sound, lifecycle gaps remain | Medium | TIGHTEN |
+| memory-safety | institute, code-surface, implementation; 1 | AST+N+M | 29/158; duplicated implementation prescriptions | Weak | TIGHTEN |
+| modularization | institute, code-surface, implementation; 0 | AST+V+M | 37/198; package/layer placement seams | Medium | TIGHTEN |
+| package-export | core; 1 | P/script | 0/19; documented output differs from script | Weak | REPLACE |
+| platform | institute; 1 | AST+V+N | 41/915; PATTERN shared owner and stale platform claims | Weak | TIGHTEN |
+| primitives | institute, code-surface, memory; 0 | V+N+M | 10/2013; catalog snapshot contradicts computed source | Weak | TIGHTEN |
+| quick-commit-and-push-all | core; 0 | script | 4/25; obsolete clone-mirror topology and unsafe push | Weak | REPLACE |
+| readme | institute; 1 | V+M | 16/106; docs/CI family authority drift | Medium | TIGHTEN |
+| reflect-session | institute; 2 | V(partial)+M | 18/104; stale handoff/memory authority | Weak | TIGHTEN |
+| reflections-processing | institute, reflect, lifecycle, research; 0 | V(partial)+M | 6/86; evidence/recency and artifact ownership drift | Weak | TIGHTEN |
+| release-readiness | institute; 0 | V(partial)+M | 15/75; audit/GitHub/CI authority overlaps | Weak | TIGHTEN |
+| research-process | institute; 2 | V(partial)+M | 21/144; multiple incompatible status/method models | Weak | SPLIT |
+| rule-exemptions | core, code-surface; 0 | AST-seam+M | 3/25; helper names and lifecycle routing stale | Weak | TIGHTEN |
+| seat-channel | workspace; 2 | control script | 0/15; transport boundary good, capabilities absent | Medium | TIGHTEN |
+| seat-runtime | seat-channel; 0 | control script+M | 0/8; lifecycle overlaps WORK/HANDOFF | Medium | TIGHTEN |
+| skill-lifecycle | core; 1 | V+CI | 13/138; discovery and gate-mode prose stale | Weak | TIGHTEN |
+| social-preview | github, institute; 0 | V+script | 7/18; metadata seam needs validation | Medium | TIGHTEN |
+| supervise | seat-channel; 0 | M+control | 35/201; subagent/seat authority overlaps WORK | Weak | TIGHTEN |
+| swift-evolution | core; 0 | M | 2/95; current upstream-process facts need maintenance | Medium | TIGHTEN |
+| swift-forums-review | core, institute; 0 | M+corpus | 9/32; deferred calibration stated normatively | Medium | TIGHTEN |
+| swift-institute-core | none; 19 | V(partial) | 18/55; registry/loading prose stale | Weak | TIGHTEN |
+| swift-institute-ecosystem | core; 0 | M | 2/10; orientation claims enforcement and stale tiers | Weak | TIGHTEN |
+| swift-institute | core; 28 | V+M | 10/934; contradictory lateral rule and duplicated SEM-DEP | Weak | TIGHTEN |
+| swift-linter | institute, package, code-surface; 0 | AST/V setup | 5/350; setup boundary sound, inventory drift | Medium | TIGHTEN |
+| swift-package-build | core; 0 | N+V | 15/48; build cleanup and toolchain claims need guards | Medium | TIGHTEN |
+| swift-package-heritage | institute, package; 0 | Git+M | 2/21; exclusive, bounded lineage authority | Strong | KEEP |
+| swift-package-index | institute, github, CI; 0 | V+API | 2/6; ghost workflow and mutable external state | Weak | TIGHTEN |
+| swift-package | institute; 2 | V+SwiftPM | 31/256; path/URL rules contradict | Weak | TIGHTEN |
+| swift-pull-request | core; 0 | N+CI+M | 2/17; issue/CODEOWNERS/upstream drift | Medium | TIGHTEN |
+| testing-institute | core, testing, platform; 0 | N+V | 3/38; performance and nested-package overlap | Weak | TIGHTEN |
+| testing-swiftlang | testing; 0 | N+AST(partial) | 7/37; framework-specific, some stale patterns | Medium | TIGHTEN |
+| testing | institute, code-surface; 4 | V+AST(partial)+N | 15/484; index incomplete and performance seam | Medium | TIGHTEN |
+| workspace-orchestration | core; 1 | control script | 0/11; correct authority concept, incomplete implementation | Medium | TIGHTEN |
+| dutch-law | core; 0 | API+M | 2/10; required research receipt absent | Medium | TIGHTEN |
+| legal-encoding | rule-law-core, code-surface, implementation; 1 | AST(candidate)+M | 5/10; ternary semantics conflict | Weak | TIGHTEN |
+| legal-testing | rule-law-core, legal-encoding, testing; 0 | N+V(candidate) | 2/10; complements encoding but shares conflict | Medium | TIGHTEN |
+| rule-law-core | none; 2 | V(partial) | 2/7; registry misclassifies/omits dutch-law | Weak | TIGHTEN |
+| engagement-actionables | none; 0 | script+M | 2/3; shared schema owner missing | Medium | TIGHTEN |
+| engagement-compose | none; 0 | script+M | 2/3; shared state/voice mixed | Medium | TIGHTEN |
+| engagement-process | none; 0 | script+M | 5/4; orchestrator owns too much shared state | Weak | TIGHTEN |
+| engagement-review | none; 0 | script/read-only | 2/2; independent useful view, no core dependency | Medium | TIGHTEN |
+| engagement-themes | none; 0 | script+M | 2/4; generated view/schema incompleteness | Medium | TIGHTEN |
+| engagement-triage | none; 0 | script+LLM | 3/3; required state updates not enforced | Weak | TIGHTEN |
+| ingest-swift-forums | none; 0 | API+script | 3/3; useful independent source, schema owner missing | Medium | TIGHTEN |
+| ingest-x-feeds | none; 0 | network+script | 2/2; dedup/source semantics weak | Weak | TIGHTEN |
+| ingest-x | none; 0 | API+script | 4/4; unsupported reliability claim and invalid sibling shape | Weak | TIGHTEN |
+
+Rating totals: Strong 3; Medium 28; Weak 34. Disposition totals for existing skills: KEEP 3; TIGHTEN 56; SPLIT 4; REPLACE 2. Proposed creations: 1.
+
+## Ownership, dependency, and composition maps
+
+The prefix map is the Prefixes column in Inventory A. PATTERN is the sole multi-owner family: platform owns 001–009 and implementation owns the remaining sparse range. This partition is understandable but lacks a bilateral owner seam and contains contradictory members. SEM-DEP is duplicated verbatim between swift-institute/SKILL.md:287-291 and implementation/patterns.md:60-62 with only one-way canonical prose. Every other live prefix has a single skill owner.
+
+The declared graph has 65 nodes, 92 edges, no cycle, and no missing target. The high-fan-out edges are:
+
+- swift-institute-core → 19 direct dependents.
+- swift-institute → 28.
+- code-surface → 12.
+- implementation → 4.
+- testing → 4.
+- conversions, experiment-process, github-repository, reflect-session, research-process, rule-law-core, and seat-channel → 2 each.
+
+The nine Engagement skills are isolated nodes. The recommended graph adds engagement-core → all nine stages and swift-institute-core → engagement-core. No existing edge is removed until the contradictory ownership repairs are complete.
+
+Recurrent composition clusters:
+
+| Cluster | Current composition | Problem | Recommendation |
+|---|---|---|---|
+| Architecture/code | core → institute → code-surface/implementation/platform/memory | broad ALWAYS triggers and stale loading prose | retain DAG; narrow trigger predicates and repair one-way seams |
+| Testing | testing → benchmark/testing-swiftlang/testing-institute/legal-testing | performance ownership and incomplete index | testing routes; leaf skills own framework/performance mechanics |
+| Repository/release | readme → GitHub → social/SPI/CI/release | duplicated workflow, metadata, and release authority | GitHub owns remote metadata; CI owns workflow architecture; release only adjudicates readiness |
+| Research lifecycle | research/experiment/reflect → meta/reflection-processing | conflicting status, archive, and memory models | one lifecycle enum per artifact class and validators at each corpus boundary |
+| Workspace | workspace → channel → runtime; channel → supervise; handoff adjacent | authority/transport/runtime distinction is conceptually correct but operationally non-transactional | keep separate; add referential integrity and capability boundaries |
+| Legal | rule-law-core → encoding → testing | unknown/exception semantics conflict | repair semantic canon before linter promotion |
+| Engagement | nine unconnected stages | no shared queue/schema owner | add engagement-core and explicit requires |
+
+Trigger overlaps are acceptable only when routing resolves them. The most material unresolved overlaps are: code-surface versus implementation for declarations; byte-discipline versus conversions for UInt8/rawValue; testing versus benchmark/testing-institute for performance; documentation versus README for explanatory content; GitHub versus CI for thin callers; audit versus release for disposition/GO; workspace versus supervise/handoff for first-class-seat completion; and legal-encoding versus legal-testing for ternary truth.
+
+Trigger gaps are: shared Engagement state; Codex skill discovery; dormant/idle general-seat semantics; and a generated source-to-projection integrity check. A separate release-notes skill is not justified: release-readiness, README, GitHub, and blog-process already own the relevant distinct surfaces.
+
+## Cross-reference and canon report
+
+The canon scan covered 127 files because it also checks corpus-level README/LICENSE and Workspace/CLAUDE.md mirrors. It found 13 raw unresolved tokens. EXP-004b occurs only in changelog prose, leaving 12 live burned, retired, demoted, or ghost references:
+
+AUDIT-035, COLLAB-012, FAM-008, IMPL-030, IMPL-031, IMPL-032, IMPL-041, MEM-ARITH-001, MEM-COPY-007, PROMOTE-005a, PRP-002, TEST-004.
+
+Some are deliberately burned or subsumed; the defect is that references/templates/changelogs do not consistently mark that status. They must not be silently reused. The canon baseline currently reports 31 baselined findings (2 citations, 17 artifacts, 12 review findings) and contains two orphan entries for document-markup and testing-institute that are no longer emitted. Baseline count therefore overstates current active debt.
+
+## Discovery and routing
+
+| Projection | Current result | Verdict |
 |---|---|---|
-| B.1 — Heading spelling: `Supervisor Ground Rules` vs `supervisor ground-rules block` | **RESOLVED-BY-DESIGN** (verified 2026-04-30) | Convention now explicitly documented at `handoff/SKILL.md:126–131` — heading-vs-prose distinction is intentional. `[REFL-009]` matches literal heading; consistent with documented convention. |
-| B.5 — Supervisor in absentia concept coined in handoff | **PARTIALLY ADDRESSED** | `[SUPER-014a]` added; `[HANDOFF-012]` role-wording also fixed |
-| C.1 — Escalation lacks persistence requirement | **MIXED** | `[SUPER-012]` Persistence Requirement table added; `[SUPER-016]` Step 4 still doesn't list escalation in termination bullet |
-| C.4 — `[SUPER-016]` Step 4 skips `/handoff` invocation | **FIXED** | Step 4 now correctly invokes `/handoff` per `[SUPER-010]` |
-| D.1 — `[SKILL-CREATE-003]` Prefix list stale | **MITIGATED** | Now redirects to swift-institute-core Skill Index |
-| E.1 — Success-termination subordinate verification line | **FIXED** | `[HANDOFF-010]` step 5 explicit on all three termination paths |
-| E.2 — `[HANDOFF-012]` "plays the supervisor role" claim | **FIXED** | Now reads "plays the ground-rules role" |
+| Source roots | 65 skills | canonical |
+| ~/Developer/.claude/skills | 65 links, 0 broken | source-complete Claude workspace view |
+| ~/.claude/skills | 11 links, 6 broken | incorrect user projection |
+| ~/Developer/swift-primitives/.claude/skills | primitives link broken | incorrect repo projection |
+| ~/Developer/swift-standards/.claude/skills | 65 links, healthy | complete but broad |
+| swift-institute.org repo-local projection | 19 links, all broken | incorrect checked-in projection |
+| project/user .agents/skills | absent | no current Codex project/user projection |
 
-**Verdict (revised 2026-04-30)**: 4 fixed, 1 resolved-by-design, 1 mitigated, 1 partial. **The cluster is in better shape than the 2026-04-30 cluster-G agent's report indicated.** Two of the agent's findings (T1.4 [MEM-LIFE-001] and G2 / B.1 heading spelling) were superseded by intentional designs documented in the skills themselves; the agent's grep didn't reach the convention documentation. Methodological lesson: holistic-review agents should explicitly grep for "convention", "Heading-vs-prose", "intentional placement" near suspected defects before classifying.
+The Claude doctor report corroborates the user projection with real use: research-process 574, swift-institute-core 531, swift-institute 353, experiment-process 287, and blog-process 33 lifetime invocations remain healthy. The broken primitives route has 313 lifetime uses. Five retired broken names still have historical uses: naming 82, code-organization 18, anti-patterns 13, errors 13, memory 6.
 
-## Outcome
+The immediate repair is to repoint both broken primitives links to the central source and remove only the five dead projection links. This does not remove live skills. The user has separately reserved the doctor's no-op permission-rule cleanup; it is not part of this review.
 
-**Status**: RECOMMENDATION
+The deeper defect is contradictory ownership: SKILL-CREATE-014 says the home projection is generated, while sync-skills.sh manages workspace/repository projections only. The Principal must choose whether home scope is managed or intentionally purged. Do not silently expose all 65 skills globally. Current first-party Codex documentation describes project and user discovery under .agents/skills, with an 8,000-character initial listing budget; current local policy describes only Claude projections.
 
-The corpus is in **good health** overall: 37 skills, zero duplicate IDs, no skills past `[SKILL-LIFE-012]` cadence, recent active maintenance. Specific defects below are tractable; collectively they amount to ~25 actionable items across three priority tiers.
+## Enforcement adjudication
 
-### Tier 1 — Critical (do now; broken cross-references / dangling deps)
+### Current state
 
-| # | Action | Status | Effort | Skill |
-|---|---|---|---|---|
-| T1.1 | Fix `primitives/SKILL.md` `requires:` — replace `naming, errors, memory` with `code-surface, memory-safety` | **LANDED 2026-04-30** | 5 min | primitives |
-| T1.2 | Resolve `[INST-TEST-006]/[007]` ghost rules — `benchmark/SKILL.md:137` Origin line removed (the cited TEST-015, INST-TEST-006, INST-TEST-007 were all ghost references; rule [BENCH-003] is complete without them) | **LANDED 2026-04-30** | 5 min | benchmark |
-| T1.3 | Fix `[HANDOFF-028]` orphan — added an explicit "Reserved" rule at the slot, citing the holistic review as provenance and instructing future rules to use `[HANDOFF-031]+` | **LANDED 2026-04-30** | 10 min | handoff |
-| T1.4 | ~~Resolve `[MEM-LIFE-001]` ID/file mismatch~~ | **WITHDRAWN** — placement intentional per `[SKILL-CREATE-005b]` worked example | 0 | memory-safety |
-| T1.5 | Fix `[FREVIEW-017]` false obligation — added a top-of-rule "STATUS — PENDING DATA" banner; renamed heading to make pending status unambiguous; rule body retained for forward-looking discoverability | **LANDED 2026-04-30** | 5 min | swift-forums-review |
+The current declaration inventory is 173 rules:
 
-**T1 total**: 4 actionable defects landed (~25 min wall time). T1.4 was withdrawn after verification against `[SKILL-CREATE-005b]` confirmed the placement is intentional design, not a defect.
+| Declared class | Count | Interpretation |
+|---|---:|---|
+| Mechanical annotations | 162 | 91 AST/SwiftLint and 71 validator declarations |
+| Architectural | 9 | intentionally outside linter |
+| Native | 1 | delegated to compiler/toolchain |
+| Manual | 1 | judgment remains required |
 
-**Methodological lesson**: the agent finding for T1.4 illustrates [RES-013a] (Synthesis Verification): cluster agents working on a single cluster cannot always see when their finding is superseded by a rule in a *different* cluster's skill (in this case, `skill-lifecycle/SKILL.md:225`). The parent's grep before remediation caught this. Future holistic reviews SHOULD include a cross-cluster verification pass before classifying agent findings as defects.
+There are 96 AST declarations but only 95 bundled. BENCH-003 is declared AST yet its only declaration is commented/unbundled, so it is WAIT. API-NAME-010b is bundled/live despite lacking its Verification annotation. These are inventory defects, not reasons to infer coverage from prose.
 
-### Tier 2 — Substantive (this cycle; structural defects + obvious gaps)
+The selected candidate/stop queue contains 349 unique IDs. Expanded ranges were checked: categories sum to 349 with zero duplicates.
 
-| # | Action | Effort | Skill |
-|---|---|---|---|
-| T2.1 | **Split `platform` skill** into `platform-architecture` (PLAT-ARCH-*) + `platform-compilation` (PATTERN + Swift-6 + build infra) per `[SKILL-CREATE-005a]` | 4–6 hours | platform → 2 new skills |
-| ~~T2.2~~ | ~~Persistent G2 defect (heading spelling)~~ — **WITHDRAWN 2026-04-30**: convention is intentional and documented at `handoff/SKILL.md:126–131`. See cluster-G findings table for details. | 0 | — |
-| T2.3 | `swift-institute` skill (architecture, 91 lines): expand with codified layer-classification rules, license-per-layer rules, layer-boundary cases | 2 hours | swift-institute |
-| T2.4 | `testing-swiftlang`: add missing `.snapshot` trait pattern, `.buildWithoutRunning` trait; update `#1508` provenance | 1 hour | testing-swiftlang |
-| T2.5 | `release-readiness` gaps: add `[RELEASE-007]` changelog/release-notes, `[RELEASE-008]` doc-drift handling, `[RELEASE-006a]` rollback procedures | 2 hours | release-readiness |
-| T2.6 | `corpus-meta-analysis`: add `[META-027]` Discovery Completion Post-Launch | 30 min | corpus-meta-analysis |
-| T2.7 | Run `[SKILL-LIFE-031]` cluster audit on testing/testing-swiftlang/testing-institute/benchmark | 2–3 hours | testing cluster |
-| T2.8 | `document-markup`: refresh against April rendering-package consolidation; verify import paths | 1 hour | document-markup |
-| T2.9 | `ecosystem-data-structures`: add Carrier entry; verify Storage variants; bump | 30 min | ecosystem-data-structures |
-| T2.10 | Add new `changelog` / `release-notes` skill — TBD scope (governs GitHub Releases content) | 3–4 hours | new skill |
+| Disposition | Count | Meaning |
+|---|---:|---|
+| PROMOTE_AST | 51 | Deterministic parsed-Swift predicate; implement in swift-linter |
+| PROMOTE_VALIDATOR | 218 | Deterministic non-Swift or repository/external-state predicate; use the smallest purpose-built validator |
+| NATIVE | 7 | Compiler, SwiftPM, test framework, platform, or TSan is authoritative |
+| RESHAPE_FIRST | 22 | Rule conflicts or scope ambiguity; no checker may choose a side |
+| WAIT | 51 | Missing ground truth, unstable policy, placeholder, or immature control schema |
 
-**T2 total** (revised 2026-04-30 after G2 withdrawal): 9 actionable items, ~16–21 hours of focused work. Items can be parallelized; T2.1 (platform split) is the largest singleton.
+The remaining 1,247 canonical definitions were not selected for transfer because they are already covered, architectural, judgment/manual/process, permissive, or reference material. They are not a hidden queue of mechanically transferable rules.
 
-### Tier 3 — Polish (when convenient)
+### PROMOTE_AST — 51
 
-| # | Action | Effort | Skill |
-|---|---|---|---|
-| T3.1 | `swift-package` `[PKG-NAME-007]/[008]`: add cause-explanations alongside procedures | 30 min | swift-package |
-| T3.2 | `documentation`: add `[DOC-101]` to `[DOC-023]` cross-references | 5 min | documentation |
-| T3.3 | `documentation`: visual.md (86L runt) — merge with landing.md OR elevate to SKILL.md section | 1 hour | documentation |
-| T3.4 | `research-process`: ID-numbering gap explanation OR renumber for continuity | 30 min | research-process |
-| T3.5 | `research-process` `[RES-006a]`: define promote-vs-keep-as-research decision criteria | 20 min | research-process |
-| T3.6 | `experiment-process`: refresh `[EXP-006]/[007a]` provenance dates | 15 min | experiment-process |
-| T3.7 | `quick-commit-and-push-all`: refactor `[SAVE-002]` into `[SAVE-002a]` (per-repo) + `[SAVE-002b]` (ecosystem iteration) | 1 hour | quick-commit-and-push-all |
-| T3.8 | `blog-process` `[BLOG-023]`: precursor-post → launch-post closing-bridge rule | 30 min | blog-process |
-| T3.9 | Workflow-pipeline back-links: each of audit/research-process/experiment-process/swift-forums-review/swift-evolution add "Workflow integration" or "Triggers This Skill" section | 2 hours | 5 skills |
-| T3.10 | Consolidate stale-but-stable `last_reviewed` bumps: collaborative-discussion, package-export, swift-pull-request, quick-commit-and-push-all | 10 min | 4 skills |
-| T3.11 | `skill-lifecycle` numbering-convention drift: `[SKILL-LIFE-026]/[027]` don't align with stated 030–031 cluster-review range. Document the convention OR renumber. | 30 min | skill-lifecycle |
-| T3.12 | New `github-org` skill (deferred from `github-repository`) | 3–4 hours | new skill |
-| T3.13 | `memory-arithmetic`: verify `requires: primitives-conversions` typo (should be `conversions`) | 5 min | memory-arithmetic |
-| T3.14 | Extend `[AUDIT-028]` (or sibling rule) to cover frontmatter `requires:` validation and ID-existence checks across the corpus | 1 hour | audit |
+All retain their normative statement in the owning skill. Enforcement implementation and fixtures go to the existing Institute swift-linter packs unless explicitly noted.
 
-**T3 total**: ~12 hours.
+| Owner area | IDs | Target/rationale |
+|---|---|---|
+| Code surface | API-IMPL-021 | parsed declaration/signature predicate |
+| Implementation | IMPL-012, IMPL-022, IMPL-026, IMPL-062, IMPL-098, PATTERN-061, COPY-FIX-004, COPY-FIX-008 | deterministic syntax/structure |
+| Memory | MEM-COPY-004 residual; MEM-SAFE-010, 021, 026–030; MEM-SPAN-001, 002; MEM-SEND-009–011 | Swift ownership/safety syntax; residual means do not duplicate already-covered portion |
+| Data structures | DS-024, DS-025 residual, DS-027–030 | primitives Tower pack |
+| Legal encoding/testing | LEG-ENC-002, 020, 031; JUD-ENC-002, 003; PROD-ENC-002; LEG-TEST-003, 010, 020, 021, 040 | new Rule Institute legal-linter package and legal bundle, not the Institute Swift bundle |
+| Testing | TEST-038, 040; SWIFT-TEST-001, 003, 010, 011, 015 | parsed test-declaration/call structure |
+| Package/build/modularization/platform | PKG-BUILD-007; MOD-040; PLAT-ARCH-028 | deterministic Swift/manifest syntax |
+| Documentation | DOC-001, DOC-045 | parsed declaration/documentation attachment |
 
-### Aggregate
+### PROMOTE_VALIDATOR — 218
 
-- **Tier 1**: ~1.5 hours, 5 defects fixed
-- **Tier 2**: ~17–22 hours, structural gaps closed
-- **Tier 3**: ~12 hours, polish + missing skills
+These should not be forced into an AST rule merely because they are mechanical. Extend existing checkers by artifact and keep diagnostics bound to the owning requirement ID.
 
-**Grand total**: ~30–36 hours of skill maintenance work indicated. Tier 1 is closure-shaped (defects). Tier 2 is improvement-shaped (gaps). Tier 3 is polish.
+| Validator family | IDs |
+|---|---|
+| Activate authored/deferred P0 outcomes (19) | CI-004b, 030, 031, 054, 059, 112; GH-REPO-074; API-IMPL-006, 007; TEST-009; MOD-023, 031, 032, 038; PRIM-ARCH-002; PRIM-NAME-001; PKG-DEP-008; PKG-NAME-014, 017 |
+| Ratified naming vocabulary | PKG-NAME-001, 002, 015 |
+| Skill canon/lifecycle | SKILL-CREATE-003, 004, 005, 007, 008, 009, 010, 012, 014; SKILL-LIFE-004, 007, 020, 022, 028 |
+| Audit artifacts | AUDIT-003, 004, 009, 010, 018, 021, 025, 027 |
+| Blog artifacts | BLOG-002, 003, 004, 005, 009, 017, 021, 023 |
+| Corpus meta-analysis | META-001, 008, 009, 011, 012, 020, 021, 022, 025, 026, 027 |
+| Research | RES-002, 003, 003a, 003b, 003c, 008 |
+| Experiments | EXP-002, 002b, 003, 003a, 003b, 003c, 003d, 003e, 006, 007, 008, 017 |
+| Reflection | REFL-002, 003, 004, 005, 007, 009, 010, 013, 015; REFL-PROC-003a, 014, 015, 016 |
+| Release | RELEASE-001b, 001c, 002, 009, 010, 015, 016, 017 |
+| Handoff/supervision | HANDOFF-004, 006, 007, 011, 012, 014, 021, 031, 041, 051, 052; SUPER-002, 003, 004, 009, 009a, 011, 049, 052, 054, 069 |
+| Documentation/README | DOC-019a, 028, 029, 030, 041, 042, 046, 053, 054, 073, 103; README-016, 017, 137 residual, 161–165, 168, 170 |
+| GitHub/CI | GH-REPO-010, 020, 022, 023, 030, 031, 050–057, 060, 062, 063, 075, 077, 090–094; CI-106, 113, 114 |
+| Modularization/platform | MOD-020, 026, 035; PLAT-ARCH-014, 020, 024, 031 |
+| Package/SPI | PKG-DEP-010, 011; PKG-NAME-013; PKG-BUILD-012; SPI-003, 020–024 |
+| Testing | TEST-010, 019, 020, 021, 024, 033; INST-TEST-001, 002, 004, 005, 011, 013 |
+| Legal corpus | LEG-ENC-040–044, 046; LEG-TEST-001, 011, 041; RL-CORE-010, 011 |
+| Promotion process | PROMOTE-007, 009, 010, 011 |
+| Social preview | SOC-006, 007, 009 |
 
-The principal can:
+### NATIVE — 7
 
-(a) Execute Tier 1 immediately (low effort, high payoff; all defects).
-(b) Schedule Tier 2 across multiple sessions; coordinate `platform` split with downstream consumers.
-(c) Defer Tier 3 to opportunistic moments or schedule via `/loop` agents.
+PKG-DEP-007; PRIM-FOUND-002; TEST-027, 036, 037; MEM-COPY-001a; MEM-SEND-007.
 
-Or selectively pick items by package context — e.g., when next touching a specific skill, sweep its outstanding T2/T3 items.
+SwiftPM/compiler/platform/test/TSan diagnostics are the authoritative ground truth. Duplicating them would add drift and poorer diagnostics.
 
-### Methodological note on this review
+### RESHAPE_FIRST — 22
 
-This review used **8 parallel Explore subagents** to scan 37 skills in one shot. Effort: ~5 minutes parent dispatch + 4–6 minutes per agent in parallel = ~10 minutes wall clock for the read-and-categorize phase. Synthesis (this document) added ~30 minutes. Total: ~40 minutes for a corpus-wide review.
+API-BYTE-004, API-BYTE-008; CONV-013 with IMPL-108; ARCH-LAYER-001 with ARCH-LAYER-012; LEG-ENC-003, 005, 007, 063 with LEG-TEST-002; PATTERN-052 with MOD-036; PKG-DEP-001 with PKG-DEP-009; PLAT-ARCH-001, 005, 008c, 008e, 017, 027, 030.
 
-For comparison, sequential single-agent review of 37 skills × 700 lines avg would have consumed substantial parent-context tokens and likely required ~2–3 hours wall clock. The parallel subagent pattern is the right shape for corpus-wide reviews; codifying it as a research-process or audit-skill methodology rule is a Tier 3 candidate (`[RES-024]` parallel-subagent verification already covers the verification side; the open-ended-survey side could use a sibling rule).
+These pairs/clusters contradict one another or lack a stable scope boundary. Promotion before semantic repair would mechanically entrench an arbitrary side.
 
-## References
+### WAIT — 51
 
-- `swift-institute/Research/agent-workflow-skill-consistency-audit.md` (2026-04-15) — prior cluster audit; persistent findings tracked
-- `swift-institute/Research/skill-shape-and-growth-evaluation.md` — rationale for `[SKILL-CREATE-005a]` multi-file exception
-- `swift-institute/Research/skill-loading-reliability.md` — symlink + sync rationale
-- `swift-institute/Research/skill-creation-process.md`, `skill-based-documentation-architecture.md`, `skill-as-input-composition-pattern.md`, `compose-then-trace-skill-design-phase.md` — skill design rationale
-- `swift-institute/Research/documentation-skill-design.md`, `readme-skill-design.md`, `generalized-audit-skill-design.md`, `audit-finding-triage-taxonomy.md`, `implementation-patterns-skill.md` — per-skill design records
-- `swift-institute/Research/carrier-launch-skill-incorporation-backlog.md` — case study driving recent skill amendments
-- Skill files cited inline by absolute path with line numbers
+BENCH-003; API-NAME-003; API-BRAND-001; API-IMPL-019; MOD-016, 037; INFRA-020; PLAT-ARCH-016; FREVIEW-017; CI-107; WORK-001–015; CHANNEL-001–013; SEAT-001–013.
+
+Reasons are missing ground truth/list, semantic engine dependency, explicit placeholder, unstable network-current policy, or the new/uncommitted/unhealthy control-plane schema. The nine architectural rules retained outside linter are CI-003, 011, 012, 013, 020, 053, 081, 109, 110.
+
+### Promotion order
+
+PROMOTE-001 requires sequential, one-ID adjudication. The safe order is:
+
+1. Repair every RESHAPE_FIRST cluster through skill-lifecycle.
+2. Activate the 19 authored/deferred outcomes one at a time, beginning with CI-112's first live run.
+3. Promote PKG-NAME-001, 002, and 015 sequentially now that naming-vocabulary is ratified.
+4. Add the 14 skill-canon/lifecycle validators.
+5. After the legal semantic repair, create the separate Rule Institute legal-linter package and bundle.
+6. Promote high-risk memory/data-structure/Swift-source predicates.
+7. Add package, documentation, testing, and GitHub validators.
+8. Add artifact-process validators, then the social/SPI/promotion tail.
+
+Every ID requires fixtures, warning-only soak, diagnostic binding to the owner ID, an outcome record, and review before the next ID. ARCH-LAYER-012 must not be activated until its conflict with ARCH-LAYER-001 is repaired.
+
+## Per-cluster assessment
+
+### Strongest areas
+
+Code-navigation is a small, exclusive operational contract with a current tool boundary and no competing owner. Document-markup has a clear artifact trigger and current package-specific expertise. Swift-package-heritage has an unusually crisp decision boundary: it governs provenance/lineage, not API design or package naming. These three should stay structurally unchanged.
+
+The strongest Medium clusters are CI, testing-swiftlang, issue investigation, promotion lifecycle, and the workspace/channel/runtime conceptual decomposition. Their boundaries are basically correct; they need enforcement completion or operational hardening, not taxonomy replacement.
+
+### Architecture and implementation
+
+This cluster is the largest source of semantic conflict. ARCH-LAYER-001 forbids lateral dependencies at swift-institute/SKILL.md:48-50 while ARCH-LAYER-012 permits lateral L3 dependencies at :220-229. The ecosystem tour says it carries no enforcement at swift-institute-ecosystem/SKILL.md:24-26 yet defines nine MUST-style ECO requirements, and its 13-tier claim at :80-88 conflicts with the computed 19-tier source at primitives/SKILL.md:100-108. Swift-package's path-safe-default at swift-package/SKILL.md:590-655 is contradicted by PKG-DEP-009's no-path rule at :818-828.
+
+Platform, implementation, memory, conversions, byte discipline, and data structures all contain useful requirements, but catch-all growth and imperfect seams make them Weak. Splitting them further is not the remedy: only code-surface satisfies the current formal split gate. First repair ownership and move rationale out.
+
+### Testing, documentation, repository, and tooling
+
+Testing is useful but its Rule Index is incomplete and performance authority is divided among testing, testing-institute, and benchmark. Documentation has conflicting ownership between inline and style siblings; README retains retired family assumptions; GitHub and CI have a one-way thin-caller seam. Package-export's promised output is not what its embedded script produces. Quick-save's script assumes clone-mirror parents are repos and blindly pushes a hard-coded fleet.
+
+The correct response is one qualified GitHub internal split, targeted tightening of testing/docs/CI, and in-place replacement of the two operational scripts. Do not create extra testing or release-notes skills.
+
+### Research, audit, reflection, and release
+
+Audit and research-process each qualify for a structural split, but their deeper defect is status and authority conflict. Audit has multiple placement rules, contradictory FALSE_POSITIVE/PREMISE_STALE handling, and a rule that requires implementing a fix during audit. Research has incompatible status enums and mandates particular methods/tools regardless of question or authority.
+
+Experiment and META conflict on archive and FIXED/SUPERSEDED semantics. Reflection skills still route through retired HANDOFF/memory assumptions and can commit or delete user WIP. Release has incompatible phase models and contains unacceptable advice to delete CI history or rewrite Git history for presentation. RELEASE-013 should be removed as a rule during TIGHTEN; removing one rule is not removing the skill.
+
+### Multi-agent control plane
+
+The design boundary is good:
+
+- Workspace owns authority, topology, work state, assignment, acceptance, and completion.
+- Seat-channel owns transport.
+- Seat-runtime owns executor conduct after authority is granted.
+- Handoff owns same-seat continuation.
+- Supervise owns tactical oversight, not first-class-seat authority.
+
+Do not merge these skills. The live implementation is not production-ready:
+
+- WORK-014 requires edit-zone/worktree visibility, but workspace-state.py:501-560 and Workspace/control/STATUS.md:8-20 omit it.
+- Exactly-one general is normative at workspace-orchestration/SKILL.md:47-63, while the checker only rejects more than one at Scripts/workspace-state.py:619-631 and close permits zero at :993-1017.
+- Reconcile executes tracked event-log shell predicates through /bin/zsh at workspace-state.py:403-455 and :1061-1126.
+- Rotate and close span separate non-transactional channel/registry operations at seat-channel.py:291-322 and :481-510 versus workspace-state.py:968-1017.
+- Charter immutability is prose-only; only path/existence is checked.
+- Same-user callers can spoof workspace role, read peer channels, regress unlocked cursors, and close without a required close transaction.
+- The general seat is currently UNHEALTHY with incomplete BOOT; sending-regions is CLOSED but its charter remains under charters/active.
+- L1/L2/L3 actor terminology collides with the five-layer architecture and platform tiers.
+
+Recommended model: a persistent general identity may be DORMANT with no active transport lease; assignment requires a healthy current-generation handshake. Use workspace/general/arc names, not numeric layer names. Use structured allowlisted oracle executables, content-hashed immutable charters, transactional rotate/close journals, monotonic locked cursors, capability-bound role operations, and work/channel referential integrity.
+
+### Rule Institute
+
+The legal root belongs where it is. The core registry currently misclassifies/omits Dutch-law routing, and legal-encoding conflicts with legal-testing over unknown/exception semantics. Repair the semantic canon before adding the proposed separate legal linter package. Dutch-law and legal-testing are Medium because their boundaries remain useful; legal-encoding and rule-law-core are Weak until authority is coherent.
+
+### Engagement
+
+All nine skills have useful independent triggers, so absorption fails. None has a requirement-ID family or requires edge. Shared queue schema, status transitions, IDs, deduplication, index integrity, and no-posting safety are repeated but ownerless. This is the only justified new skill gap.
+
+Current implementation evidence also shows concrete defects: triage does not enforce all tags/status transitions, themes omits surfaces and includes draft text, review references a nonexistent draft.file, Forums ingestion stores reply count as likes, and X dedup uses URL rather than stable post ID. Fifty current queue records are dormant from 2026-04-22 (46 ignore, 3 blog, 1 research), so operational usefulness is not yet demonstrated.
+
+## Structural recommendations
+
+### SPLIT code-surface
+
+Why: 50 rules, 1,421 lines, at least four independently loadable narrative clusters; all SKILL-CREATE-005a conditions pass.
+
+| File | Rules |
+|---|---|
+| SKILL.md | thin hub, global axioms, Files table, full Rule Index |
+| naming.md | API-NAME-001/001a/001b/001c/002/003/004/004a/005/006/007/008/010/010a/010b/011/012/013/014/015 plus API-BRAND-001 |
+| errors.md | API-ERR-001–008 |
+| declarations-and-conformances.md | API-IMPL-005/006/007/008/009/016/018/019/020/022/023/024 |
+| signatures-and-state.md | API-NAME-009 plus API-IMPL-003/010/011/012/013/014/017/021 |
+
+### SPLIT audit
+
+Why: 40 rules, 1,114 lines, four independently useful audit concerns; the threshold is met exactly.
+
+| File | Rules |
+|---|---|
+| SKILL.md | hub and complete Rule Index |
+| artifacts.md | AUDIT-001/002/003/004/005/007/008/009/010/015/016/017 |
+| modes-and-routing.md | AUDIT-006/011/012/013/014/019/032 |
+| evidence.md | AUDIT-018/021/023/026/027/028/029/033/034/036/037/039/040/041 |
+| findings-and-remediation.md | AUDIT-020/022/024/025/030/031/038 |
+
+### SPLIT research-process
+
+Why: 52 rules, 1,075 lines, four independently loadable research modes.
+
+| File | Rules |
+|---|---|
+| SKILL.md | hub and complete Rule Index |
+| investigation.md | RES-001/001a/004/004a/011/027/028/029/033/035 |
+| documents.md | RES-002/002a/003/003a/003b/003c/004b/005/006/006a/007/008/009/010/010a/010b/010c/036/039 |
+| rigor-and-verification.md | RES-020/021/022/023/024/025/026/031/032/034/037/038 |
+| discovery.md | RES-012/013/013a/014/015/016/017/018/019/020a/030 |
+
+### SPLIT github-repository
+
+Why: 44 rules, 1,003 lines, five independently useful concerns.
+
+| File | Rules |
+|---|---|
+| SKILL.md | hub and complete Rule Index |
+| public-presentation.md | GH-REPO-001/003/010/011/012/013/014/020/021/022/023/024/030/031/040/041 |
+| settings.md | GH-REPO-050–057 |
+| metadata.md | GH-REPO-002/060/061/062/063/076 |
+| automation.md | GH-REPO-070/071/072/073/074/075/077 |
+| organization-and-discussions.md | GH-REPO-080/081/090/091/092/093/094 |
+
+All four splits retain skill name, directory, IDs, and references. They are breaking only for raw path/line consumers. Land relocation without wording changes, update scanners to recurse, then remove the size-baseline entry only after each file is below 1,000 lines.
+
+Rejected splits: swift-package (29 rules), existing-infrastructure (26), testing (27), skill-lifecycle (39), legal-encoding (36), and conversions (34). SKILL-CREATE-005a requires at least 40; line count alone is insufficient. Evict rationale first. Do not invent rules to cross the threshold.
+
+Rejected absorptions: every Engagement stage has an independent trigger or direct invocation; seat-channel and seat-runtime are not proper subsets of workspace authority. No candidate meets 100% co-load, under-200-line proper-subset, and no-independent-consumer simultaneously.
+
+## New skill: engagement-core
+
+| Field | Recommendation |
+|---|---|
+| Name | engagement-core |
+| Source | Engagement/Skills/engagement-core/SKILL.md |
+| Layer | meta |
+| Prefix | ENG-CORE |
+| Trigger | Whenever any Engagement queue, schema, status, route, ID, dedup, or shared-state operation runs, including direct invocation of a stage |
+| Requires | swift-institute-core |
+| Owns | repo-root resolution; queue and index schema; status/route state machine; stable IDs; dedup/idempotency; index↔Queue integrity; universal test-only/no-posting invariant |
+| Does not own | ingestion mechanics; classification; composition/voice; view rendering; review; end-to-end orchestration |
+| Why existing skills cannot own it | engagement-process is deliberately pure orchestration, while stages are independently invoked; assigning shared canon to either would make direct runs unsafe or duplicate authority |
+| Example invocations | validating a queue migration; changing allowed statuses; repairing index/Queue divergence; adding a new source stage |
+| Effect | all nine existing stages add engagement-core to requires and stop redefining shared state |
+
+## Replacement specifications
+
+Package-export remains the same skill and prefix but its implementation is replaced with one tested maintained script. It must emit the documented tree and content, preserve namespace-root ordering, honor git check-ignore, exclude build/vendor material, and accept an explicit context budget. Remove the static vendor-table prose.
+
+Quick-commit-and-push-all remains the same skill and prefix but becomes registry-driven and fail-closed. Discover leaf repositories rather than treating org mirrors as repos; classify visibility authoritatively; enforce branch and dirty-state guards; produce a dry-run receipt; separate public/private authorization; and verify every push. No operation proceeds merely because a repo appears in a hard-coded list.
+
+## Complete proposed end-state catalog
+
+KEEP:
+
+code-navigation; document-markup; swift-package-heritage.
+
+SPLIT internally:
+
+audit; code-surface; github-repository; research-process.
+
+REPLACE in place:
+
+package-export; quick-commit-and-push-all.
+
+TIGHTEN:
+
+benchmark; blog-process; byte-discipline; ci-cd-workflows; collaborative-discussion; conversions; corpus-meta-analysis; documentation; ecosystem-data-structures; existing-infrastructure; experiment-process; handoff; implementation; issue-investigation; lint-rule-promotion; memory-safety; modularization; platform; primitives; readme; reflect-session; reflections-processing; release-readiness; rule-exemptions; seat-channel; seat-runtime; skill-lifecycle; social-preview; supervise; swift-evolution; swift-forums-review; swift-institute-core; swift-institute-ecosystem; swift-institute; swift-linter; swift-package-build; swift-package-index; swift-package; swift-pull-request; testing-institute; testing-swiftlang; testing; workspace-orchestration; dutch-law; legal-encoding; legal-testing; rule-law-core; engagement-actionables; engagement-compose; engagement-process; engagement-review; engagement-themes; engagement-triage; ingest-swift-forums; ingest-x-feeds; ingest-x.
+
+CREATE:
+
+engagement-core.
+
+There are no MERGE/ABSORB, RENAME, MOVE ROOT, DEPRECATE, or REMOVE dispositions for live skills. Five retired broken symlinks are removed as projections, not skills. RELEASE-013 is removed as a defective rule during tightening, not as a skill disposition.
+
+## Systemic root causes
+
+1. Canon grew additively without a single generated registry. The corpus now has correct raw ownership for most prefixes but stale narrative indexes, loading prose, and discovery projections.
+2. Mechanical annotations were treated as coverage claims. Authored, bundled, activated, and independently validated states are not consistently distinguished.
+3. Process skills captured point-in-time runtime/tooling facts as permanent requirements. Claude memory, HANDOFF files, old org topology, toolchain versions, and external service behavior survived later architecture changes.
+4. Control-plane authority converged faster than implementation. The conceptual boundaries are recent and sound, but scripts do not yet provide transactions, capabilities, referential integrity, or safe idle state.
+5. Engagement evolved as executable stages before acquiring shared canon. This explains zero IDs, zero dependencies, schema repetition, and inconsistent state handling.
+6. Baselines became both debt registers and apparent success metrics. Prune-only is sound, but orphan/stale entries and contradictory enforce/report-only documentation obscure actual gate state.
+
+## Predecessor reconciliation
+
+| Predecessor claim/finding | Current classification | Evidence |
+|---|---|---|
+| 37-skill corpus and four-layer count | Premise-stale | current census is 65 across three roots |
+| Platform should split as a single file | Resolved structurally | platform is now a six-file routed hub; content weakness remains |
+| Testing cluster needed cross-review | Confirmed/refined | cluster boundaries useful; ownership/index defects remain |
+| Many April ghost references/duplicate IDs | Resolved for those exact findings | prior audit section records 31 resolved; current unresolved tokens are a different residue set |
+| Missing release-notes skill | Rejected | responsibility is already partitioned across release, README, GitHub, blog |
+| Quick-save hard-coded topology risk | Confirmed and worsened | current no-superrepo topology makes the embedded implementation unsafe |
+| Collaboration/reflection stable | Premise-stale | Codex runtime and July workspace authority invalidate vendor/memory assumptions |
+| Handoff heading/orphan findings | Resolved or previously withdrawn | do not reopen old resolved rows |
+| Workspace cluster CLEAN after 13 remediations | Confirmed for those exact 13 findings | new runtime/state findings arose after closure and are separately recorded |
+| Merge process skills for neatness | Rejected | independent triggers and durable outputs fail absorption criteria |
+
+This document replaces the predecessor's current-state conclusions in place. Historical reasoning remains available through Git history and the predecessor audit sections.
+
+## Migration plan
+
+### Phase 1 — correctness and discovery
+
+Scope: repair the two broken primitives projections; remove five dead user links; decide managed versus purged home scope; repair all checked-in broken projections; add a read-only source/projection integrity gate; correct canon mode documentation and prune two orphan baseline entries.
+
+Preconditions: Principal chooses home-scope policy and authorizes symlink/script changes.
+
+Validation: zero broken/missing/extra/wrong-target links for each declared projection; description and size checks; canon enforce; Claude discovery smoke test; Codex .agents discovery smoke test if adopted.
+
+Rollback: projection changes are reversible links; retain a generated before/after manifest. Do not change skill sources.
+
+This is the smallest safe first implementation batch.
+
+### Phase 2 — semantic correctness and ownership
+
+Scope: repair all 22 RESHAPE_FIRST clusters; reconcile audit/research/experiment/META status models; remove RELEASE-013; correct architecture tier/path/lateral contradictions; legal unknown/exception semantics; add bilateral seams for PATTERN and duplicated SEM-DEP.
+
+Preconditions: one Principal ruling for each semantic conflict.
+
+Validation: canon scan, cross-reference scan, dependency DAG, targeted examples/counterexamples, and independent cluster audit.
+
+Rollback: one rule cluster per commit; preserve redirect/burn records for changed IDs.
+
+### Phase 3 — triggers and dependency cleanup
+
+Scope: narrow broad triggers; correct core loading order; add engagement-core and nine requires edges; correct legal/core routing; make collaborative-discussion runtime-neutral.
+
+Preconditions: engagement-core schema approved; semantic repairs from Phase 2 that affect routing complete.
+
+Validation: synthetic routing tasks, complete dependency graph, no cycle/missing owner, description budget under the current harness limit.
+
+Rollback: additive engagement-core can be removed before consumer edits if routing tests fail.
+
+### Phase 4 — qualified splits and replacements
+
+Scope: four file-only splits exactly as specified; replace package-export and quick-save implementations.
+
+Preconditions: semantic edits to each split skill land before mechanical relocation; replacement acceptance tests written first.
+
+Validation: recursive canon scan, each Markdown file at or below 1,000 lines, unchanged ID set, path/citation migration, package-export golden fixtures, quick-save dry-run/fail-closed tests.
+
+Rollback: splits are one mechanical relocation commit each; replacements retain old behavior only as versioned test fixtures, not executable fallback.
+
+### Phase 5 — control-plane hardening
+
+Scope: dormant general identity; nonnumeric actor vocabulary; transactional rotate/close; capability checks; structured oracles; locked cursors; charter hashes; work/channel referential integrity; durable tracked state.
+
+Preconditions: Principal approves lifecycle model and security boundary; live work is quiesced or migrated through an explicit journal.
+
+Validation: crash-injection tests at every transaction boundary; spoof/peer-read/close negative tests; concurrent cursor tests; charter tamper test; active/dormant/closed lifecycle matrix; independent closure audit.
+
+Rollback: version event schema and provide a read-only migration verifier; never rewrite existing event logs in place.
+
+### Phase 6 — enforcement
+
+Scope: execute the adjudication queue in the exact order above. Swift-source predicates go to swift-linter; artifact/API/state predicates to purpose-built validators; native rules stay native.
+
+Preconditions: Phase 2 resolves contradictions; diagnostics cite canonical owner IDs; baseline policy is prune-only and truthful.
+
+Validation: fixtures, warning-only soak, false-positive review, first live run, outcome receipt, and one-ID independent review.
+
+Rollback: disable one new diagnostic/bundle entry while retaining fixtures and outcome record; never weaken the canonical rule silently.
+
+### Phase 7 — lifecycle expiry and independent validation
+
+Scope: remove temporary redirects after their stated windows, expire suppressions, prune baselines, regenerate projections, and run a fresh whole-corpus audit.
+
+Preconditions: all consumers migrated and discovery receipts clean.
+
+Validation: full census; zero cycles; zero unexplained ghosts; zero broken projections; all gates blocking as documented; operational control-plane health; end-state catalog count 66.
+
+## Risks and tradeoffs
+
+- Tightening 56 skills is a large semantic program. Batch by composing cluster, not by arbitrary file count.
+- Four splits reduce load cost but increase path-sensitive consumer risk; IDs must remain stable and scanners must recurse.
+- A managed home projection improves Claude use outside Developer but can pollute unrelated sessions. Purging home scope is safer unless cross-workspace loading is explicitly required.
+- More validators can create a fragmented enforcement UX. A common diagnostic schema and one aggregate gate are preferable to one monolithic checker.
+- Control-plane capability enforcement is limited by same-user filesystem access. The goal is robust protocol/tool boundaries and tamper evidence, not an OS security boundary that does not exist.
+- Legal linter separation preserves domain/privacy boundaries but adds another package/bundle to maintain.
+
+## Principal decisions required
+
+1. Choose managed or purged home-level Claude skill projection.
+2. Approve project/user Codex projection under .agents/skills and the description-budget reduction needed to fit it.
+3. Rule on each of the 22 RESHAPE_FIRST semantic clusters.
+4. Approve engagement-core's meta layer, ENG-CORE prefix, schema ownership, and dependency edges.
+5. Approve the four breaking file relocations.
+6. Approve in-place replacement specifications for package-export and quick-save.
+7. Approve dormant-general lifecycle and workspace/general/arc terminology.
+8. Approve the control-plane trust model and transactional migration.
+9. Approve a separate Rule Institute legal-linter package/bundle.
+10. Authorize the sequential 349-ID enforcement program; no blanket transfer is recommended.
+
+## Gate and verification receipt
+
+| Check | Result |
+|---|---|
+| Description check | PASS: 65 skills; ceiling 250; one stale allowlist entry outside corpus |
+| Size check | PASS against prune-only baseline; 8 legacy over-ceiling files remain baselined |
+| Canon enforce | PASS with 31 baselined findings across 127 files and 1,596 IDs; baseline has 2 orphan entries |
+| Dependency graph | 65 nodes, 92 edges, acyclic, no missing declared name |
+| Prefix ownership | one multi-owner prefix, PATTERN; no accidental second owner |
+| Source census | 65 skills, 124 Markdown files; no exclusions |
+| Sync dry run | discovers 65; manages Developer/.claude and swift-standards projections only |
+| Workspace state check | internal ledger/view consistency PASS |
+| General channel health | FAIL: incomplete BOOT; stale workspace heartbeat; missing seat heartbeat |
+| Sending-regions lifecycle | CLOSED state but charter still under active |
+| Git/worktree | dirty user-owned state preserved; no commit/push |
+
+Verification limits:
+
+- Usage counts are file-reference proxies except the explicit Claude-doctor lifetime invocation counts.
+- No mutating sync, warning rollout, CI dispatch, remote API mutation, or control-plane repair was authorized.
+- External mutable facts were not promoted to timeless rules; current first-party Codex discovery documentation was used only for the current harness comparison.
+- The current worktree is heavily modified across several repositories. Findings describe that live state and should be rechecked immediately before implementation.
+
+## Key evidence
+
+- Skill lifecycle structural gates: Skills/skill-lifecycle/SKILL.md:203-225, :583-593, :829-840.
+- Discovery contradiction: Skills/skill-lifecycle/SKILL.md:562-575; Scripts/sync-skills.sh:15-23, :99-161, :263-276.
+- Architecture conflict: Skills/swift-institute/SKILL.md:48-50, :220-229.
+- Tier drift: Skills/swift-institute-ecosystem/SKILL.md:80-88; Skills/primitives/SKILL.md:100-108.
+- Package dependency conflict: Skills/swift-package/SKILL.md:590-655, :818-828.
+- Promotion architecture: Skills/lint-rule-promotion/SKILL.md:56-66, :89-150, :505-511.
+- Control findings: Skills/workspace-orchestration/SKILL.md:47-63, :207-215; Scripts/workspace-state.py:403-455, :501-560, :619-631, :968-1017, :1061-1126; Scripts/seat-channel.py:291-408, :481-571.
+- Formal compliance findings: Audits/audit.md, 2026-07-15 holistic cluster sections.
+- Current Codex skill guidance: https://learn.chatgpt.com/docs/build-skills

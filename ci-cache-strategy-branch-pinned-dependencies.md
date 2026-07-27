@@ -529,5 +529,5 @@ already on.
 [jimmya-yml]: https://github.com/jimmya/SPM-Caching/blob/main/.github/workflows/build.yml
 [hoist]: https://github.com/swift-primitives/swift-carrier-primitives/commit/99ad46e
 [jimmya]: https://github.com/jimmya/SPM-Caching
-[sync-gitignore]: https://github.com/swift-institute/REDACTED/blob/main/sync-gitignore.sh#L47
+[sync-gitignore]: https://github.com/swift-institute/Scripts/blob/main/sync-gitignore.sh#L47
 [spm-resolved]: https://docs.swift.org/swiftpm/documentation/packagedescription/package-resolved-file

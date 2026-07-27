@@ -158,7 +158,7 @@ env TOOLCHAINS=org.swift.633202606251a swift build \
   --package-path ~/Developer/swift-institute/swift-control-plane --build-tests
 
 # Gate of record (resolves + clean-ish build + runs tests + cross-checks):
-~/Developer/swift-institute/REDACTED/gate.sh --test \
+~/Developer/swift-institute/Scripts/gate.sh --test \
   ~/Developer/swift-institute/swift-control-plane
 
 # Live smoke (opt-in; claude present, codex absent) — see step 3 above.

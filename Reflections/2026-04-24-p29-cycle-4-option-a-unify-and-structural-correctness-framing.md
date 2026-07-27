@@ -45,7 +45,7 @@ triage_outcomes:
 
 4. **Three principal-authorized ask:-based scope relaxations** recorded as `[SUPER-015]` observations: (i) io_uring 1-line `public import` addition (ground-rule #4 relaxed); (ii) `unsafe(self.cValue = siginfo_t())` expression-level wrap on new `init()` body per [MEM-SAFE-002] (ground-rule "non-@unsafe init declaration" clarified to mean attribute not body); (iii) substantive-canary gate substitution per Cycle 3 gate (b)/(d) precedent.
 
-**HANDOFF scan (per [REFL-009])**: 4 files found at `~/Developer/swift-institute/REDACTED/`:
+**HANDOFF scan (per [REFL-009])**: 4 files found at `~/Developer/swift-institute/Audits/`:
 
 - `HANDOFF-cycle-3-file-handle-writeall.md` — Cycle 3 SUCCESS-stamped (6/6 ground rules verified, 10/10 acceptance criteria verified, no pending escalation). Subject of this session's parent cleanup directive. → **DELETED**.
 - `HANDOFF-layer-perfection-implementation.md` — three-cycle layer-perfection arc complete (Cycle 1 + 2 + 3 all SUCCESS-closed). Cycle 3 trigger annotated RESOLVED by parent session. No live work. → **DELETED**.

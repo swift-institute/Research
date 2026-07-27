@@ -160,7 +160,7 @@ is designed Institute-first.
 ```
 # Clean gate of record:
 cd ~/Developer/swift-institute/swift-control-plane && rm -rf .build
-~/Developer/swift-institute/REDACTED/gate.sh --test ~/Developer/swift-institute/swift-control-plane
+~/Developer/swift-institute/Scripts/gate.sh --test ~/Developer/swift-institute/swift-control-plane
 
 # Live smokes: see steps 3–4 above.
 ```

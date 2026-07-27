@@ -124,7 +124,7 @@ the skill system. They belong to the Carrier audit's Phase 1.
    `~/Developer/swift-institute/Skills/<skill>/SKILL.md`
    (or sub-file).
 2. Bump the skill version per `[SKILL-LIFE-*]`.
-3. Run `~/Developer/swift-institute/REDACTED/sync-skills.sh`
+3. Run `~/Developer/swift-institute/Scripts/sync-skills.sh`
    to regenerate the `~/.claude/skills/` symlinks.
 4. Annotate the matching row in this backlog: change `Status` from
    `OPEN` to `LANDED <commit-sha> <date>`.

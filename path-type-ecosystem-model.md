@@ -443,7 +443,7 @@ L3 file-system typealiases:
 - swift-path-primitives commit `a96dddf`: "Add Path.Protocol decomposition API [IMPL-023] [IMPL-081]"
 - swift-iso-9945 commit `a90491b`: "Add POSIX Path.Protocol conformance on Path.View [API-IMPL-007]"
 - HANDOFF: `~/Developer/HANDOFF-path-decomposition.md`
-- Ecosystem audit: `~/Developer/swift-institute/REDACTED/audit.md` lines 914-915, 1066, 1073.
+- Ecosystem audit: `~/Developer/swift-institute/Audits/audit.md` lines 914-915, 1066, 1073.
 - Confirmed: **no Windows Path.Protocol file** (`Grep 'Path\.`?Protocol`?' swift-microsoft/swift-windows-standard` — zero matches).
 
 ---

@@ -484,8 +484,8 @@ counts.
 
 Full per-rule histogram (69 rule classes, 712 repos, 447 FAST / 258 NO-LINT /
 7 EVAL-FALLBACK, 0 lint errors):
-`~/Developer/swift-institute/REDACTED/lint-sweep-2026-07-23.md:61-133`,
-machine-readable in `~/Developer/swift-institute/REDACTED/lint-sweep-2026-07-23.json`
+`~/Developer/swift-institute/Audits/lint-sweep-2026-07-23.md:61-133`,
+machine-readable in `~/Developer/swift-institute/Audits/lint-sweep-2026-07-23.json`
 (`completed_results[].rule_counts`), committed at Audits `9b2a49f`.
 
 Top-20 classes for orientation (total / repos): API-ERR-001 9650/238,

@@ -158,7 +158,7 @@ post-tag dispatch.
    `~/Developer/swift-institute/Skills/<skill>/`
    (or the appropriate sub-file for cohorted skills).
 2. Bump the skill's `last_reviewed` per `[SKILL-LIFE-004]`.
-3. Run `~/Developer/swift-institute/REDACTED/sync-skills.sh`
+3. Run `~/Developer/swift-institute/Scripts/sync-skills.sh`
    to regenerate the `~/.claude/skills/` symlinks.
 4. Annotate the matching row in this backlog: change `Status` from
    `OPEN` to `LANDED <commit-sha> <date>`.

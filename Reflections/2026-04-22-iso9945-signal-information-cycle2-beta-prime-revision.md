@@ -34,7 +34,7 @@ IP5 final: macOS `swift build --build-tests` clean in 3.59s; Docker Linux swift:
 ### HANDOFF scan
 
 In-session authority:
-- `~/Developer/swift-institute/REDACTED/HANDOFF-layer-perfection-implementation.md` — **annotated-and-left**. Stamped with Cycle 2 § Status via commit `891e935`. Cycle 3 (Doc 1 — P2.2 #1/#11) remains trigger-ready; the file is the canonical doc for future Cycle 3 open. Supervisor constraints #1–#6 verified end-to-end.
+- `~/Developer/swift-institute/Audits/HANDOFF-layer-perfection-implementation.md` — **annotated-and-left**. Stamped with Cycle 2 § Status via commit `891e935`. Cycle 3 (Doc 1 — P2.2 #1/#11) remains trigger-ready; the file is the canonical doc for future Cycle 3 open. Supervisor constraints #1–#6 verified end-to-end.
 
 Out-of-session authority (leave untouched per [REFL-009] bounded-cleanup rule):
 - `~25` other `HANDOFF*.md` files at `~/Developer/`, `~/Developer/swift-primitives/`, `~/Developer/swift-foundations/`, etc. None of these describe work this session touched; no annotation applied.

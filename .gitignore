@@ -14,3 +14,6 @@ Package.resolved
 /_*/
 !/_archived/
 /prompts/
+
+# Purged from history 2026-07-25 (machine-path exposure); keep local, never commit
+Reflections/.cadence.log

@@ -34,7 +34,7 @@ Structure was three-layer supervise-governed throughout (user → supervisor →
   - `swift-institute/Audits`: `3f7de0f` (tracker P2.4 #8 PARTIAL CLOSE + "Linux test-target ecosystem drift cleanup (2026-04-22)" sub-section).
 - 10/10 acceptance criteria verified end-to-end. All 6 ground-rules-block entries verified per [SUPER-011]. Cycle 1 terminated in Success per [SUPER-010]. Cycles 2 (Doc 3 — P2.3 #3) and 3 (Doc 1 — P2.2 #1/#11) remain deferred per the handoff's no-bundling rule.
 
-**HANDOFF scan** (per [REFL-009]): 16 handoff files found across scope (4 at `~/Developer/swift-institute/`, 3 at `~/Developer/swift-institute/REDACTED/`, 12 at `~/Developer/`). Only one in this session's bounded cleanup authority: `HANDOFF-layer-perfection-implementation.md`. Cycles 2 and 3 remain open; annotated with Cycle 1 Success closure + supervisor-constraints verification line per [SUPER-011]; file retained (not deleted). The other 15 are out-of-session-scope — not triaged.
+**HANDOFF scan** (per [REFL-009]): 16 handoff files found across scope (4 at `~/Developer/swift-institute/`, 3 at `~/Developer/swift-institute/Audits/`, 12 at `~/Developer/`). Only one in this session's bounded cleanup authority: `HANDOFF-layer-perfection-implementation.md`. Cycles 2 and 3 remain open; annotated with Cycle 1 Success closure + supervisor-constraints verification line per [SUPER-011]; file retained (not deleted). The other 15 are out-of-session-scope — not triaged.
 
 **Audit finding cleanup** (per [REFL-010]): P2.4 #8 status updated to PARTIAL CLOSE in `platform-compliance-2026-04-21.md` as part of commit `3f7de0f`. No other findings touched this session; no additional status updates needed.
 

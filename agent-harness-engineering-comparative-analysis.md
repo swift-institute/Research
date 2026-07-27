@@ -1440,7 +1440,7 @@ Workspace artifacts cited:
 - `~/Developer/swift-institute/Skills/{handoff,supervise,reflect-session,reflections-processing,skill-lifecycle,swift-institute-core,code-surface,swift-institute,corpus-meta-analysis,ci-cd-workflows,git-operations}/SKILL.md`
 - `~/Developer/swift-institute/.github/.github/workflows/` — 27 reusable workflows
 - `~/Developer/swift-primitives/.github/.github/workflows/swift-ci.yml` — layer-tier reusable
-- `~/Developer/swift-institute/REDACTED/` — 28 workspace tooling scripts
+- `~/Developer/swift-institute/Scripts/` — 28 workspace tooling scripts
 - `~/Developer/swift-institute/Research/agent-harness-engineering-state-of-the-art.md` (the survey)
 - `~/Developer/swift-institute/Research/agent-handoff-patterns.md`
 - `~/Developer/swift-institute/Research/agent-supervision-patterns.md`
