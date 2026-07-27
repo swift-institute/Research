@@ -217,7 +217,7 @@ public @inlinable func m() -> UnsafePointer<X> on a ~Copyable type {
 
 **Upstream ID**: `swiftlang/swift#88022`.
 
-**Standalone reproducer**: <https://github.com/coenttb/swift-issue-copypropagation-nonescapable-mark-dependence>.
+**Canonical issue**: <https://github.com/swift-institute/Issues/issues/6>.
 
 **Source: `copypropagation-nonescapable-fix.md` (deleted 2026-05-10 in Wave 6).**
 

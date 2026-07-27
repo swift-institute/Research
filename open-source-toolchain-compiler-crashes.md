@@ -253,11 +253,11 @@ Xcode-bundled toolchain for immediate unblock while waiting for compiler fixes.
 
 3. **Filed Bug A**: [swiftlang/swift#87029](https://github.com/swiftlang/swift/issues/87029)
    — SIL verifier crash: `_read` yielding `~Escapable` value with `@_lifetime(borrow)`.
-   Minimal reproduction (20 lines): [coenttb/swift-issue-sil-verifier-read-escapable-lifetime](https://github.com/coenttb/swift-issue-sil-verifier-read-escapable-lifetime).
+   Canonical issue and reproduction dossier: [swift-institute/Issues#15](https://github.com/swift-institute/Issues/issues/15).
 
 4. **Filed Bug B**: [swiftlang/swift#87030](https://github.com/swiftlang/swift/issues/87030)
    — IRGen crash: closure with typed throws using nested Error in generic type.
-   Minimal reproduction (8 lines): [coenttb/swift-issue-irgen-typed-throws-nested-error-generic](https://github.com/coenttb/swift-issue-irgen-typed-throws-nested-error-generic).
+   Canonical issue and reproduction dossier: [swift-institute/Issues#9](https://github.com/swift-institute/Issues/issues/9).
 
 ### Remaining Steps
 
