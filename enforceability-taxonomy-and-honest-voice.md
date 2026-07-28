@@ -2,7 +2,7 @@
 
 <!--
 ---
-version: 2.0.0
+version: 3.0.0
 last_updated: 2026-07-28
 status: RECOMMENDATION
 tier: 2
@@ -53,6 +53,40 @@ party routes it nowhere.
 The separating test: *would two informed parties, given the same context, necessarily converge?*
 If yes, it is judgeable and a disagreement would be a mistake by one of them. If they could
 reasonably differ and both be right, it is open.
+
+### Open is rare by construction, and hunting for it is the greater danger
+
+A conventions corpus is largely a record of decisions that have already been made. So *"two
+reasonable people could have chosen differently"* is **not** the test. If the question was
+settled, it is closed, and the line should keep commanding — the fact that some other choice was
+once available says nothing about whether this one is now binding.
+
+The asymmetry matters. Mislabelling a settled decision as open **licenses divergence from a
+decision that was actually taken**, which is a live harm. Leaving a genuinely open line in the
+imperative is a smaller one. When uncertain, prefer to leave it commanding.
+
+The operational test is therefore not "could this have gone another way" but: **has this been
+settled, or is the prose asserting a preference that was never resolved?** And where the second is
+suspected, **measure adoption**. A prescribed shape that nothing in the ecosystem actually uses is
+open content written as settled — which is exactly how the board-vocabulary defect surfaced, at
+zero uses out of ninety-four items. Adoption is the evidence; measure before reclassifying
+anything.
+
+### Splits are the common case
+
+In practice, few sentences carry a single disposition. Most carry two: a decidable prohibition
+beside an open preference, or a judgeable procedure beside an open choice of instrument.
+
+A naming rule that both forbids one suffix and prefers another between two acceptable
+alternatives is decidable in its first half and open in its second. A namespace rule that gives a
+determinate procedure for choosing between two forms, then instructs the author to pick a
+different word when a candidate is ambiguous, is judgeable then open. A design rule whose
+enumerated cases are settled but whose novel cases turn on which properties the author intends a
+type to carry is settled *and* open, by case.
+
+**The split is the useful output, not the label.** Classifying such a sentence as a whole forces a
+wrong answer either way; separating its clauses lets the enforceable half be enforced and the open
+half stop pretending.
 
 ## Voice is a second axis
 
@@ -195,6 +229,58 @@ costs nothing mechanically while omitting the comment costs a diagnostic.
 
 Step 4 finds existing defects; steps 1–3 only classify. And separately from all four: **is this
 line an enforcement claim?** If so, verify it against the check that allegedly implements it.
+
+One addition for decidable lines, because it is the step most often skipped: **name the venue.**
+Syntax and AST facts belong to the source linter; package-graph and manifest facts to the
+workspace validators; repository and platform state to the policy layer; some things are only
+provable by building, and some are best enforced by a commit hook rather than any of these.
+*Decidable* without a named venue is still unenforced — it merely sounds enforced, which is the
+failure this document exists to name.
+
+## Classifying an existing corpus
+
+Applied to the conventions corpus, the taxonomy sorts roughly as follows. Rules are named by their
+subject rather than by location, because locations move.
+
+**Decidable, cheap, and purely syntactic** — forbidden suffix and identifier forms; prohibited
+local binding names; phantom-tag spellings; the experimental accessor spelling; error-erasing
+catch bindings; namespace-restricted extension members; attribute ordering on conformance clauses;
+qualification of stdlib protocols that are also used as namespaces; one-type-per-file and
+file-name-matches-type-path; the restriction of type bodies to stored properties, the canonical
+initializer, and deinit; untyped and existential throws clauses.
+
+**Decidable, but silent when violated** — these deserve rules first, because nothing else will
+surface them. A lock-scoped closure returning its own parameter, which hands a region-disconnected
+alias out of the lock with no diagnostic. A generic leaf conformer missing its explicit
+never-bodied typealias, which fails at link time far from the edit. A multi-level reach-through
+from a typed index to a raw integer, which the corpus calls unconditionally wrong. Ownership
+escape hatches used outside their declaring file, which the corpus itself describes as costing a
+human reviewer. A missing safety disclosure adjacent to an unsafety-asserting attribute — itself a
+decidable shell over a judgeable core, since the disclosure's *existence* is checkable and its
+*soundness* is not.
+
+**Decidable, but not by the source linter** — platform-C imports outside their sanctioned layer,
+retroactive-conformance scope, required package settings and upcoming features, and conditional
+compilation confined to particular files. All need package-graph or manifest facts the syntax tree
+cannot see.
+
+**Judgeable, and already admitted as such** — the domain classification of a raw byte value, and
+the untyped-callee boundary in typed-throws code. Both say outright that no mechanical rule can
+decide them. These are the best honest-voice models the corpus already contains, and new
+disclosures should be patterned on them rather than newly invented.
+
+**Judgeable with a decidable shell** — the classification of unchecked concurrency-safety
+conformances, where the category is judgeable and the presence of the required disclosure fields
+is decidable. State which half is checked.
+
+**Open** — the choice between an acceptable suffix and a domain word, once the forbidden form is
+excluded; preference between equally natural nouns; default scoping of introductory documentation;
+the choice of replacement word when a candidate name is ambiguous; the variant axes of a container
+family, which are performance bets rather than correctness facts; and whether to mint a capability
+seam at all, which the corpus already calls a deletable convenience.
+
+That last group is short, and it should be. If a review of a conventions corpus produces a long
+list of open lines, the classification is probably wrong.
 
 ## What honest voice looks like
 
