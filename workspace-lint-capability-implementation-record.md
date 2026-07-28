@@ -156,12 +156,18 @@ than letting one uncontrolled number harden into a citation.
 the five slowest for roughly 22%. That decomposition survives contention even where the totals do
 not, and it is what made the next finding legible.
 
-**An estimate that was wrong by 8×, recorded as method rather than apology.** A pre-implementation
-estimate of "roughly two minutes" for the full sweep was extrapolated from a six-package sample
-taken on a quieter machine. The real per-package mean was 3.4× the sample, and two packages spent
-minutes each on a build doomed by an upstream break. The correction was to make the sweep report
-its own per-package durations and name its slowest packages, so the *next* estimate is checkable
-rather than trusted.
+**An estimate that was wrong by 3.3×, recorded as method rather than apology.** A
+pre-implementation estimate of "roughly two minutes" for the full sweep was extrapolated from a
+six-package sample taken on a quieter machine. Against the steady-state figure it was wrong by
+**3.3×**; against the first-ever run, by **7.8×**. Two causes, and only the first was avoidable:
+the sample was drawn from small packages and missed a long tail, and two packages spent minutes
+each on a build doomed by an upstream break nobody knew about yet.
+
+The correction was not to estimate better but to make estimation unnecessary — the sweep now
+reports its own per-package durations and names its slowest packages, so the *next* figure is
+checkable rather than trusted. **An extrapolation from a convenience sample is a guess wearing a
+number's clothes**, and the tell was that the sample was chosen for being easy to run rather than
+for being representative.
 
 ## The scope filter that cost more than the work it avoided
 
@@ -223,6 +229,25 @@ packages, and those were exactly the nine carrying no consumer configuration. Ch
 accepted as coincidence: all nine sit dirty on the same unfinished standardization branch with no
 upstream. Two symptoms, one cause. Routed to the session owning that cohort.
 
+## The sweep takes no coordinator lock, and that is a hazard as well as a feature
+
+Every build routed through the Workspace coordinator serializes on a single machine-wide advisory
+lock, so effective parallelism across *coordinated* work on one machine is 1.
+
+**The lint sweep does not take that lock.** It spawns the linter binary directly, and where the
+eval fallback shells out to the package manager it does so raw rather than through the
+coordinator. Two consequences, and the second is easy to miss:
+
+- A lint sweep does not queue behind a running build, which is what makes it usable at all while
+  the machine is busy. Timing it is an ordinary contention problem, not a lock-waiting one.
+- **A sweep therefore races every coordinated build on the machine, and neither side can tell.**
+  The lock exists precisely to stop concurrent package-manager work from colliding, and the eval
+  path performs exactly that kind of work outside it.
+
+This matters for scheduling any measurement — a window arranged by pausing coordinated builds does
+not quiet uncoordinated ones — and it is a third instance of work bypassing that lock. Recorded so
+the next person does not have to rediscover which side of the lock this capability sits on.
+
 ## Decisions taken
 
 Adjudicated by the Team Lead; recorded here because the reasoning is the transferable part.
@@ -237,10 +262,33 @@ Adjudicated by the Team Lead; recorded here because the reasoning is the transfe
 2. **The sweep defaults to all packages**, with changed-scope as explicit opt-in. A default that
    silently narrows the population is indistinguishable from a sweep that found nothing, and that
    is the family of defect this fleet spent the surrounding days removing.
-3. **The sweep starts red.** Packages with no consumer configuration report UNMEASURED and the
-   sweep exits 2. **With a condition attached:** each must end up either carrying a configuration
-   or explicitly recorded as out of scope. A permanent red that everyone learns to ignore is worse
-   than green, because it costs the signal without buying the coverage.
+3. **Deliberate gaps are recorded rather than left red.** This one was adjudicated twice in
+   opposite directions before settling, and the settled form is better than either starting
+   position.
+
+   A package with no consumer configuration measured nothing, and the sweep refuses to call that
+   clean. Left alone that meant exiting non-zero on day one and every day after — the inert-gate
+   family, where the signal survives and nobody reads it. **A gate that is always red gates
+   nothing.**
+
+   The resolution is a checked-in allowlist recording where the absence is deliberate: listed
+   means reported and counted but not failing; unlisted still fails loudly. Chronic red goes, the
+   alarm stays.
+
+   The objection to an allowlist — that it becomes a second place a package's lint status is
+   declared, alongside the configuration file that is already CI's activation signal, and two
+   sources for one fact is how they drift — is answered mechanically rather than by discipline:
+   **an entry for a package that does carry a configuration is an error**, as is an entry naming a
+   package outside the inventory, or one listed twice. The configuration file stays the single
+   authority; the allowlist records only its deliberate absence, and a stale record fails loudly
+   instead of quietly excusing a package that no longer needs excusing. Every fault is reported at
+   once, because a list corrected one error per run is a list nobody finishes correcting.
+
+   The recorded state is its own verdict rather than either neighbour. Folding it into *clean*
+   would overstate coverage; folding it into *unmeasured* would restore the permanent red. And the
+   single-package path never reads the allowlist — asked to lint a package, "nothing here is
+   configured" is a failure to deliver what was asked, whatever the ecosystem-level policy says.
+   That also keeps the fast path free of inventory reads.
 
 Two finer calls: an absent linter is a **warning** in doctor, so a bare clone that never installed
 still passes, while divergence once installed is an **error**, because that one produces
