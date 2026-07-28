@@ -178,14 +178,23 @@ for the input every time.
 
 ## Findings that belong to others
 
-**An upstream break, latent rather than visible.** The two packages that take the eval fallback
-returned UNMEASURED rather than merely slow. The cause is a source-compatibility break on `main`:
-a filesystem package collapsed a read operation's typed-throws form at 2026-07-28 12:45Z, and a
-manifest package that consumes it has a head from the previous day and has not followed. The eval
-path resolves both from `main` at invocation time, so it no longer builds. CI's last green run on
-the affected package predates the break by 16 hours, so nothing had surfaced it. Only 2 of 441
-packages take that path; the other 431 use the prebuilt runner and are unaffected. Ownership was
-placed elsewhere.
+**An upstream break, found latent and then confirmed live.** The two packages that take the eval
+fallback returned UNMEASURED rather than merely slow. The cause is a source-compatibility break on
+`main`: a filesystem package collapsed a read operation's typed-throws form at 2026-07-28 12:45Z,
+and a manifest package that consumes it has a head from the previous day and has not followed. The
+eval path resolves both from `main` at invocation time, so it no longer builds. CI's last green run
+on the affected package predated the break by 16 hours, so nothing had surfaced it. Only 2 of 441
+packages take that path; the other 431 use the prebuilt runner and are unaffected.
+
+This was first recorded here as a **prediction** — that the next CI run on an affected package
+would fail its gating lint leg — because the local finding was a macOS observation and a finding
+from one vantage point is not a finding about another. A CI run was then dispatched with
+authorization, and **the prediction is now a fact**: the gating leg failed on Linux at the same
+file, the same line, and the same diagnostic as locally. Ownership of the repair was placed
+elsewhere.
+
+The sequence is the point. The local capability surfaced a break in CI's own path **before CI had
+run into it**, and it did so by refusing to call an unmeasured package clean.
 
 **This is the design working, not a shortfall.** A broken tool path surfacing as *nothing was
 measured* rather than *no violations found* is the entire reason the capability was worth
