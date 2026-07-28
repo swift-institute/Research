@@ -192,6 +192,23 @@ measured* rather than *no violations found* is the entire reason the capability 
 building. Had the UNMEASURED guard not been there, two packages would have been reported clean on
 the strength of a build that never ran.
 
+### The packages reporting UNMEASURED, by name
+
+The condition attached to decision 3 is that each ends up either carrying a consumer
+configuration or explicitly recorded as out of scope. The list belongs in the record so that
+shrinking it is the obvious thing to do with it, and so a tenth entry appearing is legible as an
+alarm rather than as more of the same.
+
+**Ten with no consumer configuration** — `swift-percent-primitives`;
+`swift-certificate-verification`, `swift-image-magick`, `swift-money`, `swift-resource-pool`,
+`swift-server-dependencies`, `swift-server-static`, `swift-sitemap`, `swift-splat`,
+`swift-svg-printer`.
+
+**Two whose configuration cannot currently be evaluated** — `swift-carrier-primitives` and
+`swift-linter-rules`, both blocked by the upstream break above. These are expected to clear
+without any change to either package once that break is repaired, and are not candidates for an
+out-of-scope record.
+
 **Nine packages dirty on an abandoned branch.** The changed-scope filter selected exactly nine
 packages, and those were exactly the nine carrying no consumer configuration. Checked rather than
 accepted as coincidence: all nine sit dirty on the same unfinished standardization branch with no
