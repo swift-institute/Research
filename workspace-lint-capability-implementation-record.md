@@ -195,9 +195,30 @@ packages take that path; the other 431 use the prebuilt runner and are unaffecte
 This was first recorded here as a **prediction** — that the next CI run on an affected package
 would fail its gating lint leg — because the local finding was a macOS observation and a finding
 from one vantage point is not a finding about another. A CI run was then dispatched with
-authorization, and **the prediction is now a fact**: the gating leg failed on Linux at the same
-file, the same line, and the same diagnostic as locally. Ownership of the repair was placed
-elsewhere.
+authorization, and **the prediction is now a fact**: the lint leg failed on Linux at the same
+file, the same line, and the same diagnostic as locally, under the pinned Swift version. Ownership
+of the repair was placed elsewhere.
+
+**That run failed two substantive legs, not one, and the second is unrelated.** The nightly Linux
+leg crashed independently — a `libdispatch` runtime crash (`_dispatch_event_loop_drain`, thread
+`DispatchWorker`, bad pointer dereference) under a 6.5-dev toolchain with assertions. It is
+neither the typed-throws break above nor the compiler abort tracked separately by the fleet. A
+reader taking that run as confirmation of the typed-throws break alone would be reading it as
+narrower than it is.
+
+Two notes on how that was found, because the manner matters more than the fact:
+
+- The first report of this run named **one** failed leg, because the query filtered job names for
+  the one expected to fail. Enumerating the run's jobs unfiltered showed **four**: the two
+  substantive legs plus the two `ci-ok` aggregates that failed as a consequence. This is §16's
+  enumeration trap committed while writing §16 — a filter built from what you expect to find
+  cannot report what you did not think of, and the omission was caught by a reviewer rather than
+  by the instrument.
+- **The nightly leg sits inside the gating aggregate**, so a Swift *nightly* regression can redden
+  any repository in this fleet on a day nothing in the repository changed. It is not always
+  scheduled — on at least one other package that leg was skipped — so the exposure is
+  intermittent rather than constant. Whether a nightly toolchain should gate is a real question
+  and belongs to whoever owns CI policy; recorded here only as an observation made in passing.
 
 The sequence is the point. The local capability surfaced a break in CI's own path **before CI had
 run into it**, and it did so by refusing to call an unmeasured package clean.
