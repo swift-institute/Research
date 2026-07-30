@@ -43,6 +43,11 @@ research-process ([RES-*]), handoff, supervise.
 3. Move OFF PostgresNIO/Vapor plumbing toward institute-native engines eventually, not now.
 4. swift-records: supersede-and-split (DSL→L2, plumbing→L3); NOT convert-whole, NOT
    fold-into-postgresql-standard.
+   **Amendment (2026-07-30, coordinator adjudication under
+   [swift-institute/Research#2](https://github.com/swift-institute/Research/issues/2)):**
+   scope: the `swift-records` package disposition only. This ruling does not govern the
+   SQL↔PostgreSQL bridge; the bridge is governed by the integration-product passage — see
+   line 322 (`SQL PostgreSQL Standard Integration`).
 5. Phase-2 Redis drop approved (cache → Postgres tables + in-proc LRU/TTL).
 6. Stub-fill arcs (scheduler → sql-postgres → http server) green-lit post-Phase-1.
 7. No tags this phase; new-ecosystem platform floor macOS/iOS v26.
