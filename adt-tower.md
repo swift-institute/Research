@@ -924,6 +924,14 @@ restores.
 0-witness); `Experiments/adt-tower-worked-example` (real upstream); walls probes p1–p3c
 (the alias feature matrix, 6.3.3).
 
+**Rider (swift-institute/.github#122 W6, 2026-07-30):** [DS-028] front doors are
+generic-instantiation aliases and therefore **not** vocabulary hosts. Member-type lookup does not
+look through an unbound generic typealias on any toolchain (swift-institute/Issues#81); a family
+fronted by `X<E>` has no `X` namespace to nest a capability protocol into, so that protocol stays
+top-level and non-underscored. §4.7 W15 already stated this law for carriers ("Tower vocabulary
+stays on non-generic nouns via the [API-IMPL-009] hoist; carriers are hoisted `__X` types, not
+vocabulary hosts") — this rider closes the gap the front door slipped through.
+
 ### 4.5 `[DS-029]` Allocation-Generic Operation Pins *(NEW; RATIFIED)*
 
 **Statement**: Tower operations MUST NOT hardcode a Memory leaf. Three op forms exist, in order
