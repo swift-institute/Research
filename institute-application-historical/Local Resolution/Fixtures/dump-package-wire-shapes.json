@@ -1,0 +1,120 @@
+{
+  "_comment": [
+    "Minimized, sanitized dump-package wire excerpts for Adjudication-001 and 002.",
+    "Sources: swift-build package dump-package on swift-foundations/swift-package-graph (remote + mirrored local)",
+    "and on swift-foundations/swift-css/Tests (genuine .package(path:)).",
+    "Toolchain: Apple Swift 6.3.3 (swiftlang-6.3.3.1.3), arm64-apple-macosx26.0, 2026-07-24.",
+    "SANITIZATION: local filesystem pathnames are replaced with the artificial stable path",
+    "/fixture/checkouts/<name>. THE FIXTURE PRESERVES THE OBSERVED JSON SHAPE, NOT THE",
+    "MACHINE-SPECIFIC PATHNAME. Wire keys, array structure, requirement, identity, and the",
+    "remote URL are byte-for-byte as observed and MUST NOT be altered.",
+    "Full dump was 12079 bytes; only the shapes the adjudications turn on are kept."
+  ],
+  "fileSystem_path_dependency": {
+    "_note": "Genuine .package(path: \"..\") from swift-foundations/swift-css/Tests, observed alongside the mirror-transformed shapes in a separate dump-package run. NOTE THE THREE DIFFERENCES from sourceControl_location_local: the discriminator is 'fileSystem'; 'path' is a bare String not an array; and there is NO 'requirement' key. Pathname SANITIZED; shape exact.",
+    "fileSystem": [
+      {
+        "identity": "swift-css",
+        "path": "/fixture/checkouts/swift-css",
+        "productFilter": null,
+        "traits": [
+          {
+            "name": "default"
+          }
+        ]
+      }
+    ]
+  },
+  "platforms_element": {
+    "_note": "Modelled by SupportedPlatform { platform, version }. 'options' is not modelled.",
+    "options": [],
+    "platformName": "macos",
+    "version": "26.0"
+  },
+  "products_element": {
+    "_note": "Modelled by Package.Manifest.Product { name, kind, targets }. 'settings' is not modelled.",
+    "name": "Package Graph",
+    "settings": [],
+    "targets": [
+      "Package Graph"
+    ],
+    "type": {
+      "library": [
+        "automatic"
+      ]
+    }
+  },
+  "sourceControl_location_local": {
+    "_note": "Emitted for a dependency whose canonical URL is mirror-redirected to a local directory. 'local' is a bare [String], structurally unlike 'remote's [{urlString}]. The pathname below is SANITIZED; the shape (key name, array-of-string, sibling keys) is exactly as observed. Neither hand decoder reads it; swift-spm-standard's Codable throws keyNotFound(\"remote\") on it.",
+    "sourceControl": [
+      {
+        "identity": "swift-paths",
+        "location": {
+          "local": [
+            "/fixture/checkouts/swift-paths"
+          ]
+        },
+        "productFilter": null,
+        "requirement": {
+          "branch": [
+            "main"
+          ]
+        },
+        "traits": [
+          {
+            "name": "default"
+          }
+        ]
+      }
+    ]
+  },
+  "sourceControl_location_remote": {
+    "_note": "Emitted for a dependency absent from the mirror map. This is the only shape all three decoders handle.",
+    "sourceControl": [
+      {
+        "identity": "swift-package-manager",
+        "location": {
+          "remote": [
+            {
+              "urlString": "https://github.com/swift-foundations/swift-package-manager.git"
+            }
+          ]
+        },
+        "productFilter": null,
+        "requirement": {
+          "branch": [
+            "main"
+          ]
+        },
+        "traits": [
+          {
+            "name": "default"
+          }
+        ]
+      }
+    ]
+  },
+  "unmodelled": {
+    "_note": "Observed on the wire, absent from the Package.Manifest domain. None is required by Adjudication-001; recorded so a later slice does not rediscover them.",
+    "dependency_level": [
+      "traits",
+      "productFilter"
+    ],
+    "target_level": [
+      "resources",
+      "settings",
+      "exclude",
+      "packageAccess"
+    ],
+    "top_level_decoded_and_discarded": [
+      "cLanguageStandard",
+      "cxxLanguageStandard",
+      "defaultLocalization",
+      "packageKind",
+      "pkgConfig",
+      "providers",
+      "swiftLanguageVersions",
+      "traits"
+    ]
+  }
+}
