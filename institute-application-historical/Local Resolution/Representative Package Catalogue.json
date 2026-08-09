@@ -1,0 +1,734 @@
+{
+  "capturedAt": "2026-07-24",
+  "collisions": {
+    "identityMappingToMultipleURLs": [],
+    "identityToRepositoryCollisions": [],
+    "inconsistentURLSpellings": [
+      "The machine-wide mirror map at ~/.swiftpm/configuration/mirrors.json spells every original twice, with and without a .git suffix (1256 entries over approximately 628 unique repositories). No catalogue manifest declares a bare (non-.git) Institute URL, so within this catalogue the spelling is consistent."
+    ],
+    "renamedRepositories": [
+      "18 rename pairs exist in the mirror map (for example swift-github-types -> swift-github-standard, swift-github-live -> swift-github-http, swift-domain-type -> swift-domain-standard, swift-emailaddress-type -> swift-emailaddress-standard, swift-html-rendering -> swift-html-render, swift-css-html-rendering -> swift-css-html-render). Verified that ZERO current Package.swift files under swift-primitives, swift-standards or swift-foundations declare any pre-rename spelling, so these aliases serve historical tags and pins only and are dormant with respect to HEAD manifests."
+    ]
+  },
+  "generatedBy": "Gate 0A repository and capability audit, read-only inspection",
+  "identityMethodology": [
+    "Package identity is NEVER asserted from repository basename, directory name, display name, lowercasing, or .git removal.",
+    "Where an identity value is given, its basis is an observed packageRef.identity in a pre-existing .build/workspace-state.json produced by SwiftPM on this machine.",
+    "Where no such observation exists, identity.value is null and identity.basis records why.",
+    "Across the 200 dependencies resolved for Workspace/Application, packageRef.identity equals packageRef.name and equals basename(location) in every case, with zero divergences. This is an observation about the current graph, not a rule.",
+    "Corroborating adjudication: swift-institute/Research/Reflections/2026-07-22-canonical-package-topology-and-workspace-resolve-gate.md states that the local directory basename is part of SwiftPM package identity when a package is overridden by path."
+  ],
+  "packages": [
+    {
+      "ambiguities": [
+        "None observed. Repository name, directory basename, manifest display name and resolved SwiftPM identity all read 'swift-dimension-primitives'.",
+        "Library product name ('Dimension Primitives', spaces) differs from module name ('Dimension_Primitives', underscores) by the standing ecosystem convention; this is a naming transform, not an identity ambiguity."
+      ],
+      "binaryTargets": [],
+      "branch": "main",
+      "canonicalRemote": "https://github.com/swift-primitives/swift-dimension-primitives.git",
+      "declaredDependencies": [
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-axis-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-direction-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-finite-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-numeric-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-pair-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-tagged-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        }
+      ],
+      "displayName": "swift-dimension-primitives",
+      "identity": {
+        "basis": "empirical: appears as packageRef.identity in 5 inspected .build/workspace-state.json files, kind=localSourceControl, location=<developer-root>/swift-primitives/swift-dimension-primitives",
+        "value": "swift-dimension-primitives"
+      },
+      "layer": "primitives",
+      "localPath": "<developer-root>/swift-primitives/swift-dimension-primitives",
+      "macros": [],
+      "materiallyRelevantImports": [
+        "Axis_Primitive",
+        "Direction_Primitive",
+        "Finite_Primitives",
+        "Numeric_Primitives_Core",
+        "Pair_Primitives",
+        "Real_Primitives",
+        "Tagged_Primitives"
+      ],
+      "organization": "swift-primitives",
+      "platforms": [
+        "iOS v26",
+        "macOS v26",
+        "tvOS v26",
+        "visionOS v26",
+        "watchOS v26"
+      ],
+      "plugins": [],
+      "products": [
+        "Dimension Primitives",
+        "Dimension Primitives Test Support"
+      ],
+      "rationale": "Base of the three-layer transitive chain declared in Workspace.json. An L1 primitive with six same-layer dependencies, exercising the intra-Primitives tier DAG.",
+      "repositoryIdentityVersusPackageIdentity": "identical",
+      "repositoryName": "swift-dimension-primitives",
+      "resources": [],
+      "revision": "f123b8b8a",
+      "roleInCatalogue": [
+        "transitive-chain-base",
+        "internal-primitive-dependency-target"
+      ],
+      "targets": [
+        "Dimension Primitives",
+        "Dimension Primitives Test Support",
+        "Dimension Primitives Tests"
+      ],
+      "toolsVersion": "6.3.3",
+      "traits": [],
+      "workingTree": "clean"
+    },
+    {
+      "ambiguities": [
+        "None observed for identity.",
+        "Spans four standards authority organizations in one manifest (swift-iec, swift-iso, swift-ecma) plus one primitive; a repository-to-organization projection must not assume that a swift-standards package depends only on swift-standards packages."
+      ],
+      "binaryTargets": [],
+      "branch": "main",
+      "canonicalRemote": "https://github.com/swift-standards/swift-color-standard.git",
+      "declaredDependencies": [
+        {
+          "declaredURL": "https://github.com/swift-ecma/swift-ecma-48.git",
+          "organization": "swift-ecma",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-iec/swift-iec-61966.git",
+          "organization": "swift-iec",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-iso/swift-iso-9899.git",
+          "organization": "swift-iso",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-dimension-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        }
+      ],
+      "displayName": "swift-color-standard",
+      "identity": {
+        "basis": "empirical: packageRef.identity in 2 inspected .build/workspace-state.json files (swift-color, Workspace/Application chain), kind=localSourceControl, location=<developer-root>/swift-standards/swift-color-standard",
+        "value": "swift-color-standard"
+      },
+      "layer": "standards",
+      "localPath": "<developer-root>/swift-standards/swift-color-standard",
+      "macros": [],
+      "materiallyRelevantImports": [
+        "Dimension_Primitives",
+        "ECMA_48",
+        "IEC_61966",
+        "ISO_9899"
+      ],
+      "organization": "swift-standards",
+      "platforms": [
+        "iOS v26",
+        "macOS v26",
+        "tvOS v26",
+        "visionOS v26",
+        "watchOS v26"
+      ],
+      "plugins": [],
+      "products": [
+        "Color Standard",
+        "Theme"
+      ],
+      "rationale": "The required standards package, and a clean instance of the -standard convergence pattern: it converges three spec-direct authority packages behind one stable module. Middle link of the Workspace.json chain.",
+      "repositoryIdentityVersusPackageIdentity": "identical",
+      "repositoryName": "swift-color-standard",
+      "resources": [],
+      "revision": "ba61bd79b",
+      "roleInCatalogue": [
+        "standards-package",
+        "transitive-chain-middle",
+        "multi-authority-convergence"
+      ],
+      "targets": [
+        "Color Standard",
+        "Color Standard Tests",
+        "Theme",
+        "Theme Tests"
+      ],
+      "toolsVersion": "6.3.3",
+      "traits": [],
+      "workingTree": "clean"
+    },
+    {
+      "ambiguities": [
+        "None observed.",
+        "Single-product package whose product name ('Color') is a common noun; target-name uniqueness across the whole graph is enforced by [PKG-NAME-014] rather than by the manifest."
+      ],
+      "binaryTargets": [],
+      "branch": "main",
+      "canonicalRemote": "https://github.com/swift-foundations/swift-color.git",
+      "declaredDependencies": [
+        {
+          "declaredURL": "https://github.com/swift-standards/swift-color-standard.git",
+          "organization": "swift-standards",
+          "requirement": "branch: main"
+        }
+      ],
+      "displayName": "swift-color",
+      "identity": {
+        "basis": "empirical: packageRef.identity in swift-foundations/swift-html/.build/workspace-state.json, kind=localSourceControl, location=<developer-root>/swift-foundations/swift-color",
+        "value": "swift-color"
+      },
+      "layer": "foundations",
+      "localPath": "<developer-root>/swift-foundations/swift-color",
+      "macros": [],
+      "materiallyRelevantImports": [
+        "Color_Standard",
+        "Theme"
+      ],
+      "organization": "swift-foundations",
+      "platforms": [
+        "iOS v26",
+        "macOS v26",
+        "tvOS v26",
+        "visionOS v26",
+        "watchOS v26"
+      ],
+      "plugins": [],
+      "products": [
+        "Color"
+      ],
+      "rationale": "Independent root #1 and the required foundations package with an internal primitive dependency: it reaches swift-dimension-primitives transitively through swift-color-standard. Its resolved closure is 28 dependencies, all localSourceControl.",
+      "repositoryIdentityVersusPackageIdentity": "identical",
+      "repositoryName": "swift-color",
+      "resources": [],
+      "revision": "0799a5711",
+      "roleInCatalogue": [
+        "independent-root-1",
+        "foundations-with-internal-primitive-dependency",
+        "transitive-chain-head"
+      ],
+      "targets": [
+        "Color",
+        "Color Tests"
+      ],
+      "toolsVersion": "6.3.3",
+      "traits": [],
+      "workingTree": "clean"
+    },
+    {
+      "ambiguities": [
+        "Product name 'URLRouting' (no spaces) and target 'URLRoutingTests' (no spaces) break the ecosystem's spaced-name convention used by the other six packages; a tool inferring module names from product names by space-to-underscore substitution will produce different results here.",
+        "Mixed requirement forms in one manifest: 24 branch-tracked Institute dependencies and 2 version-ranged external dependencies (apple/swift-collections from 1.0.3, apple/swift-log from 1.0.0). Any remote-resolution validation must handle both.",
+        "Declares a dependency on swift-http-body, which is listed in Workspace.json but absent from Workspace/Packages/ — see catalogue note N-2."
+      ],
+      "binaryTargets": [],
+      "branch": "main",
+      "canonicalRemote": "https://github.com/swift-foundations/swift-url-routing.git",
+      "declaredDependencies": [
+        {
+          "declaredURL": "https://github.com/apple/swift-collections.git",
+          "organization": "apple",
+          "requirement": "from: 1.0.3"
+        },
+        {
+          "declaredURL": "https://github.com/apple/swift-log.git",
+          "organization": "apple",
+          "requirement": "from: 1.0.0"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-dependencies.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-dual.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-html-form-coder.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-http-body.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-json.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-logger-dependencies.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-ietf/swift-rfc-2045.git",
+          "organization": "swift-ietf",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-ietf/swift-rfc-2046.git",
+          "organization": "swift-ietf",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-ietf/swift-rfc-2183.git",
+          "organization": "swift-ietf",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-ietf/swift-rfc-3986.git",
+          "organization": "swift-ietf",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-ietf/swift-rfc-6265.git",
+          "organization": "swift-ietf",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-ietf/swift-rfc-6750.git",
+          "organization": "swift-ietf",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-ietf/swift-rfc-7578.git",
+          "organization": "swift-ietf",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-ietf/swift-rfc-7617.git",
+          "organization": "swift-ietf",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-byte-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-coder-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-collection-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-parser-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-tagged-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-standards/swift-html-standard.git",
+          "organization": "swift-standards",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-standards/swift-http-standard.git",
+          "organization": "swift-standards",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-standards/swift-media-type-standard.git",
+          "organization": "swift-standards",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-whatwg/swift-whatwg-html.git",
+          "organization": "swift-whatwg",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-whatwg/swift-whatwg-url.git",
+          "organization": "swift-whatwg",
+          "requirement": "branch: main"
+        }
+      ],
+      "displayName": "swift-url-routing",
+      "identity": {
+        "basis": "UNESTABLISHED. This package is a root in every inspected build state and was never resolved as a dependency, so no packageRef.identity was observed for it. Its identity is asserted by neither basename nor display name here; establishing it requires resolving a consumer of it.",
+        "value": null
+      },
+      "layer": "foundations",
+      "localPath": "<developer-root>/swift-foundations/swift-url-routing",
+      "macros": [],
+      "materiallyRelevantImports": [],
+      "organization": "swift-foundations",
+      "platforms": [
+        "iOS v26",
+        "macOS v26",
+        "tvOS v26",
+        "watchOS v26"
+      ],
+      "plugins": [],
+      "products": [
+        "URL Routing Foundation Integration",
+        "URL Routing Test Support",
+        "URLRouting"
+      ],
+      "rationale": "Independent root #2, and the widest closure in the catalogue: 172 resolved dependencies, 169 localSourceControl and 3 remoteSourceControl. Carries both external version-ranged dependencies and an opt-in Foundation Integration product, so it exercises the Foundation-freedom boundary and mixed requirement forms.",
+      "repositoryIdentityVersusPackageIdentity": "repository name matches directory basename; package identity unestablished (see identity.basis)",
+      "repositoryName": "swift-url-routing",
+      "resources": [],
+      "revision": "45548aaa5",
+      "roleInCatalogue": [
+        "independent-root-2",
+        "external-remote-dependency",
+        "version-requirement-forms",
+        "foundation-integration-target"
+      ],
+      "targets": [
+        "URL Routing Foundation Integration",
+        "URL Routing Test Support",
+        "URLRouting",
+        "URLRoutingTests"
+      ],
+      "toolsVersion": "6.3.3",
+      "traits": [],
+      "workingTree": "clean"
+    },
+    {
+      "ambiguities": [
+        "None observed for identity.",
+        "Listed in Workspace.json but ABSENT from Workspace/Packages/, so `workspace doctor` would report it as a missing repository. See catalogue note N-2."
+      ],
+      "binaryTargets": [],
+      "branch": "main",
+      "canonicalRemote": "https://github.com/swift-foundations/swift-http-body.git",
+      "declaredDependencies": [
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-json.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-byte-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-coder-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-either-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-parser-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-serializer-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-standards/swift-http-standard.git",
+          "organization": "swift-standards",
+          "requirement": "branch: main"
+        }
+      ],
+      "displayName": "swift-http-body",
+      "identity": {
+        "basis": "empirical: packageRef.identity in 2 inspected .build/workspace-state.json files, kind=localSourceControl, location=<developer-root>/swift-foundations/swift-http-body",
+        "value": "swift-http-body"
+      },
+      "layer": "foundations",
+      "localPath": "<developer-root>/swift-foundations/swift-http-body",
+      "macros": [],
+      "materiallyRelevantImports": [],
+      "organization": "swift-foundations",
+      "platforms": [
+        "iOS v26",
+        "macOS v26",
+        "tvOS v26",
+        "visionOS v26",
+        "watchOS v26"
+      ],
+      "plugins": [],
+      "products": [
+        "HTTP Body",
+        "HTTP Body JSON"
+      ],
+      "rationale": "Included because it is declared in the Workspace.json inventory yet has no clone under Workspace/Packages/, making it the catalogue's live inventory-versus-disk divergence case. Also a transitive internal dependency of swift-url-routing.",
+      "repositoryIdentityVersusPackageIdentity": "identical",
+      "repositoryName": "swift-http-body",
+      "resources": [],
+      "revision": "eb62e8c3e",
+      "roleInCatalogue": [
+        "inventory-versus-disk-divergence",
+        "transitive-internal-dependency"
+      ],
+      "targets": [
+        "HTTP Body",
+        "HTTP Body JSON",
+        "HTTP Body JSON Tests",
+        "HTTP Body Tests"
+      ],
+      "toolsVersion": "6.3.3",
+      "traits": [],
+      "workingTree": "clean"
+    },
+    {
+      "ambiguities": [
+        "None observed for identity.",
+        "Only catalogue package with a version-RANGE requirement ('602.0.0'..<'603.0.0' on swiftlang/swift-syntax) rather than branch or from:.",
+        "Its macro target 'Witnesses Macros Implementation' is named verbatim in the 2026-07-16 Xcode integration evidence as the macro whose validation must be skipped or trusted before a workspace build reaches compilation."
+      ],
+      "binaryTargets": [],
+      "branch": "main",
+      "canonicalRemote": "https://github.com/swift-foundations/swift-witnesses.git",
+      "declaredDependencies": [
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-dependency-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-finite-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-optic-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-ownership-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-source-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-witness-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swiftlang/swift-syntax.git",
+          "organization": "swiftlang",
+          "requirement": "range: 602.0.0 ..< 603.0.0"
+        }
+      ],
+      "displayName": "swift-witnesses",
+      "identity": {
+        "basis": "empirical: packageRef.identity in 2 inspected .build/workspace-state.json files, kind=localSourceControl, location=<developer-root>/swift-foundations/swift-witnesses",
+        "value": "swift-witnesses"
+      },
+      "layer": "foundations",
+      "localPath": "<developer-root>/swift-foundations/swift-witnesses",
+      "macros": [
+        "Witnesses Macros Implementation"
+      ],
+      "materiallyRelevantImports": [
+        "SwiftSyntax",
+        "Witness_Primitives"
+      ],
+      "organization": "swift-foundations",
+      "platforms": [
+        "iOS v26",
+        "macOS v26",
+        "tvOS v26",
+        "visionOS v26",
+        "watchOS v26"
+      ],
+      "plugins": [],
+      "products": [
+        "Witnesses",
+        "Witnesses Macros",
+        "Witnesses Test Support"
+      ],
+      "rationale": "The required non-trivial SwiftPM feature case: a compiler-plugin macro target. Chosen over other macro packages because the 2026-07-16 Xcode integration evidence names this exact macro as the one blocking workspace builds without -skipMacroValidation, so any Xcode materialization design must account for it by name.",
+      "repositoryIdentityVersusPackageIdentity": "identical",
+      "repositoryName": "swift-witnesses",
+      "resources": [],
+      "revision": "8297968ac",
+      "roleInCatalogue": [
+        "macro-target",
+        "version-range-requirement",
+        "xcode-macro-validation-blocker"
+      ],
+      "targets": [
+        "Witnesses",
+        "Witnesses Macros",
+        "Witnesses Macros Implementation",
+        "Witnesses Test Support",
+        "Witnesses Tests"
+      ],
+      "toolsVersion": "6.3.3",
+      "traits": [],
+      "workingTree": "clean"
+    },
+    {
+      "ambiguities": [
+        "PRODUCT AND TARGET NAMES ARE NOT LITERALS. The manifest declares `extension String { static let html: Self = \"HTML\" }` and then writes `.library(name: .html, targets: [.html])`. A literal grep over Package.swift extracts '.html'; the actual product and target name is 'HTML'. Any catalogue built by static text matching is wrong for this package.",
+        "Trait-conditional dependencies: two products (Translating, Translating Dependencies) are attached with `condition: .when(traits: [\"Translating\"])`, and a compilation condition `.define(\"TRANSLATING\", .when(traits: [\"Translating\"]))` is applied. The effective dependency set therefore depends on trait activation, which is not visible from the dependency list alone.",
+        "Identity unestablished: this package is a root in every inspected build state."
+      ],
+      "binaryTargets": [],
+      "branch": "main",
+      "canonicalRemote": "https://github.com/swift-foundations/swift-html.git",
+      "declaredDependencies": [
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-color.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-css.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-html-render.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-markdown-html-render.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-svg.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-translating-dependencies.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-foundations/swift-translating.git",
+          "organization": "swift-foundations",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-ietf/swift-rfc-4648.git",
+          "organization": "swift-ietf",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-primitives/swift-byte-primitives.git",
+          "organization": "swift-primitives",
+          "requirement": "branch: main"
+        },
+        {
+          "declaredURL": "https://github.com/swift-whatwg/swift-whatwg-url.git",
+          "organization": "swift-whatwg",
+          "requirement": "branch: main"
+        }
+      ],
+      "displayName": "swift-html",
+      "identity": {
+        "basis": "UNESTABLISHED. Root package in every inspected build state; no packageRef.identity was observed for it.",
+        "value": null
+      },
+      "layer": "foundations",
+      "localPath": "<developer-root>/swift-foundations/swift-html",
+      "macros": [],
+      "materiallyRelevantImports": [
+        "Color",
+        "CSS",
+        "HTML_Rendering",
+        "SVG"
+      ],
+      "organization": "swift-foundations",
+      "platforms": [
+        "iOS v26",
+        "macOS v26",
+        "tvOS v26",
+        "watchOS v26"
+      ],
+      "plugins": [],
+      "products": [
+        "HTML"
+      ],
+      "rationale": "The required traits case, and the catalogue's proof that manifests cannot be read statically: product and target names are computed through a String extension, and two dependencies plus one compilation define are trait-conditional. 134 resolved dependencies, 131 localSourceControl and 3 remoteSourceControl.",
+      "repositoryIdentityVersusPackageIdentity": "repository name matches directory basename; package identity unestablished (see identity.basis)",
+      "repositoryName": "swift-html",
+      "resources": [],
+      "revision": "d76cb8a99",
+      "roleInCatalogue": [
+        "traits",
+        "computed-manifest-names",
+        "conditional-dependencies"
+      ],
+      "targets": [
+        "HTML",
+        "HTML Tests"
+      ],
+      "toolsVersion": "6.3.3",
+      "traits": [
+        "Translating"
+      ],
+      "workingTree": "clean"
+    }
+  ],
+  "schema": 1,
+  "selectionCriteria": {
+    "foundationsWithInternalPrimitiveDependency": "swift-color",
+    "independentRoots": [
+      "swift-color",
+      "swift-url-routing"
+    ],
+    "nonTrivialSwiftPMFeature": [
+      "swift-witnesses (macro target)",
+      "swift-html (traits, conditional dependencies, computed names)"
+    ],
+    "standardsPackage": "swift-color-standard",
+    "transitiveInternalChain": "swift-color -> swift-color-standard -> swift-dimension-primitives"
+  },
+  "toolchain": {
+    "swift": "6.3.3",
+    "xcode": "26.6"
+  }
+}
