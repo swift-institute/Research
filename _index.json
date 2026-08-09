@@ -2842,6 +2842,174 @@
       "topic" : "Swift's @_spi-in-@inlinable rule is a direct-reference rule, not a transitive-call-graph rule. Composing @inlinable through a public non-@inlinable boundary severs the cascade. Earlier (2026-04-20) inferential extension that treated propagation as transitive is corrected by this finding. Implications for cross-package consumer migration patterns, error-conversion layering, and overall API-layer design. Pending: empirical multi-Swift-version sweep, boundary-pattern-shape investigation."
     },
     {
+      "displayName" : "BUILD-AND-GRAPH-FINDINGS.md",
+      "file" : "institute-application-historical\/BUILD-AND-GRAPH-FINDINGS.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: BUILD-AND-GRAPH-FINDINGS.md."
+    },
+    {
+      "displayName" : "Identity Collisions\/identity-collision-check.py",
+      "file" : "institute-application-historical\/Identity Collisions\/identity-collision-check.py",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Identity Collisions\/identity-collision-check.py."
+    },
+    {
+      "displayName" : "Local Resolution\/ADR-001-Materialization-Backends.md",
+      "file" : "institute-application-historical\/Local Resolution\/ADR-001-Materialization-Backends.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/ADR-001-Materialization-Backends.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Adjudication-001-Manifest-Decoding-Ownership.md",
+      "file" : "institute-application-historical\/Local Resolution\/Adjudication-001-Manifest-Decoding-Ownership.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Adjudication-001-Manifest-Decoding-Ownership.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Adjudication-002-Dependency-Source-Semantics.md",
+      "file" : "institute-application-historical\/Local Resolution\/Adjudication-002-Dependency-Source-Semantics.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Adjudication-002-Dependency-Source-Semantics.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Baseline Build and Test Evidence.md",
+      "file" : "institute-application-historical\/Local Resolution\/Baseline Build and Test Evidence.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Baseline Build and Test Evidence.md."
+    },
+    {
+      "displayName" : "Local Resolution\/DESIGN-Local-Overlay-2026-07-28.md",
+      "file" : "institute-application-historical\/Local Resolution\/DESIGN-Local-Overlay-2026-07-28.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/DESIGN-Local-Overlay-2026-07-28.md."
+    },
+    {
+      "displayName" : "Local Resolution\/DESIGN-Selection-Override-2026-07-29.md",
+      "file" : "institute-application-historical\/Local Resolution\/DESIGN-Selection-Override-2026-07-29.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/DESIGN-Selection-Override-2026-07-29.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Fixtures\/dump-package-wire-shapes.json",
+      "file" : "institute-application-historical\/Local Resolution\/Fixtures\/dump-package-wire-shapes.json",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Fixtures\/dump-package-wire-shapes.json."
+    },
+    {
+      "displayName" : "Local Resolution\/HANDOFF-Local-Overlay-2026-07-28.md",
+      "file" : "institute-application-historical\/Local Resolution\/HANDOFF-Local-Overlay-2026-07-28.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/HANDOFF-Local-Overlay-2026-07-28.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Milestone Evidence.md",
+      "file" : "institute-application-historical\/Local Resolution\/Milestone Evidence.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Milestone Evidence.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Org Layout Acceptance.md",
+      "file" : "institute-application-historical\/Local Resolution\/Org Layout Acceptance.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Org Layout Acceptance.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Owner Capability Matrix.md",
+      "file" : "institute-application-historical\/Local Resolution\/Owner Capability Matrix.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Owner Capability Matrix.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Repository Safety Inspection.md",
+      "file" : "institute-application-historical\/Local Resolution\/Repository Safety Inspection.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Repository Safety Inspection.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Representative Package Catalogue.json",
+      "file" : "institute-application-historical\/Local Resolution\/Representative Package Catalogue.json",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Representative Package Catalogue.json."
+    },
+    {
+      "displayName" : "Local Resolution\/Representative Package Catalogue.md",
+      "file" : "institute-application-historical\/Local Resolution\/Representative Package Catalogue.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Representative Package Catalogue.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Resolved State Wire Shapes.md",
+      "file" : "institute-application-historical\/Local Resolution\/Resolved State Wire Shapes.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Resolved State Wire Shapes.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Workspace Finalization Handoff.md",
+      "file" : "institute-application-historical\/Local Resolution\/Workspace Finalization Handoff.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Workspace Finalization Handoff.md."
+    },
+    {
+      "displayName" : "Local Resolution\/Workspace Responsibility Audit.md",
+      "file" : "institute-application-historical\/Local Resolution\/Workspace Responsibility Audit.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: Local Resolution\/Workspace Responsibility Audit.md."
+    },
+    {
+      "displayName" : "README.md",
+      "file" : "institute-application-historical\/README.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Directory README stating that this record is historical and that its command lines predate TX-APP1Z's flatten and rename."
+    },
+    {
+      "displayName" : "TOOLCHAINS.md",
+      "file" : "institute-application-historical\/TOOLCHAINS.md",
+      "scope" : "package-specific",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/institute-application repository root by TX-APP1Z under Amendment 6 item 9 (swift-institute\/.github#85 comment 5231144592), which retired that root to Context\/, Selection.json, Peers.json and Institute.json. Archival intake: kept as the record of how the Institute Application reached its end state; not maintained, and not the current description of any package. Command lines inside predate the flatten and the workspace-to-institute rename. Closes institute-application#62.",
+      "topic" : "Historical institute-application research artifact: TOOLCHAINS.md."
+    },
+    {
       "displayName" : "Institute Server-Stack Architecture",
       "file" : "institute-server-stack-architecture.md",
       "scope" : "ecosystem-wide",
