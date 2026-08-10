@@ -1,0 +1,93 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-20",
+  "title": "Research Index — swift-json",
+  "blurb": "",
+  "scope": "swift-json (swift-foundations)",
+  "documents": [
+    {
+      "file": "family-codable-convention.md",
+      "displayName": "Family-Codable Convention",
+      "topic": "Institutional convention for multi-format coding/parsing/serialization: canonical attachment protocols (Codable / Parseable / Serializable) at top level of primitives packages; operational protocols (Coder.Protocol / Parser.Protocol / Serializer.Protocol) nested under their namespaces; format-specific siblings (JSON.Serializable, Plist.Serializable, XML.Serializable, Binary.Serializable, future Binary.Parseable peer, ...) as non-refining top-level siblings composing through the canonical leaf. v1.1.0 (RECOMMENDATION, 2026-05-14): adds five codified rules ([FAM-001] no associatedtype on siblings; [FAM-002] canonical-attachment associatedtype as intentional asymmetry; [FAM-003] guarded-use rule for canonical attachments; [FAM-004] format-specific instance accessors at call sites; [FAM-005] sibling namespaces correspond to format-level distinctions — sub-format dimensions like endianness are operation parameters via Binary.Endianness, NOT per-dimension sibling namespaces). v1.1.0 reframes the byte-stream forcing function as the Binary split-pair sibling (Binary.Parseable NEW peer + enhanced Binary.Serializable with endianness parameter) replacing the rejected Binary.LittleEndian.Codable framing. v1.1.1 (same-session follow-on): adds [FAM-006] codifying the operational-vs-attachment refinement asymmetry — Coder.Protocol SHOULD refine Parser.Protocol + Serializer.Protocol with `where Parsed == Serialized` (operational layer); Codable MUST NOT refine Parseable + Serializable (attachment layer stays flat); no Decodable/Encodable aliases. Attachment-layer state already CONFIRMED; operational-layer refinement RECOMMENDED-FOR-MIGRATION as separate source-code arc. Status box + confidence tiers (Resolved / Ready-to-test / Deferred) added per peer-review convergence. Honestly documents the parser-side refinement-vs-siblings tension (ASCII.Parseable: Parser_Primitives_Core.Parseable) as queued-for-migration via Φ.1+Φ.3. Cites Apple/Foundation Codable-successor proposal (Kevin Perry, Mar 2025) as convergent external on 3 of 4 axes. v1.1.2 (same-session follow-on): removes the defensive ecosystem-rename recommendation per [BLOG-IDEA-031] (associated-type-trap blog). Same-name unification of `Output` across Coder.Protocol's refinement of Parser.Protocol + Serializer.Protocol is INTENDED; bridge-type collisions handled via `@_implements` at the conforming type, not via protocol-level rename. Source-code arc for [FAM-006] operational refinement is correspondingly smaller in scope. Codifies Coder.Protocol's unified `Failure` slot as `Either<DecodeFailure, EncodeFailure>` from swift-either-primitives (with Either<X, Never> collapse via Either+Never.swift for one-directional infallible codecs) — preserving split decode/encode failure semantics while satisfying refinement's required unification. Also fixes a Phase A defect in §3a code example where Serializer.Protocol's signature was incorrectly written as <Input, Output, Failure> with associatedtype Input; corrected to <Output, Buffer, Failure> with associatedtype Output + Buffer matching real source at swift-serializer-primitives/Sources/Serializer Primitives Core/Serializer.Protocol.swift:49. v1.1.3 (2026-05-15, finalization follow-on): codifies [FAM-007] sub-sibling carve-out. Top-level format-attachment siblings remain bound by [FAM-001] (no associatedtypes). Sub-siblings — refinements of a top-level sibling-without-associatedtype, e.g., UInt8.Base62.Serializable: Binary.Serializable — MAY declare domain-specific associated types provided: (1) unique naming that doesn't collide with operational-layer slots (Failure/Input/Output/Buffer/Body) or canonical attachment slots (Coder/Parser/Serializer); (2) bridge-type collisions handled at the conforming type via @_implements per [BLOG-IDEA-031]; (3) the sub-sibling provides a default-implementation bridge to its parent sibling's required method. Resolves the OPEN TENSION on sub-siblings flagged in v1.1.2's State-of-Workspace table. UInt8.Base62.Serializable is sanctioned. Binary.ASCII.Serializable remains deprecated for W4 namespace-consolidation reasons (orthogonal to the sub-sibling pattern). Pure documentation-layer amendment — no source changes; swift-base62-primitives builds clean with 120 tests passing.",
+      "date": "2026-05-14",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "coder-refinement-migration-plan.md",
+      "displayName": "Coder.Protocol Refinement Migration Plan",
+      "topic": "Phase C1 design + caller survey for executing [FAM-006] on swift-json: migrate JSON.Coder from the legacy Coder.Protocol shape (DecodeInput / EncodeBuffer / DecodeFailure / EncodeFailure with decode / encode methods) to the refined shape (Coder.Protocol refines Parser.Protocol + Serializer.Protocol with same-name unification, collapsing to Input / Buffer / Output / Failure=Either<RFC_8259.Error, JSON.Encode.Error> with parse / serialize methods). Caller survey: zero pattern-(c) direct callers of JSON.Coder().decode(_:); zero pattern-(b) canonical-attachment callers of RFC_8259.Value(decoding:); pattern-(a) generic-protocol callers receive automatic propagation via same-name unification. Rare clean-migration window — real callers route through format-specific sibling protocols (JSON.Serializable) rather than through Coder.Protocol directly. Phase C2 execution applies the migration to Sources/JSON/JSON.Coder.swift + docstring sweep across 4 sibling files + adds swift-either-primitives dep to Package.swift. Status: PLAN ready for Phase C2 execution; Phase C2 landing supersedes this doc to RESOLVED.",
+      "date": "2026-05-14",
+      "status": "PLAN",
+      "statusDetail": null,
+      "statusRaw": "PLAN",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "multi-format-codable-readiness.md",
+      "displayName": "Multi-Format Codable Readiness",
+      "topic": "Readiness audit of the family-Codable convention for ecosystem-wide multi-format adoption beyond JSON. Resolves five gaps (G1 forcing-function — corrected from Binary.LittleEndian.Codable to Binary split-pair sibling per [FAM-005]; G2 stdlib lock-in scope; G3 ASCII Φ cross-check; G4 user-type synthesis strategy; G5 W2 combinator user-level catalog) plus two cross-cutting findings (CROSS-1 language-mechanism premise from associated-type-trap blog, CROSS-2 V4 D non-generic-wins call-site rule from dual-conformance experiment). v1.0.0 (RECOMMENDATION, 2026-05-14): corrects the brief's 'N=1 empirical' framing — workspace grep surfaces N=3 production tree-intermediate siblings (JSON.Serializable, Plist.Serializable, XML.Serializable) plus Binary.Serializable byte-stream sibling at L1. §0a anchors the multiple-conformance resolution: yes, a single type can carry multiple sibling format-Codable conformances simultaneously; the solution is one extension per format with independent format-natural representation; structurally derivable (no associatedtype on siblings → no anchor-unification trap) and empirically validated (V1–V3 dual-conformance experiment + N=3 production siblings on stdlib primitives). Identifies Apple/Foundation Codable-successor proposal (Kevin Perry, March 2025) as the load-bearing convergent external — same dual-protocol architecture, same parser-driven visitor pattern. Institute is ahead on CROSS-1 @_implements escape hatch + CROSS-2 V4 D + composition through canonical leaf; behind on cross-format visitor abstraction and per-format macros. G4 principal decision (2026-05-14): manual per-format conformances ONLY at this time; per-format macros DEFERRED with explicit trigger conditions; cross-format synthesis macros REJECTED on structural grounds. Mid-drafting peer-review (2026-05-14) corrected the Binary.LittleEndian.Codable naming to the Binary split-pair sibling (Binary.Parseable NEW + Binary.Serializable with Binary.Endianness operation parameter); codified as [FAM-005] in convention v1.1.0. Convention doc amendment v1.1.0 landed; document body updated to reflect corrected framing throughout. Class-(c) escalation triggers explicitly cleared.",
+      "date": "2026-05-14",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "parse-performance.md",
+      "displayName": "Parse Performance",
+      "topic": "RFC_8259 text-parser hotspots at stdlib-scale inputs; debug vs release framing, allocation reduction, Span-cursor path. v1.2.0 (DECISION): Tier 4 LANDED — Foundation parity achieved (1.02× on bytes, 1.06× on String). Tiers 2/5 remain HELD pending second hot consumer.",
+      "date": "2026-05-13",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "parse-performance-canada-anomaly.md",
+      "displayName": "Parse Performance — Canada Anomaly (Numeric-Heavy Workload)",
+      "topic": "Investigation of the 17× canada.json slowdown vs Foundation.JSONSerialization reported in the codec-throughput-vs-newcodable experiment (2026-05-19). v1.0.0 (2026-05-19): three-patch recommendation targeting Number-allocation hot path. v1.1.0 (2026-05-19): Patches 1+2+3 landed, observed ~6% wall-clock improvement vs projected 30–60%; doc reframes residual ~240 ms as tree-shape-bound. v1.2.0 (2026-05-20): per-call float-microbench shows EL parser within 1.10×–1.34× of stdlib Double(_: String); savings ceiling 0.24–0.85 ms; float parsing is ~1.1% of canada parse cost. v1.3.0 (2026-05-20, same-day follow-on): tree-microbench decomposes residual into per-Value alloc (2.3%), array growth (1.2%), tree teardown (0.6%) — sum 4.2%. REFUTES v1.2.0 tree-shape framing. W2 byte cascade migration of swift-json + swift-rfc-8259 + ASCII.Decimal.Float.Parser to Byte/Span<Byte>/Collection<Byte> public API landed concurrently. v1.4.0 (2026-05-20, same-day follow-on, RECOMMENDATION): lex-microbench shows scanner advance + typed-dispatch + number-tokenize sum to ~3% of parse — also REFUTES the v1.3.0 'lex dominates' hypothesis. Time Profiler (xctrace) localizes the dominant cost to Swift runtime generic-metadata machinery (172 samples / 27.8% of total / 45.5% of attributable parse time) — `_getWitnessTable`, `MetadataCacheKey::operator==`, `_swift_getGenericMetadata`, `MetadataCache::getOrInsert<...>`, `getCache`, `getGenericContext`, `ConcurrentReadableHashMap::find`. Tagged/typed-index infrastructure adds ~6% (Tagged.init/retag, _CarrierProtocol.vector). Allocation/ARC traffic ~14% (Buffer.Linear.Small.append 26 samples, Storage.Inline.deinit 16 samples). User JSON parser code is only ~13% of total samples — algorithm is fast. Cost is COMPILER/RUNTIME, NOT ALGORITHMIC: specialization is incomplete on the hot path; Swift runtime resolves generic-protocol conformances at runtime instead of monomorphizing at compile time. Recommended next-arc lever (highest ROI, lowest cost): specialization audit + @_specialize annotations on Lexer.Scanner / Cursor<Text> / JSON.Decode.Implementation / RFC_8259.Parser hot paths. Theoretical ceiling: ~46% of attributable cost. Re-measure post-specialization; if metadata-machinery samples drop <5%, the Copyable-Value-tree architecture is fine and the issue was compiler/runtime, not algorithmic.",
+      "date": "2026-05-20",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.4.1: post-supervisor review. Pre-gates run (SIL spot-check + cross-workload Time Profiler). SIL shows MIXED specialization (Cursor.consume specialized; Cursor.peek + Tagged.retag<A> + Scanner.peek<X> + _CarrierProtocol.vector unspecialized). Cross-workload: metadata% 33.4% (twitter) vs 45.5% (canada) — sublinear scaling. Refined Lever 1: targeted @_specialize on lexer-primitives + cursor-primitives + tagged-primitives (class-(c) ecosystem). Realistic ROI: 17× → ~13× Foundation on canada; 1.4× → ~1.2× on twitter. Foundation parity NOT achievable via single lever.",
+      "statusRaw": "RECOMMENDATION -> VALIDATED -> SUPERSEDED-BY-EVIDENCE -> RECOMMENDATION (v1.4.0 Time Profiler Localization) -> RECOMMENDATION (v1.4.1 Pre-Gate-Refined, 2026-05-20)",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "parse-performance-architecture.md",
+      "displayName": "Parse Performance Architecture — Tier 4",
+      "topic": "Tier-4 architecture design: Span<UInt8>-specialized internal lexer for RFC_8259 to reach ≤1.3× Foundation on stdlib-scale inputs. Enumerates three architectures, recommends Architecture A (internal Span cursor mirroring Binary.Bytes.Input.View, lazy position with cache-on-first-access, dispatch fork in RFC_8259.Decode). v1.0.2 (DECISION): Phase A1 LANDED, A2 measurement gate PASSED — bytes 1.02× Foundation, String 1.06×, both well below 1.3× target. Phase B (arena tree) NOT triggered. Naming refinement (RFC_8259.Span.Lexer over RFC_8259.Lexer.Span) and three optimisations beyond spec recorded in §9.",
+      "date": "2026-05-13",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "value-tree-redesign-v2.md",
+      "displayName": "Value Tree Redesign — swift-json v2 (SUPERSEDED-BY-EVIDENCE)",
+      "topic": "swift-json v2 value-tree architecture originally targeting O(1) lookup. v1.1.0 (SUPERSEDED-BY-EVIDENCE 2026-05-13): L1 prototype implemented + measured + rolled back. Empirical regression: parse +339%, lookup +226% vs baseline at canonical workload (Swift.symbols.json, mean N=2). Root cause is structural — every `case .object(let o)` extract refcounts Object's contained storage; baseline Array has 1 refcount, Dict.Ordered has 3-4, Swift.Dictionary+order has 2; integration cost exceeds algorithmic O(1) gain at small N. Two rescue interventions (bulk-init + Swift.Dictionary swap) both failed. L1 cannot outperform baseline while preserving Copyable Value. v2 arc closes here. L2 (~Copyable Value cascade) remains documented but not pursued absent specific consumer ask per [BENCH-010] / [RES-018]. Bench harness retained for future re-verification. Generalisable finding: Copyable wrapper + multi-buffer storage = refcount-per-copy dominates O(1) gains at small N.",
+      "date": "2026-05-13",
+      "status": "SUPERSEDED-BY-EVIDENCE",
+      "statusDetail": null,
+      "statusRaw": "SUPERSEDED-BY-EVIDENCE",
+      "tier": 2,
+      "scope": null
+    }
+  ],
+  "narrativeSections": [
+    {
+      "heading": "See also",
+      "body": "Modularization audit findings (MOD-010 stdlib extensions, MOD-011 test support) live in `swift-foundations/swift-json/Audits/audit.md` rather than `Research/`; the audit was incorrectly indexed here from 2026-03-20 to 2026-05-13 and has been moved to its correct home."
+    }
+  ]
+}

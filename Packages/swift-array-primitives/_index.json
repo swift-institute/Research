@@ -1,0 +1,76 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-array-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "array-discipline-boundary-analysis.md",
+      "displayName": "array-discipline-boundary-analysis",
+      "topic": "What semantics belong solely to Array vs Buffer.Linear",
+      "date": "2026-02-13",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "array-operations-audit.md",
+      "displayName": "array-operations-audit",
+      "topic": "Canonical Array ADT operations inventory and gap analysis",
+      "date": "2026-02-16",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "array-protocol-unification.md",
+      "displayName": "array-protocol-unification",
+      "topic": "How to share common operations across 5 Array variants via __ArrayProtocol",
+      "date": "2026-02-23",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "repeating-reference-type-aliasing.md",
+      "displayName": "repeating-reference-type-aliasing",
+      "topic": "repeating: with class types aliases one object across all slots",
+      "date": "2026-02-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "array-foreach-redesign.md",
+      "displayName": "array-foreach-redesign",
+      "topic": "Redesign forEach to yield elements (matching stdlib), add .forEach.index nested accessor",
+      "date": "2026-03-17",
+      "status": "IMPLEMENTED",
+      "statusDetail": null,
+      "statusRaw": "IMPLEMENTED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "se-0527-rigid-unique-array-alignment.md",
+      "displayName": "se-0527-rigid-unique-array-alignment",
+      "topic": "Compare SE-0527 RigidArray/UniqueArray to our five-variant Array; inventory stdlib prerequisites landed in Swift 6.3.1; adoption plan for OutputSpan-shaped APIs",
+      "date": "2026-04-18",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}
