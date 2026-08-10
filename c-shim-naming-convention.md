@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
+version: 1.1.0
 last_updated: 2026-08-10
-status: RULING PACKAGE (awaiting principal ratification)
+status: RULING PACKAGE (adversarial review complete — RATIFY-WITH-CHANGES applied; awaiting principal ratification of §4)
 decision_tier: 2
 ---
 -->
@@ -159,11 +159,15 @@ spaced, authored modulemap pinning `module CDarwinKernelShim`, imports
 unchanged. Rejected because it splits one identity into two spellings that must
 be kept in correspondence by a **new** predicate (spaced form ↔ concatenation),
 desynchronizes import sites from directory names, and forces authored
-modulemaps onto the six auto-modulemap targets solely to pin the identifier
+modulemaps onto the nine auto-modulemap targets solely to pin the identifier
 (else P1's silent underscore mangling changes every in-package import to
 `C_Darwin_Kernel_Shim` forms). Fleet-wide cost: ~19 target renames + 19
-directory renames + 6 new modulemaps, for no consumer-visible gain — the import
-spelling stays concatenated either way, because the toolchain pins it.
+directory renames + 9 new modulemaps, and the 127 in-fleet `import C…` sites
+would spell a name matching no target or directory anywhere — permanent
+name≠identifier≠directory skew normalized only by a new correspondence
+predicate. The directory-grammar uniformity gained is real but manifest-side
+only: the import spelling stays concatenated under every option, because the
+toolchain pins it.
 
 ### Option C — spaced everywhere (infeasible)
 
@@ -202,9 +206,15 @@ A target is **C-interop** iff:
 
 - its manifest factory is `.systemLibrary`; or
 - its manifest factory is `.target` and its resolved source directory contains
-  at least one C-family source or header (`.c .cc .cpp .m .mm .h .hpp` or
+  at least one file whose extension is in **SwiftPM's own supported
+  clang-family source and header set** (C/C++/Objective-C sources and headers
+  **and assembly** — `.c .cc .cpp .cxx .c++ .m .mm .h .hh .hpp` `.S .s` — or a
   `module.modulemap`) and **no** `.swift` file — SwiftPM's own clang-target
-  classification, re-derived from manifest + filesystem facts.
+  classification, re-derived from manifest + filesystem facts. The
+  implementation MUST key this set to SwiftPM's supported-extension list rather
+  than a locally authored copy: an assembly-only clang target (`probe.S`, no
+  C files) builds on the pinned 6.4 toolchain and must classify C-interop
+  (adversarial-review finding, verified by two sessions independently).
 
 No annotation, comment, name shape, or registry entry ever feeds the
 classifier. In particular the `C` prefix itself is **not** the class signal:
@@ -231,12 +241,15 @@ manifest AST alone:
 - *R1c.* A `.target` name that is neither a spaced Nest.Name form nor an
   admitted C-interop form remains a violation (fires today on `_Shims`).
 
-Recorded residue of R1a, with its compositional backstop: a **Swift** target
-wrongly given a concatenated `C…` name (e.g. `CSSParser`) is admitted by R1a,
-but every Swift target contains linted files, so its concatenated directory
-fires the existing `path name grammar` per-file — and a spaced directory under
-the concatenated name fires the declared-path-correspondence predicate. The
-false-negative window is closed by composition, not by widening R1.
+R1a's admission window: a **Swift** target wrongly given a concatenated `C…`
+name (e.g. `CSSParser`) is admitted by R1a at the manifest. The package's
+original claim that path-rule composition closes this window was **overturned**
+under adversarial review (an explicit grammatical `path:` evades every
+composed rule); the window is instead closed by R2d in the validator, the
+owner of target-kind facts. Live-fleet exposure while R2d ships: of 2,972
+distinct declared names in canonical manifests, the C-interop grammar matches
+only the census C-targets plus the single words `CPU` and `CSS` — the
+evasion class is currently an empty set.
 
 **R2 — new validator predicates
 (owner: the Workspace/Institute validator family, per the 2026-08-06 Nest.Name
@@ -249,21 +262,39 @@ every target the §5.1 classifier marks C-interop:
   the target name. If none exists, the target name must itself be a valid C99
   identifier — which under R2a it already is — so the auto-derived module
   identifier equals the target name and P1's silent underscore mangling cannot
-  occur.
+  occur. Implementation precision (adversarial-review finding 4): clang module
+  maps admit string-literal module names (`module "CFoo"`), `framework module`,
+  and `extern module` declaration forms; the equality compares the **decoded**
+  module name, and the one-top-level-module count is defined over all
+  declaration forms.
 - *R2c (directory).* The target's source-directory basename equals the target
   name (default layout or explicit `path:` alike).
-- *Scope carve-out.* Targets classified C-interop are excluded from the spaced
-  manifest/directory predicates; targets not so classified are excluded from
-  R2a–R2c. Exactly one grammar applies to every target.
+- *R2d (inverse predicate — closes the review's finding 1).* A target the
+  classifier does **not** mark C-interop whose declared name matches the
+  C-interop grammar and is not a single grammatical word is a violation. This
+  replaces the original blanket carve-out ("non-classified targets are excluded
+  from R2a–R2c"), whose closure argument was **overturned** under adversarial
+  review: a Swift target `.target(name: "CSSParser", path: "Sources/Parser")`
+  evades R1a (name admitted), the spacing-only path predicate (substantive
+  difference — recorded residue), the per-file path grammar (directory
+  `Parser` is grammatical), and the API-IMPL/API-NAME composition (grammatical
+  basenames) — nothing fires. The compositional backstop holds only when the
+  directory repeats the concatenated name, precisely what an evader avoids.
+  R2d closes the window at the owner of kind facts. Single grammatical words
+  (`CPU`, `CSS`) stay admitted by both grammars.
+- *Scope.* Targets classified C-interop are excluded from the spaced
+  manifest/directory predicates and take R2a–R2c; targets not so classified
+  take the spaced grammar plus R2d. Exactly one grammar applies to every
+  target, and the C-form near-miss is policed on both sides of the boundary.
 
 ### 5.3 Fixture set (rule-maturity gate §8.4)
 
 | Kind | Fixtures |
 |---|---|
-| Positive (fires) | `.systemLibrary(name: "imagemagick")`; clang target `_Shims`; clang target with spaced name `"C Darwin Probe"`; authored modulemap declaring `CDarwinProbe` under target `CDarwinShim` (R2b mismatch); modulemap declaring two top-level modules; clang target `CFooShim` with `path:` ending `Sources/CFoo` (R2c). |
+| Positive (fires) | `.systemLibrary(name: "imagemagick")`; clang target `_Shims`; clang target with spaced name `"C Darwin Probe"`; authored modulemap declaring `CDarwinProbe` under target `CDarwinShim` (R2b mismatch); modulemap declaring two top-level modules; clang target `CFooShim` with `path:` ending `Sources/CFoo` (R2c); Swift target `.target(name: "CSSParser", path: "Sources/Parser")` — the review's evasion counterexample (R2d). |
 | Negative (silent) | The canonical shape (`CDarwinKernelShim`, authored modulemap, matching directory); the auto-modulemap shape (`CISO9899Math`, valid identifier, no authored map); `CIEEE754` (digits, no suffix); `CTypeMetadata` (C++ sources). |
 | Edge | Conditional platform dependency on the shim; nested test-package manifest; `Package@swift-*` variant manifest; modulemap with submodules under one top-level module (one top-level module — passes R2b). |
-| Near-miss | Swift target named `CPU` (single word, not classified C-interop, admitted by both grammars); Swift target `CSS Test Support` (spaced, classified Swift); C-language `executableTarget` from `Sources/CPOSIXTestHelper` (excluded from the importable class); Swift target `CSSParser` (R1a residue — admitted at manifest, caught by path rules via its Swift files). |
+| Near-miss | Swift target named `CPU` (single word, not classified C-interop, admitted by both grammars); Swift target `CSS Test Support` (spaced, classified Swift); C-language `executableTarget` from `Sources/CPOSIXTestHelper` (excluded from the importable class); assembly-only clang target (`probe.S` + `include/`, no C files — must classify C-interop, the review's classifier-drift counterexample). |
 | Exemption | None. The design has no exemption list; the §5.1 class boundary is the only scoping mechanism, and it is derived. |
 | Self-firing | The rule packs' and validator's own fixture trees must not fire on their host repositories' real manifests. |
 | Positive control | `CDarwinKernelShim` with its name mutated to `cDarwinKernelShim` in a fixture proves each of R1/R2a can fire before any sweep result is accepted. |
@@ -300,3 +331,10 @@ every target the §5.1 classifier marks C-interop:
 - If a future package legitimately needs two top-level modules in one authored
   modulemap, R2b's one-module predicate is the stop condition: that shape is a
   new convention question, not an exception to grant locally.
+- **Recorded consequence** (adversarial-review finding 3): the grammar's
+  underscore rejection deliberately forecloses the wider Swift ecosystem's
+  underscore-prefixed internal-module idiom (`_SwiftSyntaxCShims`-class) for
+  Institute C-interop targets, and its second-character rule requires
+  re-spelling lowercase upstream family names (`Curl` → `CCurl`,
+  `Cmark` → `CMark`). The census shows neither idiom in Institute use; both
+  are convention choices, recorded here so they are ratified, not accidental.
