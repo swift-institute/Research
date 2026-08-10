@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 2.0.0
+version: 2.1.0
 last_updated: 2026-08-10
-status: RULING PACKAGE (recut under the principal's 2026-08-10 ruling; awaiting coordinator review of the recut)
+status: RULING PACKAGE (recut ACCEPTED by the coordinator; in execution — R1 landed, R2 filed, wave in flight)
 decision_tier: 2
 ---
 -->
@@ -82,6 +82,19 @@ dependency checkouts, fixture trees, and a duplicate task-branch checkout of
 - `CUring` (swift-io, `Experiments/proactor-buffer-ownership`): liburing shim in
   a scratch experiment package, not a canonical surface.
 
+### 1.4 Census facts that bear on the ruling
+
+1. **No C-interop target is exported as a product.** Every consumer is a Swift
+   target inside the owning package; the ~126 in-fleet `import` sites
+   (per-target counts above) exist only in-package. A rename therefore never
+   breaks an external consumer.
+2. Everywhere conforming today, one spelling carries target name == module
+   identifier == directory basename; there is no skew in the fleet.
+3. `swift-image-magick` also declares its **package** name as
+   `SwiftImageMagick`, a kebab-slug violation owned by the existing manifest
+   rule — recorded here, not part of this ruling, and moot in practice since
+   that repository is out-of-fleet (§1.5).
+
 ### 1.5 Archived repositories are out-of-fleet (ruled during execution)
 
 `swift-foundations/swift-image-magick` is **archived**. An archived repository
@@ -97,23 +110,10 @@ violation. **The migration wave is 19 targets across 12 repositories**, not 20
 across 13. The rename was authored before the archive status was discovered and
 was reverted; the repository is untouched.
 
-The census's own omission is part of the finding and is encoded as an R2
-requirement (§5.2): enumeration that reads a local checkout tree sees archived
-repositories exactly like live ones — **filesystem presence is not fleet
-membership**, and `.archived` must be resolved through the API before a target
-is counted.
-
-### 1.4 Census facts that bear on the ruling
-
-1. **No C-interop target is exported as a product.** Every consumer is a Swift
-   target inside the owning package; the 127 `import` sites (per-target counts
-   above) exist only in-package. A rename therefore never breaks an external
-   consumer.
-2. Everywhere conforming today, one spelling carries target name == module
-   identifier == directory basename; there is no skew in the fleet.
-3. `swift-image-magick` also declares its **package** name as
-   `SwiftImageMagick`, a kebab-slug violation owned by the existing manifest
-   rule — recorded here, not part of this ruling.
+The census's own omission is part of the finding and is encoded as R2e (§5.2):
+enumeration that reads a local checkout tree sees archived repositories exactly
+like live ones — **filesystem presence is not fleet membership**, and
+`.archived` must be resolved through the API before a target is counted.
 
 ## 2. Toolchain constraints (compiling probes)
 
