@@ -1174,10 +1174,10 @@
       "file" : "c-shim-naming-convention.md",
       "scope" : null,
       "status" : "RULING PACKAGE",
-      "statusDetail" : "awaiting principal ratification",
-      "statusRaw" : "RULING PACKAGE (awaiting principal ratification)",
+      "statusDetail" : "recut under the principal's 2026-08-10 ruling (spaced * Shims shape); awaiting coordinator review of the recut",
+      "statusRaw" : "RULING PACKAGE (recut under the principal's 2026-08-10 ruling)",
       "tier" : 2,
-      "topic" : "C-interop target naming: census of all 20 fleet C-shim\/system-library targets; Swift 6.4 compiling probes proving only the module identifier is toolchain-constrained; ruling proposal keeping the upstream C-prefixed concatenated convention as a sibling grammar (target name == module id == directory) with two-owner mechanical enforcement (linter manifest amendment + Workspace validator predicates) and a two-rename migration wave."
+      "topic" : "C-interop target naming under the principal's 2026-08-10 ruling: census of all 20 fleet C-shim\/system-library targets with import-site counts; Swift 6.4 compiling probes (P1-P7) proving only the module identifier is toolchain-constrained; spaced * Shims target\/directory names with the c99 underscored import mirror (auto-derived); recut two-owner enforcement (linter .systemLibrary amendment + validator R2a-R2d incl. suffix reservation) and a 13-PR\/20-target\/127-import-site migration wave."
     },
     {
       "displayName" : "c-shim-placement-architecture.md",
