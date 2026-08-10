@@ -273,3 +273,8 @@ packages break, not merely *that* upstream broke. Full-fleet nightly sweeps stay
 Findings 1 (exception-expiry semantics — the #488 fix), the upstream-posture conclusion,
 Finding 4 (image-version recording), and the §7 disposition (no date move; land the
 semantic change before 2026-09-01; freeze keys on 2026-09-09) are unchanged.
+
+**Status (2026-08-10, on landing):** the Finding-1 semantic change was subsequently ruled
+ADOPT-WITH-CHANGES and implemented — swift-institute/.github#521, merged as `c5ab8d7`
+(owner-localized fail-closed expiry, derived leg class, typed `descheduled` records);
+ruling trail on swift-institute/.github#488.
