@@ -249,3 +249,27 @@ re-creates it. Instead:
 
 All changes are proposal-only pending a principal ruling; no workflow was modified by this
 research session.
+
+## 8. Postscript — principal corrections (2026-08-10, same day)
+
+Two findings above are recalibrated by principal feedback received after the initial draft;
+where they conflict, this section supersedes §4 and §5.
+
+**§4 (nightly identity) narrowed.** Launch is keyed to Swift 6.4 GA, and no official
+`swift:6.4` image exists yet — targeting nightlies is the point, not a defect. For
+*advisory* legs whose purpose is tracking the approaching release (`linux-6-4`, `embedded`),
+auto-advancing mutable tags may be the desired semantics; the requirement drops from
+"digest-pinned, advanced deliberately" to **"tracked and recorded"**: each run records the
+digest its tag resolved to, so the environment is recoverable even though it floats. Gating
+legs are unaffected — they already ride the digest-pinned release-floor exception. The
+`embedded`-vs-exception dual-identity observation stands as a recording concern, not a
+pinning demand.
+
+**§5 (canary sweep) withdrawn.** Public repositories have unlimited Actions minutes, and
+the main-nightly leg is Linux-only, full-tier only, and scheduled off-peak — it does not
+contend with the binding macOS concurrency budget. Full-fleet coverage also answers *which*
+packages break, not merely *that* upstream broke. Full-fleet nightly sweeps stay.
+
+Findings 1 (exception-expiry semantics — the #488 fix), the upstream-posture conclusion,
+Finding 4 (image-version recording), and the §7 disposition (no date move; land the
+semantic change before 2026-09-01; freeze keys on 2026-09-09) are unchanged.
