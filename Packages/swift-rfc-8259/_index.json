@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-20",
+  "title": "Research Index — swift-rfc-8259",
+  "blurb": "",
+  "scope": "swift-rfc-8259 (swift-ietf)",
+  "documents": [
+    {
+      "file": "noncopyable-value-feasibility.md",
+      "displayName": "~Copyable RFC_8259.Value Cascade — Feasibility",
+      "topic": "Structural feasibility + consumer-site inventory + cost estimate for making RFC_8259.Value ~Copyable as Path B of the canada-perf next-arc decision space. Spike GREEN on Q1 (~Copyable enum with 2 ~Copyable-payload cases declares + constructs), Q2 (borrowing func + switch inspection compiles), Q4 (Memory.Arena compose at type level). Spike RED on Q3 — stdlib Array<Element> does NOT accept Element: ~Copyable, which means production RFC_8259.Array._storage and RFC_8259.Object._storage cannot remain as stdlib Array; both must swap to Buffer<Value>.Linear from swift-buffer-primitives. Consumer inventory across swift-rfc-8259 (4 files / 65 sites), swift-foundations/swift-json (12 files / 92 sites), swift-foundations/swift-tests (3 files / 30 sites), and 8 downstream JSON.Serializable consumers. Category split: (a) trivially migratable ~35 sites, (b) Copyable-dependent ~165 sites, (c) Sendable/Hashable-dependent ~25 sites — 75% are (b). Realistic LoC: 3 800–5 000 across 3 primary packages + 3 critical upstream dependency-validations (Coder_Primitives.Codable / swift-tree-primitives.Tree / swift-lexer-primitives.Lexer.Pull.Assemble.Strategy.Value all admitting ~Copyable). RECOMMENDATION: do NOT pursue Path B as the next arc; pursue cheaper premise-checks first — localised tree-emit profiling on canada to verify the refcount-per-extract mechanism is actually load-bearing (the v2 disposition's mechanism, plausibly applicable but un-measured at cascade granularity), then targeted Buffer<RFC_8259.Value>.Linear in parser accumulators as an internal-only intervention preserving Value Copyability. If both cheaper interventions are insufficient, Path B becomes the necessary next arc and this doc is its design entry point.",
+      "date": "2026-05-20",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ]
+}

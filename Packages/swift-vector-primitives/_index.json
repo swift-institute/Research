@@ -1,0 +1,19 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Vector Primitives Research",
+  "blurb": "",
+  "scope": "swift-vector-primitives (swift-primitives)",
+  "documents": [],
+  "narrativeSections": [
+    {
+      "heading": "Note",
+      "body": "As of 2026-02-08, swift-vector-primitives has been repurposed for the functional vector `Vector<Bound>` (formerly `Range.Lazy<Bound>` from swift-range-primitives). The stored vector types (`Vector<Element, N>`, `Vector<Element, N>.Inline`) have been removed. See `swift-primitives/Research/vector-rename-analysis.md` v4.0.0 (DECISION) for the full analysis.\n\nThe research documents below are preserved for historical reference. They pertain to the stored vector types that no longer exist in this package."
+    },
+    {
+      "heading": "Summary (Historical)",
+      "body": "### noncopyable-conditional-copyable\n\nComprehensive investigation of `~Copyable` element support and conditional `Copyable` conformance for the stored `Vector.Inline` and underlying storage primitives.\n\n**Key finding**: Conditional `Copyable` conformance is **architecturally impossible** for inline storage types that support `~Copyable` elements. This is a fundamental Swift language constraint: types with `deinit` cannot conform to `Copyable` (even conditionally).\n\n### vector-dependency-storage-vs-buffer\n\nInvestigation of whether the stored Vector should depend on `swift-buffer-primitives` or `swift-storage-primitives` directly.\n\n**Key finding (v2)**: Vector IS a linear buffer. Moot after repurposing — the functional `Vector<Bound>` depends on neither storage nor buffer primitives."
+    }
+  ]
+}

@@ -290,6 +290,125 @@
       "topic" : "REFERENCE: Apache License, Version 2.0 — the license text for the Research repository. Not a research document."
     },
     {
+      "displayName" : "Packages\/swift-array-primitives\/array-discipline-boundary-analysis.md",
+      "file" : "Packages\/swift-array-primitives\/array-discipline-boundary-analysis.md",
+      "scope" : "package-specific",
+      "source" : "swift-primitives\/swift-array-primitives",
+      "statusDetail" : "Transferred from swift-primitives\/swift-array-primitives\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-array-primitives\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-array-primitives\/array-foreach-redesign.md",
+      "file" : "Packages\/swift-array-primitives\/array-foreach-redesign.md",
+      "scope" : "package-specific",
+      "source" : "swift-primitives\/swift-array-primitives",
+      "statusDetail" : "Transferred from swift-primitives\/swift-array-primitives\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-array-primitives\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-array-primitives\/array-operations-audit.md",
+      "file" : "Packages\/swift-array-primitives\/array-operations-audit.md",
+      "scope" : "package-specific",
+      "source" : "swift-primitives\/swift-array-primitives",
+      "statusDetail" : "Transferred from swift-primitives\/swift-array-primitives\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-array-primitives\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-array-primitives\/array-protocol-unification.md",
+      "file" : "Packages\/swift-array-primitives\/array-protocol-unification.md",
+      "scope" : "package-specific",
+      "source" : "swift-primitives\/swift-array-primitives",
+      "statusDetail" : "Transferred from swift-primitives\/swift-array-primitives\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-array-primitives\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-array-primitives\/repeating-reference-type-aliasing.md",
+      "file" : "Packages\/swift-array-primitives\/repeating-reference-type-aliasing.md",
+      "scope" : "package-specific",
+      "source" : "swift-primitives\/swift-array-primitives",
+      "statusDetail" : "Transferred from swift-primitives\/swift-array-primitives\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-array-primitives\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-array-primitives\/se-0527-rigid-unique-array-alignment.md",
+      "file" : "Packages\/swift-array-primitives\/se-0527-rigid-unique-array-alignment.md",
+      "scope" : "package-specific",
+      "source" : "swift-primitives\/swift-array-primitives",
+      "statusDetail" : "Transferred from swift-primitives\/swift-array-primitives\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-array-primitives\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-json\/coder-refinement-migration-plan.md",
+      "file" : "Packages\/swift-json\/coder-refinement-migration-plan.md",
+      "scope" : "package-specific",
+      "source" : "swift-foundations\/swift-json",
+      "statusDetail" : "Transferred from swift-foundations\/swift-json\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-json\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-json\/family-codable-convention.md",
+      "file" : "Packages\/swift-json\/family-codable-convention.md",
+      "scope" : "package-specific",
+      "source" : "swift-foundations\/swift-json",
+      "statusDetail" : "Transferred from swift-foundations\/swift-json\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-json\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-json\/multi-format-codable-readiness.md",
+      "file" : "Packages\/swift-json\/multi-format-codable-readiness.md",
+      "scope" : "package-specific",
+      "source" : "swift-foundations\/swift-json",
+      "statusDetail" : "Transferred from swift-foundations\/swift-json\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-json\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-json\/parse-performance-architecture.md",
+      "file" : "Packages\/swift-json\/parse-performance-architecture.md",
+      "scope" : "package-specific",
+      "source" : "swift-foundations\/swift-json",
+      "statusDetail" : "Transferred from swift-foundations\/swift-json\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-json\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-json\/parse-performance-canada-anomaly.md",
+      "file" : "Packages\/swift-json\/parse-performance-canada-anomaly.md",
+      "scope" : "package-specific",
+      "source" : "swift-foundations\/swift-json",
+      "statusDetail" : "Transferred from swift-foundations\/swift-json\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-json\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-json\/parse-performance.md",
+      "file" : "Packages\/swift-json\/parse-performance.md",
+      "scope" : "package-specific",
+      "source" : "swift-foundations\/swift-json",
+      "statusDetail" : "Transferred from swift-foundations\/swift-json\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-json\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-json\/value-tree-redesign-v2.md",
+      "file" : "Packages\/swift-json\/value-tree-redesign-v2.md",
+      "scope" : "package-specific",
+      "source" : "swift-foundations\/swift-json",
+      "statusDetail" : "Transferred from swift-foundations\/swift-json\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-json\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-rfc-8259\/noncopyable-value-feasibility.md",
+      "file" : "Packages\/swift-rfc-8259\/noncopyable-value-feasibility.md",
+      "scope" : "package-specific",
+      "source" : "swift-ietf\/swift-rfc-8259",
+      "statusDetail" : "Transferred from swift-ietf\/swift-rfc-8259\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-rfc-8259\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-vector-primitives\/noncopyable-conditional-copyable.md",
+      "file" : "Packages\/swift-vector-primitives\/noncopyable-conditional-copyable.md",
+      "scope" : "package-specific",
+      "source" : "swift-primitives\/swift-vector-primitives",
+      "statusDetail" : "Transferred from swift-primitives\/swift-vector-primitives\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-vector-primitives\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-vector-primitives\/vector-dependency-storage-vs-buffer.md",
+      "file" : "Packages\/swift-vector-primitives\/vector-dependency-storage-vs-buffer.md",
+      "scope" : "package-specific",
+      "source" : "swift-primitives\/swift-vector-primitives",
+      "statusDetail" : "Transferred from swift-primitives\/swift-vector-primitives\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-vector-primitives\/_index.json."
+    },
+    {
+      "displayName" : "Packages\/swift-vector-primitives\/vector-primitives-rawvalue-underlying-rename.md",
+      "file" : "Packages\/swift-vector-primitives\/vector-primitives-rawvalue-underlying-rename.md",
+      "scope" : "package-specific",
+      "source" : "swift-primitives\/swift-vector-primitives",
+      "statusDetail" : "Transferred from swift-primitives\/swift-vector-primitives\/Research under the Stage 2 repo-shape transfer wave (swift-institute\/.github#527); per-package _index.json retained at Packages\/swift-vector-primitives\/_index.json."
+    },
+    {
       "displayName" : "Institute capability and gap atlas",
       "file" : "Pure-Institute-Networking\/institute-capability-and-gap-atlas.md"
     },
