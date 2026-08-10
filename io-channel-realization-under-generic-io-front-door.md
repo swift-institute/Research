@@ -162,46 +162,124 @@ the Issues#104/#105 signatures (value-generic metadata; runtime libswiftCore
 generic-metadata instantiation SIGSEGV) do not recur here on the shapes probed. This is
 evidence about the probed shapes only, not a general clearance.
 
-## 4. Option (c): top-level `Channel` — the package's own realized convention
+## 4. Option (c): top-level `Channel` — REJECTED on doctrine re-assessment
 
-swift-io's realized convention is **top-level noun per target**: `Event` (IO Events
-target), `Completion` (IO Completions target) — neither nests under `IO`, for exactly the
-reason at issue. The channels follow it:
+The first draft of this package recommended a top-level `Channel<Element, Failure>` in a
+new swift-io target, on the precedent that `Event` and `Completion` are top-level per
+target. The principal's counterpoint — *a top-level `Channel` would require
+channel-primitives* — is the doctrine speaking, and it kills the option:
 
-- **`Channel<Element, Failure>`** — top-level, new `IO Channels` target in swift-io.
-  Owns exactly the ratified tier-1 laws: half-close ordering, cross-direction failure
-  propagation, shutdown sequencing, as the product of two L1 channel ends.
-- **`Byte.Channel<Failure>`** — tier 2, nested by **namespace adoption** in the existing
-  `Byte` owner (`public struct Byte`, swift-byte-primitives — a plain non-generic struct,
-  so nesting is phantom-free). `Byte.Channel` is the corpus's subject-first shape ("parse
-  the bytes" → `Byte.Parser`; "channel the bytes" → `Byte.Channel`), and the adoption is
-  the sanctioned kind: substantial domain behavior (chunk-boundary erasure law) built on
-  the adopted concept, not a shortening alias. It also preserves the ratified reading
-  order `…Byte.Channel<Failure>` exactly.
+- **Axiom 1 (sole semantic ownership).** The channel concept already has an active owner:
+  the `Async.Channel` family at swift-primitives/swift-async-primitives (Unbounded,
+  Bounded, ends, state, take/send machinery — the vocabulary, laws, and source of change
+  of "channel" in this ecosystem). A top-level `Channel` minted at swift-io is a second
+  active owner of channel vocabulary. "Duplicate ownership is a defect even when the
+  implementations happen to agree."
+- **A bare top-level noun is a package-level ownership claim.** Under the architecture
+  skill, package names and top-level namespaces carry the noun of the concept the package
+  owns. A lawful top-level `Channel` therefore implies its own owner package —
+  `swift-channel-primitives` — which would immediately face a reduction against
+  `Async.Channel` (relation: equality/alias), resolvable only by migrating the entire
+  channel family into it (a fleet refactor with no independent semantic property gained —
+  the concept is inherently suspension-based, so `Async` is its lawful home) or by
+  leaving two owners standing (prohibited). Default is no refactor; rejected.
+- **The `Event`/`Completion` precedent was the wrong basis.** Those top-level nouns are
+  lawful because swift-io *is* the sole ecosystem owner of those concepts. The convention
+  is not "swift-io gets top-level nouns"; it is "the concept's sole owner gets the noun."
+  `Channel` fails that test precisely because an owner already exists.
+- **Naming discipline.** The bare noun names the category, not the concept. The concept
+  here is narrower: the *duplex variant* of the channel family.
+
+## 4b. Option (f): complete the channel family at its owner — `Async.Channel<Element>.Duplex<Failure>`
+
+Once the owner question is asked correctly, the disposition flips from *implement once*
+(at swift-io) to **complete** (doctrine §5.2.3): the generic duplex tier is a lawful
+missing *variant* of the existing channel family, added at the family's owner.
+
+The three tier-1 laws confirm the placement by essence (Axiom 6): half-close ordering,
+cross-direction failure propagation, and shutdown sequencing are **channel-lifecycle
+laws** — no descriptor, no kernel, no capability witness, no IO dependency appears in any
+of them. They are exactly the kind of law the channel family owns, and the tier is
+constructible purely as the product of two of the family's own ends.
+
+The family already realizes the variant shape this lands in: `Async.Channel<Element>` is
+the bound generic namespace, and variants nest under it *using* its `Element` —
+`Async.Channel<Int>.Unbounded`, `Async.Channel<Int>.Bounded` (live call sites in
+swift-async's `Async.Stream+Bridge.swift`). `Duplex` is the third variant. This is not
+the option-(a) phantom shape: `Element` is genuinely the duplex's element, so the outer
+bind carries a law, not ceremony.
+
+### Probe P7 — the family-variant shape (run clean, `-O`, exit 0)
+
+```swift
+extension Async.Channel where Element: ~Copyable {
+    public struct Duplex<Failure: Swift.Error> { public init() {} }
+}
+extension Async.Channel.Duplex where Element: ~Copyable {
+    public func receive() async throws(Failure) -> Element? { nil }
+    public consuming func close() {}   // half-close outbound
+}
+public struct Chunk: ~Copyable {}
+
+let d = Async.Channel<Int>.Duplex<Never>()        // ✅
+let b = Async.Channel<Chunk>.Duplex<Async._ChannelError>()  // ✅ ~Copyable element
+_ = try? await b.receive()                        // ✅ typed throws
+b.close()                                         // ✅ consuming half-close
+```
+
+`~Copyable` element (the owned byte chunk from §8 is `~Copyable`), typed throws over the
+generic `Failure`, and `consuming` half-close all compile and run under `-O` on the
+pinned toolchain.
+
+Placement within the owner: swift-primitives/swift-async-primitives, beside the additive
+failure-typed tier of §7 — the two land in the same package, and `Duplex` composes the
+failure-typed ends to carry cross-direction failure propagation as state. Package-internal
+composition at L1 is the family's existing pattern (Bounded already composes its own
+State/Storage/Ends), and the channel targets are already `!hasFeature(Embedded)`-gated.
+
+### Tier 2 — unchanged: `Byte.Channel<Failure>` at swift-io
+
+The byte tier is where genuine IO flavor lives (the `Buffer.Slice<Byte>` handoff, the
+chunk-boundary-erasure law), so it stays at swift-io as the **interpretation**: nested by
+namespace adoption in the existing `Byte` owner (`public struct Byte`,
+swift-byte-primitives — non-generic, so nesting is phantom-free). `Byte.Channel` is the
+corpus's subject-first shape (`Byte.Parser` pattern) and preserves the ratified reading
+order `…Byte.Channel<Failure>` exactly. swift-io is the lawful relation owner: it can
+depend on swift-byte-primitives, swift-async-primitives, and swift-buffer-primitives
+without reversing any edge, and neither endpoint can host the relation (byte-primitives
+must not depend on channels; async-primitives must not know bytes).
 
 The ratified *vocabulary* (two tiers, their laws, their parameters) is preserved
-untouched; only the leading `IO.` prefix — which live source has never been able to
-honor — is dropped, in favor of the convention the package already realizes twice.
-`IO<Capabilities>` is not touched: zero refactor, zero fleet impact, and the L1 bundle
-remains the sole owner of the capability/runner concept.
+untouched. `IO<Capabilities>` is not touched. No new top-level noun is minted; no
+channel-primitives package is required. If the `IO.Channel` reading must surface at
+swift-io for documentation continuity, a sanctioned generic-instantiation typealias can
+carry it — but canonical call sites use the canonical family spelling.
 
 ## 5. Consumer call-site comparison
 
-| Consumer | (a) nested in `IO` | (c) top-level per convention |
+| Consumer | (a) nested in `IO` | (f) family variant + byte interpretation |
 |---|---|---|
-| TX-N5 HTTP body streaming (domain-generic) | `func body<C: Sendable>(_: IO<C>.Channel<Buffer…, HTTP.Error>)` — phantom `C` threaded through every signature in the stack | `func body(_: Channel<Buffer…, HTTP.Error>)` |
+| TX-N5 HTTP body streaming (domain-generic) | `func body<C: Sendable>(_: IO<C>.Channel<Buffer…, HTTP.Error>)` — phantom `C` threaded through every signature in the stack | `func body(_: Async.Channel<Buffer…>.Duplex<HTTP.Error>)` — no phantom; `Element` is real |
 | TX-N2 sockets (domain-fixed) | `IO<Socket.Capabilities>.Byte.Channel<Socket.Error>` — a nested `Byte` captures the phantom too, so a file-domain byte channel is a *different type* | `Byte.Channel<Socket.Error>` |
 | TX-N7B client (crosses domains: socket transport, mock transport in tests) | impossible without erasure or a phantom parameter on the client's own API; a test-mock channel cannot be handed where a socket channel is expected (P1d hard error) | `Byte.Channel<Client.Error>` — one type, any transport |
-| Domain-free construction (tests, adapters) | `IO<Never>.Channel<Int, Never>()` — dummy bind (live precedent: `Buffer<Never>.Slice(span)` in TX-N1B's own tests) | `Channel<Int, Never>()` |
-| Extension authoring | every `extension IO<…>.Channel` re-states the phantom context; constrained-per-member extensions pin sentinel binds (P3) | `extension Channel`, `extension Byte.Channel` |
+| Domain-free construction (tests, adapters) | `IO<Never>.Channel<Int, Never>()` — dummy bind (live precedent: `Buffer<Never>.Slice(span)` in TX-N1B's own tests) | `Async.Channel<Int>.Duplex<Never>()` — every parameter meaningful |
+| Extension authoring | every `extension IO<…>.Channel` re-states the phantom context; constrained-per-member extensions pin sentinel binds (P3) | `extension Async.Channel.Duplex`, `extension Byte.Channel` — the family's existing extension idiom |
+
+The rejected option (c) spellings (`Channel<Int, Never>`, bare) were terser, but the
+brevity was purchased with a duplicate ownership claim (§4); the family spelling is
+longer and honest — and identical in shape to what every `Async.Channel` consumer
+already writes today.
 
 ## 6. Recommendation
 
-**Realize the ratified two-tier design as option (c):** top-level `Channel<Element,
-Failure>` in a new swift-io `IO Channels` target, plus `Byte.Channel<Failure>` by
-namespace adoption on the `Byte` owner. Reject (a)/(b) on the compiler-verified identity
-fragmentation, phantom-parameter violation, and dummy-bind ceremony; reject (d) on the
-ambiguity probe; (e) surfaced nothing beyond these.
+**Realize the ratified two-tier design as option (f):** tier 1 as
+`Async.Channel<Element>.Duplex<Failure>` — a *completion* of the channel family at its
+owner, swift-primitives/swift-async-primitives, beside the additive failure-typed tier —
+and tier 2 as `Byte.Channel<Failure>` at swift-io by namespace adoption on the `Byte`
+owner. Reject (a)/(b) on the compiler-verified identity fragmentation, phantom-parameter
+violation, and dummy-bind ceremony; reject (c) on duplicate channel-concept ownership
+(the principal's channel-primitives point, §4); reject (d) on the ambiguity probe; (e)
+surfaced nothing beyond these.
 
 The answer to the principal's question in one sentence: `IO<Capabilities>.Channel`
 *compiles* when bound, but `Capabilities` is a stored value-level operation witness — not
@@ -275,13 +353,13 @@ search:
   positiveControls: [Async.Channel found at swift-async-primitives; Event/Completion found at swift-io]
   candidates: [Async.Channel (L1, single-direction), Event.Channel vocabulary (audit), no existing duplex owner]
 owner:
-  conceptId: io.channel.duplex
-  coordinate: swift-foundations/swift-io, new target "IO Channels"
-disposition: implementOnce   # tier 1; tier 2 is compose (interpretation over tier 1 + Buffer.Slice handoff)
+  conceptId: async.channel.duplex
+  coordinate: swift-primitives/swift-async-primitives (the channel family owner)
+disposition: complete   # tier 1 — missing lawful variant added at the owner; tier 2 is compose (interpretation at swift-io)
 change:
-  dependency: swift-io -> swift-async-primitives (L3 -> L1, lawful, new manifest edge)
-  relationOwner: "IO Channels" target owns Relation(Async.Channel×2, half-close/failure/shutdown laws)
-  closureDelta: adds swift-async-primitives to swift-io resolution (already resolved transitively via swift-async today)
+  dependency: swift-io -> swift-async-primitives (L3 -> L1, lawful, new manifest edge, for tier 2)
+  relationOwner: swift-io owns Relation(Async.Channel.Duplex, Byte, Buffer.Slice handoff) as Byte.Channel
+  closureDelta: swift-async-primitives gains no dependency (Duplex composes package-internal ends); swift-io adds the L1 edge
 compatibility: none — no shipped consumer of the ratified spellings exists yet
 verification:
   ownerFirst: [build/test IO Channels via workspace package, then N2/N5/N7B consumers]
