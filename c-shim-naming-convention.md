@@ -71,7 +71,7 @@ dependency checkouts, fixture trees, and a duplicate task-branch checkout of
 
 | Target / module | Package | Layer | Import sites | Notes |
 |---|---|---|---|---|
-| `imagemagick` | swift-image-magick | L3 | 1 | pkgConfig `MagickWand-7.Q16HDRI`; lowercase name |
+| ~~`imagemagick`~~ | ~~swift-image-magick~~ | — | — | **OUT-OF-FLEET: the repository is archived** (see §1.5) |
 
 ### 1.3 Out of the importable class (recorded, not in scope)
 
@@ -81,6 +81,27 @@ dependency checkouts, fixture trees, and a duplicate task-branch checkout of
   parent manifest/path rules.
 - `CUring` (swift-io, `Experiments/proactor-buffer-ownership`): liburing shim in
   a scratch experiment package, not a canonical surface.
+
+### 1.5 Archived repositories are out-of-fleet (ruled during execution)
+
+`swift-foundations/swift-image-magick` is **archived**. An archived repository
+is read-only — push, issue, and visibility mutations all fail — so a naming
+finding against one is **permanently unactionable**: a report no lawful action
+can ever clear. The coordinator ruled during wave execution (2026-08-10) that
+archived repositories leave sweep scope entirely, generalized beyond this rule;
+roughly 75 Institute repositories are deliberately archived, so this is
+structural rather than a one-off.
+
+`imagemagick` is therefore recorded as out-of-fleet, not as an outstanding
+violation. **The migration wave is 19 targets across 12 repositories**, not 20
+across 13. The rename was authored before the archive status was discovered and
+was reverted; the repository is untouched.
+
+The census's own omission is part of the finding and is encoded as an R2
+requirement (§5.2): enumeration that reads a local checkout tree sees archived
+repositories exactly like live ones — **filesystem presence is not fleet
+membership**, and `.archived` must be resolved through the API before a target
+is counted.
 
 ### 1.4 Census facts that bear on the ruling
 
@@ -188,9 +209,9 @@ the domain nest; final word choice within the grammar is the owning package's.
 | `CIEEE754` | `IEEE 754 Shims` | `IEEE_754_Shims` | 6 | swift-ieee-754 |
 | `CTypeMetadata` | `Type Metadata Shims` | `Type_Metadata_Shims` | 1 | swift-loader |
 | `CAllocationTracking` | `Allocation Tracking Shims` | `Allocation_Tracking_Shims` | 1 | swift-testing-performance |
-| `imagemagick` | `Image Magick Shims` | `Image_Magick_Shims` | 1 | swift-image-magick |
+| ~~`imagemagick`~~ | — not actionable — | — | — | swift-image-magick (**archived**, §1.5) |
 
-Wave shape: **13 repository PRs, 20 targets, 127 import sites**, ordinary PR
+Wave shape: **12 repository PRs, 19 targets, ~126 import sites** (revised: swift-image-magick is archived and out-of-fleet, §1.5), ordinary PR
 flow in each owning repo (no history involvement). Heaviest single edit:
 swift-linux-standard (54 files). The nine auto-modulemap targets need **no**
 new modulemap — the auto-derived identifier is the convention. The eleven
@@ -254,6 +275,25 @@ manifest↔filesystem and kind facts).** For every §5.1-classified target:
   for the same reason. (V1's evasion counterexample dissolves — there is no
   admission at the manifest any more — but the misleading-suffix window this
   closes is the same class of hole, policed on both sides of the boundary.)
+- *R2e (fleet-membership precondition — ruled 2026-08-10, generalized beyond
+  this rule).* Repository enumeration excludes every repository with
+  `.archived == true`, resolved through the API rather than inferred from a
+  checkout tree. A rule firing on an archived repository yields a permanently
+  unactionable finding — the informationless-gate shape in reverse. Fixtures
+  prove the exclusion by contrast: an archived repository carrying a violating
+  target must NOT fire, while a live repository carrying the same target must.
+
+**Two defect classes observed during wave execution**, both required as
+fixtures and both caught by sweep positive controls rather than by any rule:
+
+1. *Stale explicit `path:`.* A target whose `path:` still names the pre-rename
+   directory. R2c compares basenames and passes a *consistent* pair, so it
+   misses a path pointing at a directory that is simply gone.
+2. *Third-party identifier rewritten by a mechanical rename.* `providers:`
+   entries name Homebrew formulae and Debian packages owned by external
+   authorities and are as out-of-bounds as dependency references. The live
+   instance rewrote `.brew(["imagemagick"])` to the new target name, which
+   would have broken provider resolution on every macOS machine.
 
 ### 5.3 Fixture set (rule-maturity gate §8.4)
 
