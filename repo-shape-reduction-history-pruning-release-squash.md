@@ -419,7 +419,7 @@ stages 1–3 start immediately.
    each repo cleanliness vs republication. Produce the bundle archives and the SHA-map
    manifest skeleton.
 5. ▲ **Rewrite wave** (one bounded convergence event, quiet window: PR drain, lane
-   stand-down): per repo, construct the 1–2 commit history from the whitelisted tree
+   stand-down; execution procedure in `repo-shape-rewrite-wave-runbook.md`): per repo, construct the 1–2 commit history from the whitelisted tree
    (§3.2), force-push (`--force-with-lease`), write the SHA-map entry; republication
    path for escalated repos; superrepo submodule pointer bump; open-issue SHA
    annotations (bot); fleet re-clone/resync directive.

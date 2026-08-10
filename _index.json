@@ -4760,6 +4760,17 @@
       "topic" : "Uniform maximally reduced repository shape for all 478 layer repos (full tracked-file census; the canonical whitelist .gitignore already defines the shape, 430\/478 identical copies); Research\/Experiments\/Skills transfer to the central repos with history preserved in the destination via filter-repo subtree extraction; history-pruning design with the secrecy-vs-cleanliness distinction backed by empirical GitHub link-survival tests (in-place force-push hides nothing: refs\/pull\/N\/head is immortal; only fresh-repo republication removes objects from every surface); squash-to-max-3-commits impact on the issue corpus (bare drained-head SHAs + run URLs dominate, zero commit URLs; PR-transited SHAs survive in-place squash indefinitely, direct-pushed SHAs are the at-risk class); SHA-map manifest + bundle-archive mitigations; exception roster (three generator-based ISO repos, fork-heritage attribution files, Issues\/.github\/Research\/Experiments\/Internal never rewritten); staged execution plan bounded by the 09-09 ceiling with principal-execution points marked."
     },
     {
+      "date" : "2026-08-10",
+      "displayName" : "repo-shape-rewrite-wave-runbook.md",
+      "file" : "repo-shape-rewrite-wave-runbook.md",
+      "scope" : "ecosystem-wide",
+      "status" : "RUNBOOK",
+      "statusDetail" : "Stage-5 execution procedure for the ratified ruling package; every rewrite command is principal-execution-only.",
+      "statusRaw" : "RUNBOOK (companion to repo-shape-reduction-history-pruning-release-squash.md)",
+      "tier" : 2,
+      "topic" : "Execution runbook for the 2026-08-22→2026-08-23 rewrite quiet window (fallback 09-06): close-window-unconditionally discipline; preconditions incl. the hard transfers-before-rewrite gate; PR-drain checklist; per-repo in-place rewrite via bare clone + git commit-tree with lease pinned to the recorded old tip and tree-hash equality as the per-repo receipt; branch-protection window handling vs the 04:00 UTC metadata-sync cron; republication path for secrecy-escalated repos; per-org superrepo submodule pointer-bump order; verification pass; post-window resync, SHA-map commit to Internal, and open-issue annotation run."
+    },
+    {
       "date" : "2026-05-07",
       "displayName" : "result-builder-performance-optimization.md",
       "file" : "result-builder-performance-optimization.md",
