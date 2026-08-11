@@ -1,0 +1,54 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-stack-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "Research Paper.md",
+      "displayName": "Research Paper.md",
+      "topic": "Stack primitives research paper",
+      "date": "2026-01-19",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "Comparative Analysis.md",
+      "displayName": "Comparative Analysis.md",
+      "topic": "Stack primitives comparative analysis",
+      "date": "2026-01-19",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "stack-discipline-boundary-analysis.md",
+      "displayName": "stack-discipline-boundary-analysis.md",
+      "topic": "Layering audit: what belongs to stack vs buffer",
+      "date": "2026-02-14",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "stack-indexed-access-adt-tension.md",
+      "displayName": "stack-indexed-access-adt-tension.md",
+      "topic": "Literature study: should stacks expose indexed access?",
+      "date": "2026-02-14",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}
