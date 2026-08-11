@@ -1,0 +1,32 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-list-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "linked-list-layered-architecture.md",
+      "displayName": "linked-list-layered-architecture.md",
+      "topic": "Storage/Buffer/DataStructure layered architecture for linked lists",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "list-discipline-boundary-analysis.md",
+      "displayName": "list-discipline-boundary-analysis.md",
+      "topic": "Audit of list-vs-buffer layer boundary and semantic ownership",
+      "date": "",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

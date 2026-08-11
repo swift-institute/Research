@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-13",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-order-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "Ordering Primitives Design.md",
+      "displayName": "Ordering Primitives Design.md",
+      "topic": "Ordering primitives design",
+      "date": "2026-01-22",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}
