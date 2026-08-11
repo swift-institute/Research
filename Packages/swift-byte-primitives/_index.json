@@ -1,0 +1,32 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-20",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-byte-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "byte-vs-uint8-compiler-affordance-audit.md",
+      "displayName": "byte-vs-uint8-compiler-affordance-audit",
+      "topic": "Per-site audit of every place the Swift compiler grants UInt8 special treatment that other unsigned widths do not receive, evaluated for whether the institute's Byte type loses the affordance. Four affordances surface: three byte-pointee cohort sites pairing UInt8 with Int8 (String→pointer conversion at CSSimplify.cpp:4422; C pointer interop defaulting at CSSimplify.cpp:15159; raw-pointer diagnostic at SILGenExpr.cpp:6892) and one UInt8-only site (LegalLiteralExprVerifier.cpp:75 — @const/@DebugDescription `as UInt8` coercion per SE-0492). Each affordance traced to file:line with [Verified: 2026-05-20] tags. Byte loses participation in all four, but the losses are concentrated at C-interop boundaries (where the institute pattern already names UInt8 explicitly) and at @DebugDescription macro bodies (where byte-discipline already classifies UInt8 as appropriate). The substantive Span<UInt8>↔Span<Byte> reinterpretation block is language-level, not compiler-affordance-level, and is already documented as load-bearing in bsli-gap-inventory.md. Verdict: no design change warranted to Byte or the byte-discipline skill; this doc is the empirical backing the canonical-Byte rule did not previously cite.",
+      "date": "2026-05-20",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Retrospective rationale-documentation for the existing canonical-Byte rule ([API-BYTE-006]). Compiler-source citations [Verified: 2026-05-20] back the rule with primary evidence. No design change recommended.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "swift-byte-primitives"
+    },
+    {
+      "file": "bsli-gap-inventory.md",
+      "displayName": "bsli-gap-inventory",
+      "topic": "Friction inventory motivating the BSLI (Byte Primitives Standard Library Integration) target's bridge corpus: 8 categories of landed Byte↔UInt8 bridges (integer widening + bitPattern, Array bridges both directions, Sequence-level eager .underlying, fallible Byte.init(exactly:), String UTF-8 decoding, Collection trimming/search, BinaryInteger→ASCII decimal digits). Explicitly rejected items (Byte arithmetic ops; hex/binary rendering on Byte; Foundation-typed bridges) and Swift-language-blocked candidates (Span<UInt8>↔Span<Byte> reinterpretation). Per-site .underlying triage from the substrate migration arc; open friction notes on the `[UInt8]→[Byte]` loop-form dance and ASCII-arithmetic ergonomics (the latter resolved 2026-05-19 via byte-arithmetic-conformance.md RECOMMENDATION ζ). Load-bearing reference for byte-domain consumer-package work needing to bridge to stdlib UInt8 surface.",
+      "date": "2026-05-19",
+      "status": "INVENTORY",
+      "statusDetail": "Living inventory of BSLI bridge corpus, rejected items, language-blocked candidates, and substrate-migration triage. Doc-internal status line reads 'LANDED 2026-05-19' for the BSLI additions themselves; INVENTORY captures the doc's role as the per-package gap catalogue.",
+      "statusRaw": "INVENTORY",
+      "tier": 1,
+      "scope": "swift-byte-primitives"
+    }
+  ]
+}

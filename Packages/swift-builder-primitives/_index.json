@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-11",
+  "title": "Research Index — swift-builder-primitives",
+  "blurb": "",
+  "scope": "swift-builder-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "grammar-design-and-roadmap.md",
+      "displayName": "grammar-design-and-roadmap.md",
+      "topic": "grammar-design-and-roadmap.md",
+      "date": "2026-08-11",
+      "status": "MIGRATED",
+      "statusDetail": null,
+      "statusRaw": "MIGRATED",
+      "tier": null,
+      "scope": "package-specific"
+    }
+  ]
+}

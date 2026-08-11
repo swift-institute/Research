@@ -1,0 +1,13 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "documents": [
+    {
+      "file": "coproduct-primitive-design-and-blockers.md",
+      "displayName": "Coproduct Primitive Design and Blockers",
+      "topic": "GATED (upgraded from DEFERRED v1.2.0 2026-05-12): package design + named Swift-evolution blockers (parameter-pack enum cases, pack ~Copyable/~Escapable) + source-gating path. Sources present at `Sources/Coproduct Primitives/` guarded by `#if hasFeature(VariadicEnum)`; gate evaluates false on current toolchains, target builds clean with zero public symbols. Activates if upstream Swift defines `VariadicEnum`. Resolves the sibling-vs-absorbed open item from swift-either-primitives/Research/future-directions.md Candidate 6.",
+      "status": "GATED",
+      "tier": 2,
+      "scope": "per-package"
+    }
+  ]
+}

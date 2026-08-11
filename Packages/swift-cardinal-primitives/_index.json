@@ -1,0 +1,43 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-21",
+  "title": "Cardinal Primitives Research",
+  "blurb": "",
+  "scope": "swift-cardinal-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "cardinal-clamping-init-from-int.md",
+      "displayName": "cardinal-clamping-init-from-int.md",
+      "topic": "Clamping init from Int for Cardinal and Tagged Cardinal",
+      "date": "2026-02-10",
+      "status": "SUPERSEDED",
+      "statusDetail": null,
+      "statusRaw": "SUPERSEDED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "cardinal-primitives-rawvalue-underlying-rename.md",
+      "displayName": "cardinal-primitives-rawvalue-underlying-rename.md",
+      "topic": "rawValue → underlying rename — alignment with upstream Carrier rename",
+      "date": "2026-05-03",
+      "status": "DEFERRED",
+      "statusDetail": "Cohort-wide policy C1 (2026-05-09): Story 1 launches at the current rawValue shape; the rename is scheduled but unscoped for a future major version. The trivial-self-carrier shape (Cardinal.Underlying = Cardinal) is preserved across 0.x for cohort coherence.",
+      "statusRaw": "DEFERRED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "cardinal-sli-overload-expansion-survey.md",
+      "displayName": "cardinal-sli-overload-expansion-survey.md",
+      "topic": "Survey of stdlib APIs warranting typed-Cardinal overloads in Cardinal SLI; placement decision framework (protocol-level vs concrete-type) post-RRC-reserveCapacity precedent",
+      "date": "2026-05-21",
+      "status": "DECISION",
+      "statusDetail": "Tier-2 survey implemented across three tiers. Tier 1 (1fb2691): protocol-level overloads on RRC/BidirectionalCollection/Collection for removeFirst, removeLast, prefix, suffix, dropFirst, dropLast. Tier 2 (5098356): Set/Dictionary per-type overloads (reserveCapacity, init(minimumCapacity:)). Tier 3 (fbad738+15d2e1b): Array/ContiguousArray init(repeating:count:) and init(unsafeUninitializedCapacity:initializingWith:), String.init(repeating:count:). Dead Ends section REVISED — original 'per-type Array silently fails in ~Copyable Self extension' claim REFUTED; root cause was stale Package.resolved (see experiment copyable-self-cardinal-resolution).",
+      "statusRaw": "RECOMMENDATION -> DECISION",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ]
+}
