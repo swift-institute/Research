@@ -29,7 +29,7 @@ What is the optimal directory layout and package structure for a nested testing 
 |-----------|--------|
 | SwiftPM ignores subdirectories with their own `Package.swift` | Nested packages are invisible to the parent build |
 | swift-testing pulls in swift-syntax (~40MB compiled) | Each nested package with its own `.build/` duplicates this cost |
-| `#snapshot` stores reference files in `__Snapshots__/` relative to test source | Snapshot reference files must be committed alongside test sources |
+| `#snapshot` stores reference files in `.snapshots/` relative to test source | Snapshot reference files must be committed alongside test sources |
 | `#Tests` macro generates Unit/EdgeCase/Integration/Performance/Snapshot suites | Provides ready-made scaffolding but includes categories we may not use in the nested package |
 | Unit and edge case tests use Apple Testing in main `Package.swift` | No duplication — these stay in the parent |
 | `swift test` only discovers tests in the current package | Each nested package requires separate `swift test` invocation |
@@ -53,7 +53,7 @@ swift-{pkg}/
           {Type} Performance Tests.swift
         {Module} Snapshot Tests/
           {Type} Snapshot Tests.swift
-          __Snapshots__/                     ← committed reference files
+          .snapshots/                       ← committed reference files
 ```
 
 **Advantages:**
@@ -97,7 +97,7 @@ swift-{pkg}/
       Package.swift                          ← depends on parent + swift-testing
       Tests/
         {Module} Snapshot Tests/
-          __Snapshots__/
+          .snapshots/
 ```
 
 **Advantages:**
@@ -130,7 +130,7 @@ swift-{pkg}/
       Tests/
         {Module} Performance Tests/
         {Module} Snapshot Tests/
-          __Snapshots__/
+          .snapshots/
 ```
 
 **Advantages:**
@@ -159,7 +159,7 @@ swift-{pkg}/
       Tests/
         {Module} Extended Tests/
           {Type} Tests.swift                 ← uses #Tests macro
-          __Snapshots__/
+          .snapshots/
 ```
 
 Test file structure:
