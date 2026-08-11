@@ -1,0 +1,43 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Hash Table Primitives Research Index",
+  "blurb": "",
+  "scope": "swift-hash-table-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "inline-hash-table.md",
+      "displayName": "inline-hash-table.md",
+      "topic": "Inline hash table design (dual arrays vs positions-only vs interleaved)",
+      "date": "2026-01-30",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "hash-table-storage-buffer-layering.md",
+      "displayName": "hash-table-storage-buffer-layering.md",
+      "topic": "Whether Hash.Table.Storage should be replaced with buffer-primitives",
+      "date": "2026-02-07",
+      "status": "DECISION",
+      "statusDetail": "(Provisional)",
+      "statusRaw": "DECISION (Provisional)",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "hash-table-discipline-boundary-analysis.md",
+      "displayName": "hash-table-discipline-boundary-analysis.md",
+      "topic": "Whether hash-table-primitives contains only hash-table-discipline semantics",
+      "date": "2026-02-14",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

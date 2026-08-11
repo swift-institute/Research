@@ -1,0 +1,197 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-03",
+  "title": "Research Index",
+  "blurb": "swift-ownership-primitives ships a package-local corpus that groups (1) the cross-type merit + completeness + naming review (v2.1.0) and (2) per-module naming research for every type whose name was DEBATE / QUESTION / INCORRECT in v2.1.0 \u2014 grounded in Apple (Swift Evolution, stdlib, API Design Guidelines) and academia (linear/affine types, ownership types, session types). Ecosystem-wide cross-references live in `/Users/coen/Developer/swift-institute/Research/` and `/Users/coen/Developer/swift-primitives/Research/`; this index carries pointers to those external canonical docs.",
+  "scope": "swift-ownership-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "escapable-value-upgrade.md",
+      "displayName": "escapable-value-upgrade.md",
+      "topic": "CONVERGED (v1.0.0): Per-package execution note for Ownership.Inout<Value>'s Value widening from ~Copyable to ~Copyable & ~Escapable. Mirrors Ownership.Borrow's already-shipped pattern: storage rewrites from UnsafeMutablePointer<Value> to UnsafeMutableRawPointer; typed inits stay where Value: ~Copyable (Escapable implicit; UnsafeMutablePointer<Value> requires it); new raw-address init `init(unsafeRawAddress:, mutating owner:)` gated where Value: ~Copyable & ~Escapable; var value accessors switch from direct pointee to assumingMemoryBound(to:). Inout is structurally simpler than Borrow (no _owner field; no init(borrowing:) path). 1 source file rewrite (~25 net new lines), 1 test file addition (~50 lines including NEResource fixture). Lands FIRST in cascade (Property.Inout's Tagged storage depends on this).",
+      "date": "2026-05-09",
+      "status": "CONVERGED",
+      "statusDetail": "v1.0.0. Tier 1 per-package research. Authored 2026-05-09 in Phase 1 of HANDOFF-property-primitives-escapable-upgrade.md cascade. Phase 2 implementation gated on per-action user authorization for the public-repo push. Cascade-order: lands FIRST (before swift-property-primitives' Property Base widening).",
+      "statusRaw": "CONVERGED (v1.0.0)",
+      "tier": 1,
+      "scope": "swift-ownership-primitives"
+    },
+    {
+      "file": "ownership-primitives-rawvalue-underlying-rename.md",
+      "displayName": "ownership-primitives-rawvalue-underlying-rename",
+      "topic": "Phase 1 design audit for the upstream RawValue → Underlying rename in swift-tagged-primitives (96f2a76, 73020e6) and the Carrier → Carrier.`Protocol` rename in swift-carrier-primitives (99ad46e). Concludes all four audit questions trivial: no own-field rawValue, no editorial public surface, all public members have downstream consumers, no code-surface violations. Mechanical scope is one source file (Tagged+Ownership.Borrow.Protocol.swift) and one test file. No Carrier dependency in the package.",
+      "date": "2026-05-03",
+      "status": "AUDIT",
+      "statusDetail": "Phase 1 trivial — proceed to Phase 2 mechanical migration",
+      "statusRaw": "AUDIT",
+      "tier": 1,
+      "scope": "swift-ownership-primitives"
+    },
+    {
+      "file": "stdlib-interaction-notes.md",
+      "displayName": "stdlib-interaction-notes",
+      "topic": "Notes on possible interaction between this package and stdlib SE-0519 (Borrow<T> / Inout<T>). Captures current state (mirroring shape on Swift 6.3.1 via _read / nonmutating _modify before SE-0507 stabilises) and several plausible scenarios for what may happen when SE-0519 stabilises: deprecate package types in favour of stdlib equivalents, retain divergent types where stdlib ships a meaningfully different shape, or continue current shape if SE-0519 stalls. Explicitly non-committal; replaces the README's earlier 'Migration to stdlib SE-0519' four-step deprecation-plan prose, which asserted forecast as consumer fact.",
+      "date": "2026-05-01",
+      "status": "NOTES",
+      "statusDetail": "Contributor-facing notes only; not part of the source-stability commitment. Created 2026-05-01 to relocate the README's prior speculative migration-plan prose, per cohort README evaluator-pass remediation (swift-institute/Research/cohort-readme-evaluator-pass.md).",
+      "statusRaw": "NOTES",
+      "tier": 3,
+      "scope": "swift-ownership-primitives"
+    },
+    {
+      "file": "ownership-types-usage-and-justification.md",
+      "displayName": "ownership-types-usage-and-justification.md",
+      "topic": "Pre-0.1.0 per-type evaluation on merits + naming review + completeness analysis. Reframes the earlier usage-centric v1.0.0 draft (SUPERSEDED within this document's changelog) to evaluate each Ownership type by its unique position in the 5-axis lattice (lifetime \u00d7 mutability \u00d7 ownership-multiplicity \u00d7 sync \u00d7 copyability), not by adoption count. Package is positioned as total for ownership. Recommends naming actions: rename Transfer.Box \u2192 Transfer.Erased (Cluster A, high priority \u2014 diametric collision with Rust Box<T>); rename Slot.Store result \u2192 Slot.Outcome (Cluster E \u2014 SUPERSEDED 2026-04-24 by removal; see naming-slot-store-result-enum.md v2.0.0); optional Transfer direction rename (Cluster B: Cell/Storage \u2192 Outgoing/Incoming) and Unique \u2192 Box (Cluster C, requires Cluster A). Identifies two completeness gaps (inbound AnyObject-zero-alloc transfer, inbound type-erased transfer) visible under the direction-symmetry rename. @unchecked Sendable breakdown: Category A (Slot, _Box, Box.Pointer) and B (Unique, Retained) are sound; D (Shared) is a compiler-limitation workaround; only Category C (Mutable.Unchecked) is the class region-based isolation (SE-0518 ~Sendable) replaces \u2014 already DEFERRED in the audit.",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v2.1.0 \u2014 merit + completeness + naming",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "naming-transfer-box-to-erased.md",
+      "displayName": "naming-transfer-box-to-erased.md",
+      "topic": "Per-module naming research for Ownership.Transfer.Box. Concludes: RENAME to Transfer.Erased. Rust's std::boxed::Box<T> is exclusive heap ownership (our Ownership.Unique); calling our type-erased transfer slot Box is diametrically wrong. 'Erased' matches the contract, aligns with Apple's type-erasure vocabulary (AnyHashable, any, AnySequence) without stealing the Any* prefix, and does not collide with academic terms of art. Blast radius: zero external consumers.",
+      "status": "RECOMMENDATION",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "naming-slot-store-result-enum.md",
+      "displayName": "naming-slot-store-result-enum.md",
+      "topic": "Per-module naming research for Ownership.Slot.Store (the ~Copyable result enum). v1.0.0 recommended rename to Slot.Outcome. v2.0.0 (IMPLEMENTED 2026-04-24) supersedes: the enum is removed entirely \u2014 store(_) returns Value? directly, matching stdlib Dictionary.updateValue(_:forKey:) shape. Ecosystem sweep confirmed zero external consumers of the enum cases; every external slot.store(_) site uses `_ = slot.store(...)` and is source-compatible with the Value? return. Builds green across swift-ownership-primitives (84/33 tests), swift-async-primitives, and swift-pool-primitives.",
+      "status": "IMPLEMENTED",
+      "statusDetail": "v2.0.0 \u2014 enum removed; store(_) returns Value?",
+      "statusRaw": "IMPLEMENTED",
+      "tier": 1,
+      "scope": "cross-package"
+    },
+    {
+      "file": "naming-unique-to-box.md",
+      "displayName": "naming-unique-to-box.md",
+      "topic": "Per-module naming research for Ownership.Unique. v1.0.0 recommended RENAME to Ownership.Box (conditional on Transfer.Box \u2192 Transfer.Erased landing first). SUPERSEDED 2026-04-24 by naming-box-ecosystem-survey.md + experiments unified-vs-two-type-box-design + nested-type-generic-escape. Final action (IMPLEMENTED 2026-04-24): the Ownership.Unique NAME stays (it is the Institute Nest.Name rendering of SE-0517 UniqueBox; renaming to Box is rejected by Apple's own ecosystem-collision reasoning). The API is tightened to SE-0517 parity: .take() (mutating) \u2192 .consume() (consuming); .duplicated() \u2192 .clone(); drop .hasValue / .leak() / description / debugDescription; add var value { _read _modify }; storage becomes non-optional. 85 tests / 35 suites pass.",
+      "status": "SUPERSEDED",
+      "statusDetail": "type rename superseded; API rewrite implemented",
+      "statusRaw": "SUPERSEDED",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "naming-box-ecosystem-survey.md",
+      "displayName": "naming-box-ecosystem-survey.md",
+      "topic": "Ecosystem-wide literature study of 'Box' naming across swiftlang/swift (compiler + stdlib + runtime), Apple stewardship packages (swift-nio, swift-crypto, swift-collections, swift-package-manager, swift-certificates), Swift Evolution proposals (SE-0517 UniqueBox accepted, SE-0527 RigidArray/UniqueArray in review), and Swift Forums naming debates. Documents Apple's full Unique* / Rigid* family strategy + the new Containers stdlib module. Key findings: (1) Swift stdlib has ZERO public bare 'Box' types \u2014 all '*Box' public types are qualified (NIOLockedValueBox, SealedBox, ThreadSafeBox, SendableBox); (2) Apple explicitly reserves bare 'Box' for a future CoW variant per LSG acceptance note; (3) Apple's chosen API uses consume() not take(); (4) McCall's matrix: Array/UniqueArray, Dictionary/UniqueDictionary, Set/UniqueSet, Box/UniqueBox. Revises A3 recommendation: rename Ownership.Unique \u2192 Ownership.UniqueBox and .take() \u2192 .consume() for full SE-0517 API parity. Reinforces A1 (Transfer.Box \u2192 Transfer.Erased). Leaves A2 (direction rename) orthogonal to this axis.",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.1.0 \u2014 definitive A3 decision basis",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "naming-transfer-direction-pair.md",
+      "displayName": "naming-transfer-direction-pair.md",
+      "topic": "Per-module naming research for Ownership.Transfer.Cell + Ownership.Transfer.Storage (+ Retained, Box). Recommends: pair RENAME to Outgoing / Incoming (with Retained \u2192 Outgoing.Retained and Box \u2192 Outgoing.Erased). The direction axis is first-class but the current names hide it. Rust (std::sync::mpsc, tokio::sync::mpsc) consistently uses Sender/Receiver; session-types literature (Honda-Vasconcelos-Kubo 1998, Gay-Vasconcelos 2010) uses direction-named primitives. Rename surfaces the two known completeness gaps (Incoming.Retained, Incoming.Erased) as nameable positions. Blast radius: ~10 call sites across swift-kernel + swift-executors.",
+      "status": "RECOMMENDATION",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "naming-shared-mutable-symmetry.md",
+      "displayName": "naming-shared-mutable-symmetry.md",
+      "topic": "Per-module naming research for Ownership.Shared + Ownership.Mutable + Ownership.Mutable.Unchecked. Recommends: DO NOT RENAME. Apple's 25-year NSArray/NSMutableArray pattern is the canonical precedent \u2014 the current scheme IS that pattern. Explicit-pair alternative (Shared.Immutable / Shared.Mutable / Shared.Mutable.Unchecked) is academically motivated (Clarke-Potter-Noble 1998; Boyapati-Liskov-Shrira 2003) but adds nesting with 32+ external call sites across swift-async / swift-pool / swift-cache / swift-markdown-html-render. The seasoned-Swift-engineer reachability is better under the current names (one step vs two).",
+      "status": "DEFERRED",
+      "statusDetail": "recommend: do not rename \u2014 Apple precedent (NSArray/NSMutableArray)",
+      "statusRaw": "DEFERRED",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ],
+  "crossRefDocuments": [
+    {
+      "path": "../../../swift-institute/Research/ownership-borrow-protocol-unification.md",
+      "topic": "Canonical protocol shape for `Ownership.Borrow.`Protocol`` \u2014 associatedtype `Borrowed` defaults to the sibling generic struct over `Self`. Frozen DECISION landed in commit `b3eb11b`.",
+      "status": "DECISION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "path": "../../../swift-institute/Research/ownership-borrow-protocol-unification-implementation-plan.md",
+      "topic": "Ecosystem-wide implementation plan for the `Ownership.Borrow.`Protocol`` unification. IMPLEMENTED 2026-04-23 across 7 sub-repos; zero residual `.View` references on the cascade surface.",
+      "status": "IMPLEMENTED",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "path": "../../../swift-institute/Research/self-projection-default-pattern.md",
+      "topic": "Generalises the `Ownership.Borrow.`Protocol`` associatedtype-defaulting shape to other self-projection namespaces. The Borrow application is the first empirical ecosystem instance.",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "path": "../../../swift-institute/Research/capability-lift-pattern.md",
+      "topic": "Capability-lift pattern \u2014 the `associatedtype default = Namespace<Self>` shape that `Ownership.Borrow.`Protocol`` uses.",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "path": "../../../swift-institute/Research/capability-lift-pattern-academic-foundations.md",
+      "topic": "Academic references grounding the capability-lift pattern.",
+      "status": "ANALYSIS",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "path": "../../../swift-institute/Research/feature-flags-addressable-borrowinout.md",
+      "topic": "Feature-flag choices around `BorrowAndMutateAccessors` (SE-0507) \u2014 the future state that makes `Ownership.Borrow._read` / `Ownership.Inout._modify` coroutines obsolete.",
+      "status": "SUPERSEDED",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "path": "../../../swift-institute/Research/noncopyable-peek-escapable.md",
+      "topic": "Motivates `Ownership.Borrow<~Escapable>` and the raw-address init path used for ~Escapable peek.",
+      "status": "ANALYSIS",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "path": "../../../swift-institute/Research/transfer-cell-cancellation-propagation.md",
+      "topic": "`Ownership.Transfer.Cell` cancellation-propagation semantics under structured concurrency.",
+      "status": "ANALYSIS",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "path": "../../../swift-institute/Research/noncopyable-closure-capture-relaxation.md",
+      "topic": "~Copyable closure-capture interactions that affect Ownership-type usage in `@Sendable` closures.",
+      "status": "ANALYSIS",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "path": "../../../swift-institute/Research/noncopyable-ecosystem-state.md",
+      "topic": "Consolidated current state of ~Copyable patterns across the ecosystem (supersedes `noncopyable-ownership-transfer-patterns.md`).",
+      "status": "DECISION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "path": "../../../swift-primitives/Research/yielding-vs-returning-lifetime-models.md",
+      "topic": "Coroutine-yielding vs plain-return lifetime models \u2014 informs the V12 `Ownership.Inout.value` accessor split (`get` + `_modify` for Copyable `Value`; `_read` + `_modify` for ~Copyable).",
+      "status": "ANALYSIS",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "path": "../../../swift-primitives/Research/nested-view-vs-borrowed-naming.md",
+      "topic": "Naming conventions for nested view / borrowed types that affect `Ownership.Borrow` / `Ownership.Inout` adoption sites.",
+      "status": "ANALYSIS",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ]
+}

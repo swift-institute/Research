@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-dimension-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "cross-type-compound-assignment-completeness.md",
+      "displayName": "cross-type-compound-assignment-completeness.md",
+      "topic": "Cross-type compound assignment operator completeness",
+      "date": "2026-02-28",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

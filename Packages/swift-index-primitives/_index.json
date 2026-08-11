@@ -1,0 +1,76 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-13",
+  "title": "Index Primitives Research",
+  "blurb": "",
+  "scope": "swift-index-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "Architecture.md",
+      "displayName": "Architecture.md",
+      "topic": "Index primitives architecture",
+      "date": "2026-01-20",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "Strideable Index Design.md",
+      "displayName": "Strideable Index Design.md",
+      "topic": "Strideable conformance for phantom-typed Index and Count",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "_Package-Insights.md",
+      "displayName": "_Package-Insights.md",
+      "topic": "Index Primitives insights — recorded design decisions and patterns",
+      "date": "2026-01-28",
+      "status": "ACTIVE",
+      "statusDetail": "Non-normative recorded decisions, consolidated from reflections tagged [Package: swift-index-primitives]",
+      "statusRaw": "ACTIVE",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "index-count-offset-as-tagged.md",
+      "displayName": "index-count-offset-as-tagged.md",
+      "topic": "Index.Count and Index.Offset as Tagged types",
+      "date": "2026-01-27",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "index-count-spelling.md",
+      "displayName": "index-count-spelling.md",
+      "topic": "Whether Index\\<T\\>.Count is the right spelling vs alternatives",
+      "date": "2026-03-23",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "index-primitives-rawvalue-underlying-rename.md",
+      "displayName": "index-primitives-rawvalue-underlying-rename.md",
+      "topic": ".rawValue → .underlying + Carrier.Protocol migration receipt",
+      "date": "2026-05-03",
+      "status": "RESOLVED",
+      "statusDetail": "Migration completed in commit e4f2299 (2026-05-03); mechanical because the package owns zero rename-target surface — the entire package is one typealias.",
+      "statusRaw": "RESOLVED",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}
