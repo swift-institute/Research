@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-11",
+  "title": "Research Index — swift-rfc-4648",
+  "blurb": "",
+  "scope": "swift-rfc-4648 (swift-ietf)",
+  "documents": [
+    {
+      "file": "codec-split-design.md",
+      "displayName": "codec-split-design.md",
+      "topic": "codec-split-design.md",
+      "date": "2026-08-11",
+      "status": "MIGRATED",
+      "statusDetail": null,
+      "statusRaw": "MIGRATED",
+      "tier": null,
+      "scope": "package-specific"
+    }
+  ]
+}
