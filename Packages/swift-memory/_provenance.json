@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "1cb513e70894ca29cb323a0528771bd585229469",
+  "sourceRepository": "swift-foundations/swift-memory",
+  "sourceCommit": "757f6a7ca3237601d4fb2eb44b1563c6609b0f26",
+  "sourcePath": "Research",
+  "sourceTree": "34f4f8bfb5dec55819917e090c4369006b8f58a4",
+  "destinationPath": "Packages/swift-memory",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/16"
+}
