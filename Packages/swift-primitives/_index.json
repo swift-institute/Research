@@ -1,0 +1,516 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-21",
+  "title": "Research Index",
+  "blurb": "Primitives-wide research documents for swift-primitives.",
+  "scope": "swift-primitives",
+  "documents": [
+    {
+      "file": "tagged-unchecked-construction-inventory.md",
+      "displayName": "tagged-unchecked-construction-inventory.md",
+      "topic": "Ecosystem inventory of 952 `__unchecked:` call sites across swift-primitives. Classifies each against the Tagged brief's five categories (legitimate-bypass / could-use-validated-init / missing-validated-init / test-fixture / other) and separates structurally-distinct sibling conventions (Tagged 2-param, Tagged 1-param extension, Finite.Enumerable labelled-ordinal, non-Tagged struct inits like Time/Instant/Binary.Cursor, method APIs like Hash.Table.insert/Ownership.Slot.take/Input.Restore.to). Surfaces taxonomy tensions: `missing-validated-init` conflates API gaps with deliberate no-invariant phantom aliases (Radian, Index<T>); `could-use-validated-init` conflates oversight with pre-verified fast-path. Feeds later remediation discussion; makes no decisions.",
+      "date": "2026-04-22",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "rendering-primitives-split.md",
+      "displayName": "rendering-primitives-split.md",
+      "topic": "Decompose swift-rendering-primitives into three sibling L1 packages: swift-render-primitives (domain-neutral infra), swift-render-markup-primitives (SGML-family document vocabulary), swift-render-image-primitives (PostScript-imaging-model graphics vocabulary). Dependency-delta criterion justifies package-split over target-split (image vocabulary needs geometry + affine deps). Executes as Phase 1 of HANDOFF-package-noun-rename.md.",
+      "date": "2026-04-21",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "array-name-shadowing-exported-import-precedence.md",
+      "displayName": "array-name-shadowing-exported-import-precedence.md",
+      "topic": "@_exported already shadows Swift.Array; defensive qualifications can be removed",
+      "date": "2026-04-04",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "vector-primitives-role-and-dependency-analysis.md",
+      "displayName": "vector-primitives-role-and-dependency-analysis.md",
+      "topic": "Role of vector-primitives given bit-vector, storage, and buffer packages",
+      "date": "2026-02-04",
+      "status": "SUPERSEDED",
+      "statusDetail": null,
+      "statusRaw": "SUPERSEDED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "algebra-adt-package-relationship.md",
+      "displayName": "algebra-adt-package-relationship.md",
+      "topic": "Dependency direction between algebra and ADT/container packages",
+      "date": "2026-02-04",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "algebra-primitives-package-split.md",
+      "displayName": "algebra-primitives-package-split.md",
+      "topic": "Decomposing algebra-primitives into per-level packages to lower hierarchy tiers",
+      "date": "2026-02-04",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "algebra-split-tier-analysis.md",
+      "displayName": "algebra-split-tier-analysis.md",
+      "topic": "Post-split tier drift analysis and optimization options",
+      "date": "2026-02-05",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "algebra-aggregate-decomposition.md",
+      "displayName": "algebra-aggregate-decomposition.md",
+      "topic": "Decomposition of aggregate package to eliminate bundled concerns",
+      "date": "2026-02-05",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "blanket-tagged-init-audit.md",
+      "displayName": "blanket-tagged-init-audit.md",
+      "topic": "Ecosystem-wide audit of blanket Tagged inits bypassing invariant enforcement",
+      "date": "2026-02-06",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "int-bitpattern-conversion-audit.md",
+      "displayName": "int-bitpattern-conversion-audit.md",
+      "topic": "Audit of Int(bitPattern:) pervasiveness and reduction strategies",
+      "date": "2026-02-06",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "storage-primitives-comparative-analysis.md",
+      "displayName": "storage-primitives-comparative-analysis.md",
+      "topic": "State of the art vs theoretical perfect for storage-primitives",
+      "date": "2026-02-06",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "sequence-storage-integration-analysis.md",
+      "displayName": "sequence-storage-integration-analysis.md",
+      "topic": "Integration surface between sequence-primitives (Tier 7) and storage-primitives (Tier 14)",
+      "date": "2026-02-06",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 7,
+      "scope": null
+    },
+    {
+      "file": "zip-primitive-placement.md",
+      "displayName": "zip-primitive-placement.md",
+      "topic": "Where zip lives in the tier architecture: algebra vs sequence vs range",
+      "date": "2026-02-06",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "range-lazy-semantic-identity.md",
+      "displayName": "range-lazy-semantic-identity.md",
+      "topic": "Is Range.Lazy semantically a Range, Sequence, or something else? (v2.0 with prior art survey)",
+      "date": "2026-02-07",
+      "status": "SUPERSEDED",
+      "statusDetail": null,
+      "statusRaw": "SUPERSEDED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "vector-rename-analysis.md",
+      "displayName": "vector-rename-analysis.md",
+      "topic": "Renaming Range.Lazy to Vector\\<Bound\\> and repurposing swift-vector-primitives",
+      "date": "2026-02-08",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "sequence-primitives-ecosystem-adoption.md",
+      "displayName": "sequence-primitives-ecosystem-adoption.md",
+      "topic": "Bottom-up adoption plan for sequence-primitives across 9 remaining packages",
+      "date": "2026-02-06",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "bit-vector-type-organization.md",
+      "displayName": "bit-vector-type-organization.md",
+      "topic": "Correct organizational home for bit vector types split across bit-vector and array packages",
+      "date": "2026-02-08",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "bitset-naming-literature-study.md",
+      "displayName": "bitset-naming-literature-study.md",
+      "topic": "Package naming: swift-bitset-primitives vs swift-bit-set-primitives — literature survey",
+      "date": "2026-02-09",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "bitset-architecture-ideal-model.md",
+      "displayName": "bitset-architecture-ideal-model.md",
+      "topic": "Ideal composition model for Bitset: shared kernel (Bit.Pack) vs composition vs standalone",
+      "date": "2026-02-09",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "bounded-index-precondition-elimination.md",
+      "displayName": "bounded-index-precondition-elimination.md",
+      "topic": "Bounded/finite index types for eliminating runtime preconditions across 20 packages",
+      "date": "2026-02-10",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "yielding-vs-returning-lifetime-models.md",
+      "displayName": "yielding-vs-returning-lifetime-models.md",
+      "topic": "Architectural rationale for dual-model borrowed access: yielding (primary) vs returning ~Escapable (Span interop)",
+      "date": "2026-02-10",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "deferred-infrastructure-gap-analysis.md",
+      "displayName": "deferred-infrastructure-gap-analysis.md",
+      "topic": "Principled correctness analysis of 6 deferred typed-arithmetic infrastructure gaps",
+      "date": "2026-02-11",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "cross-domain-init-overload-resolution-footgun.md",
+      "displayName": "cross-domain-init-overload-resolution-footgun.md",
+      "topic": "Unlabeled cross-domain conversion inits on Tagged causing silent overload resolution footguns",
+      "date": "2026-02-11",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "labeled-cross-domain-init-convention.md",
+      "displayName": "labeled-cross-domain-init-convention.md",
+      "topic": "Cross-domain init inventory: label non-identity inits, enable production literal conformance",
+      "date": "2026-03-04",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "memory-pool-arena-buffer-usage-analysis.md",
+      "displayName": "memory-pool-arena-buffer-usage-analysis.md",
+      "topic": "Disposition of Memory.Pool, Memory.Arena, and Memory.Buffer — usage analysis and removal recommendation",
+      "date": "2026-02-11",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "memory-storage-composition-feasibility.md",
+      "displayName": "memory-storage-composition-feasibility.md",
+      "topic": "Can Memory.Pool/Arena be modified to enable composition with Storage.Pool/Arena without drawbacks?",
+      "date": "2026-02-11",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "bit-collections-stack-migration-feasibility.md",
+      "displayName": "bit-collections-stack-migration-feasibility.md",
+      "topic": "Should Bit.Vector and Bitset migrate to Storage ← Buffer stack? (No — circular dependency, semantic mismatch)",
+      "date": "2026-02-11",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "implicit-member-init-resolution-hazard.md",
+      "displayName": "implicit-member-init-resolution-hazard.md",
+      "topic": "Tier 3: Cross-package init overloads causing implicit member resolution to select unintended (throwing) overloads — taxonomy and labeling convention",
+      "date": "2026-02-11",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 3,
+      "scope": "cross-package"
+    },
+    {
+      "file": "primitives-taxonomy-naming-layering-audit.md",
+      "displayName": "primitives-taxonomy-naming-layering-audit.md",
+      "topic": "Tier 3: Comprehensive taxonomy — naming and layering audit across Memory → Storage → Buffer → Data Structure stack",
+      "date": "2026-02-11",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 3,
+      "scope": null
+    },
+    {
+      "file": "tree-primitives-buffer-arena-migration.md",
+      "displayName": "tree-primitives-buffer-arena-migration.md",
+      "topic": "Tier 2: Design decisions for migrating Tree.N and Tree.Unbounded from hand-rolled arena to Buffer.Arena",
+      "date": "2026-02-11",
+      "status": "DEFERRED",
+      "statusDetail": null,
+      "statusRaw": "DEFERRED",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "buffer-arena-conditional-copyable.md",
+      "displayName": "buffer-arena-conditional-copyable.md",
+      "topic": "Tier 2: Making Buffer.Arena conditionally Copyable — restructuring storage to eliminate deinit",
+      "date": "2026-02-11",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "storage-arena-architecture.md",
+      "displayName": "storage-arena-architecture.md",
+      "topic": "Tier 3: Storage.Arena architecture — reconciling Memory.Arena composition with Buffer.Arena's conditional Copyable needs",
+      "date": "2026-02-11",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 3,
+      "scope": null
+    },
+    {
+      "file": "property-view-protocol-delegation.md",
+      "displayName": "property-view-protocol-delegation.md",
+      "topic": "Tier 2: Property.View accessors and methods as protocol defaults with Base: Protocol & ~Copyable constraints",
+      "date": "2026-02-12",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "parser-collection-protocol-migration.md",
+      "displayName": "parser-collection-protocol-migration.md",
+      "topic": "Replace stdlib Collection with Collection.Slice.Protocol in parser-primitives",
+      "date": "2026-02-13",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "collection-sequence-protocol-detachment.md",
+      "displayName": "collection-sequence-protocol-detachment.md",
+      "topic": "Remove Sequence.Protocol inheritance from Collection.Protocol to enable ~Copyable element support and unify the split protocol hierarchy",
+      "date": "2026-02-23",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "binary-buffer-primitives-architectural-review.md",
+      "displayName": "binary-buffer-primitives-architectural-review.md",
+      "topic": "Should swift-binary-buffer-primitives exist? Buffer.Aligned placement, namespace correctness, consumer analysis",
+      "date": "2026-02-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "nextspan-delegation-reduction.md",
+      "displayName": "nextspan-delegation-reduction.md",
+      "topic": "Can data structure iterators delegate nextSpan to their underlying buffer iterators instead of reimplementing?",
+      "date": "2026-02-27",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "intra-package-modularization-patterns.md",
+      "displayName": "intra-package-modularization-patterns.md",
+      "topic": "Pattern extraction: 13 recurring intra-package modularization patterns including constraint isolation for ~Copyable hygiene",
+      "date": "2026-02-27",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "modularization-theoretical-foundations.md",
+      "displayName": "modularization-theoretical-foundations.md",
+      "topic": "Tier 3: Systematic literature review — theoretical foundations for modularization patterns (Parnas, Baldwin-Clark, Walker substructural types, ML modules, build parallelism)",
+      "date": "2026-02-27",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 3,
+      "scope": null
+    },
+    {
+      "file": "view-vs-span-borrowed-access-types.md",
+      "displayName": "view-vs-span-borrowed-access-types.md",
+      "topic": "Tier 2: First-principles analysis — is View necessary given Span exists? Null-termination invariant, borrowed access hierarchy, Viewable protocol justification",
+      "date": "2026-02-28",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "nonescapable-support-memory-storage-buffer.md",
+      "displayName": "nonescapable-support-memory-storage-buffer.md",
+      "topic": "Tier 2: ~Escapable fitness analysis for memory-primitives, storage-primitives, buffer-primitives — type taxonomy, soundness, benefits, edge case validation (8/8 confirmed)",
+      "date": "2026-02-28",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "iterator-span-buffer-elimination.md",
+      "displayName": "iterator-span-buffer-elimination.md",
+      "topic": "Tier 2: Ecosystem-wide nextSpan pattern audit (97 iterators, 7 patterns). Optional<T> as inline MaybeUninit eliminates ALL 32 heap-allocating iterators to 0. Subsumes nextspan-delegation-reduction.",
+      "date": "2026-03-04",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "ecosystem-wide"
+    },
+    {
+      "file": "pool-bounded-storage-refactor.md",
+      "displayName": "pool-bounded-storage-refactor.md",
+      "topic": "Pool.Bounded storage refactor (Tier 1) — two parallel fixed-capacity arrays (slots + entries) subscripted by Slot.Index with .rawValue at 30+ call sites. Investigation of replacing stdlib Array subscripts with typed index access. Migrated from swift-institute per [META-017].",
+      "date": "",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "set-protocol-requirements.md",
+      "displayName": "set-protocol-requirements.md",
+      "topic": "Consolidated Set.Protocol design document (Tier 2, v4.0.0) — covers protocol design rationale, O(1) contains restoration for ~Copyable, minimal complete requirements (contains + forEach + count → 10 defaults), insert error divergence analysis. Migrated from swift-institute per [META-017].",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    }
+  ],
+  "narrativeSections": [
+    {
+      "heading": "Research Documents",
+      "body": "| [bit-vector-primitives-reducibility.md](bit-vector-primitives-reducibility.md) | Can bit-vector-primitives be reduced or absorbed given consolidation? | 2026-02-08 | RECOMMENDATION |\n| [data structures/](data%20structures/) | Post-refactor assessments for all data structure packages | 2026-02-12 | DECISION |\n| [finite-collection-join-point-integration.md](finite-collection-join-point-integration.md) | Ecosystem-level join-point patterns | 2026-01-29 | RECOMMENDATION |\n| [integration-maximization-comparative-analysis.md](integration-maximization-comparative-analysis.md) | Cross-package integration analysis | 2026-02-02 | RECOMMENDATION |\n| [range-sequence-collection-semantic-analysis.md](range-sequence-collection-semantic-analysis.md) | Collection semantics for Range.Lazy | 2026-01-29 | ANALYSIS |\n| [lifetime-annotation-escapable-swift-6.3.md](lifetime-annotation-escapable-swift-6.3.md) | Swift 6.3 rejects @_lifetime on Escapable types — full audit of ~50 affected files across 15+ packages | 2026-03-25 | SUPERSEDED |\n| [kernel-atomic-memory-ordering.md](kernel-atomic-memory-ordering.md) | Kernel.Atomic unsound on ARM64 — `<stdatomic.h>` C shim replacing `@_optimize(none)` compiler barrier | 2026-03-25 | DECISION |\n| [linked-list-cursor-and-arena-backing-improvements.md](linked-list-cursor-and-arena-backing-improvements.md) | Cursor API + arena-backing improvements blocking `List.Linked<E, 2>` from replacing `Async.Timer.Wheel` ad-hoc intrusive lists | 2026-04-01 | RECOMMENDATION |\n| [linked-list-theoretical-perfect.md](linked-list-theoretical-perfect.md) | Unbounded-scope theoretical-perfect linked list design — follow-up to cursor-and-arena improvements | 2026-04-01 | RECOMMENDATION |\n| [linux-io-uring-api-reference.md](linux-io-uring-api-reference.md) | Complete Linux io_uring API reference — syscalls, 65 operations, flags, memory model, gotchas, best practices. Baseline for swift-linux-primitives comparison. | 2026-04-10 | DECISION |\n| [io-uring-impl-study-zig-std.md](io-uring-impl-study-zig-std.md) | Zig stdlib IO_Uring implementation study — type mapping, safety model, ring management, memory ordering, lessons for Swift | 2026-04-10 | DECISION |\n| [io-uring-impl-study-tigerbeetle.md](io-uring-impl-study-tigerbeetle.md) | TigerBeetle io_uring study — cross-platform abstraction (io_uring+kqueue), completion model, single-threaded event loop | 2026-04-10 | DECISION |\n| [io-uring-impl-study-rust-io-uring.md](io-uring-impl-study-rust-io-uring.md) | Rust io-uring crate study — ownership model, opcode builders, safety boundary, lifetime management | 2026-04-10 | DECISION |\n| [io-uring-impl-study-liburing.md](io-uring-impl-study-liburing.md) | liburing C reference study — API layering, prep helpers, memory barriers, what liburing does NOT do | 2026-04-10 | DECISION |\n| [io-uring-swift-feature-inventory.md](io-uring-swift-feature-inventory.md) | Maps 14 io_uring concerns to Swift features + existing research/experiments. 12/14 HIGH confidence. | 2026-04-10 | RECOMMENDATION |\n| [io-uring-l1-api-audit-and-recommendations.md](io-uring-l1-api-audit-and-recommendations.md) | Audit of existing Kernel.IO.Uring implementation: 14 gaps identified (2 P0 correctness, 5 P1 spec coverage, 3 P2 convention, 4 P3 QoL). Architecture confirmed sound. | 2026-04-10 | RECOMMENDATION |\n| [io-uring-semantic-flag-modeling.md](io-uring-semantic-flag-modeling.md) | Full semantic modeling of 29 io_uring flag parameters: 4 decompose to enums, 12 move to correct owners, 3 delete as duplicates, 5 confirmed correct. io_uring owns ~7 types; rest referenced from domains. | 2026-04-10 | RECOMMENDATION |\n| [effect-primitives-and-io-algebra-relation.md](effect-primitives-and-io-algebra-relation.md) | Tier 2: Relation between swift-effect-primitives (L1, algebraic effects) and the fresh io-algebra experiment (L3, ReaderT · ExceptT · Linear · Async monad). Both lag Swift 6.3 standards; recommendation is (c) modernize both, keep separate (orthogonal algebras). | 2026-04-16 | RECOMMENDATION |"
+    },
+    {
+      "heading": "Scope",
+      "body": "This directory contains primitives-wide research—design analysis that affects multiple primitives packages but is specific to the primitives layer.\n\nFor ecosystem-wide research, see: `swift-institute/Research/`\n\nFor package-specific research, see: `{package}/Research/`"
+    },
+    {
+      "heading": "Examples of Primitives-Wide Research",
+      "body": "- Index type hierarchy design across all collection primitives\n- Storage variant naming conventions\n- ~Copyable support patterns for primitives\n- Error handling patterns across primitives"
+    },
+    {
+      "heading": "Document Types",
+      "body": "| Type | Purpose | Template |\n|---|---|---|\n| Naming Analysis | Evaluate naming alternatives | [RES-010a] |\n| Architecture Analysis | Evaluate architectural alternatives | [RES-010b] |\n| Trade-off Analysis | Balance competing concerns | [RES-010c] |\n| Consistency Analysis | Cross-package consistency review | [RES-014] |\n| Pattern Extraction | Identify and document patterns | [RES-017] |"
+    },
+    {
+      "heading": "References",
+      "body": "- Research infrastructure: `swift-institute/Research/Research.md`\n- Investigation workflow: `swift-institute/Research/Research Investigation.md`\n- Discovery workflow: `swift-institute/Research/Research Discovery.md`"
+    }
+  ]
+}

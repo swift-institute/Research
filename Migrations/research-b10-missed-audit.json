@@ -1,0 +1,156 @@
+{
+  "$schema": "../Schemas/research-migration-receipt-v1.json",
+  "destinationImportCommit": "9cba71e066f8f015c9bc3ff7eef1d95edab42f95",
+  "batch": "Research-B10",
+  "manifestSHA256": "750aebca0fcb855881cfc8eee690fdceb8f68a1c92417beac727b15b4f247bf9",
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/.github/issues/527",
+  "historyImport": false,
+  "sourceHistoryRetained": true,
+  "imports": [
+    {
+      "sourceRepository": "swift-primitives/swift-arm-primitives",
+      "sourceCommit": "7f65cd1cf913a0584db00b18ba2e08aa70afcf42",
+      "sourcePath": "Research",
+      "sourceTree": "ae9fe60ee0808851783f1b854f6bbe3e74ef889f",
+      "destinationPath": "Packages/swift-arm-primitives",
+      "provenanceIndex": "Packages/swift-arm-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-darwin-primitives",
+      "sourceCommit": "94b81be48a7c9d347215a74d878acadc22d78e2f",
+      "sourcePath": "Research",
+      "sourceTree": "5555b62480d78d815dea8c436408e5291b20344a",
+      "destinationPath": "Packages/swift-darwin-primitives",
+      "provenanceIndex": "Packages/swift-darwin-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-handle-primitives",
+      "sourceCommit": "764d9a55f320f732c994aea76fc617fe363ff79b",
+      "sourcePath": "Research",
+      "sourceTree": "45fcf952ee756e392d8ce627bb0e2145e6ff9e35",
+      "destinationPath": "Packages/swift-handle-primitives",
+      "provenanceIndex": "Packages/swift-handle-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-kernel-primitives",
+      "sourceCommit": "651233fd4dac6f2aba74c8da1ca2aec2c4b15a1c",
+      "sourcePath": "Research",
+      "sourceTree": "6327e8ba89683654d56099c42d736153aaf42eeb",
+      "destinationPath": "Packages/swift-kernel-primitives",
+      "provenanceIndex": "Packages/swift-kernel-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-linux-primitives",
+      "sourceCommit": "182e2c1a1e5045d314c2ea6fca25793c442c484d",
+      "sourcePath": "Research",
+      "sourceTree": "5281c7ef0721846ad750ec065cbccfb58e8ee89d",
+      "destinationPath": "Packages/swift-linux-primitives",
+      "provenanceIndex": "Packages/swift-linux-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-pointer-primitives",
+      "sourceCommit": "c838b63637b5beb470b50a5c8d3a916ff80438af",
+      "sourcePath": "Research",
+      "sourceTree": "cf08a636a678c5f8ddbbb18edca97368b6a2c1c7",
+      "destinationPath": "Packages/swift-pointer-primitives",
+      "provenanceIndex": "Packages/swift-pointer-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-posix-primitives",
+      "sourceCommit": "68d7fc5807e52c469fc5c382e4cf0ce64c7e1e13",
+      "sourcePath": "Research",
+      "sourceTree": "523dc5c60d29ea63eb2706e41d0343d2dea95c5f",
+      "destinationPath": "Packages/swift-posix-primitives",
+      "provenanceIndex": "Packages/swift-posix-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-primitives",
+      "sourceCommit": "daced5d249a897a895fbfaeb7c5b5cf211d28c87",
+      "sourcePath": "Research",
+      "sourceTree": "e9f5b4f599ac2c47c76311d1f5c2ae4507aea051",
+      "destinationPath": "Packages/swift-primitives",
+      "provenanceIndex": "Packages/swift-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-riscv-primitives",
+      "sourceCommit": "8b5aff1f2e13a3f5e4f1ccdc4b6384313ee33d56",
+      "sourcePath": "Research",
+      "sourceTree": "e49ac9bc4bf72b6a9d8d05cb8a26de8ea4ff48eb",
+      "destinationPath": "Packages/swift-riscv-primitives",
+      "provenanceIndex": "Packages/swift-riscv-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-storage-pool-primitives",
+      "sourceCommit": "970c38ad0dc225706012ceabde845cc57d8dc506",
+      "sourcePath": "Research",
+      "sourceTree": "0da3bb92175ed69ef5d273a5de41107e67b160a7",
+      "destinationPath": "Packages/swift-storage-pool-primitives",
+      "provenanceIndex": "Packages/swift-storage-pool-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-storage-slab-primitives",
+      "sourceCommit": "b56eb46c1e1967284d6edc6e4f86d9dce18b333e",
+      "sourcePath": "Research",
+      "sourceTree": "bdc67787520fe2d0756d74730f2c1b4ff423eeba",
+      "destinationPath": "Packages/swift-storage-slab-primitives",
+      "provenanceIndex": "Packages/swift-storage-slab-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-x86-primitives",
+      "sourceCommit": "81de8f2390af5ade3efe76f8a19642d77941e97f",
+      "sourcePath": "Research",
+      "sourceTree": "ae9fe60ee0808851783f1b854f6bbe3e74ef889f",
+      "destinationPath": "Packages/swift-x86-primitives",
+      "provenanceIndex": "Packages/swift-x86-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    }
+  ]
+}
