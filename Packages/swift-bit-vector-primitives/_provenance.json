@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "ac1d509f3a88a14267f2cb49ea331a0aacdd2298",
+  "sourceRepository": "swift-primitives/swift-bit-vector-primitives",
+  "sourceCommit": "09babb77af0b84cdd7881ab64a039c1cdd9d194a",
+  "sourcePath": "Research",
+  "sourceTree": "9a37f442f6ac8146e17143b3594961cd8ca7340b",
+  "destinationPath": "Packages/swift-bit-vector-primitives",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/25"
+}
