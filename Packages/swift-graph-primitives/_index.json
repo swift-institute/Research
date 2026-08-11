@@ -1,0 +1,65 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-graph-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "Analysis - Graph Extraction and Dependency Structure.md",
+      "displayName": "Analysis - Graph Extraction and Dependency Structure.md",
+      "topic": "Graph extraction and dependency structure analysis",
+      "date": "2026-01-19",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "Analysis - Graph Primitives as Timeless Substrate.md",
+      "displayName": "Analysis - Graph Primitives as Timeless Substrate.md",
+      "topic": "Graph primitives as timeless substrate",
+      "date": "2026-01-19",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "Analysis - Maximalist Graph Extraction.md",
+      "displayName": "Analysis - Maximalist Graph Extraction.md",
+      "topic": "Maximalist graph extraction approach",
+      "date": "2026-01-19",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "graph-discipline-boundary-analysis.md",
+      "displayName": "graph-discipline-boundary-analysis.md",
+      "topic": "Graph vs buffer/array layer boundary audit",
+      "date": "2026-02-14",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "graph-primitives-roadmap.md",
+      "displayName": "graph-primitives-roadmap.md",
+      "topic": "Graph-primitives gap analysis, prioritization, and non-goals",
+      "date": "2026-02-23",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

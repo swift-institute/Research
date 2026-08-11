@@ -1,0 +1,65 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-binary-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "Lifetime Dependent Borrowed Cursors.md",
+      "displayName": "Lifetime Dependent Borrowed Cursors.md",
+      "topic": "Lifetime-dependent borrowed cursors",
+      "date": "2026-01-19",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "SE-0458 Audit Methodology.md",
+      "displayName": "SE-0458 Audit Methodology.md",
+      "topic": "SE-0458 audit methodology",
+      "date": "2026-01-15",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "SE-0458 Strict Memory Safety.md",
+      "displayName": "SE-0458 Strict Memory Safety.md",
+      "topic": "SE-0458 strict memory safety",
+      "date": "2026-01-15",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "Comparative Analysis swift-binary-primitives.md",
+      "displayName": "Comparative Analysis swift-binary-primitives.md",
+      "topic": "Comparative analysis of swift-binary-primitives",
+      "date": "2026-01-15",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "Strict Memory Safety Audit Template.md",
+      "displayName": "Strict Memory Safety Audit Template.md",
+      "topic": "Strict memory safety audit template",
+      "date": "2026-01-15",
+      "status": "TEMPLATE",
+      "statusDetail": null,
+      "statusRaw": "TEMPLATE",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

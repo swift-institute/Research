@@ -1,0 +1,40 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-30",
+  "title": "Research Index",
+  "blurb": "Research documents for swift-linux-standard.",
+  "documents": [
+    {
+      "file": "io-uring-sqe-pointer-elimination.md",
+      "displayName": "io-uring-sqe-pointer-elimination.md",
+      "topic": "Eliminate UnsafeMutablePointer<Entry> from io_uring Submission Queue Entry preparation API. Restore @inlinable using ~Copyable ~Escapable slot types. Lifetimes and LifetimeDependence enabled in package. v2.0.0 DECISION.",
+      "date": "2026-04-12",
+      "status": "DECISION",
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "io-uring-sqe-visibility.md",
+      "displayName": "io-uring-sqe-visibility.md",
+      "topic": "Build-blocking visibility issue: @inlinable public Prepare methods reference internal io_uring_sqe C struct from CLinuxKernelShim, blocked under InternalImportsByDefault. Affects ~60 Prepare methods. Resolved 2026-04-11.",
+      "date": "2026-04-10",
+      "status": "DECISION",
+      "statusRaw": "resolved",
+      "statusDetail": "Resolved 2026-04-11; build-blocking severity at issue time. statusRaw uses non-canonical lowercase 'resolved' — mapped to canonical DECISION.",
+      "tier": 1,
+      "scope": "cross-package"
+    },
+    {
+      "file": "consuming-init-take-replacement.md",
+      "displayName": "consuming-init-take-replacement.md",
+      "topic": "Pattern doc: replace `take()` consuming methods on source types with consuming init on the TARGET type (e.g., Kernel.Descriptor(consume eventDescriptor) replaces eventDescriptor.take()). Established during io_uring refactor.",
+      "date": "2026-04-12",
+      "status": "REFERENCE",
+      "statusRaw": "REFERENCE",
+      "tier": 1,
+      "scope": "cross-package"
+    }
+  ]
+}

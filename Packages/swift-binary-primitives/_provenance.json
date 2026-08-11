@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "3a9e9f5859a8816ea2917983fe690770c080f899",
+  "sourceRepository": "swift-primitives/swift-binary-primitives",
+  "sourceCommit": "62c6e0efce4f82100c449686503ae141dbd867ac",
+  "sourcePath": "Research",
+  "sourceTree": "d0c93bce025885831baae5f6f8d4f6e53bc0240b",
+  "destinationPath": "Packages/swift-binary-primitives",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/32"
+}

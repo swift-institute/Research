@@ -1,0 +1,54 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-29",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-async-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "Architectural Analysis.md",
+      "displayName": "Architectural Analysis.md",
+      "topic": "Async primitives architectural analysis",
+      "date": "2026-01-16",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "waiter-two-phase-design.md",
+      "displayName": "waiter-two-phase-design",
+      "topic": "Cell vs Entry refactor for two-phase arm/cancel/drain",
+      "date": "2026-03-23",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "zero-copy-noncopyable-element-feasibility.md",
+      "displayName": "zero-copy-noncopyable-element-feasibility.md",
+      "topic": "~Copyable element feasibility \u2014 1 genuine blocker (stdlib continuation), not 5",
+      "date": "2026-03-27",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "broadcast-bounded-replay-semantics.md",
+      "displayName": "Bounded Broadcast/Replay Semantics for Async.Broadcast",
+      "topic": "Bounded replay-window overflow semantics for Async.Broadcast (F-002 trigger); drop-oldest vs lossless vs policy-enum vs sibling types",
+      "date": "2026-07-20",
+      "status": "DECISION",
+      "statusDetail": "Tier 2; DECISION (Principal, 2026-07-20): option (e) drop-oldest + observable loss adopted; refinement landed 3e27e44..0b71caa",
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    }
+  ]
+}
