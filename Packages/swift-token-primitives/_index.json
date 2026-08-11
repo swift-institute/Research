@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "Research documents for swift-token-primitives.",
+  "scope": "swift-token-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "token-representation-model.md",
+      "displayName": "token-representation-model.md",
+      "topic": "Tier 2 design research — token kind representation, keyword structure, trivia placement, dependencies. Surveys swiftc, swift-syntax, rowan, Clang, tree-sitter. Recommends hybrid enum + UInt8 keyword + Text.Range token struct.",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    }
+  ]
+}

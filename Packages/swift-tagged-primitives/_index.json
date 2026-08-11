@@ -1,0 +1,208 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-01",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-tagged-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "sli-deliberate-absences.md",
+      "displayName": "sli-deliberate-absences",
+      "topic": "One-page catalogue of stdlib protocols that Tagged Primitives Standard Library Integration (SLI) does NOT conform Tagged to, plus SLI-shipped conformances with documented caveats. Three categories (Structural Swift-level blockers / Foundation axiom / Policy trade-off); each entry classified as HARD, SOFT-shipped-in-SLI, or SOFT-excluded-by-policy with the paired research doc + experiment under Research/principled-absence-*.md and Experiments/tagged-no-*/. Created 2026-05-01 to relocate the README's prior 200-word in-prose enumeration to a single linkable artifact, per cohort README evaluator-pass remediation (swift-institute/Research/cohort-readme-evaluator-pass.md).",
+      "date": "2026-05-01",
+      "status": "CATALOGUE",
+      "statusDetail": "Catalogue document. Indexes the 10 principled-absence-*.md research docs and the SLI-shipped-with-caveat conformances. Replaces in-README enumeration as the README's link target for 'See deliberate absences' pointers.",
+      "statusRaw": "CATALOGUE",
+      "tier": 2,
+      "scope": "swift-tagged-primitives"
+    },
+    {
+      "file": "principled-absence-niche-protocols.md",
+      "displayName": "principled-absence-niche-protocols",
+      "topic": "Per-protocol absence rationale for CustomPlaygroundDisplayConvertible, CodingKeyRepresentable, and Decodable double-try fallback (combined doc \u2014 niche / edge-case classification). Empirical experiment confirms each rationale: (A) CustomStringConvertible (in main) covers the playground-display use case; (B) Codable conditional encodes Tagged-as-value via Swift's default synthesis (keyed container {\"rawValue\": N} \u2014 empirically discovered, not single-value as initially expected; symmetric encode/decode); (C) Single Codable conformance produces single informative errors on decode failure \u2014 no double-try fallback masks errors. All three classified HARD absences (not in SLI) for distinct reasons: niche/deprecated, covered-by-simpler-conformance, anti-pattern (error masking).",
+      "date": "2026-04-30",
+      "status": "DECISION",
+      "statusDetail": "All three HARD absences (not in SLI). Different reasons: CustomPlaygroundDisplayConvertible is niche (CustomStringConvertible covers); CodingKeyRepresentable is niche (Codable covers Tagged-as-value); Decodable double-try is anti-pattern (masks errors). Keyed-vs-single-value Codable shape is an empirically-surfaced detail recorded in the doc.",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "principled-absence-foundation-protocols.md",
+      "displayName": "principled-absence-foundation-protocols",
+      "topic": "Per-protocol absence rationale for LocalizedError and UUID convenience inits (combined doc \u2014 same Foundation-dependency rationale). Both require import Foundation, which is structurally forbidden in the Institute primitives layer per [PRIM-FOUND-001]. Empirical experiment confirms: Tagged Primitives main is Foundation-free (this experiment imports Tagged_Primitives without import Foundation and works); LocalizedError + UUID conformances would require Foundation import. Classified HARD-BY-AXIOM absence \u2014 not a SLI candidate (SLI is also primitives-layer and inherits [PRIM-FOUND-001]). Consumer alternative: author conformances at consumer's layer where Foundation dependency is appropriate.",
+      "date": "2026-04-30",
+      "status": "DECISION",
+      "statusDetail": "HARD-BY-AXIOM absence. Forbidden by [PRIM-FOUND-001] regardless of consumer intent. Not in SLI. Consumer authors conformance at their own layer if they want it.",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "principled-absence-array-dict-literal.md",
+      "displayName": "principled-absence-array-dict-literal",
+      "topic": "Per-protocol classification for ExpressibleByArrayLiteral and ExpressibleByDictionaryLiteral. v1.2.0 (2026-04-30) reclassified from HARD-BY-POLICY to SOFT-shipped-in-SLI via documented unsafeBitCast carve-out \u2014 the FIRST AND ONLY [MEM-SAFE-001] exception in the package, bounded to two function-pointer reinterpretation sites at Tagged+Literals.swift:121, 133, marked with the unsafe expression keyword. v1.2.1 (2026-04-30) added the ABI commitment status section addressing variadic-vs-array function-type ABI equivalence, failure-mode containment, and recovery posture. The carve-out's confidence levels: operational correctness HIGH; runtime cost APPROXIMATELY EQUIVALENT to non-folded canonical RawValue init, HIGHER than constant-folded direct path due to unsafeBitCast's optimizer opacity (codegen evidence in Experiments/tagged-zero-cost-codegen/). Coverage: Array, ContiguousArray, Data, Set, Dictionary, and any custom ExpressibleByArrayLiteral / ExpressibleByDictionaryLiteral type.",
+      "date": "2026-04-30",
+      "status": "DECISION",
+      "statusDetail": "SOFT-shipped-in-SLI via documented unsafeBitCast carve-out. Bounded scope (2 sites at Tagged+Literals.swift:121, 133), unsafe keyword applied, ABI commitment status documented (current-implementation reliance with mitigation plan). Future SLI / main-target additions requiring unsafeBitCast need separate per-action authorization.",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "principled-absence-dynamicmemberlookup.md",
+      "displayName": "principled-absence-dynamicmemberlookup",
+      "topic": "Per-feature absence rationale for @dynamicMemberLookup. Distinct from protocol absences \u2014 @dynamicMemberLookup is a Swift attribute on the type declaration, not a protocol. Empirical experiment confirmed: cannot be added retroactively via extension. Therefore SLI opt-in structurally not authorable. Classified HARD absence. Type-boundary erosion argument applies: tagged.name would silently mean tagged.rawValue.name, hiding the wrapper boundary at every dot-syntax member access. Consumer alternative: explicit .rawValue access (recommended; aligns with Sequence/Collection unwrap pattern) OR domain-specific wrapper struct with own @dynamicMemberLookup if passthrough ergonomics are explicitly desired.",
+      "date": "2026-04-30",
+      "status": "DECISION",
+      "statusDetail": "HARD absence. Type-declaration-level attribute, not extensible. Recommended consumer pattern: explicit .rawValue access. Consumer-side @dynamicMemberLookup wrapper struct works for domains genuinely wanting passthrough.",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "principled-absence-additivearithmetic-family.md",
+      "displayName": "principled-absence-additivearithmetic-family",
+      "topic": "Per-protocol absence rationale for AdditiveArithmetic / Numeric / SignedNumeric / BinaryInteger / BinaryFloatingPoint (combined doc \u2014 same operator-forwarding footgun applies). Empirical experiment confirms Option B (SLI-style opt-in) IS authorable on Swift 6.3.1 \u2014 function-style witnesses bypass the ~Escapable blocker. BUT classified SOFT structurally / HARD semantically: the domain-blind arithmetic footgun is empirically demonstrated (UserID + UserID compiles, processUsers(start:count:) returns nonsensical UserID; literals compound the footgun). Recommendation: do NOT include in SLI \u2014 package-level import granularity is too coarse. Per-domain alternative (Counter authoring AdditiveArithmetic where the semantic IS arithmetic) is the recommended pattern.",
+      "date": "2026-04-30",
+      "status": "DECISION",
+      "statusDetail": "SOFT structurally, HARD semantically. The singular case where structural authorability and semantic correctness diverge \u2014 semantic wins. Not eligible for SLI; per-domain conformance is the correct pattern (Cardinal authors arithmetic; UserID does not).",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "principled-absence-sequence-collection.md",
+      "displayName": "principled-absence-sequence-collection",
+      "topic": "Per-protocol absence rationale for Sequence and Collection (combined doc \u2014 same wrapper-vs-content rationale). Empirical experiment confirms Option B (SLI-style opt-in) IS authorable on Swift 6.3.1 for both protocols \u2014 function-style witnesses (makeIterator, subscript, index(after:), etc.) bypass the structural ~Escapable blocker. Classified SOFT (SLI-eligible). Wrapper-vs-content conflation cost demonstrated empirically: a generic T: Sequence algorithm (sumElements) produces identical results for [Int] and Tagged<Tag, [Int]> \u2014 the phantom Tag is invisible. Option C (explicit .rawValue unwrap) is the preferred default for Institute consumers where type-boundary visibility is load-bearing.",
+      "date": "2026-04-30",
+      "status": "DECISION",
+      "statusDetail": "SOFT absence (SLI-eligible) for both Sequence and Collection. Conformances structurally authorable; wrapper-vs-content conflation cost is the consumer's accepted trade-off. Default-safe pattern is explicit .rawValue unwrap; SLI opt-in is for consumers integrating with external Sequence/Collection-constrained APIs.",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "principled-absence-losslessstringconvertible.md",
+      "displayName": "principled-absence-losslessstringconvertible",
+      "topic": "Per-protocol absence rationale for LosslessStringConvertible. Empirical experiment confirms Option B (SLI opt-in) IS authorable on Swift 6.3.1 \u2014 init?(_:) is function-style; description requirement is satisfied by Tagged's existing CustomStringConvertible conformance. Classified SOFT (SLI-eligible). Within-domain roundtrip holds (T(v.description) == v for same T); lossy-from-Tagged-perspective demonstrated empirically \u2014 a string '99' parses as both UserTag.ID(99) and OrderTag.ID(99); receiver type determines the Tag, not the string content. Per-domain wrapper alternative preserves the within-domain lossless guarantee genuinely.",
+      "date": "2026-04-30",
+      "status": "DECISION",
+      "statusDetail": "SOFT absence (SLI-eligible). Lossy-from-Tagged-perspective cost is real but the conformance is structurally authorable; consumers accept the cost when importing SLI. Option C (per-domain wrapper) is the recommended pattern for cross-process serialization where Tag must be preserved.",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "principled-absence-identifiable.md",
+      "displayName": "principled-absence-identifiable",
+      "topic": "Per-protocol absence rationale for Identifiable. Empirical experiment confirms Option B (SLI opt-in) IS authorable on Swift 6.3.1 \u2014 Identifiable's `var id: ID { get }` witness uses computed-forward access (`rawValue.id`), not direct stored-property access, bypassing the ~Escapable blocker that hit RawRepresentable. Classified SOFT (SLI-eligible). Identity-inversion cost demonstrated empirically: two Tagged values with different phantom Tags but the same RawValue.id are observed as the same id by Identifiable consumers. Per-domain alternative (Option C) demonstrated: Tagged itself acts as the Identifiable.ID of consumer-domain structs (User: Identifiable with id: UserTag.ID), preserving phantom-typed identity at the protocol layer.",
+      "date": "2026-04-30",
+      "status": "DECISION",
+      "statusDetail": "SOFT absence (SLI-eligible). Identity-inversion cost is real but the conformance is structurally authorable; consumers accept the cost when importing SLI. Option C (Tagged-as-id) is the recommended pattern for Institute consumers authoring their own domain types.",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "principled-absence-strideable.md",
+      "displayName": "principled-absence-strideable",
+      "topic": "Per-protocol absence rationale for Strideable. Empirical experiment confirms Option B (SLI opt-in conformance) IS authorable on Swift 6.3.1 \u2014 function-style requirements (distance(to:), advanced(by:)) bypass the structural ~Escapable blocker that hit RawRepresentable's stored-property-style getter. Classified SOFT (SLI-eligible). Same-domain ranges work; cross-domain ranges still rejected by phantom Tag. Caveat: importing SLI Strideable reactivates the literal-conformance footgun. Per-domain alternative (Option C) demonstrated via SparseUserID with valid-ID-position stride differing from raw-Int stride.",
+      "date": "2026-04-30",
+      "status": "DECISION",
+      "statusDetail": "SOFT absence (SLI-eligible). Empirically authorable; experiment verified opt-in works and per-domain alternative also works.",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "principled-absence-rawrepresentable.md",
+      "displayName": "principled-absence-rawrepresentable",
+      "topic": "Per-protocol absence rationale for RawRepresentable. Empirical experiment found a STRUCTURAL Swift-level blocker \u2014 three constraint shapes all fail with 'the get accessor cannot return a ~Escapable result'. RawRepresentable is not ~Escapable-aware; Tagged's structural ~Escapable declaration propagates through synthesized rawValue getter witness regardless of constraint shape. Reclassified from SOFT (originally proposed for SLI opt-in) to HARD (not authorable in any form on Swift 6.3.1). Consumer alternative: domain-specific wrapper struct with own conformance + meaningful failable-init validation. Forward-compatibility note: revisit if Swift makes RawRepresentable ~Escapable-aware.",
+      "date": "2026-04-30",
+      "status": "DECISION",
+      "statusDetail": "v1.1.0 reclassification: HARD absence (not authorable even via SLI on Swift 6.3.1). v1.0.0 SOFT classification superseded by same-day empirical experiment.",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "tagged-literal-conformances.md",
+      "displayName": "tagged-literal-conformances",
+      "topic": "Should Tagged conform to ExpressibleByIntegerLiteral/FloatLiteral in production? (v3.0: yes, with labeled non-identity inits)",
+      "date": "2026-03-04",
+      "status": "DECISION",
+      "statusDetail": "Prior DECISION; see tagged-literal-conformances-fresh-perspective for 2026-04 re-examination with new empirical findings",
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "comparative-analysis-pointfree-swift-tagged.md",
+      "displayName": "comparative-analysis-pointfree-swift-tagged",
+      "topic": "Comparative analysis of swift-tagged-primitives vs pointfreeco/swift-tagged",
+      "date": "2026-02-26",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "revisiting-tagged-production-literal-conformances.md",
+      "displayName": "revisiting-tagged-production-literal-conformances",
+      "topic": "Revisiting v2.0: identity-numeric safety enables production literal conformance with labeled non-identity inits",
+      "date": "2026-03-04",
+      "status": "DECISION",
+      "statusDetail": "Prior DECISION; see tagged-literal-conformances-fresh-perspective for 2026-04 re-examination",
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "tagged-literal-conformances-fresh-perspective.md",
+      "displayName": "tagged-literal-conformances-fresh-perspective",
+      "topic": "2026-04 re-examination: footgun dormant without Strideable but reactivates with it; consumer opt-in structurally impossible; recommendation leans toward keeping literals test-only",
+      "date": "2026-04-21",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "tagged-types-merits-completeness-and-naming.md",
+      "displayName": "tagged-types-merits-completeness-and-naming",
+      "topic": "Pre-0.1.0 merit / completeness / naming / five-axis lattice review. Confirms distinct position vs Point-Free + hand-rolled newtypes; no lattice cells missing at 0.1.0; every public declaration passes diametric-collision check. Flags ecosystem tier table stale post-9ac9b04 (swift-primitives, not this package).",
+      "date": "2026-04-24",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "sli-literal-vs-strideable-tradeoff.md",
+      "displayName": "sli-literal-vs-strideable-tradeoff",
+      "topic": "DECISION — when Strideable and ExpressibleBy*Literal are individually authorable in SLI but combine into a footgun (the silent-overload-resolution hazard documented in tagged-literal-conformances-fresh-perspective.md), which ships in SLI? Outcome: ship literals; remove Strideable from SLI. Per-domain Strideable on Index types (per swift-index-primitives) is unaffected. Consumers wanting generic-Tagged Strideable copy a 6-line extension into their own codebase; the literal-conformance footgun reactivation is the consumer's documented acceptance. Residual risk: if the consumer's downstream package adds Strideable to a Tagged-aliased type, the footgun fires for those Tagged types specifically — narrower blast radius than 'all SLI consumers'.",
+      "date": "2026-04-30",
+      "status": "DECISION",
+      "statusDetail": "Ship ExpressibleBy*Literal in SLI; exclude Strideable from SLI by policy trade-off. Strideable principled-absence doc updated to SOFT structurally + SLI-excluded-by-policy.",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-bundle-vs-per-conformance-granularity.md",
+      "displayName": "sli-bundle-vs-per-conformance-granularity",
+      "topic": "RECOMMENDATION — should the SLI library product split into per-conformance sub-targets (Tagged Primitives Identifiable, Tagged Primitives Literals, etc.) for granular consumer opt-in, or remain as a single bundle? Outcome: stay bundled for 0.1.x; revisit at 0.2.0 if a real consumer requirement surfaces. Rationale: cost-benefit doesn't favour splitting at current scale (5+ new products, asymmetry vs. swift-carrier-primitives precedent); the @_disfavoredOverload discipline IS bundle-level so per-literal splits don't change footgun behaviour; the bitcast carve-out's surface is bounded to 2 sites and auditable without separate sub-target. Codifies the future-evolution path: 0.2.0 minor-version bump may add per-conformance sub-targets while preserving the umbrella product. Closes the predicted forums-review Angle 1 (layering-modularity, score 52.46) sub-question raised by simulated post 11.",
+      "date": "2026-04-30",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Stay bundled for 0.1.x. Per-conformance sub-target split is the documented 0.2.0+ evolution path if a real consumer requirement materializes.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
+    }
+  ]
+}

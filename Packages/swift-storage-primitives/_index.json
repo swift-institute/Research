@@ -1,0 +1,262 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Storage Primitives Research",
+  "blurb": "Research documents backing the storage-primitives implementation.",
+  "scope": "swift-storage-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "storage-ownership-reference-synthesis.md",
+      "displayName": "storage-ownership-reference-synthesis",
+      "topic": "Master synthesis: conceptual model, canonical primitives, layering",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "storage-contiguous-api-design.md",
+      "displayName": "storage-contiguous-api-design",
+      "topic": "Span/MutableSpan API surface design",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "storage-contiguous-protocol-conformance.md",
+      "displayName": "storage-contiguous-protocol-conformance",
+      "topic": "Span.Protocol conformance",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "storage-inline-invariants.md",
+      "displayName": "storage-inline-invariants",
+      "topic": "Complete invariant catalog for Storage.Inline",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "inline-slot-type-organization.md",
+      "displayName": "inline-slot-type-organization",
+      "topic": "@_rawLayout for automatic optimal layout",
+      "date": "",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "inline-deinitialize-state-reset.md",
+      "displayName": "inline-deinitialize-state-reset",
+      "topic": "Preventing double-free footgun in Storage.Inline",
+      "date": "",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "per-slot-initialization-tracking.md",
+      "displayName": "per-slot-initialization-tracking",
+      "topic": "BitVector-based per-slot tracking to eliminate footgun",
+      "date": "",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "inline-bitvector-wordcount.md",
+      "displayName": "inline-bitvector-wordcount",
+      "topic": "Eliminating wordCount generic parameter",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "inline-storage-read-pointer-escape.md",
+      "displayName": "inline-storage-read-pointer-escape",
+      "topic": "Closure-based pointer access pattern",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "ring-buffer-index-arithmetic.md",
+      "displayName": "ring-buffer-index-arithmetic",
+      "topic": "Cyclic index arithmetic (\u2124/N\u2124 for Bounded, % for dynamic)",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "split-storage-design.md",
+      "displayName": "split-storage-design",
+      "topic": "Tier 2: Field-handle-based dual-lane metadata-driven storage",
+      "date": "",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "split-storage-naming.md",
+      "displayName": "split-storage-naming",
+      "topic": "Tier 2: Literature study on naming for dual-lane storage type",
+      "date": "",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "storage-pool-architecture.md",
+      "displayName": "storage-pool-architecture",
+      "topic": "Tier 3: Composition vs independence for Storage.Pool (superseded by memory-storage-composition-feasibility)",
+      "date": "",
+      "status": "SUPERSEDED",
+      "statusDetail": null,
+      "statusRaw": "SUPERSEDED",
+      "tier": 3,
+      "scope": null
+    },
+    {
+      "file": "bounded-unbounded-storage-inline-api.md",
+      "displayName": "bounded-unbounded-storage-inline-api",
+      "topic": "Dual public API for bounded (preferred) + unbounded (infrastructure) index access",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "inline-deinit-ownership.md",
+      "displayName": "inline-deinit-ownership",
+      "topic": "Where RAII cleanup lives: storage layer vs buffer layer (literature study)",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "inline-storage-layering.md",
+      "displayName": "inline-storage-layering",
+      "topic": "Separating raw addressable storage (memory layer) from initialization tracking (storage layer)",
+      "date": "",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "escapable-deinit-lifetime.md",
+      "displayName": "escapable-deinit-lifetime",
+      "topic": "~Escapable values in deinit: lifetime-dependence limitation",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "initialization-visibility.md",
+      "displayName": "initialization-visibility",
+      "topic": "Initialization property visibility to prevent state drift",
+      "date": "",
+      "status": "IN_PROGRESS",
+      "statusDetail": null,
+      "statusRaw": "IN_PROGRESS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "inline-pool-arena.md",
+      "displayName": "inline-pool-arena",
+      "topic": "Inline pool and arena storage",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "storage-primitives-modularization-review.md",
+      "displayName": "storage-primitives-modularization-review",
+      "topic": "Modularization review triggered by Chase-Lev surfacing an apparent (Heap, Single-lane, None) gap. Outcome: no new Storage primitive. The taxonomy is intentional curation, not an orthogonal grid; concurrent collections like Executor.Job.Deque are their own L1 primitive backed directly by ManagedBuffer, matching the stdlib _ContiguousArrayStorage pattern. ManagedBuffer is vestigial in the ecosystem; replacing it is a separate, larger effort. Tier 2.",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "storage-protocol-capacity-pilot.md",
+      "displayName": "storage-protocol-capacity-pilot",
+      "topic": "Storage.Protocol capacity pilot (Wave 1): Inline+Pool conformance, slotCapacity->capacity, SIL specialization gate",
+      "date": "2026-05-25",
+      "status": "CONFIRMED",
+      "statusDetail": "SIL gate PASS \u2014 0 witness_method on capacity/pointer(at:) for Inline (struct) + Pool (class), release + cross-module",
+      "statusRaw": "CONFIRMED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "storage-protocol-pointer-modernization.md",
+      "displayName": "storage-protocol-pointer-modernization",
+      "topic": "Replacing UnsafeMutablePointer in Storage.Protocol's single primitive with modern Span types for the public surface. Recommends Option C (single borrowing mutableSpan(at:) access primitive; init/move/deinit sink to the memory tier; Buffer.Linear recomposes on Span.Protocol + OutputSpan), with Option B (demoted @_spi raw primitive) as fallback if the borrowing-MutableSpan lifetime gate fails. Contingent on 3 feasibility gates. Tier 2.",
+      "date": "2026-06-02",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Contingent on feasibility gates (borrowing->MutableSpan over ~Copyable; OutputSpan ~Copyable; zero-witness SIL re-pass). Keeps borrowing per principal constraint = retains @unsafe escape hatch, not the sound @_lifetime(&self) pattern.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ],
+  "narrativeSections": [
+    {
+      "heading": "Key Architectural Decisions",
+      "body": "### @_rawLayout Migration (2026-02-05)\n\n`Storage.Inline` now uses `@_rawLayout(likeArrayOf: Element, count: capacity)` for automatic optimal layout:\n- **Before**: 64-byte fixed slots, physical slot \u2260 logical element\n- **After**: Element-sized slots, physical slot = logical element (1:1)\n\nThis enables Span access for Copyable elements and eliminates the slot/element distinction.\n\n### Storage Primitives\n\n\n`Heap` and `Inline` support `~Copyable` elements and conform to `Span.Protocol` for Copyable elements. `Split` (see `split-storage-design.md` v3.0.0) is proposed for metadata-driven dual-array structures like hash table metadata+payload. Access is via field handles (`Storage.Field<Value>`); design converged via Claude-ChatGPT collaborative review.\n\n| Type | Placement | Lifetime | Layout | Init Tracking |\n|---|---|---|---|---|\n| `Storage.Heap` | Heap | ARC | Dense (element stride) | `Storage.Initialization` |\n| `Storage.Inline<Element, capacity>` | Inline | Lexical | Dense (@_rawLayout) | `Bit.Vector.Static` |\n| `Storage.Split<Lane>` (proposed) | Heap | ARC | Dual-lane `[Lane...][Element...]` | None (metadata-driven) |\n| `Storage.Pool` | Heap | ARC | Dense (element stride) | `Bit.Vector` (per-slot) |"
+    },
+    {
+      "heading": "Status Legend",
+      "body": "| Status | Meaning |\n|---|---|\n| DECISION | Final decision documented and implemented |\n| RECOMMENDATION | Analysis complete, recommendation made |"
+    }
+  ]
+}

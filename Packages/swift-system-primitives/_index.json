@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-03",
+  "title": "swift-system-primitives Research Index",
+  "blurb": "",
+  "scope": "swift-system-primitives (swift-primitives)",
+  "documents": [
+    {
+      "path": "system-primitives-rawvalue-underlying-rename.md",
+      "title": "Tagged.underlying / Carrier.`Protocol` migration audit",
+      "summary": "Phase 1 design audit for the carrier/tagged/cardinal/ordinal rename cascade. Zero own-field rawValues; zero mechanical-rename hits; build green against migrated upstreams. Editorial Int/UInt64 SLI move flagged as separable follow-up."
+    }
+  ],
+  "narrativeSections": [
+    {
+      "heading": "Audits",
+      "body": "- `audit.md` — Platform compliance findings from ecosystem-wide audit"
+    }
+  ]
+}

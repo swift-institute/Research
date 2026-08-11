@@ -1,0 +1,192 @@
+{
+  "$schema": "../Schemas/research-migration-receipt-v1.json",
+  "destinationImportCommit": "29bddbf721df38e8cfebd4d83ce584539723241e",
+  "batch": "Research-B08",
+  "manifestSHA256": "4ee326eb712972d1e915273a6ef4e31995d064a2578f6c0e756f7661d4f8942a",
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/32",
+  "historyImport": false,
+  "sourceHistoryRetained": true,
+  "imports": [
+    {
+      "sourceRepository": "swift-primitives/swift-stack-primitives",
+      "sourceCommit": "cf26560b048294e4cb5ad7b2ac052aa3b436fd3f",
+      "sourcePath": "Research",
+      "sourceTree": "f4d13d8bf23edf403ff777a353de2585a0f15907",
+      "destinationPath": "Packages/swift-stack-primitives",
+      "provenanceIndex": "Packages/swift-stack-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-storage-generational-primitives",
+      "sourceCommit": "96d370e387d5c0263ce48bcaa5f51462c6911132",
+      "sourcePath": "Research",
+      "sourceTree": "d73907d800190c0beaf5d08135365400cb3338cf",
+      "destinationPath": "Packages/swift-storage-generational-primitives",
+      "provenanceIndex": "Packages/swift-storage-generational-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-storage-primitives",
+      "sourceCommit": "8a848ec137c7afdd34972f6836e194e8802f4c28",
+      "sourcePath": "Research",
+      "sourceTree": "f31b776f713ff39c38a31740f4c5119042d27441",
+      "destinationPath": "Packages/swift-storage-primitives",
+      "provenanceIndex": "Packages/swift-storage-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-storage-split-primitives",
+      "sourceCommit": "5d8d297e18fe73e93353f72d7413d46c2d1f3bba",
+      "sourcePath": "Research",
+      "sourceTree": "d7d711b9a3abac26fb8e9d6337226ad39c70f0b2",
+      "destinationPath": "Packages/swift-storage-split-primitives",
+      "provenanceIndex": "Packages/swift-storage-split-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-string-primitives",
+      "sourceCommit": "400da5a7dad6089be1f9b4cf8c790fbd6f83363a",
+      "sourcePath": "Research",
+      "sourceTree": "caf8adc2c5d8814bb5d0f39bd55f03d3a7ce5c82",
+      "destinationPath": "Packages/swift-string-primitives",
+      "provenanceIndex": "Packages/swift-string-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-structured-queries-primitives",
+      "sourceCommit": "c473364004a172316075ffb67eb73a8722e8577d",
+      "sourcePath": "Research",
+      "sourceTree": "d9385160e4f9ccd4379aa4a890886f85faf84151",
+      "destinationPath": "Packages/swift-structured-queries-primitives",
+      "provenanceIndex": "Packages/swift-structured-queries-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-symmetry-primitives",
+      "sourceCommit": "7377990768de118de6b66d3cd29c505f0b71a2c5",
+      "sourcePath": "Research",
+      "sourceTree": "7a3da41a135f10fa03a91be2fb4f01614f7b0630",
+      "destinationPath": "Packages/swift-symmetry-primitives",
+      "provenanceIndex": "Packages/swift-symmetry-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-system-primitives",
+      "sourceCommit": "edd5a0260b2b1b2faf5e70e2a9a100c4534467c0",
+      "sourcePath": "Research",
+      "sourceTree": "98ead5a6fc7029e156aa455874756b3b918ebf82",
+      "destinationPath": "Packages/swift-system-primitives",
+      "provenanceIndex": "Packages/swift-system-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-tagged-primitives",
+      "sourceCommit": "7a13825eab48f6b0641491b244cea72291a4d6a7",
+      "sourcePath": "Research",
+      "sourceTree": "2b021522e71f6ce0fb48dfb9d254970468735067",
+      "destinationPath": "Packages/swift-tagged-primitives",
+      "provenanceIndex": "Packages/swift-tagged-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-terminal-primitives",
+      "sourceCommit": "d459b630c8fc21d49f5a18c7c8deb47e4d74e4e1",
+      "sourcePath": "Research",
+      "sourceTree": "8e55c399dfd84472fd0c701db39ae2543ac93074",
+      "destinationPath": "Packages/swift-terminal-primitives",
+      "provenanceIndex": "Packages/swift-terminal-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-test-primitives",
+      "sourceCommit": "793a691f9374fcd4ba4c083c847ff12fdca29cfd",
+      "sourcePath": "Research",
+      "sourceTree": "e914f3d1fbf6b3c5c4c9e98fe25644c573808881",
+      "destinationPath": "Packages/swift-test-primitives",
+      "provenanceIndex": "Packages/swift-test-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-text-primitives",
+      "sourceCommit": "01b406ec1351f542ead2321cd0a5ec3b779753b7",
+      "sourcePath": "Research",
+      "sourceTree": "55251ebd5ce073a2992376d537486cf866636605",
+      "destinationPath": "Packages/swift-text-primitives",
+      "provenanceIndex": "Packages/swift-text-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-time-primitives",
+      "sourceCommit": "417cd4fe24def1351d354e50d1172d631d394173",
+      "sourcePath": "Research",
+      "sourceTree": "bb083061cf4d1cdc5d7348af62a476a79021949e",
+      "destinationPath": "Packages/swift-time-primitives",
+      "provenanceIndex": "Packages/swift-time-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-token-primitives",
+      "sourceCommit": "8749bcc48fa2fae44411690f65d735a64e330ec7",
+      "sourcePath": "Research",
+      "sourceTree": "9ced794ba2da6d16fe5551378335d1e28ad8269a",
+      "destinationPath": "Packages/swift-token-primitives",
+      "provenanceIndex": "Packages/swift-token-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-tree-primitives",
+      "sourceCommit": "3829ae133c755338d537b188747007fc7d785629",
+      "sourcePath": "Research",
+      "sourceTree": "e725ab06339901ef73419f29f8f9764892aaea10",
+      "destinationPath": "Packages/swift-tree-primitives",
+      "provenanceIndex": "Packages/swift-tree-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    }
+  ]
+}
