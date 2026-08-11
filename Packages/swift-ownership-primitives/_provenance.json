@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "87bf02621ff61a8a8bb9a6fe174a6efa9c8bcf31",
+  "sourceRepository": "swift-primitives/swift-ownership-primitives",
+  "sourceCommit": "e5a8d3550125e1205b90cad51ead64e34b8e40db",
+  "sourcePath": "Research",
+  "sourceTree": "727f608ed6c787177446e2d795ad3f0eced52582",
+  "destinationPath": "Packages/swift-ownership-primitives",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/32"
+}

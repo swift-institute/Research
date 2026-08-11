@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "87bf02621ff61a8a8bb9a6fe174a6efa9c8bcf31",
+  "sourceRepository": "swift-primitives/swift-comparison-primitives",
+  "sourceCommit": "9f5f84624d218586c3ab2b385d63bd08039db9bd",
+  "sourcePath": "Research",
+  "sourceTree": "75a3786d3fb2ca981a26066048ce88b2ff0eb6e9",
+  "destinationPath": "Packages/swift-comparison-primitives",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/32"
+}

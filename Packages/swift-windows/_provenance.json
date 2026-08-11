@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "87bf02621ff61a8a8bb9a6fe174a6efa9c8bcf31",
+  "sourceRepository": "swift-foundations/swift-windows",
+  "sourceCommit": "41e619315c812bf3c24e358fe675ba7d2e9718a8",
+  "sourcePath": "Research",
+  "sourceTree": "3bbf757418c1eb6e0400db29621829d8c9d03ffc",
+  "destinationPath": "Packages/swift-windows",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/32"
+}

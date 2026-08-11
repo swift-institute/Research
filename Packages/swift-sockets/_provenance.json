@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "87bf02621ff61a8a8bb9a6fe174a6efa9c8bcf31",
+  "sourceRepository": "swift-foundations/swift-sockets",
+  "sourceCommit": "42db47856d66532391baddd16f2e485fea98073e",
+  "sourcePath": "Research",
+  "sourceTree": "5767a6522abbdd34f77fdb36f12efb29b806b2ce",
+  "destinationPath": "Packages/swift-sockets",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/32"
+}
