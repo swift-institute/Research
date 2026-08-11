@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "29bddbf721df38e8cfebd4d83ce584539723241e",
+  "sourceRepository": "swift-primitives/swift-symmetry-primitives",
+  "sourceCommit": "7377990768de118de6b66d3cd29c505f0b71a2c5",
+  "sourcePath": "Research",
+  "sourceTree": "7a3da41a135f10fa03a91be2fb4f01614f7b0630",
+  "destinationPath": "Packages/swift-symmetry-primitives",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/32"
+}
