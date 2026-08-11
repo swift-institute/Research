@@ -1,0 +1,32 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-09",
+  "title": "Affine Primitives Research",
+  "blurb": "",
+  "scope": "swift-affine-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "affine-primitives-rawvalue-underlying-rename.md",
+      "displayName": "affine-primitives-rawvalue-underlying-rename.md",
+      "topic": "rawValue → underlying rename — alignment with upstream Carrier rename",
+      "date": "2026-05-03",
+      "status": "DEFERRED",
+      "statusDetail": "Cohort-wide policy C1 (2026-05-09): Story 1 launches at the current rawValue shape; the rename is scheduled but unscoped for a future major version. The trivial-self-carrier shape (Affine.Discrete.Vector.Underlying = Affine.Discrete.Vector) is preserved across 0.x for cohort coherence.",
+      "statusRaw": "DEFERRED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "vector-unit-displacement-layering.md",
+      "displayName": "vector-unit-displacement-layering.md",
+      "topic": "Layering of `.one` for Affine.Discrete.Vector",
+      "date": "2026-02-13",
+      "status": "SUPERSEDED",
+      "statusDetail": "Superseded 2026-05-09 by the Carrier migration; vector `.one` is now provided by the `Carrier.Protocol where Underlying == Affine.Discrete.Vector` extension and is visible at every consumer of the typed-offset surface.",
+      "statusRaw": "SUPERSEDED",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

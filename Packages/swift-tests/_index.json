@@ -1,0 +1,142 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-tests (swift-foundations)",
+  "documents": [
+    {
+      "file": "atexit-sigbus-inline-snapshot-writeback.md",
+      "displayName": "atexit-sigbus-inline-snapshot-writeback",
+      "topic": "atexit SIGBUS crash from inline snapshot write-back under Swift Testing runner",
+      "date": "2026-03-03",
+      "status": "IN_PROGRESS",
+      "statusDetail": null,
+      "statusRaw": "IN_PROGRESS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "rich-performance-diagnostics.md",
+      "displayName": "rich-performance-diagnostics",
+      "topic": "Rich diagnostic output for AI-actionable performance regression analysis",
+      "date": "2026-03-03",
+      "status": "PARTIALLY",
+      "statusDetail": "IMPLEMENTED",
+      "statusRaw": "PARTIALLY IMPLEMENTED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "serial-executor-foundation-removal.md",
+      "displayName": "serial-executor-foundation-removal",
+      "topic": "Removing Foundation dependency from SerialExecutor",
+      "date": "2026-02-26",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "sink-concurrent-sharing-pattern.md",
+      "displayName": "sink-concurrent-sharing-pattern",
+      "topic": "Ownership pattern for sharing ~Copyable Sink across concurrent tasks",
+      "date": "2026-03-02",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "~~benchmark-serial-execution~~",
+      "displayName": "~~benchmark-serial-execution~~",
+      "topic": "Moved to swift-institute/Research/ (ecosystem scope per [META-017])",
+      "date": "2026-04-01",
+      "status": "MOVED",
+      "statusDetail": null,
+      "statusRaw": "MOVED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": ".ecosystem-metrics-survey.md",
+      "displayName": ".ecosystem-metrics-survey",
+      "topic": "Exhaustive survey of types aggregating numeric observations across foundations layer (swift-io, swift-pools, swift-witnesses)",
+      "date": "2026-02-28",
+      "status": "WIP",
+      "statusDetail": null,
+      "statusRaw": "WIP",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": ".fp-type-theory-statistics.md",
+      "displayName": ".fp-type-theory-statistics",
+      "topic": "Functional programming and type theory approaches to typed statistical computation (Haskell, Scala, etc.)",
+      "date": "2026-02-28",
+      "status": "WIP",
+      "statusDetail": null,
+      "statusRaw": "WIP",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": ".generic-sample-analysis.md",
+      "displayName": ".generic-sample-analysis",
+      "topic": "Whether Measurement should be generalized to Sample\\<T\\> for broader reuse",
+      "date": "2026-02-28",
+      "status": "WIP",
+      "statusDetail": null,
+      "statusRaw": "WIP",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": ".ideal-type-system.md",
+      "displayName": ".ideal-type-system",
+      "topic": "First-principles design of ideal measurement/statistics type system",
+      "date": "2026-02-28",
+      "status": "WIP",
+      "statusDetail": null,
+      "statusRaw": "WIP",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": ".mathematical-foundations.md",
+      "displayName": ".mathematical-foundations",
+      "topic": "Mathematical foundations of statistical aggregation: decomposable vs non-decomposable statistics",
+      "date": "2026-02-28",
+      "status": "WIP",
+      "statusDetail": null,
+      "statusRaw": "WIP",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": ".primitives-triage.md",
+      "displayName": ".primitives-triage",
+      "topic": "Primitives package triage for swift-sample-primitives: 15+ packages evaluated, all SKIP for v1",
+      "date": "2026-02-28",
+      "status": "WIP",
+      "statusDetail": null,
+      "statusRaw": "WIP",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": ".prior-art-benchmarking.md",
+      "displayName": ".prior-art-benchmarking",
+      "topic": "Prior art: benchmarking and statistical measurement infrastructure across major ecosystems",
+      "date": "2026-02-28",
+      "status": "WIP",
+      "statusDetail": null,
+      "statusRaw": "WIP",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

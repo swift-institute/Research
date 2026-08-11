@@ -1,0 +1,43 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-witnesses (swift-foundations)",
+  "documents": [
+    {
+      "file": "borrowing-observation-experiment/",
+      "displayName": "borrowing-observation-experiment",
+      "topic": "Verify ~Copyable borrow-and-return patterns under Swift 6.2 with Lifetimes feature",
+      "date": "2026-03-04",
+      "status": "CONFIRMED",
+      "statusDetail": null,
+      "statusRaw": "CONFIRMED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "noncopyable-type-detection-in-witness-macro.md",
+      "displayName": "noncopyable-type-detection-in-witness-macro.md",
+      "topic": "Detecting ~Copyable types in @Witness macro for Action/Result enum generation",
+      "date": "2026-03-04",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "action-type-naming.md",
+      "displayName": "action-type-naming.md",
+      "topic": "Literature survey: naming the struct→enum / enum→struct generated types (Action vs Dual)",
+      "date": "2026-03-16",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-algebra-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "phase-rotation-placement.md",
+      "displayName": "phase-rotation-placement.md",
+      "topic": "Phase and discrete rotation type placement",
+      "date": "2026-01-29",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "deferred-work.md",
+      "displayName": "deferred-work.md",
+      "topic": "Future work deferred from correctness round (items 1–6 implemented)",
+      "date": "2026-02-03",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

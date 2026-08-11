@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-11",
+  "title": "Research Index — swift-bifunctor-primitives",
+  "blurb": "",
+  "scope": "swift-bifunctor-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "bifunctor-primitives-package-home.md",
+      "displayName": "bifunctor-primitives-package-home.md",
+      "topic": "bifunctor-primitives-package-home.md",
+      "date": "2026-08-11",
+      "status": "MIGRATED",
+      "statusDetail": null,
+      "statusRaw": "MIGRATED",
+      "tier": null,
+      "scope": "package-specific"
+    }
+  ]
+}
