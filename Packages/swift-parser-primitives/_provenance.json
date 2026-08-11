@@ -1,6 +1,6 @@
 {
   "$schema": "../../Schemas/research-migration-provenance-v1.json",
-  "destinationImportCommit": "d5bdb4fae8a68cf066c73ed9d7a9cef222bebc95",
+  "destinationImportCommit": "32d1f65cb40540ecb9e90809f7ec359cd83e0659",
   "sourceRepository": "swift-primitives/swift-parser-primitives",
   "sourceCommit": "86ff390f5ed9fd04d04a294c24ce0023d2e27c5c",
   "sourcePath": "Research",
