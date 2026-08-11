@@ -1,0 +1,133 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-13",
+  "title": "Research Index",
+  "blurb": "swift-linter package research and verification records.",
+  "scope": "swift-linter (swift-foundations)",
+  "documents": [
+    {
+      "file": "near-instant-lint-with-external-rule-loading.md",
+      "displayName": "near-instant-lint-with-external-rule-loading",
+      "topic": "Reconciles near-instant warm runs with external/consumer-declared rule loading. Establishes (empirically) that SwiftSyntax-from-source (~155s Linux) is the unavoidable floor, compiled twice per run (engine CLI + eval), and that no supported Linux mechanism ships a non-recompiled Swift engine/SwiftSyntax library (SE-0272/0305/0482; prebuilt swift-syntax auto-disabled for non-macro). Reconciliation principle: separate rule SELECTION (dynamic, in Lint.swift) from rule COMPILATION (lifted out of the per-run hot path). Recommends a phased path: Phase 0 engine-as-URL-dep (unlocks the binary), Phase 1 prebuilt CLI binary (-270s), Phase 2 free local .build warmth + optional --watch, Phase 3 prebuilt rule-pack RUNNER executables → near-instant CI for 77/78 pure-bundle consumers (eval fallback for the 1 inline-rule consumer). Rejects binary rule libraries (no Swift binary lib on Linux), dlopen plugins (same-toolchain @_spi, still compiles), CI eval caching (fights the no-cache decision; gated on version-pinning), and daemon-for-CI (ephemeral). Census: 78 consumers, 77 pure-bundle, 1 inline (carrier).",
+      "date": "2026-06-24",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Phases 0-2 low-risk/unconditional; Phase 3 (prebuilt rule-pack runners) is the structural reconciliation and carries the one design-change decision (variant 3-i combined runner vs 3-ii per-bundle) for principal ratification. Supersedes the eval-cache §4 of REPORT-swift-linter-binary-product-synthesis.md.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "lsp-sourcekit-integration.md",
+      "displayName": "lsp-sourcekit-integration",
+      "topic": "Surveys 6 integration shapes; RECOMMENDS Shape F (precomputed conformance oracle), DEFERS live LSP/SourceKit. v1.1.0 adds Q6 (design-space exploration), Q7 (domain framing), full cross-ecosystem literature study, long-term framing. v1.2.0 promotes RECOMMENDATION → DECISION after spike: 136 stdlib refinement pairs extracted; rule consumes auto-generated table. v1.3.0 adds Phase 2.5 user-domain scan: 28 institute symbol-graph files yield 2 cross-module pairs (Comparison→Equation, Hash→Equation) with leaf-name collision per `Namespace.\\`Protocol\\`` convention; rule would need path-aware matching to consume. v1.4.0 (2026-05-13) persists post-decision conversation work as durable record: adds Q8 sister-product map (Concept A `swift-institute-lsp` NEW sibling, Concept B `swift-linter analyze` mode EXTEND, Concept C `swift-refactor` LATENT) with bird's-eye stacking diagram and activation triggers; adds Open Follow-ups section enumerating done / deferred / queued / handed-off items with dispositions including the conditional-`~Copyable` rule-design concern.",
+      "date": "2026-05-13",
+      "status": "DECISION",
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "2026-05-12-thread-e-public-dsl-rename-catalog.md",
+      "displayName": "thread-e-public-dsl-rename-catalog",
+      "topic": "Thread E Phase 2 — per-rename catalog covering 24 public-DSL compound-identifier + compound-type-name findings across swift-linter (15+3) and swift-linter-primitives (6), plus 1 carry-forward row from swift-primitives-linter-rules. Each row evaluates Shape A (rename only) vs Shape B (rename + typed-primitive adoption) through the maximal-ecosystem-reuse lens, with recommendation + cascade scope + principal-disposition checkbox. Phase 3 execution is gated on principal sign-off of each row.",
+      "date": "2026-05-12",
+      "status": "DISPOSITIONED",
+      "statusDetail": "Principal dispositioned 2026-05-13. All rows have final shapes; the larger.smaller naming principle applies throughout (rules.disabled, rules.effective, severity.default). Three scope ambiguities resolved: 33 internal swift-linter findings get proper renames; brandOwner refactored to primitives.excluding(rules:) with cascade to 3 consumer packages; Row 24 deferred (target Lint.File.Single in swift-manifests). Phase 3 execution proceeds linter-primitives-first.",
+      "statusRaw": "DISPOSITIONED",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "2026-05-07-canonical-tier-rule-activation-design.md",
+      "displayName": "canonical-tier-rule-activation-design",
+      "topic": "Cross-package design analysis of three options for canonical-tier rule activation: (A) single-file Lint.swift + default rule-pack umbrella import; (B) Lint/ nested SwiftPM package as the canonical form with single-file as a sugar variant; (C) Lint.Manifest.defaults() factory baked into the linter binary. Recommends B for production use with A as a future Phase-5 sugar form; rejects C on binary-coupling grounds. Tier 2 design analysis grounded in the Phase A PoC and the post-Phase-B.1 decoupling.",
+      "date": "2026-05-07",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Recommends Option B (Lint/ canonical) with Option A deferred to Phase 5. Phase 5 mechanism design (single-file dep-discovery) is open; two candidates surfaced (bundled rule-pack registry vs swift-manifest dep injection) require prototyping before the recommendation becomes a decision.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "2026-05-07-poc-lint-nested-package.md",
+      "displayName": "poc-lint-nested-package",
+      "topic": "Phase A proof-of-concept verification of the Lint/ nested-package mechanism. Validates end-to-end that a consumer's Lint/ SwiftPM package activates rule packs via the linter CLI dispatch and that the R5 27-hit invariant holds.",
+      "date": "2026-05-07",
+      "status": "IMPLEMENTED",
+      "statusRaw": "IMPLEMENTED",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "2026-05-07-phase-b1-decouple.md",
+      "displayName": "phase-b1-decouple",
+      "topic": "Phase B.1 verification record — swift-linter decoupled from swift-linter-rules. The engine ships zero built-in rules; rule registration is the consumer's responsibility via a Lint/ nested package or (future) single-file umbrella import.",
+      "date": "2026-05-07",
+      "status": "IMPLEMENTED",
+      "statusRaw": "IMPLEMENTED",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "2026-05-07-phase-b4-wave-1-migration.md",
+      "displayName": "phase-b4-wave-1-migration",
+      "topic": "Phase B.4 verification record — wave-1 rules migrated to the post-architecture shape. Confirms each rule's predicate continues to fire post-decouple under the new activation mechanism.",
+      "date": "2026-05-07",
+      "status": "IMPLEMENTED",
+      "statusRaw": "IMPLEMENTED",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "2026-05-07-phase-2-5b-cohort-gate.md",
+      "displayName": "phase-2-5b-cohort-gate",
+      "topic": "Phase 2.5b cohort gate — Sanitize / TempPath ecosystem promotion verification record covering the cohort's pre-merge invariants.",
+      "date": "2026-05-07",
+      "status": "IMPLEMENTED",
+      "statusRaw": "IMPLEMENTED",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "2026-05-07-day-1-progress.md",
+      "displayName": "day-1-progress",
+      "topic": "Architecture cohort Day 1 progress note. Records the in-flight state of Phase A + B.1 + B.4 work and downstream impact on swift-linter consumers.",
+      "date": "2026-05-07",
+      "status": "IMPLEMENTED",
+      "statusRaw": "IMPLEMENTED",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "2026-05-07-code-surface-cleanup.md",
+      "displayName": "code-surface-cleanup",
+      "topic": "Code-surface cleanup verification record for the 2026-05-07 cohort. Confirms convention compliance across the touched modules post-cleanup.",
+      "date": "2026-05-07",
+      "status": "IMPLEMENTED",
+      "statusRaw": "IMPLEMENTED",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "2026-05-06-r5-postpush-chain-gate.md",
+      "displayName": "r5-postpush-chain-gate",
+      "topic": "Post-push #8 verification gate — R5 27-hit invariant verified via the chain-resolved code path with all parent URLs resolving post-push. Sibling to the prepush-fallback-gate doc which exercised the consumer-only fallback path.",
+      "date": "2026-05-06",
+      "status": "IMPLEMENTED",
+      "statusRaw": "IMPLEMENTED",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "2026-05-06-r5-prepush-fallback-gate.md",
+      "displayName": "r5-prepush-fallback-gate",
+      "topic": "Pre-push #8 verification gate — R5 27-hit invariant verified via the v2 consumer-only fallback path (parent URLs return 404 pre-push; WARN-signal-bearing fallback fires). Sibling to the postpush-chain-gate doc.",
+      "date": "2026-05-06",
+      "status": "IMPLEMENTED",
+      "statusRaw": "IMPLEMENTED",
+      "tier": 1,
+      "scope": null
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-comparison-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "Comparison Primitives Design.md",
+      "displayName": "Comparison Primitives Design.md",
+      "topic": "Comparison primitives design",
+      "date": "2026-01-22",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "escapable-conformer-support.md",
+      "displayName": "escapable-conformer-support.md",
+      "topic": "DECISION (v1.0.0): Protocol upgraded to admit ~Escapable conformers in addition to ~Copyable. Borrowing-parameter shape supports ~Escapable Self correctly. SE-0499 alignment: stdlib counterpart in Swift 6.4 is also ~Copyable & ~Escapable-permissive. Existing Copyable + Escapable conformers unaffected.",
+      "status": "DECISION",
+      "tier": 1,
+      "scope": "package"
+    }
+  ]
+}

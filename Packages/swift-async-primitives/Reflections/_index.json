@@ -1,0 +1,24 @@
+{
+  "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-25",
+  "title": "Reflections — swift-async-primitives",
+  "blurb": "",
+  "scope": "swift-async-primitives (swift-primitives)",
+  "reflections": [
+    {
+      "file": "2026-04-25-async-lifecycle-error-domain-specific-revision.md",
+      "displayName": "2026-04-25-async-lifecycle-error-domain-specific-revision.md",
+      "date": "2026-04-25",
+      "title": "Async.Lifecycle.Error Refactor — Mid-Cycle Domain-Specific Revision",
+      "packages": [
+        "swift-async-primitives"
+      ],
+      "status": "pending",
+      "statusRaw": "pending",
+      "processedDate": null,
+      "triageOutcome": null,
+      "outcomeDescription": null
+    }
+  ]
+}
