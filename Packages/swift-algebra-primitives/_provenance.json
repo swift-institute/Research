@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "19dcaf04aa77c9ac8deda86a699316f6ce653a3f",
+  "sourceRepository": "swift-primitives/swift-algebra-primitives",
+  "sourceCommit": "f9acf157949e7ce343ce6acff62f31376db49f4e",
+  "sourcePath": "Research",
+  "sourceTree": "8612f04ade8ead6586db98954550410e3d9224ad",
+  "destinationPath": "Packages/swift-algebra-primitives",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/21"
+}

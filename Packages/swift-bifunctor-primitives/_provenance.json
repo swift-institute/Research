@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "19dcaf04aa77c9ac8deda86a699316f6ce653a3f",
+  "sourceRepository": "swift-primitives/swift-bifunctor-primitives",
+  "sourceCommit": "c1c76389a970c6f08b55299e04048f142b4dc996",
+  "sourcePath": "Research",
+  "sourceTree": "21511013b618ebdf080c238f46c784e55fb1f51d",
+  "destinationPath": "Packages/swift-bifunctor-primitives",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/21"
+}

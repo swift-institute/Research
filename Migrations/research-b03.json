@@ -1,0 +1,144 @@
+{
+  "$schema": "../Schemas/research-migration-receipt-v1.json",
+  "destinationImportCommit": "19dcaf04aa77c9ac8deda86a699316f6ce653a3f",
+  "batch": "Research-B03",
+  "manifestSHA256": "4ee326eb712972d1e915273a6ef4e31995d064a2578f6c0e756f7661d4f8942a",
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/21",
+  "historyImport": false,
+  "sourceHistoryRetained": true,
+  "imports": [
+    {
+      "sourceRepository": "swift-foundations/swift-tests",
+      "sourceCommit": "cca9e320a481469ab3abccd45a8b3a14758ad9ea",
+      "sourcePath": "Research",
+      "sourceTree": "2fe0945fc0d0883e09ddcf71627e6511fcdb4b89",
+      "destinationPath": "Packages/swift-tests",
+      "provenanceIndex": "Packages/swift-tests/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-threads",
+      "sourceCommit": "a202369b7b3dc9cb342ae4ec156d2226fc265542",
+      "sourcePath": "Research",
+      "sourceTree": "334836378caa33bf77cf382bbbec460993429bfb",
+      "destinationPath": "Packages/swift-threads",
+      "provenanceIndex": "Packages/swift-threads/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-translating",
+      "sourceCommit": "013d20bf81bf738634ab4f919a83be52f814a0a8",
+      "sourcePath": "Research",
+      "sourceTree": "65c1010e69330db8ec21673f6696394163b25747",
+      "destinationPath": "Packages/swift-translating",
+      "provenanceIndex": "Packages/swift-translating/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-witnesses",
+      "sourceCommit": "4e6cd696d09af160ddedf2d8d942839d45c22b6e",
+      "sourcePath": "Research",
+      "sourceTree": "9451964ec7957619fabb14d2017effb4e9abe121",
+      "destinationPath": "Packages/swift-witnesses",
+      "provenanceIndex": "Packages/swift-witnesses/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-affine-primitives",
+      "sourceCommit": "609904f295ace446ed64266804dd9d6f10d84901",
+      "sourcePath": "Research",
+      "sourceTree": "0afa8b73bdf7f8bb8444689c8dee840847de2d86",
+      "destinationPath": "Packages/swift-affine-primitives",
+      "provenanceIndex": "Packages/swift-affine-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-algebra-modular-primitives",
+      "sourceCommit": "2b32622e7c546c569b19dff5428e2cdcb33845d1",
+      "sourcePath": "Research",
+      "sourceTree": "14fc4fd7973491a21c10247ca1c46199740efd4b",
+      "destinationPath": "Packages/swift-algebra-modular-primitives",
+      "provenanceIndex": "Packages/swift-algebra-modular-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-algebra-primitives",
+      "sourceCommit": "f9acf157949e7ce343ce6acff62f31376db49f4e",
+      "sourcePath": "Research",
+      "sourceTree": "8612f04ade8ead6586db98954550410e3d9224ad",
+      "destinationPath": "Packages/swift-algebra-primitives",
+      "provenanceIndex": "Packages/swift-algebra-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-ascii-primitives",
+      "sourceCommit": "0ba20e8edaedf877b1c4a80bfd6087389853c430",
+      "sourcePath": "Research",
+      "sourceTree": "04675c49a55c88f2e588c79401fc1b8687b2e5e9",
+      "destinationPath": "Packages/swift-ascii-primitives",
+      "provenanceIndex": "Packages/swift-ascii-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-bifunctor-primitives",
+      "sourceCommit": "c1c76389a970c6f08b55299e04048f142b4dc996",
+      "sourcePath": "Research",
+      "sourceTree": "21511013b618ebdf080c238f46c784e55fb1f51d",
+      "destinationPath": "Packages/swift-bifunctor-primitives",
+      "provenanceIndex": "Packages/swift-bifunctor-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-binary-parser-primitives",
+      "sourceCommit": "489c30bbe060a18ff6d8e513266407dcd412bfa4",
+      "sourcePath": "Research",
+      "sourceTree": "d5169bcdfa1108cf610b8ac7cb5ca959bbfd7090",
+      "destinationPath": "Packages/swift-binary-parser-primitives",
+      "provenanceIndex": "Packages/swift-binary-parser-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-bit-index-primitives",
+      "sourceCommit": "ff18f0073b2da71fbc22161da5fdb245c7705a7b",
+      "sourcePath": "Research",
+      "sourceTree": "cabfe4ca0bffc83cceaa0d2d9fb2832b6183e17f",
+      "destinationPath": "Packages/swift-bit-index-primitives",
+      "provenanceIndex": "Packages/swift-bit-index-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    }
+  ]
+}

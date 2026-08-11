@@ -1,0 +1,54 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-11",
+  "title": "Research Index — swift-ascii-primitives",
+  "blurb": "",
+  "scope": "swift-ascii-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "ascii-typed-constants-design.md",
+      "displayName": "ascii-typed-constants-design.md",
+      "topic": "ascii-typed-constants-design.md",
+      "date": "2026-08-11",
+      "status": "MIGRATED",
+      "statusDetail": null,
+      "statusRaw": "MIGRATED",
+      "tier": null,
+      "scope": "package-specific"
+    },
+    {
+      "file": "ascii-primitives-rawvalue-underlying-rename.md",
+      "displayName": "ascii-primitives-rawvalue-underlying-rename.md",
+      "topic": "ascii-primitives-rawvalue-underlying-rename.md",
+      "date": "2026-08-11",
+      "status": "MIGRATED",
+      "statusDetail": null,
+      "statusRaw": "MIGRATED",
+      "tier": null,
+      "scope": "package-specific"
+    },
+    {
+      "file": "audit.md",
+      "displayName": "audit.md",
+      "topic": "audit.md",
+      "date": "2026-08-11",
+      "status": "MIGRATED",
+      "statusDetail": null,
+      "statusRaw": "MIGRATED",
+      "tier": null,
+      "scope": "package-specific"
+    },
+    {
+      "file": "ascii-migration-category-b.md",
+      "displayName": "ascii-migration-category-b.md",
+      "topic": "ascii-migration-category-b.md",
+      "date": "2026-08-11",
+      "status": "MIGRATED",
+      "statusDetail": null,
+      "statusRaw": "MIGRATED",
+      "tier": null,
+      "scope": "package-specific"
+    }
+  ]
+}

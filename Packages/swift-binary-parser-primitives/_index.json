@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-binary-parser-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "full-internal-typing-interpreter.md",
+      "displayName": "full-internal-typing-interpreter.md",
+      "topic": "Replace internal Int usage with full typed indexing in Binary.Bytes interpreter",
+      "date": "2026-01-29",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

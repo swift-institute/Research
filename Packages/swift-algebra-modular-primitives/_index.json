@@ -1,0 +1,54 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-algebra-modular-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "cyclic-algebra-unification.md",
+      "displayName": "cyclic-algebra-unification.md",
+      "topic": "Unifying cyclic-primitives under algebra",
+      "date": "2026-02-05",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "modular-arithmetic-design.md",
+      "displayName": "modular-arithmetic-design.md",
+      "topic": "API design for Z/nZ modular arithmetic",
+      "date": "2026-02-05",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "zero-one-static-declarations.md",
+      "displayName": "zero-one-static-declarations.md",
+      "topic": "Where to declare .zero and .one on Algebra.Z",
+      "date": "2026-02-06",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "z-constructor-design.md",
+      "displayName": "z-constructor-design.md",
+      "topic": "Constructor design for Algebra.Z using domain types",
+      "date": "2026-02-06",
+      "status": "SUPERSEDED",
+      "statusDetail": null,
+      "statusRaw": "SUPERSEDED",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}
