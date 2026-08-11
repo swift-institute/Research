@@ -208,7 +208,7 @@ implementable. Cilk THE (A) is a strict subset; modern runtimes use it only as
 a teaching reference. Idempotent (C) fails the contextualization step.
 Private deques (D) is an optimization to revisit only if profiling demands it.
 
-**Validated by spike (2026-04-16):** `Experiments/chase-lev-deque-spike/`
+**Validated by spike (2026-04-16):** [central Chase-Lev deque spike](https://github.com/swift-institute/Experiments/tree/8da086ca55b2a6b20edaaf16bfaad6aedc9985bf/swift-executors--chase-lev-deque-spike)
 implements Chase-Lev (B) using only `Synchronization.Atomic<Int>` with
 `.acquiring`/`.releasing`/`.sequentiallyConsistent` orderings. Both the
 single-threaded LIFO/FIFO discipline (V1) and the contended count
@@ -362,7 +362,7 @@ small.
 
 1. ~~**Verify `Synchronization` module suffices** for the Chase-Lev atomics on
    target platforms (macOS, Linux; Embedded TBD).~~ **DONE (macOS arm64)** —
-   `Experiments/chase-lev-deque-spike/` CONFIRMED on Swift 6.3 / macOS 26 arm64.
+   [central Chase-Lev deque spike](https://github.com/swift-institute/Experiments/tree/8da086ca55b2a6b20edaaf16bfaad6aedc9985bf/swift-executors--chase-lev-deque-spike) CONFIRMED on Swift 6.3 / macOS 26 arm64.
    Linux x86_64 / arm64 validation remains open; rerun the same spike on Linux
    under the same toolchain to close.
 2. ~~**Variant taxonomy alignment per [DS-002].** Decide which variants of
@@ -408,7 +408,7 @@ small.
 
 ### Benchmark amendment (2026-04-17)
 
-`Experiments/victim-selection-benchmark/` validates Q2's DECISION
+[central victim-selection benchmark](https://github.com/swift-institute/Experiments/tree/8da086ca55b2a6b20edaaf16bfaad6aedc9985bf/swift-executors--victim-selection-benchmark) validates Q2's DECISION
 (random victim selection) against a sequential-scan baseline using a
 minimal mutex-protected deque (not Chase-Lev; sufficient to isolate
 the victim-selection variable). Averages across 3 runs, Apple Swift
