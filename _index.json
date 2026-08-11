@@ -3501,6 +3501,17 @@
       "topic" : "DECISION (v1.0.0, 2026-04-10): Comprehensive reference for the Linux io_uring API surface, memory model (SQ\/CQ shared rings, user_data correlation, unordered completions), usage patterns, common pitfalls, and best practices — sourced from kernel headers, man pages, and authoritative references. Serves as the baseline for a future comparison against the IO.Uring implementation in swift-linux-primitives."
     },
     {
+      "date" : "2026-08-11",
+      "displayName" : "local-composition-programme-implementation-plan.md",
+      "file" : "local-composition-programme-implementation-plan.md",
+      "scope" : "swift-institute\/institute, swift-institute\/institute-application",
+      "status" : "RECOMMENDATION",
+      "statusDetail" : null,
+      "statusRaw" : "RECOMMENDATION",
+      "tier" : 2,
+      "topic" : "RECOMMENDATION (2026-08-11): ratified coordinate map, gate record (G1-G9, S1-S9) and corrected 13-task implementation plan for local multi-package composed builds. Corrects the source plan's test-target, CLI-parsing and receipt-owner coordinates; rules VERB-001 (the compose verb family absorbs the colliding top-level `verify`); establishes that the swiftpm-composed-root path already exists end-to-end for inventory scope, so #81 needs evidence rather than implementation. Recommends landing T1-T4 + T6 as one increment ending at the SwiftPM calibration go\/no-go."
+    },
+    {
       "displayName" : "localization-architecture-analysis.md",
       "file" : "localization-architecture-analysis.md",
       "scope" : null,
