@@ -1,0 +1,32 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-13",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-parser-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "2026-05-13-parser-oneof-storage-redesign-for-noncopyable.md",
+      "displayName": "2026-05-13-parser-oneof-storage-redesign-for-noncopyable.md",
+      "topic": "RECOMMENDATION (v1.0.0): Tier 2 per-package design resolving the dominant remaining structural blocker named in the parent Tier-3 doc swift-institute/Research/2026-05-13-parser-protocol-noncopyable-escapable-relaxation.md v1.1.0 — the Parser.OneOf.Any.parsers: [Closure] stdlib-Array cap against Parser.`Protocol`: ~Copyable adoption (Option α). Six storage shapes scored across 7 criteria (ergonomics / arity / allocation / compile-time cost / Parser.`Protocol` composition / builder ergonomics / native ~Copyable support): Option 4 (Result-builder-only — drop Parser.OneOf.Any entirely) scores 35/35 and is RECOMMENDED. Empirical finding: Parser.OneOf.Any has ZERO call-sites across 9 surveyed ecosystem repositories (swift-primitives, swift-foundations, swift-standards, swift-institute, rule-institute, rule-law, swift-law, swift-nl-wetgever, swift-us-nv-legislature); zero tests under Tests/Parser OneOf Primitives Tests/; the result-builder path at Parser.OneOf.Builder.buildPartialBlock already provides dynamic-arity alternative parsing at every N ≥ 1 via typed OneOf.Two cascade accumulation; deletion preserves stronger typed-throws guarantees (Product<P0.Failure, P1.Failure> chain replaces erased [Swift.Error] aggregate). Option 1 (variadic generics on Any<each P>) scored 29/35 as second choice — viable if a runtime-dynamic-arity consumer surfaces; Option 3 (Storage.Pool.Inline-backed) scored 17/35 — disqualified by homogeneous-element-type constraint; Option 5 (existentials) scored 17/35 — stdlib-Array cap unchanged + typed-throws regression; Options 2 (recursive struct) and 6b (inline+heap hybrid) scored 22/35 and 17/35 respectively, also disqualified. Per [RES-021] Rust prior-art survey: nom's alt((p1, p2, p3)), chumsky's choice((p1, p2, p3)), combine's choice! all use tuple-based static-arity alternative parsing — NO surveyed Rust parser-combinator library uses runtime-Vec-of-type-erased-parsers as canonical shape, corroborating the result-builder-cascade approach as architecturally clean. Per [HANDOFF-013] reader-side prior-research grep extends 11 prior research docs cited inline; supersedes none. Per [RES-018] second-consumer framing explicitly rejected by principal per dispatch — adoption judged on structural merit alone. Per [RES-002] doc-location convention + [RES-003] structure (Context/Question/Analysis/Outcome) + [RES-003a] metadata + [RES-003b] naming. Generalizes a meta-pattern (audit call-sites before redesigning [Closure]/[Element] storage for ~Copyable admission; if zero, prefer deletion) but does NOT escalate to ecosystem-wide scope — the Row 3 [Lint.Finding] stream pattern has many callers, so deletion does not transfer. Composition with parent doc: Option 4 adoption invalidates the parent's v1.1.0 re-evaluation trigger (4) (stdlib Array<~Copyable>), removes the parent's Phase 5 (type-erased combinator opt-out) entirely, and revises six-axis score from 6/30 → 7/30. Still below the v1.2.0 Wave-5 (25/30) / Wave-6 (20/30) adoption threshold, but the residual gate shifts from structural (the cap) to mechanical (166-site cascade ceremony).",
+      "date": "2026-05-13",
+      "status": "RECOMMENDATION",
+      "statusDetail": "v1.0.0. Tier 2 per-package per [RES-020] (parser-stack-internal design with cross-package consequence at Parser.OneOf.Builder return surface; informal semantic commitment; low cost of error since no callers exist; reversible). Per [RES-021] prior-art survey (nom alt / chumsky choice / combine choice!) + contextualization step: Rust ecosystem unanimously uses tuple-based static-arity for alternative parsing, runtime-Vec-of-closures shape is anomalous-not-canonical. Per [RES-022] structural-correctness framing: deletion-of-unused-affordance is structurally correct over add-redesigned-storage. Per [HANDOFF-013] reader-side prior-research check completed (11 prior docs cited inline). Per [HANDOFF-019] commit-as-you-go: research-side commit; principal pushes if recommendation accepted. Sibling-type workarounds explicitly rejected per dispatch; [RES-018] second-consumer framing explicitly rejected per dispatch.",
+      "statusRaw": "RECOMMENDATION (v1.0.0)",
+      "tier": 2,
+      "scope": "per-package"
+    },
+    {
+      "file": "witness-table-sigsegv-with-noncopyable-protocol-constraints.md",
+      "displayName": "witness-table-sigsegv-with-noncopyable-protocol-constraints.md",
+      "topic": "Runtime SIGSEGV from witness table instantiation with ~Copyable protocol constraints",
+      "date": "2026-02-14",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

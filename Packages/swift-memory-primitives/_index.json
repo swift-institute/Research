@@ -1,0 +1,305 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "Centralized memory, pointer, buffer, and storage research for swift-memory-primitives.\n\nThis directory consolidates all memory-related research from:\n- `swift-memory-primitives/Research/` (original)\n- `swift-pointer-primitives/Research/` (moved)\n- `swift-primitives/Research/` (memory-related docs moved)\n- `swift-institute/Research/` (memory-related docs moved)",
+  "scope": "swift-memory-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "memory-address-mutability.md",
+      "displayName": "memory-address-mutability.md",
+      "topic": "Address as capability vs position—resolved to position-only model",
+      "date": "",
+      "status": "IMPLEMENTED",
+      "statusDetail": null,
+      "statusRaw": "IMPLEMENTED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "~~buffer-base-nullability.md~~",
+      "displayName": "~~buffer-base-nullability.md~~",
+      "topic": "Moved to swift-storage-primitives/Research/",
+      "date": "",
+      "status": "—",
+      "statusDetail": null,
+      "statusRaw": "—",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "ordinal-cardinal-foundations.md",
+      "displayName": "ordinal-cardinal-foundations.md",
+      "topic": "Foundational patterns for typed arithmetic (ordinals, cardinals, affine)",
+      "date": "",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "affine-scaling-operations.md",
+      "displayName": "affine-scaling-operations.md",
+      "topic": "Arithmetic patterns for memory operations",
+      "date": "",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "pool-free-list-representation.md",
+      "displayName": "pool-free-list-representation.md",
+      "topic": "Type-theoretically correct free list link representation",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "allocation-substrate-first-principles.md",
+      "displayName": "allocation-substrate-first-principles.md",
+      "topic": "Allocator contract redesign: single individually-freeing region-allocator protocol (Memory.Allocator.Protocol = allocate+deallocate over a self-describing Region/Block/Request currency); arena (scoped) and pool (slot) are concrete sibling disciplines, not conformers; concrete system allocator provided at L2 via Memory.Allocator.system",
+      "date": "2026-05-25",
+      "status": "DECISION",
+      "statusDetail": "converged 2026-05-25 via /collaborative-discussion (Claude×ChatGPT, 6 rounds) + binding principal refinements; Tier-3 formalization ([RES-024]/[RES-023]) deferred",
+      "statusRaw": "DECISION (converged; Tier-3 formalization deferred)",
+      "tier": 3,
+      "scope": "cross-package"
+    },
+    {
+      "file": "pointer-architecture-comparison.md",
+      "displayName": "pointer-architecture-comparison.md",
+      "topic": "Compares Swift stdlib pointers with custom implementations",
+      "date": "",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "pointer-type-hierarchy.md",
+      "displayName": "pointer-type-hierarchy.md",
+      "topic": "Typed-only pointer hierarchy design (no raw pointers)",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "pointer-primitives-design.md",
+      "displayName": "pointer-primitives-design.md",
+      "topic": "Best-in-class pointer wrapper architecture",
+      "date": "",
+      "status": "SUPERSEDED",
+      "statusDetail": null,
+      "statusRaw": "SUPERSEDED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "pointer-mutable-pointee-semantics.md",
+      "displayName": "pointer-mutable-pointee-semantics.md",
+      "topic": "Pointer.Mutable.pointee mutation semantics (nonmutating vs var)",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "mutable-cross-module-ambiguity.md",
+      "displayName": "mutable-cross-module-ambiguity.md",
+      "topic": "Cross-module Mutable/Buffer typealias ambiguity on Tagged",
+      "date": "",
+      "status": "COMPLETED",
+      "statusDetail": null,
+      "statusRaw": "COMPLETED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "unique-package-placement.md",
+      "displayName": "unique-package-placement.md",
+      "topic": "Package organization and placement decisions",
+      "date": "",
+      "status": "IN_PROGRESS",
+      "statusDetail": null,
+      "statusRaw": "IN_PROGRESS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "memory-inline-package-placement.md",
+      "displayName": "memory-inline-package-placement.md",
+      "topic": "Memory.Inline package placement to avoid SPM dependency cycle",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": "premise superseded; structural work retained",
+      "statusRaw": "DECISION (premise superseded; structural work retained)",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "Pointer-Stdlib-Interop-Design.md",
+      "displayName": "Pointer-Stdlib-Interop-Design.md",
+      "topic": "Design for interoperability with stdlib pointers",
+      "date": "",
+      "status": "RESEARCH",
+      "statusDetail": null,
+      "statusRaw": "RESEARCH",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "stdlib-pointer-migration.md",
+      "displayName": "stdlib-pointer-migration.md",
+      "topic": "Stdlib pointer migration analysis across all primitives",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "Lifetime-Memory-Safety-Plan.md",
+      "displayName": "Lifetime-Memory-Safety-Plan.md",
+      "topic": "Experiment-driven investigation of ~Escapable types and lifetime system",
+      "date": "",
+      "status": "COMPLETED",
+      "statusDetail": null,
+      "statusRaw": "COMPLETED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "lifetime-dependent-borrowed-cursors.md",
+      "displayName": "lifetime-dependent-borrowed-cursors.md",
+      "topic": "Comprehensive analysis of ~Escapable, @_lifetime, non-escapable types",
+      "date": "",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "contiguous-memory-access-standardization.md",
+      "displayName": "contiguous-memory-access-standardization.md",
+      "topic": "Standardize span/mutableSpan/withUnsafe across all types",
+      "date": "",
+      "status": "DECIDED",
+      "statusDetail": null,
+      "statusRaw": "DECIDED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "span-access-abstraction.md",
+      "displayName": "span-access-abstraction.md",
+      "topic": "Whether span access should use protocols or ad-hoc methods",
+      "date": "",
+      "status": "DECIDED",
+      "statusDetail": null,
+      "statusRaw": "DECIDED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "typed-index-arithmetic-unification.md",
+      "displayName": "typed-index-arithmetic-unification.md",
+      "topic": "Unifying typed index arithmetic patterns",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "~~ring-buffer-index-arithmetic.md~~",
+      "displayName": "~~ring-buffer-index-arithmetic.md~~",
+      "topic": "Moved to swift-storage-primitives/Research/",
+      "date": "",
+      "status": "—",
+      "statusDetail": null,
+      "statusRaw": "—",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "Input Index Bit Analysis.md",
+      "displayName": "Input Index Bit Analysis.md",
+      "topic": "Bit-level analysis of index types",
+      "date": "",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "allocation-alignment-operation-domain-naming.md",
+      "displayName": "allocation-alignment-operation-domain-naming.md",
+      "topic": "Operation-domain naming applied to allocation (machine: +Allocating alias, +Allocator.Witness, struct→enum — bundled into the allocation-substrate pass) and alignment (relation: Aligned→Memory.Alignable, no Aligner)",
+      "date": "2026-06-03",
+      "status": "DECISION",
+      "statusDetail": "alignment rename LANDED 2026-06-03; allocation additions pending allocation-substrate pass",
+      "statusRaw": "DECISION",
+      "tier": 3,
+      "scope": "swift-memory-primitives (allocation + alignment surface)"
+    }
+  ],
+  "movedDocuments": [
+    {
+      "file": "buffer-algebraic-structure.md",
+      "displayName": "buffer-algebraic-structure.md",
+      "newLocation": "swift-storage-primitives/Research/"
+    },
+    {
+      "file": "buffer-base-nullability.md",
+      "displayName": "buffer-base-nullability.md",
+      "newLocation": "swift-storage-primitives/Research/"
+    },
+    {
+      "file": "storage-primitives-design.md",
+      "displayName": "storage-primitives-design.md",
+      "newLocation": "swift-storage-primitives/Research/"
+    },
+    {
+      "file": "storage-primitives-first-principles.md",
+      "displayName": "storage-primitives-first-principles.md",
+      "newLocation": "swift-storage-primitives/Research/"
+    },
+    {
+      "file": "unified-storage-primitive.md",
+      "displayName": "unified-storage-primitive.md",
+      "newLocation": "swift-storage-primitives/Research/"
+    },
+    {
+      "file": "ring-buffer-index-arithmetic.md",
+      "displayName": "ring-buffer-index-arithmetic.md",
+      "newLocation": "swift-storage-primitives/Research/"
+    }
+  ],
+  "narrativeSections": [
+    {
+      "heading": "Buffer and Storage",
+      "body": "Moved to `swift-storage-primitives/Research/`:"
+    },
+    {
+      "heading": "Status Legend",
+      "body": "| Status | Meaning |\n|---|---|\n| ANALYSIS | Research/investigation document |\n| RESEARCH | Active research in progress |\n| IN_PROGRESS | Implementation or design work ongoing |\n| RECOMMENDATION | Analysis complete, recommendation made |\n| DECISION | Final decision documented |\n| DECIDED | Decision made and documented |\n| COMPLETED | Research and implementation finished |\n| SUPERSEDED | Replaced by newer research |\n| IMPLEMENTED | Implemented in code |"
+    }
+  ]
+}

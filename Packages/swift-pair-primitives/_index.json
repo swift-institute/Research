@@ -1,0 +1,70 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-08",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-pair-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "escapable-arm-support.md",
+      "displayName": "escapable-arm-support.md",
+      "topic": "DECISION (v1.0.0): Pair underwent type-level ~Escapable upgrade. swapped + apply + init admit both arms ~Escapable; map (un-transformed arm) admits ~Escapable; map(first:second:) blocked by Gap A. Stdlib Equatable/Hashable/Comparable/Codable intrinsically blocked (require Escapable); institute Equation/Hash/Comparison.Protocol admit ~Escapable (after upstream upgrade). Empirical reproduction at Experiments/escapable-arm-support/.",
+      "status": "DECISION",
+      "tier": 1,
+      "scope": "package"
+    },
+    {
+      "file": "escapable-arm-support.md",
+      "displayName": "escapable-arm-support.md",
+      "topic": "DECISION (v1.0.0): Pair underwent type-level ~Escapable upgrade. swapped + apply + init admit both arms ~Escapable; map (un-transformed arm) admits ~Escapable; map(first:second:) blocked by Gap A. Stdlib Equatable/Hashable/Comparable/Codable intrinsically blocked (require Escapable); institute Equation/Hash/Comparison.Protocol admit ~Escapable (after upstream upgrade). Empirical reproduction at Experiments/escapable-arm-support/.",
+      "status": "DECISION",
+      "tier": 1,
+      "scope": "package"
+    },
+    {
+      "file": "property-primitives-api-design.md",
+      "displayName": "property-primitives-api-design.md",
+      "topic": "Public API redesign analysis: Property.View adoption vs labeled-method renames vs status quo. Outcome: Option C (labeled methods) shipped 2026-05-08.",
+      "date": "2026-05-08",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": "per-package"
+    },
+    {
+      "file": "pair-prior-art-survey.md",
+      "displayName": "pair-prior-art-survey.md",
+      "topic": "Prior-art survey: type theory, FP languages, Swift stdlib/tuples, SE proposals, future directions. Long-lived reference for future Pair design questions and deferred Either work.",
+      "date": "2026-05-08",
+      "status": "REFERENCE",
+      "statusDetail": null,
+      "statusRaw": "REFERENCE",
+      "tier": 2,
+      "scope": "per-package"
+    },
+    {
+      "file": "equation-hash-comparison-protocol-adoption.md",
+      "displayName": "equation-hash-comparison-protocol-adoption.md",
+      "topic": "Adoption of Equation.Protocol / Hash.Protocol / Comparison.Protocol fork protocols + stdlib Comparable. Forward-compatible with SE-0499 typealias path.",
+      "date": "2026-05-08",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": "per-package"
+    },
+    {
+      "file": "future-directions.md",
+      "displayName": "future-directions.md",
+      "topic": "Forward directions: 14 candidates analyzed across category-theory totality (assocL/assocR, distributivity, sequence/traverse, bifold, bizip, These, Tagged-Pair, n-ary Product bridge) and Swift Evolution forward-pass (SE-0470/0494/0499/0503/0507/0518/0530, BitwiseCopyable, InlineArray/Span interop). Verdicts: 5 ADOPT (assocL/assocR, sequence over Optional/Result/Either, SE-0499 cleanup, BitwiseCopyable, InlineArray interop tests), 6 DEFER, 8 REJECT, 1 DONE. Top 3: A4 sequence, A1 assocL/assocR, B5+B6 BitwiseCopyable + InlineArray. Cross-package implications: A2 distributivity and A4 Either variant share a Pair↔Either bridge-package decision needing user input.",
+      "date": "2026-05-10",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ]
+}

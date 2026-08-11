@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-parser-machine-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "machine-noncopyable-input.md",
+      "displayName": "machine-noncopyable-input.md",
+      "topic": "Support ~Copyable input in parser machine compile primitives",
+      "date": "2026-02-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

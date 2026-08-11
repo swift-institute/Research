@@ -1,0 +1,14 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "documents": [
+    {
+      "file": "memory-cursor-generic-witness-demangle-feasibility.md",
+      "displayName": "Memory.Cursor Generic-Witness Demangle — Bridge-Revival Feasibility",
+      "topic": "Whether the dormant Memory.Cursor → Sequenceable bridge can be revived: re-investigation of the associated-type-witness demangle/emission defect on current toolchains (Swift 6.3.2 / 6.4-dev / 6.5-dev).",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Not fixed through 6.5-dev 2026-05-12-a; lazy-Memory.Cursor revival not feasible; snapshot reshape is the available dedup path; per-type scalar workaround stays. Upstream filing gated on separate authorization.",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ]
+}
