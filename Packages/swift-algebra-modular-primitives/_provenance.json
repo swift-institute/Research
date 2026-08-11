@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "19dcaf04aa77c9ac8deda86a699316f6ce653a3f",
+  "sourceRepository": "swift-primitives/swift-algebra-modular-primitives",
+  "sourceCommit": "2b32622e7c546c569b19dff5428e2cdcb33845d1",
+  "sourcePath": "Research",
+  "sourceTree": "14fc4fd7973491a21c10247ca1c46199740efd4b",
+  "destinationPath": "Packages/swift-algebra-modular-primitives",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/21"
+}

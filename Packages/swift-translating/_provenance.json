@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "19dcaf04aa77c9ac8deda86a699316f6ce653a3f",
+  "sourceRepository": "swift-foundations/swift-translating",
+  "sourceCommit": "013d20bf81bf738634ab4f919a83be52f814a0a8",
+  "sourcePath": "Research",
+  "sourceTree": "65c1010e69330db8ec21673f6696394163b25747",
+  "destinationPath": "Packages/swift-translating",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/21"
+}
