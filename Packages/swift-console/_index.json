@@ -1,0 +1,76 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index — swift-console",
+  "blurb": "",
+  "scope": "swift-console (swift-foundations)",
+  "documents": [
+    {
+      "file": "console-library-architecture.md",
+      "displayName": "console-library-architecture.md",
+      "topic": "Multi-module architecture for console/CLI library: events, prompts, progress, layout, line editing",
+      "date": "2026-03-03",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "mouse-protocol-selection.md",
+      "displayName": "mouse-protocol-selection.md",
+      "topic": "Mouse tracking modes, SGR encoding, opt-in policy, UX impact, multiplexer interaction",
+      "date": "2026-03-03",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "bracketed-paste-mode.md",
+      "displayName": "bracketed-paste-mode.md",
+      "topic": "Paste detection protocol, paste smuggling defense, single-event delivery model, security analysis",
+      "date": "2026-03-03",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "kitty-keyboard-protocol.md",
+      "displayName": "kitty-keyboard-protocol.md",
+      "topic": "Progressive enhancement flags, unified Key type design, terminal support matrix, legacy fallback",
+      "date": "2026-03-03",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "async-sync-event-api.md",
+      "displayName": "async-sync-event-api.md",
+      "topic": "Parser/IO separation, AsyncSequence primary API, sync poll convenience, backpressure strategy",
+      "date": "2026-03-03",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "argumentparser-integration.md",
+      "displayName": "argumentparser-integration.md",
+      "topic": "Full independence from ArgumentParser, cross-ecosystem evidence, Vapor ConsoleKit case study",
+      "date": "2026-03-03",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}
