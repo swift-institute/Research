@@ -1,0 +1,15 @@
+{
+  "$schema": "../Schemas/research-migration-receipt-v1.json",
+  "destinationImportCommit": "0b5840ab37157b434eaac2946568b217c4fd8ccd",
+  "batch": "Research-Residual44-Final3",
+  "manifestSHA256": "a018f39bcc5aa6eee8bf259c72d972540f0c7a08e0e49c8483845f861147fdb7",
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/32",
+  "historyImport": false,
+  "sourceHistoryRetained": true,
+  "imports": [
+    { "sourceRepository": "swift-foundations/swift-console", "sourceCommit": "b40be9aefc8d37a7ae16db8650037103d9dfbba4", "sourcePath": "Research", "sourceTree": "6b8db524ef9cbaafed66678b6296ff5b044bebcd", "destinationPath": "Packages/swift-console", "provenanceIndex": "Packages/swift-console/_index.json", "equality": { "fileList": "verified", "blobs": "verified" } },
+    { "sourceRepository": "swift-foundations/swift-dependencies", "sourceCommit": "76c3b00b3c74f8c16eea80b4947a11c42fb08c2f", "sourcePath": "Research", "sourceTree": "4ea78e67e030a641ef39582fb5c12ca196dc4f9a", "destinationPath": "Packages/swift-dependencies", "provenanceIndex": "Packages/swift-dependencies/_index.json", "equality": { "fileList": "verified", "blobs": "verified" } },
+    { "sourceRepository": "swift-foundations/swift-io", "sourceCommit": "d0cd28462b6c55f2865edda416fbccb643477471", "sourcePath": "Research", "sourceTree": "1b5f27bbf004063d48dfa364b0ff0e85f35d5985", "destinationPath": "Packages/swift-io", "provenanceIndex": "Packages/swift-io/_index.json", "equality": { "fileList": "verified", "blobs": "verified" } }
+  ]
+}
