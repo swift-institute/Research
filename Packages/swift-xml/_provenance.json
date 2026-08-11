@@ -1,11 +1,12 @@
 {
   "$schema": "../../Schemas/research-migration-provenance-v1.json",
-  "destinationImportCommit": "3a9e9f5859a8816ea2917983fe690770c080f899",
+  "destinationImportCommit": "528fe49c40c8714e72141321614e09a9191eabfc",
   "sourceRepository": "swift-foundations/swift-xml",
-  "sourceCommit": "05c83aac561c093d26be72e401c3862d853f9a00",
+  "sourceCommit": "3bcdf0ccbb194e35eb7e5a8c06b6a7b64a94fa51",
   "sourcePath": "Research",
   "sourceTree": "448053537a99e502bcd880ddbb856f4adf812451",
   "destinationPath": "Packages/swift-xml",
+  "provenanceIndex": "Packages/swift-xml/_provenance.json",
   "equality": {
     "fileList": "verified",
     "blobs": "verified",

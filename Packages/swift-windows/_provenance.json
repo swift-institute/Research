@@ -1,11 +1,12 @@
 {
   "$schema": "../../Schemas/research-migration-provenance-v1.json",
-  "destinationImportCommit": "3a9e9f5859a8816ea2917983fe690770c080f899",
+  "destinationImportCommit": "528fe49c40c8714e72141321614e09a9191eabfc",
   "sourceRepository": "swift-foundations/swift-windows",
-  "sourceCommit": "41e619315c812bf3c24e358fe675ba7d2e9718a8",
+  "sourceCommit": "7d1b958ad9deaab1cbcafb35c0545235376e3e84",
   "sourcePath": "Research",
   "sourceTree": "3bbf757418c1eb6e0400db29621829d8c9d03ffc",
   "destinationPath": "Packages/swift-windows",
+  "provenanceIndex": "Packages/swift-windows/_provenance.json",
   "equality": {
     "fileList": "verified",
     "blobs": "verified",
