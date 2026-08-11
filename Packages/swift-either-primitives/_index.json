@@ -1,0 +1,37 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "documents": [
+    {
+      "file": "api-design-property-leverage.md",
+      "displayName": "Either API Design — Property-Primitives Leverage",
+      "topic": "API surface design (call-site shape)",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "per-package"
+    },
+    {
+      "file": "either-academic-and-ecosystem-survey.md",
+      "displayName": "Either — Academic and Ecosystem Survey",
+      "topic": "Categorical foundations, stdlib usage, SE-proposals, cross-language survey, future directions",
+      "status": "COMPLETE",
+      "tier": 2,
+      "scope": "per-package"
+    },
+    {
+      "file": "escapable-arm-support.md",
+      "displayName": "escapable-arm-support.md",
+      "topic": "DECISION (v1.0.0): Per-package operationalization of ~Escapable adoption across Either's functor surface. swapped, value(of:), and map (un-transformed arm) admit ~Escapable arms with @_lifetime(copy either); flatMap, fold, and full-~Escapable map(left:right:) blocked by Gap A. Empirical reproduction at Experiments/escapable-arm-support/.",
+      "status": "DECISION",
+      "tier": 1,
+      "scope": "package"
+    },
+    {
+      "file": "future-directions.md",
+      "displayName": "Either — Future Directions",
+      "topic": "future directions",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-30",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-initialization-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "initialization-primitives-improvement-and-prior-art.md",
+      "displayName": "initialization-primitives-improvement-and-prior-art",
+      "topic": "Post-restructure improvement analysis and prior-art survey: Initiable as monoid identity (mempty), coherent active-protocol combinators, SLI breadth, and the Buildable reconciliation",
+      "date": "2026-05-30",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Tier 2; structural-correctness-first recommendations with two ecosystem-wide escalations (Defaultable axis, tower-wide witness Sendable)",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ]
+}
