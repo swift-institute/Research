@@ -1,0 +1,65 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index — swift-posix",
+  "blurb": "",
+  "scope": "swift-posix (swift-foundations)",
+  "documents": [
+    {
+      "file": "glob-layering-investigation.md",
+      "displayName": "glob-layering-investigation.md",
+      "topic": "L2 delegation for glob: delegate to existing L2 directory/stat APIs (Option B)",
+      "date": "2026-04-10",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "glob-layering-research.md",
+      "displayName": "glob-layering-research.md",
+      "topic": "Glob L1--L3 layering: L2 fnmatch encoding, L3 delegates matching, no Kernel Glob target",
+      "date": "2026-04-13",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "l3-policy-design.md",
+      "displayName": "l3-policy-design.md",
+      "topic": "L3 POSIX policy design: re-export vs policy layering",
+      "date": "2026-04-10",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "post-modularization-design-notes.md",
+      "displayName": "post-modularization-design-notes.md",
+      "topic": "Post-modularization: namespace depth, strerror, EINTR",
+      "date": "2026-04-10",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "connect-eintr-investigation.md",
+      "displayName": "connect-eintr-investigation.md",
+      "topic": "EINTR handling in POSIX Kernel Socket connect",
+      "date": "2026-04-10",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

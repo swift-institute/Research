@@ -1,0 +1,43 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-testing (swift-foundations)",
+  "documents": [
+    {
+      "file": "typed-throws-autoclosure-e-inference.md",
+      "displayName": "typed-throws-autoclosure-e-inference",
+      "topic": "Typed throws E inference in autoclosures",
+      "date": "2025-12-15",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "zero-ceremony-swift-test-integration.md",
+      "displayName": "zero-ceremony-swift-test-integration",
+      "topic": "Making @Test work with swift test zero-ceremony",
+      "date": "2026-03-01",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "suite-record-discovery-gap.md",
+      "displayName": "suite-record-discovery-gap",
+      "topic": "Suite records skipped during discovery",
+      "date": "2026-03-03",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

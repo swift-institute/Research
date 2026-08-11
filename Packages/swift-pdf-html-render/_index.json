@@ -1,0 +1,65 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-pdf-html-rendering (swift-foundations)",
+  "documents": [
+    {
+      "file": "iterative-tuple-rendering.md",
+      "displayName": "iterative-tuple-rendering.md",
+      "topic": "Iterative _Tuple rendering — eliminates O(N) stack depth from left-heavy binary nesting in dynamic dispatch path. Partially superseded by worklist-rendering-dispatch.md (tuple solution retained, overall approach replaced).",
+      "date": "2026-03-12",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "modifier-dispatch-ordering.md",
+      "displayName": "modifier-dispatch-ordering.md",
+      "topic": "CSS modifier dispatch ordering + PDF emission ordering — v1.1.0 covers both axes: A1 (dispatch) inventories all 46 modifier conformances, all `_pushElement` push-time READs, all `_popElement`/`_popStyle` pop-time CONSUMES; classifies each modifier by phase set; recommends α₂-flat over α₁ (provably broken). A2 (emission) inventories all 14 render-primitives + emission sites; finds cell borders (E1/E2) latently non-compliant with CSS §17.6 painting order (emitted after content), cell background (E5) missing (dead function). A1+A2 axes orthogonal; A2 fix is a follow-on Research doc gated on A1 Phase 2 landing.",
+      "date": "2026-05-11",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "coenttb-rendering-reference.md",
+      "displayName": "coenttb-rendering-reference.md",
+      "topic": "Phase D cumulative-vertical-spacing reference inventory: coenttb/swift-html-to-pdf is a WebKit/Quartz bridge with no custom CSS engine, so comparison reduces to vs-WebKit-UA-stylesheet. Inventories 5 axes (inter-element spacing; tag-default margins; font setup; cell layout; paragraph wrapping) with institute file:line evidence for every divergence. Per-finding mapping for C-1 through C-10 with proposed institute-shaped fix-shapes. Highest-impact finding: `<table>` tag-default 1em margins (C-2) diverge from WebKit's 0 default; one-line fix at HTML.Element.Tag+TagStyle.swift:120-121.",
+      "date": "2026-05-12",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "visual-differences-inventory-2026-05-13.md",
+      "displayName": "visual-differences-inventory-2026-05-13.md",
+      "topic": "Empirical visual-differences inventory for factuur 29IOVCDMKT-21 — REF (Quartz/WebKit, 1 page, 595×961pt) vs WIP (institute swift-pdf at HEAD 0039040, 2 pages, A4). Categorizes ~35 observable deltas across FONT / SIZING / POSITIONING / SPACING / LAYOUT / DETAILS / COLOR with bbox + raw-Tj evidence per defect and per-defect user-perceptibility scoring. Identifies 9 root-cause clusters (page-margin propagation, font-size cascade, line-height cascade, narrow-right-column allocator, Factuur meta position, vertical-budget exhaustion, border rendering, wrap-vs-fit, font typeface). Diagnostic-only; pure observation; no fixes proposed.",
+      "date": "2026-05-13",
+      "status": "INVENTORY",
+      "statusDetail": null,
+      "statusRaw": "INVENTORY",
+      "tier": 1,
+      "scope": "cross-package"
+    },
+    {
+      "file": "css-cascade-architectural-gap-2026-05-13.md",
+      "displayName": "css-cascade-architectural-gap-2026-05-13.md",
+      "topic": "CSS cascade architectural gap — institute PDF renderer never reads <style> blocks because (1) HTML.__DocumentProtocol._render at HTML.Document.Protocol.swift:37-42 drops html.head; (2) consumer doesn't wrap invoice in HTML.Document; (3) PDF.HTML.Context.register(style:) is a no-op stub. Seven-component architectural decomposition: head-pass / CSS parser / rule storage / type-selector matching (Phase 1) vs full selector engine + specificity + cascade + inheritance + @media (Phase 2). Phase 1 closes CC3 structurally (html { line-height: 1.5 } applies); CC2 stays correctly via consumer defaultFontSize=14 (the template's @media-only-screen rule SKIPS for PDF/print per Option-C print-media classification, so consumer-side is legitimate UA-customization not a bandaid); CC7-D2 preserved W3C-correct. Phase 2 deferred behind five enumerated trigger conditions.",
+      "date": "2026-05-13",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ]
+}
