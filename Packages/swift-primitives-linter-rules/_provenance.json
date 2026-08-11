@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "3da0ed16d9f149c051f7adfbff249f09be61f436",
+  "sourceRepository": "swift-primitives/swift-primitives-linter-rules",
+  "sourceCommit": "bcefc05848a7b966874426466964600394944a77",
+  "sourcePath": "Research",
+  "sourceTree": "b8c34815538b11ddb2b582cad05a2d48ce3a82ee",
+  "destinationPath": "Packages/swift-primitives-linter-rules",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/29"
+}
