@@ -1,0 +1,153 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-21",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-property-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "property-inout-raw-address-init.md",
+      "displayName": "property-inout-raw-address-init.md",
+      "topic": "CONVERGED-PRUNED (v1.1.0): Originally CONVERGED (v1.0.0) per-package execution note for raw-address-form Property.{Inout,Borrow}[.Typed[.Valued[.Valued]]] inits — shipped at swift-property-primitives be0e3a2 + 9ee0c37 on 2026-05-09. PRUNED 2026-05-09 by HANDOFF-escapable-property-tier-prune.md: the 7 init signatures + 7 admission tests + supporting code reverted out of Sources/+Tests/ to pre-cascade 49dce56 state because Property's value-add over raw Ownership is structurally view-of-self-locked, and view-of-self is blocked at the Swift language level (#ExclusivityViolation on dual-`&self` arguments + body-scoped raw-pointer lifetime; verified via swiftc -emit-sil). Research preserved verbatim — design space, empirical findings, structural-blocker analysis, language-affordance trigger condition are load-bearing for future re-attempt when Swift toolchain ships the missing affordance. Broader institute ~Escapable program retained: swift-ownership-primitives 30f44a2 (Ownership.Inout admits ~Escapable Value) is NOT pruned; cohort base + institute protocols stay.",
+      "date": "2026-05-09",
+      "status": "CONVERGED-PRUNED",
+      "statusDetail": "v1.1.0. Tier 1 per-package research. Originally CONVERGED v1.0.0 2026-05-09; status amended to CONVERGED-PRUNED 2026-05-09 per HANDOFF-escapable-property-tier-prune.md surgical prune. Source/Tests reverted to 49dce56 baseline; research note preserved with status frontmatter amendment + rationale block. Re-ship trigger: Swift toolchain provides user-package mechanism for raw-pointer derivation from inout self without dual-borrow violation (e.g., Builtin.addressOfBorrow at user level, ~Escapable-admitting withUnsafeMutablePointer variant, Reborrow<T>: ~Escapable-style facility).",
+      "statusRaw": "CONVERGED-PRUNED (v1.1.0)",
+      "tier": 1,
+      "scope": "swift-property-primitives"
+    },
+    {
+      "file": "escapable-base-upgrade.md",
+      "displayName": "escapable-base-upgrade.md",
+      "topic": "CONVERGED-PRUNED (v1.1.0): Originally CONVERGED (v1.0.0) per-package execution note for Property<Tag, Base>'s type-level Base widening from ~Copyable to ~Copyable & ~Escapable — shipped at swift-property-primitives 5bb2f67 on 2026-05-09 (with Property.Typed widening + conditional-conformance discipline + Property.Consume Sendable adjustment). PRUNED 2026-05-09 by HANDOFF-escapable-property-tier-prune.md: type-level Base widening reverted out of Sources/+Tests/ to pre-cascade 49dce56 state because the downstream functional-construction cascade (be0e3a2 + 9ee0c37 — see property-inout-raw-address-init.md) was structurally view-of-self-locked. Research preserved verbatim — design space (§A–§K), Phase-2 implementation refinements (§L), and Phase-2 verification (§M, 48/48 → 55/55 verified clean on triple-toolchain at the cascade SHAs) are load-bearing for future re-attempt when Swift toolchain ships the missing affordance. Cross-package readiness audit (Tagged + Carrier already admit ~Escapable Underlying) survives unchanged.",
+      "date": "2026-05-09",
+      "status": "CONVERGED-PRUNED",
+      "statusDetail": "v1.1.0. Tier 1 per-package research. Originally CONVERGED v1.0.0 2026-05-09; status amended to CONVERGED-PRUNED 2026-05-09 per HANDOFF-escapable-property-tier-prune.md surgical prune. Source/Tests reverted to 49dce56 baseline; research note preserved with status frontmatter amendment + rationale block. Re-ship trigger: see property-inout-raw-address-init.md statusDetail.",
+      "statusRaw": "CONVERGED-PRUNED (v1.1.0)",
+      "tier": 1,
+      "scope": "swift-property-primitives"
+    },
+    {
+      "file": "property-type-family.md",
+      "displayName": "property-type-family.md",
+      "topic": "Property type family unified abstraction",
+      "date": "2026-01-21",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "problem-protocol-conformance-and-phantom-type-generalization.md",
+      "displayName": "problem-protocol-conformance-and-phantom-type-generalization.md",
+      "topic": "Protocol conformance and phantom type generalization",
+      "date": "2026-01-21",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "agent-briefing-dictionary-primitives-property-migration.md",
+      "displayName": "agent-briefing-dictionary-primitives-property-migration.md",
+      "topic": "Dictionary primitives property migration briefing",
+      "date": "2026-01-21",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "case-study-dictionary-primitives-migration-failure.md",
+      "displayName": "case-study-dictionary-primitives-migration-failure.md",
+      "topic": "Dictionary primitives migration failure case study",
+      "date": "2026-01-21",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "migration-instruction.md",
+      "displayName": "migration-instruction.md",
+      "topic": "Migration instruction (process document)",
+      "date": "2026-01-21",
+      "status": "IMPLEMENTED",
+      "statusDetail": null,
+      "statusRaw": "IMPLEMENTED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "property-view-valued-verbosity.md",
+      "displayName": "property-view-valued-verbosity.md",
+      "topic": "Reducing .Valued.Valued chain verbosity",
+      "date": "2026-02-12",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "property-view-escapable-removal.md",
+      "displayName": "property-view-escapable-removal.md",
+      "topic": "Property.View ~Escapable removal: root cause, options analysis, resumption trigger",
+      "date": "2026-03-22",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "variant-decomposition-rationale.md",
+      "displayName": "variant-decomposition-rationale.md",
+      "topic": "Rationale for the 4-target variant decomposition along the ownership / access-model axis",
+      "date": "2026-04-20",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "borrowing-label-drop-rationale.md",
+      "displayName": "borrowing-label-drop-rationale.md",
+      "topic": "Rationale for dropping the borrowing: argument label on Property.View* init(_:) overloads",
+      "date": "2026-04-20",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "property-tagged-semantic-roles.md",
+      "displayName": "property-tagged-semantic-roles.md",
+      "topic": "Phantom-tag semantic roles: Tagged (domain identity) vs Property (verb namespace) — are the two uses named in academic literature?",
+      "date": "2026-04-21",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Moved from swift-primitives/Research/ to this package-local Research/ on 2026-04-21 as scope is limited to swift-property-primitives.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "pure-language-ownership-feasibility.md",
+      "displayName": "pure-language-ownership-feasibility.md",
+      "topic": "Can pure Swift 6.3 ownership vocabulary replace Property / Property.Typed / Property.Consuming / Property.View at equivalent ergonomics? Per-family verdict backed by four executable experiments.",
+      "date": "2026-04-21",
+      "status": "DECISION",
+      "statusDetail": "RETAIN all four families. Pure language has every mechanism (~Copyable, ~Escapable, @_lifetime, consuming/borrowing conventions) but the types' value is per-ecosystem amortization and centralised compiler-bug absorption, not language-capability gap-filling. The handoff's worked example `container.forEach { process(consume $0) }` is REFUTED on compiler-evidenced grounds (no-op warning on Copyable elements; container unchanged). All four families PARTIALLY-REPLACEABLE per namespace; none REPLACEABLE ecosystem-wide at equivalent ergonomics.",
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

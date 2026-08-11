@@ -1,0 +1,32 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index — swift-slab-primitives",
+  "blurb": "",
+  "scope": "swift-slab-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "slab-primitives-design-variants-module-architecture.md",
+      "displayName": "slab-primitives-design-variants-module-architecture.md",
+      "topic": "Design analysis of slab variants (Dynamic, Static, Indexed) and module split architecture.",
+      "date": "2026-02-11",
+      "status": "IN_PROGRESS",
+      "statusDetail": null,
+      "statusRaw": "IN_PROGRESS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "slab-discipline-boundary-analysis.md",
+      "displayName": "slab-discipline-boundary-analysis.md",
+      "topic": "Layering audit verifying slab-primitives contains only slab-discipline semantics and no buffer-layer leakage.",
+      "date": "2026-02-14",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

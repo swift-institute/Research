@@ -1,0 +1,16 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-queue-primitives (swift-primitives)",
+  "documents": [],
+  "movedDocuments": [
+    {
+      "file": "Collection Primitives Architecture.md",
+      "displayName": "Collection Primitives Architecture.md",
+      "newLocation": "swift-storage-primitives/Research/Collection Primitives Architecture.md"
+    }
+  ]
+}
