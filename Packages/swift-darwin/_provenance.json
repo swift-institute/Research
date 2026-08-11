@@ -1,0 +1,15 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-migration-provenance-v1.json",
+  "sourceRepository": "swift-foundations/swift-darwin",
+  "sourceCommit": "bd98dc0965416c6f740f596b62dacb7b1e5802bd",
+  "sourcePath": "Research",
+  "sourceTree": "500c6cccbdf85d06e7b4a4dddb59d990784dcaf0",
+  "destinationPath": "Packages/swift-darwin",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/11"
+}

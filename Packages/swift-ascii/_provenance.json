@@ -1,0 +1,15 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-migration-provenance-v1.json",
+  "sourceRepository": "swift-foundations/swift-ascii",
+  "sourceCommit": "3d27163a7d5ea416c797d4d7d58e50b454306064",
+  "sourcePath": "Research",
+  "sourceTree": "412f591662192826c529bc73cbf2f5693ee6a7fa",
+  "destinationPath": "Packages/swift-ascii",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/11"
+}
