@@ -13,10 +13,10 @@ status: DECISION
 The ecosystem-wide nested testing pattern ([INST-TEST-001]–[INST-TEST-010]) places swift-testing-dependent tests in `Tests/Testing/Package.swift`. This was decided in [nested-testing-package-structure.md](nested-testing-package-structure.md) (DECISION, 2026-03-05). The pattern works but produces deeply nested paths:
 
 ```
-Tests/Testing/Tests/PDF Snapshot Tests/__Snapshots__/Snapshot Tests/all-elements.txt
+Tests/Testing/Tests/PDF Snapshot Tests/.snapshots/Snapshot Tests/all-elements.txt
 ```
 
-The nesting is `Tests/ > Testing/ > Tests/ > target/ > __Snapshots__/` — five levels deep, with a redundant `Tests/Testing/Tests/` stutter.
+The nesting is `Tests/ > Testing/ > Tests/ > target/ > .snapshots/` — five levels deep, with a redundant `Tests/Testing/Tests/` stutter.
 
 10 packages currently use this pattern. The user observes this is "quite ugly" and proposes flattening: place `Package.swift` directly in `Tests/` so that snapshot and performance test directories sit alongside the parent's unit test directories.
 
@@ -38,7 +38,7 @@ Can the nested testing package be relocated from `Tests/Testing/Package.swift` t
 | Nested package relative path to parent changes from `../..` to `..` | Simpler path calculation |
 | Nested package relative path to swift-testing shortens by one `../` | Minor ergonomic improvement |
 | 10 packages need migration if pattern changes | Non-trivial ecosystem-wide change |
-| `__Snapshots__/` paths shorten significantly | Better DX for snapshot review |
+| `.snapshots/` paths shorten significantly | Better DX for snapshot review |
 
 ## Analysis
 
@@ -56,7 +56,7 @@ swift-{pkg}/
       Tests/
         {Module} Performance Tests/
         {Module} Snapshot Tests/
-          __Snapshots__/
+          .snapshots/
 ```
 
 **Advantages:**
@@ -66,7 +66,7 @@ swift-{pkg}/
 
 **Disadvantages:**
 - `Tests/Testing/Tests/` stutter (three levels before test sources)
-- `__Snapshots__/` paths are 5 levels deep
+- `.snapshots/` paths are 5 levels deep
 - `cd Tests/Testing` to run extended tests is non-obvious
 - Name `Testing/` inside `Tests/` is redundant
 
@@ -83,7 +83,7 @@ swift-{pkg}/
     Package.swift                      ← nested package
     {Module} Tests/                    ← parent's Apple Testing (explicit path)
     {Module} Snapshot Tests/           ← nested package's test target
-      __Snapshots__/
+      .snapshots/
     {Module} Performance Tests/        ← nested package's test target
 ```
 
@@ -122,7 +122,7 @@ let package = Package(
 
 **Advantages:**
 - Flat structure: all test directories are siblings
-- `__Snapshots__/` paths are 3 levels deep (down from 5)
+- `.snapshots/` paths are 3 levels deep (down from 5)
 - `cd Tests && swift test` to run extended tests
 - Relative paths to parent and swift-testing are simpler
 - Eliminates `Tests/Testing/Tests/` stutter
@@ -149,7 +149,7 @@ swift-{pkg}/
   Tests/                               ← nested package
     Package.swift
     {Module} Snapshot Tests/
-      __Snapshots__/
+      .snapshots/
     {Module} Performance Tests/
 ```
 
@@ -176,7 +176,7 @@ swift-{pkg}/
     {Module} Tests/                    ← parent (explicit path)
     Extended/                          ← subdirectory for nested test targets
       {Module} Snapshot Tests/
-        __Snapshots__/
+        .snapshots/
       {Module} Performance Tests/
 ```
 
@@ -195,7 +195,7 @@ swift-{pkg}/
 
 | Criterion | A: Status Quo | B: Flatten | C: Split Dirs | D: Subdirectory |
 |-----------|--------------|-----------|---------------|-----------------|
-| Path depth to `__Snapshots__/` | 5 levels | 3 levels | 3 levels | 4 levels |
+| Path depth to `.snapshots/` | 5 levels | 3 levels | 3 levels | 4 levels |
 | Parent needs explicit `path:` | No | Yes | Yes | Yes |
 | SwiftPM behavior validated | Yes | **Yes (EXP-B)** | **Unknown** | **Unknown** |
 | Convention compliance | Standard | Non-standard | Non-standard | Non-standard |
@@ -245,7 +245,7 @@ experiment/
 **Rationale**:
 1. [EXP-B] confirmed the critical unknown — explicit `path:` works alongside nested `Package.swift`
 2. Eliminates `Tests/Testing/Tests/` stutter (3 levels → 1 level of nesting)
-3. `__Snapshots__/` paths shrink from 5 levels to 3
+3. `.snapshots/` paths shrink from 5 levels to 3
 4. Relative paths simplify: parent is `..` (was `../..`), swift-testing loses one `../`
 5. The cost (adding explicit `path:` to parent test targets) is mechanical and one-time
 
@@ -266,7 +266,7 @@ swift-{pkg}/
     Package.swift                  ← nested package (depends on parent + swift-testing)
     {Module} Tests/                ← Apple Testing (unit + edge case)
     {Module} Snapshot Tests/       ← swift-testing snapshot tests
-      __Snapshots__/
+      .snapshots/
     {Module} Performance Tests/    ← swift-testing performance tests
 ```
 

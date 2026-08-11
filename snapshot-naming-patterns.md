@@ -21,7 +21,7 @@ Key finding: **no framework that supports both inline and file-backed modes uses
 
 ### File-Backed Snapshots
 
-**Directory structure**: `__Snapshots__/<TestFileName>/<testFunctionName>.<counter>.<extension>`
+**Directory structure**: `.snapshots/<TestFileName>/<testFunctionName>.<counter>.<extension>`
 
 **API**:
 ```swift

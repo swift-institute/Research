@@ -17,7 +17,7 @@ The Swift Institute testing framework (`swift-tests` + `swift-testing`) has a ma
 |----------|-----------------|----------|
 | absent   | absent          | **Inline record**: capture value, rewrite source with trailing closure |
 | absent   | present         | **Inline compare**: compare against inline expected value |
-| present  | absent          | **File-backed**: compare against named file in `__Snapshots__/` |
+| present  | absent          | **File-backed**: compare against named file in `.snapshots/` |
 | present  | present         | **Compile error** |
 
 The `#snapshot` inline pattern works because snapshot values are **deterministic** — same input always produces same output. The inline text IS the test assertion.

@@ -412,7 +412,7 @@ Per [RES-025], evaluating snapshot testing using Green's Cognitive Dimensions Fr
 |-----------|--------|----------|
 | **Viscosity** | High | Changing a component's output requires updating all affected snapshot files. Cascade failures across dozens of tests from a single shared component change. |
 | **Hidden dependencies** | High | The relationship between source code changes and snapshot file changes is opaque. No tooling traces "which code produced this snapshot line." |
-| **Visibility** | Low | Expected output is in a separate `__Snapshots__/` directory. Developer must navigate away from test to understand what is being asserted. |
+| **Visibility** | Low | Expected output is in a separate `.snapshots/` directory. Developer must navigate away from test to understand what is being asserted. |
 | **Closeness of mapping** | Medium | Snapshots represent output directly (close to domain) but may include serialization noise (indentation, key ordering). |
 | **Error-proneness** | High | "Accept all" workflow encourages rubber-stamping without review — undermines the oracle. |
 | **Diffuseness** | High | Full-output snapshots capture far more than the developer intends to test, increasing maintenance surface. |
