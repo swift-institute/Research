@@ -1,0 +1,24 @@
+{
+  "$schema": "../Schemas/research-migration-receipt-v1.json",
+  "destinationImportCommit": "3885c1c4e8653314aba4f9b4a2bcf848d26ebd95",
+  "batch": "Research-B01-swift-executors-refresh",
+  "manifestSHA256": "4ee326eb712972d1e915273a6ef4e31995d064a2578f6c0e756f7661d4f8942a",
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/14",
+  "historyImport": false,
+  "sourceHistoryRetained": true,
+  "imports": [
+    {
+      "sourceRepository": "swift-foundations/swift-executors",
+      "sourceCommit": "3c5472d728735c678ff62b5948e823a87b0ad033",
+      "sourcePath": "Research",
+      "sourceTree": "f8509cfb195043c11ad28782b58c06084915a250",
+      "destinationPath": "Packages/swift-executors",
+      "provenanceIndex": "Packages/swift-executors/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    }
+  ]
+}
