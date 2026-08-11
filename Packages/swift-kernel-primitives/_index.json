@@ -1,0 +1,76 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-kernel-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "Principled Syscall Layering.md",
+      "displayName": "Principled Syscall Layering.md",
+      "topic": "Principled syscall layering design",
+      "date": "2026-01-15",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "Migration Inventory.md",
+      "displayName": "Migration Inventory.md",
+      "topic": "Migration inventory (process document)",
+      "date": "2026-01-15",
+      "status": "IN_PROGRESS",
+      "statusDetail": null,
+      "statusRaw": "IN_PROGRESS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "kernel-file-memory-type-placement.md",
+      "displayName": "kernel-file-memory-type-placement.md",
+      "topic": "File/Memory type placement and Dimension vs Ordinal/Cardinal",
+      "date": "2026-02-28",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "l1-types-only-no-exceptions.md",
+      "displayName": "l1-types-only-no-exceptions.md",
+      "topic": "Eliminate kernel-primitives L1 exception via L3 typealias unification",
+      "date": "2026-04-26",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "l1-types-only-no-exceptions-l2-cascade.md",
+      "displayName": "l1-types-only-no-exceptions-l2-cascade.md",
+      "topic": "L2 spec-wrapper cascade investigation (Path 1, family-wide); SUPERSEDED 2026-04-27 by path-x-removal-plan.md per [META-003] when user reconsidered the L1-stays premise the cascade rests on",
+      "date": "2026-04-27",
+      "status": "SUPERSEDED",
+      "statusDetail": "Superseded by path-x-removal-plan.md (Path X — remove swift-kernel-primitives entirely)",
+      "statusRaw": "SUPERSEDED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "path-x-removal-plan.md",
+      "displayName": "path-x-removal-plan.md",
+      "topic": "Path X removal plan: delete swift-kernel-primitives entirely. Per-target classification across 24 L1 targets into 4 buckets (L3-policy / swift-kernel L3 / domain-package / delete); ~24 cycles; supersedes cascade investigation. v1.1.0 reframed Cycle 0 substrate-only (transit-module decoupling). v1.2.0 eliminates Cycle 1 (namespace anchor relocation is structurally impossible mid-transition); namespace anchor relocates atomically with L1 package deletion at the Final cycle. Cycles renumbered: v1.1.0 Cycles 2-24 → v1.2.0 Cycles 1-23",
+      "date": "2026-04-27",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}
