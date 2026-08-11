@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "This directory contains research documents for the swift-source foundations package.",
+  "scope": "swift-source (swift-foundations)",
+  "documents": [
+    {
+      "file": "source-file-loading-design.md",
+      "displayName": "source-file-loading-design.md",
+      "topic": "File loading strategy: Foundation vs POSIX vs mmap, caching model, UTF-8 BOM handling, existing infrastructure analysis",
+      "date": "",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}
