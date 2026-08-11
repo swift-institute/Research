@@ -1,0 +1,48 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-29",
+  "title": "swift-executors Research Index",
+  "blurb": "",
+  "scope": "swift-executors (swift-foundations)",
+  "documents": [
+    {
+      "file": "executor-job-deadline-naming.md",
+      "displayName": "Executor Job Deadline Naming",
+      "topic": "Rename Executor.Job.Priority (deadline-keyed min-heap) to Executor.Job.Deadline; free the Priority name for a future QoS-bucketed queue.",
+      "status": "RECOMMENDATION",
+      "tier": 1,
+      "scope": "cross-package"
+    },
+    {
+      "file": "qos-bracketing-platform-layering.md",
+      "displayName": "QoS Bracketing Platform Layering",
+      "topic": "Push the M3 thread-QoS bracketing implementation from swift-executors (#if canImport(Darwin)) down to L2 (swift-darwin-standard) with L3-unifier (swift-kernel) typealias unification. Preserves the priority-escalation-policy.md DECISION substance; only the layering moves.",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "cooperative-yield-policy-v2.md",
+      "displayName": "Cooperative Yield Policy v2",
+      "topic": "Defer richer yield policies (budget, time-slice, predicate) for Executor.Cooperative.runUntil to v2; v1 snapshot-then-check stands per cooperative-donation-contract.md.",
+      "status": "DEFERRED",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "incoming-queue-concurrency-model.md",
+      "displayName": "Incoming Queue Concurrency Model",
+      "topic": "Decision NOT to introduce a lock-free MPSC linked-list queue matching the Swift runtime's DefaultActorImpl design. Ecosystem contract is structural-queue + caller-held mutex; runtime's lock-free design is calibrated for libdispatch-pool scale.",
+      "status": "DECISION",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ],
+  "narrativeSections": [
+    {
+      "heading": "Index Coverage Note",
+      "body": "This index currently registers only research authored on or after 2026-04-29. Eleven pre-existing documents in this Research/ directory (e.g., priority-escalation-policy.md, cooperative-donation-contract.md, executor-package-design.md) predate index population and are NOT yet listed here. Per [RES-003c] _index.json MUST be authoritative; backfilling the eleven pre-existing entries is outstanding work."
+    }
+  ]
+}

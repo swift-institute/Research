@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "3f5a1cc2bf6d5723f46f583bb0762864ee534de0",
+  "sourceRepository": "swift-foundations/swift-dual",
+  "sourceCommit": "268ef8c4418878b6765fa7c680dba92f621964d6",
+  "sourcePath": "Research",
+  "sourceTree": "531a7ca36a0816e1be5f7603865af5fd6e3ff6cb",
+  "destinationPath": "Packages/swift-dual",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/11"
+}

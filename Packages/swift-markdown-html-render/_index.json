@@ -1,0 +1,43 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-markdown-html-rendering (swift-foundations)",
+  "documents": [
+    {
+      "file": "markdown-action-rendering-performance-optimization.md",
+      "displayName": "markdown-action-rendering-performance-optimization.md",
+      "topic": "Markdown action rendering performance optimization — capture-based defaults vs pure action closures. Children replay amplification dominates. All-or-nothing conversion + outer wrapper recommended.",
+      "date": "2026-03-14",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "markdown-direct-context-rendering.md",
+      "displayName": "markdown-direct-context-rendering.md",
+      "topic": "Markdown direct-context rendering — 6 approaches analyzed for eliminating AnyView type erasure. Recommends Context+Action+Flatten (C+A+F).",
+      "date": "2026-03-13",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "css-markdown-rendering-decomposition-feasibility.md",
+      "displayName": "css-markdown-rendering-decomposition-feasibility.md",
+      "topic": "CSS HTML Rendering + Markdown HTML Rendering decomposition feasibility — 510 property files documented as MOD-008 exception, AnyView path removed, Diagnostic extraction blocked by circular dependency",
+      "date": "2026-03-22",
+      "status": "COMPLETE",
+      "statusDetail": null,
+      "statusRaw": "COMPLETE",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

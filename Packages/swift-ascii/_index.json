@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-14",
+  "title": "Research Index — swift-ascii",
+  "blurb": "",
+  "scope": "swift-ascii (swift-foundations)",
+  "documents": [
+    {
+      "file": "ascii-codable-unification.md",
+      "displayName": "ASCII Codable Unification",
+      "topic": "Migration scoping for unifying ASCII bidirectional codec under the family-Codable convention: feature-disposition matrix, bidirectional-shape resolution (B2 — non-refining ASCII.Serializable + ASCII.Parseable siblings), Error/Context disposition, stdlib integer dual-conformance resolution (C3), phased migration plan Φ.1–Φ.7",
+      "date": "2026-05-14",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ]
+}

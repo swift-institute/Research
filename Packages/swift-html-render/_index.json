@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index — swift-html-rendering",
+  "blurb": "",
+  "scope": "swift-html-rendering (swift-foundations)",
+  "documents": [
+    {
+      "file": "tag-indirect-storage-performance.md",
+      "displayName": "tag-indirect-storage-performance",
+      "topic": "HTML.Element.Tag indirect (class-backed) storage performance: 2.6x creation overhead, 12-14% copy overhead, 0.005% real-world impact — trade-off sound",
+      "date": "2026-03-18",
+      "status": "COMPLETE",
+      "statusDetail": null,
+      "statusRaw": "COMPLETE",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

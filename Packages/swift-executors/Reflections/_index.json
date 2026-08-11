@@ -1,0 +1,103 @@
+{
+  "$schema": "https://swift-institute.org/schemas/reflections-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Reflections — swift-executors",
+  "blurb": "",
+  "scope": "swift-executors (swift-foundations)",
+  "reflections": [
+    {
+      "file": "2026-04-15-executor-toolkit-phase3-completion.md",
+      "displayName": "2026-04-15-executor-toolkit-phase3-completion.md",
+      "date": "2026-04-15",
+      "title": "Executor Toolkit Phase 3 Completion",
+      "packages": [
+        "swift-executor-primitives",
+        "swift-executors",
+        "swift-io"
+      ],
+      "status": "processed",
+      "statusRaw": "pending",
+      "processedDate": "2026-04-24",
+      "triageOutcome": null,
+      "outcomeDescription": null
+    },
+    {
+      "file": "2026-04-15-executor-judgment-calls-handoff-closure.md",
+      "displayName": "2026-04-15-executor-judgment-calls-handoff-closure.md",
+      "date": "2026-04-15",
+      "title": "Executor Judgment Calls — Handoff Closure via Inaction",
+      "packages": [
+        "swift-executors",
+        "swift-foundations"
+      ],
+      "status": "processed",
+      "statusRaw": "pending",
+      "processedDate": "2026-04-24",
+      "triageOutcome": null,
+      "outcomeDescription": null
+    },
+    {
+      "file": "2026-04-16-chase-lev-spike-and-premature-primitive-trap.md",
+      "displayName": "2026-04-16-chase-lev-spike-and-premature-primitive-trap.md",
+      "date": "2026-04-16",
+      "title": "Chase-Lev Spike and the Premature-Primitive Trap",
+      "packages": [
+        "swift-executors",
+        "swift-executor-primitives",
+        "swift-storage-primitives",
+        "swift-memory-primitives"
+      ],
+      "status": "processed",
+      "statusRaw": "pending",
+      "processedDate": "2026-04-24",
+      "triageOutcome": null,
+      "outcomeDescription": null
+    },
+    {
+      "file": "2026-04-16-v1-research-corpus-completion-and-deque-implementation.md",
+      "displayName": "2026-04-16-v1-research-corpus-completion-and-deque-implementation.md",
+      "date": "2026-04-16",
+      "title": "V1 Research Corpus Completion and Deque Implementation",
+      "packages": [
+        "swift-executors",
+        "swift-executor-primitives"
+      ],
+      "status": "processed",
+      "statusRaw": "pending",
+      "processedDate": "2026-04-24",
+      "triageOutcome": null,
+      "outcomeDescription": null
+    },
+    {
+      "file": "2026-04-16-supervision-spi-stripping-and-cooperative-landing.md",
+      "displayName": "2026-04-16-supervision-spi-stripping-and-cooperative-landing.md",
+      "date": "2026-04-16",
+      "title": "Supervision, SPI Stripping Discovery, and Cooperative Landing",
+      "packages": [
+        "swift-executors"
+      ],
+      "status": "processed",
+      "statusRaw": "pending",
+      "processedDate": "2026-04-24",
+      "triageOutcome": null,
+      "outcomeDescription": null
+    },
+    {
+      "file": "2026-04-17-audit-borrowing-self-chained-property-access.md",
+      "displayName": "2026-04-17-audit-borrowing-self-chained-property-access.md",
+      "date": "2026-04-17",
+      "title": "Audit, Remediation, and the Borrowing-Self Chained-`&&` Discovery",
+      "packages": [
+        "swift-executors",
+        "swift-executor-primitives",
+        "swift-cpu-primitives"
+      ],
+      "status": "processed",
+      "statusRaw": "pending",
+      "processedDate": "2026-04-24",
+      "triageOutcome": null,
+      "outcomeDescription": null
+    }
+  ]
+}

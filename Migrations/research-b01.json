@@ -1,0 +1,192 @@
+{
+  "$schema": "../Schemas/research-migration-receipt-v1.json",
+  "destinationImportCommit": "3f5a1cc2bf6d5723f46f583bb0762864ee534de0",
+  "batch": "Research-B01",
+  "manifestSHA256": "4ee326eb712972d1e915273a6ef4e31995d064a2578f6c0e756f7661d4f8942a",
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/11",
+  "historyImport": false,
+  "sourceHistoryRetained": true,
+  "imports": [
+    {
+      "sourceRepository": "swift-foundations/swift-ascii",
+      "sourceCommit": "3d27163a7d5ea416c797d4d7d58e50b454306064",
+      "sourcePath": "Research",
+      "sourceTree": "412f591662192826c529bc73cbf2f5693ee6a7fa",
+      "destinationPath": "Packages/swift-ascii",
+      "provenanceIndex": "Packages/swift-ascii/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-async",
+      "sourceCommit": "8db5c3f331a43c1d42c5c5ef1701bbc046b33959",
+      "sourcePath": "Research",
+      "sourceTree": "5e6678b8d167cb62f895c8a0de0ffc9fc45d95f7",
+      "destinationPath": "Packages/swift-async",
+      "provenanceIndex": "Packages/swift-async/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-css",
+      "sourceCommit": "0c095acd3d1933662924cfa28929bfef246cfe93",
+      "sourcePath": "Research",
+      "sourceTree": "082f2e740b615d2e5cc5d3b3f91d2100fdae00a1",
+      "destinationPath": "Packages/swift-css",
+      "provenanceIndex": "Packages/swift-css/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-css-html-render",
+      "sourceCommit": "cf90b8d2019df8ebcfba1bbab0042e52a0d180b5",
+      "sourcePath": "Research",
+      "sourceTree": "3775e2cdf3d68d8d922086c519ca43b982463f39",
+      "destinationPath": "Packages/swift-css-html-render",
+      "provenanceIndex": "Packages/swift-css-html-render/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-darwin",
+      "sourceCommit": "bd98dc0965416c6f740f596b62dacb7b1e5802bd",
+      "sourcePath": "Research",
+      "sourceTree": "500c6cccbdf85d06e7b4a4dddb59d990784dcaf0",
+      "destinationPath": "Packages/swift-darwin",
+      "provenanceIndex": "Packages/swift-darwin/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-defunctionalize",
+      "sourceCommit": "ece5ceda0d90e89368b7582919ab7d87738e8230",
+      "sourcePath": "Research",
+      "sourceTree": "75f33c096e8053a12a14438d7ed507f26019af8a",
+      "destinationPath": "Packages/swift-defunctionalize",
+      "provenanceIndex": "Packages/swift-defunctionalize/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-dual",
+      "sourceCommit": "268ef8c4418878b6765fa7c680dba92f621964d6",
+      "sourcePath": "Research",
+      "sourceTree": "531a7ca36a0816e1be5f7603865af5fd6e3ff6cb",
+      "destinationPath": "Packages/swift-dual",
+      "provenanceIndex": "Packages/swift-dual/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-effects",
+      "sourceCommit": "16d7c490fa0522adf4d9732c79427aa6eea5e829",
+      "sourcePath": "Research",
+      "sourceTree": "ce78279db00441c3975e8469380c48633226c6d6",
+      "destinationPath": "Packages/swift-effects",
+      "provenanceIndex": "Packages/swift-effects/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-environment",
+      "sourceCommit": "116fed19ef076643ae013619887246b4f92f4914",
+      "sourcePath": "Research",
+      "sourceTree": "a471dd98af3372a588a56aa5375ee145af96a79f",
+      "destinationPath": "Packages/swift-environment",
+      "provenanceIndex": "Packages/swift-environment/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-executors",
+      "sourceCommit": "933836a5f301bca726d66b90db94fc6d7c39d491",
+      "sourcePath": "Research",
+      "sourceTree": "a48fb9e0a8321b74d666bd19f9a59a828ba14521",
+      "destinationPath": "Packages/swift-executors",
+      "provenanceIndex": "Packages/swift-executors/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-file-system",
+      "sourceCommit": "179bb51a0d90315954e95f290152be99640bc88c",
+      "sourcePath": "Research",
+      "sourceTree": "d816da04d60671d104c278c7f76f6a8ae16bd597",
+      "destinationPath": "Packages/swift-file-system",
+      "provenanceIndex": "Packages/swift-file-system/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-html",
+      "sourceCommit": "54be6e19cb207a766dbd52c70abdfcc651fd05ba",
+      "sourcePath": "Research",
+      "sourceTree": "644d91e023e1ebf84c8b1d3af9a9efae3cf8a1c6",
+      "destinationPath": "Packages/swift-html",
+      "provenanceIndex": "Packages/swift-html/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-html-render",
+      "sourceCommit": "c95ffd82953d577dc46b6b44819c8960ab621513",
+      "sourcePath": "Research",
+      "sourceTree": "08276252f8ef48379e035a3f405e6db26c36c1d0",
+      "destinationPath": "Packages/swift-html-render",
+      "provenanceIndex": "Packages/swift-html-render/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-linux",
+      "sourceCommit": "579776225d415ffc812a24bc474d1eaa88354a99",
+      "sourcePath": "Research",
+      "sourceTree": "a0bd94ea890b04098b0fb2e1e2efb594b2999439",
+      "destinationPath": "Packages/swift-linux",
+      "provenanceIndex": "Packages/swift-linux/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-markdown-html-render",
+      "sourceCommit": "780ab5fd1cfc3c5bf17e18415bf75454886fe694",
+      "sourcePath": "Research",
+      "sourceTree": "9c270d8acb4f03aa089e5709d87d94d7d75d5c99",
+      "destinationPath": "Packages/swift-markdown-html-render",
+      "provenanceIndex": "Packages/swift-markdown-html-render/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    }
+  ]
+}
