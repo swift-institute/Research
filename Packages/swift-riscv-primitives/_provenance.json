@@ -1,0 +1,16 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "9cba71e066f8f015c9bc3ff7eef1d95edab42f95",
+  "sourceRepository": "swift-primitives/swift-riscv-primitives",
+  "sourceCommit": "8b5aff1f2e13a3f5e4f1ccdc4b6384313ee33d56",
+  "sourcePath": "Research",
+  "sourceTree": "e49ac9bc4bf72b6a9d8d05cb8a26de8ea4ff48eb",
+  "destinationPath": "Packages/swift-riscv-primitives",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/.github/issues/527"
+}
