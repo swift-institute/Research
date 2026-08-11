@@ -1,0 +1,36 @@
+{
+  "$schema": "../Schemas/research-migration-receipt-v1.json",
+  "destinationImportCommit": "f98d2e9236f845c26cab926fd66dba571179616c",
+  "batch": "Research-SwiftFoundations-Lane-B01",
+  "manifestSHA256": "4e582646d991e2b776c498cff40614604d059c33f11a8c17e7029c4fa2d1cd76",
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/.github/issues/527",
+  "historyImport": false,
+  "sourceHistoryRetained": true,
+  "imports": [
+    {
+      "sourceRepository": "swift-foundations/swift-impact",
+      "sourceCommit": "2b8f2a9f499398a45bd5592c8c77b3cf415af7da",
+      "sourcePath": "Research",
+      "sourceTree": "15e1a0c69b8d49c96eb810d3a67836edd84bec56",
+      "destinationPath": "Packages/swift-impact",
+      "provenanceIndex": "Packages/swift-impact/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-compiler",
+      "sourceCommit": "da021b7de2b81b905c019f3652897eddc7c1c852",
+      "sourcePath": "Research",
+      "sourceTree": "e000d752b7881dd3258cfc2620eea6d2b5e9b329",
+      "destinationPath": "Packages/swift-compiler",
+      "provenanceIndex": "Packages/swift-compiler/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    }
+  ]
+}

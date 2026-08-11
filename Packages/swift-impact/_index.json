@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-12",
+  "title": "Research Index — swift-impact",
+  "blurb": "",
+  "scope": "swift-impact (swift-foundations)",
+  "documents": [
+    {
+      "file": "design.md",
+      "displayName": "design.md",
+      "topic": "swift-impact design: reverse-dependency build-impact analysis across a SwiftPM workspace",
+      "date": "2026-07-22",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    }
+  ]
+}
