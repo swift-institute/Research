@@ -648,7 +648,7 @@ tracking is a Darwin-only thread-QoS bump, off by default.
 
 ### Validated by spike (2026-04-16)
 
-`Experiments/priority-override-spike/` — 3 variants, ALL PASS on
+[central priority-override spike](https://github.com/swift-institute/Experiments/tree/8da086ca55b2a6b20edaaf16bfaad6aedc9985bf/swift-executors--priority-override-spike) — 3 variants, ALL PASS on
 Apple Swift 6.3 / macOS 26 arm64:
 
 - **V1 (nesting):** 3 overrides at different QoS classes started and
@@ -773,7 +773,7 @@ called out explicitly. A concrete template:
    see "Locked surface" subsection above. Flag name, type, default,
    per-platform no-op contract, and documentation template all recorded.
 2. ~~**Prototype the Darwin M3 path.**~~ **DONE** —
-   `Experiments/priority-override-spike/` CONFIRMED on Swift 6.3 / macOS
+   [central priority-override spike](https://github.com/swift-institute/Experiments/tree/8da086ca55b2a6b20edaaf16bfaad6aedc9985bf/swift-executors--priority-override-spike) CONFIRMED on Swift 6.3 / macOS
    26 arm64. Nesting, sub-µs cost, and cross-thread non-wake all
    validated. Linux null-op behavior needs no spike.
 3. ~~**Coordinate with `work-stealing-scheduler-design.md`**~~ **DONE** —

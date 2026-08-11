@@ -552,7 +552,7 @@ on SDK evolution, not on this note.
 
 ### Validated by spike (2026-04-16)
 
-`Experiments/scheduled-two-clock-spike/` — 4 variants, ALL PASS on
+[central scheduled-two-clock spike](https://github.com/swift-institute/Experiments/tree/8da086ca55b2a6b20edaaf16bfaad6aedc9985bf/swift-executors--scheduled-two-clock-spike) — 4 variants, ALL PASS on
 Apple Swift 6.3 / macOS 26 arm64:
 
 - **V1 (single-clock baseline):** One `ContinuousClock` timer thread

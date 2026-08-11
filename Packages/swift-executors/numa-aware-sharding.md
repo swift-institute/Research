@@ -104,7 +104,7 @@ v1.
 **Recommendation revised (post-spike, 2026-04-16):**
 `@_alignment(128)` is **not possible in Swift** — the compiler caps
 `@_alignment` at 16. Verified by spike:
-`Experiments/alignment-spike/` [Verified: 2026-04-16].
+[central alignment spike](https://github.com/swift-institute/Experiments/tree/8da086ca55b2a6b20edaaf16bfaad6aedc9985bf/swift-executors--alignment-spike) [Verified: 2026-04-16].
 
 Alternative approaches for `CacheLine.Padded<T>`:
 
@@ -227,7 +227,7 @@ be added without ABI break.
 
 ### Benchmark amendment (2026-04-17)
 
-`Experiments/cursor-padding-benchmark/` validates `CPU.Cache.Padded<T>`
+[central cursor-padding benchmark](https://github.com/swift-institute/Experiments/tree/8da086ca55b2a6b20edaaf16bfaad6aedc9985bf/swift-executors--cursor-padding-benchmark) validates `CPU.Cache.Padded<T>`
 as a primitive and empirically tests its effect on Sharded.cursor.
 
 **V3 (classic false-sharing, each thread writes its OWN atomic):**
@@ -289,7 +289,7 @@ for per-thread state.
 
 ### Realistic-workload benchmark (2026-04-17, follow-up)
 
-`Experiments/realistic-sharded-benchmark/` answers the v2 question
+[central realistic-sharded benchmark](https://github.com/swift-institute/Experiments/tree/8da086ca55b2a6b20edaaf16bfaad6aedc9985bf/swift-executors--realistic-sharded-benchmark) answers the v2 question
 above. Each worker interleaves `next()` with a compute burn whose
 length is calibrated to a target nanosecond budget, touching a
 1 MiB scratch buffer between calls so cache lines are evicted the
