@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "Research documents for swift-lexer-primitives.",
+  "scope": "swift-lexer-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "lexer-primitives-scope.md",
+      "displayName": "lexer-primitives-scope.md",
+      "topic": "Tier 2 scope analysis — what lexer-primitives should uniquely provide given existing ecosystem (ascii, input, parser, token, source primitives). Covers Lexeme, Trivia, character classification, keyword lookup, and concrete lexer decisions.",
+      "date": "",
+      "status": "IN_PROGRESS",
+      "statusDetail": null,
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": null
+    }
+  ]
+}

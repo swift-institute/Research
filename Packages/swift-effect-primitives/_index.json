@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-effect-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "Algebraic Effects in Swift.md",
+      "displayName": "Algebraic Effects in Swift.md",
+      "topic": "Algebraic effects in Swift",
+      "date": "2026-01-18",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

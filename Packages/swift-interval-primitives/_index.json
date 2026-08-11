@@ -1,0 +1,11 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-08-11",
+  "title": "Research Index — swift-interval-primitives",
+  "blurb": "",
+  "scope": "swift-interval-primitives (swift-primitives)",
+  "documents": [
+    {"file": "interval-value-type-design.md", "displayName": "interval-value-type-design.md", "topic": "interval-value-type-design.md", "date": "2026-08-11", "status": "MIGRATED", "statusDetail": null, "statusRaw": "MIGRATED", "tier": null, "scope": "package-specific"}
+  ]
+}

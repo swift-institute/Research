@@ -1,0 +1,32 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-05-16",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-cyclic-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "cyclic-primitives-rawvalue-underlying-rename.md",
+      "displayName": "cyclic-primitives-rawvalue-underlying-rename.md",
+      "topic": "Rename audit: cyclic owns zero rawValue declarations; all read sites migrated to Tagged.underlying",
+      "date": "2026-05-03",
+      "status": "RESOLVED",
+      "statusDetail": null,
+      "statusRaw": "RESOLVED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "maximal-algebra-refactor.md",
+      "displayName": "maximal-algebra-refactor.md",
+      "topic": "Replace hand-rolled cyclic group operations with algebra-primitives witnesses",
+      "date": "2026-02-04",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}
