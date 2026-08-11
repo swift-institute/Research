@@ -1,0 +1,37 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "documents": [
+    {
+      "file": "api-design-leveraging-property-primitives.md",
+      "displayName": "API Design Leveraging Property Primitives",
+      "topic": "API Design",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "academic-and-ecosystem-survey.md",
+      "displayName": "Academic and Ecosystem Survey",
+      "topic": "Prior Art",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "escapable-blocked.md",
+      "displayName": "escapable-blocked.md",
+      "topic": "DECISION (v1.0.0): Can Product extend functor surface to admit ~Escapable arms? Verdict: NO. Blocked indefinitely by Swift parameter-pack syntax limitations (each T: ~Copyable / ~Escapable not admitted; lifetime-annotation propagation through pack-expanded expressions not supported). Cohort asymmetry: swift-pair-primitives + swift-either-primitives admit ~Escapable; Product remains Copyable + Escapable on all arms. Tracking 3 upstream items; revisit when all land. Empirical reproduction at Experiments/escapable-blocked/.",
+      "status": "DECISION",
+      "tier": 1,
+      "scope": "package"
+    },
+    {
+      "file": "future-directions.md",
+      "displayName": "Forward Directions: Type-Theory Totality and Swift-Evolution Forward-Pass",
+      "topic": "future directions",
+      "status": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    }
+  ]
+}

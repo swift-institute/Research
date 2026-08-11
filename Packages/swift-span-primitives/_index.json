@@ -1,0 +1,20 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-06-23",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-span-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "span-capability-stdlib-alignment-and-escapable.md",
+      "displayName": "Span Capability — Standard-Library Alignment and the ~Escapable Question",
+      "topic": "Maps Span.Protocol to the stdlib's deferred ContiguousStorage (SE-0447, ~Escapable); records the @_lifetime-requirement convergence (SE-0516 BorrowingSequence, 6.4); the read linchpin is stdlib-intended; a mutable single-span-vending protocol has no stdlib precedent, so a MutableSpan mutable-linchpin is institute-pioneered and soundness-gated; no first-principles barrier to ~Escapable.",
+      "status": "RECOMMENDATION",
+      "statusDetail": "read side stdlib-aligned & settled; mutable linchpin gated on EXP-017 soundness, not principle",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
+    }
+  ]
+}

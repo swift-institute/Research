@@ -1,0 +1,142 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-sequence-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "sequence-protocol-noncopyable-elements.md",
+      "displayName": "sequence-protocol-noncopyable-elements.md",
+      "topic": "Whether to adopt SuppressedAssociatedTypes for ~Copyable Element support",
+      "date": "2026-02-12",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "iterator-protocol-hierarchy.md",
+      "displayName": "iterator-protocol-hierarchy.md",
+      "topic": "Ideal relationship between iterator protocols for ~Copyable elements",
+      "date": "2026-02-13",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "sequence-protocol-surface-simplification.md",
+      "displayName": "sequence-protocol-surface-simplification.md",
+      "topic": "Whether the protocol surface can be simplified after ~Copyable element adoption",
+      "date": "2026-02-23",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "sequence-iterator-borrowing-primitive.md",
+      "displayName": "sequence-iterator-borrowing-primitive.md",
+      "topic": "Ideal iteration primitive: withNext closure-based lending vs next() giving vs nextSpan span-based lending",
+      "date": "2026-02-23",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "lazy-sequence-pipeline-implementation.md",
+      "displayName": "lazy-sequence-pipeline-implementation.md",
+      "topic": "Lazy wrapper types with full ~Copyable & ~Escapable suppression, Property.View narrowing, extension where clause propagation",
+      "date": "2026-02-27",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "sequence-iterator-protocol-architecture.md",
+      "displayName": "sequence-iterator-protocol-architecture.md",
+      "topic": "Sequence and iterator protocol architecture for ~Copyable elements",
+      "date": "2026-02-26",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "zero-allocation-nextspan-for-generating-iterators.md",
+      "displayName": "zero-allocation-nextspan-for-generating-iterators.md",
+      "topic": "Zero-allocation nextSpan for generating iterators",
+      "date": "2026-02-26",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "implementation-handoff-nextspan-unification.md",
+      "displayName": "implementation-handoff-nextspan-unification.md",
+      "topic": "Handoff: unify iterator protocols via nextSpan",
+      "date": "",
+      "status": "—",
+      "statusDetail": null,
+      "statusRaw": "—",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "element-tilde-escapable-stdlib-span-blocker.md",
+      "displayName": "element-tilde-escapable-stdlib-span-blocker.md",
+      "topic": "Why Element: ~Escapable cannot be adopted today — Swift.Span<Element> requires Element: Escapable; empirically verified across 6.3.2 + 6.5-dev; tripwire via main-nightly CI",
+      "date": "2026-05-21",
+      "status": "DEFERRED",
+      "statusDetail": "Unblocks when Swift.Span<Element> accepts Element: ~Escapable upstream",
+      "statusRaw": "DEFERRED",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "count-direct-vs-fluent-and-hint-namespace.md",
+      "displayName": "count-direct-vs-fluent-and-hint-namespace.md",
+      "topic": "seq.count: Cardinal direct + seq.count(where:) method overload + new Sequence.Hint Property.Inout namespace for cheap conformer-supplied advisory values (.hint.count today, .hint.contains future)",
+      "date": "2026-05-21",
+      "status": "DECISION",
+      "statusDetail": "Landed in ac09a43",
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": "package"
+    },
+    {
+      "file": "iterable-revision-pitch-comparison.md",
+      "displayName": "iterable-revision-pitch-comparison.md",
+      "topic": "Comparison of sequence-primitives against the active Iterable (formerly BorrowingSequence) revision pitch — convergent axes, where we exceed the pitch (consuming+borrowing split, Nest.Name, Cardinal, Drain/Consume/Clearable, Property.Inout terminals), where we defer (Element: ~Escapable, typed Failure), audit of 5 stdlib integration adapter gaps, forum engagement opportunity on the unraised Span<Element> Escapable contradiction",
+      "date": "2026-05-21",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "source-map-compact-chain-noncopyable-self-blocker.md",
+      "displayName": "source-map-compact-chain-noncopyable-self-blocker.md",
+      "topic": "Why source.map.compact { } fluent chain cannot ship on Sequence.Protocol where Self: ~Copyable & ~Escapable — sil_movechecking_capture_consumed (DiagnosticsSIL.def:886) blocks consuming get on protocol extension at direct call site; Property.Borrow / Property.View reframings rejected for L1 due to release-mode miscompile + dual-conformer coverage gap on generator-style sources; asymmetric ship-state (Copyable chain + ~Copyable direct method) is the canonical envelope",
+      "date": "2026-05-21",
+      "status": "DEFERRED",
+      "statusDetail": "Revisit when Swift relaxes sil_movechecking_capture_consumed for consuming get on protocol extension at direct call site; reproducer scaffold at swift-institute/Experiments/sequence-map-fluent-chain-noncopyable-1/",
+      "statusRaw": "DEFERRED",
+      "tier": 2,
+      "scope": "package"
+    }
+  ]
+}
