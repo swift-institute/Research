@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Research migration provenance",
+  "type": "object",
+  "required": [
+    "$schema",
+    "destinationImportCommit",
+    "sourceRepository",
+    "sourceCommit",
+    "sourcePath",
+    "sourceTree",
+    "destinationPath",
+    "equality",
+    "programme",
+    "task"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "destinationImportCommit": { "$ref": "#/$defs/gitObjectId" },
+    "sourceRepository": { "type": "string", "minLength": 1 },
+    "sourceCommit": { "$ref": "#/$defs/gitObjectId" },
+    "sourcePath": { "type": "string", "minLength": 1 },
+    "sourceTree": { "$ref": "#/$defs/gitObjectId" },
+    "destinationPath": { "type": "string", "minLength": 1 },
+    "equality": {
+      "type": "object",
+      "required": ["fileList", "blobs", "sourceFilesExcludeDestinationMetadata"],
+      "properties": {
+        "fileList": { "const": "verified" },
+        "blobs": { "const": "verified" },
+        "sourceFilesExcludeDestinationMetadata": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "programme": { "type": "string", "format": "uri" },
+    "task": { "type": "string", "format": "uri" }
+  },
+  "$defs": {
+    "gitObjectId": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+  },
+  "additionalProperties": false
+}

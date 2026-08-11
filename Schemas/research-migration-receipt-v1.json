@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Research migration receipt",
+  "type": "object",
+  "required": [
+    "$schema",
+    "destinationImportCommit",
+    "batch",
+    "manifestSHA256",
+    "programme",
+    "task",
+    "historyImport",
+    "sourceHistoryRetained",
+    "imports"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "destinationImportCommit": { "$ref": "#/$defs/gitObjectId" },
+    "batch": { "type": "string", "minLength": 1 },
+    "manifestSHA256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "programme": { "type": "string", "format": "uri" },
+    "task": { "type": "string", "format": "uri" },
+    "historyImport": { "const": false },
+    "sourceHistoryRetained": { "const": true },
+    "imports": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "sourceRepository",
+          "sourceCommit",
+          "sourcePath",
+          "sourceTree",
+          "destinationPath",
+          "provenanceIndex",
+          "equality"
+        ],
+        "properties": {
+          "sourceRepository": { "type": "string", "minLength": 1 },
+          "sourceCommit": { "$ref": "#/$defs/gitObjectId" },
+          "sourcePath": { "type": "string", "minLength": 1 },
+          "sourceTree": { "$ref": "#/$defs/gitObjectId" },
+          "destinationPath": { "type": "string", "minLength": 1 },
+          "provenanceIndex": { "type": "string", "minLength": 1 },
+          "equality": {
+            "type": "object",
+            "required": ["fileList", "blobs"],
+            "properties": {
+              "fileList": { "const": "verified" },
+              "blobs": { "const": "verified" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "gitObjectId": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+  },
+  "additionalProperties": false
+}

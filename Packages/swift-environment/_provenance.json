@@ -1,5 +1,6 @@
 {
-  "$schema": "https://swift-institute.org/schemas/research-migration-provenance-v1.json",
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "3f5a1cc2bf6d5723f46f583bb0762864ee534de0",
   "sourceRepository": "swift-foundations/swift-environment",
   "sourceCommit": "116fed19ef076643ae013619887246b4f92f4914",
   "sourcePath": "Research",

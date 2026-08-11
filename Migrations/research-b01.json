@@ -1,5 +1,6 @@
 {
-  "$schema": "https://swift-institute.org/schemas/research-migration-receipt-v1.json",
+  "$schema": "../Schemas/research-migration-receipt-v1.json",
+  "destinationImportCommit": "3f5a1cc2bf6d5723f46f583bb0762864ee534de0",
   "batch": "Research-B01",
   "manifestSHA256": "4ee326eb712972d1e915273a6ef4e31995d064a2578f6c0e756f7661d4f8942a",
   "programme": "https://github.com/swift-institute/.github/issues/527",
