@@ -19,7 +19,7 @@ Everything marked **UNMEASURED** was not executed and is not evidence.
 | # | Defect in the source plan | Correction |
 |---|---|---|
 | D1 | `institute verify` carries two incompatible meanings | Ruling **VERB-001**: the composition family collapses to one verb with modes. `verify` is retired as a top-level verb. |
-| D2 | Tests prescribed at `Tests/Institute Development Tests/`, which does not exist | All new tests go in the existing single test target `Tests/Institute Tests/`. |
+| D2 | Tests prescribed at `Tests/Institute Development Tests/`, which does not exist | **The source plan was right and this document's first revision was wrong.** The convention is one test target *per target*, so T1 creates the `Institute Development Tests` target. See §2.2. |
 | D3 | Every task verifies with `institute verify --package-path … --jobs 8`, which is not a valid command | `institute package test --package-path … --jobs 8`. |
 | D4 | T5 extends `Institute.Composition.Record` as "the receipt" | `Institute.Composition.Record` is the **pairwise ledger record**, not a receipt. The receipt owner is `Institute.Coherence.Receipt` (target `Institute Instruments`). T5 is retargeted. |
 | D5 | T9/T10 create `Sources/Institute Application/Institute.Command.*.swift` | Those files do not exist and the CLI is not decomposed that way. Parsing lives in `Institute.Application.CLI.swift` + `.Operation` + `.Mode`. |
@@ -117,7 +117,7 @@ Every path the source plan prescribes, mapped to a verified destination. `instit
 
 | Plan prescribed | Real destination | Why |
 |---|---|---|
-| `institute/Tests/Institute Development Tests/**` | `institute/Tests/Institute Tests/**` | The package declares **one** test target, `Institute Tests`, with an explicit `path:`, covering all ten library targets. |
+| `institute/Tests/Institute Development Tests/**` | `institute/Tests/Institute Development Tests/**` — **create it** | Upheld. See the correction note below. |
 | `Institute.Materialization.Tests.swift` etc. | `Institute.Materialization Tests.swift` etc. | House spelling: `Institute.Composition Tests.swift`, `Institute.Layout Tests.swift`, `Build.Coordinator Tests.swift`. |
 | `application/Sources/Institute Application/Institute.Command.Materialization.swift` | `application/Sources/Institute Application/Institute.Application.CLI.Operation.swift` (verb case) + `Institute.Application.CLI.Mode.swift` (modes) + `Institute.Application.CLI.swift` (option declaration, `validate()`, `run()` arm) | No per-command files exist. `Institute Application CLI/main.swift` is three lines and is not a parsing site. |
 | `application/Sources/Institute Application/Institute.Command.{Compose,Verify,BuildPath}.swift` | same three files as above | ditto |
@@ -134,7 +134,39 @@ Every path the source plan prescribes, mapped to a verified destination. `instit
 `Institute.Composition.BuildPlan.swift`, `Institute.Composition.Workspace.swift`,
 `Institute.Development.VerificationPlan.swift`, `Institute.Development.ExecutionBudget.swift`.
 
-Tests, all under `institute/Tests/Institute Tests/`, named `<Type> Tests.swift`.
+Tests for the new `Institute Development` declarations go under
+`institute/Tests/Institute Development Tests/`, named `<Type> Tests.swift`.
+
+#### Correction — test-target coordinates (principal, 2026-08-11)
+
+This document's first revision routed all new tests into the existing aggregate
+`Institute Tests` target, reasoning that `institute/Package.swift` declares one test target.
+**That reasoning was wrong.** The convention is **one test target per target of a package**,
+spelled `<Target> Tests` at `Tests/<Target> Tests/`. `swift-file-system` (2 targets → 2 test
+targets) and `swift-spm-standard` (1 → 1) are the exemplars; `institute` (10 targets → 1
+aggregate test target) is the largest violation in the fleet, not the convention.
+
+Consequences for this plan:
+
+- **T1 creates the test target.** Add a `Institute Development Tests` test target to
+  `institute/Package.swift`, at `Tests/Institute Development Tests/`, depending on
+  `Institute Development` and whatever it needs to exercise it. Every new test file in T1, T2,
+  T3, T4, T6, T7 and T8 goes there.
+- **Existing test files stay where they are.** `Institute.Composed Tests.swift`,
+  `Institute.Composition Tests.swift`, `Institute.Composition.State Tests.swift` and
+  `Institute.Coherence Tests.swift` currently live in the aggregate `Institute Tests` target.
+  Tasks that *modify* them modify them in place. Relocating the aggregate target's contents into
+  per-target suites is migration work owned by the mechanical-enforcement issue, not by this
+  programme — mixing a move with a semantic change makes both unreviewable.
+- **T5 is unaffected.** It modifies `Institute.Coherence Tests.swift` in place and creates no
+  new file. `Institute Instruments` warrants its own `Institute Instruments Tests` target under
+  the same rule; that is also migration work, not this programme's.
+- **`Nest.Name` is satisfied either way** — the ratified rule requires the target *directory* to
+  match the target's spaced spelling, and `Tests/Institute Development Tests/` does.
+
+The convention had no mechanical owner, which is why the question was open at all. It is now
+filed as a validator predicate (advisory first, blocking after the §8.4 maturity gate), with a
+measured baseline of 809 missing test targets across 1646 targets in 491 packages.
 
 ---
 
@@ -301,7 +333,7 @@ Measured in `Institute.Coherence.Run`: `realComposedGraph(swift:)` calls
 | ID | Disposition | Evidence / what would clear it |
 |---|---|---|
 | **S1** exact-owner search | **CLEARED** | G8. All six roots read in full. No existing owner of registry or source-map laws. |
-| **S2** current source coordinates | **CLEARED** for the five composition files and the Model files; **CORRECTED** for CLI (G2), tests (D2) and receipt (G6). §2 is the ratified map. |
+| **S2** current source coordinates | **CLEARED** for the five composition files and the Model files; **CORRECTED** for CLI (G2) and receipt (G6); test coordinates ruled by the principal (§2.2 correction note). §2 is the ratified map. |
 | **S3** package-graph authority | **CLEARED WITH CORRECTION** | G3. `Package.Manager` + `SPM Standard`, already declared. Forward closure is new work; a second parser is prohibited. |
 | **S4** SwiftPM override semantics | **REMAINS — reassigned to T6** | Nothing in the tree measures whether a root `.package(path:)` and a transitive remote of the same evaluated identity converge on the local package. Clearing evidence: fixture `LocalOverride` compiling a symbol that exists **only** in the local copy, on macOS and Ubuntu, exit 0, plus `Package.Manager.resolution` reporting `.fileSystem` for that identity. A manifest text snapshot is inadmissible. |
 | **S5** multi-root path semantics | **REMAINS — reassigned to T6** | Feasibility is cleared (`preflight` is base-parameterised; `Layout.directory(for:at:)` is root-parameterised). Evidence still required: fixture `MixedRoots` builds a graph naming packages under two registered roots, on macOS and Ubuntu. |
@@ -350,7 +382,11 @@ valid only with `package`, and `--jobs` only with `package build|test` (measured
 `Institute.Materialization.Ownership.swift`, `Institute.Materialization.Registry.swift`,
 `Institute.Materialization.Registry.Error.swift`.
 
-**Create** (under `institute/Tests/Institute Tests/`):
+**Create** the test target `Institute Development Tests` in `institute/Package.swift`, at
+`institute/Tests/Institute Development Tests/`, depending on `Institute Development`. Every
+subsequent task's new test files go there.
+
+**Create** (under `institute/Tests/Institute Development Tests/`):
 `Institute.Materialization Tests.swift`, `Institute.Materialization.Registry Tests.swift`.
 
 **Exact change.** Immutable validated `ID`; a root locator that is explicitly *not* identity;
@@ -394,7 +430,7 @@ Store the registry beside the existing ledger: `<checkout>/.workspace/materializ
 
 **Create:** `Institute.Composition.Scope.swift`, `Institute.Composition.SourceMap.swift`,
 `Institute.Composition.SourceMap.Error.swift`, and
-`Institute.Composition.Scope Tests.swift`, `Institute.Composition.SourceMap Tests.swift`.
+`Institute.Composition.Scope Tests.swift`, `Institute.Composition.SourceMap Tests.swift` (both under `institute/Tests/Institute Development Tests/`).
 
 **Exact change.** `Scope` supports exactly two forms: full inventory, and explicit seeds
 normalized to their complete forward Institute dependency closure. `SourceMap` accepts one
@@ -438,7 +474,7 @@ prefix, changed-file, or reverse-dependency selector is admitted.
 
 **Wave 1 · depends on: gate (cleared) · PR scope: generated-root location only**
 
-**Create:** `Institute.Composition.Workspace.swift`, `Institute.Composition.Workspace Tests.swift`.
+**Create:** `Institute.Composition.Workspace.swift`, `institute/Tests/Institute Development Tests/Institute.Composition.Workspace Tests.swift`.
 **Modify:** `Institute.Composed.Root.swift`.
 
 **Exact change.** Add `Institute.Composed.Root.directory(in: Institute.Composition.Workspace)`.
@@ -475,7 +511,7 @@ intended physical directories; no conclusion may be drawn from string prefixes.
 
 **Wave 3 · depends on: T2, T3 · PR scope: canonical composed-graph representation**
 
-**Create:** `Institute.Composition.BuildPlan.swift`, `Institute.Composition.BuildPlan Tests.swift`.
+**Create:** `Institute.Composition.BuildPlan.swift`, `institute/Tests/Institute Development Tests/Institute.Composition.BuildPlan Tests.swift`.
 **Modify:** `Institute.Composed.Root.swift`, `Institute.Composed.swift`,
 `Institute.Composed Tests.swift`.
 
@@ -566,13 +602,12 @@ represent dirty local source, **stop and report** — do not invent a second has
 
 **Wave 4 · depends on: T4, T5 · PR scope: empirical proof only; no activation**
 
-**Create** under `institute/Tests/Institute Tests/`:
+**Create** under `institute/Tests/Institute Development Tests/`:
 `Fixtures/Composition/{LocalOverride,IdentityCollision,IdentityDivergence,MixedRoots,LibraryLess,SymlinkEscape}/`
 and `Institute.Composed.Root.Integration Tests.swift`.
 
-> Fixture resources live under the existing test target's directory. If SwiftPM excludes them
-> from compilation, declare them via the test target's `resources:`/`exclude:` in
-> `institute/Package.swift` — do **not** create a second test target for them (D2).
+> If SwiftPM tries to compile the fixture packages as test sources, declare them via the
+> `Institute Development Tests` target's `resources:` / `exclude:` in `institute/Package.swift`.
 
 **Exact change.** Isolated fixture packages proving:
 
@@ -618,7 +653,8 @@ A text snapshot is inadmissible (Axiom 8).
 
 **Modify:** `Institute.Composed.swift`, `Institute.Composition.swift`.
 **Create:** `Institute.Development.ExecutionBudget.swift`,
-`Institute.Composed.Execution Tests.swift`, `Institute.Development.ExecutionBudget Tests.swift`.
+`Institute.Composed.Execution Tests.swift`, `Institute.Development.ExecutionBudget Tests.swift`
+(both under `institute/Tests/Institute Development Tests/`).
 
 > Scope correction: composed-root execution **already works** for inventory scope through
 > `Institute.Coherence.Run.realComposedBuild` (G9). This task adds workspace locking, the
@@ -650,7 +686,7 @@ review.
 **Wave 5 · depends on: T6 · PR scope: transactional source redirection and serial plan**
 
 **Create:** `Institute.Development.VerificationPlan.swift`,
-`Institute.Development.VerificationPlan Tests.swift`.
+`institute/Tests/Institute Development Tests/Institute.Development.VerificationPlan Tests.swift`.
 **Modify:** `Institute.Composition.State.swift`, `Institute.Composition.swift`,
 `Institute.Composition.Record.swift`, `Institute.Composition Tests.swift`,
 `Institute.Composition.State Tests.swift`.
@@ -984,6 +1020,11 @@ Two items are referred to the principal as **ruling requests**, not resolved her
   owner should make. Options: (a) create `Documentation/`; (b) publish as a `.docc` article in
   the existing catalogue; (c) publish to `swift-institute/Research`. Consequence of (a): a new
   docs surface with no generator and no CI check, which tends to go stale.
+- **RR-3 — the aggregate `Institute Tests` target.** The one-test-target-per-target rule now
+  has a mechanical owner. Whether `institute`'s aggregate `Institute Tests` target may remain
+  alongside per-target suites, or must be decomposed into ten, is open. This programme creates
+  `Institute Development Tests` and leaves the aggregate alone; the decision changes migration
+  cost, not this plan's coordinates.
 - **RR-2 — `institute build` and the Xcode surface.** T13 deletes the Xcode-backed *coherence*
   path. `institute build` (merged `xcodebuild` over the selection) and `Institute.Xcode.Scheme`
   are a separate capability with their own documented rationale. Retiring them needs its own
