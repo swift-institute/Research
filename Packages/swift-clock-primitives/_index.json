@@ -1,0 +1,43 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-clock-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "instant-affine-arithmetic.md",
+      "displayName": "instant-affine-arithmetic.md",
+      "topic": "Tagged-based clock instant types and affine operators",
+      "date": "2026-03-01",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "test-clock-advance-ordering.md",
+      "displayName": "test-clock-advance-ordering.md",
+      "topic": "Clock.Test advance ordering: nonsending + serial executor",
+      "date": "2026-03-01",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "clock-time-unification.md",
+      "displayName": "clock-time-unification.md",
+      "topic": "Clock / Kernel.Time unification: remove monotonicNanoseconds, keep dual namespace",
+      "date": "2026-03-19",
+      "status": "IMPLEMENTED",
+      "statusDetail": null,
+      "statusRaw": "IMPLEMENTED",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

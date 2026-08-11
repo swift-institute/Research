@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-bit-vector-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "bit-vector-protocol-unification.md",
+      "displayName": "bit-vector-protocol-unification",
+      "topic": "Unifying pop, take, ones, and bitmap operations across all Bit.Vector variants",
+      "date": "2026-02-12",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

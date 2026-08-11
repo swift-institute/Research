@@ -1,0 +1,196 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-29",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-carrier-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "Carrier Primitives Vision.md",
+      "displayName": "Carrier Primitives Vision",
+      "topic": "Consolidated contributor-facing design rationale for Carrier 0.1.0. Ten-part narrative covering: the problem (phantom-typed wrappers, four Copyable \u00d7 Escapable quadrants); the protocol surface; Tagged as the canonical generic Carrier implementation; why Carrier and not RawRepresentable (nine-dimension comparison); four-quadrant coverage operationalized via the project sketch; pattern relationships and the role-class taxonomy (Carrier vs sibling protocols vs witness protocols vs domain-specific value types); round-trip semantics for ~Copyable Underlying; read-only by design (no Mutable / no @dynamicMemberLookup / no cross-Carrier utilities at v0.1.x); theoretical foundations (Reynolds, Wadler, Coercible, fibrations); open questions and revisit triggers. Supersedes 10 prior topic-specific docs.",
+      "date": "2026-04-29",
+      "status": "VISION",
+      "statusDetail": "Consolidates 10 prior research docs into a single coherent narrative per principal direction 2026-04-29. Audience: contributors and ecosystem maintainers. Consumer-facing surface is the DocC catalog.",
+      "statusRaw": "VISION",
+      "tier": 2,
+      "scope": "package-specific"
+    },
+    {
+      "file": "sli-array.md",
+      "displayName": "sli-array",
+      "topic": "SLI skip rationale for Array<Element>. Could be done (trivial self-carrier or parametric element-unwrap); skipped because trivial form is zero-payoff and parametric form pre-commits a specific Domain/Underlying choice that consumers should own.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-set.md",
+      "displayName": "sli-set",
+      "topic": "SLI skip rationale for Set<Element>. Trivial form zero-payoff; parametric form has hash-consistency issues on element unwrap.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-dictionary.md",
+      "displayName": "sli-dictionary",
+      "topic": "SLI skip rationale for Dictionary<Key, Value>. Two-parameter generic \u2014 can't map into single-param Carrier without axis choice that pre-commits semantics.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-optional.md",
+      "displayName": "sli-optional",
+      "topic": "SLI skip rationale for Optional<Wrapped>. Strongest could-be-done case: parametric form reads cleanly (Optional.map-style). Skipped to avoid pre-committing Domain propagation choice for a type as central as Optional.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-result.md",
+      "displayName": "sli-result",
+      "topic": "SLI skip rationale for Result<Success, Failure>. Sum type with no canonical wrapped value; Carrier's abstraction assumes single wrapped Underlying. Ecosystem prefers typed-throws-thunk over Result anyway (feedback_throws_not_result).",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-range-family.md",
+      "displayName": "sli-range-family",
+      "topic": "SLI skip rationale for Range / ClosedRange / PartialRangeFrom / PartialRangeThrough / PartialRangeUpTo. Interval types, not value wrappers; no canonical Underlying.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-slice.md",
+      "displayName": "sli-slice",
+      "topic": "SLI skip rationale for Slice<Base>. View into another collection; semantic identity is 'view', not 'wrapped value'. Parallel to Array analysis plus the view-vs-wrapper mismatch.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-contiguousarray.md",
+      "displayName": "sli-contiguousarray",
+      "topic": "SLI skip rationale for ContiguousArray<Element>. Same analysis as Array; contiguous-storage guarantee is orthogonal to Carrier.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-inlinearray.md",
+      "displayName": "sli-inlinearray",
+      "topic": "SLI skip rationale for InlineArray<count, Element>. Array-family analysis plus the value-generic (count) axis that Carrier's abstraction doesn't parameterize over.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-void.md",
+      "displayName": "sli-void",
+      "topic": "SLI skip rationale for Void / (). Structural blocker: Swift doesn't permit `extension Void: Carrier` (non-nominal type). A nominal Unit wrapper type would be invention, not stdlib integration.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-taskpriority.md",
+      "displayName": "sli-taskpriority",
+      "topic": "SLI skip rationale for TaskPriority. Structurally viable (trivial self-carrier) but no demonstrated use case; too specialized for 0.1.0 FINAL commitment without concrete demand.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-unsafe-pointers.md",
+      "displayName": "sli-unsafe-pointers",
+      "topic": "SLI skip rationale for the unsafe pointer family (UnsafePointer, UnsafeMutablePointer, UnsafeRawPointer, UnsafeMutableRawPointer, UnsafeBufferPointer, UnsafeMutableBufferPointer, OpaquePointer). Category error: pointers are reference (memory-address) types, not value wrappers. Carrier's abstraction would lie.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-span-family.md",
+      "displayName": "sli-span-family",
+      "topic": "SLI skip rationale for Span / MutableSpan / RawSpan / MutableRawSpan. Strongest could-be-done case for ~Escapable Carrier conformance (Q3 quadrant). Skipped because the trivial-self-carrier default may not satisfy @_lifetime correctly for ~Escapable Self; each variant would need bespoke explicit-lifetime conformance.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-clock-instants.md",
+      "displayName": "sli-clock-instants",
+      "topic": "SLI skip rationale for ContinuousClock.Instant and SuspendingClock.Instant. Positional semantics (point on a timeline) rather than value-wrapper semantics; weaker fit than Duration (which IS included). Too specialized to centralize without demand.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "sli-foundation.md",
+      "displayName": "sli-foundation",
+      "topic": "SLI skip rationale for Foundation types (Date, URL, Data, TimeInterval, UUID, and all others). Hard skip via [PRIM-FOUND-001]: primitives layer MUST NOT import Foundation. Any Foundation-type Carrier conformance belongs in a higher-layer package, not in carrier-primitives.",
+      "date": "2026-04-24",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    }
+  ],
+  "narrativeSections": [
+    {
+      "heading": "Provenance",
+      "body": "These four research documents were authored in swift-institute/Research/ on 2026-04-22 and moved to this package on 2026-04-24 when swift-carrier-primitives was created as the dedicated home for Carrier-family research and experiments. See swift-institute/Research/Reflections/2026-04-23-carrier-walkback-and-capability-lift-taxonomy.md for the full investigation arc, including the initial Carrier package proposal, walk-back on three grounds, and the 2026-04-24 revisit that produced this package."
+    },
+    {
+      "heading": "Companion research",
+      "body": "The companion characterization of the orthogonal self-projection default pattern lives at swift-ownership-primitives/Research/self-projection-default-pattern.md (v1.0.0, 2026-04-24, RECOMMENDATION, Tier 2). The original authoring on 2026-04-22 was lost mid-session 2026-04-23 and re-authored on 2026-04-24 from the shipped Ownership.Borrow.`Protocol` source and the reflection record. The companion experiment (V0\u2013V5 variants) was also lost and has not been re-authored; variant verdicts in the re-authored doc are replayed from shape analysis."
+    }
+  ]
+}

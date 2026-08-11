@@ -1,0 +1,21 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "See also: `swift-primitives/Research/collection-sequence-protocol-detachment.md` — primitives-wide research on removing Sequence.Protocol inheritance from Collection.Protocol (RECOMMENDATION, 2026-02-23).",
+  "scope": "swift-collection-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "escapable-protocol-foreach-count-view.md",
+      "displayName": "escapable-protocol-foreach-count-view.md",
+      "topic": "DEFERRED-TOOLCHAIN-PRUNED (v1.2.0): Per-package execution note for Collection.Protocol ~Escapable admission. v1.0.0 designed re-derivation of parked Item B Candidate 2 widening using the new Property.Inout.init(unsafeRawAddress:mutating:) API. v1.1.0 amendment (§J–§K, 2026-05-09) documented the structural blocker at Phase 2: the dispatched view-of-self consumer pattern (`Property<...>.Inout(unsafeRawAddress: &self, mutating: &self)` from `mutating _read`) is uncompilable under Swift's exclusive-access law (#ExclusivityViolation on dual-`&self` arguments + body-scoped raw-pointer lifetime; verified via `swiftc -emit-sil`). PUSH #2 at `2e60130` shipped doc-only; 4 parked source-file changes reverted to `e72ad2a` baseline. v1.2.0 amendment (§L, 2026-05-09) per HANDOFF-escapable-property-tier-prune.md: forward-amends status to DEFERRED-TOOLCHAIN-PRUNED following surgical prune at swift-property-primitives `8ea61bb` of the upstream cascade (raw-address-form inits + Property Base widening reverted out of Sources/+Tests/; research preserved verbatim with CONVERGED-PRUNED frontmatter). Re-ship trigger unchanged: language-affordance event (not a count). swift-ownership-primitives `30f44a2` NOT pruned — institute ~Escapable program retains it.",
+      "date": "2026-05-09",
+      "status": "DEFERRED-TOOLCHAIN-PRUNED",
+      "statusDetail": "v1.2.0. Tier 1 per-package research. v1.0.0 authored 2026-05-09 (Phase 1); v1.1.0 amendment 2026-05-09 (Phase 2 structural blocker); v1.2.0 amendment 2026-05-09 (forward-amend after upstream cascade-tail prune at swift-property-primitives `8ea61bb`). No source-file changes in this package across v1.1.0 or v1.2.0 (pure doc-only forward amendments). Re-ship trigger: see §L Prune-Outcome.",
+      "statusRaw": "DEFERRED-TOOLCHAIN-PRUNED (v1.2.0)",
+      "tier": 1,
+      "scope": "swift-collection-primitives"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-coder-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "coder-primitives-core-api-surface.md",
+      "displayName": "coder-primitives-core-api-surface",
+      "topic": "Complete core API surface for Coder Primitives",
+      "date": "2026-03-04",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "optics-streaming-io-bridge.md",
+      "displayName": "optics-streaming-io-bridge",
+      "topic": "Bridge design between pure optics and streaming I/O (Coder)",
+      "date": "2026-03-05",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

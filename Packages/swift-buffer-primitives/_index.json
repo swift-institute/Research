@@ -1,0 +1,252 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-18",
+  "title": "Buffer Primitives Research",
+  "blurb": "",
+  "scope": "swift-buffer-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "storage-generic-buffer-core.md",
+      "displayName": "storage-generic-buffer-core.md",
+      "topic": "Where to introduce storage-genericity in the buffer layer (leaf vs Layer-2 algorithm) and how to surface operations. Decision: concrete Layer-3 leaves delegating to one algorithm generic over some Storage.Protocol; operation surface via concrete-Base Property.Inout accessors (not a Buffer.Linear.Operations enum, not protocol-Base). Collapses the 2×2 Heap/Inline × Copyable/~Copyable duplication; keeps .Small expressible; preserves zero-witness specialization. Validated by two SIL experiments.",
+      "date": "2026-05-24",
+      "status": "RECOMMENDATION",
+      "statusDetail": "Decided + experimentally validated (specialization to 0 witness_method confirmed in release + cross-module, through the real Property.Inout stack); not yet implemented in production. Reuse locus decided: concrete-Base (protocol-Base would need @inlinable → documented ~Copyable miscompile path). Phased test-gated implementation path with in-package SIL recheck at Phase 3.",
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": "cross-package"
+    },
+    {
+      "file": "theoretical-buffer-primitives-design.md",
+      "displayName": "theoretical-buffer-primitives-design",
+      "topic": "Tier 3: Theoretical buffer-primitives built on storage-primitives and bit-vector-primitives",
+      "date": "2026-02-03",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 3,
+      "scope": null
+    },
+    {
+      "file": "metadata-parametric-slots.md",
+      "displayName": "metadata-parametric-slots",
+      "topic": "Tier 2: Metadata-parametric random-access slots buffer discipline",
+      "date": "2026-02-07",
+      "status": "IN_PROGRESS",
+      "statusDetail": null,
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "noncopyable-optional-access-patterns.md",
+      "displayName": "noncopyable-optional-access-patterns",
+      "topic": "Tier 2: Access patterns for ~Copyable optionals in borrowing contexts",
+      "date": "2026-02-09",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "linked-buffer-n-parameterization.md",
+      "displayName": "linked-buffer-n-parameterization",
+      "topic": "Tier 1: N-parameter analysis for Buffer.Linked singly/doubly-linked support",
+      "date": "2026-02-11",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "noncopyable-view-types-for-peek-reversed.md",
+      "displayName": "noncopyable-view-types-for-peek-reversed",
+      "topic": "Tier 1: View type design for Peek/Reversed on ~Copyable Buffer.Linked",
+      "date": "2026-02-11",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "inline-small-linked-buffer-design.md",
+      "displayName": "inline-small-linked-buffer-design",
+      "topic": "Tier 2: Inline and Small variants for Buffer.Linked using Storage.Inline",
+      "date": "2026-02-11",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "arena-buffer-design.md",
+      "displayName": "arena-buffer-design",
+      "topic": "Tier 2: Arena buffer discipline with generation-based stale-reference detection",
+      "date": "2026-02-11",
+      "status": "IN_PROGRESS",
+      "statusDetail": null,
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "slab-first-principles.md",
+      "displayName": "slab-first-principles",
+      "topic": "Tier 2: First-principles analysis of \"slab\" in CS literature vs Buffer.Slab implementation",
+      "date": "2026-02-11",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "buffer-ring-consumer-api-boundary.md",
+      "displayName": "buffer-ring-consumer-api-boundary",
+      "topic": "Tier 1: Consumer API boundary design for Buffer.Ring",
+      "date": "2026-02-10",
+      "status": "IN_PROGRESS",
+      "statusDetail": null,
+      "statusRaw": "IN_PROGRESS",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "buffer-variant-parity-analysis.md",
+      "displayName": "buffer-variant-parity-analysis",
+      "topic": "Tier 2: Consistency audit across six buffer disciplines",
+      "date": "2026-02-11",
+      "status": "IN_PROGRESS",
+      "statusDetail": null,
+      "statusRaw": "IN_PROGRESS",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "linked-cow-safe-overloads.md",
+      "displayName": "linked-cow-safe-overloads",
+      "topic": "Tier 1: Add CoW-safe Copyable overloads to Buffer.Linked, consistent with Ring/Linear",
+      "date": "2026-02-12",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "checkpoint-ordering-design.md",
+      "displayName": "checkpoint-ordering-design",
+      "topic": "Tier 2: Checkpoint Comparable trichotomy fix — count-only equality matching count-only ordering",
+      "date": "2026-02-12",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "slots-buffer-variant-parity.md",
+      "displayName": "slots-buffer-variant-parity",
+      "topic": "Tier 1: Buffer.Slots ensureUnique/copy alignment and static method assessment",
+      "date": "2026-02-12",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "buffer-core-pattern-unification.md",
+      "displayName": "buffer-core-pattern-unification",
+      "topic": "Tier 2: Pattern unification — correctness fixes and minimal API surface for Buffer Primitives Core",
+      "date": "2026-02-12",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "small-buffer-storage-representation.md",
+      "displayName": "small-buffer-storage-representation",
+      "topic": "Tier 2: Enum vs two-field storage for Small variants — force-unwrap elimination vs ~Copyable _modify",
+      "date": "2026-02-15",
+      "status": "SUPERSEDED",
+      "statusDetail": null,
+      "statusRaw": "SUPERSEDED",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "small-buffer-enum-compiler-workarounds.md",
+      "displayName": "small-buffer-enum-compiler-workarounds",
+      "topic": "Tier 2: Compiler bugs and workarounds from Small enum refactoring — LLVM verifier, DiagnoseStaticExclusivity, CopyPropagation",
+      "date": "2026-02-15",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 2,
+      "scope": null
+    },
+    {
+      "file": "bounded-index-parameter-syntax.md",
+      "displayName": "bounded-index-parameter-syntax",
+      "topic": "Tier 1: Bounded parameter syntax — accept bounded at API boundary, let retag carry the bound",
+      "date": "2026-02-12",
+      "status": "RECOMMENDATION",
+      "statusDetail": null,
+      "statusRaw": "RECOMMENDATION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "storage-pointer-access-level.md",
+      "displayName": "storage-pointer-access-level",
+      "topic": "Tier 1: Promote Storage.Heap/Pool pointer(at:) from package to public for buffer-layer access",
+      "date": "2026-02-15",
+      "status": "DECISION",
+      "statusDetail": null,
+      "statusRaw": "DECISION",
+      "tier": 1,
+      "scope": null
+    },
+    {
+      "file": "release-mode-llvm-verifier-crash-diagnosis.md",
+      "displayName": "release-mode-llvm-verifier-crash-diagnosis",
+      "topic": "Authoritative diagnosis: @_rawLayout + deinit + -O LLVM verifier crash (Steps 1-8)",
+      "date": "2026-03-20",
+      "status": "OPEN",
+      "statusDetail": null,
+      "statusRaw": "OPEN",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "rawlayout-release-crash-investigation.md",
+      "displayName": "rawlayout-release-crash-investigation",
+      "topic": "Consolidated investigation: timeline, 2-field rule, Storage.Inline deinit analysis, GitHub issue reproducer. Bug 2 root-cause fixed 2026-03-22: removed ~Escapable from Property.View, all @_optimize(none) removed",
+      "date": "2026-03-22",
+      "status": "RESOLVED",
+      "statusDetail": null,
+      "statusRaw": "RESOLVED",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "release-build-options-v2.md",
+      "displayName": "release-build-options-v2",
+      "topic": "Ranked alternatives for release build workaround",
+      "date": "2026-03-22",
+      "status": "SUPERSEDED",
+      "statusDetail": "(both bugs resolved without compiler flags)",
+      "statusRaw": "SUPERSEDED (both bugs resolved without compiler flags)",
+      "tier": null,
+      "scope": null
+    }
+  ]
+}

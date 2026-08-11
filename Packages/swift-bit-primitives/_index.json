@@ -1,0 +1,43 @@
+{
+  "$schema": "https://swift-institute.org/schemas/research-index-v1.json",
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-06-01",
+  "title": "Research Index",
+  "blurb": "",
+  "scope": "swift-bit-primitives (swift-primitives)",
+  "documents": [
+    {
+      "file": "Bit Primitives Extension Patterns Analysis.md",
+      "displayName": "Bit Primitives Extension Patterns Analysis.md",
+      "topic": "Bit primitives extension patterns analysis",
+      "date": "2026-01-21",
+      "status": "ANALYSIS",
+      "statusDetail": null,
+      "statusRaw": "ANALYSIS",
+      "tier": null,
+      "scope": null
+    },
+    {
+      "file": "bit-primitives-completeness-analysis.md",
+      "displayName": "bit-primitives-completeness-analysis.md",
+      "topic": "Tier 3: Completeness analysis of Bit type operations",
+      "date": "2026-03-15",
+      "status": "SUPERSEDED",
+      "statusDetail": "Superseded by bit-primitives-domain-decomposition.md on the decomposition axis; Part A implemented.",
+      "statusRaw": "SUPERSEDED",
+      "tier": 3,
+      "scope": null
+    },
+    {
+      "file": "bit-primitives-domain-decomposition.md",
+      "displayName": "bit-primitives-domain-decomposition.md",
+      "topic": "Tier 3: Primitive-domain decomposition — Bit atom vs word-of-bits (Binary.Pattern) vs cardinality (Finite); Ones/Zeros symmetry",
+      "date": "2026-06-01",
+      "status": "DECISION",
+      "statusDetail": "v2.0.0 IMPLEMENTED 2026-06-01: word-of-bits consolidated into Binary.Pattern (swift-binary-primitives) with symmetric Ones/Zeros; Bit reduced to the atom. Supersedes bit-primitives-completeness-analysis.md.",
+      "statusRaw": "DECISION",
+      "tier": 3,
+      "scope": null
+    }
+  ]
+}
