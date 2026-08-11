@@ -1,0 +1,17 @@
+{
+  "$schema": "../../Schemas/research-migration-provenance-v1.json",
+  "destinationImportCommit": "528fe49c40c8714e72141321614e09a9191eabfc",
+  "sourceRepository": "swift-primitives/swift-affine-geometry-primitives",
+  "sourceCommit": "bac189d4641a81e925ddfafd57a2668719dccae6",
+  "sourcePath": "Research",
+  "sourceTree": "ed0357f3af8df501642040c4fdbcaa8e3e53b5e8",
+  "destinationPath": "Packages/swift-affine-geometry-primitives",
+  "provenanceIndex": "Packages/swift-affine-geometry-primitives/_provenance.json",
+  "equality": {
+    "fileList": "verified",
+    "blobs": "verified",
+    "sourceFilesExcludeDestinationMetadata": true
+  },
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "task": "https://github.com/swift-institute/Research/issues/32"
+}

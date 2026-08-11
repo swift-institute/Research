@@ -1,0 +1,132 @@
+{
+  "$schema": "../Schemas/research-migration-receipt-v1.json",
+  "destinationImportCommit": "528fe49c40c8714e72141321614e09a9191eabfc",
+  "batch": "Research-Residual44-Refresh10",
+  "manifestSHA256": "4507f3cb38e3002680b05bb157f4d1553b826f289e4704d15ae4d9d260b21dca",
+  "programme": "https://github.com/swift-institute/.github/issues/527",
+  "historyImport": false,
+  "sourceHistoryRetained": true,
+  "task": "https://github.com/swift-institute/Research/issues/32",
+  "imports": [
+    {
+      "sourceRepository": "swift-foundations/swift-kernel",
+      "sourceCommit": "e3a9c580016be328b531d720b4627e6a57c32ce3",
+      "sourcePath": "Research",
+      "sourceTree": "c10f2b0ac4f199b5c7863f47a9c6637687096f70",
+      "destinationPath": "Packages/swift-kernel",
+      "provenanceIndex": "Packages/swift-kernel/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-loader",
+      "sourceCommit": "0ba61595ab01e566fb00e54b078be2b90f42d686",
+      "sourcePath": "Research",
+      "sourceTree": "b8782f5e58a96b0a23b527ba4565e0eee989c749",
+      "destinationPath": "Packages/swift-loader",
+      "provenanceIndex": "Packages/swift-loader/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-server",
+      "sourceCommit": "2c784f9663d6b618c4af398e0a55c91b2eddeb96",
+      "sourcePath": "Research",
+      "sourceTree": "4867fc93a3978921a5f26863c44ee62f3713016a",
+      "destinationPath": "Packages/swift-server",
+      "provenanceIndex": "Packages/swift-server/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-manifests",
+      "sourceCommit": "91b5421d404244c687c767e1b67ac3fcac39d54f",
+      "sourcePath": "Research",
+      "sourceTree": "0fc1f442a12e3e6d76b052345ccc341a74fc887a",
+      "destinationPath": "Packages/swift-manifests",
+      "provenanceIndex": "Packages/swift-manifests/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-xml",
+      "sourceCommit": "3bcdf0ccbb194e35eb7e5a8c06b6a7b64a94fa51",
+      "sourcePath": "Research",
+      "sourceTree": "448053537a99e502bcd880ddbb856f4adf812451",
+      "destinationPath": "Packages/swift-xml",
+      "provenanceIndex": "Packages/swift-xml/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-windows",
+      "sourceCommit": "7d1b958ad9deaab1cbcafb35c0545235376e3e84",
+      "sourcePath": "Research",
+      "sourceTree": "3bbf757418c1eb6e0400db29621829d8c9d03ffc",
+      "destinationPath": "Packages/swift-windows",
+      "provenanceIndex": "Packages/swift-windows/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-primitives/swift-affine-geometry-primitives",
+      "sourceCommit": "bac189d4641a81e925ddfafd57a2668719dccae6",
+      "sourcePath": "Research",
+      "sourceTree": "ed0357f3af8df501642040c4fdbcaa8e3e53b5e8",
+      "destinationPath": "Packages/swift-affine-geometry-primitives",
+      "provenanceIndex": "Packages/swift-affine-geometry-primitives/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-iso/swift-iso-9945",
+      "sourceCommit": "7a773d953743647b90f9b27b356cb7a1e0a100f6",
+      "sourcePath": "Research",
+      "sourceTree": "869c790add9eabc5d4eb9879019334951120f64d",
+      "destinationPath": "Packages/swift-iso-9945",
+      "provenanceIndex": "Packages/swift-iso-9945/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-linux-foundation/swift-linux-standard",
+      "sourceCommit": "71ea14fc1fb3a60ed9b1a4c141d38e15c53a8256",
+      "sourcePath": "Research",
+      "sourceTree": "482f19708b02056c5dafa69a4747749d339ff8e5",
+      "destinationPath": "Packages/swift-linux-standard",
+      "provenanceIndex": "Packages/swift-linux-standard/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    },
+    {
+      "sourceRepository": "swift-foundations/swift-sockets",
+      "sourceCommit": "3149a77743285e426f447cc73635741575cc70f2",
+      "sourcePath": "Research",
+      "sourceTree": "5767a6522abbdd34f77fdb36f12efb29b806b2ce",
+      "destinationPath": "Packages/swift-sockets",
+      "provenanceIndex": "Packages/swift-sockets/_provenance.json",
+      "equality": {
+        "fileList": "verified",
+        "blobs": "verified"
+      }
+    }
+  ]
+}
