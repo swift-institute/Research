@@ -326,6 +326,30 @@ Measured in `Institute.Coherence.Run`: `realComposedGraph(swift:)` calls
 3. The plan's `institute compose --scope inventory` is a **duplicate spelling of an existing
    command** and is removed from this plan (D6).
 
+**Precision correction, run 2026-08-11.** "Already exists end-to-end" is a claim about the
+*code path*, not about this machine currently producing a green receipt. Run once, as
+recommended:
+
+```bash
+institute coherence --build-path swiftpm-composed-root
+```
+
+Result: **`verdict: unmeasured`**, digest `8933fd4…`. The run never reached the `graph`, `build`,
+or `population` stages — it failed at `sync` (473s), which reported 346 fast-forwards, 84
+lawful skips (repositories parked on feature branches, correctly left alone — `sync` never
+rewrites work), and **9 conflicts**: repositories whose local `origin` remote is configured over
+SSH (`git@github.com:…`) where the sync policy expects HTTPS
+(`https://github.com/…`). All nine are pre-existing local git configuration on this machine,
+unrelated to this programme, and not touched here — they may be a deliberate operator choice,
+not a defect to silently overwrite.
+
+So: the composed-root *machinery* is real and wired (G9 above stands), but nobody has actually
+seen it produce a receipt past `sync` on this machine, and Axiom 8 applies —
+`swiftpm-composed-root`'s inventory-scope build is UNMEASURED here, not proven, until those nine
+conflicts are resolved (by whoever owns that local git config) and the run repeats past `sync`.
+This does not change T7-T13's scope, which already treats S8 as open, but it does mean "already
+runs end to end" should be read as *capability*, not *demonstrated result*.
+
 ---
 
 ## 4. Stop-condition dispositions (S1–S9)
