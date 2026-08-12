@@ -1497,6 +1497,30 @@
       "topic" : "Comparative prior-art survey of CI\/CD patterns across 6 non-Swift ecosystems (Rust, Go, Python, JS\/TS, multi-language large-OSS, plus Apple's swift_package_test reference). Cross-ecosystem synthesis identifies universal patterns (composite actions for setup recipes, scheduled-cron sweeps, harden-runner egress lockdown, OSSF Scorecard, OIDC keyless publishing), common patterns (workflow_call reuse, conclusion-aggregator job, hot-path\/cold-path split, sharded testing, generated workflows from typed source), and convergent absences (layered package-tier organization, maintainer-operated cross-repo cron orchestrator, public\/private visibility gate — all swift-institute-original design). Application to Swift Institute identifies 3 high-value candidate cohorts: (1) step-security\/harden-runner egress lockdown (closes the supply-chain gap left by SHA-pinning declination); (2) Rust-style conclusion-aggregator job (decouples branch protection from workflow refactors); (3) OIDC keyless attestation for tagged releases via sigstore\/cosign (establishes signing infrastructure ahead of SwiftPM Trusted Publishers). 3 deferred candidates (hot-path\/cold-path split, swift-tools-version derivation, DockerHub→ghcr.io mirror) — analogs don't fit cleanly or trigger condition not yet present. 3 declined candidates (generated workflows from typed source, external CI, external dashboards) — appropriate at scales swift-institute hasn't reached. Tier 2, ecosystem-wide."
     },
     {
+      "displayName" : "ci-cd-refactor-programme-historical\/CI-CD-COMPLETION-PROGRAMME.md",
+      "file" : "ci-cd-refactor-programme-historical\/CI-CD-COMPLETION-PROGRAMME.md",
+      "scope" : "ecosystem-wide",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/.github repository root by the terminal .github reduction programme (swift-institute\/.github#515), which archives closed-programme paperwork out of the GitHub control plane. Archival intake: the execution programme that carried the CI\/CD refactor from its verified checkpoint to the completion receipt under governing Goal swift-institute\/.github#276 (closed 2026-08-05T20:46:54Z); not maintained, and not the current description of any workflow.",
+      "topic" : "Historical CI\/CD refactor research artifact: CI-CD-COMPLETION-PROGRAMME.md."
+    },
+    {
+      "displayName" : "ci-cd-refactor-programme-historical\/CI-CD-REFACTOR-COMPLETION-RECEIPT.md",
+      "file" : "ci-cd-refactor-programme-historical\/CI-CD-REFACTOR-COMPLETION-RECEIPT.md",
+      "scope" : "ecosystem-wide",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/.github repository root by the terminal .github reduction programme (swift-institute\/.github#515), which archives closed-programme paperwork out of the GitHub control plane. Archival intake: the reclosure-recut completion receipt for Goal swift-institute\/.github#276 (closed 2026-08-05T20:46:54Z), superseding the receipt at commit f22d79d8; not maintained, and not the current description of any workflow.",
+      "topic" : "Historical CI\/CD refactor research artifact: CI-CD-REFACTOR-COMPLETION-RECEIPT.md."
+    },
+    {
+      "displayName" : "ci-cd-refactor-programme-historical\/CI-CD-REFACTOR-PROGRAMME.md",
+      "file" : "ci-cd-refactor-programme-historical\/CI-CD-REFACTOR-PROGRAMME.md",
+      "scope" : "ecosystem-wide",
+      "status" : "ARCHIVAL",
+      "statusDetail" : "Relocated from the swift-institute\/.github repository root by the terminal .github reduction programme (swift-institute\/.github#515), which archives closed-programme paperwork out of the GitHub control plane. Archival intake: the definitive A-Z implementation programme for the Swift Institute CI\/CD refactor, effective 2026-08-04, executed under governing Goal swift-institute\/.github#276 (closed 2026-08-05T20:46:54Z); not maintained, and not the current description of any workflow.",
+      "topic" : "Historical CI\/CD refactor research artifact: CI-CD-REFACTOR-PROGRAMME.md."
+    },
+    {
       "date" : "2026-05-06",
       "displayName" : "ci-cd-security-review.md",
       "file" : "ci-cd-security-review.md",
