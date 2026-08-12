@@ -335,15 +335,114 @@ Measured in `Institute.Coherence.Run`: `realComposedGraph(swift:)` calls
 | **S1** exact-owner search | **CLEARED** | G8. All six roots read in full. No existing owner of registry or source-map laws. |
 | **S2** current source coordinates | **CLEARED** for the five composition files and the Model files; **CORRECTED** for CLI (G2) and receipt (G6); test coordinates ruled by the principal (§2.2 correction note). §2 is the ratified map. |
 | **S3** package-graph authority | **CLEARED WITH CORRECTION** | G3. `Package.Manager` + `SPM Standard`, already declared. Forward closure is new work; a second parser is prohibited. |
-| **S4** SwiftPM override semantics | **REMAINS — reassigned to T6** | Nothing in the tree measures whether a root `.package(path:)` and a transitive remote of the same evaluated identity converge on the local package. Clearing evidence: fixture `LocalOverride` compiling a symbol that exists **only** in the local copy, on macOS and Ubuntu, exit 0, plus `Package.Manager.resolution` reporting `.fileSystem` for that identity. A manifest text snapshot is inadmissible. |
-| **S5** multi-root path semantics | **REMAINS — reassigned to T6** | Feasibility is cleared (`preflight` is base-parameterised; `Layout.directory(for:at:)` is root-parameterised). Evidence still required: fixture `MixedRoots` builds a graph naming packages under two registered roots, on macOS and Ubuntu. |
+| **S4** SwiftPM override semantics | **CLEARED — confirmed positive on macOS, 2026-08-11 (pre-programme spike, see §4a)** | Ubuntu leg dispatched, not yet returned. T6 still owns the *fixture*, permanently in-tree; this clears the go/no-go for starting T1. |
+| **S5** multi-root path semantics | **CLEARED on macOS — confirmed positive, 2026-08-11 (§4a)** | Ubuntu leg dispatched via the same run as S4, not yet returned. T6 still owns the *fixture*. |
 | **S6** package-verification redirection | **PARTLY CLEARED** | Cleared by reading: the incumbent never touches `Package.resolved`, and `restore` returns the declared clause byte-for-byte with a resolve-free structural check. **Remains, and is worse than the plan assumed:** the incumbent has **no failure or cancellation restoration at all** — `compose` writes the manifest and saves the ledger with no `defer`-equivalent unwind. Generalising to a multi-entry transaction must *add* that, not preserve it. Reassigned to T8. |
 | **S7** receipt compatibility | **CLEARED WITH CORRECTION** | G6. One receipt owner exists (`Coherence.Receipt`) and is already `buildPath`-aware. Constraint restated: absolute paths and materialisation IDs must not enter the addressed digest. |
 | **S8** scale | **REMAINS — reassigned to T11** | Full-inventory Ubuntu run at Swift 6.3.3 with manifest-load, graph-load, memory, population and target-count evidence. The full-tier `linux-release` leg exists (G7); the *receipt fields* do not yet (T5). |
 | **S9** CI owner | **CLEARED** | G7. |
 
-**No stop condition remains blocking for T1–T4.** S4/S5 gate everything from T7 onward, and
-T6 is the measurement that clears them.
+**No stop condition remains blocking for T1–T4.** S4 and S5 no longer gate T7 either, on the
+macOS evidence below; T6 remains the task that files the fixture permanently in-tree and adds
+the Ubuntu leg.
+
+---
+
+## 4a. Pre-programme spike — S4/S5 measured outside the sequence (2026-08-11)
+
+T6 was originally sequenced fifth (wave 4), after T1–T5. That is backwards for a go/no-go: S4
+and S5 do not need any part of the programme to test, and if either fails the entire T1–T13
+sequence collapses. Both were spiked directly against SwiftPM, outside the programme, before
+committing to T1.
+
+### S4 — does a root path override actually win?
+
+Four throwaway packages, in scratch, no Institute code involved:
+
+- `B` — a real Git repository (`git init --bare`), one commit, library product `B`, function
+  `B.origin() -> "REMOTE"`.
+- `local-root/B` — a plain directory, same manifest name `B`, same product name, function
+  `B.origin() -> "LOCAL_OVERRIDE"`. Directory name matters: SwiftPM's default package identity
+  is the URL/path **basename**, not the manifest's `name:` field — a first attempt using a
+  differently-named local directory produced two *different* identities and a product-name
+  collision error, not an override. The directory must be named to match the identity, exactly
+  what `Institute.Layout` already does when it materializes a checkout by inventory name.
+- `A` — declares `.package(url: "file://.../B.git", branch: "main")`, i.e. a transitive remote
+  dependency on identity `b`.
+- `C` — the composed root: `.package(path: "../A")` and `.package(path: "../local-root/B")`,
+  an executable target depending on both, printing `B.origin()` as seen from `A` and directly.
+
+```bash
+institute package build --package-path <scratch>/C
+```
+
+Result: **build succeeds**, with a warning:
+
+> `Conflicting identity for b: dependency '.../s4-spike/B' and dependency
+> '.../s4-spike/local-root/B' both point to the same package identity 'b'. … This will be
+> escalated to an error in future versions of SwiftPM.`
+
+Running the built executable:
+
+```
+A sees B as: LOCAL_OVERRIDE
+C sees B directly as: LOCAL_OVERRIDE
+```
+
+And `.build/workspace-state.json` — the same fact `Package.Manager.resolution(at:)` would
+report — records identity `b` resolved as `{"name": "fileSystem", "path":
+".../local-root/B"}`, not the remote checkout. **The root path dependency wins the identity
+collision, unconditionally, for both the direct and the transitive consumer.** This is real,
+admissible evidence: a linked symbol and the resolver's own state record, not a manifest text
+snapshot.
+
+**Material risk, not a blocker.** SwiftPM's own message states plainly that this convergence —
+the exact mechanism the whole programme's local-override story depends on — currently compiles
+with a warning and **will become a hard error in a future SwiftPM version**. This is not a
+theoretical risk T6 should merely watch for; it is realized today, in the toolchain this
+programme targets. **T6's fixture must assert on this warning's presence and treat its
+escalation to an error as a standing programme risk**, tracked against SwiftPM's release notes,
+not discovered when a toolchain bump silently turns green CI red. Added as an explicit line item
+to T6 below.
+
+### S5 — does one graph span two unrelated roots?
+
+A fifth package, `E`, at a physically separate scratch root (`s5-root2/`, no relation to
+`s4-spike/`), path-depending on `local-root/B` (root 1) and a new package `D` (root 2,
+`D.origin() -> "ROOT_2"`):
+
+```bash
+institute package build --package-path <scratch>/E
+```
+
+Result: **clean build, no warning** (there is no identity collision here — two independent
+identities, two independent roots). Running it:
+
+```
+B: LOCAL_OVERRIDE
+D: ROOT_2
+```
+
+**Confirmed on macOS.** SwiftPM does not care that the two path dependencies live under
+unrelated absolute directories; `Institute.Root.preflight(_:under:)` already being
+base-parameterised (G8) means nothing in the Institute layer needs to change to support this
+either.
+
+### What is not yet measured
+
+Both spikes ran on macOS only (Swift 6.4, Xcode toolchain). The Ubuntu leg was dispatched the
+same day via `gh workflow run ci.yml --repo swift-institute/institute --ref main`
+(full tier — `workflow_dispatch` alone selects it per `swift-ci.yml`'s classifier) to get
+independent Ubuntu SwiftPM-version evidence without hand-authoring a throwaway workflow or
+disturbing any in-flight branch. Its result is not yet in hand and must be read from the run's
+own conclusion before S4/S5 are called CLEARED rather than CLEARED-ON-MACOS.
+
+### Consequence for sequencing
+
+T1 is dispatched immediately following this spike rather than waiting for wave 4. T6 is
+unchanged in scope — it still owns the permanent, in-tree, CI-checked fixture — but it is no
+longer the first evidence anyone sees for S4/S5, and it inherits one new acceptance item: assert
+on and track the SwiftPM deprecation warning found here.
 
 ---
 
@@ -602,6 +701,13 @@ represent dirty local source, **stop and report** — do not invent a second has
 
 **Wave 4 · depends on: T4, T5 · PR scope: empirical proof only; no activation**
 
+> **S4 and S5 were pre-spiked outside the programme on 2026-08-11 (§4a) and both confirmed
+> positive on macOS** — a root path dependency does win an identity collision against a
+> transitive remote, and one graph does span two unrelated roots. This task's job is to turn
+> that spike into a permanent, CI-checked fixture and add the Ubuntu leg, not to discover the
+> answer for the first time. Do not re-derive the finding from scratch; port the spike's fixture
+> shape (§4a) directly.
+
 **Create** under `institute/Tests/Institute Development Tests/`:
 `Fixtures/Composition/{LocalOverride,IdentityCollision,IdentityDivergence,MixedRoots,LibraryLess,SymlinkEscape}/`
 and `Institute.Composed.Root.Integration Tests.swift`.
@@ -619,7 +725,12 @@ and `Institute.Composed.Root.Integration Tests.swift`.
 5. a library-less package stays visible but is not a synthetic target dependency;
 6. a physical path escape fails;
 7. package-qualified duplicate product names are unambiguous;
-8. an empty or non-enumerated population cannot produce a green result.
+8. an empty or non-enumerated population cannot produce a green result;
+9. **the `LocalOverride` fixture's build asserts on the presence of SwiftPM's "Conflicting
+   identity … will be escalated to an error in future versions" warning** (measured in §4a) and
+   fails loudly, rather than silently, the day a SwiftPM upgrade turns it into a build failure.
+   File that escalation as its own tracked risk against the toolchain's release notes, not
+   discovered cold by a red CI run.
 
 Every SwiftPM invocation runs through `Build.Coordinator` or `Package.Manager`. Never a shell
 `swift build`.
@@ -952,7 +1063,7 @@ Textual absence alone is not the proof; it supplements build-level evidence (doc
 
 | Wave | Tasks | Depends on | Max concurrent editors | Why it serializes |
 |---|---|---|---:|---|
-| 1 | T1, T3 | gate (cleared) | 2 | disjoint files: new model vs. composed-root/workspace |
+| 1 | T1, T3 | gate (cleared) | 2 | disjoint files: new model vs. composed-root/workspace — **T1 dispatched 2026-08-11** on the strength of the §4a spike, ahead of waiting for T6 |
 | 2 | T2, T9 | T1 | 2 | model vs. CLI exposure |
 | 3 | T4, T5 | T2, T3 | 2 | build plan/rendering vs. receipt schema |
 | 4 | **T6** | T4, T5 | 1 | **go/no-go gate**; SwiftPM semantics must settle first |
@@ -976,15 +1087,26 @@ The claim that "2–3 concurrent graphs" are useful is unmeasured and is not ado
 
 ## 7. Scope recommendation
 
-**Recommendation: land T1–T4 and T6 as one increment, then stop and re-decide at the T6
-result. Do not authorize T5 and T7–T13 yet.**
+**Recommendation: land T1–T4 and T6 as one increment, then stop and re-decide at T6's own
+in-tree, Ubuntu-confirmed result. Do not authorize T5 and T7–T13 yet.**
+
+Update, 2026-08-11: the go/no-go itself is no longer sequenced last. S4 and S5 were pre-spiked
+outside the programme (§4a) and both confirmed positive on macOS, with a full-tier Ubuntu CI run
+dispatched the same day; T1 was dispatched immediately on the strength of that result rather
+than waiting for wave 4. **T6 remains required** — it is what turns a throwaway scratch spike
+into a permanent, reviewed, CI-checked fixture that the fleet can trust indefinitely, and it
+carries one new item the spike surfaced: asserting on SwiftPM's own "will be escalated to an
+error" deprecation warning (§4a) so a future toolchain bump cannot silently turn this from a
+warning into a red build. What has changed is only the *order of confidence*, not the increment's
+scope.
 
 Reasoning:
 
-1. **T6 is a genuine go/no-go.** S4 (transitive-remote override) and S5 (multi-root paths) are
-   unmeasured, and the source ruling itself says the programme stops if they fail. Spending
-   T7–T13 before that measurement risks the entire tail on an untested SwiftPM hypothesis. The
-   increment is deliberately shaped to *end at the measurement*.
+1. **T6 is a genuine go/no-go, now cleared with high confidence rather than unmeasured.** The
+   spike answered the two SwiftPM hypotheses this whole programme rests on before any code
+   landed. Spending T7–T13 before T6's own fixture exists still risks drift between the spike's
+   throwaway packages and the real, in-tree behaviour — T6 is what closes that gap, not what
+   opens the question.
 2. **The tail is #81's activation work, not local-development value.** G9 measured that the
    composed root already builds the full inventory. T11–T13 are Ubuntu evidence, default
    switching, and Xcode-path deletion — real work, but it delivers nothing to a developer
